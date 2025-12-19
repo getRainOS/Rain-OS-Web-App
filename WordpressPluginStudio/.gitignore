@@ -1,0 +1,23 @@
+# PHP
+*.log
+*.cache
+.phpunit.result.cache
+vendor/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (if any build tools added later)
+node_modules/
+
+# Replit
+.replit.nix
+.cache/
