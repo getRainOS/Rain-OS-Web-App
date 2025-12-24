@@ -1,0 +1,95 @@
+Upgrade Request (treat as premium feature upgrades, not changes)
+
+Context:
+We already have a working Rain OS WordPress plugin in this Replit project that integrates with the Rain OS Headless AEO Analysis Engine. We are now adding “Pro” upgrades that enhance the editor experience and bring full parity with backend capabilities, without breaking existing flows. Everything must remain WordPress-standards compliant and backwards compatible.
+
+High-level goals:
+1) Add premium micro-action tools in the editor sidebar/metabox.
+2) Add a provenance/authorship panel.
+3) Add live usage/quota updates after analysis using X-Usage-Info.
+4) Add a rich subScores breakdown UI with drilldowns.
+5) Ensure the client-side analysis reference files are packaged with the plugin build (or compiled equivalents).
+
+Non-negotiables:
+- These are UPGRADES: do not remove existing UI, do not rename existing settings, do not change existing behavior; only add enhanced UI/UX and additional tools.
+- All new UI features must be backed by backend engine data or existing client-side structural scoring. Do not invent new metrics.
+- Secure + WP best practices: capabilities checks, nonces, sanitize/escape output, avoid storing secrets in plaintext if the project already has a secure pattern.
+- Keep compatibility with Gutenberg + Classic editor metabox.
+- Keep the core /api/analyze full_analysis flow intact.
+
+UPGRADE 1 — Micro-action buttons in editor (Sidebar + Metabox)
+Add a new “Quick Tools (Pro)” panel/tab in the editor sidebar and classic metabox that includes:
+- “Suggest Titles”
+- “Generate Meta Description”
+- “Summarize”
+- “Rewrite Sentence” (inline tool: user can paste/type a sentence, click rewrite, get output with copy/replace actions)
+
+Implementation details:
+- Each button must POST to: {apiBaseUrl}/api/analyze
+- Include Authorization: Bearer {apiKey}
+- Payloads:
+  - suggest_titles: { action: "suggest_titles", content: "<post content>" }
+  - generate_description: { action: "generate_description", content: "<post content>" }
+  - summarize_content: { action: "summarize_content", content: "<post content>" }
+  - rewrite_sentence: { action: "rewrite_sentence", sentence: "<user sentence>" }
+- Render results in a polished “results card” pattern with copy buttons, and (where appropriate) an “Apply” button:
+  - Titles: show list; allow “Use as Post Title” (optional confirmation) without breaking existing title logic.
+  - Meta description: show text; allow “Copy” and optionally “Save to post meta” (do not require Yoast/RankMath).
+  - Summary: show text; allow copy.
+  - Rewrite: show rewritten sentence; allow copy and a “Replace in editor” action (for Gutenberg: replace selected text if possible; otherwise insert into clipboard and show guidance).
+
+UPGRADE 2 — Authorship / Provenance card
+Add a compact “Authorship / Provenance (Pro)” card shown after full_analysis results:
+- Displays: authorship.hash, authorship.timestamp, authorship.status
+- Includes “Copy provenance” (single line string like: hash + timestamp + status)
+- Optionally include a toggle: “Save provenance to post meta” (off by default). If enabled, store in post meta keys like:
+  - _rainos_authorship_hash
+  - _rainos_authorship_timestamp
+  - _rainos_authorship_status
+Ensure values are sanitized, and only users with proper capability can write.
+
+UPGRADE 3 — Live usage widget updated from X-Usage-Info header
+Enhance the existing usage/quota widget:
+- After any successful /api/analyze response, parse the header:
+  - const usageInfoRaw = xhr.getResponseHeader("X-Usage-Info")
+  - if present: JSON.parse and update UI immediately (used count, limit, remaining, progress bar)
+- Keep the existing /api/users/me test connection flow as-is. This is just an enhancement for instant refresh.
+
+UPGRADE 4 — subScores grid/list with drilldown details
+Enhance the analysis results display:
+- Add a “Score Breakdown (Pro)” section that renders:
+  - a grid/list of subScores showing category + score
+  - ensure all categories returned are displayed (including: Semantic Clarity, Logical Structure, Descriptive Metadata, Entity Recognition, Citation Readiness, AEO Alignment, Readability, Schema Extraction, QA-format Detection)
+- Clicking a subScore opens a drilldown panel (side drawer or expandable card) that shows:
+  - the selected category name + score
+  - “Why it matters” (static UI copy, not backend)
+  - category-relevant recommendations and examples:
+    - Use backend recommendations array and keyword match heuristics to filter the most relevant recommendations for the selected category.
+    - If no specific match, show the full recommendations list but highlight the category.
+- Keep existing pillar scores and overall score UI intact; this is an added premium layer.
+
+UPGRADE 5 — Ensure client-side analysis reference files are included in build
+We must ensure the plugin package includes:
+- services/clientSideAnalysis.ts
+- includes/client-side-logic-guide.md
+If the plugin build process cannot ship TS directly, compile to JS and include the compiled file in admin assets AND still keep the original TS + MD in the repository/package for developer reference.
+
+Deliverables required in this Replit project:
+1) Updated WordPress plugin source reflecting all upgrades above.
+2) UI additions integrated into:
+   - Gutenberg sidebar
+   - Classic metabox
+   - Admin settings screen (if you add any toggles like “save provenance to post meta”)
+3) No breaking changes: existing analysis still works exactly as before.
+4) Documentation update:
+   - Add a “Pro Upgrades” section explaining each new panel/tool and which backend action it uses.
+   - Add a “Feature parity” table proving all engine actions are surfaced in plugin UI.
+5) Include mock-data rendering fallback in dev mode so UI can be previewed without engine access (but do not change production behavior).
+
+Quality bar:
+- Premium SaaS UX: clean spacing, consistent cards, subtle animations, responsive layout.
+- Accessibility: keyboard focus states, readable contrast, ARIA labels for buttons.
+- Robust error UX: show friendly messages for 401/402/429/500 and keep existing behavior.
+
+Do not add features not supported by backend engine.
+Only enhancements that surface existing engine capabilities and improve the visual/UX presentation.
