@@ -250,6 +250,40 @@ function get_score_class_analyzer($score) {
         </div>
 
         <div class="rain-os-editor-sidebar">
+            <!-- Pro Tabs -->
+            <div class="rain-os-pro-tabs">
+                <button class="rain-os-pro-tab active" data-tab="analysis">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                        <path d="M21 21H3V3"/>
+                        <path d="M21 9l-6 6-4-4-6 6"/>
+                    </svg>
+                    Analysis
+                </button>
+                <button class="rain-os-pro-tab" data-tab="quick-tools">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                    Quick Tools
+                    <span class="rain-os-pro-badge">Pro</span>
+                </button>
+            </div>
+
+            <!-- Usage Tracker -->
+            <div class="rain-os-usage-tracker">
+                <div class="rain-os-usage-header">
+                    <span class="rain-os-usage-label">API Usage</span>
+                    <span class="rain-os-usage-count">47 / 100</span>
+                </div>
+                <div class="rain-os-usage-bar">
+                    <div class="rain-os-usage-fill" style="width: 47%;"></div>
+                </div>
+                <span class="rain-os-usage-period">Monthly limit resets in 8 days</span>
+            </div>
+
+            <!-- Analysis Tab Content -->
+            <div class="rain-os-pro-tab-content active" id="tab-analysis">
             <div class="rain-os-sidebar-section rain-os-score-section">
                 <div class="rain-os-donut-row">
                     <div class="rain-os-main-donut">
@@ -462,6 +496,230 @@ function get_score_class_analyzer($score) {
                     <p class="rain-os-analysis-tip">2 of 4 images missing alt text. Add descriptive alt attributes for better accessibility and AI understanding.</p>
                 </div>
 
+            </div>
+
+            <!-- Score Breakdown Section -->
+            <div class="rain-os-sidebar-section rain-os-score-breakdown">
+                <h4 class="rain-os-sidebar-title">
+                    Score Breakdown
+                    <span class="rain-os-pro-badge">Pro</span>
+                </h4>
+                <div class="rain-os-subscores-grid">
+                    <div class="rain-os-subscore-item" data-subscore="semantic-clarity">
+                        <span class="rain-os-subscore-name">Semantic Clarity</span>
+                        <span class="rain-os-subscore-value good">92</span>
+                    </div>
+                    <div class="rain-os-subscore-item" data-subscore="logical-structure">
+                        <span class="rain-os-subscore-name">Logical Structure</span>
+                        <span class="rain-os-subscore-value good">85</span>
+                    </div>
+                    <div class="rain-os-subscore-item" data-subscore="readability">
+                        <span class="rain-os-subscore-name">Readability</span>
+                        <span class="rain-os-subscore-value good">87</span>
+                    </div>
+                    <div class="rain-os-subscore-item" data-subscore="entity-recognition">
+                        <span class="rain-os-subscore-name">Entity Recognition</span>
+                        <span class="rain-os-subscore-value ok">75</span>
+                    </div>
+                    <div class="rain-os-subscore-item" data-subscore="citation-readiness">
+                        <span class="rain-os-subscore-name">Citation Readiness</span>
+                        <span class="rain-os-subscore-value ok">77</span>
+                    </div>
+                    <div class="rain-os-subscore-item" data-subscore="aeo-alignment">
+                        <span class="rain-os-subscore-name">AEO Alignment</span>
+                        <span class="rain-os-subscore-value good">86</span>
+                    </div>
+                </div>
+                <p class="rain-os-subscore-hint">Click any score for detailed breakdown</p>
+            </div>
+
+            <!-- Authorship/Provenance Card -->
+            <div class="rain-os-sidebar-section rain-os-provenance-card">
+                <h4 class="rain-os-sidebar-title">
+                    Content Provenance
+                    <span class="rain-os-pro-badge">Pro</span>
+                </h4>
+                <div class="rain-os-provenance-content">
+                    <div class="rain-os-provenance-row">
+                        <span class="rain-os-provenance-label">Hash</span>
+                        <div class="rain-os-provenance-value-wrap">
+                            <code class="rain-os-provenance-hash">a7f3e2d1...</code>
+                            <button class="rain-os-copy-btn" title="Copy hash">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="rain-os-provenance-row">
+                        <span class="rain-os-provenance-label">Timestamp</span>
+                        <span class="rain-os-provenance-value">Dec 24, 2024 12:30 PM</span>
+                    </div>
+                    <div class="rain-os-provenance-row">
+                        <span class="rain-os-provenance-label">Status</span>
+                        <span class="rain-os-provenance-status verified">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                                <path d="M20 6L9 17l-5-5"/>
+                            </svg>
+                            Verified
+                        </span>
+                    </div>
+                    <div class="rain-os-provenance-toggle">
+                        <label class="rain-os-toggle-label">
+                            <input type="checkbox" class="rain-os-toggle-input" checked>
+                            <span class="rain-os-toggle-slider"></span>
+                            <span class="rain-os-toggle-text">Save to post meta</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            </div><!-- End Analysis Tab -->
+
+            <!-- Quick Tools Tab Content -->
+            <div class="rain-os-pro-tab-content" id="tab-quick-tools">
+                <div class="rain-os-sidebar-section rain-os-quick-tools">
+                    <h4 class="rain-os-sidebar-title">
+                        Quick Tools
+                        <span class="rain-os-pro-badge">Pro</span>
+                    </h4>
+                    
+                    <div class="rain-os-tool-card">
+                        <div class="rain-os-tool-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <path d="M12 20h9"/>
+                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                            </svg>
+                            <span>Suggest Titles</span>
+                        </div>
+                        <p class="rain-os-tool-desc">Generate AI-powered title suggestions optimized for search engines.</p>
+                        <button class="rain-os-btn rain-os-btn-tool">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                            </svg>
+                            Generate Titles
+                        </button>
+                        <div class="rain-os-tool-result">
+                            <div class="rain-os-suggestion-item">
+                                <span class="rain-os-suggestion-text">10 Microservices Architecture Best Practices for 2024</span>
+                                <div class="rain-os-suggestion-actions">
+                                    <button class="rain-os-action-btn" title="Apply title">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                                            <path d="M20 6L9 17l-5-5"/>
+                                        </svg>
+                                    </button>
+                                    <button class="rain-os-action-btn" title="Copy">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="rain-os-suggestion-item">
+                                <span class="rain-os-suggestion-text">Complete Guide to Building Scalable Microservices</span>
+                                <div class="rain-os-suggestion-actions">
+                                    <button class="rain-os-action-btn" title="Apply title">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                                            <path d="M20 6L9 17l-5-5"/>
+                                        </svg>
+                                    </button>
+                                    <button class="rain-os-action-btn" title="Copy">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rain-os-tool-card">
+                        <div class="rain-os-tool-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                            </svg>
+                            <span>Generate Meta Description</span>
+                        </div>
+                        <p class="rain-os-tool-desc">Create an SEO-optimized meta description for your content.</p>
+                        <button class="rain-os-btn rain-os-btn-tool">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                            </svg>
+                            Generate Description
+                        </button>
+                    </div>
+
+                    <div class="rain-os-tool-card">
+                        <div class="rain-os-tool-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <line x1="21" y1="10" x2="3" y2="10"/>
+                                <line x1="21" y1="6" x2="3" y2="6"/>
+                                <line x1="21" y1="14" x2="3" y2="14"/>
+                                <line x1="21" y1="18" x2="3" y2="18"/>
+                            </svg>
+                            <span>Summarize Content</span>
+                        </div>
+                        <p class="rain-os-tool-desc">Get a concise summary of your content for quick reference.</p>
+                        <button class="rain-os-btn rain-os-btn-tool">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                            </svg>
+                            Summarize
+                        </button>
+                    </div>
+
+                    <div class="rain-os-tool-card">
+                        <div class="rain-os-tool-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                            <span>Rewrite Sentence</span>
+                        </div>
+                        <p class="rain-os-tool-desc">Select a sentence to rewrite for improved clarity and flow.</p>
+                        <textarea class="rain-os-rewrite-input" placeholder="Paste or select a sentence to rewrite..."></textarea>
+                        <button class="rain-os-btn rain-os-btn-tool">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                            </svg>
+                            Rewrite
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Drilldown Drawer (initially hidden) -->
+            <div class="rain-os-drilldown-drawer" id="drilldown-drawer">
+                <div class="rain-os-drilldown-header">
+                    <h5 class="rain-os-drilldown-title">Semantic Clarity</h5>
+                    <button class="rain-os-drilldown-close">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="rain-os-drilldown-score">
+                    <span class="rain-os-drilldown-value good">92</span>
+                    <span class="rain-os-drilldown-label">out of 100</span>
+                </div>
+                <div class="rain-os-drilldown-content">
+                    <h6>Why This Matters</h6>
+                    <p>Semantic clarity measures how precisely and unambiguously your content communicates its message. High semantic clarity helps AI systems accurately understand and represent your content in search results.</p>
+                    <h6>Recommendations</h6>
+                    <ul>
+                        <li>Use specific, concrete language instead of vague terms</li>
+                        <li>Define technical terms when first introduced</li>
+                        <li>Ensure pronouns have clear antecedents</li>
+                        <li>Avoid ambiguous phrases that could be misinterpreted</li>
+                    </ul>
+                </div>
             </div>
 
         </div>
