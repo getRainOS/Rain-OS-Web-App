@@ -80,3 +80,9 @@ A standalone preview system exists in `preview/` directory for demonstration pur
 - All AJAX handlers verify nonces with check_ajax_referer()
 - Provenance saving requires edit_posts + edit_post capability hierarchy
 - Post ID sanitization with absint()
+
+### Developer Documentation (December 2024)
+- **TypeScript Reference**: `services/clientSideAnalysis.ts` - Typed implementation for client-side analysis logic
+- **Client-Side Guide**: `includes/client-side-logic-guide.md` - Comprehensive documentation of client-side architecture
+- **API Reference**: `docs/API-Reference.md` - External API endpoint documentation
+- **Pro Features Guide**: `docs/Pro-Features.md` - Pro feature implementation details
