@@ -1,6 +1,6 @@
 /**
  * Rain OS SEO Analyzer - Admin JavaScript
- * jQuery-based interactions and AJAX integration
+ * jQuery-based interactions and AJAX integration with Pro features
  */
 
 (function($) {
@@ -8,9 +8,13 @@
 
     window.RainOS = window.RainOS || {};
 
+    RainOS.currentAnalysisData = null;
+    RainOS.subScoreDescriptions = {};
+
     RainOS.init = function() {
         this.bindEvents();
         this.initTabs();
+        this.initMetaboxTabs();
         this.loadSavedResults();
     };
 
@@ -23,6 +27,16 @@
         $(document).on('click', '#rain-os-clear-results', this.clearResults.bind(this));
         $(document).on('click', '.rain-os-toggle-password', this.togglePassword.bind(this));
         $(document).on('click', '.rain-os-alert-close', this.closeAlert.bind(this));
+        
+        $(document).on('click', '.rain-os-quick-tool-btn', this.handleQuickTool.bind(this));
+        $(document).on('click', '#rain-os-rewrite-btn', this.handleRewrite.bind(this));
+        $(document).on('click', '#rain-os-close-results', this.closeToolResults.bind(this));
+        $(document).on('click', '.rain-os-copy-btn', this.copyToClipboard.bind(this));
+        $(document).on('click', '.rain-os-apply-title-btn', this.applyTitle.bind(this));
+        $(document).on('click', '#rain-os-copy-provenance', this.copyProvenance.bind(this));
+        $(document).on('change', '#rain-os-save-provenance-toggle', this.toggleSaveProvenance.bind(this));
+        $(document).on('click', '.rain-os-subscore-item', this.openSubScoreDrawer.bind(this));
+        $(document).on('click', '#rain-os-close-drawer, .rain-os-drawer-overlay', this.closeSubScoreDrawer.bind(this));
     };
 
     RainOS.initTabs = function() {
@@ -35,6 +49,19 @@
             
             $('.rain-os-tab-panel').removeClass('active');
             $('#tab-' + tabId).addClass('active');
+        });
+    };
+
+    RainOS.initMetaboxTabs = function() {
+        $(document).on('click', '.rain-os-metabox-tab', function() {
+            var $btn = $(this);
+            var tabId = $btn.data('tab');
+            
+            $('.rain-os-metabox-tab').removeClass('active');
+            $btn.addClass('active');
+            
+            $('.rain-os-metabox-panel').removeClass('active');
+            $('#rain-os-panel-' + tabId).addClass('active');
         });
     };
 
@@ -101,17 +128,32 @@
                 content: content,
                 industry: industry
             },
-            success: function(response) {
+            success: function(response, textStatus, xhr) {
                 if (response.success) {
+                    RainOS.currentAnalysisData = response.data;
+                    if (response.data.subScoreDescriptions) {
+                        RainOS.subScoreDescriptions = response.data.subScoreDescriptions;
+                    }
                     RainOS.displayResults(response.data);
                     RainOS.saveResults(response.data);
+                    RainOS.updateUsageFromHeader(xhr);
                     RainOS.updateUsageDisplay();
                 } else {
                     RainOS.showAlert('error', 'Analysis Failed', response.data.message || rainOS.strings.error);
                 }
             },
-            error: function() {
-                RainOS.showAlert('error', 'Connection Error', rainOS.strings.error);
+            error: function(xhr) {
+                var message = rainOS.strings.error;
+                if (xhr.status === 401) {
+                    message = 'Invalid API key. Please check your settings.';
+                } else if (xhr.status === 402) {
+                    message = 'Subscription inactive. Please renew your subscription.';
+                } else if (xhr.status === 429) {
+                    message = 'Rate limit exceeded. Please try again later.';
+                } else if (xhr.status >= 500) {
+                    message = 'Server error. Please try again later.';
+                }
+                RainOS.showAlert('error', 'Connection Error', message);
             },
             complete: function() {
                 $btn.prop('disabled', false).removeClass('rain-os-loading');
@@ -120,6 +162,23 @@
                 $spinnerIcon.hide();
             }
         });
+    };
+
+    RainOS.updateUsageFromHeader = function(xhr) {
+        try {
+            var usageInfoRaw = xhr.getResponseHeader('X-Usage-Info');
+            if (usageInfoRaw) {
+                var usageInfo = JSON.parse(usageInfoRaw);
+                if (usageInfo && typeof usageInfo.used !== 'undefined' && typeof usageInfo.limit !== 'undefined') {
+                    RainOS.updateUsageDisplay({
+                        count: usageInfo.used,
+                        limit: usageInfo.limit
+                    });
+                }
+            }
+        } catch (e) {
+            console.log('Could not parse X-Usage-Info header');
+        }
     };
 
     RainOS.displayResults = function(data) {
@@ -132,11 +191,29 @@
         var overallScore = data.overallScore || 0;
         $('#rain-os-overall-score').text(overallScore);
         
-        var dashOffset = 502.65 - (502.65 * overallScore / 100);
-        $('#rain-os-overall-gauge').css('stroke-dashoffset', dashOffset);
+        var circumference = 2 * Math.PI * 35;
+        var dashOffset = circumference - (circumference * overallScore / 100);
+        $('#rain-os-overall-gauge').css({
+            'stroke-dasharray': circumference,
+            'stroke-dashoffset': dashOffset
+        });
         
         var gaugeColor = this.getScoreColor(overallScore);
         $('#rain-os-overall-gauge').css('stroke', gaugeColor);
+
+        var scoreLabel = overallScore >= 80 ? 'Excellent' : overallScore >= 60 ? 'Good' : overallScore >= 40 ? 'Needs Work' : 'Poor';
+        $('#rain-os-score-label').text(scoreLabel);
+        $('#rain-os-score-message').text(this.getScoreMessage(overallScore));
+        
+        var $tag = $('#rain-os-score-tag');
+        $tag.removeClass('success warning info');
+        if (overallScore >= 80) {
+            $tag.addClass('success').text('AEO Optimized');
+        } else if (overallScore >= 60) {
+            $tag.addClass('info').text('Partially Optimized');
+        } else {
+            $tag.addClass('warning').text('Needs Improvement');
+        }
         
         var pillarHtml = '';
         if (data.pillarScores) {
@@ -158,18 +235,33 @@
             });
         }
         $('#rain-os-pillar-scores').html(pillarHtml);
-        
-        var subScoresHtml = '';
+
         if (data.subScores && data.subScores.length) {
+            var subScoresHtml = '';
             data.subScores.forEach(function(item) {
-                subScoresHtml += '<div class="rain-os-sub-score-item">';
-                subScoresHtml += '<span>' + RainOS.escapeHtml(item.category) + '</span>';
-                subScoresHtml += '<span>' + item.score + '/100</span>';
+                var scoreClass = item.score >= 80 ? 'good' : item.score >= 60 ? 'ok' : 'needs-work';
+                subScoresHtml += '<div class="rain-os-subscore-item" data-category="' + RainOS.escapeHtml(item.category) + '" data-score="' + item.score + '">';
+                subScoresHtml += '<div class="rain-os-subscore-info">';
+                subScoresHtml += '<span class="rain-os-subscore-name">' + RainOS.escapeHtml(item.category) + '</span>';
+                subScoresHtml += '<span class="rain-os-subscore-value ' + scoreClass + '">' + item.score + '</span>';
+                subScoresHtml += '</div>';
+                subScoresHtml += '<div class="rain-os-subscore-bar"><div class="rain-os-subscore-fill ' + scoreClass + '" style="width: ' + item.score + '%"></div></div>';
                 subScoresHtml += '</div>';
             });
+            $('#rain-os-subscores-grid').html(subScoresHtml);
+            $('#rain-os-subscores-section').show();
+        } else {
+            $('#rain-os-subscores-section').hide();
         }
-        $('#rain-os-sub-scores .rain-os-sub-scores-list').html(subScoresHtml);
-        $('#rain-os-sub-scores').toggle(subScoresHtml.length > 0);
+
+        if (data.authorship) {
+            $('#rain-os-authorship-hash').text(data.authorship.hash || '-');
+            $('#rain-os-authorship-timestamp').text(data.authorship.timestamp || '-');
+            $('#rain-os-authorship-status').text(data.authorship.status || '-');
+            $('#rain-os-authorship-section').show();
+        } else {
+            $('#rain-os-authorship-section').hide();
+        }
         
         var recommendationsHtml = '';
         if (data.recommendations && data.recommendations.length) {
@@ -190,6 +282,13 @@
         $('#rain-os-keywords').toggle(keywordsHtml.length > 0);
     };
 
+    RainOS.getScoreMessage = function(score) {
+        if (score >= 80) return 'Your content is well-optimized for AI readability and answer engines.';
+        if (score >= 60) return 'Good foundation. A few improvements could boost your AI visibility.';
+        if (score >= 40) return 'Several areas need attention to improve AI comprehension.';
+        return 'Significant improvements needed for AI-friendly content.';
+    };
+
     RainOS.getScoreColor = function(score) {
         if (score >= 80) return '#10b981';
         if (score >= 60) return '#6366f1';
@@ -201,6 +300,344 @@
         var div = document.createElement('div');
         div.appendChild(document.createTextNode(text));
         return div.innerHTML;
+    };
+
+    RainOS.handleQuickTool = function(e) {
+        e.preventDefault();
+        
+        var $btn = $(e.currentTarget);
+        var action = $btn.data('action');
+        var content = this.getEditorContent();
+        
+        if (!content || content.length < 50) {
+            this.showAlert('warning', 'Content Required', rainOS.strings.noContent);
+            return;
+        }
+        
+        $btn.addClass('rain-os-loading');
+        var $allBtns = $('.rain-os-quick-tool-btn');
+        $allBtns.prop('disabled', true);
+        
+        var ajaxAction = '';
+        var ajaxData = {
+            action: '',
+            nonce: rainOS.nonce,
+            content: content
+        };
+        
+        switch (action) {
+            case 'suggest_titles':
+                ajaxData.action = 'rain_os_suggest_titles';
+                break;
+            case 'generate_description':
+                ajaxData.action = 'rain_os_generate_description';
+                break;
+            case 'summarize_content':
+                ajaxData.action = 'rain_os_summarize_content';
+                break;
+        }
+        
+        $.ajax({
+            url: rainOS.ajaxUrl,
+            type: 'POST',
+            data: ajaxData,
+            success: function(response, textStatus, xhr) {
+                if (response.success) {
+                    RainOS.displayToolResults(action, response.data);
+                    RainOS.updateUsageFromHeader(xhr);
+                } else {
+                    RainOS.showAlert('error', 'Tool Failed', response.data.message || rainOS.strings.error);
+                }
+            },
+            error: function(xhr) {
+                var message = rainOS.strings.error;
+                if (xhr.status === 401) message = 'Invalid API key.';
+                else if (xhr.status === 402) message = 'Subscription inactive.';
+                else if (xhr.status === 429) message = 'Rate limit exceeded.';
+                RainOS.showAlert('error', 'Error', message);
+            },
+            complete: function() {
+                $btn.removeClass('rain-os-loading');
+                $allBtns.prop('disabled', false);
+            }
+        });
+    };
+
+    RainOS.handleRewrite = function(e) {
+        e.preventDefault();
+        
+        var sentence = $('#rain-os-rewrite-input').val().trim();
+        
+        if (!sentence || sentence.length < 10) {
+            this.showAlert('warning', 'Input Required', 'Please enter a sentence to rewrite.');
+            return;
+        }
+        
+        var $btn = $('#rain-os-rewrite-btn');
+        var $icon = $btn.find('.rain-os-rewrite-icon');
+        var $spinner = $btn.find('.rain-os-rewrite-spinner');
+        
+        $btn.prop('disabled', true);
+        $icon.hide();
+        $spinner.show();
+        
+        $.ajax({
+            url: rainOS.ajaxUrl,
+            type: 'POST',
+            data: {
+                action: 'rain_os_rewrite_sentence',
+                nonce: rainOS.nonce,
+                sentence: sentence
+            },
+            success: function(response, textStatus, xhr) {
+                if (response.success) {
+                    RainOS.displayToolResults('rewrite_sentence', response.data);
+                    RainOS.updateUsageFromHeader(xhr);
+                } else {
+                    RainOS.showAlert('error', 'Rewrite Failed', response.data.message || rainOS.strings.error);
+                }
+            },
+            error: function(xhr) {
+                var message = rainOS.strings.error;
+                if (xhr.status === 401) message = 'Invalid API key.';
+                else if (xhr.status === 402) message = 'Subscription inactive.';
+                else if (xhr.status === 429) message = 'Rate limit exceeded.';
+                RainOS.showAlert('error', 'Error', message);
+            },
+            complete: function() {
+                $btn.prop('disabled', false);
+                $icon.show();
+                $spinner.hide();
+            }
+        });
+    };
+
+    RainOS.displayToolResults = function(action, data) {
+        var $container = $('#rain-os-tool-results');
+        var $title = $('#rain-os-tool-results-title');
+        var $content = $('#rain-os-tool-results-content');
+        
+        var html = '';
+        
+        switch (action) {
+            case 'suggest_titles':
+                $title.text('Title Suggestions');
+                if (data.titles && data.titles.length) {
+                    html = '<div class="rain-os-titles-list">';
+                    data.titles.forEach(function(title, index) {
+                        html += '<div class="rain-os-title-item">';
+                        html += '<span class="rain-os-title-text">' + RainOS.escapeHtml(title) + '</span>';
+                        html += '<div class="rain-os-title-actions">';
+                        html += '<button type="button" class="rain-os-btn rain-os-btn-xs rain-os-copy-btn" data-text="' + RainOS.escapeHtml(title) + '" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>';
+                        html += '<button type="button" class="rain-os-btn rain-os-btn-xs rain-os-btn-primary rain-os-apply-title-btn" data-title="' + RainOS.escapeHtml(title) + '" title="Use as Title">Apply</button>';
+                        html += '</div>';
+                        html += '</div>';
+                    });
+                    html += '</div>';
+                } else {
+                    html = '<p class="rain-os-no-results">No suggestions available.</p>';
+                }
+                break;
+                
+            case 'generate_description':
+                $title.text('Meta Description');
+                if (data.description) {
+                    html = '<div class="rain-os-description-result">';
+                    html += '<p class="rain-os-description-text">' + RainOS.escapeHtml(data.description) + '</p>';
+                    html += '<div class="rain-os-description-meta"><span class="rain-os-char-count">' + data.description.length + ' characters</span></div>';
+                    html += '<div class="rain-os-description-actions">';
+                    html += '<button type="button" class="rain-os-btn rain-os-btn-sm rain-os-btn-secondary rain-os-copy-btn" data-text="' + RainOS.escapeHtml(data.description) + '"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button>';
+                    html += '</div>';
+                    html += '</div>';
+                } else {
+                    html = '<p class="rain-os-no-results">No description generated.</p>';
+                }
+                break;
+                
+            case 'summarize_content':
+                $title.text('Content Summary');
+                if (data.summary) {
+                    html = '<div class="rain-os-summary-result">';
+                    html += '<p class="rain-os-summary-text">' + RainOS.escapeHtml(data.summary) + '</p>';
+                    html += '<div class="rain-os-summary-actions">';
+                    html += '<button type="button" class="rain-os-btn rain-os-btn-sm rain-os-btn-secondary rain-os-copy-btn" data-text="' + RainOS.escapeHtml(data.summary) + '"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button>';
+                    html += '</div>';
+                    html += '</div>';
+                } else {
+                    html = '<p class="rain-os-no-results">No summary generated.</p>';
+                }
+                break;
+                
+            case 'rewrite_sentence':
+                $title.text('Rewritten Sentence');
+                if (data.rewritten) {
+                    html = '<div class="rain-os-rewrite-result">';
+                    html += '<div class="rain-os-rewrite-comparison">';
+                    html += '<div class="rain-os-rewrite-original"><span class="rain-os-label">Original:</span><p>' + RainOS.escapeHtml($('#rain-os-rewrite-input').val()) + '</p></div>';
+                    html += '<div class="rain-os-rewrite-new"><span class="rain-os-label">Rewritten:</span><p>' + RainOS.escapeHtml(data.rewritten) + '</p></div>';
+                    html += '</div>';
+                    html += '<div class="rain-os-rewrite-actions">';
+                    html += '<button type="button" class="rain-os-btn rain-os-btn-sm rain-os-btn-secondary rain-os-copy-btn" data-text="' + RainOS.escapeHtml(data.rewritten) + '"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button>';
+                    html += '</div>';
+                    html += '</div>';
+                } else {
+                    html = '<p class="rain-os-no-results">No rewrite generated.</p>';
+                }
+                break;
+        }
+        
+        $content.html(html);
+        $container.slideDown(200);
+    };
+
+    RainOS.closeToolResults = function(e) {
+        e.preventDefault();
+        $('#rain-os-tool-results').slideUp(200);
+    };
+
+    RainOS.copyToClipboard = function(e) {
+        e.preventDefault();
+        var $btn = $(e.currentTarget);
+        var text = $btn.data('text');
+        
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function() {
+                RainOS.showCopyFeedback($btn);
+            }).catch(function() {
+                RainOS.fallbackCopy(text);
+                RainOS.showCopyFeedback($btn);
+            });
+        } else {
+            RainOS.fallbackCopy(text);
+            RainOS.showCopyFeedback($btn);
+        }
+    };
+
+    RainOS.fallbackCopy = function(text) {
+        var $temp = $('<textarea>');
+        $('body').append($temp);
+        $temp.val(text).select();
+        document.execCommand('copy');
+        $temp.remove();
+    };
+
+    RainOS.showCopyFeedback = function($btn) {
+        var originalHtml = $btn.html();
+        $btn.html('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>');
+        setTimeout(function() {
+            $btn.html(originalHtml);
+        }, 1500);
+    };
+
+    RainOS.applyTitle = function(e) {
+        e.preventDefault();
+        var title = $(e.currentTarget).data('title');
+        
+        if (typeof wp !== 'undefined' && wp.data && wp.data.dispatch('core/editor')) {
+            wp.data.dispatch('core/editor').editPost({ title: title });
+            this.showAlert('success', 'Title Applied', 'The title has been set for your post.');
+        } else {
+            var $titleInput = $('#title');
+            if ($titleInput.length) {
+                $titleInput.val(title).trigger('change');
+                this.showAlert('success', 'Title Applied', 'The title has been set for your post.');
+            } else {
+                this.copyToClipboard({ currentTarget: { dataset: { text: title } }, preventDefault: function() {} });
+                this.showAlert('info', 'Title Copied', 'Title copied to clipboard. Paste it in the title field.');
+            }
+        }
+    };
+
+    RainOS.copyProvenance = function(e) {
+        e.preventDefault();
+        
+        var hash = $('#rain-os-authorship-hash').text();
+        var timestamp = $('#rain-os-authorship-timestamp').text();
+        var status = $('#rain-os-authorship-status').text();
+        
+        var provenanceString = 'Hash: ' + hash + ' | Timestamp: ' + timestamp + ' | Status: ' + status;
+        
+        var $btn = $(e.currentTarget);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(provenanceString).then(function() {
+                RainOS.showCopyFeedback($btn);
+            });
+        } else {
+            RainOS.fallbackCopy(provenanceString);
+            RainOS.showCopyFeedback($btn);
+        }
+    };
+
+    RainOS.toggleSaveProvenance = function(e) {
+        var enabled = $(e.target).is(':checked');
+        
+        if (enabled && RainOS.currentAnalysisData && RainOS.currentAnalysisData.authorship) {
+            var postId = RainOS.getPostId();
+            if (postId) {
+                $.ajax({
+                    url: rainOS.ajaxUrl,
+                    type: 'POST',
+                    data: {
+                        action: 'rain_os_save_provenance',
+                        nonce: rainOS.nonce,
+                        post_id: postId,
+                        hash: RainOS.currentAnalysisData.authorship.hash || '',
+                        timestamp: RainOS.currentAnalysisData.authorship.timestamp || '',
+                        status: RainOS.currentAnalysisData.authorship.status || ''
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            RainOS.showAlert('success', 'Provenance Saved', 'Authorship data saved to post meta.');
+                        }
+                    }
+                });
+            }
+        }
+    };
+
+    RainOS.openSubScoreDrawer = function(e) {
+        var $item = $(e.currentTarget);
+        var category = $item.data('category');
+        var score = $item.data('score');
+        
+        $('#rain-os-drawer-title').text(category);
+        $('#rain-os-drawer-score .rain-os-drawer-score-value').text(score);
+        
+        var description = RainOS.subScoreDescriptions[category] || 'This metric measures an important aspect of your content\'s optimization for AI and answer engines.';
+        $('#rain-os-drawer-why-text').text(description);
+        
+        var recommendations = [];
+        if (RainOS.currentAnalysisData && RainOS.currentAnalysisData.recommendations) {
+            var categoryKeywords = category.toLowerCase().split(' ');
+            RainOS.currentAnalysisData.recommendations.forEach(function(rec) {
+                var recLower = rec.toLowerCase();
+                var isRelevant = categoryKeywords.some(function(keyword) {
+                    return keyword.length > 3 && recLower.indexOf(keyword) > -1;
+                });
+                if (isRelevant) {
+                    recommendations.push(rec);
+                }
+            });
+            
+            if (recommendations.length === 0) {
+                recommendations = RainOS.currentAnalysisData.recommendations.slice(0, 3);
+            }
+        }
+        
+        var recHtml = '';
+        recommendations.forEach(function(rec) {
+            recHtml += '<li>' + RainOS.escapeHtml(rec) + '</li>';
+        });
+        $('#rain-os-drawer-recommendations-list').html(recHtml || '<li>No specific recommendations for this category.</li>');
+        
+        $('#rain-os-subscore-drawer').fadeIn(200);
+        $('body').addClass('rain-os-drawer-open');
+    };
+
+    RainOS.closeSubScoreDrawer = function(e) {
+        e.preventDefault();
+        $('#rain-os-subscore-drawer').fadeOut(200);
+        $('body').removeClass('rain-os-drawer-open');
     };
 
     RainOS.clearResults = function(e) {
@@ -228,6 +665,10 @@
                 var saved = localStorage.getItem('rain_os_results_' + postId);
                 if (saved) {
                     var data = JSON.parse(saved);
+                    RainOS.currentAnalysisData = data;
+                    if (data.subScoreDescriptions) {
+                        RainOS.subScoreDescriptions = data.subScoreDescriptions;
+                    }
                     this.displayResults(data);
                 }
             }
@@ -408,7 +849,7 @@
             $gauge.find('.rain-os-gauge-fill').css('stroke-dashoffset', dashOffset);
         }
         
-        $('.rain-os-usage-bar-fill').css('width', percentage + '%');
+        $('.rain-os-usage-bar-fill, .rain-os-usage-fill').css('width', percentage + '%');
         $('.rain-os-usage-text').text(count + ' / ' + limit + ' analyses');
     };
 
@@ -459,7 +900,7 @@
             '<strong class="rain-os-alert-title">' + RainOS.escapeHtml(title) + '</strong>' +
             '<p class="rain-os-alert-message">' + RainOS.escapeHtml(message) + '</p>' +
             '</div>' +
-            '<button type="button" class="rain-os-alert-close">' +
+            '<button type="button" class="rain-os-alert-close" aria-label="Close">' +
             '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
             '</button>'
         );

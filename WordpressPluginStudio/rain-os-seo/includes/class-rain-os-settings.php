@@ -28,6 +28,7 @@ class Rain_OS_Settings {
         add_action('wp_ajax_rain_os_generate_description', array($this, 'ajax_generate_description'));
         add_action('wp_ajax_rain_os_summarize_content', array($this, 'ajax_summarize_content'));
         add_action('wp_ajax_rain_os_rewrite_sentence', array($this, 'ajax_rewrite_sentence'));
+        add_action('wp_ajax_rain_os_save_provenance', array($this, 'ajax_save_provenance'));
     }
     
     public static function get($option, $default = '') {
@@ -67,6 +68,20 @@ class Rain_OS_Settings {
         
         return $options;
     }
+
+    public static function get_subscore_descriptions() {
+        return array(
+            'Semantic Clarity' => 'Measures how clearly your content communicates its meaning to AI systems. High semantic clarity helps search engines and AI assistants accurately understand and represent your content.',
+            'Logical Structure' => 'Evaluates the organization and flow of your content. Well-structured content with clear headings and logical progression is easier for AI to parse and summarize.',
+            'Descriptive Metadata' => 'Assesses the quality of meta descriptions, titles, and structured data. Rich metadata helps AI systems categorize and surface your content appropriately.',
+            'Entity Recognition' => 'Measures how well your content identifies and connects to known entities (people, places, organizations). Strong entity signals improve AI comprehension.',
+            'Citation Readiness' => 'Evaluates whether your content contains quotable facts, statistics, and authoritative statements that AI can cite as sources.',
+            'AEO Alignment' => 'Overall alignment with Answer Engine Optimization best practices for appearing in AI-generated responses and featured snippets.',
+            'Readability' => 'Measures how easy your content is to read and understand. Clear, accessible writing improves both human and AI comprehension.',
+            'Schema Extraction' => 'Assesses the presence and quality of structured data markup that helps AI systems understand content relationships.',
+            'QA-format Detection' => 'Evaluates whether your content contains question-answer patterns that AI assistants can easily extract and present.'
+        );
+    }
     
     public function ajax_save_settings() {
         check_ajax_referer('rain_os_nonce', 'nonce');
@@ -79,11 +94,13 @@ class Rain_OS_Settings {
         $api_key = isset($_POST['api_key']) ? sanitize_text_field(wp_unslash($_POST['api_key'])) : '';
         $default_industry = isset($_POST['default_industry']) ? sanitize_text_field(wp_unslash($_POST['default_industry'])) : 'General / Other';
         $post_types = isset($_POST['post_types']) ? array_map('sanitize_text_field', wp_unslash($_POST['post_types'])) : array('post', 'page');
+        $save_provenance = isset($_POST['save_provenance']) ? (bool) $_POST['save_provenance'] : false;
         
         update_option('rain_os_api_endpoint', $api_endpoint);
         update_option('rain_os_api_key', $api_key);
         update_option('rain_os_default_industry', $default_industry);
         update_option('rain_os_post_types', $post_types);
+        update_option('rain_os_save_provenance', $save_provenance);
         
         wp_send_json_success(array('message' => __('Settings saved successfully.', 'rain-os-seo')));
     }
@@ -158,6 +175,8 @@ class Rain_OS_Settings {
         if (is_wp_error($result)) {
             wp_send_json_error(array('message' => $result->get_error_message()));
         }
+
+        $result['subScoreDescriptions'] = self::get_subscore_descriptions();
         
         wp_send_json_success($result);
     }
@@ -252,6 +271,34 @@ class Rain_OS_Settings {
         }
         
         wp_send_json_success($result);
+    }
+
+    public function ajax_save_provenance() {
+        check_ajax_referer('rain_os_nonce', 'nonce');
+        
+        if (!current_user_can('edit_posts')) {
+            wp_send_json_error(array('message' => __('Permission denied.', 'rain-os-seo')));
+        }
+        
+        $post_id = isset($_POST['post_id']) ? absint($_POST['post_id']) : 0;
+        
+        if (!$post_id) {
+            wp_send_json_error(array('message' => __('Invalid post ID.', 'rain-os-seo')));
+        }
+        
+        if (!current_user_can('edit_post', $post_id)) {
+            wp_send_json_error(array('message' => __('Permission denied. You cannot edit this post.', 'rain-os-seo')));
+        }
+        
+        $hash = isset($_POST['hash']) ? sanitize_text_field(wp_unslash($_POST['hash'])) : '';
+        $timestamp = isset($_POST['timestamp']) ? sanitize_text_field(wp_unslash($_POST['timestamp'])) : '';
+        $status = isset($_POST['status']) ? sanitize_text_field(wp_unslash($_POST['status'])) : '';
+        
+        update_post_meta($post_id, '_rainos_authorship_hash', $hash);
+        update_post_meta($post_id, '_rainos_authorship_timestamp', $timestamp);
+        update_post_meta($post_id, '_rainos_authorship_status', $status);
+        
+        wp_send_json_success(array('message' => __('Provenance saved to post.', 'rain-os-seo')));
     }
 }
 
