@@ -119,8 +119,10 @@ Location: `WordpressPluginStudio/dashboard-preview/`
 - PHP Plugin Preview: `php -S 0.0.0.0:8000` on port 8000
 
 ### Dashboard UX Improvements (December 2024)
-- **Time Period Indicators**: All charts and KPI cards display clear time context (e.g., "Last 12 Weeks", "All Time", "This Billing Cycle")
-- **KPI Card Context**: Total Analyses (All Time), Average Score (30 Days), Content Health (Last 7 Days), API Usage (This Billing Cycle)
+- **Time Period Dropdown**: Global dropdown selector in dashboard header with options: Last 7 Days, Last 30 Days (default), Last 60 Days
+- **Dynamic Data Filtering**: All charts and KPI cards filter data based on selected time period
+- **EmptyState Component**: Displays friendly message when no data available for selected time range
+- **KPI Card Context**: Total Analyses, Average Score, Content Health values update dynamically based on period selection
 - **ChartCard Component**: Accepts optional `period` prop for displaying time badges in chart headers
 - **Built-in Optimization Tools**: Six non-API tools in Getting Started: Readability Calculator, Sentence Length Analyzer, Keyword Density Checker, Heading Structure Validator, Question Detection, Entity Highlighter
 - **AI Messaging**: Documentation emphasizes "AI-powered analysis" and "advanced AI technology" without referencing specific AI providers
