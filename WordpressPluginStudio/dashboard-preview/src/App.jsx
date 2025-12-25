@@ -102,20 +102,25 @@ function Sidebar({ currentPage, setCurrentPage }) {
             gap: '10px',
             padding: '10px 12px',
             borderRadius: '6px',
-            color: 'var(--accent)',
             backgroundColor: 'rgba(34, 211, 238, 0.1)',
             textDecoration: 'none',
             marginBottom: '2px',
-            fontSize: '14px',
-            fontWeight: 500,
             cursor: 'pointer',
           }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="18" height="18">
-            <path d="M17.5 11a5.5 5.5 0 0 0-10.4-2.5A4 4 0 1 0 4 16h13a3.5 3.5 0 0 0 .5-7z"/>
-            <path d="M7 19c0 1.5 1 3 2.5 3s2.5-1.5 2.5-3c0-2-2.5-4-2.5-4S7 17 7 19z" fill="currentColor" stroke="currentColor"/>
-          </svg>
-          rain OS
+          <span style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-0.5px' }}>
+            <span style={{ color: '#ffffff' }}>rai</span>
+            <span style={{ color: '#3b82f6' }}>n</span>
+          </span>
+          <span style={{
+            padding: '2px 8px',
+            borderRadius: '4px',
+            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+            color: '#3b82f6',
+            fontSize: '10px',
+            fontWeight: 600,
+            letterSpacing: '0.5px',
+          }}>BETA</span>
         </a>
         
         {navItems.map((item, index) => (
@@ -888,14 +893,18 @@ Additionally, establishing digital authority through proper citations, expert au
             justifyContent: 'space-between',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <span style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '15px' }}>Rain OS Analysis</span>
+              <span style={{ fontSize: '18px', fontWeight: 700, letterSpacing: '-0.3px' }}>
+                <span style={{ color: '#ffffff' }}>rai</span>
+                <span style={{ color: '#3b82f6' }}>n</span>
+              </span>
+              <span style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Analysis</span>
               <span style={{
                 padding: '2px 8px',
                 borderRadius: '4px',
-                backgroundColor: 'rgba(34, 211, 238, 0.15)',
-                color: 'var(--accent)',
-                fontSize: '11px',
-                fontWeight: 500,
+                backgroundColor: 'rgba(59, 130, 246, 0.15)',
+                color: '#3b82f6',
+                fontSize: '10px',
+                fontWeight: 600,
               }}>v2.4</span>
             </div>
           </div>
