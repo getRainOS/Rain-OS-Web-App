@@ -16,15 +16,15 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Preview rain OS SEO"
+args = "Dashboard Preview"
 
 [[workflows.workflow]]
-name = "Preview rain OS SEO"
+name = "Dashboard Preview"
 author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd WordpressPluginStudio/preview && php -S 0.0.0.0:5000"
+args = "cd WordpressPluginStudio/dashboard-preview && npm run dev"
 waitForPort = 5000
 
 [workflows.workflow.metadata]
@@ -33,3 +33,7 @@ outputType = "webview"
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 5001
+externalPort = 3000
