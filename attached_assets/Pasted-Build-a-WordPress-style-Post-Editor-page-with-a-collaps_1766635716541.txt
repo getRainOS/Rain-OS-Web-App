@@ -1,0 +1,110 @@
+Build a WordPress-style Post Editor page with a collapsible AEO Analysis sidebar. Use React, TailwindCSS, Recharts, and react-circular-progressbar.
+
+Design System:
+
+Dark navy background (#0f172a), cards (#0c1222), cyan accents (#22d3ee)
+Text: Primary (#f8fafc), Secondary (#94a3b8), Muted (#64748b)
+Status: Success (#10b981), Warning (#f59e0b), Error (#ef4444)
+LAYOUT STRUCTURE:
+Split view with flexbox, full viewport height minus header:
+
+Left: Content Editor (flex-1, min-width-0)
+Toolbar: 56px height with "Edit Post" label, Draft badge, Heatmap toggle, Save/Publish buttons, sidebar collapse button
+Editor area: contentEditable div with large title (text-4xl font-serif) and body content (prose-lg), max-width 768px, centered
+Right: Analysis Sidebar (400px fixed width, conditionally rendered)
+Slide-in animation from right when opened
+Dark background with cyan accent header showing "Rain OS Analysis" + version badge
+SIDEBAR TAB SYSTEM (4 tabs):
+Use a tabbed interface with these sections:
+
+Tab 1: Overview
+
+Main Score Card: Circular progress indicator (react-circular-progressbar) showing overall score (0-100), cyan color, "GOOD/OK/NEEDS WORK" badge below
+"Run Full Analysis" button with RefreshCw icon
+3 Pillar Cards stacked vertically:
+AI Readability (Microscope icon)
+Digital Authority (ShieldCheck icon)
+Conversion Readiness (Target icon)
+Each shows icon, label, and score value
+Critical Issues section: List of recommendation cards with left border color based on severity (red=critical, amber=warning)
+Tab 2: Metrics
+
+Horizontal Bar Chart (Recharts BarChart, layout="vertical", 200px height) showing 7-9 metrics:
+Semantic Clarity, Logical Structure, Entity Recognition, Citation Readiness, AEO Alignment, QA-format Detection, Schema Extraction
+Bar colors based on score: green (>75), amber (50-75), red (<50)
+Authorship Provenance Card:
+Gradient background (blue-900/30 to cyan-900/30)
+Shows verification hash (monospace font), timestamp, "VERIFIED" badge
+Engine version display
+Tab 3: Actions
+
+2x2 grid of action buttons:
+Suggest Titles (Wand2 icon)
+Meta Description (FileText icon)
+Summarize (Fingerprint icon)
+Rewrite Selection (RefreshCw icon)
+Usage Quota section:
+Progress bar showing queries used vs limit (e.g., "850 / 2,000")
+"Reset in X days" text
+Tab 4: History
+
+List of previous analysis entries, each showing:
+History icon in circle
+Score value + "AEO Score" label
+Timestamp
+Delta change (+X points) in green if positive
+ChevronRight arrow
+Hover effect: cyan background tint
+INTERACTIVE FEATURES:
+
+Sidebar Toggle: Button to show/hide the 400px sidebar with slide animation
+AI Heatmap Toggle: On/Off button that highlights specific phrases in the editor content with colored underlines (yellow for warnings, green for good sections)
+Tab Navigation: Active tab shows cyan background/border, inactive tabs are muted gray
+Hover States: All cards and buttons have hover:bg-cyan/10 and slight border glow effects
+MOCK DATA STRUCTURE:
+
+const mockAnalysis = {
+  overallScore: 82,
+  pillarScores: {
+    aiReadability: 78,
+    digitalAuthority: 85,
+    conversionReadiness: 83
+  },
+  subScores: [
+    { name: "Semantic Clarity", score: 90, status: "good" },
+    { name: "Logical Structure", score: 85, status: "good" },
+    { name: "Entity Recognition", score: 72, status: "warning" },
+    { name: "Citation Readiness", score: 65, status: "warning" },
+    { name: "AEO Alignment", score: 88, status: "good" },
+    { name: "QA-format Detection", score: 95, status: "good" },
+    { name: "Schema Extraction", score: 40, status: "critical" }
+  ],
+  recommendations: [
+    { text: "Add structured entity definitions in first paragraph.", type: "critical" },
+    { text: "Citation readiness is low; add external authority links.", type: "warning" },
+    { text: "Break down complex sentences in section 2.", type: "info" }
+  ],
+  authorship: {
+    hash: "a1b2c3d4e5f67890",
+    timestamp: "2025-12-22T10:00:00Z",
+    status: "Verified",
+    engineVersion: "2.4.0"
+  },
+  history: [
+    { id: 1, date: "2025-12-22 10:00", score: 82, delta: 5 },
+    { id: 2, date: "2025-12-21 14:30", score: 77, delta: 2 },
+    { id: 3, date: "2025-12-20 09:15", score: 75, delta: 0 }
+  ]
+};
+ANIMATIONS:
+
+Sidebar slide-in: animate-in slide-in-from-right-4 duration-300
+Page fade-in: opacity 0→1, translateY 10px→0 over 500ms
+Button/card hovers: transition-all duration-200
+DEPENDENCIES:
+
+react-circular-progressbar for main score display
+recharts for horizontal bar chart (BarChart, Bar, XAxis, YAxis, Cell, Tooltip)
+lucide-react for all icons
+Shadcn/ui components: Button, Badge, Progress, Tabs, TabsList, TabsTrigger, TabsContent, ScrollArea
+Make all tabs fully functional with state management. The editor should feel like a real WordPress post editor integrated with an AI analysis panel.

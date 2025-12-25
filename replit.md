@@ -86,3 +86,34 @@ A standalone preview system exists in `preview/` directory for demonstration pur
 - **Client-Side Guide**: `includes/client-side-logic-guide.md` - Comprehensive documentation of client-side architecture
 - **API Reference**: `docs/API-Reference.md` - External API endpoint documentation
 - **Pro Features Guide**: `docs/Pro-Features.md` - Pro feature implementation details
+
+### React Dashboard Preview (December 2024)
+Location: `WordpressPluginStudio/dashboard-preview/`
+
+**Navigation Pages:**
+- **Dashboard**: Full analytics view with KPI cards, performance history chart, pillar breakdown pie chart, category bar chart, and content signals scatter plot
+- **Content Analyzer**: WordPress-style Post Editor with collapsible AEO Analysis sidebar
+- **Settings**: API configuration and analysis preferences
+- **Documentation**: Guide listing with links
+- **Upgrade**: Pro pricing comparison page
+
+**Post Editor Features (Content Analyzer):**
+- Split view layout: Editor (left) + Analysis Sidebar (right, 400px collapsible)
+- Toolbar with: Edit Post label, Draft badge, AI Heatmap toggle, Save/Publish buttons, sidebar toggle
+- ContentEditable editor with serif title and prose body
+- 4-Tab Analysis Sidebar:
+  1. **Overview**: Circular progress score (react-circular-progressbar), 3 pillar cards, critical issues list
+  2. **Metrics**: Horizontal bar chart (Recharts) with color-coded scores, Authorship Provenance card
+  3. **Actions**: 2x2 grid of Quick Tools buttons, Usage Quota progress bar
+  4. **History**: Previous analysis entries with score deltas
+- AI Heatmap: Highlights keywords in content when enabled (semantic clarity, entity recognition, etc.)
+- Slide-in animation for sidebar
+
+**Dependencies:**
+- react-circular-progressbar: Main score display
+- recharts: All charts (LineChart, PieChart, BarChart, ScatterChart)
+- lucide-react: Icons
+
+**Workflows:**
+- Dashboard Preview: `npm run dev` on port 5000
+- PHP Plugin Preview: `php -S 0.0.0.0:8000` on port 8000

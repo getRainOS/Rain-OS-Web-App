@@ -8,8 +8,12 @@ import {
 import {
   LayoutDashboard, FileText, Settings, HelpCircle, Star,
   Search, Bell, Plus, TrendingUp, Target, Zap,
-  ChevronRight, BookOpen, Mail, Key, Sliders, Shield, ExternalLink
+  ChevronRight, BookOpen, Mail, Key, Sliders, Shield, ExternalLink,
+  Microscope, ShieldCheck, RefreshCw, Wand2, Fingerprint, History,
+  PanelRightClose, PanelRightOpen, Eye, EyeOff, Save, Send
 } from 'lucide-react'
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
+import 'react-circular-progressbar/dist/styles.css'
 import './index.css'
 
 const performanceData = [
@@ -308,81 +312,643 @@ function CustomTooltip({ active, payload, label }) {
   return null
 }
 
+const mockAnalysis = {
+  overallScore: 82,
+  pillarScores: {
+    aiReadability: 78,
+    digitalAuthority: 85,
+    conversionReadiness: 83
+  },
+  subScores: [
+    { name: "Semantic Clarity", score: 90, status: "good" },
+    { name: "Logical Structure", score: 85, status: "good" },
+    { name: "Entity Recognition", score: 72, status: "warning" },
+    { name: "Citation Readiness", score: 65, status: "warning" },
+    { name: "AEO Alignment", score: 88, status: "good" },
+    { name: "QA-format Detection", score: 95, status: "good" },
+    { name: "Schema Extraction", score: 40, status: "critical" }
+  ],
+  recommendations: [
+    { text: "Add structured entity definitions in first paragraph.", type: "critical" },
+    { text: "Citation readiness is low; add external authority links.", type: "warning" },
+    { text: "Break down complex sentences in section 2.", type: "info" }
+  ],
+  authorship: {
+    hash: "a1b2c3d4e5f67890",
+    timestamp: "2025-12-22T10:00:00Z",
+    status: "Verified",
+    engineVersion: "2.4.0"
+  },
+  history: [
+    { id: 1, date: "2025-12-22 10:00", score: 82, delta: 5 },
+    { id: 2, date: "2025-12-21 14:30", score: 77, delta: 2 },
+    { id: 3, date: "2025-12-20 09:15", score: 75, delta: 0 }
+  ]
+}
+
 function ContentAnalyzerPage({ setCurrentPage }) {
-  return (
-    <>
-      <header className="animate-in" style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '4px' }}>Content Analyzer</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Analyze your content for AEO and GEO optimization</p>
-      </header>
-      
-      <div className="animate-in" style={{
-        backgroundColor: 'var(--bg-secondary)',
-        border: '1px solid var(--border-color)',
-        borderRadius: '12px',
-        padding: '32px',
-        textAlign: 'center',
-        marginBottom: '24px',
-      }}>
-        <FileText size={48} color="var(--accent)" style={{ marginBottom: '16px' }} />
-        <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '8px' }}>Analyze Your Content</h2>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>Paste your content below or select a post to analyze</p>
-        
-        <textarea
-          placeholder="Paste your content here..."
-          style={{
-            width: '100%',
-            minHeight: '200px',
-            padding: '16px',
-            backgroundColor: 'var(--bg-tertiary)',
-            border: '1px solid var(--border-color)',
-            borderRadius: '8px',
-            color: 'var(--text-primary)',
-            fontSize: '14px',
-            resize: 'vertical',
-            marginBottom: '16px',
-          }}
-        />
-        
-        <button
-          onClick={() => setCurrentPage('dashboard')}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '12px 24px',
-            borderRadius: '8px',
-            backgroundColor: 'var(--accent)',
-            border: 'none',
-            color: '#000',
-            fontSize: '14px',
-            fontWeight: 600,
-            cursor: 'pointer',
-          }}
-        >
-          <Zap size={16} />
-          Analyze Content
-        </button>
-      </div>
-      
-      <ChartCard title="Recent Analyses">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {['Homepage Copy', 'Product Description', 'Blog Post Draft', 'Landing Page'].map((item, i) => (
-            <div key={i} style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '12px 16px',
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [activeTab, setActiveTab] = useState('overview')
+  const [heatmapEnabled, setHeatmapEnabled] = useState(false)
+  const [title, setTitle] = useState('How to Optimize Your Content for AI Search Engines')
+  const [content, setContent] = useState(`In the rapidly evolving landscape of digital marketing, understanding how AI-powered search engines process and rank content has become essential for content creators and marketers alike.
+
+This comprehensive guide explores the key strategies for optimizing your content to perform well in AI-driven search environments. We'll cover semantic clarity, entity recognition, and the importance of structured data.
+
+The first principle of AEO (Answer Engine Optimization) is ensuring your content directly answers user queries. AI systems are designed to extract concise, accurate answers from web content, so structuring your information clearly is paramount.
+
+Additionally, establishing digital authority through proper citations, expert authorship, and consistent branding signals helps AI systems trust and prioritize your content in search results.`)
+
+  const getScoreLabel = (score) => {
+    if (score >= 80) return { text: 'GOOD', color: '#10b981' }
+    if (score >= 60) return { text: 'OK', color: '#f59e0b' }
+    return { text: 'NEEDS WORK', color: '#ef4444' }
+  }
+
+  const getBarColor = (score) => {
+    if (score > 75) return '#10b981'
+    if (score >= 50) return '#f59e0b'
+    return '#ef4444'
+  }
+
+  const getBorderColor = (type) => {
+    if (type === 'critical') return '#ef4444'
+    if (type === 'warning') return '#f59e0b'
+    return '#22d3ee'
+  }
+
+  const scoreLabel = getScoreLabel(mockAnalysis.overallScore)
+
+  const tabs = [
+    { id: 'overview', label: 'Overview' },
+    { id: 'metrics', label: 'Metrics' },
+    { id: 'actions', label: 'Actions' },
+    { id: 'history', label: 'History' }
+  ]
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'overview':
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{
               backgroundColor: 'var(--bg-tertiary)',
-              borderRadius: '8px',
+              borderRadius: '12px',
+              padding: '24px',
+              textAlign: 'center',
             }}>
-              <span>{item}</span>
-              <span style={{ color: 'var(--accent)', fontWeight: 600 }}>{75 + i * 5}%</span>
+              <div style={{ width: '120px', height: '120px', margin: '0 auto 16px' }}>
+                <CircularProgressbar
+                  value={mockAnalysis.overallScore}
+                  text={`${mockAnalysis.overallScore}`}
+                  styles={buildStyles({
+                    textSize: '28px',
+                    pathColor: '#22d3ee',
+                    textColor: '#f8fafc',
+                    trailColor: 'rgba(255,255,255,0.1)',
+                  })}
+                />
+              </div>
+              <span style={{
+                display: 'inline-block',
+                padding: '4px 12px',
+                borderRadius: '20px',
+                backgroundColor: `${scoreLabel.color}20`,
+                color: scoreLabel.color,
+                fontSize: '12px',
+                fontWeight: 600,
+              }}>
+                {scoreLabel.text}
+              </span>
+              <button
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  width: '100%',
+                  marginTop: '16px',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  backgroundColor: 'var(--accent)',
+                  border: 'none',
+                  color: '#000',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                }}
+              >
+                <RefreshCw size={16} />
+                Run Full Analysis
+              </button>
             </div>
-          ))}
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {[
+                { icon: Microscope, label: 'AI Readability', score: mockAnalysis.pillarScores.aiReadability, color: '#22d3ee' },
+                { icon: ShieldCheck, label: 'Digital Authority', score: mockAnalysis.pillarScores.digitalAuthority, color: '#10b981' },
+                { icon: Target, label: 'Conversion Readiness', score: mockAnalysis.pillarScores.conversionReadiness, color: '#a855f7' },
+              ].map((pillar, i) => (
+                <div key={i} style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '16px',
+                  backgroundColor: 'var(--bg-tertiary)',
+                  borderRadius: '8px',
+                  border: '1px solid var(--border-color)',
+                  transition: 'all 0.2s ease',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = pillar.color }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border-color)' }}
+                >
+                  <div style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '10px',
+                    backgroundColor: `${pillar.color}20`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    <pillar.icon size={20} color={pillar.color} />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{pillar.label}</div>
+                  </div>
+                  <div style={{ fontSize: '20px', fontWeight: 700, color: pillar.color }}>{pillar.score}</div>
+                </div>
+              ))}
+            </div>
+
+            <div>
+              <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '12px', color: 'var(--text-secondary)' }}>Critical Issues</h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {mockAnalysis.recommendations.map((rec, i) => (
+                  <div key={i} style={{
+                    padding: '12px 16px',
+                    backgroundColor: 'var(--bg-tertiary)',
+                    borderRadius: '8px',
+                    borderLeft: `3px solid ${getBorderColor(rec.type)}`,
+                    fontSize: '13px',
+                    color: 'var(--text-secondary)',
+                  }}>
+                    {rec.text}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )
+
+      case 'metrics':
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ height: '280px', minWidth: '100px' }}>
+              <ResponsiveContainer width="100%" height="100%" minWidth={100}>
+                <BarChart data={mockAnalysis.subScores} layout="vertical" margin={{ left: 0, right: 20 }}>
+                  <XAxis type="number" domain={[0, 100]} stroke="var(--text-muted)" fontSize={11} />
+                  <YAxis dataKey="name" type="category" stroke="var(--text-muted)" fontSize={11} width={110} tick={{ fill: 'var(--text-secondary)' }} />
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const data = payload[0].payload
+                        return (
+                          <div style={{
+                            backgroundColor: 'var(--bg-tertiary)',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '8px',
+                            padding: '10px 14px',
+                            boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+                          }}>
+                            <p style={{ margin: 0, fontWeight: 600, fontSize: '13px' }}>{data.name}</p>
+                            <p style={{ margin: '4px 0 0', color: getBarColor(data.score), fontSize: '12px' }}>
+                              Score: {data.score}
+                            </p>
+                          </div>
+                        )
+                      }
+                      return null
+                    }}
+                  />
+                  <Bar dataKey="score" radius={[0, 4, 4, 0]}>
+                    {mockAnalysis.subScores.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={getBarColor(entry.score)} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(30, 58, 138, 0.3), rgba(6, 78, 82, 0.3))',
+              borderRadius: '12px',
+              padding: '20px',
+              border: '1px solid var(--border-color)',
+            }}>
+              <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Fingerprint size={16} color="var(--accent)" />
+                Authorship Provenance
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Hash</span>
+                  <code style={{ fontSize: '12px', fontFamily: 'monospace', color: 'var(--accent)' }}>{mockAnalysis.authorship.hash}</code>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Timestamp</span>
+                  <span style={{ fontSize: '12px' }}>{new Date(mockAnalysis.authorship.timestamp).toLocaleString()}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Status</span>
+                  <span style={{
+                    padding: '2px 8px',
+                    borderRadius: '4px',
+                    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                    color: '#10b981',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                  }}>VERIFIED</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Engine</span>
+                  <span style={{ fontSize: '12px' }}>v{mockAnalysis.authorship.engineVersion}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+
+      case 'actions':
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              {[
+                { icon: Wand2, label: 'Suggest Titles', color: '#22d3ee' },
+                { icon: FileText, label: 'Meta Description', color: '#10b981' },
+                { icon: Fingerprint, label: 'Summarize', color: '#a855f7' },
+                { icon: RefreshCw, label: 'Rewrite Selection', color: '#f59e0b' },
+              ].map((action, i) => (
+                <button key={i} style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '20px 16px',
+                  backgroundColor: 'var(--bg-tertiary)',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: '10px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(34, 211, 238, 0.1)'
+                  e.currentTarget.style.borderColor = action.color
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)'
+                  e.currentTarget.style.borderColor = 'var(--border-color)'
+                }}
+                >
+                  <div style={{
+                    width: '44px',
+                    height: '44px',
+                    borderRadius: '10px',
+                    backgroundColor: `${action.color}20`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    <action.icon size={22} color={action.color} />
+                  </div>
+                  <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)' }}>{action.label}</span>
+                </button>
+              ))}
+            </div>
+
+            <div style={{
+              backgroundColor: 'var(--bg-tertiary)',
+              borderRadius: '12px',
+              padding: '20px',
+              border: '1px solid var(--border-color)',
+            }}>
+              <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '16px' }}>Usage Quota</h4>
+              <div style={{ marginBottom: '12px' }}>
+                <div style={{
+                  height: '8px',
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  borderRadius: '4px',
+                  overflow: 'hidden',
+                }}>
+                  <div style={{
+                    width: '42.5%',
+                    height: '100%',
+                    background: 'linear-gradient(90deg, #22d3ee, #a855f7)',
+                    borderRadius: '4px',
+                  }} />
+                </div>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>850 / 2,000 queries</span>
+                <span style={{ color: 'var(--text-muted)' }}>Reset in 12 days</span>
+              </div>
+            </div>
+          </div>
+        )
+
+      case 'history':
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {mockAnalysis.history.map((entry) => (
+              <div
+                key={entry.id}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '14px 16px',
+                  backgroundColor: 'var(--bg-tertiary)',
+                  borderRadius: '10px',
+                  border: '1px solid var(--border-color)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(34, 211, 238, 0.1)'
+                  e.currentTarget.style.borderColor = 'var(--accent)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)'
+                  e.currentTarget.style.borderColor = 'var(--border-color)'
+                }}
+              >
+                <div style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(34, 211, 238, 0.15)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                  <History size={16} color="var(--accent)" />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '16px', fontWeight: 600 }}>{entry.score}</div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>AEO Score</div>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{entry.date}</div>
+                  {entry.delta > 0 && (
+                    <div style={{ fontSize: '12px', color: '#10b981', fontWeight: 500 }}>+{entry.delta} points</div>
+                  )}
+                </div>
+                <ChevronRight size={16} color="var(--text-muted)" />
+              </div>
+            ))}
+          </div>
+        )
+
+      default:
+        return null
+    }
+  }
+
+  return (
+    <div style={{
+      display: 'flex',
+      height: 'calc(100vh - var(--admin-bar-height) - 64px)',
+      margin: '-32px',
+      marginTop: '-32px',
+    }}>
+      <div style={{
+        flex: 1,
+        minWidth: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: 'var(--bg-primary)',
+      }}>
+        <div style={{
+          height: '56px',
+          backgroundColor: 'var(--bg-secondary)',
+          borderBottom: '1px solid var(--border-color)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0 20px',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ fontSize: '15px', fontWeight: 600 }}>Edit Post</span>
+            <span style={{
+              padding: '3px 10px',
+              borderRadius: '4px',
+              backgroundColor: 'rgba(245, 158, 11, 0.2)',
+              color: '#f59e0b',
+              fontSize: '11px',
+              fontWeight: 600,
+            }}>DRAFT</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <button
+              onClick={() => setHeatmapEnabled(!heatmapEnabled)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '8px 14px',
+                borderRadius: '6px',
+                backgroundColor: heatmapEnabled ? 'rgba(34, 211, 238, 0.2)' : 'var(--bg-tertiary)',
+                border: `1px solid ${heatmapEnabled ? 'var(--accent)' : 'var(--border-color)'}`,
+                color: heatmapEnabled ? 'var(--accent)' : 'var(--text-secondary)',
+                fontSize: '13px',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              {heatmapEnabled ? <Eye size={14} /> : <EyeOff size={14} />}
+              AI Heatmap
+            </button>
+            <button style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 14px',
+              borderRadius: '6px',
+              backgroundColor: 'var(--bg-tertiary)',
+              border: '1px solid var(--border-color)',
+              color: 'var(--text-secondary)',
+              fontSize: '13px',
+              cursor: 'pointer',
+            }}>
+              <Save size={14} />
+              Save
+            </button>
+            <button style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 14px',
+              borderRadius: '6px',
+              backgroundColor: 'var(--accent)',
+              border: 'none',
+              color: '#000',
+              fontSize: '13px',
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}>
+              <Send size={14} />
+              Publish
+            </button>
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '6px',
+                backgroundColor: sidebarOpen ? 'rgba(34, 211, 238, 0.2)' : 'var(--bg-tertiary)',
+                border: `1px solid ${sidebarOpen ? 'var(--accent)' : 'var(--border-color)'}`,
+                color: sidebarOpen ? 'var(--accent)' : 'var(--text-secondary)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+              }}
+            >
+              {sidebarOpen ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}
+            </button>
+          </div>
         </div>
-      </ChartCard>
-    </>
+
+        <div style={{
+          flex: 1,
+          overflowY: 'auto',
+          padding: '48px 32px',
+          display: 'flex',
+          justifyContent: 'center',
+        }}>
+          <div style={{ maxWidth: '768px', width: '100%' }}>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Add title"
+              style={{
+                width: '100%',
+                fontSize: '36px',
+                fontWeight: 700,
+                fontFamily: 'Georgia, serif',
+                background: 'none',
+                border: 'none',
+                color: 'var(--text-primary)',
+                marginBottom: '24px',
+                outline: 'none',
+              }}
+            />
+            <div
+              contentEditable
+              suppressContentEditableWarning
+              style={{
+                fontSize: '18px',
+                lineHeight: '1.8',
+                color: 'var(--text-secondary)',
+                outline: 'none',
+                minHeight: '400px',
+              }}
+              dangerouslySetInnerHTML={{
+                __html: heatmapEnabled
+                  ? content
+                      .replace(/semantic clarity/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;">semantic clarity</span>')
+                      .replace(/entity recognition/gi, '<span style="background: rgba(245, 158, 11, 0.3); padding: 2px 4px; border-radius: 3px;">entity recognition</span>')
+                      .replace(/structured data/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;">structured data</span>')
+                      .replace(/digital authority/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;">digital authority</span>')
+                      .replace(/proper citations/gi, '<span style="background: rgba(245, 158, 11, 0.3); padding: 2px 4px; border-radius: 3px;">proper citations</span>')
+                      .split('\n\n').join('<br><br>')
+                  : content.split('\n\n').join('<br><br>')
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {sidebarOpen && (
+        <div style={{
+          width: '400px',
+          backgroundColor: 'var(--bg-secondary)',
+          borderLeft: '1px solid var(--border-color)',
+          display: 'flex',
+          flexDirection: 'column',
+          animation: 'slideInFromRight 0.3s ease',
+        }}>
+          <div style={{
+            padding: '16px 20px',
+            borderBottom: '1px solid var(--border-color)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '15px' }}>Rain OS Analysis</span>
+              <span style={{
+                padding: '2px 8px',
+                borderRadius: '4px',
+                backgroundColor: 'rgba(34, 211, 238, 0.15)',
+                color: 'var(--accent)',
+                fontSize: '11px',
+                fontWeight: 500,
+              }}>v2.4</span>
+            </div>
+          </div>
+
+          <div style={{
+            display: 'flex',
+            borderBottom: '1px solid var(--border-color)',
+          }}>
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                style={{
+                  flex: 1,
+                  padding: '12px 8px',
+                  backgroundColor: activeTab === tab.id ? 'rgba(34, 211, 238, 0.1)' : 'transparent',
+                  border: 'none',
+                  borderBottom: activeTab === tab.id ? '2px solid var(--accent)' : '2px solid transparent',
+                  color: activeTab === tab.id ? 'var(--accent)' : 'var(--text-muted)',
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          <div style={{
+            flex: 1,
+            overflowY: 'auto',
+            padding: '20px',
+          }}>
+            {renderTabContent()}
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        @keyframes slideInFromRight {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+      `}</style>
+    </div>
   )
 }
 
