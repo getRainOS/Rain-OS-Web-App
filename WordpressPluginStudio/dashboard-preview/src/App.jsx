@@ -77,7 +77,7 @@ const navItems = [
     page: 'dashboard', 
     isSub: true,
     subItems: [
-      { label: 'Performance History', page: 'performance' },
+      { label: 'Performance', page: 'performance' },
       { label: 'Pillar Breakdown', page: 'pillars' },
       { label: 'Category Scores', page: 'categories' },
       { label: 'Content Signals', page: 'signals' },
@@ -1973,36 +1973,58 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
   )
 }
 
-function PerformanceHistoryPage() {
+function PerformancePage({ selectedPeriod, setSelectedPeriod }) {
+  const periodLabel = TIME_PERIODS.find(p => p.value === selectedPeriod)?.label || 'Last 30 Days'
+  
+  const getFilteredData = () => {
+    if (selectedPeriod === 7) return performanceData.slice(-2)
+    if (selectedPeriod === 30) return performanceData.slice(-4)
+    return performanceData
+  }
+  const filteredData = getFilteredData()
+  
   return (
     <>
-      <div className="animate-in" style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Performance History</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Track your content performance over time</p>
-      </div>
-      
-      <ChartCard title="Score Trend" period="Last 12 Months" className="animate-in-delay-1">
-        <div style={{ height: '400px' }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={performanceData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
-              <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} />
-              <YAxis stroke="var(--text-muted)" fontSize={12} domain={[60, 100]} />
-              <Tooltip content={<CustomTooltip />} />
-              <Line type="monotone" dataKey="baseline" stroke="var(--text-muted)" strokeDasharray="5 5" dot={false} name="Baseline" />
-              <Line type="monotone" dataKey="score" stroke="var(--accent)" strokeWidth={2} dot={{ fill: 'var(--accent)', strokeWidth: 0, r: 4 }} activeDot={{ r: 6, fill: 'var(--accent)' }} name="Score" />
-            </LineChart>
-          </ResponsiveContainer>
+      <header className="animate-in" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
+        <div>
+          <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Performance</h1>
+          <p style={{ color: 'var(--text-secondary)' }}>Track your content performance over time</p>
         </div>
+        <TimePeriodDropdown selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
+      </header>
+      
+      <ChartCard title="Score Trend" period={periodLabel} className="animate-in-delay-1">
+        {filteredData.length === 0 ? (
+          <EmptyState message="No performance data available for this time period" />
+        ) : (
+          <div style={{ height: '400px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={filteredData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
+                <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} />
+                <YAxis stroke="var(--text-muted)" fontSize={12} domain={[60, 100]} />
+                <Tooltip content={<CustomTooltip />} />
+                <Line type="monotone" dataKey="baseline" stroke="var(--text-muted)" strokeDasharray="5 5" dot={false} name="Baseline" />
+                <Line type="monotone" dataKey="score" stroke="var(--accent)" strokeWidth={2} dot={{ fill: 'var(--accent)', strokeWidth: 0, r: 4 }} activeDot={{ r: 6, fill: 'var(--accent)' }} name="Score" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        )}
       </ChartCard>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginTop: '24px' }}>
-        {[
-          { label: 'Best Month', value: 'December', sub: 'Score: 91' },
-          { label: 'Worst Month', value: 'January', sub: 'Score: 65' },
-          { label: 'Average Score', value: '78', sub: '+8 from baseline' },
-          { label: 'Improvement', value: '+40%', sub: 'Year over year' },
-        ].map((stat, i) => (
+        {(() => {
+          if (filteredData.length === 0) return []
+          const best = filteredData.reduce((a, b) => a.score > b.score ? a : b)
+          const worst = filteredData.reduce((a, b) => a.score < b.score ? a : b)
+          const avg = Math.round(filteredData.reduce((sum, d) => sum + d.score, 0) / filteredData.length)
+          return [
+            { label: 'Best Period', value: best.name, sub: `Score: ${best.score}` },
+            { label: 'Lowest Period', value: worst.name, sub: `Score: ${worst.score}` },
+            { label: 'Average Score', value: String(avg), sub: periodLabel },
+            { label: 'Data Points', value: String(filteredData.length), sub: periodLabel },
+          ]
+        })().map((stat, i) => (
           <div key={i} className={`animate-in-delay-${i + 2}`} style={{
             backgroundColor: 'var(--bg-secondary)',
             border: '1px solid var(--border-color)',
@@ -2019,24 +2041,39 @@ function PerformanceHistoryPage() {
   )
 }
 
-function PillarBreakdownPage() {
-  const overallScore = Math.round(pillarData.reduce((sum, p) => sum + p.value, 0) / pillarData.length)
+function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
+  const periodLabel = TIME_PERIODS.find(p => p.value === selectedPeriod)?.label || 'Last 30 Days'
+  
+  const getFilteredPillarData = () => {
+    if (selectedPeriod === 7) {
+      return pillarData.map(p => ({ ...p, value: Math.max(p.value - 3, 50) }))
+    }
+    if (selectedPeriod === 60) {
+      return pillarData.map(p => ({ ...p, value: Math.min(p.value + 2, 100) }))
+    }
+    return pillarData
+  }
+  const filteredPillarData = getFilteredPillarData()
+  const overallScore = Math.round(filteredPillarData.reduce((sum, p) => sum + p.value, 0) / filteredPillarData.length)
   
   return (
     <>
-      <div className="animate-in" style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Pillar Breakdown</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Analyze your three core optimization pillars</p>
-      </div>
+      <header className="animate-in" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
+        <div>
+          <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Pillar Breakdown</h1>
+          <p style={{ color: 'var(--text-secondary)' }}>Analyze your three core optimization pillars</p>
+        </div>
+        <TimePeriodDropdown selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
+      </header>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '24px' }}>
-        <ChartCard title="Overall Score" period="Current Analysis" className="animate-in-delay-1">
+        <ChartCard title="Overall Score" period={periodLabel} className="animate-in-delay-1">
           <div style={{ height: '280px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
             <div style={{ position: 'relative', width: '200px', height: '200px' }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={pillarData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={3} dataKey="value">
-                    {pillarData.map((entry, index) => (
+                  <Pie data={filteredPillarData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={3} dataKey="value">
+                    {filteredPillarData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
@@ -2052,7 +2089,7 @@ function PillarBreakdownPage() {
         </ChartCard>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {pillarData.map((pillar, i) => (
+          {filteredPillarData.map((pillar, i) => (
             <div key={i} className={`animate-in-delay-${i + 2}`} style={{
               backgroundColor: 'var(--bg-secondary)',
               border: '1px solid var(--border-color)',
@@ -2082,18 +2119,34 @@ function PillarBreakdownPage() {
   )
 }
 
-function CategoryScoresPage() {
+function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
+  const periodLabel = TIME_PERIODS.find(p => p.value === selectedPeriod)?.label || 'Last 30 Days'
+  
+  const getFilteredCategoryData = () => {
+    if (selectedPeriod === 7) {
+      return categoryData.map(c => ({ ...c, score: Math.max(c.score - 5, 50) }))
+    }
+    if (selectedPeriod === 60) {
+      return categoryData.map(c => ({ ...c, score: Math.min(c.score + 3, 100) }))
+    }
+    return categoryData
+  }
+  const filteredCategoryData = getFilteredCategoryData()
+  
   return (
     <>
-      <div className="animate-in" style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Category Scores</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Detailed breakdown of all analysis categories</p>
-      </div>
+      <header className="animate-in" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
+        <div>
+          <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Category Scores</h1>
+          <p style={{ color: 'var(--text-secondary)' }}>Detailed breakdown of all analysis categories</p>
+        </div>
+        <TimePeriodDropdown selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
+      </header>
 
-      <ChartCard title="All Categories" period="Last 30 Days Average" className="animate-in-delay-1">
+      <ChartCard title="All Categories" period={periodLabel} className="animate-in-delay-1">
         <div style={{ height: '450px' }}>
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={categoryData} layout="vertical">
+            <BarChart data={filteredCategoryData} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" horizontal={false} />
               <XAxis type="number" stroke="var(--text-muted)" fontSize={12} domain={[0, 100]} />
               <YAxis dataKey="name" type="category" stroke="var(--text-muted)" fontSize={11} width={140} />
@@ -2105,7 +2158,7 @@ function CategoryScoresPage() {
       </ChartCard>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginTop: '24px' }}>
-        {categoryData.map((cat, i) => (
+        {filteredCategoryData.map((cat, i) => (
           <div key={i} className={`animate-in-delay-${Math.min(i + 2, 5)}`} style={{
             backgroundColor: 'var(--bg-secondary)',
             border: '1px solid var(--border-color)',
@@ -2126,50 +2179,67 @@ function CategoryScoresPage() {
   )
 }
 
-function ContentSignalsPage() {
+function ContentSignalsPage({ selectedPeriod, setSelectedPeriod }) {
+  const periodLabel = TIME_PERIODS.find(p => p.value === selectedPeriod)?.label || 'Last 30 Days'
+  
+  const getFilteredData = () => {
+    if (selectedPeriod === 7) return []
+    if (selectedPeriod === 30) return scatterData.slice(0, 6)
+    return scatterData
+  }
+  const filteredData = getFilteredData()
+  
   return (
     <>
-      <div className="animate-in" style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Content Signals</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Analyze the relationship between content length and performance</p>
-      </div>
-
-      <ChartCard title="Word Count vs Score Distribution" period="All Analyzed Content" className="animate-in-delay-1">
-        <div style={{ height: '450px' }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <ScatterChart>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
-              <XAxis dataKey="wordCount" stroke="var(--text-muted)" fontSize={12} name="Word Count" label={{ value: 'Word Count', position: 'bottom', fill: 'var(--text-muted)', fontSize: 11 }} />
-              <YAxis dataKey="score" stroke="var(--text-muted)" fontSize={12} name="Score" domain={[50, 100]} label={{ value: 'Score', angle: -90, position: 'insideLeft', fill: 'var(--text-muted)', fontSize: 11 }} />
-              <ZAxis dataKey="title" name="Content" />
-              <Tooltip content={({ active, payload }) => {
-                if (active && payload && payload.length) {
-                  const data = payload[0].payload
-                  return (
-                    <div style={{ backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
-                      <p style={{ margin: 0, fontWeight: 600 }}>{data.title}</p>
-                      <p style={{ margin: '4px 0 0', color: 'var(--text-secondary)', fontSize: '13px' }}>Words: {data.wordCount}</p>
-                      <p style={{ margin: '4px 0 0', color: 'var(--accent)', fontSize: '13px' }}>Score: {data.score}</p>
-                    </div>
-                  )
-                }
-                return null
-              }} />
-              <Scatter data={scatterData} fill="var(--accent)">
-                {scatterData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.score >= 80 ? '#10b981' : entry.score >= 70 ? '#22d3ee' : '#f59e0b'} />
-                ))}
-              </Scatter>
-            </ScatterChart>
-          </ResponsiveContainer>
+      <header className="animate-in" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
+        <div>
+          <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Content Signals</h1>
+          <p style={{ color: 'var(--text-secondary)' }}>Analyze the relationship between content length and performance</p>
         </div>
+        <TimePeriodDropdown selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
+      </header>
+
+      <ChartCard title="Word Count vs Score Distribution" period={periodLabel} className="animate-in-delay-1">
+        {filteredData.length === 0 ? (
+          <EmptyState message="No content signals available for this time period" />
+        ) : (
+          <div style={{ height: '450px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <ScatterChart>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
+                <XAxis dataKey="wordCount" stroke="var(--text-muted)" fontSize={12} name="Word Count" label={{ value: 'Word Count', position: 'bottom', fill: 'var(--text-muted)', fontSize: 11 }} />
+                <YAxis dataKey="score" stroke="var(--text-muted)" fontSize={12} name="Score" domain={[50, 100]} label={{ value: 'Score', angle: -90, position: 'insideLeft', fill: 'var(--text-muted)', fontSize: 11 }} />
+                <ZAxis dataKey="title" name="Content" />
+                <Tooltip content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    const data = payload[0].payload
+                    return (
+                      <div style={{ backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
+                        <p style={{ margin: 0, fontWeight: 600 }}>{data.title}</p>
+                        <p style={{ margin: '4px 0 0', color: 'var(--text-secondary)', fontSize: '13px' }}>Words: {data.wordCount}</p>
+                        <p style={{ margin: '4px 0 0', color: 'var(--accent)', fontSize: '13px' }}>Score: {data.score}</p>
+                      </div>
+                    )
+                  }
+                  return null
+                }} />
+                <Scatter data={filteredData} fill="var(--accent)">
+                  {filteredData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.score >= 80 ? '#10b981' : entry.score >= 70 ? '#22d3ee' : '#f59e0b'} />
+                  ))}
+                </Scatter>
+              </ScatterChart>
+            </ResponsiveContainer>
+          </div>
+        )}
       </ChartCard>
 
+      {filteredData.length > 0 && (
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px', marginTop: '24px' }}>
         <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
           <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>Content Analysis</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {scatterData.slice(0, 6).map((item, i) => (
+            {filteredData.slice(0, 6).map((item, i) => (
               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: i < 5 ? '1px solid var(--border-color)' : 'none' }}>
                 <span style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>{item.title}</span>
                 <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
@@ -2198,6 +2268,7 @@ function ContentSignalsPage() {
           </div>
         </div>
       </div>
+      )}
     </>
   )
 }
@@ -2604,13 +2675,13 @@ function App() {
       case 'upgrade':
         return <UpgradePage />
       case 'performance':
-        return <PerformanceHistoryPage />
+        return <PerformancePage selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
       case 'pillars':
-        return <PillarBreakdownPage />
+        return <PillarBreakdownPage selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
       case 'categories':
-        return <CategoryScoresPage />
+        return <CategoryScoresPage selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
       case 'signals':
-        return <ContentSignalsPage />
+        return <ContentSignalsPage selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
       case 'learn-ai-readability':
         return <LearnAIReadabilityPage />
       case 'improve-score':
