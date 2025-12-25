@@ -75,6 +75,8 @@ const navItems = [
       { label: 'Pillar Breakdown', page: 'pillars' },
       { label: 'Category Scores', page: 'categories' },
       { label: 'Content Signals', page: 'signals' },
+      { label: 'Learn about AI Readability', page: 'learn-ai-readability' },
+      { label: 'Improve Your Score', page: 'improve-score' },
     ]
   },
   { icon: FileText, label: 'Content Analyzer', page: 'analyzer', isSub: true },
@@ -1738,6 +1740,351 @@ function ContentSignalsPage() {
   )
 }
 
+function LearnAIReadabilityPage() {
+  return (
+    <>
+      <div className="animate-in" style={{ marginBottom: '32px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Learn About AI Readability</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Understanding how AI systems read and interpret your content</p>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>What is AI Readability?</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
+              AI Readability measures how well artificial intelligence systems can understand, process, and extract meaning from your content. Unlike traditional readability scores that focus on human comprehension, AI Readability specifically evaluates how effectively your content communicates with AI-powered search engines, chatbots, and answer engines.
+            </p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7 }}>
+              When AI systems like ChatGPT, Google's AI Overview, or Perplexity read your content, they look for clear patterns, logical structure, and semantic clarity. Content that scores high in AI Readability is more likely to be quoted, summarized, or recommended by these systems.
+            </p>
+          </div>
+
+          <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Why Does It Matter?</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
+              The way people search for information is changing. Instead of typing keywords and clicking through links, users are increasingly asking AI assistants direct questions and expecting comprehensive answers. This shift is called Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO).
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '20px' }}>
+              {[
+                { title: 'AI Citations', desc: 'AI systems cite content they understand clearly and trust' },
+                { title: 'Voice Search', desc: 'Voice assistants prefer content with clear, direct answers' },
+                { title: 'Featured Snippets', desc: 'Well-structured content appears in rich search results' },
+                { title: 'Chatbot Recommendations', desc: 'AI chatbots recommend content they can easily summarize' },
+              ].map((item, i) => (
+                <div key={i} style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                  <div style={{ fontWeight: 500, marginBottom: '6px' }}>{item.title}</div>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>{item.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>The Three Pillars Explained</h2>
+            
+            <div style={{ marginBottom: '24px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#22d3ee' }}></span>
+                AI Readability
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.7, paddingLeft: '22px' }}>
+                This pillar measures how easily AI can parse and understand your content. It evaluates semantic clarity (are your ideas expressed clearly?), logical structure (does your content flow in a sensible order?), and readability metrics (sentence length, vocabulary complexity, and paragraph organization). High AI Readability means your content speaks the language that AI understands best.
+              </p>
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#10b981' }}></span>
+                Digital Authority
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.7, paddingLeft: '22px' }}>
+                AI systems evaluate whether your content is trustworthy and authoritative. This pillar looks at credibility signals like proper citations, author expertise, factual accuracy, and E-E-A-T markers (Experience, Expertise, Authoritativeness, Trustworthiness). Content with strong Digital Authority is more likely to be cited by AI as a reliable source.
+              </p>
+            </div>
+
+            <div>
+              <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#a855f7' }}></span>
+                Conversion Readiness
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.7, paddingLeft: '22px' }}>
+                Beyond being understood and trusted, your content should drive action. This pillar measures user engagement potential, clear calls-to-action, and how effectively your content guides readers toward meaningful next steps. AI systems recognize and reward content that provides complete, actionable information.
+              </p>
+            </div>
+          </div>
+
+          <div className="animate-in-delay-4" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>How AI Reads Your Content</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
+              Understanding how AI processes content helps you write better. Here's a simplified view of what happens when an AI system reads your page:
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {[
+                { step: '1', title: 'Tokenization', desc: 'AI breaks your text into tokens (words and word pieces) to process it' },
+                { step: '2', title: 'Entity Recognition', desc: 'It identifies key entities: people, places, concepts, products, and their relationships' },
+                { step: '3', title: 'Semantic Analysis', desc: 'AI understands the meaning behind your words, not just the words themselves' },
+                { step: '4', title: 'Structure Mapping', desc: 'It recognizes headings, lists, paragraphs, and how ideas are organized' },
+                { step: '5', title: 'Context Building', desc: 'AI connects your content to broader knowledge and evaluates relevance' },
+                { step: '6', title: 'Quality Scoring', desc: 'Finally, it assigns trust and quality scores based on all these factors' },
+              ].map((item, i) => (
+                <div key={i} style={{ display: 'flex', gap: '16px', padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--accent)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, flexShrink: 0 }}>{item.step}</div>
+                  <div>
+                    <div style={{ fontWeight: 500, marginBottom: '4px' }}>{item.title}</div>
+                    <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>{item.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>Quick Facts</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {[
+                { label: 'AI searches by 2025', value: '40%', color: 'var(--accent)' },
+                { label: 'Users trust AI answers', value: '73%', color: '#10b981' },
+                { label: 'Voice search growth', value: '58%', color: '#a855f7' },
+              ].map((stat, i) => (
+                <div key={i} style={{ textAlign: 'center', padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                  <div style={{ fontSize: '28px', fontWeight: 700, color: stat.color }}>{stat.value}</div>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '4px' }}>{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>Key Terms</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {[
+                { term: 'AEO', def: 'Answer Engine Optimization - optimizing for AI answer systems' },
+                { term: 'GEO', def: 'Generative Engine Optimization - optimizing for generative AI' },
+                { term: 'E-E-A-T', def: 'Experience, Expertise, Authoritativeness, Trust' },
+                { term: 'Semantic SEO', def: 'Optimizing for meaning, not just keywords' },
+                { term: 'Entity', def: 'A distinct concept AI can identify and understand' },
+              ].map((item, i) => (
+                <div key={i} style={{ padding: '12px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '6px' }}>
+                  <div style={{ fontWeight: 600, color: 'var(--accent)', fontSize: '13px' }}>{item.term}</div>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '4px' }}>{item.def}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="animate-in-delay-3" style={{ backgroundColor: 'linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(168, 85, 247, 0.15))', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px', background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(168, 85, 247, 0.1))' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '12px' }}>Ready to Improve?</h3>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '16px' }}>
+              Now that you understand AI Readability, learn practical strategies to boost your score.
+            </p>
+            <button style={{
+              width: '100%',
+              padding: '12px',
+              backgroundColor: 'var(--accent)',
+              color: '#000',
+              border: 'none',
+              borderRadius: '8px',
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}>
+              Improve Your Score →
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function ImproveScorePage() {
+  return (
+    <>
+      <div className="animate-in" style={{ marginBottom: '32px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Improve Your Readability Score</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Practical strategies to make your content AI-friendly</p>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '10px', backgroundColor: 'rgba(34, 211, 238, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: '20px' }}>1</span>
+            </div>
+            <h2 style={{ fontSize: '20px', fontWeight: 600 }}>Write Clear, Direct Sentences</h2>
+          </div>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
+            AI systems process language sequentially. Short, clear sentences are easier to parse and understand. Avoid complex nested clauses, passive voice, and ambiguous pronouns.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div style={{ padding: '20px', backgroundColor: 'rgba(239, 68, 68, 0.1)', borderRadius: '8px', borderLeft: '3px solid #ef4444' }}>
+              <div style={{ color: '#ef4444', fontWeight: 600, fontSize: '12px', marginBottom: '8px' }}>BEFORE</div>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.6 }}>
+                "The implementation of the new system, which was developed by our team over the course of several months and has been tested extensively, will be rolled out next quarter."
+              </p>
+            </div>
+            <div style={{ padding: '20px', backgroundColor: 'rgba(16, 185, 129, 0.1)', borderRadius: '8px', borderLeft: '3px solid #10b981' }}>
+              <div style={{ color: '#10b981', fontWeight: 600, fontSize: '12px', marginBottom: '8px' }}>AFTER</div>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.6 }}>
+                "Our team developed a new system over several months. After extensive testing, we will roll it out next quarter."
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '10px', backgroundColor: 'rgba(34, 211, 238, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: '20px' }}>2</span>
+            </div>
+            <h2 style={{ fontSize: '20px', fontWeight: 600 }}>Use Descriptive Headings</h2>
+          </div>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
+            AI uses headings to understand your content's structure and main topics. Make headings descriptive and specific rather than clever or vague. Include key concepts in your H2 and H3 tags.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+            {[
+              { bad: 'Getting Started', good: 'How to Set Up Your First Campaign in 5 Minutes' },
+              { bad: 'More Info', good: 'Pricing Plans and Features Comparison' },
+              { bad: 'What We Do', good: 'AI-Powered Content Analysis Services' },
+            ].map((item, i) => (
+              <div key={i} style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                <div style={{ color: '#ef4444', fontSize: '12px', textDecoration: 'line-through', marginBottom: '8px' }}>{item.bad}</div>
+                <div style={{ color: '#10b981', fontSize: '13px', fontWeight: 500 }}>{item.good}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '10px', backgroundColor: 'rgba(34, 211, 238, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: '20px' }}>3</span>
+            </div>
+            <h2 style={{ fontSize: '20px', fontWeight: 600 }}>Answer Questions Directly</h2>
+          </div>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
+            AI answer engines look for direct answers to questions. Use a Question + Answer format, especially for common queries. Put the answer in the first sentence, then provide supporting details.
+          </p>
+          <div style={{ padding: '20px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+            <div style={{ color: 'var(--accent)', fontWeight: 600, marginBottom: '12px' }}>Example: Q&A Format</div>
+            <div style={{ fontWeight: 500, marginBottom: '8px' }}>What is the best time to post on social media?</div>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.6 }}>
+              The best time to post on social media is between 9-11 AM on weekdays for most platforms. However, optimal timing varies by platform: Instagram performs best at 11 AM on Wednesdays, while LinkedIn sees peak engagement at 7-8 AM on Tuesdays and Wednesdays. B2B audiences are most active during business hours, while B2C content often performs better in evenings and weekends.
+            </p>
+          </div>
+        </div>
+
+        <div className="animate-in-delay-4" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '10px', backgroundColor: 'rgba(34, 211, 238, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: '20px' }}>4</span>
+            </div>
+            <h2 style={{ fontSize: '20px', fontWeight: 600 }}>Define Key Terms</h2>
+          </div>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
+            When you use industry terms, acronyms, or technical concepts, define them clearly. This helps AI understand the context and correctly categorize your content. It also improves accessibility for all readers.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+              <div style={{ color: '#ef4444', fontSize: '12px', marginBottom: '8px' }}>Unclear</div>
+              <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>"Our ROI increased after implementing the new CRM with AI-powered NLP features."</p>
+            </div>
+            <div style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+              <div style={{ color: '#10b981', fontSize: '12px', marginBottom: '8px' }}>Clear</div>
+              <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>"Our return on investment (ROI) increased after implementing a new Customer Relationship Management (CRM) system. The CRM uses Natural Language Processing (NLP), an AI technology that understands human language."</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="animate-in-delay-5" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '10px', backgroundColor: 'rgba(34, 211, 238, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: '20px' }}>5</span>
+            </div>
+            <h2 style={{ fontSize: '20px', fontWeight: 600 }}>Use Lists and Structured Data</h2>
+          </div>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
+            AI loves structure. Use bullet points, numbered lists, and tables to organize information. This makes it easy for AI to extract and present your content in featured snippets and AI answers.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+            <div>
+              <div style={{ fontWeight: 500, marginBottom: '12px' }}>Use Numbered Lists For:</div>
+              <ul style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.8, paddingLeft: '20px' }}>
+                <li>Step-by-step instructions</li>
+                <li>Rankings or priorities</li>
+                <li>Sequential processes</li>
+                <li>Chronological events</li>
+              </ul>
+            </div>
+            <div>
+              <div style={{ fontWeight: 500, marginBottom: '12px' }}>Use Bullet Points For:</div>
+              <ul style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.8, paddingLeft: '20px' }}>
+                <li>Feature lists</li>
+                <li>Benefits or pros/cons</li>
+                <li>Related items (no order)</li>
+                <li>Quick tips or takeaways</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="animate-in-delay-5" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '10px', backgroundColor: 'rgba(34, 211, 238, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: '20px' }}>6</span>
+            </div>
+            <h2 style={{ fontSize: '20px', fontWeight: 600 }}>Include Authoritative Citations</h2>
+          </div>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
+            AI systems evaluate credibility by looking at your sources. Cite reputable sources, link to authoritative websites, and reference data with proper attribution. This signals that your content is well-researched and trustworthy.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
+            {[
+              { type: 'Academic', examples: 'Research papers, journals, universities' },
+              { type: 'Government', examples: 'Official statistics, regulations, reports' },
+              { type: 'Industry', examples: 'Trade publications, industry leaders' },
+              { type: 'Primary', examples: 'Original research, first-hand interviews' },
+            ].map((source, i) => (
+              <div key={i} style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px', textAlign: 'center' }}>
+                <div style={{ color: 'var(--accent)', fontWeight: 600, marginBottom: '8px' }}>{source.type}</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '12px' }}>{source.examples}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="animate-in-delay-5" style={{ backgroundColor: 'linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(168, 85, 247, 0.15))', border: '1px solid var(--accent)', borderRadius: '12px', padding: '32px', background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(168, 85, 247, 0.1))' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>Quick Checklist</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+            {[
+              'Sentences average under 20 words',
+              'Clear, descriptive headings (H2, H3)',
+              'Questions answered in first sentence',
+              'Technical terms are defined',
+              'Content uses bullet/numbered lists',
+              'Sources are cited and linked',
+              'Paragraphs are 2-4 sentences max',
+              'Active voice used throughout',
+              'Key entities clearly identified',
+              'Content has logical flow',
+            ].map((item, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px', backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '6px' }}>
+                <div style={{ width: '20px', height: '20px', borderRadius: '4px', border: '2px solid var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <span style={{ color: 'var(--accent)', fontSize: '12px' }}>✓</span>
+                </div>
+                <span style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard')
   const overallScore = Math.round(pillarData.reduce((sum, p) => sum + p.value, 0) / pillarData.length)
@@ -1760,6 +2107,10 @@ function App() {
         return <CategoryScoresPage />
       case 'signals':
         return <ContentSignalsPage />
+      case 'learn-ai-readability':
+        return <LearnAIReadabilityPage />
+      case 'improve-score':
+        return <ImproveScorePage />
       default:
         return <DashboardPage overallScore={overallScore} setCurrentPage={setCurrentPage} />
     }
