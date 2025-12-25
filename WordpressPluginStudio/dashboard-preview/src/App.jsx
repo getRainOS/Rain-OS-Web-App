@@ -315,7 +315,7 @@ function ProgressBar({ value, color }) {
   )
 }
 
-function ChartCard({ title, children, className, style }) {
+function ChartCard({ title, period, children, className, style }) {
   return (
     <div
       className={className}
@@ -336,7 +336,12 @@ function ChartCard({ title, children, className, style }) {
         e.currentTarget.style.boxShadow = 'none'
       }}
     >
-      <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '20px', color: 'var(--text-primary)' }}>{title}</h3>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>{title}</h3>
+        {period && (
+          <span style={{ fontSize: '12px', color: 'var(--text-muted)', backgroundColor: 'var(--bg-tertiary)', padding: '4px 10px', borderRadius: '4px' }}>{period}</span>
+        )}
+      </div>
       {children}
     </div>
   )
@@ -1191,18 +1196,40 @@ function GettingStartedPage() {
         <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Your First Analysis</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
-            Once installed, you can analyze any post or page content. Here's how to run your first analysis:
+            Rain OS uses advanced AI technology to analyze your content and provide actionable insights. Once installed, you can analyze any post or page content. Here's how to run your first analysis:
           </p>
           <ol style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.8, paddingLeft: '20px' }}>
             <li style={{ marginBottom: '8px' }}>Open any post or page in the WordPress editor</li>
             <li style={{ marginBottom: '8px' }}>Look for the "Rain OS Analysis" panel in the sidebar (Gutenberg) or below the editor (Classic)</li>
             <li style={{ marginBottom: '8px' }}>Click the "Analyze Content" button</li>
-            <li style={{ marginBottom: '8px' }}>Wait a few seconds for the AI to process your content</li>
+            <li style={{ marginBottom: '8px' }}>Our AI engine processes your content using natural language understanding</li>
             <li>Review your scores across all three pillars: AI Readability, Digital Authority, and Conversion Readiness</li>
           </ol>
         </div>
 
         <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Built-in Optimization Tools</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
+            In addition to AI-powered analysis, Rain OS includes helpful tools that work locally to improve your content:
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+            {[
+              { title: 'Readability Calculator', desc: 'Measures Flesch-Kincaid, Gunning Fog, and other readability scores locally' },
+              { title: 'Sentence Length Analyzer', desc: 'Identifies overly long sentences that may confuse AI systems' },
+              { title: 'Keyword Density Checker', desc: 'Tracks how often key terms appear without API calls' },
+              { title: 'Heading Structure Validator', desc: 'Ensures proper H1-H6 hierarchy for better AI parsing' },
+              { title: 'Question Detection', desc: 'Finds Q&A patterns that perform well in answer engines' },
+              { title: 'Entity Highlighter', desc: 'Identifies people, places, and concepts in your content' },
+            ].map((tool, i) => (
+              <div key={i} style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                <div style={{ fontWeight: 500, marginBottom: '6px', color: 'var(--accent)' }}>{tool.title}</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>{tool.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="animate-in-delay-4" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>System Requirements</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
             {[
@@ -1722,7 +1749,7 @@ function DashboardPage({ overallScore, setCurrentPage }) {
           icon={FileText}
           title="Total Analyses"
           value="247"
-          subtitle="+12 this week"
+          subtitle="+12 this week (All Time)"
           color="#22d3ee"
           delay="1"
         />
@@ -1730,7 +1757,7 @@ function DashboardPage({ overallScore, setCurrentPage }) {
           icon={TrendingUp}
           title="Average Score"
           value="78"
-          subtitle="+5 from last month"
+          subtitle="+5 from last month (30 Days)"
           color="#10b981"
           delay="2"
         />
@@ -1738,7 +1765,7 @@ function DashboardPage({ overallScore, setCurrentPage }) {
           icon={Target}
           title="Content Health"
           value="82%"
-          subtitle=""
+          subtitle="Last 7 Days"
           color="#a855f7"
           delay="3"
         />
@@ -1746,7 +1773,7 @@ function DashboardPage({ overallScore, setCurrentPage }) {
           icon={Zap}
           title="API Usage"
           value="47%"
-          subtitle=""
+          subtitle="This Billing Cycle"
           color="#f59e0b"
           delay="4"
         />
@@ -1758,7 +1785,7 @@ function DashboardPage({ overallScore, setCurrentPage }) {
         gap: '24px',
         marginBottom: '32px',
       }}>
-        <ChartCard title="Performance History" className="animate-in-delay-2">
+        <ChartCard title="Performance History" period="Last 12 Weeks" className="animate-in-delay-2">
           <div style={{ height: '300px' }}>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={performanceData}>
@@ -1788,7 +1815,7 @@ function DashboardPage({ overallScore, setCurrentPage }) {
           </div>
         </ChartCard>
 
-        <ChartCard title="Pillar Breakdown" className="animate-in-delay-3">
+        <ChartCard title="Pillar Breakdown" period="Current Analysis" className="animate-in-delay-3">
           <div style={{ height: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
             <div style={{ position: 'relative', width: '180px', height: '180px' }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -1837,7 +1864,7 @@ function DashboardPage({ overallScore, setCurrentPage }) {
         gridTemplateColumns: '1fr 1fr',
         gap: '24px',
       }}>
-        <ChartCard title="Analysis Categories" className="animate-in-delay-4">
+        <ChartCard title="Analysis Categories" period="Last 30 Days" className="animate-in-delay-4">
           <div style={{ height: '300px' }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={categoryData} layout="vertical">
@@ -1851,7 +1878,7 @@ function DashboardPage({ overallScore, setCurrentPage }) {
           </div>
         </ChartCard>
 
-        <ChartCard title="Content Signals" className="animate-in-delay-5">
+        <ChartCard title="Content Signals" period="All Time" className="animate-in-delay-5">
           <div style={{ height: '300px' }}>
             <ResponsiveContainer width="100%" height="100%">
               <ScatterChart>
@@ -1922,7 +1949,7 @@ function PerformanceHistoryPage() {
         <p style={{ color: 'var(--text-secondary)' }}>Track your content performance over time</p>
       </div>
       
-      <ChartCard title="Score Trend (12 Months)" className="animate-in-delay-1">
+      <ChartCard title="Score Trend" period="Last 12 Months" className="animate-in-delay-1">
         <div style={{ height: '400px' }}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={performanceData}>
@@ -1971,7 +1998,7 @@ function PillarBreakdownPage() {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '24px' }}>
-        <ChartCard title="Overall Score" className="animate-in-delay-1">
+        <ChartCard title="Overall Score" period="Current Analysis" className="animate-in-delay-1">
           <div style={{ height: '280px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
             <div style={{ position: 'relative', width: '200px', height: '200px' }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -2031,7 +2058,7 @@ function CategoryScoresPage() {
         <p style={{ color: 'var(--text-secondary)' }}>Detailed breakdown of all analysis categories</p>
       </div>
 
-      <ChartCard title="All Categories" className="animate-in-delay-1">
+      <ChartCard title="All Categories" period="Last 30 Days Average" className="animate-in-delay-1">
         <div style={{ height: '450px' }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={categoryData} layout="vertical">
@@ -2075,7 +2102,7 @@ function ContentSignalsPage() {
         <p style={{ color: 'var(--text-secondary)' }}>Analyze the relationship between content length and performance</p>
       </div>
 
-      <ChartCard title="Word Count vs Score Distribution" className="animate-in-delay-1">
+      <ChartCard title="Word Count vs Score Distribution" period="All Analyzed Content" className="animate-in-delay-1">
         <div style={{ height: '450px' }}>
           <ResponsiveContainer width="100%" height="100%">
             <ScatterChart>
@@ -2156,10 +2183,10 @@ function LearnAIReadabilityPage() {
           <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
             <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>What is AI Readability?</h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
-              AI Readability measures how well artificial intelligence systems can understand, process, and extract meaning from your content. Unlike traditional readability scores that focus on human comprehension, AI Readability specifically evaluates how effectively your content communicates with AI-powered search engines, chatbots, and answer engines.
+              AI Readability measures how well artificial intelligence systems can understand, process, and extract meaning from your content. Rain OS uses advanced AI technology with natural language processing to analyze your content the same way modern search engines and AI assistants do.
             </p>
             <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7 }}>
-              When AI systems like ChatGPT, Google's AI Overview, or Perplexity read your content, they look for clear patterns, logical structure, and semantic clarity. Content that scores high in AI Readability is more likely to be quoted, summarized, or recommended by these systems.
+              When AI systems like ChatGPT, Google's AI Overview, or Perplexity read your content, they look for clear patterns, logical structure, and semantic clarity. Our AI-powered analysis identifies exactly what these systems are looking for and helps you optimize accordingly.
             </p>
           </div>
 
@@ -2220,7 +2247,7 @@ function LearnAIReadabilityPage() {
           <div className="animate-in-delay-4" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
             <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>How AI Reads Your Content</h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
-              Understanding how AI processes content helps you write better. Here's a simplified view of what happens when an AI system reads your page:
+              Rain OS leverages AI to simulate how search engines and answer engines process your content. Here's what our AI analysis examines:
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {[
