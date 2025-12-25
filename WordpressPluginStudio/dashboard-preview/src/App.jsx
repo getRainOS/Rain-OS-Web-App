@@ -85,7 +85,12 @@ const navItems = [
     page: 'docs', 
     isSub: true,
     subItems: [
-      { label: 'Learn about AI Readability', page: 'learn-ai-readability' },
+      { label: 'Getting Started', page: 'docs-getting-started' },
+      { label: 'API Reference', page: 'docs-api-reference' },
+      { label: 'Pro Features', page: 'docs-pro-features' },
+      { label: 'Three Pillars', page: 'docs-three-pillars' },
+      { label: 'Troubleshooting', page: 'docs-troubleshooting' },
+      { label: 'Learn About AI Readability', page: 'learn-ai-readability' },
       { label: 'Improve Your Score', page: 'improve-score' },
     ]
   },
@@ -1103,13 +1108,13 @@ function SettingsPage() {
   )
 }
 
-function DocsPage() {
+function DocsPage({ setCurrentPage }) {
   const docs = [
-    { title: 'Getting Started', desc: 'Learn how to set up Rain OS SEO Analyzer' },
-    { title: 'API Reference', desc: 'Complete API documentation and endpoints' },
-    { title: 'Pro Features', desc: 'Explore advanced features and micro-actions' },
-    { title: 'Three Pillars', desc: 'Understanding AI Readability, Digital Authority, and Conversion Readiness' },
-    { title: 'Troubleshooting', desc: 'Common issues and solutions' },
+    { title: 'Getting Started', desc: 'Learn how to set up Rain OS SEO Analyzer', page: 'docs-getting-started' },
+    { title: 'API Reference', desc: 'Complete API documentation and endpoints', page: 'docs-api-reference' },
+    { title: 'Pro Features', desc: 'Explore advanced features and micro-actions', page: 'docs-pro-features' },
+    { title: 'Three Pillars', desc: 'Understanding AI Readability, Digital Authority, and Conversion Readiness', page: 'docs-three-pillars' },
+    { title: 'Troubleshooting', desc: 'Common issues and solutions', page: 'docs-troubleshooting' },
   ]
   
   return (
@@ -1124,6 +1129,7 @@ function DocsPage() {
           <div
             key={i}
             className="animate-in"
+            onClick={() => setCurrentPage(doc.page)}
             style={{
               backgroundColor: 'var(--bg-secondary)',
               border: '1px solid var(--border-color)',
@@ -1152,6 +1158,400 @@ function DocsPage() {
             <ChevronRight size={20} color="var(--text-muted)" />
           </div>
         ))}
+      </div>
+    </>
+  )
+}
+
+function GettingStartedPage() {
+  return (
+    <>
+      <div className="animate-in" style={{ marginBottom: '32px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Getting Started</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Learn how to set up Rain OS SEO Analyzer</p>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Installation</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {[
+              { step: '1', title: 'Download the Plugin', desc: 'Download the Rain OS SEO Analyzer plugin from your account dashboard or the WordPress plugin repository.' },
+              { step: '2', title: 'Upload to WordPress', desc: 'Go to Plugins > Add New > Upload Plugin in your WordPress admin. Select the downloaded ZIP file and click Install Now.' },
+              { step: '3', title: 'Activate the Plugin', desc: 'After installation, click Activate Plugin. You will see a new "Rain OS" menu item in your WordPress admin sidebar.' },
+              { step: '4', title: 'Enter Your API Key', desc: 'Navigate to Rain OS > Settings and enter your API key. You can find your API key in your Rain OS account dashboard.' },
+            ].map((item, i) => (
+              <div key={i} style={{ display: 'flex', gap: '16px', padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--accent)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, flexShrink: 0 }}>{item.step}</div>
+                <div>
+                  <div style={{ fontWeight: 500, marginBottom: '4px' }}>{item.title}</div>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '14px' }}>{item.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Your First Analysis</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
+            Once installed, you can analyze any post or page content. Here's how to run your first analysis:
+          </p>
+          <ol style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.8, paddingLeft: '20px' }}>
+            <li style={{ marginBottom: '8px' }}>Open any post or page in the WordPress editor</li>
+            <li style={{ marginBottom: '8px' }}>Look for the "Rain OS Analysis" panel in the sidebar (Gutenberg) or below the editor (Classic)</li>
+            <li style={{ marginBottom: '8px' }}>Click the "Analyze Content" button</li>
+            <li style={{ marginBottom: '8px' }}>Wait a few seconds for the AI to process your content</li>
+            <li>Review your scores across all three pillars: AI Readability, Digital Authority, and Conversion Readiness</li>
+          </ol>
+        </div>
+
+        <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>System Requirements</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+            {[
+              { label: 'WordPress Version', value: '5.8 or higher' },
+              { label: 'PHP Version', value: '7.4 or higher' },
+              { label: 'PHP Extensions', value: 'curl, json, mbstring' },
+              { label: 'Internet Connection', value: 'Required for API calls' },
+            ].map((req, i) => (
+              <div key={i} style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                <div style={{ color: 'var(--text-muted)', fontSize: '12px', marginBottom: '4px' }}>{req.label}</div>
+                <div style={{ fontWeight: 500 }}>{req.value}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function APIReferencePage() {
+  return (
+    <>
+      <div className="animate-in" style={{ marginBottom: '32px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>API Reference</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Complete API documentation and endpoints</p>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Authentication</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
+            All API requests require authentication using a Bearer token. Include your API key in the Authorization header:
+          </p>
+          <div style={{ backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px', padding: '16px', fontFamily: 'monospace', fontSize: '13px', color: 'var(--accent)' }}>
+            Authorization: Bearer YOUR_API_KEY
+          </div>
+        </div>
+
+        <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Endpoints</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {[
+              { method: 'POST', endpoint: '/api/analyze', desc: 'Perform full content analysis', action: 'full_analysis' },
+              { method: 'POST', endpoint: '/api/analyze', desc: 'Generate title suggestions', action: 'suggest_titles' },
+              { method: 'POST', endpoint: '/api/analyze', desc: 'Generate meta description', action: 'generate_description' },
+              { method: 'POST', endpoint: '/api/analyze', desc: 'Summarize content', action: 'summarize_content' },
+              { method: 'POST', endpoint: '/api/analyze', desc: 'Rewrite a sentence', action: 'rewrite_sentence' },
+            ].map((ep, i) => (
+              <div key={i} style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                  <span style={{ padding: '4px 8px', backgroundColor: '#10b981', color: '#000', borderRadius: '4px', fontSize: '11px', fontWeight: 700 }}>{ep.method}</span>
+                  <code style={{ color: 'var(--accent)', fontSize: '14px' }}>{ep.endpoint}</code>
+                </div>
+                <div style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>{ep.desc}</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '4px' }}>Action: {ep.action}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Response Headers</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
+            The API returns usage information in response headers:
+          </p>
+          <div style={{ backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px', padding: '16px', fontFamily: 'monospace', fontSize: '13px' }}>
+            <div style={{ marginBottom: '8px' }}><span style={{ color: 'var(--accent)' }}>X-Usage-Info:</span> <span style={{ color: 'var(--text-secondary)' }}>used=45;limit=100;reset=2024-01-01</span></div>
+            <div><span style={{ color: 'var(--accent)' }}>X-RateLimit-Remaining:</span> <span style={{ color: 'var(--text-secondary)' }}>55</span></div>
+          </div>
+        </div>
+
+        <div className="animate-in-delay-4" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Example Request</h2>
+          <div style={{ backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px', padding: '16px', fontFamily: 'monospace', fontSize: '12px', lineHeight: 1.6, overflowX: 'auto' }}>
+            <div style={{ color: 'var(--text-muted)' }}>// Full analysis request</div>
+            <div style={{ color: '#10b981' }}>POST /api/analyze</div>
+            <div style={{ color: 'var(--text-secondary)', marginTop: '8px' }}>{'{'}</div>
+            <div style={{ color: 'var(--text-secondary)', paddingLeft: '16px' }}>"action": "full_analysis",</div>
+            <div style={{ color: 'var(--text-secondary)', paddingLeft: '16px' }}>"content": "Your article content here...",</div>
+            <div style={{ color: 'var(--text-secondary)', paddingLeft: '16px' }}>"title": "Article Title",</div>
+            <div style={{ color: 'var(--text-secondary)', paddingLeft: '16px' }}>"url": "https://example.com/article"</div>
+            <div style={{ color: 'var(--text-secondary)' }}>{'}'}</div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function ProFeaturesPage() {
+  return (
+    <>
+      <div className="animate-in" style={{ marginBottom: '32px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Pro Features</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Explore advanced features and micro-actions</p>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Quick Tools (Micro-Actions)</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
+            Pro users get access to powerful AI-powered quick tools that help optimize content in seconds:
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+            {[
+              { title: 'Suggest Titles', desc: 'Generate multiple AI-optimized title variations based on your content. Perfect for A/B testing and SEO optimization.' },
+              { title: 'Generate Meta Description', desc: 'Create compelling meta descriptions that improve click-through rates and are optimized for search engines.' },
+              { title: 'Summarize Content', desc: 'Get a concise AI-generated summary of your content, perfect for social media or featured snippets.' },
+              { title: 'Rewrite Sentence', desc: 'Select any sentence and get AI-powered rewrites that improve clarity and readability.' },
+            ].map((tool, i) => (
+              <div key={i} style={{ padding: '20px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                <div style={{ fontWeight: 600, marginBottom: '8px', color: 'var(--accent)' }}>{tool.title}</div>
+                <div style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.6 }}>{tool.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Authorship & Provenance</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
+            Track and verify content authenticity with our provenance system. Each analysis generates a unique hash that proves when and how your content was analyzed.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+            {[
+              { label: 'Content Hash', desc: 'Unique fingerprint of your content' },
+              { label: 'Timestamp', desc: 'Exact time of analysis' },
+              { label: 'Verification', desc: 'Cryptographic proof of authenticity' },
+            ].map((item, i) => (
+              <div key={i} style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px', textAlign: 'center' }}>
+                <div style={{ color: 'var(--accent)', fontWeight: 600, marginBottom: '8px' }}>{item.label}</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '12px' }}>{item.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Detailed Sub-Scores</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
+            Pro users see granular breakdowns within each pillar. Click any sub-score to see detailed explanations and specific recommendations.
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {[
+              { pillar: 'AI Readability', scores: ['Semantic Clarity', 'Logical Structure', 'Readability Index', 'Entity Recognition'] },
+              { pillar: 'Digital Authority', scores: ['Citation Readiness', 'E-E-A-T Signals', 'Source Quality', 'Fact Density'] },
+              { pillar: 'Conversion Readiness', scores: ['CTA Strength', 'Engagement Hooks', 'User Intent Match', 'Action Clarity'] },
+            ].map((p, i) => (
+              <div key={i} style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                <div style={{ fontWeight: 500, marginBottom: '8px' }}>{p.pillar}</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  {p.scores.map((s, j) => (
+                    <span key={j} style={{ padding: '4px 10px', backgroundColor: 'rgba(34, 211, 238, 0.1)', color: 'var(--accent)', borderRadius: '4px', fontSize: '12px' }}>{s}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="animate-in-delay-4" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Usage Tracking</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7 }}>
+            Pro accounts include real-time usage tracking. See how many analyses you have used and remaining, with automatic notifications when approaching limits. Usage resets monthly based on your billing cycle.
+          </p>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function ThreePillarsPage() {
+  return (
+    <>
+      <div className="animate-in" style={{ marginBottom: '32px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>The Three Pillars</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Understanding AI Readability, Digital Authority, and Conversion Readiness</p>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '2px solid #22d3ee', borderRadius: '12px', padding: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+            <div style={{ width: '16px', height: '16px', borderRadius: '4px', backgroundColor: '#22d3ee' }} />
+            <h2 style={{ fontSize: '22px', fontWeight: 600, color: '#22d3ee' }}>AI Readability</h2>
+          </div>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
+            AI Readability measures how well artificial intelligence systems can understand and process your content. This pillar evaluates the clarity, structure, and semantic quality of your writing from an AI perspective.
+          </p>
+          <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '12px' }}>Key Components:</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+            {[
+              { name: 'Semantic Clarity', desc: 'How clearly your ideas are expressed and whether AI can extract meaning accurately' },
+              { name: 'Logical Structure', desc: 'The flow and organization of your content, from introduction to conclusion' },
+              { name: 'Readability Index', desc: 'Sentence length, vocabulary complexity, and paragraph organization' },
+              { name: 'Entity Recognition', desc: 'How well AI can identify people, places, concepts, and their relationships' },
+            ].map((item, i) => (
+              <div key={i} style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                <div style={{ fontWeight: 500, marginBottom: '6px' }}>{item.name}</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>{item.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '2px solid #10b981', borderRadius: '12px', padding: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+            <div style={{ width: '16px', height: '16px', borderRadius: '4px', backgroundColor: '#10b981' }} />
+            <h2 style={{ fontSize: '22px', fontWeight: 600, color: '#10b981' }}>Digital Authority</h2>
+          </div>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
+            Digital Authority evaluates the credibility and trustworthiness of your content. AI systems use these signals to determine whether to cite or recommend your content as a reliable source.
+          </p>
+          <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '12px' }}>Key Components:</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+            {[
+              { name: 'Citation Readiness', desc: 'Proper references, sources, and attribution that AI can verify' },
+              { name: 'E-E-A-T Signals', desc: 'Evidence of Experience, Expertise, Authoritativeness, and Trustworthiness' },
+              { name: 'Source Quality', desc: 'The caliber and reputation of external sources you reference' },
+              { name: 'Fact Density', desc: 'The presence of verifiable facts, statistics, and data points' },
+            ].map((item, i) => (
+              <div key={i} style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                <div style={{ fontWeight: 500, marginBottom: '6px' }}>{item.name}</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>{item.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '2px solid #a855f7', borderRadius: '12px', padding: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+            <div style={{ width: '16px', height: '16px', borderRadius: '4px', backgroundColor: '#a855f7' }} />
+            <h2 style={{ fontSize: '22px', fontWeight: 600, color: '#a855f7' }}>Conversion Readiness</h2>
+          </div>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
+            Conversion Readiness measures how effectively your content drives user action. Beyond being understood and trusted, great content should guide readers toward meaningful next steps.
+          </p>
+          <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '12px' }}>Key Components:</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+            {[
+              { name: 'CTA Strength', desc: 'Clear, compelling calls-to-action that guide user behavior' },
+              { name: 'Engagement Hooks', desc: 'Elements that capture attention and encourage continued reading' },
+              { name: 'User Intent Match', desc: 'How well your content addresses what users are actually looking for' },
+              { name: 'Action Clarity', desc: 'Unambiguous next steps that users can take after reading' },
+            ].map((item, i) => (
+              <div key={i} style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                <div style={{ fontWeight: 500, marginBottom: '6px' }}>{item.name}</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>{item.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="animate-in-delay-4" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>How Scores Are Calculated</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
+            Each pillar is scored from 0-100 based on multiple sub-factors. The overall score is a weighted average of all three pillars. Scores are calculated using advanced AI models that simulate how modern search engines and AI systems evaluate content.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+            <div style={{ textAlign: 'center', padding: '20px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+              <div style={{ fontSize: '32px', fontWeight: 700, color: '#ef4444' }}>0-59</div>
+              <div style={{ color: 'var(--text-muted)', fontSize: '13px', marginTop: '8px' }}>Needs Improvement</div>
+            </div>
+            <div style={{ textAlign: 'center', padding: '20px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+              <div style={{ fontSize: '32px', fontWeight: 700, color: '#f59e0b' }}>60-79</div>
+              <div style={{ color: 'var(--text-muted)', fontSize: '13px', marginTop: '8px' }}>Good</div>
+            </div>
+            <div style={{ textAlign: 'center', padding: '20px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+              <div style={{ fontSize: '32px', fontWeight: 700, color: '#10b981' }}>80-100</div>
+              <div style={{ color: 'var(--text-muted)', fontSize: '13px', marginTop: '8px' }}>Excellent</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function TroubleshootingPage() {
+  return (
+    <>
+      <div className="animate-in" style={{ marginBottom: '32px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Troubleshooting</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Common issues and solutions</p>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        {[
+          {
+            q: 'Analysis is not working or returns an error',
+            a: 'First, check that your API key is correctly entered in Rain OS > Settings. Verify your subscription is active and you have remaining API credits. If the issue persists, check your server error logs for PHP errors.',
+            steps: ['Verify API key in Settings', 'Check subscription status', 'Ensure PHP curl extension is enabled', 'Check server error logs']
+          },
+          {
+            q: 'Scores seem inconsistent or unexpected',
+            a: 'AI analysis can produce slightly different results each time due to the nature of AI models. However, scores should be generally consistent. If you see major variations, try clearing your browser cache and running the analysis again.',
+            steps: ['Clear browser cache', 'Wait a few minutes and re-analyze', 'Ensure content has saved properly', 'Check for special characters that may affect parsing']
+          },
+          {
+            q: 'The plugin is slow or timing out',
+            a: 'Analysis requires sending content to our API servers. Large content (10,000+ words) may take longer. Check your internet connection and server timeout settings. You may need to increase PHP max_execution_time.',
+            steps: ['Check internet connection', 'Increase PHP max_execution_time', 'Try analyzing smaller content first', 'Contact support if issue persists']
+          },
+          {
+            q: 'Quick Tools (Pro) are not available',
+            a: 'Quick Tools require an active Pro subscription. Verify your subscription status in your Rain OS account dashboard. If you recently upgraded, try logging out and back in to refresh your access.',
+            steps: ['Verify Pro subscription', 'Log out and log back in', 'Clear plugin cache', 'Re-enter API key']
+          },
+          {
+            q: 'Usage quota shows incorrect numbers',
+            a: 'Usage is tracked on our servers and may take a few minutes to sync. The quota resets at the beginning of each billing cycle. Check your account dashboard for the most accurate usage information.',
+            steps: ['Refresh the page', 'Check account dashboard', 'Wait a few minutes for sync', 'Contact support if discrepancy persists']
+          },
+        ].map((item, i) => (
+          <div key={i} className={`animate-in-delay-${Math.min(i + 1, 5)}`} style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '12px', color: 'var(--accent)' }}>{item.q}</h3>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.7, marginBottom: '16px' }}>{item.a}</p>
+            <div style={{ backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px', padding: '16px' }}>
+              <div style={{ fontWeight: 500, fontSize: '13px', marginBottom: '8px' }}>Steps to resolve:</div>
+              <ol style={{ margin: 0, paddingLeft: '20px' }}>
+                {item.steps.map((step, j) => (
+                  <li key={j} style={{ color: 'var(--text-muted)', fontSize: '13px', padding: '4px 0' }}>{step}</li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        ))}
+
+        <div className="animate-in-delay-5" style={{ backgroundColor: 'linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(168, 85, 247, 0.1))', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px', textAlign: 'center' }}>
+          <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '8px' }}>Still need help?</h3>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '16px' }}>
+            Contact our support team at support@getrainos.com
+          </p>
+          <button style={{
+            padding: '12px 24px',
+            backgroundColor: 'var(--accent)',
+            color: '#000',
+            border: 'none',
+            borderRadius: '8px',
+            fontWeight: 600,
+            cursor: 'pointer',
+          }}>
+            Contact Support
+          </button>
+        </div>
       </div>
     </>
   )
@@ -2103,7 +2503,7 @@ function App() {
       case 'settings':
         return <SettingsPage />
       case 'docs':
-        return <DocsPage />
+        return <DocsPage setCurrentPage={setCurrentPage} />
       case 'upgrade':
         return <UpgradePage />
       case 'performance':
@@ -2118,6 +2518,16 @@ function App() {
         return <LearnAIReadabilityPage />
       case 'improve-score':
         return <ImproveScorePage />
+      case 'docs-getting-started':
+        return <GettingStartedPage />
+      case 'docs-api-reference':
+        return <APIReferencePage />
+      case 'docs-pro-features':
+        return <ProFeaturesPage />
+      case 'docs-three-pillars':
+        return <ThreePillarsPage />
+      case 'docs-troubleshooting':
+        return <TroubleshootingPage />
       default:
         return <DashboardPage overallScore={overallScore} setCurrentPage={setCurrentPage} />
     }
