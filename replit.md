@@ -117,3 +117,11 @@ Location: `WordpressPluginStudio/dashboard-preview/`
 **Workflows:**
 - Dashboard Preview: `npm run dev` on port 5000
 - PHP Plugin Preview: `php -S 0.0.0.0:8000` on port 8000
+
+### Dashboard UX Improvements (December 2024)
+- **Time Period Indicators**: All charts and KPI cards display clear time context (e.g., "Last 12 Weeks", "All Time", "This Billing Cycle")
+- **KPI Card Context**: Total Analyses (All Time), Average Score (30 Days), Content Health (Last 7 Days), API Usage (This Billing Cycle)
+- **ChartCard Component**: Accepts optional `period` prop for displaying time badges in chart headers
+- **Built-in Optimization Tools**: Six non-API tools in Getting Started: Readability Calculator, Sentence Length Analyzer, Keyword Density Checker, Heading Structure Validator, Question Detection, Entity Highlighter
+- **AI Messaging**: Documentation emphasizes "AI-powered analysis" and "advanced AI technology" without referencing specific AI providers
+- **Documentation Navigation**: Restructured with sub-links (Getting Started, Troubleshooting, Learn About AI Readability, Improve Your Score)
