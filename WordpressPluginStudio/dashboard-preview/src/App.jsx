@@ -65,7 +65,18 @@ const scatterData = [
 ]
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'AI Readability Dashboard', page: 'dashboard', isSub: true },
+  { 
+    icon: LayoutDashboard, 
+    label: 'AI Readability Dashboard', 
+    page: 'dashboard', 
+    isSub: true,
+    subItems: [
+      { label: 'Performance History', section: 'performance' },
+      { label: 'Pillar Breakdown', section: 'pillars' },
+      { label: 'Category Scores', section: 'categories' },
+      { label: 'Content Signals', section: 'signals' },
+    ]
+  },
   { icon: FileText, label: 'Content Analyzer', page: 'analyzer', isSub: true },
   { icon: Settings, label: 'Settings', page: 'settings', isSub: true },
   { icon: HelpCircle, label: 'Documentation', page: 'docs', isSub: true },
@@ -123,30 +134,56 @@ function Sidebar({ currentPage, setCurrentPage }) {
         </a>
         
         {navItems.map((item, index) => (
-          <a
-            key={index}
-            href={`#${item.page}`}
-            onClick={(e) => { e.preventDefault(); setCurrentPage(item.page); }}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              padding: '8px 12px',
-              paddingLeft: item.isSub ? '36px' : '12px',
-              borderRadius: '6px',
-              color: currentPage === item.page ? 'var(--accent)' : 'var(--text-secondary)',
-              backgroundColor: currentPage === item.page ? 'rgba(34, 211, 238, 0.08)' : 'transparent',
-              textDecoration: 'none',
-              marginBottom: '2px',
-              transition: 'all 0.2s ease',
-              fontSize: '13px',
-              fontWeight: currentPage === item.page ? 500 : 400,
-              cursor: 'pointer',
-            }}
-          >
-            {!item.isSub && <item.icon size={16} />}
-            {item.label}
-          </a>
+          <div key={index}>
+            <a
+              href={`#${item.page}`}
+              onClick={(e) => { e.preventDefault(); setCurrentPage(item.page); }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '8px 12px',
+                paddingLeft: item.isSub ? '20px' : '12px',
+                borderRadius: '6px',
+                color: currentPage === item.page ? 'var(--accent)' : 'var(--text-secondary)',
+                backgroundColor: currentPage === item.page ? 'rgba(34, 211, 238, 0.08)' : 'transparent',
+                textDecoration: 'none',
+                marginBottom: '2px',
+                transition: 'all 0.2s ease',
+                fontSize: '13px',
+                fontWeight: currentPage === item.page ? 500 : 400,
+                cursor: 'pointer',
+              }}
+            >
+              {!item.isSub && <item.icon size={16} />}
+              {item.label}
+            </a>
+            {item.subItems && (
+              <div style={{ marginLeft: '0', marginBottom: '4px' }}>
+                {item.subItems.map((subItem, subIndex) => (
+                  <a
+                    key={subIndex}
+                    href={`#${item.page}-${subItem.section}`}
+                    onClick={(e) => { e.preventDefault(); setCurrentPage(item.page); }}
+                    style={{
+                      display: 'block',
+                      padding: '6px 12px',
+                      paddingLeft: '36px',
+                      color: 'var(--text-muted)',
+                      textDecoration: 'none',
+                      fontSize: '12px',
+                      transition: 'color 0.2s ease',
+                      cursor: 'pointer',
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+                  >
+                    {subItem.label}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
         ))}
         
         <div style={{ height: '1px', backgroundColor: 'var(--border-color)', margin: '12px 8px' }} />
@@ -182,48 +219,6 @@ function Sidebar({ currentPage, setCurrentPage }) {
 }
 
 function AdminBar() {
-  const [openMenu, setOpenMenu] = useState(null);
-  
-  const adminMenus = [
-    {
-      label: 'WordPress Admin',
-      icon: '⊞',
-      items: [
-        { label: 'Dashboard', href: '#' },
-        { label: 'Visit Site', href: '#', external: true },
-      ]
-    },
-    {
-      label: 'Updates',
-      icon: '↻',
-      badge: 3,
-      items: [
-        { label: 'WordPress 6.4.2', href: '#' },
-        { label: '2 Plugin Updates', href: '#' },
-        { label: '1 Theme Update', href: '#' },
-      ]
-    },
-    {
-      label: 'Comments',
-      icon: '💬',
-      badge: 12,
-      items: [
-        { label: 'Pending (5)', href: '#' },
-        { label: 'Approved (7)', href: '#' },
-        { label: 'Spam (0)', href: '#' },
-      ]
-    },
-    {
-      label: '+ New',
-      items: [
-        { label: 'Post', href: '#' },
-        { label: 'Page', href: '#' },
-        { label: 'Media', href: '#' },
-        { label: 'User', href: '#' },
-      ]
-    },
-  ];
-
   return (
     <div style={{
       height: 'var(--admin-bar-height)',
@@ -235,109 +230,10 @@ function AdminBar() {
       zIndex: 1000,
       display: 'flex',
       alignItems: 'center',
-      padding: '0 8px',
+      padding: '0 16px',
       borderBottom: '1px solid rgba(255,255,255,0.1)',
-      gap: '0',
     }}>
-      {adminMenus.map((menu, idx) => (
-        <div
-          key={idx}
-          style={{ position: 'relative' }}
-          onMouseEnter={() => setOpenMenu(idx)}
-          onMouseLeave={() => setOpenMenu(null)}
-        >
-          <button
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '0 12px',
-              height: 'var(--admin-bar-height)',
-              background: openMenu === idx ? '#32373c' : 'transparent',
-              border: 'none',
-              color: '#c3c4c7',
-              fontSize: '13px',
-              cursor: 'pointer',
-              transition: 'background 0.15s',
-            }}
-          >
-            {menu.icon && <span style={{ fontSize: '14px' }}>{menu.icon}</span>}
-            <span>{menu.label}</span>
-            {menu.badge && (
-              <span style={{
-                backgroundColor: '#d63638',
-                color: '#fff',
-                fontSize: '9px',
-                fontWeight: 600,
-                padding: '2px 6px',
-                borderRadius: '10px',
-                minWidth: '18px',
-                textAlign: 'center',
-              }}>{menu.badge}</span>
-            )}
-          </button>
-          
-          {openMenu === idx && (
-            <div style={{
-              position: 'absolute',
-              top: '100%',
-              left: 0,
-              backgroundColor: '#1d2327',
-              border: '1px solid #3c434a',
-              borderTop: 'none',
-              minWidth: '160px',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-              zIndex: 1001,
-            }}>
-              {menu.items.map((item, itemIdx) => (
-                <a
-                  key={itemIdx}
-                  href={item.href}
-                  onClick={(e) => e.preventDefault()}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '8px 12px',
-                    color: '#c3c4c7',
-                    textDecoration: 'none',
-                    fontSize: '13px',
-                    borderBottom: itemIdx < menu.items.length - 1 ? '1px solid #3c434a' : 'none',
-                    transition: 'background 0.15s',
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = '#32373c'}
-                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                >
-                  {item.label}
-                  {item.external && <ExternalLink size={12} style={{ opacity: 0.6 }} />}
-                </a>
-              ))}
-            </div>
-          )}
-        </div>
-      ))}
-      
-      <div style={{ flex: 1 }} />
-      
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0' }}>
-        <button
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            padding: '0 12px',
-            height: 'var(--admin-bar-height)',
-            background: 'transparent',
-            border: 'none',
-            color: '#c3c4c7',
-            fontSize: '13px',
-            cursor: 'pointer',
-          }}
-        >
-          <span style={{ width: '20px', height: '20px', borderRadius: '50%', backgroundColor: '#50575e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px' }}>A</span>
-          <span>Admin User</span>
-        </button>
-      </div>
+      <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>WordPress Admin</span>
     </div>
   )
 }
