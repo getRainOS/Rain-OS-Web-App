@@ -89,7 +89,8 @@ function Sidebar() {
       
       <nav style={{ padding: '8px', flex: 1, overflowY: 'auto' }}>
         <a
-          href="#"
+          href="#rain-os"
+          onClick={(e) => e.preventDefault()}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -102,6 +103,7 @@ function Sidebar() {
             marginBottom: '2px',
             fontSize: '14px',
             fontWeight: 500,
+            cursor: 'pointer',
           }}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="18" height="18">
@@ -114,7 +116,8 @@ function Sidebar() {
         {navItems.map((item, index) => (
           <a
             key={index}
-            href="#"
+            href={`#${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+            onClick={(e) => e.preventDefault()}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -129,6 +132,7 @@ function Sidebar() {
               transition: 'all 0.2s ease',
               fontSize: '13px',
               fontWeight: item.active ? 500 : 400,
+              cursor: 'pointer',
             }}
           >
             {!item.isSub && <item.icon size={16} />}
@@ -139,7 +143,8 @@ function Sidebar() {
         <div style={{ height: '1px', backgroundColor: 'var(--border-color)', margin: '12px 8px' }} />
         
         <a
-          href="#"
+          href="#upgrade"
+          onClick={(e) => e.preventDefault()}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -152,6 +157,7 @@ function Sidebar() {
             textDecoration: 'none',
             fontSize: '13px',
             fontWeight: 500,
+            cursor: 'pointer',
           }}
         >
           <Star size={14} />
