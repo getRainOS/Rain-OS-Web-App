@@ -24,14 +24,22 @@ rain-os-seo/
     └── images/
         └── rain-os-logo.png     # Rain OS cloud logo
 
-preview/                         # Standalone preview system (not part of plugin)
+preview/                         # PHP-based preview system (legacy)
 ├── index.php                    # Preview router
 ├── dashboard-preview.php        # Dashboard preview with 3 pillars
+├── content-analyzer-preview.php # Content analyzer with Pro features
 ├── settings-preview.php         # Settings preview
-├── metabox-preview.php          # Meta box preview with subcategories
 ├── preview.css                  # Preview-specific styles
 ├── preview.js                   # Preview interactions
 └── rain-os-logo.png             # Logo for preview
+
+dashboard-preview/               # React-based analytics dashboard (current)
+├── src/
+│   ├── App.jsx                  # Main dashboard with Recharts charts
+│   ├── index.css                # Dark theme CSS with animations
+│   └── main.jsx                 # React entry point
+├── vite.config.js               # Vite config (port 5000, allowedHosts)
+└── package.json                 # Dependencies (recharts, lucide-react)
 ```
 
 ## Technical Requirements
@@ -72,14 +80,17 @@ Focus: Is your content structured to provide answers?
    - Submenu: Dashboard, Settings
    - Menu position: 30 (after Comments)
 
-3. **Dashboard Page**
-   - Yoast-style content table with 6 columns (Title, AEO Score, AI Readability, Digital Authority, Conversion, Analyzed)
-   - Score overview cards (Good, OK, Needs work, Not analyzed) with smaller numbers
-   - Trend charts showing score progression over 5 weeks
-   - Horizontal bar charts for pillar score averages
-   - Multi-ring analytics chart with legend
-   - Quick action cards with working links
-   - Dark/Light mode toggle with localStorage persistence
+3. **Dashboard Page (React Version)**
+   - Fixed sidebar (192px) with admin bar (48px) and cyan active state
+   - 4 KPI cards: Total Analyses, Average Score, Content Health %, API Usage %
+   - Performance History line chart (2/3 width) with dashed baseline comparison
+   - Pillar Breakdown donut chart (1/3 width) with overall score in center
+   - Analysis Categories horizontal bar chart (9 metric categories)
+   - Content Signals scatter plot (word count vs score correlation)
+   - Header with search input, notification bell, and "New Analysis" CTA
+   - Fade-in animations (fadeInUp keyframe) on page load
+   - Hover effects on cards: translateY(-2px) with border glow
+   - Built with Recharts and Lucide React icons
    - Connection status with pulse animation
 
 4. **Settings Page**
