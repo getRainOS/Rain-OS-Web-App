@@ -75,13 +75,20 @@ const navItems = [
       { label: 'Pillar Breakdown', page: 'pillars' },
       { label: 'Category Scores', page: 'categories' },
       { label: 'Content Signals', page: 'signals' },
-      { label: 'Learn about AI Readability', page: 'learn-ai-readability' },
-      { label: 'Improve Your Score', page: 'improve-score' },
     ]
   },
   { icon: FileText, label: 'Content Analyzer', page: 'analyzer', isSub: true },
   { icon: Settings, label: 'Settings', page: 'settings', isSub: true },
-  { icon: HelpCircle, label: 'Documentation', page: 'docs', isSub: true },
+  { 
+    icon: HelpCircle, 
+    label: 'Documentation', 
+    page: 'docs', 
+    isSub: true,
+    subItems: [
+      { label: 'Learn about AI Readability', page: 'learn-ai-readability' },
+      { label: 'Improve Your Score', page: 'improve-score' },
+    ]
+  },
 ]
 
 function Sidebar({ currentPage, setCurrentPage }) {
