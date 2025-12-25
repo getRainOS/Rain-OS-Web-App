@@ -99,26 +99,25 @@ function Sidebar({ currentPage, setCurrentPage }) {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
+            gap: '12px',
             padding: '10px 12px',
-            borderRadius: '6px',
-            backgroundColor: 'rgba(34, 211, 238, 0.1)',
             textDecoration: 'none',
-            marginBottom: '2px',
+            marginBottom: '8px',
             cursor: 'pointer',
           }}
         >
-          <span style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-0.5px' }}>
-            <span style={{ color: '#ffffff' }}>rai</span>
-            <span style={{ color: '#3b82f6' }}>n</span>
+          <span style={{ fontSize: '24px', fontWeight: 700, letterSpacing: '-0.5px' }}>
+            <span style={{ color: '#ffffff' }}>r</span>
+            <span style={{ color: '#22d3ee' }}>ai</span>
+            <span style={{ color: '#ffffff' }}>n</span>
           </span>
           <span style={{
-            padding: '2px 8px',
+            padding: '4px 10px',
             borderRadius: '4px',
-            backgroundColor: 'rgba(59, 130, 246, 0.2)',
-            color: '#3b82f6',
-            fontSize: '10px',
-            fontWeight: 600,
+            backgroundColor: '#22d3ee',
+            color: '#000000',
+            fontSize: '11px',
+            fontWeight: 700,
             letterSpacing: '0.5px',
           }}>BETA</span>
         </a>
@@ -894,17 +893,18 @@ Additionally, establishing digital authority through proper citations, expert au
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <span style={{ fontSize: '18px', fontWeight: 700, letterSpacing: '-0.3px' }}>
-                <span style={{ color: '#ffffff' }}>rai</span>
-                <span style={{ color: '#3b82f6' }}>n</span>
+                <span style={{ color: '#ffffff' }}>r</span>
+                <span style={{ color: '#22d3ee' }}>ai</span>
+                <span style={{ color: '#ffffff' }}>n</span>
               </span>
               <span style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Analysis</span>
               <span style={{
                 padding: '2px 8px',
                 borderRadius: '4px',
-                backgroundColor: 'rgba(59, 130, 246, 0.15)',
-                color: '#3b82f6',
+                backgroundColor: '#22d3ee',
+                color: '#000000',
                 fontSize: '10px',
-                fontWeight: 600,
+                fontWeight: 700,
               }}>v2.4</span>
             </div>
           </div>
