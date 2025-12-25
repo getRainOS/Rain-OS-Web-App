@@ -77,8 +77,6 @@ const navItems = [
       { label: 'Content Signals', page: 'signals' },
     ]
   },
-  { icon: FileText, label: 'Content Analyzer', page: 'analyzer', isSub: true },
-  { icon: Settings, label: 'Settings', page: 'settings', isSub: true },
   { 
     icon: HelpCircle, 
     label: 'Documentation', 
@@ -86,14 +84,13 @@ const navItems = [
     isSub: true,
     subItems: [
       { label: 'Getting Started', page: 'docs-getting-started' },
-      { label: 'API Reference', page: 'docs-api-reference' },
-      { label: 'Pro Features', page: 'docs-pro-features' },
-      { label: 'Three Pillars', page: 'docs-three-pillars' },
       { label: 'Troubleshooting', page: 'docs-troubleshooting' },
       { label: 'Learn About AI Readability', page: 'learn-ai-readability' },
       { label: 'Improve Your Score', page: 'improve-score' },
     ]
   },
+  { icon: FileText, label: 'Content Analyzer', page: 'analyzer', isSub: true },
+  { icon: Settings, label: 'Settings', page: 'settings', isSub: true },
 ]
 
 function Sidebar({ currentPage, setCurrentPage }) {
@@ -1111,10 +1108,9 @@ function SettingsPage() {
 function DocsPage({ setCurrentPage }) {
   const docs = [
     { title: 'Getting Started', desc: 'Learn how to set up Rain OS SEO Analyzer', page: 'docs-getting-started' },
-    { title: 'API Reference', desc: 'Complete API documentation and endpoints', page: 'docs-api-reference' },
-    { title: 'Pro Features', desc: 'Explore advanced features and micro-actions', page: 'docs-pro-features' },
-    { title: 'Three Pillars', desc: 'Understanding AI Readability, Digital Authority, and Conversion Readiness', page: 'docs-three-pillars' },
     { title: 'Troubleshooting', desc: 'Common issues and solutions', page: 'docs-troubleshooting' },
+    { title: 'Learn About AI Readability', desc: 'Understand how AI systems read and interpret your content', page: 'learn-ai-readability' },
+    { title: 'Improve Your Score', desc: 'Practical tips and strategies to boost your content scores', page: 'improve-score' },
   ]
   
   return (
