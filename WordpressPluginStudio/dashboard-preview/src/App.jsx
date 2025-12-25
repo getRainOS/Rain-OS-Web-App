@@ -60,10 +60,11 @@ const scatterData = [
 ]
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', active: true },
-  { icon: FileText, label: 'Content Analyzer', active: false },
-  { icon: Settings, label: 'Settings', active: false },
-  { icon: HelpCircle, label: 'Documentation', active: false },
+  { icon: LayoutDashboard, label: 'rain OS', active: false, isParent: true },
+  { icon: FileText, label: 'Content Analyzer', active: false, isSub: true },
+  { icon: TrendingUp, label: 'Full Analytics Dashboard', active: true, isSub: true },
+  { icon: Settings, label: 'Settings', active: false, isSub: true },
+  { icon: HelpCircle, label: 'Documentation', active: false, isSub: true },
 ]
 
 function Sidebar() {
@@ -81,27 +82,36 @@ function Sidebar() {
       zIndex: 100,
     }}>
       <div style={{
-        padding: '24px 16px',
+        padding: '16px 12px',
         borderBottom: '1px solid var(--border-color)',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '24px', fontWeight: 700 }}>
-            <span style={{ color: '#fff' }}>r</span>
-            <span style={{ color: 'var(--accent)' }}>ai</span>
-            <span style={{ color: '#fff' }}>n</span>
-          </span>
-          <span style={{
-            fontSize: '10px',
-            padding: '2px 6px',
-            backgroundColor: 'rgba(34, 211, 238, 0.1)',
-            color: 'var(--accent)',
-            borderRadius: '4px',
-            fontWeight: 600,
-          }}>SEO</span>
-        </div>
+        <span style={{ color: 'var(--text-muted)', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>WordPress Admin</span>
       </div>
       
-      <nav style={{ padding: '16px 8px', flex: 1 }}>
+      <nav style={{ padding: '8px', flex: 1, overflowY: 'auto' }}>
+        <a
+          href="#"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            padding: '10px 12px',
+            borderRadius: '6px',
+            color: 'var(--accent)',
+            backgroundColor: 'rgba(34, 211, 238, 0.1)',
+            textDecoration: 'none',
+            marginBottom: '2px',
+            fontSize: '14px',
+            fontWeight: 500,
+          }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="18" height="18">
+            <path d="M17.5 11a5.5 5.5 0 0 0-10.4-2.5A4 4 0 1 0 4 16h13a3.5 3.5 0 0 0 .5-7z"/>
+            <path d="M7 19c0 1.5 1 3 2.5 3s2.5-1.5 2.5-3c0-2-2.5-4-2.5-4S7 17 7 19z" fill="currentColor" stroke="currentColor"/>
+          </svg>
+          rain OS
+        </a>
+        
         {navItems.map((item, index) => (
           <a
             key={index}
@@ -109,43 +119,49 @@ function Sidebar() {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '12px',
-              padding: '12px',
-              borderRadius: '8px',
+              gap: '10px',
+              padding: '8px 12px',
+              paddingLeft: item.isSub ? '36px' : '12px',
+              borderRadius: '6px',
               color: item.active ? 'var(--accent)' : 'var(--text-secondary)',
-              backgroundColor: item.active ? 'rgba(34, 211, 238, 0.1)' : 'transparent',
+              backgroundColor: item.active ? 'rgba(34, 211, 238, 0.08)' : 'transparent',
               textDecoration: 'none',
-              marginBottom: '4px',
+              marginBottom: '2px',
               transition: 'all 0.2s ease',
-              fontSize: '14px',
-              fontWeight: item.active ? 600 : 400,
+              fontSize: '13px',
+              fontWeight: item.active ? 500 : 400,
             }}
           >
-            <item.icon size={18} />
+            {!item.isSub && <item.icon size={16} />}
             {item.label}
           </a>
         ))}
-      </nav>
-      
-      <div style={{ padding: '16px', borderTop: '1px solid var(--border-color)' }}>
+        
+        <div style={{ height: '1px', backgroundColor: 'var(--border-color)', margin: '12px 8px' }} />
+        
         <a
           href="#"
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            padding: '12px',
-            borderRadius: '8px',
-            background: 'linear-gradient(135deg, var(--accent), var(--purple))',
-            color: '#fff',
+            padding: '10px 12px',
+            paddingLeft: '36px',
+            borderRadius: '6px',
+            background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(168, 85, 247, 0.15))',
+            color: 'var(--accent)',
             textDecoration: 'none',
-            fontSize: '14px',
-            fontWeight: 600,
+            fontSize: '13px',
+            fontWeight: 500,
           }}
         >
-          <Star size={16} />
+          <Star size={14} />
           Upgrade Now
         </a>
+      </nav>
+      
+      <div style={{ padding: '12px', borderTop: '1px solid var(--border-color)' }}>
+        <span style={{ color: 'var(--text-muted)', fontSize: '11px' }}>support@getrainos.com</span>
       </div>
     </div>
   )
@@ -299,7 +315,9 @@ function App() {
         marginTop: 'var(--admin-bar-height)',
         padding: '32px',
         minHeight: 'calc(100vh - var(--admin-bar-height))',
+        width: 'calc(100% - var(--sidebar-width))',
         backgroundColor: 'var(--bg-primary)',
+        boxSizing: 'border-box',
       }}>
         <header className="animate-in" style={{
           display: 'flex',
