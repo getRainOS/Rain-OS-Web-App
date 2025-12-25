@@ -60,7 +60,6 @@ const scatterData = [
 ]
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'rain OS', active: false, isParent: true },
   { icon: FileText, label: 'Content Analyzer', active: false, isSub: true },
   { icon: TrendingUp, label: 'Full Analytics Dashboard', active: true, isSub: true },
   { icon: Settings, label: 'Settings', active: false, isSub: true },
