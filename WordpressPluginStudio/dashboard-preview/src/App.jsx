@@ -71,10 +71,10 @@ const navItems = [
     page: 'dashboard', 
     isSub: true,
     subItems: [
-      { label: 'Performance History', section: 'performance' },
-      { label: 'Pillar Breakdown', section: 'pillars' },
-      { label: 'Category Scores', section: 'categories' },
-      { label: 'Content Signals', section: 'signals' },
+      { label: 'Performance History', page: 'performance' },
+      { label: 'Pillar Breakdown', page: 'pillars' },
+      { label: 'Category Scores', page: 'categories' },
+      { label: 'Content Signals', page: 'signals' },
     ]
   },
   { icon: FileText, label: 'Content Analyzer', page: 'analyzer', isSub: true },
@@ -163,20 +163,20 @@ function Sidebar({ currentPage, setCurrentPage }) {
                 {item.subItems.map((subItem, subIndex) => (
                   <a
                     key={subIndex}
-                    href={`#${item.page}-${subItem.section}`}
-                    onClick={(e) => { e.preventDefault(); setCurrentPage(item.page); }}
+                    href={`#${subItem.page}`}
+                    onClick={(e) => { e.preventDefault(); setCurrentPage(subItem.page); }}
                     style={{
                       display: 'block',
                       padding: '6px 12px',
                       paddingLeft: '36px',
-                      color: 'var(--text-muted)',
+                      color: currentPage === subItem.page ? 'var(--accent)' : 'var(--text-muted)',
                       textDecoration: 'none',
                       fontSize: '12px',
                       transition: 'color 0.2s ease',
                       cursor: 'pointer',
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
-                    onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+                    onMouseEnter={(e) => { if (currentPage !== subItem.page) e.currentTarget.style.color = 'var(--text-secondary)' }}
+                    onMouseLeave={(e) => { if (currentPage !== subItem.page) e.currentTarget.style.color = 'var(--text-muted)' }}
                   >
                     {subItem.label}
                   </a>
@@ -1509,6 +1509,235 @@ function DashboardPage({ overallScore, setCurrentPage }) {
   )
 }
 
+function PerformanceHistoryPage() {
+  return (
+    <>
+      <div className="animate-in" style={{ marginBottom: '32px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Performance History</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Track your content performance over time</p>
+      </div>
+      
+      <ChartCard title="Score Trend (12 Months)" className="animate-in-delay-1">
+        <div style={{ height: '400px' }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={performanceData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
+              <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} />
+              <YAxis stroke="var(--text-muted)" fontSize={12} domain={[60, 100]} />
+              <Tooltip content={<CustomTooltip />} />
+              <Line type="monotone" dataKey="baseline" stroke="var(--text-muted)" strokeDasharray="5 5" dot={false} name="Baseline" />
+              <Line type="monotone" dataKey="score" stroke="var(--accent)" strokeWidth={2} dot={{ fill: 'var(--accent)', strokeWidth: 0, r: 4 }} activeDot={{ r: 6, fill: 'var(--accent)' }} name="Score" />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </ChartCard>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginTop: '24px' }}>
+        {[
+          { label: 'Best Month', value: 'December', sub: 'Score: 91' },
+          { label: 'Worst Month', value: 'January', sub: 'Score: 65' },
+          { label: 'Average Score', value: '78', sub: '+8 from baseline' },
+          { label: 'Improvement', value: '+40%', sub: 'Year over year' },
+        ].map((stat, i) => (
+          <div key={i} className={`animate-in-delay-${i + 2}`} style={{
+            backgroundColor: 'var(--bg-secondary)',
+            border: '1px solid var(--border-color)',
+            borderRadius: '12px',
+            padding: '20px',
+          }}>
+            <div style={{ color: 'var(--text-muted)', fontSize: '12px', marginBottom: '8px' }}>{stat.label}</div>
+            <div style={{ fontSize: '24px', fontWeight: 600, color: 'var(--accent)' }}>{stat.value}</div>
+            <div style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '4px' }}>{stat.sub}</div>
+          </div>
+        ))}
+      </div>
+    </>
+  )
+}
+
+function PillarBreakdownPage() {
+  const overallScore = Math.round(pillarData.reduce((sum, p) => sum + p.value, 0) / pillarData.length)
+  
+  return (
+    <>
+      <div className="animate-in" style={{ marginBottom: '32px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Pillar Breakdown</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Analyze your three core optimization pillars</p>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '24px' }}>
+        <ChartCard title="Overall Score" className="animate-in-delay-1">
+          <div style={{ height: '280px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ position: 'relative', width: '200px', height: '200px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={pillarData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={3} dataKey="value">
+                    {pillarData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip content={<CustomTooltip />} />
+                </PieChart>
+              </ResponsiveContainer>
+              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
+                <div style={{ fontSize: '36px', fontWeight: 700 }}>{overallScore}</div>
+                <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Overall</div>
+              </div>
+            </div>
+          </div>
+        </ChartCard>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {pillarData.map((pillar, i) => (
+            <div key={i} className={`animate-in-delay-${i + 2}`} style={{
+              backgroundColor: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
+              borderRadius: '12px',
+              padding: '24px',
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: pillar.color }} />
+                  <span style={{ fontSize: '16px', fontWeight: 500 }}>{pillar.name}</span>
+                </div>
+                <span style={{ fontSize: '24px', fontWeight: 600, color: pillar.color }}>{pillar.value}</span>
+              </div>
+              <div style={{ height: '8px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ height: '100%', width: `${pillar.value}%`, backgroundColor: pillar.color, borderRadius: '4px', transition: 'width 0.5s ease' }} />
+              </div>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '12px' }}>
+                {pillar.name === 'AI Readability' && 'Measures semantic clarity, logical structure, and overall readability for AI systems.'}
+                {pillar.name === 'Digital Authority' && 'Evaluates credibility signals, citation readiness, and trustworthiness indicators.'}
+                {pillar.name === 'Conversion Readiness' && 'Assesses user engagement potential and action-driving effectiveness.'}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  )
+}
+
+function CategoryScoresPage() {
+  return (
+    <>
+      <div className="animate-in" style={{ marginBottom: '32px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Category Scores</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Detailed breakdown of all analysis categories</p>
+      </div>
+
+      <ChartCard title="All Categories" className="animate-in-delay-1">
+        <div style={{ height: '450px' }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={categoryData} layout="vertical">
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" horizontal={false} />
+              <XAxis type="number" stroke="var(--text-muted)" fontSize={12} domain={[0, 100]} />
+              <YAxis dataKey="name" type="category" stroke="var(--text-muted)" fontSize={11} width={140} />
+              <Tooltip content={<CustomTooltip />} />
+              <Bar dataKey="score" fill="var(--accent)" radius={[0, 4, 4, 0]} name="Score" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </ChartCard>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginTop: '24px' }}>
+        {categoryData.map((cat, i) => (
+          <div key={i} className={`animate-in-delay-${Math.min(i + 2, 5)}`} style={{
+            backgroundColor: 'var(--bg-secondary)',
+            border: '1px solid var(--border-color)',
+            borderRadius: '12px',
+            padding: '20px',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <span style={{ fontSize: '14px', fontWeight: 500 }}>{cat.name}</span>
+              <span style={{ fontSize: '20px', fontWeight: 600, color: cat.score >= 85 ? '#10b981' : cat.score >= 70 ? 'var(--accent)' : '#f59e0b' }}>{cat.score}</span>
+            </div>
+            <div style={{ height: '6px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '3px', overflow: 'hidden' }}>
+              <div style={{ height: '100%', width: `${cat.score}%`, backgroundColor: cat.score >= 85 ? '#10b981' : cat.score >= 70 ? 'var(--accent)' : '#f59e0b', borderRadius: '3px' }} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  )
+}
+
+function ContentSignalsPage() {
+  return (
+    <>
+      <div className="animate-in" style={{ marginBottom: '32px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Content Signals</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Analyze the relationship between content length and performance</p>
+      </div>
+
+      <ChartCard title="Word Count vs Score Distribution" className="animate-in-delay-1">
+        <div style={{ height: '450px' }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <ScatterChart>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
+              <XAxis dataKey="wordCount" stroke="var(--text-muted)" fontSize={12} name="Word Count" label={{ value: 'Word Count', position: 'bottom', fill: 'var(--text-muted)', fontSize: 11 }} />
+              <YAxis dataKey="score" stroke="var(--text-muted)" fontSize={12} name="Score" domain={[50, 100]} label={{ value: 'Score', angle: -90, position: 'insideLeft', fill: 'var(--text-muted)', fontSize: 11 }} />
+              <ZAxis dataKey="title" name="Content" />
+              <Tooltip content={({ active, payload }) => {
+                if (active && payload && payload.length) {
+                  const data = payload[0].payload
+                  return (
+                    <div style={{ backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
+                      <p style={{ margin: 0, fontWeight: 600 }}>{data.title}</p>
+                      <p style={{ margin: '4px 0 0', color: 'var(--text-secondary)', fontSize: '13px' }}>Words: {data.wordCount}</p>
+                      <p style={{ margin: '4px 0 0', color: 'var(--accent)', fontSize: '13px' }}>Score: {data.score}</p>
+                    </div>
+                  )
+                }
+                return null
+              }} />
+              <Scatter data={scatterData} fill="var(--accent)">
+                {scatterData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.score >= 80 ? '#10b981' : entry.score >= 70 ? '#22d3ee' : '#f59e0b'} />
+                ))}
+              </Scatter>
+            </ScatterChart>
+          </ResponsiveContainer>
+        </div>
+      </ChartCard>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px', marginTop: '24px' }}>
+        <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>Content Analysis</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {scatterData.slice(0, 6).map((item, i) => (
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: i < 5 ? '1px solid var(--border-color)' : 'none' }}>
+                <span style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>{item.title}</span>
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '13px' }}>{item.wordCount} words</span>
+                  <span style={{ fontSize: '14px', fontWeight: 600, color: item.score >= 80 ? '#10b981' : item.score >= 70 ? 'var(--accent)' : '#f59e0b' }}>{item.score}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>Insights</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ padding: '16px', backgroundColor: 'rgba(34, 211, 238, 0.1)', borderRadius: '8px', borderLeft: '3px solid var(--accent)' }}>
+              <div style={{ fontWeight: 500, marginBottom: '4px' }}>Optimal Length</div>
+              <div style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>Content between 1000-2000 words tends to score highest</div>
+            </div>
+            <div style={{ padding: '16px', backgroundColor: 'rgba(16, 185, 129, 0.1)', borderRadius: '8px', borderLeft: '3px solid #10b981' }}>
+              <div style={{ fontWeight: 500, marginBottom: '4px' }}>Top Performer</div>
+              <div style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>Comprehensive Guide (2100 words) scores 94</div>
+            </div>
+            <div style={{ padding: '16px', backgroundColor: 'rgba(245, 158, 11, 0.1)', borderRadius: '8px', borderLeft: '3px solid #f59e0b' }}>
+              <div style={{ fontWeight: 500, marginBottom: '4px' }}>Needs Improvement</div>
+              <div style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>Short content (&lt;500 words) averages score of 60</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard')
   const overallScore = Math.round(pillarData.reduce((sum, p) => sum + p.value, 0) / pillarData.length)
@@ -1523,6 +1752,14 @@ function App() {
         return <DocsPage />
       case 'upgrade':
         return <UpgradePage />
+      case 'performance':
+        return <PerformanceHistoryPage />
+      case 'pillars':
+        return <PillarBreakdownPage />
+      case 'categories':
+        return <CategoryScoresPage />
+      case 'signals':
+        return <ContentSignalsPage />
       default:
         return <DashboardPage overallScore={overallScore} setCurrentPage={setCurrentPage} />
     }
