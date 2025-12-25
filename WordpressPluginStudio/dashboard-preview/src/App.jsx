@@ -64,6 +64,12 @@ const scatterData = [
   { wordCount: 2100, score: 94, title: 'Comprehensive Guide' },
 ]
 
+const TIME_PERIODS = [
+  { value: 7, label: 'Last 7 Days' },
+  { value: 30, label: 'Last 30 Days' },
+  { value: 60, label: 'Last 60 Days' },
+]
+
 const navItems = [
   { 
     icon: LayoutDashboard, 
@@ -1653,7 +1659,23 @@ function UpgradePage() {
   )
 }
 
-function DashboardPage({ overallScore, setCurrentPage }) {
+function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelectedPeriod }) {
+  const periodLabel = TIME_PERIODS.find(p => p.value === selectedPeriod)?.label || 'Last 30 Days'
+  
+  const getFilteredPerformanceData = () => {
+    if (selectedPeriod === 7) return performanceData.slice(-2)
+    if (selectedPeriod === 30) return performanceData.slice(-4)
+    return performanceData
+  }
+  
+  const getFilteredScatterData = () => {
+    if (selectedPeriod === 7) return []
+    if (selectedPeriod === 30) return scatterData.slice(0, 6)
+    return scatterData
+  }
+  
+  const filteredPerformanceData = getFilteredPerformanceData()
+  const filteredScatterData = getFilteredScatterData()
   return (
     <>
       <header className="animate-in" style={{
@@ -1668,6 +1690,8 @@ function DashboardPage({ overallScore, setCurrentPage }) {
         </div>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <TimePeriodDropdown selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
+          
           <div style={{
             display: 'flex',
             alignItems: 'center',
@@ -1748,24 +1772,24 @@ function DashboardPage({ overallScore, setCurrentPage }) {
         <KPICard
           icon={FileText}
           title="Total Analyses"
-          value="247"
-          subtitle="+12 this week (All Time)"
+          value={selectedPeriod === 7 ? "42" : selectedPeriod === 30 ? "156" : "247"}
+          subtitle={periodLabel}
           color="#22d3ee"
           delay="1"
         />
         <KPICard
           icon={TrendingUp}
           title="Average Score"
-          value="78"
-          subtitle="+5 from last month (30 Days)"
+          value={selectedPeriod === 7 ? "81" : selectedPeriod === 30 ? "78" : "76"}
+          subtitle={periodLabel}
           color="#10b981"
           delay="2"
         />
         <KPICard
           icon={Target}
           title="Content Health"
-          value="82%"
-          subtitle="Last 7 Days"
+          value={selectedPeriod === 7 ? "85%" : selectedPeriod === 30 ? "82%" : "79%"}
+          subtitle={periodLabel}
           color="#a855f7"
           delay="3"
         />
@@ -1785,37 +1809,41 @@ function DashboardPage({ overallScore, setCurrentPage }) {
         gap: '24px',
         marginBottom: '32px',
       }}>
-        <ChartCard title="Performance History" period="Last 12 Weeks" className="animate-in-delay-2">
-          <div style={{ height: '300px' }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={performanceData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
-                <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} />
-                <YAxis stroke="var(--text-muted)" fontSize={12} domain={[60, 100]} />
-                <Tooltip content={<CustomTooltip />} />
-                <Line
-                  type="monotone"
-                  dataKey="baseline"
-                  stroke="var(--text-muted)"
-                  strokeDasharray="5 5"
-                  dot={false}
-                  name="Baseline"
-                />
-                <Line
-                  type="monotone"
-                  dataKey="score"
-                  stroke="var(--accent)"
-                  strokeWidth={2}
-                  dot={{ fill: 'var(--accent)', strokeWidth: 0, r: 4 }}
-                  activeDot={{ r: 6, fill: 'var(--accent)' }}
-                  name="Score"
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+        <ChartCard title="Performance History" period={periodLabel} className="animate-in-delay-2">
+          {filteredPerformanceData.length === 0 ? (
+            <EmptyState message="No performance data available for this time period" />
+          ) : (
+            <div style={{ height: '300px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={filteredPerformanceData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
+                  <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} />
+                  <YAxis stroke="var(--text-muted)" fontSize={12} domain={[60, 100]} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Line
+                    type="monotone"
+                    dataKey="baseline"
+                    stroke="var(--text-muted)"
+                    strokeDasharray="5 5"
+                    dot={false}
+                    name="Baseline"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="score"
+                    stroke="var(--accent)"
+                    strokeWidth={2}
+                    dot={{ fill: 'var(--accent)', strokeWidth: 0, r: 4 }}
+                    activeDot={{ r: 6, fill: 'var(--accent)' }}
+                    name="Score"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          )}
         </ChartCard>
 
-        <ChartCard title="Pillar Breakdown" period="Current Analysis" className="animate-in-delay-3">
+        <ChartCard title="Pillar Breakdown" period={periodLabel} className="animate-in-delay-3">
           <div style={{ height: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
             <div style={{ position: 'relative', width: '180px', height: '180px' }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -1864,7 +1892,7 @@ function DashboardPage({ overallScore, setCurrentPage }) {
         gridTemplateColumns: '1fr 1fr',
         gap: '24px',
       }}>
-        <ChartCard title="Analysis Categories" period="Last 30 Days" className="animate-in-delay-4">
+        <ChartCard title="Analysis Categories" period={periodLabel} className="animate-in-delay-4">
           <div style={{ height: '300px' }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={categoryData} layout="vertical">
@@ -1878,63 +1906,67 @@ function DashboardPage({ overallScore, setCurrentPage }) {
           </div>
         </ChartCard>
 
-        <ChartCard title="Content Signals" period="All Time" className="animate-in-delay-5">
-          <div style={{ height: '300px' }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <ScatterChart>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
-                <XAxis
-                  dataKey="wordCount"
-                  stroke="var(--text-muted)"
-                  fontSize={12}
-                  name="Word Count"
-                  label={{ value: 'Word Count', position: 'bottom', fill: 'var(--text-muted)', fontSize: 11 }}
-                />
-                <YAxis
-                  dataKey="score"
-                  stroke="var(--text-muted)"
-                  fontSize={12}
-                  name="Score"
-                  domain={[50, 100]}
-                  label={{ value: 'Score', angle: -90, position: 'insideLeft', fill: 'var(--text-muted)', fontSize: 11 }}
-                />
-                <ZAxis dataKey="title" name="Content" />
-                <Tooltip
-                  content={({ active, payload }) => {
-                    if (active && payload && payload.length) {
-                      const data = payload[0].payload
-                      return (
-                        <div style={{
-                          backgroundColor: 'var(--bg-tertiary)',
-                          border: '1px solid var(--border-color)',
-                          borderRadius: '8px',
-                          padding: '12px',
-                          boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
-                        }}>
-                          <p style={{ margin: 0, fontWeight: 600 }}>{data.title}</p>
-                          <p style={{ margin: '4px 0 0', color: 'var(--text-secondary)', fontSize: '13px' }}>
-                            Words: {data.wordCount}
-                          </p>
-                          <p style={{ margin: '4px 0 0', color: 'var(--accent)', fontSize: '13px' }}>
-                            Score: {data.score}
-                          </p>
-                        </div>
-                      )
-                    }
-                    return null
-                  }}
-                />
-                <Scatter data={scatterData} fill="var(--accent)">
-                  {scatterData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={entry.score >= 80 ? '#10b981' : entry.score >= 70 ? '#22d3ee' : '#f59e0b'}
-                    />
-                  ))}
-                </Scatter>
-              </ScatterChart>
-            </ResponsiveContainer>
-          </div>
+        <ChartCard title="Content Signals" period={periodLabel} className="animate-in-delay-5">
+          {filteredScatterData.length === 0 ? (
+            <EmptyState message="No content signals available for this time period" />
+          ) : (
+            <div style={{ height: '300px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <ScatterChart>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
+                  <XAxis
+                    dataKey="wordCount"
+                    stroke="var(--text-muted)"
+                    fontSize={12}
+                    name="Word Count"
+                    label={{ value: 'Word Count', position: 'bottom', fill: 'var(--text-muted)', fontSize: 11 }}
+                  />
+                  <YAxis
+                    dataKey="score"
+                    stroke="var(--text-muted)"
+                    fontSize={12}
+                    name="Score"
+                    domain={[50, 100]}
+                    label={{ value: 'Score', angle: -90, position: 'insideLeft', fill: 'var(--text-muted)', fontSize: 11 }}
+                  />
+                  <ZAxis dataKey="title" name="Content" />
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const data = payload[0].payload
+                        return (
+                          <div style={{
+                            backgroundColor: 'var(--bg-tertiary)',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '8px',
+                            padding: '12px',
+                            boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+                          }}>
+                            <p style={{ margin: 0, fontWeight: 600 }}>{data.title}</p>
+                            <p style={{ margin: '4px 0 0', color: 'var(--text-secondary)', fontSize: '13px' }}>
+                              Words: {data.wordCount}
+                            </p>
+                            <p style={{ margin: '4px 0 0', color: 'var(--accent)', fontSize: '13px' }}>
+                              Score: {data.score}
+                            </p>
+                          </div>
+                        )
+                      }
+                      return null
+                    }}
+                  />
+                  <Scatter data={filteredScatterData} fill="var(--accent)">
+                    {filteredScatterData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={entry.score >= 80 ? '#10b981' : entry.score >= 70 ? '#22d3ee' : '#f59e0b'}
+                      />
+                    ))}
+                  </Scatter>
+                </ScatterChart>
+              </ResponsiveContainer>
+            </div>
+          )}
         </ChartCard>
       </div>
     </>
@@ -2515,8 +2547,50 @@ function ImproveScorePage() {
   )
 }
 
+function TimePeriodDropdown({ selectedPeriod, setSelectedPeriod }) {
+  return (
+    <select
+      value={selectedPeriod}
+      onChange={(e) => setSelectedPeriod(Number(e.target.value))}
+      style={{
+        backgroundColor: 'var(--bg-secondary)',
+        border: '1px solid var(--border-color)',
+        borderRadius: '8px',
+        padding: '8px 12px',
+        color: 'var(--text-primary)',
+        fontSize: '14px',
+        cursor: 'pointer',
+        outline: 'none',
+      }}
+    >
+      {TIME_PERIODS.map(period => (
+        <option key={period.value} value={period.value}>{period.label}</option>
+      ))}
+    </select>
+  )
+}
+
+function EmptyState({ message = "No data available for this time period" }) {
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '48px 24px',
+      color: 'var(--text-muted)',
+      textAlign: 'center',
+    }}>
+      <FileText size={48} style={{ marginBottom: '16px', opacity: 0.5 }} />
+      <p style={{ fontSize: '14px', marginBottom: '8px' }}>{message}</p>
+      <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Try selecting a different time range</p>
+    </div>
+  )
+}
+
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard')
+  const [selectedPeriod, setSelectedPeriod] = useState(30)
   const overallScore = Math.round(pillarData.reduce((sum, p) => sum + p.value, 0) / pillarData.length)
 
   const renderPage = () => {
@@ -2552,7 +2626,7 @@ function App() {
       case 'docs-troubleshooting':
         return <TroubleshootingPage />
       default:
-        return <DashboardPage overallScore={overallScore} setCurrentPage={setCurrentPage} />
+        return <DashboardPage overallScore={overallScore} setCurrentPage={setCurrentPage} selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
     }
   }
 
