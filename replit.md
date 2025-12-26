@@ -177,3 +177,16 @@ Location: `WordpressPluginStudio/dashboard-preview/`
 
 ### Pricing Updates (December 2024)
 - **Upgrade Page**: Business $29.99/month (100 AI Optimizations), Pro $99.99/month (500 AI Optimizations with priority support)
+
+### UI Enhancements (December 2024)
+- **3D Donut Chart**: Content Analyzer Overview tab donut chart enhanced with:
+  - 3-stop linear gradients for each pillar segment creating depth effect
+  - Multi-layer drop shadows for 3D appearance
+  - Larger dimensions and subtle white stroke on segments
+  - Score label remains flat and readable in center
+- **Upgrade Now Button**: Centered text with Cloud icon (replacing Star) to match Rain OS branding
+- **Local Content Audit**: New section in Content Analyzer Overview tab:
+  - Title: "Local Content Audit" with CheckSquare icon
+  - Subtitle: "WordPress-powered checks (no API required)"
+  - 6 checklist items with pass/fail indicators
+  - Gradient background to differentiate from AI-powered analysis sections

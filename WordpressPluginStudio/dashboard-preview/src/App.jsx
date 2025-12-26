@@ -11,7 +11,7 @@ import {
   Search, Bell, Plus, TrendingUp, Target, Zap,
   ChevronRight, BookOpen, Mail, Key, Sliders, Shield, ExternalLink,
   Microscope, ShieldCheck, RefreshCw, Wand2, Fingerprint, History,
-  PanelRightClose, PanelRightOpen, Eye, EyeOff, Save, Send
+  PanelRightClose, PanelRightOpen, Eye, EyeOff, Save, Send, Cloud, CheckSquare
 } from 'lucide-react'
 import './index.css'
 
@@ -240,9 +240,9 @@ function Sidebar({ currentPage, setCurrentPage }) {
           style={{
             display: 'flex',
             alignItems: 'center',
+            justifyContent: 'center',
             gap: '8px',
             padding: '10px 12px',
-            paddingLeft: '36px',
             borderRadius: '6px',
             background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(168, 85, 247, 0.15))',
             color: 'var(--accent)',
@@ -252,7 +252,7 @@ function Sidebar({ currentPage, setCurrentPage }) {
             cursor: 'pointer',
           }}
         >
-          <Star size={14} />
+          <Cloud size={14} />
           Upgrade Now
         </a>
       </nav>
@@ -581,48 +581,82 @@ The evolution toward edge computing extends cloud capabilities closer to end use
               padding: '24px',
               textAlign: 'center',
             }}>
-              <div style={{ width: '140px', height: '140px', margin: '0 auto 16px', position: 'relative' }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={[
-                        { name: 'AI Readability', value: mockAnalysis.pillarScores.aiReadability, color: '#22d3ee' },
-                        { name: 'Digital Authority', value: mockAnalysis.pillarScores.digitalAuthority, color: '#10b981' },
-                        { name: 'Conversion', value: mockAnalysis.pillarScores.conversionReadiness, color: '#a855f7' },
-                      ]}
-                      innerRadius={40}
-                      outerRadius={60}
-                      paddingAngle={2}
-                      dataKey="value"
-                    >
-                      <Cell fill="#22d3ee" />
-                      <Cell fill="#10b981" />
-                      <Cell fill="#a855f7" />
-                    </Pie>
-                  </PieChart>
-                </ResponsiveContainer>
+              <div style={{ 
+                width: '160px', 
+                height: '160px', 
+                margin: '0 auto 16px', 
+                position: 'relative',
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  filter: 'drop-shadow(0 8px 20px rgba(0,0,0,0.5)) drop-shadow(0 4px 8px rgba(34,211,238,0.2))',
+                }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <defs>
+                        <linearGradient id="grad-cyan-3d" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#67e8f9" />
+                          <stop offset="50%" stopColor="#22d3ee" />
+                          <stop offset="100%" stopColor="#0891b2" />
+                        </linearGradient>
+                        <linearGradient id="grad-green-3d" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#34d399" />
+                          <stop offset="50%" stopColor="#10b981" />
+                          <stop offset="100%" stopColor="#047857" />
+                        </linearGradient>
+                        <linearGradient id="grad-purple-3d" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#c084fc" />
+                          <stop offset="50%" stopColor="#a855f7" />
+                          <stop offset="100%" stopColor="#7c3aed" />
+                        </linearGradient>
+                      </defs>
+                      <Pie
+                        data={[
+                          { name: 'AI Readability', value: mockAnalysis.pillarScores.aiReadability },
+                          { name: 'Digital Authority', value: mockAnalysis.pillarScores.digitalAuthority },
+                          { name: 'Conversion', value: mockAnalysis.pillarScores.conversionReadiness },
+                        ]}
+                        innerRadius={48}
+                        outerRadius={72}
+                        paddingAngle={3}
+                        dataKey="value"
+                        stroke="rgba(255,255,255,0.15)"
+                        strokeWidth={1}
+                      >
+                        <Cell fill="url(#grad-cyan-3d)" />
+                        <Cell fill="url(#grad-green-3d)" />
+                        <Cell fill="url(#grad-purple-3d)" />
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
                 <div style={{ 
                   position: 'absolute', 
                   top: '50%', 
                   left: '50%', 
                   transform: 'translate(-50%, -50%)',
                   textAlign: 'center',
+                  zIndex: 10,
                 }}>
-                  <div style={{ fontSize: '24px', fontWeight: 700 }}>{mockAnalysis.overallScore}</div>
+                  <div style={{ fontSize: '28px', fontWeight: 700, textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>{mockAnalysis.overallScore}</div>
                   <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Overall</div>
                 </div>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginBottom: '12px', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '10px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#22d3ee' }} />
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginBottom: '12px', flexWrap: 'wrap' }}>
+                <span style={{ fontSize: '11px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 500 }}>
+                  <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: 'linear-gradient(135deg, #22d3ee, #06b6d4)', boxShadow: '0 2px 4px rgba(34,211,238,0.3)' }} />
                   AI Read
                 </span>
-                <span style={{ fontSize: '10px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#10b981' }} />
+                <span style={{ fontSize: '11px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 500 }}>
+                  <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: 'linear-gradient(135deg, #10b981, #059669)', boxShadow: '0 2px 4px rgba(16,185,129,0.3)' }} />
                   Authority
                 </span>
-                <span style={{ fontSize: '10px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#a855f7' }} />
+                <span style={{ fontSize: '11px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 500 }}>
+                  <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: 'linear-gradient(135deg, #a855f7, #7c3aed)', boxShadow: '0 2px 4px rgba(168,85,247,0.3)' }} />
                   Conversion
                 </span>
               </div>
@@ -698,6 +732,56 @@ The evolution toward edge computing extends cloud capabilities closer to end use
                   <div style={{ fontSize: '20px', fontWeight: 700, color: pillar.color }}>{pillar.score}</div>
                 </div>
               ))}
+            </div>
+
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.08), rgba(168, 85, 247, 0.08))',
+              border: '1px solid rgba(34, 211, 238, 0.3)',
+              borderRadius: '12px',
+              padding: '16px',
+            }}>
+              <h4 style={{ fontSize: '13px', fontWeight: 600, marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--accent)' }}>
+                <CheckSquare size={14} />
+                Local Content Audit
+              </h4>
+              <p style={{ fontSize: '10px', color: 'var(--text-muted)', marginBottom: '12px' }}>
+                WordPress-powered checks (no API required)
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {[
+                  { label: 'Sentences under 20 words', pass: true },
+                  { label: 'Clear H2/H3 headings', pass: true },
+                  { label: 'Questions answered early', pass: false },
+                  { label: 'Technical terms defined', pass: true },
+                  { label: 'Content uses lists', pass: true },
+                  { label: 'Paragraphs 2-4 sentences', pass: false },
+                ].map((check, i) => (
+                  <div key={i} style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '8px',
+                    padding: '6px 8px',
+                    backgroundColor: 'rgba(255,255,255,0.03)',
+                    borderRadius: '4px',
+                  }}>
+                    <span style={{ 
+                      width: '16px', 
+                      height: '16px', 
+                      borderRadius: '3px', 
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '10px',
+                      fontWeight: 700,
+                      backgroundColor: check.pass ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                      color: check.pass ? '#10b981' : '#ef4444',
+                    }}>
+                      {check.pass ? '✓' : '✗'}
+                    </span>
+                    <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{check.label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div>
