@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
   PieChart, Pie, Cell,
   BarChart, Bar,
   ScatterChart, Scatter, ZAxis
@@ -17,18 +17,18 @@ import 'react-circular-progressbar/dist/styles.css'
 import './index.css'
 
 const performanceData = [
-  { name: 'Jan', score: 65, baseline: 70 },
-  { name: 'Feb', score: 68, baseline: 70 },
-  { name: 'Mar', score: 72, baseline: 70 },
-  { name: 'Apr', score: 70, baseline: 70 },
-  { name: 'May', score: 75, baseline: 70 },
-  { name: 'Jun', score: 78, baseline: 70 },
-  { name: 'Jul', score: 82, baseline: 70 },
-  { name: 'Aug', score: 79, baseline: 70 },
-  { name: 'Sep', score: 85, baseline: 70 },
-  { name: 'Oct', score: 83, baseline: 70 },
-  { name: 'Nov', score: 88, baseline: 70 },
-  { name: 'Dec', score: 91, baseline: 70 },
+  { name: 'Jan', aiReadability: 67, digitalAuthority: 62, conversionReadiness: 66, average: 65, baseline: 70 },
+  { name: 'Feb', aiReadability: 70, digitalAuthority: 65, conversionReadiness: 69, average: 68, baseline: 70 },
+  { name: 'Mar', aiReadability: 74, digitalAuthority: 69, conversionReadiness: 73, average: 72, baseline: 70 },
+  { name: 'Apr', aiReadability: 72, digitalAuthority: 67, conversionReadiness: 71, average: 70, baseline: 70 },
+  { name: 'May', aiReadability: 77, digitalAuthority: 72, conversionReadiness: 76, average: 75, baseline: 70 },
+  { name: 'Jun', aiReadability: 80, digitalAuthority: 75, conversionReadiness: 79, average: 78, baseline: 70 },
+  { name: 'Jul', aiReadability: 84, digitalAuthority: 79, conversionReadiness: 83, average: 82, baseline: 70 },
+  { name: 'Aug', aiReadability: 81, digitalAuthority: 76, conversionReadiness: 80, average: 79, baseline: 70 },
+  { name: 'Sep', aiReadability: 87, digitalAuthority: 82, conversionReadiness: 86, average: 85, baseline: 70 },
+  { name: 'Oct', aiReadability: 85, digitalAuthority: 80, conversionReadiness: 84, average: 83, baseline: 70 },
+  { name: 'Nov', aiReadability: 90, digitalAuthority: 85, conversionReadiness: 89, average: 88, baseline: 70 },
+  { name: 'Dec', aiReadability: 93, digitalAuthority: 88, conversionReadiness: 92, average: 91, baseline: 70 },
 ]
 
 const pillarData = [
@@ -1841,6 +1841,7 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
                   <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} />
                   <YAxis stroke="var(--text-muted)" fontSize={12} domain={[60, 100]} />
                   <Tooltip content={<CustomTooltip />} />
+                  <Legend wrapperStyle={{ paddingTop: '10px' }} />
                   <Line
                     type="monotone"
                     dataKey="baseline"
@@ -1851,12 +1852,39 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
                   />
                   <Line
                     type="monotone"
-                    dataKey="score"
-                    stroke="var(--accent)"
+                    dataKey="aiReadability"
+                    stroke="#22d3ee"
                     strokeWidth={2}
-                    dot={{ fill: 'var(--accent)', strokeWidth: 0, r: 4 }}
-                    activeDot={{ r: 6, fill: 'var(--accent)' }}
-                    name="Score"
+                    dot={{ fill: '#22d3ee', strokeWidth: 0, r: 3 }}
+                    activeDot={{ r: 5, fill: '#22d3ee' }}
+                    name="AI Readability"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="digitalAuthority"
+                    stroke="#10b981"
+                    strokeWidth={2}
+                    dot={{ fill: '#10b981', strokeWidth: 0, r: 3 }}
+                    activeDot={{ r: 5, fill: '#10b981' }}
+                    name="Digital Authority"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="conversionReadiness"
+                    stroke="#f59e0b"
+                    strokeWidth={2}
+                    dot={{ fill: '#f59e0b', strokeWidth: 0, r: 3 }}
+                    activeDot={{ r: 5, fill: '#f59e0b' }}
+                    name="Conversion Readiness"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="average"
+                    stroke="#a855f7"
+                    strokeWidth={3}
+                    dot={{ fill: '#a855f7', strokeWidth: 0, r: 4 }}
+                    activeDot={{ r: 6, fill: '#a855f7' }}
+                    name="Average"
                   />
                 </LineChart>
               </ResponsiveContainer>
