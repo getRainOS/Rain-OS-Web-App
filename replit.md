@@ -123,6 +123,20 @@ Location: `WordpressPluginStudio/dashboard-preview/`
 - **Dynamic Data Filtering**: All charts and KPI cards filter data based on selected time period
 - **EmptyState Component**: Displays friendly message when no data available for selected time range
 - **KPI Card Context**: Total Analyses, Average Score, Content Health values update dynamically based on period selection
+
+### Post-Level Analytics (December 2024)
+- **Navigation Restructure**: Content Analyzer moved under AI Readability Dashboard as a sub-link
+- **postsData Array**: Shared dataset with 12 sample posts including:
+  - Post metadata: id, title, slug, author, publishDate, wordCount
+  - Scores: overallScore, trend (delta)
+  - Pillar scores: aiReadability, digitalAuthority, conversionReadiness
+  - Category scores: semanticClarity, logicalStructure, citationReadiness, entityRecognition
+- **Relative Date Helper**: `getRelativeDate(daysAgo)` generates dates relative to current date for proper filtering
+- **Performance Page**: Post Performance table showing posts with Title, Author, Score (color-coded badge), Trend (arrows), Published date
+- **Pillar Breakdown Page**: Each pillar card shows "TOP POSTS BY [PILLAR]" section with top 3 posts sorted by that pillar's score
+- **Category Scores Page**: "Posts by Category" section with 2x2 grid showing 4 key categories with top 4 posts each
+- **Content Signals Page**: Uses postsData for scatter chart and Content Analysis list with word count and scores
+- **Time Period Filtering**: All post lists filter by publish date based on selected period (7/30/60 days)
 - **ChartCard Component**: Accepts optional `period` prop for displaying time badges in chart headers
 - **Built-in Optimization Tools**: Six non-API tools in Getting Started: Readability Calculator, Sentence Length Analyzer, Keyword Density Checker, Heading Structure Validator, Question Detection, Entity Highlighter
 - **AI Messaging**: Documentation emphasizes "AI-powered analysis" and "advanced AI technology" without referencing specific AI providers
