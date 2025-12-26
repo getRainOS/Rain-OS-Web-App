@@ -2053,8 +2053,12 @@ function PerformancePage({ selectedPeriod, setSelectedPeriod }) {
                 <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} />
                 <YAxis stroke="var(--text-muted)" fontSize={12} domain={[60, 100]} />
                 <Tooltip content={<CustomTooltip />} />
+                <Legend wrapperStyle={{ paddingTop: '10px' }} />
                 <Line type="monotone" dataKey="baseline" stroke="var(--text-muted)" strokeDasharray="5 5" dot={false} name="Baseline" />
-                <Line type="monotone" dataKey="score" stroke="var(--accent)" strokeWidth={2} dot={{ fill: 'var(--accent)', strokeWidth: 0, r: 4 }} activeDot={{ r: 6, fill: 'var(--accent)' }} name="Score" />
+                <Line type="monotone" dataKey="aiReadability" stroke="#22d3ee" strokeWidth={2} dot={{ fill: '#22d3ee', strokeWidth: 0, r: 3 }} activeDot={{ r: 5, fill: '#22d3ee' }} name="AI Readability" />
+                <Line type="monotone" dataKey="digitalAuthority" stroke="#10b981" strokeWidth={2} dot={{ fill: '#10b981', strokeWidth: 0, r: 3 }} activeDot={{ r: 5, fill: '#10b981' }} name="Digital Authority" />
+                <Line type="monotone" dataKey="conversionReadiness" stroke="#f59e0b" strokeWidth={2} dot={{ fill: '#f59e0b', strokeWidth: 0, r: 3 }} activeDot={{ r: 5, fill: '#f59e0b' }} name="Conversion Readiness" />
+                <Line type="monotone" dataKey="average" stroke="#a855f7" strokeWidth={3} dot={{ fill: '#a855f7', strokeWidth: 0, r: 4 }} activeDot={{ r: 6, fill: '#a855f7' }} name="Average" />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -2064,12 +2068,12 @@ function PerformancePage({ selectedPeriod, setSelectedPeriod }) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginTop: '24px' }}>
         {(() => {
           if (filteredData.length === 0) return []
-          const best = filteredData.reduce((a, b) => a.score > b.score ? a : b)
-          const worst = filteredData.reduce((a, b) => a.score < b.score ? a : b)
-          const avg = Math.round(filteredData.reduce((sum, d) => sum + d.score, 0) / filteredData.length)
+          const best = filteredData.reduce((a, b) => a.average > b.average ? a : b)
+          const worst = filteredData.reduce((a, b) => a.average < b.average ? a : b)
+          const avg = Math.round(filteredData.reduce((sum, d) => sum + d.average, 0) / filteredData.length)
           return [
-            { label: 'Best Period', value: best.name, sub: `Score: ${best.score}` },
-            { label: 'Lowest Period', value: worst.name, sub: `Score: ${worst.score}` },
+            { label: 'Best Period', value: best.name, sub: `Score: ${best.average}` },
+            { label: 'Lowest Period', value: worst.name, sub: `Score: ${worst.average}` },
             { label: 'Average Score', value: String(avg), sub: periodLabel },
             { label: 'Data Points', value: String(filteredData.length), sub: periodLabel },
           ]
