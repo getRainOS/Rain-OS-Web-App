@@ -1,0 +1,38 @@
+Under Post Performance in Category Scores, the layout should look like the attachment
+
+In the ‘Content Analyzer’ circular chart, it should be a donut chart with AI Readability, Digital Authority and Conversion Readiness indicated separately by colors within the single donut chart, the Run Full Analysis button should actually function, the buttons under the Actions tab should function and the tabs under the History tab should function 
+
+ In the ‘Content Analyzer’ make sure the Save button actually saves content and the Publish button actually ensure content is published and make the search button actually search, and make the AI heatmap actually functional and do not make anything dummy and Make sure the bell in the Dashboard is fully functioning 
+
+Under Post Categories Sub category bars should be color coated to demonstrate which pillar they fall imder and text underneath should be larger and bright white
+
+In the ‘Content Analyzer’ screen and all other screens, change the dummy text from AEO to something about technology and nothing to do with AI and make the dummy text in the Content Analyzer screen longer form and have all of the other screens use that dummy text base as analysis
+
+In Content Analyzer in Metrics, there is only 7 of the 9 sub categories and there should 9
+
+The buttons underneath the history tabs should be full functional
+
+Make sure that Built - in Optimization Tools are actually part of the plugin as discussed in our plugin text
+
+
+The Upgrade section needs to have this information for prices: 
+Business $29.99 / Month
+*100 AI Optimizations
+Perfect for local businesses, early-stage startups, product teams and solo-creators optimizing for Gemini, Perplexity, Claude and the emerging ChatGPT shopping experience.
+ 
+✅ Semantic Clarity: Precision & ambiguity check.
+✅ Readability Score: AI & human processing ease.
+✅ Metadata Audit: Schema & HTML verification.
+✅ Logical Structure: Heading hierarchy analysis.
+✅ Entity Recognition: Knowledge graph linking.
+✅ Citation Readiness: Quotable snippet detection.
+✅ Answer Engine Optimization Alignment: Direct answer scoring.
+✅ Schema Extraction: Structured data opportunities.
+✅ QA-Format Detection: Question/Answer optimization.
+
+Pro $99.99 / Month
+*500 AI Optimizations
+Ideal for enterprises, agencies, scaling SaaS brands, product teams and other power users optimizing for Gemini, Perplexity, Claude and the emerging ChatGPT shopping experience.
+●     ​✅ Everything in Business + 
+●     ​✅ 400 additional AI Optimizations  
+●     ​✅ Priority e-mail Support

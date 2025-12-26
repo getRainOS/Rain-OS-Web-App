@@ -158,3 +158,22 @@ Location: `WordpressPluginStudio/dashboard-preview/`
   - Post Performance Indicators (green/yellow/red lights based on score ranges)
 - **Chart Colors**: AI Readability (#22d3ee cyan), Digital Authority (#10b981 green), Conversion Readiness (#a855f7 purple)
 - **Score Thresholds**: Green ≥80, Yellow 65-79, Red <65
+
+### Dashboard Interactivity Updates (December 2024)
+- **Inline Search**: Dashboard search bar with real-time inline results dropdown filtering by title, slug, and author
+- **Search Results**: Shows up to 5 matching posts with title, author, score; clicking navigates to Content Analyzer
+- **Notification System**: Bell icon with unread count badge, dropdown showing notifications with read/unread states
+- **Click-Outside Handling**: useEffect hook closes notification dropdown when clicking outside
+- **Mark All Read**: Button to mark all notifications as read at once
+
+### Content Analyzer Enhancements (December 2024)
+- **AI Heatmap**: Highlights technology terms (cloud computing, infrastructure, database, security, microservices, etc.) with color-coded tooltips indicating pillar categories
+- **Technology Content**: 8-paragraph cloud computing/infrastructure text (scalability, load balancing, container orchestration, zero-trust security, observability)
+- **Metrics Tab**: 9 sub-categories with pillar-based coloring (added Readability Score and Metadata Audit)
+
+### Data Updates (December 2024)
+- **postsData**: All 12 posts now technology-focused (Cloud Computing, Database Optimization, Network Security, Microservices, DevOps Pipeline, API Gateway, Container Orchestration, RESTful API, Serverless Architecture, Data Pipeline, Load Balancing, Caching Mechanisms)
+- **Post Fields**: Each post includes indexing and mobileUsability boolean fields for Category Scores table
+
+### Pricing Updates (December 2024)
+- **Upgrade Page**: Business $29.99/month (100 AI Optimizations), Pro $99.99/month (500 AI Optimizations with priority support)

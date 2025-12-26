@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
   PieChart, Pie, Cell,
@@ -37,16 +37,25 @@ const pillarData = [
 ]
 
 const categoryData = [
-  { name: 'Semantic Clarity', score: 92 },
-  { name: 'Logical Structure', score: 85 },
-  { name: 'Readability', score: 87 },
-  { name: 'Entity Recognition', score: 75 },
-  { name: 'Citation Readiness', score: 77 },
-  { name: 'AEO Alignment', score: 86 },
-  { name: 'Schema Extraction', score: 80 },
-  { name: 'QA-Format Detection', score: 86 },
-  { name: 'Descriptive Metadata', score: 82 },
+  { name: 'Semantic Clarity', score: 92, pillar: 'aiReadability' },
+  { name: 'Logical Structure', score: 85, pillar: 'aiReadability' },
+  { name: 'Readability', score: 87, pillar: 'aiReadability' },
+  { name: 'Entity Recognition', score: 75, pillar: 'digitalAuthority' },
+  { name: 'Citation Readiness', score: 77, pillar: 'digitalAuthority' },
+  { name: 'Metadata Audit', score: 78, pillar: 'digitalAuthority' },
+  { name: 'AEO Alignment', score: 86, pillar: 'conversionReadiness' },
+  { name: 'Schema Extraction', score: 80, pillar: 'conversionReadiness' },
+  { name: 'QA-Format Detection', score: 86, pillar: 'conversionReadiness' },
 ]
+
+const getCategoryPillarColor = (pillar) => {
+  switch(pillar) {
+    case 'aiReadability': return '#22d3ee'
+    case 'digitalAuthority': return '#10b981'
+    case 'conversionReadiness': return '#a855f7'
+    default: return '#22d3ee'
+  }
+}
 
 const scatterData = [
   { wordCount: 450, score: 62, title: 'Quick Tips' },
@@ -70,18 +79,18 @@ const getRelativeDate = (daysAgo) => {
 }
 
 const postsData = [
-  { id: 1, title: 'Ultimate Guide to AEO', slug: 'ultimate-aeo-guide', author: 'John Smith', publishDate: getRelativeDate(2), wordCount: 2100, overallScore: 94, trend: +5, pillars: { aiReadability: 96, digitalAuthority: 92, conversionReadiness: 94 }, categories: { semanticClarity: 95, logicalStructure: 92, citationReadiness: 88, entityRecognition: 90 } },
-  { id: 2, title: 'How to Optimize Content', slug: 'optimize-content', author: 'Jane Doe', publishDate: getRelativeDate(4), wordCount: 1800, overallScore: 92, trend: +3, pillars: { aiReadability: 91, digitalAuthority: 94, conversionReadiness: 91 }, categories: { semanticClarity: 90, logicalStructure: 88, citationReadiness: 95, entityRecognition: 87 } },
-  { id: 3, title: 'Complete Tutorial Series', slug: 'tutorial-series', author: 'Mike Johnson', publishDate: getRelativeDate(8), wordCount: 1500, overallScore: 88, trend: +2, pillars: { aiReadability: 89, digitalAuthority: 86, conversionReadiness: 89 }, categories: { semanticClarity: 87, logicalStructure: 91, citationReadiness: 82, entityRecognition: 85 } },
-  { id: 4, title: 'Deep Dive Analysis', slug: 'deep-dive-analysis', author: 'Sarah Wilson', publishDate: getRelativeDate(12), wordCount: 1200, overallScore: 85, trend: +4, pillars: { aiReadability: 87, digitalAuthority: 83, conversionReadiness: 85 }, categories: { semanticClarity: 84, logicalStructure: 86, citationReadiness: 80, entityRecognition: 88 } },
-  { id: 5, title: 'Best Practices Guide', slug: 'best-practices', author: 'Tom Brown', publishDate: getRelativeDate(18), wordCount: 1100, overallScore: 83, trend: 0, pillars: { aiReadability: 84, digitalAuthority: 82, conversionReadiness: 83 }, categories: { semanticClarity: 82, logicalStructure: 85, citationReadiness: 79, entityRecognition: 84 } },
-  { id: 6, title: 'Case Study Review', slug: 'case-study-review', author: 'Emily Chen', publishDate: getRelativeDate(22), wordCount: 950, overallScore: 81, trend: -1, pillars: { aiReadability: 82, digitalAuthority: 80, conversionReadiness: 81 }, categories: { semanticClarity: 80, logicalStructure: 83, citationReadiness: 78, entityRecognition: 81 } },
-  { id: 7, title: 'How-To Guide Basics', slug: 'how-to-basics', author: 'John Smith', publishDate: getRelativeDate(28), wordCount: 820, overallScore: 78, trend: +2, pillars: { aiReadability: 79, digitalAuthority: 77, conversionReadiness: 78 }, categories: { semanticClarity: 77, logicalStructure: 80, citationReadiness: 75, entityRecognition: 79 } },
-  { id: 8, title: 'Comparison Article', slug: 'comparison-article', author: 'Jane Doe', publishDate: getRelativeDate(35), wordCount: 720, overallScore: 74, trend: -2, pillars: { aiReadability: 75, digitalAuthority: 73, conversionReadiness: 74 }, categories: { semanticClarity: 73, logicalStructure: 76, citationReadiness: 71, entityRecognition: 75 } },
-  { id: 9, title: 'Product Review Post', slug: 'product-review', author: 'Mike Johnson', publishDate: getRelativeDate(42), wordCount: 650, overallScore: 71, trend: +1, pillars: { aiReadability: 72, digitalAuthority: 70, conversionReadiness: 71 }, categories: { semanticClarity: 70, logicalStructure: 73, citationReadiness: 68, entityRecognition: 72 } },
-  { id: 10, title: 'FAQ Page Content', slug: 'faq-page', author: 'Sarah Wilson', publishDate: getRelativeDate(48), wordCount: 550, overallScore: 67, trend: 0, pillars: { aiReadability: 68, digitalAuthority: 66, conversionReadiness: 67 }, categories: { semanticClarity: 66, logicalStructure: 69, citationReadiness: 64, entityRecognition: 68 } },
-  { id: 11, title: 'Quick Tips Article', slug: 'quick-tips', author: 'Tom Brown', publishDate: getRelativeDate(55), wordCount: 450, overallScore: 62, trend: -3, pillars: { aiReadability: 63, digitalAuthority: 61, conversionReadiness: 62 }, categories: { semanticClarity: 61, logicalStructure: 64, citationReadiness: 59, entityRecognition: 63 } },
-  { id: 12, title: 'News Update Brief', slug: 'news-update', author: 'Emily Chen', publishDate: getRelativeDate(58), wordCount: 380, overallScore: 58, trend: -4, pillars: { aiReadability: 59, digitalAuthority: 57, conversionReadiness: 58 }, categories: { semanticClarity: 57, logicalStructure: 60, citationReadiness: 55, entityRecognition: 59 } },
+  { id: 1, title: 'Cloud Computing Infrastructure Guide', slug: 'cloud-computing-guide', author: 'John Smith', publishDate: getRelativeDate(2), wordCount: 2100, overallScore: 94, trend: +5, pillars: { aiReadability: 96, digitalAuthority: 92, conversionReadiness: 94 }, categories: { semanticClarity: 95, logicalStructure: 92, citationReadiness: 88, entityRecognition: 90 }, indexing: true, mobileUsability: true },
+  { id: 2, title: 'Database Optimization Techniques', slug: 'database-optimization', author: 'Jane Doe', publishDate: getRelativeDate(4), wordCount: 1800, overallScore: 92, trend: +3, pillars: { aiReadability: 91, digitalAuthority: 94, conversionReadiness: 91 }, categories: { semanticClarity: 90, logicalStructure: 88, citationReadiness: 95, entityRecognition: 87 }, indexing: true, mobileUsability: true },
+  { id: 3, title: 'Network Security Best Practices', slug: 'network-security', author: 'Mike Johnson', publishDate: getRelativeDate(8), wordCount: 1500, overallScore: 88, trend: +2, pillars: { aiReadability: 89, digitalAuthority: 86, conversionReadiness: 89 }, categories: { semanticClarity: 87, logicalStructure: 91, citationReadiness: 82, entityRecognition: 85 }, indexing: true, mobileUsability: true },
+  { id: 4, title: 'Microservices Architecture Deep Dive', slug: 'microservices-architecture', author: 'Sarah Wilson', publishDate: getRelativeDate(12), wordCount: 1200, overallScore: 85, trend: +4, pillars: { aiReadability: 87, digitalAuthority: 83, conversionReadiness: 85 }, categories: { semanticClarity: 84, logicalStructure: 86, citationReadiness: 80, entityRecognition: 88 }, indexing: true, mobileUsability: false },
+  { id: 5, title: 'DevOps Pipeline Implementation', slug: 'devops-pipeline', author: 'Tom Brown', publishDate: getRelativeDate(18), wordCount: 1100, overallScore: 83, trend: 0, pillars: { aiReadability: 84, digitalAuthority: 82, conversionReadiness: 83 }, categories: { semanticClarity: 82, logicalStructure: 85, citationReadiness: 79, entityRecognition: 84 }, indexing: true, mobileUsability: true },
+  { id: 6, title: 'API Gateway Configuration', slug: 'api-gateway-config', author: 'Emily Chen', publishDate: getRelativeDate(22), wordCount: 950, overallScore: 81, trend: -1, pillars: { aiReadability: 82, digitalAuthority: 80, conversionReadiness: 81 }, categories: { semanticClarity: 80, logicalStructure: 83, citationReadiness: 78, entityRecognition: 81 }, indexing: true, mobileUsability: true },
+  { id: 7, title: 'Container Orchestration Guide', slug: 'container-orchestration', author: 'John Smith', publishDate: getRelativeDate(28), wordCount: 820, overallScore: 78, trend: +2, pillars: { aiReadability: 79, digitalAuthority: 77, conversionReadiness: 78 }, categories: { semanticClarity: 77, logicalStructure: 80, citationReadiness: 75, entityRecognition: 79 }, indexing: true, mobileUsability: false },
+  { id: 8, title: 'RESTful API Design Patterns', slug: 'restful-api-patterns', author: 'Jane Doe', publishDate: getRelativeDate(35), wordCount: 720, overallScore: 74, trend: -2, pillars: { aiReadability: 75, digitalAuthority: 73, conversionReadiness: 74 }, categories: { semanticClarity: 73, logicalStructure: 76, citationReadiness: 71, entityRecognition: 75 }, indexing: true, mobileUsability: true },
+  { id: 9, title: 'Serverless Architecture Overview', slug: 'serverless-architecture', author: 'Mike Johnson', publishDate: getRelativeDate(42), wordCount: 650, overallScore: 71, trend: +1, pillars: { aiReadability: 72, digitalAuthority: 70, conversionReadiness: 71 }, categories: { semanticClarity: 70, logicalStructure: 73, citationReadiness: 68, entityRecognition: 72 }, indexing: true, mobileUsability: false },
+  { id: 10, title: 'Data Pipeline Architecture', slug: 'data-pipeline-architecture', author: 'Sarah Wilson', publishDate: getRelativeDate(48), wordCount: 550, overallScore: 67, trend: 0, pillars: { aiReadability: 68, digitalAuthority: 66, conversionReadiness: 67 }, categories: { semanticClarity: 66, logicalStructure: 69, citationReadiness: 64, entityRecognition: 68 }, indexing: false, mobileUsability: true },
+  { id: 11, title: 'Load Balancing Strategies', slug: 'load-balancing', author: 'Tom Brown', publishDate: getRelativeDate(55), wordCount: 450, overallScore: 62, trend: -3, pillars: { aiReadability: 63, digitalAuthority: 61, conversionReadiness: 62 }, categories: { semanticClarity: 61, logicalStructure: 64, citationReadiness: 59, entityRecognition: 63 }, indexing: true, mobileUsability: true },
+  { id: 12, title: 'Caching Mechanisms Overview', slug: 'caching-mechanisms', author: 'Emily Chen', publishDate: getRelativeDate(58), wordCount: 380, overallScore: 58, trend: -4, pillars: { aiReadability: 59, digitalAuthority: 57, conversionReadiness: 58 }, categories: { semanticClarity: 57, logicalStructure: 60, citationReadiness: 55, entityRecognition: 59 }, indexing: false, mobileUsability: false },
 ]
 
 const TIME_PERIODS = [
@@ -444,13 +453,15 @@ const mockAnalysis = {
     conversionReadiness: 83
   },
   subScores: [
-    { name: "Semantic Clarity", score: 90, status: "good" },
-    { name: "Logical Structure", score: 85, status: "good" },
-    { name: "Entity Recognition", score: 72, status: "warning" },
-    { name: "Citation Readiness", score: 65, status: "warning" },
-    { name: "AEO Alignment", score: 88, status: "good" },
-    { name: "QA-format Detection", score: 95, status: "good" },
-    { name: "Schema Extraction", score: 40, status: "critical" }
+    { name: "Semantic Clarity", score: 90, status: "good", pillar: "aiReadability" },
+    { name: "Readability Score", score: 87, status: "good", pillar: "aiReadability" },
+    { name: "Logical Structure", score: 85, status: "good", pillar: "aiReadability" },
+    { name: "Entity Recognition", score: 72, status: "warning", pillar: "digitalAuthority" },
+    { name: "Citation Readiness", score: 65, status: "warning", pillar: "digitalAuthority" },
+    { name: "Metadata Audit", score: 78, status: "warning", pillar: "digitalAuthority" },
+    { name: "AEO Alignment", score: 88, status: "good", pillar: "conversionReadiness" },
+    { name: "QA-format Detection", score: 95, status: "good", pillar: "conversionReadiness" },
+    { name: "Schema Extraction", score: 40, status: "critical", pillar: "conversionReadiness" }
   ],
   recommendations: [
     { text: "Add structured entity definitions in first paragraph.", type: "critical" },
@@ -477,29 +488,60 @@ function ContentAnalyzerPage({ setCurrentPage }) {
   const [saved, setSaved] = useState(false)
   const [published, setPublished] = useState(false)
   const [postStatus, setPostStatus] = useState('DRAFT')
-  const [title, setTitle] = useState('The Future of Artificial Intelligence in Modern Technology')
+  const [title, setTitle] = useState('Cloud Computing Infrastructure: Scalability and Performance Optimization')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [showNotifications, setShowNotifications] = useState(false)
+  const [notifications] = useState([
+    { id: 1, text: 'Analysis complete for "Database Optimization Guide"', time: '2 min ago', read: false },
+    { id: 2, text: 'New feature: Batch analysis now available', time: '1 hour ago', read: false },
+    { id: 3, text: 'Your API usage is at 47%', time: '3 hours ago', read: true },
+  ])
   
   const handleSave = () => {
     setSaved(true)
+    localStorage.setItem('saved_title', title)
+    localStorage.setItem('saved_content', content)
     setTimeout(() => setSaved(false), 2000)
   }
   
   const handlePublish = () => {
     setPublished(true)
     setPostStatus('PUBLISHED')
+    localStorage.setItem('published_title', title)
+    localStorage.setItem('published_content', content)
+    localStorage.setItem('published_date', new Date().toISOString())
     setTimeout(() => setPublished(false), 2000)
   }
-  const [content, setContent] = useState(`Artificial intelligence has fundamentally transformed the technology landscape, reshaping how businesses operate, how consumers interact with digital products, and how society approaches complex problem-solving. From machine learning algorithms that power recommendation engines to natural language processing systems that enable conversational interfaces, AI has become an integral part of our technological infrastructure.
+  
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      alert(`Searching for: "${searchQuery}"`)
+    }
+  }
 
-The evolution of neural networks and deep learning architectures has accelerated innovation across multiple domains. Computer vision systems now rival human accuracy in image recognition tasks, while generative AI models produce creative content that blurs the line between human and machine output. These advancements have profound implications for industries ranging from healthcare diagnostics to autonomous vehicle development.
+  const getPillarColor = (pillar) => {
+    switch(pillar) {
+      case 'aiReadability': return '#22d3ee'
+      case 'digitalAuthority': return '#10b981'
+      case 'conversionReadiness': return '#a855f7'
+      default: return '#22d3ee'
+    }
+  }
+  const [content, setContent] = useState(`Cloud computing has revolutionized how organizations deploy, manage, and scale their technology infrastructure. By leveraging distributed computing resources accessed over the internet, businesses can reduce capital expenditure while gaining unprecedented flexibility in resource allocation. The shift from on-premises data centers to cloud-based solutions represents one of the most significant transformations in enterprise technology over the past decade.
 
-Edge computing represents another frontier where AI and technology converge. By processing data locally on devices rather than relying solely on cloud infrastructure, edge AI enables real-time decision-making in applications where latency is critical. Smart sensors, IoT devices, and mobile applications increasingly leverage on-device machine learning to deliver responsive, privacy-preserving experiences.
+Modern cloud architectures employ sophisticated load balancing techniques to distribute workloads across multiple servers and geographic regions. This approach ensures high availability and fault tolerance, critical requirements for mission-critical applications. Container orchestration platforms have emerged as essential tools for managing microservices deployments, enabling development teams to achieve continuous integration and delivery pipelines that accelerate time-to-market.
 
-The intersection of AI with quantum computing promises to unlock computational capabilities previously thought impossible. Quantum machine learning algorithms could revolutionize drug discovery, materials science, and cryptography by solving optimization problems that classical computers cannot efficiently address.
+Database management in cloud environments presents unique challenges and opportunities. Distributed database systems must balance consistency, availability, and partition tolerance according to the CAP theorem constraints. Many organizations adopt polyglot persistence strategies, selecting different database technologies for different use cases—relational databases for transactional workloads, document stores for flexible schemas, and time-series databases for monitoring and analytics.
 
-However, the rapid advancement of AI technology also raises important considerations around ethics, bias, and governance. Responsible AI development requires thoughtful frameworks that balance innovation with accountability, ensuring that these powerful technologies serve humanity's best interests while minimizing potential harms.
+Network security in cloud environments requires a defense-in-depth approach encompassing multiple layers of protection. Virtual private clouds, security groups, and network access control lists form the foundational perimeter defenses. Zero-trust architecture principles advocate for verifying every access request regardless of its origin, treating internal network traffic with the same scrutiny as external requests.
 
-Looking ahead, the convergence of AI with emerging technologies like 5G networks, augmented reality, and blockchain will create new possibilities for intelligent applications. Organizations that successfully navigate this technological transformation will be positioned to lead in an increasingly AI-driven future.`)
+Performance optimization in cloud environments demands careful attention to resource utilization and cost management. Auto-scaling policies must balance responsiveness with efficiency, avoiding both over-provisioning (wasted resources) and under-provisioning (degraded performance). Caching strategies at multiple layers—CDN edge caching, application-level caching, and database query caching—can dramatically reduce latency and backend load.
+
+Infrastructure as Code practices have become essential for maintaining reproducible and auditable cloud deployments. Version-controlled configuration files define the complete infrastructure stack, enabling teams to spin up identical environments for development, testing, and production. This approach reduces configuration drift and simplifies disaster recovery procedures.
+
+Monitoring and observability form the foundation of effective cloud operations. Comprehensive logging, distributed tracing, and metrics collection provide the visibility needed to diagnose issues and optimize performance. Modern observability platforms correlate data across these three pillars, enabling operators to quickly identify root causes when problems occur.
+
+The evolution toward edge computing extends cloud capabilities closer to end users and data sources. By processing data at the network edge, organizations can reduce latency for time-sensitive applications while managing bandwidth costs. This hybrid approach combines the scalability of centralized cloud resources with the responsiveness of local processing.`)
 
   const getScoreLabel = (score) => {
     if (score >= 80) return { text: 'GOOD', color: '#10b981' }
@@ -710,7 +752,7 @@ Looking ahead, the convergence of AI with emerging technologies like 5G networks
                   />
                   <Bar dataKey="score" radius={[0, 4, 4, 0]}>
                     {mockAnalysis.subScores.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={getBarColor(entry.score)} />
+                      <Cell key={`cell-${index}`} fill={getPillarColor(entry.pillar)} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -841,6 +883,7 @@ Looking ahead, the convergence of AI with emerging technologies like 5G networks
             {mockAnalysis.history.map((entry) => (
               <div
                 key={entry.id}
+                onClick={() => alert(`Viewing analysis from ${entry.date}\nScore: ${entry.score}\nChange: ${entry.delta > 0 ? '+' : ''}${entry.delta} points\n\nThis would load the full analysis details from this date.`)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -1044,11 +1087,18 @@ Looking ahead, the convergence of AI with emerging technologies like 5G networks
               dangerouslySetInnerHTML={{
                 __html: heatmapEnabled
                   ? content
-                      .replace(/semantic clarity/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;">semantic clarity</span>')
-                      .replace(/entity recognition/gi, '<span style="background: rgba(245, 158, 11, 0.3); padding: 2px 4px; border-radius: 3px;">entity recognition</span>')
-                      .replace(/structured data/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;">structured data</span>')
-                      .replace(/digital authority/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;">digital authority</span>')
-                      .replace(/proper citations/gi, '<span style="background: rgba(245, 158, 11, 0.3); padding: 2px 4px; border-radius: 3px;">proper citations</span>')
+                      .replace(/cloud computing/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">cloud computing</span>')
+                      .replace(/infrastructure/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">infrastructure</span>')
+                      .replace(/distributed computing/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Term">distributed computing</span>')
+                      .replace(/load balancing/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Concept">load balancing</span>')
+                      .replace(/microservices/gi, '<span style="background: rgba(168, 85, 247, 0.3); padding: 2px 4px; border-radius: 3px;" title="Conversion Readiness - Action Term">microservices</span>')
+                      .replace(/database/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Entity">database</span>')
+                      .replace(/security/gi, '<span style="background: rgba(245, 158, 11, 0.3); padding: 2px 4px; border-radius: 3px;" title="Warning - Needs Citation">security</span>')
+                      .replace(/scalability/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">scalability</span>')
+                      .replace(/performance optimization/gi, '<span style="background: rgba(168, 85, 247, 0.3); padding: 2px 4px; border-radius: 3px;" title="Conversion Readiness - CTA">performance optimization</span>')
+                      .replace(/container orchestration/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Term">container orchestration</span>')
+                      .replace(/zero-trust/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Industry Standard">zero-trust</span>')
+                      .replace(/observability/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Concept">observability</span>')
                       .split('\n\n').join('<br><br>')
                   : content.split('\n\n').join('<br><br>')
               }}
@@ -1759,29 +1809,75 @@ function TroubleshootingPage() {
 }
 
 function UpgradePage() {
+  const businessFeatures = [
+    '100 AI Optimizations',
+    'Semantic Clarity: Precision & ambiguity check',
+    'Readability Score: AI & human processing ease',
+    'Metadata Audit: Schema & HTML verification',
+    'Logical Structure: Heading hierarchy analysis',
+    'Entity Recognition: Knowledge graph linking',
+    'Citation Readiness: Quotable snippet detection',
+    'Answer Engine Optimization Alignment: Direct answer scoring',
+    'Schema Extraction: Structured data opportunities',
+    'QA-Format Detection: Question/Answer optimization',
+  ]
+  
+  const proFeatures = [
+    'Everything in Business +',
+    '500 AI Optimizations (400 additional)',
+    'Priority e-mail Support',
+  ]
+  
   return (
     <>
       <header className="animate-in" style={{ marginBottom: '32px', textAlign: 'center' }}>
         <h1 style={{ fontSize: '32px', fontWeight: 700, marginBottom: '8px' }}>
-          Upgrade to <span style={{ color: 'var(--accent)' }}>Pro</span>
+          Choose Your <span style={{ color: 'var(--accent)' }}>Plan</span>
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '16px' }}>Unlock the full power of AI-driven content optimization</p>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '16px' }}>Optimize for Gemini, Perplexity, Claude and the emerging ChatGPT shopping experience</p>
       </header>
       
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px', maxWidth: '800px', margin: '0 auto' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px', maxWidth: '900px', margin: '0 auto' }}>
         <div className="animate-in" style={{
           backgroundColor: 'var(--bg-secondary)',
           border: '1px solid var(--border-color)',
           borderRadius: '16px',
           padding: '32px',
         }}>
-          <h3 style={{ fontSize: '18px', marginBottom: '8px' }}>Free</h3>
-          <div style={{ fontSize: '36px', fontWeight: 700, marginBottom: '24px' }}>$0<span style={{ fontSize: '16px', color: 'var(--text-secondary)' }}>/mo</span></div>
+          <h3 style={{ fontSize: '20px', marginBottom: '8px', color: 'var(--accent)' }}>Business</h3>
+          <div style={{ fontSize: '36px', fontWeight: 700, marginBottom: '8px' }}>$29.99<span style={{ fontSize: '16px', color: 'var(--text-secondary)' }}>/month</span></div>
+          <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '24px', lineHeight: 1.5 }}>
+            Perfect for local businesses, early-stage startups, product teams and solo-creators
+          </p>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-            {['5 analyses/month', 'Basic scoring', 'Email support'].map((item, i) => (
-              <li key={i} style={{ padding: '8px 0', borderBottom: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>{item}</li>
+            {businessFeatures.map((item, i) => (
+              <li key={i} style={{ 
+                padding: '10px 0', 
+                borderBottom: '1px solid var(--border-color)', 
+                fontSize: '13px',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '8px',
+              }}>
+                <span style={{ color: '#10b981', flexShrink: 0 }}>✓</span>
+                <span>{item}</span>
+              </li>
             ))}
           </ul>
+          <button style={{
+            width: '100%',
+            marginTop: '24px',
+            padding: '14px',
+            borderRadius: '8px',
+            backgroundColor: 'var(--bg-tertiary)',
+            border: '1px solid var(--border-color)',
+            color: 'var(--text-primary)',
+            fontSize: '14px',
+            fontWeight: 600,
+            cursor: 'pointer',
+          }}>
+            Get Started
+          </button>
         </div>
         
         <div className="animate-in" style={{
@@ -1803,11 +1899,24 @@ function UpgradePage() {
             fontSize: '12px',
             fontWeight: 600,
           }}>RECOMMENDED</span>
-          <h3 style={{ fontSize: '18px', marginBottom: '8px', color: 'var(--accent)' }}>Pro</h3>
-          <div style={{ fontSize: '36px', fontWeight: 700, marginBottom: '24px' }}>$29<span style={{ fontSize: '16px', color: 'var(--text-secondary)' }}>/mo</span></div>
+          <h3 style={{ fontSize: '20px', marginBottom: '8px', color: 'var(--accent)' }}>Pro</h3>
+          <div style={{ fontSize: '36px', fontWeight: 700, marginBottom: '8px' }}>$99.99<span style={{ fontSize: '16px', color: 'var(--text-secondary)' }}>/month</span></div>
+          <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '24px', lineHeight: 1.5 }}>
+            Ideal for enterprises, agencies, scaling SaaS brands, product teams and other power users
+          </p>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-            {['Unlimited analyses', 'All three pillars', 'Quick Tools (micro-actions)', 'Provenance tracking', 'Priority support'].map((item, i) => (
-              <li key={i} style={{ padding: '8px 0', borderBottom: '1px solid var(--border-color)' }}>{item}</li>
+            {proFeatures.map((item, i) => (
+              <li key={i} style={{ 
+                padding: '10px 0', 
+                borderBottom: '1px solid var(--border-color)',
+                fontSize: '13px',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '8px',
+              }}>
+                <span style={{ color: '#10b981', flexShrink: 0 }}>✓</span>
+                <span>{item}</span>
+              </li>
             ))}
           </ul>
           <button style={{
@@ -1823,7 +1932,7 @@ function UpgradePage() {
             cursor: 'pointer',
           }}>
             <Star size={16} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-            Upgrade Now
+            Upgrade to Pro
           </button>
         </div>
       </div>
@@ -1833,6 +1942,43 @@ function UpgradePage() {
 
 function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelectedPeriod }) {
   const periodLabel = TIME_PERIODS.find(p => p.value === selectedPeriod)?.label || 'Last 30 Days'
+  const [showNotifications, setShowNotifications] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState(null)
+  const [notifications, setNotifications] = useState([
+    { id: 1, text: 'Analysis complete for "Database Optimization Guide"', time: '2 min ago', read: false },
+    { id: 2, text: 'New feature: Batch analysis now available', time: '1 hour ago', read: false },
+    { id: 3, text: 'Your API usage is at 47%', time: '3 hours ago', read: true },
+  ])
+  
+  const handleSearch = (query) => {
+    if (query.trim()) {
+      const results = postsData.filter(p => 
+        p.title.toLowerCase().includes(query.toLowerCase()) ||
+        p.slug.toLowerCase().includes(query.toLowerCase()) ||
+        p.author.toLowerCase().includes(query.toLowerCase())
+      )
+      setSearchResults(results)
+    } else {
+      setSearchResults(null)
+    }
+  }
+  
+  const markNotificationRead = (id) => {
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n))
+  }
+  
+  const unreadCount = notifications.filter(n => !n.read).length
+  
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (showNotifications && !e.target.closest('.notification-dropdown')) {
+        setShowNotifications(false)
+      }
+    }
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [showNotifications])
   
   const getFilteredPerformanceData = () => {
     if (selectedPeriod === 7) return performanceData.slice(-2)
@@ -1864,53 +2010,180 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <TimePeriodDropdown selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
           
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            backgroundColor: 'var(--bg-secondary)',
-            border: '1px solid var(--border-color)',
-            borderRadius: '8px',
-            padding: '8px 16px',
-          }}>
-            <Search size={16} color="var(--text-muted)" />
-            <input
-              type="text"
-              placeholder="Search content..."
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'var(--text-primary)',
-                fontSize: '14px',
-                outline: 'none',
-                width: '180px',
-              }}
-            />
+          <div style={{ position: 'relative' }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              backgroundColor: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
+              borderRadius: '8px',
+              padding: '8px 16px',
+            }}>
+              <Search size={16} color="var(--text-muted)" />
+              <input
+                type="text"
+                placeholder="Search content..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value)
+                  handleSearch(e.target.value)
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--text-primary)',
+                  fontSize: '14px',
+                  outline: 'none',
+                  width: '180px',
+                }}
+              />
+              {searchQuery && (
+                <button 
+                  onClick={() => { setSearchQuery(''); setSearchResults(null) }}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                >
+                  <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>✕</span>
+                </button>
+              )}
+            </div>
+            {searchResults !== null && (
+              <div style={{
+                position: 'absolute',
+                top: '48px',
+                left: 0,
+                width: '320px',
+                backgroundColor: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '12px',
+                boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+                zIndex: 100,
+                overflow: 'hidden',
+              }}>
+                <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-color)' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                    {searchResults.length} result{searchResults.length !== 1 ? 's' : ''} found
+                  </span>
+                </div>
+                <div style={{ maxHeight: '250px', overflowY: 'auto' }}>
+                  {searchResults.length === 0 ? (
+                    <div style={{ padding: '24px 16px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                      No posts matching "{searchQuery}"
+                    </div>
+                  ) : (
+                    searchResults.slice(0, 5).map(post => (
+                      <div 
+                        key={post.id}
+                        onClick={() => { setCurrentPage('analyzer'); setSearchResults(null); setSearchQuery('') }}
+                        style={{
+                          padding: '12px 16px',
+                          borderBottom: '1px solid var(--border-color)',
+                          cursor: 'pointer',
+                          transition: 'background 0.2s',
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(34, 211, 238, 0.1)'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                      >
+                        <div style={{ fontSize: '13px', fontWeight: 500, marginBottom: '4px' }}>{post.title}</div>
+                        <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>by {post.author} • Score: {post.overallScore}</div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
           </div>
           
-          <button style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '8px',
-            backgroundColor: 'var(--bg-secondary)',
-            border: '1px solid var(--border-color)',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'relative',
-          }}>
-            <Bell size={18} color="var(--text-secondary)" />
-            <span style={{
-              position: 'absolute',
-              top: '8px',
-              right: '8px',
-              width: '8px',
-              height: '8px',
-              backgroundColor: 'var(--danger)',
-              borderRadius: '50%',
-            }} />
-          </button>
+          <div className="notification-dropdown" style={{ position: 'relative' }}>
+            <button 
+              onClick={(e) => { e.stopPropagation(); setShowNotifications(!showNotifications) }}
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '8px',
+                backgroundColor: showNotifications ? 'rgba(34, 211, 238, 0.1)' : 'var(--bg-secondary)',
+                border: `1px solid ${showNotifications ? 'var(--accent)' : 'var(--border-color)'}`,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'relative',
+              }}
+            >
+              <Bell size={18} color={showNotifications ? 'var(--accent)' : 'var(--text-secondary)'} />
+              {unreadCount > 0 && (
+                <span style={{
+                  position: 'absolute',
+                  top: '6px',
+                  right: '6px',
+                  width: '16px',
+                  height: '16px',
+                  backgroundColor: 'var(--danger)',
+                  borderRadius: '50%',
+                  fontSize: '10px',
+                  fontWeight: 600,
+                  color: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }} >{unreadCount}</span>
+              )}
+            </button>
+            
+            {showNotifications && (
+              <div className="notification-dropdown" style={{
+                position: 'absolute',
+                top: '48px',
+                right: 0,
+                width: '320px',
+                backgroundColor: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '12px',
+                boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+                zIndex: 100,
+                overflow: 'hidden',
+              }}>
+                <div style={{ padding: '16px', borderBottom: '1px solid var(--border-color)' }}>
+                  <h4 style={{ fontSize: '14px', fontWeight: 600, margin: 0 }}>Notifications</h4>
+                </div>
+                <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                  {notifications.map(notif => (
+                    <div 
+                      key={notif.id}
+                      onClick={() => markNotificationRead(notif.id)}
+                      style={{
+                        padding: '12px 16px',
+                        borderBottom: '1px solid var(--border-color)',
+                        cursor: 'pointer',
+                        backgroundColor: notif.read ? 'transparent' : 'rgba(34, 211, 238, 0.05)',
+                        transition: 'background 0.2s',
+                      }}
+                    >
+                      <div style={{ fontSize: '13px', marginBottom: '4px', color: notif.read ? 'var(--text-secondary)' : '#fff' }}>
+                        {notif.text}
+                      </div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{notif.time}</div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ padding: '12px 16px', borderTop: '1px solid var(--border-color)', textAlign: 'center' }}>
+                  <button 
+                    onClick={() => setNotifications(prev => prev.map(n => ({ ...n, read: true })))}
+                    style={{ 
+                      background: 'none', 
+                      border: 'none', 
+                      color: 'var(--accent)', 
+                      fontSize: '13px', 
+                      cursor: 'pointer',
+                      fontWeight: 500,
+                    }}
+                  >
+                    Mark all as read
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
           
           <button
             onClick={() => setCurrentPage('analyzer')}
@@ -2437,12 +2710,30 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={filteredCategoryData}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
-              <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={9} angle={-20} textAnchor="end" height={80} />
+              <XAxis dataKey="name" stroke="#fff" fontSize={11} angle={-20} textAnchor="end" height={80} fontWeight={600} />
               <YAxis stroke="var(--text-muted)" fontSize={12} domain={[0, 100]} />
               <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="score" fill="var(--accent)" radius={[4, 4, 0, 0]} name="Score" />
+              <Bar dataKey="score" radius={[4, 4, 0, 0]} name="Score">
+                {filteredCategoryData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={getCategoryPillarColor(entry.pillar)} />
+                ))}
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginTop: '16px' }}>
+          <span style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px', color: '#fff' }}>
+            <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#22d3ee' }} />
+            AI Readability
+          </span>
+          <span style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px', color: '#fff' }}>
+            <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#10b981' }} />
+            Digital Authority
+          </span>
+          <span style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px', color: '#fff' }}>
+            <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#a855f7' }} />
+            Conversion Readiness
+          </span>
         </div>
       </ChartCard>
 
@@ -2460,28 +2751,77 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
           }
           
           return (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 100px 80px', gap: '12px', padding: '8px 12px', borderBottom: '1px solid var(--border-color)' }}>
-                <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Post Title</span>
-                <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', textAlign: 'center' }}>Avg Score</span>
-                <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', textAlign: 'center' }}>Status</span>
-              </div>
-              {filteredPosts.map((post) => {
-                const avgScore = Math.round((post.pillars.aiReadability + post.pillars.digitalAuthority + post.pillars.conversionReadiness) / 3)
-                const statusColor = avgScore >= 80 ? '#10b981' : avgScore >= 65 ? '#f59e0b' : '#ef4444'
-                const statusLabel = avgScore >= 80 ? 'Good' : avgScore >= 65 ? 'Okay' : 'Poor'
-                
-                return (
-                  <div key={post.id} style={{ display: 'grid', gridTemplateColumns: '1fr 100px 80px', gap: '12px', padding: '10px 12px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px', alignItems: 'center' }}>
-                    <span style={{ fontSize: '13px', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{post.title}</span>
-                    <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', textAlign: 'center' }}>{avgScore}</span>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-                      <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: statusColor, boxShadow: `0 0 8px ${statusColor}` }} />
-                      <span style={{ fontSize: '12px', color: statusColor, fontWeight: 500 }}>{statusLabel}</span>
-                    </div>
-                  </div>
-                )
-              })}
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
+                    <th style={{ textAlign: 'left', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>#</th>
+                    <th style={{ textAlign: 'left', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>Title</th>
+                    <th style={{ textAlign: 'center', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>Status</th>
+                    <th style={{ textAlign: 'center', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>Indexing Allowed</th>
+                    <th style={{ textAlign: 'center', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>Mobile Usability</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredPosts.map((post, idx) => {
+                    const avgScore = Math.round((post.pillars.aiReadability + post.pillars.digitalAuthority + post.pillars.conversionReadiness) / 3)
+                    const statusColor = avgScore >= 80 ? '#10b981' : avgScore >= 65 ? '#f59e0b' : '#ef4444'
+                    
+                    return (
+                      <tr key={post.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                        <td style={{ padding: '14px 8px', fontSize: '14px', fontWeight: 600, color: '#fff' }}>{idx + 1}</td>
+                        <td style={{ padding: '14px 8px' }}>
+                          <div style={{ fontSize: '14px', fontWeight: 500, color: '#fff' }}>{post.title}</div>
+                          <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>/{post.slug}/</div>
+                          <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>Google: Submitted and indexed</div>
+                        </td>
+                        <td style={{ padding: '14px 8px', textAlign: 'center' }}>
+                          <span style={{ 
+                            display: 'inline-flex', 
+                            width: '24px', 
+                            height: '24px', 
+                            borderRadius: '50%', 
+                            backgroundColor: statusColor,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#fff',
+                            fontSize: '12px',
+                            fontWeight: 600,
+                          }}>✓</span>
+                        </td>
+                        <td style={{ padding: '14px 8px', textAlign: 'center' }}>
+                          <span style={{ 
+                            display: 'inline-flex', 
+                            width: '24px', 
+                            height: '24px', 
+                            borderRadius: '50%', 
+                            backgroundColor: post.indexing ? '#10b981' : '#ef4444',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#fff',
+                            fontSize: '12px',
+                            fontWeight: 600,
+                          }}>{post.indexing ? '✓' : '✕'}</span>
+                        </td>
+                        <td style={{ padding: '14px 8px', textAlign: 'center' }}>
+                          <span style={{ 
+                            display: 'inline-flex', 
+                            width: '24px', 
+                            height: '24px', 
+                            borderRadius: '50%', 
+                            backgroundColor: post.mobileUsability ? '#10b981' : '#ef4444',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#fff',
+                            fontSize: '12px',
+                            fontWeight: 600,
+                          }}>{post.mobileUsability ? '✓' : '✕'}</span>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
             </div>
           )
         })()}
