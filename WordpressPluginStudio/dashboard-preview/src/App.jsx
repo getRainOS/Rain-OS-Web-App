@@ -64,19 +64,25 @@ const scatterData = [
   { wordCount: 2100, score: 94, title: 'Comprehensive Guide' },
 ]
 
+const getRelativeDate = (daysAgo) => {
+  const date = new Date()
+  date.setDate(date.getDate() - daysAgo)
+  return date.toISOString().split('T')[0]
+}
+
 const postsData = [
-  { id: 1, title: 'Ultimate Guide to SEO', slug: 'ultimate-seo-guide', author: 'John Smith', publishDate: '2024-12-20', wordCount: 2100, overallScore: 94, trend: +5, pillars: { aiReadability: 96, digitalAuthority: 92, conversionReadiness: 94 }, categories: { semanticClarity: 95, logicalStructure: 92, citationReadiness: 88, entityRecognition: 90 } },
-  { id: 2, title: 'How to Optimize Content', slug: 'optimize-content', author: 'Jane Doe', publishDate: '2024-12-18', wordCount: 1800, overallScore: 92, trend: +3, pillars: { aiReadability: 91, digitalAuthority: 94, conversionReadiness: 91 }, categories: { semanticClarity: 90, logicalStructure: 88, citationReadiness: 95, entityRecognition: 87 } },
-  { id: 3, title: 'Complete Tutorial Series', slug: 'tutorial-series', author: 'Mike Johnson', publishDate: '2024-12-15', wordCount: 1500, overallScore: 88, trend: +2, pillars: { aiReadability: 89, digitalAuthority: 86, conversionReadiness: 89 }, categories: { semanticClarity: 87, logicalStructure: 91, citationReadiness: 82, entityRecognition: 85 } },
-  { id: 4, title: 'Deep Dive Analysis', slug: 'deep-dive-analysis', author: 'Sarah Wilson', publishDate: '2024-12-12', wordCount: 1200, overallScore: 85, trend: +4, pillars: { aiReadability: 87, digitalAuthority: 83, conversionReadiness: 85 }, categories: { semanticClarity: 84, logicalStructure: 86, citationReadiness: 80, entityRecognition: 88 } },
-  { id: 5, title: 'Best Practices Guide', slug: 'best-practices', author: 'Tom Brown', publishDate: '2024-12-10', wordCount: 1100, overallScore: 83, trend: 0, pillars: { aiReadability: 84, digitalAuthority: 82, conversionReadiness: 83 }, categories: { semanticClarity: 82, logicalStructure: 85, citationReadiness: 79, entityRecognition: 84 } },
-  { id: 6, title: 'Case Study Review', slug: 'case-study-review', author: 'Emily Chen', publishDate: '2024-12-08', wordCount: 950, overallScore: 81, trend: -1, pillars: { aiReadability: 82, digitalAuthority: 80, conversionReadiness: 81 }, categories: { semanticClarity: 80, logicalStructure: 83, citationReadiness: 78, entityRecognition: 81 } },
-  { id: 7, title: 'How-To Guide Basics', slug: 'how-to-basics', author: 'John Smith', publishDate: '2024-12-05', wordCount: 820, overallScore: 78, trend: +2, pillars: { aiReadability: 79, digitalAuthority: 77, conversionReadiness: 78 }, categories: { semanticClarity: 77, logicalStructure: 80, citationReadiness: 75, entityRecognition: 79 } },
-  { id: 8, title: 'Comparison Article', slug: 'comparison-article', author: 'Jane Doe', publishDate: '2024-12-02', wordCount: 720, overallScore: 74, trend: -2, pillars: { aiReadability: 75, digitalAuthority: 73, conversionReadiness: 74 }, categories: { semanticClarity: 73, logicalStructure: 76, citationReadiness: 71, entityRecognition: 75 } },
-  { id: 9, title: 'Product Review Post', slug: 'product-review', author: 'Mike Johnson', publishDate: '2024-11-28', wordCount: 650, overallScore: 71, trend: +1, pillars: { aiReadability: 72, digitalAuthority: 70, conversionReadiness: 71 }, categories: { semanticClarity: 70, logicalStructure: 73, citationReadiness: 68, entityRecognition: 72 } },
-  { id: 10, title: 'FAQ Page Content', slug: 'faq-page', author: 'Sarah Wilson', publishDate: '2024-11-25', wordCount: 550, overallScore: 67, trend: 0, pillars: { aiReadability: 68, digitalAuthority: 66, conversionReadiness: 67 }, categories: { semanticClarity: 66, logicalStructure: 69, citationReadiness: 64, entityRecognition: 68 } },
-  { id: 11, title: 'Quick Tips Article', slug: 'quick-tips', author: 'Tom Brown', publishDate: '2024-11-20', wordCount: 450, overallScore: 62, trend: -3, pillars: { aiReadability: 63, digitalAuthority: 61, conversionReadiness: 62 }, categories: { semanticClarity: 61, logicalStructure: 64, citationReadiness: 59, entityRecognition: 63 } },
-  { id: 12, title: 'News Update Brief', slug: 'news-update', author: 'Emily Chen', publishDate: '2024-11-15', wordCount: 380, overallScore: 58, trend: -4, pillars: { aiReadability: 59, digitalAuthority: 57, conversionReadiness: 58 }, categories: { semanticClarity: 57, logicalStructure: 60, citationReadiness: 55, entityRecognition: 59 } },
+  { id: 1, title: 'Ultimate Guide to SEO', slug: 'ultimate-seo-guide', author: 'John Smith', publishDate: getRelativeDate(2), wordCount: 2100, overallScore: 94, trend: +5, pillars: { aiReadability: 96, digitalAuthority: 92, conversionReadiness: 94 }, categories: { semanticClarity: 95, logicalStructure: 92, citationReadiness: 88, entityRecognition: 90 } },
+  { id: 2, title: 'How to Optimize Content', slug: 'optimize-content', author: 'Jane Doe', publishDate: getRelativeDate(4), wordCount: 1800, overallScore: 92, trend: +3, pillars: { aiReadability: 91, digitalAuthority: 94, conversionReadiness: 91 }, categories: { semanticClarity: 90, logicalStructure: 88, citationReadiness: 95, entityRecognition: 87 } },
+  { id: 3, title: 'Complete Tutorial Series', slug: 'tutorial-series', author: 'Mike Johnson', publishDate: getRelativeDate(8), wordCount: 1500, overallScore: 88, trend: +2, pillars: { aiReadability: 89, digitalAuthority: 86, conversionReadiness: 89 }, categories: { semanticClarity: 87, logicalStructure: 91, citationReadiness: 82, entityRecognition: 85 } },
+  { id: 4, title: 'Deep Dive Analysis', slug: 'deep-dive-analysis', author: 'Sarah Wilson', publishDate: getRelativeDate(12), wordCount: 1200, overallScore: 85, trend: +4, pillars: { aiReadability: 87, digitalAuthority: 83, conversionReadiness: 85 }, categories: { semanticClarity: 84, logicalStructure: 86, citationReadiness: 80, entityRecognition: 88 } },
+  { id: 5, title: 'Best Practices Guide', slug: 'best-practices', author: 'Tom Brown', publishDate: getRelativeDate(18), wordCount: 1100, overallScore: 83, trend: 0, pillars: { aiReadability: 84, digitalAuthority: 82, conversionReadiness: 83 }, categories: { semanticClarity: 82, logicalStructure: 85, citationReadiness: 79, entityRecognition: 84 } },
+  { id: 6, title: 'Case Study Review', slug: 'case-study-review', author: 'Emily Chen', publishDate: getRelativeDate(22), wordCount: 950, overallScore: 81, trend: -1, pillars: { aiReadability: 82, digitalAuthority: 80, conversionReadiness: 81 }, categories: { semanticClarity: 80, logicalStructure: 83, citationReadiness: 78, entityRecognition: 81 } },
+  { id: 7, title: 'How-To Guide Basics', slug: 'how-to-basics', author: 'John Smith', publishDate: getRelativeDate(28), wordCount: 820, overallScore: 78, trend: +2, pillars: { aiReadability: 79, digitalAuthority: 77, conversionReadiness: 78 }, categories: { semanticClarity: 77, logicalStructure: 80, citationReadiness: 75, entityRecognition: 79 } },
+  { id: 8, title: 'Comparison Article', slug: 'comparison-article', author: 'Jane Doe', publishDate: getRelativeDate(35), wordCount: 720, overallScore: 74, trend: -2, pillars: { aiReadability: 75, digitalAuthority: 73, conversionReadiness: 74 }, categories: { semanticClarity: 73, logicalStructure: 76, citationReadiness: 71, entityRecognition: 75 } },
+  { id: 9, title: 'Product Review Post', slug: 'product-review', author: 'Mike Johnson', publishDate: getRelativeDate(42), wordCount: 650, overallScore: 71, trend: +1, pillars: { aiReadability: 72, digitalAuthority: 70, conversionReadiness: 71 }, categories: { semanticClarity: 70, logicalStructure: 73, citationReadiness: 68, entityRecognition: 72 } },
+  { id: 10, title: 'FAQ Page Content', slug: 'faq-page', author: 'Sarah Wilson', publishDate: getRelativeDate(48), wordCount: 550, overallScore: 67, trend: 0, pillars: { aiReadability: 68, digitalAuthority: 66, conversionReadiness: 67 }, categories: { semanticClarity: 66, logicalStructure: 69, citationReadiness: 64, entityRecognition: 68 } },
+  { id: 11, title: 'Quick Tips Article', slug: 'quick-tips', author: 'Tom Brown', publishDate: getRelativeDate(55), wordCount: 450, overallScore: 62, trend: -3, pillars: { aiReadability: 63, digitalAuthority: 61, conversionReadiness: 62 }, categories: { semanticClarity: 61, logicalStructure: 64, citationReadiness: 59, entityRecognition: 63 } },
+  { id: 12, title: 'News Update Brief', slug: 'news-update', author: 'Emily Chen', publishDate: getRelativeDate(58), wordCount: 380, overallScore: 58, trend: -4, pillars: { aiReadability: 59, digitalAuthority: 57, conversionReadiness: 58 }, categories: { semanticClarity: 57, logicalStructure: 60, citationReadiness: 55, entityRecognition: 59 } },
 ]
 
 const TIME_PERIODS = [
@@ -2052,6 +2058,75 @@ function PerformancePage({ selectedPeriod, setSelectedPeriod }) {
           </div>
         ))}
       </div>
+
+      <ChartCard title="Post Performance" period={periodLabel} className="animate-in-delay-3" style={{ marginTop: '24px' }}>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
+                <th style={{ textAlign: 'left', padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 500 }}>Post Title</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 500 }}>Author</th>
+                <th style={{ textAlign: 'center', padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 500 }}>Score</th>
+                <th style={{ textAlign: 'center', padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 500 }}>Trend</th>
+                <th style={{ textAlign: 'right', padding: '12px 16px', color: 'var(--text-muted)', fontWeight: 500 }}>Published</th>
+              </tr>
+            </thead>
+            <tbody>
+              {postsData.filter(post => {
+                const postDate = new Date(post.publishDate)
+                const cutoffDate = new Date()
+                cutoffDate.setDate(cutoffDate.getDate() - selectedPeriod)
+                return postDate >= cutoffDate
+              }).sort((a, b) => b.overallScore - a.overallScore).map((post, i) => (
+                <tr key={post.id} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.15s' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-tertiary)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                  <td style={{ padding: '14px 16px' }}>
+                    <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{post.title}</div>
+                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>{post.wordCount.toLocaleString()} words</div>
+                  </td>
+                  <td style={{ padding: '14px 16px', color: 'var(--text-secondary)' }}>{post.author}</td>
+                  <td style={{ padding: '14px 16px', textAlign: 'center' }}>
+                    <span style={{ 
+                      display: 'inline-block', 
+                      padding: '4px 12px', 
+                      borderRadius: '12px', 
+                      fontWeight: 600,
+                      fontSize: '13px',
+                      backgroundColor: post.overallScore >= 80 ? 'rgba(16, 185, 129, 0.15)' : post.overallScore >= 70 ? 'rgba(34, 211, 238, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+                      color: post.overallScore >= 80 ? '#10b981' : post.overallScore >= 70 ? '#22d3ee' : '#f59e0b'
+                    }}>{post.overallScore}</span>
+                  </td>
+                  <td style={{ padding: '14px 16px', textAlign: 'center' }}>
+                    <span style={{ 
+                      display: 'inline-flex', 
+                      alignItems: 'center', 
+                      gap: '4px',
+                      color: post.trend > 0 ? '#10b981' : post.trend < 0 ? '#ef4444' : 'var(--text-muted)',
+                      fontWeight: 500 
+                    }}>
+                      {post.trend > 0 ? '↑' : post.trend < 0 ? '↓' : '→'} {Math.abs(post.trend)}
+                    </span>
+                  </td>
+                  <td style={{ padding: '14px 16px', textAlign: 'right', color: 'var(--text-secondary)' }}>
+                    {new Date(post.publishDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  </td>
+                </tr>
+              ))}
+              {postsData.filter(post => {
+                const postDate = new Date(post.publishDate)
+                const cutoffDate = new Date()
+                cutoffDate.setDate(cutoffDate.getDate() - selectedPeriod)
+                return postDate >= cutoffDate
+              }).length === 0 && (
+                <tr>
+                  <td colSpan={5} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                    No posts published in this time period
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </ChartCard>
     </>
   )
 }
@@ -2104,30 +2179,55 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
         </ChartCard>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {filteredPillarData.map((pillar, i) => (
-            <div key={i} className={`animate-in-delay-${i + 2}`} style={{
-              backgroundColor: 'var(--bg-secondary)',
-              border: '1px solid var(--border-color)',
-              borderRadius: '12px',
-              padding: '24px',
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: pillar.color }} />
-                  <span style={{ fontSize: '16px', fontWeight: 500 }}>{pillar.name}</span>
+          {filteredPillarData.map((pillar, i) => {
+            const pillarKey = pillar.name === 'AI Readability' ? 'aiReadability' : pillar.name === 'Digital Authority' ? 'digitalAuthority' : 'conversionReadiness'
+            const pillarPosts = postsData.filter(post => {
+              const postDate = new Date(post.publishDate)
+              const cutoffDate = new Date()
+              cutoffDate.setDate(cutoffDate.getDate() - selectedPeriod)
+              return postDate >= cutoffDate
+            }).sort((a, b) => b.pillars[pillarKey] - a.pillars[pillarKey]).slice(0, 3)
+            
+            return (
+              <div key={i} className={`animate-in-delay-${i + 2}`} style={{
+                backgroundColor: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '12px',
+                padding: '24px',
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: pillar.color }} />
+                    <span style={{ fontSize: '16px', fontWeight: 500 }}>{pillar.name}</span>
+                  </div>
+                  <span style={{ fontSize: '24px', fontWeight: 600, color: pillar.color }}>{pillar.value}</span>
                 </div>
-                <span style={{ fontSize: '24px', fontWeight: 600, color: pillar.color }}>{pillar.value}</span>
+                <div style={{ height: '8px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '4px', overflow: 'hidden' }}>
+                  <div style={{ height: '100%', width: `${pillar.value}%`, backgroundColor: pillar.color, borderRadius: '4px', transition: 'width 0.5s ease' }} />
+                </div>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '12px', marginBottom: '16px' }}>
+                  {pillar.name === 'AI Readability' && 'Measures semantic clarity, logical structure, and overall readability for AI systems.'}
+                  {pillar.name === 'Digital Authority' && 'Evaluates credibility signals, citation readiness, and trustworthiness indicators.'}
+                  {pillar.name === 'Conversion Readiness' && 'Assesses user engagement potential and action-driving effectiveness.'}
+                </p>
+                <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '12px', fontWeight: 500 }}>TOP POSTS BY {pillar.name.toUpperCase()}</div>
+                  {pillarPosts.length === 0 ? (
+                    <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>No posts in this period</div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {pillarPosts.map((post, j) => (
+                        <div key={post.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                          <span style={{ fontSize: '13px', color: 'var(--text-primary)' }}>{post.title}</span>
+                          <span style={{ fontSize: '13px', fontWeight: 600, color: pillar.color }}>{post.pillars[pillarKey]}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-              <div style={{ height: '8px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: `${pillar.value}%`, backgroundColor: pillar.color, borderRadius: '4px', transition: 'width 0.5s ease' }} />
-              </div>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '12px' }}>
-                {pillar.name === 'AI Readability' && 'Measures semantic clarity, logical structure, and overall readability for AI systems.'}
-                {pillar.name === 'Digital Authority' && 'Evaluates credibility signals, citation readiness, and trustworthiness indicators.'}
-                {pillar.name === 'Conversion Readiness' && 'Assesses user engagement potential and action-driving effectiveness.'}
-              </p>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </>
@@ -2172,24 +2272,44 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
         </div>
       </ChartCard>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginTop: '24px' }}>
-        {filteredCategoryData.map((cat, i) => (
-          <div key={i} className={`animate-in-delay-${Math.min(i + 2, 5)}`} style={{
-            backgroundColor: 'var(--bg-secondary)',
-            border: '1px solid var(--border-color)',
-            borderRadius: '12px',
-            padding: '20px',
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '14px', fontWeight: 500 }}>{cat.name}</span>
-              <span style={{ fontSize: '20px', fontWeight: 600, color: cat.score >= 85 ? '#10b981' : cat.score >= 70 ? 'var(--accent)' : '#f59e0b' }}>{cat.score}</span>
-            </div>
-            <div style={{ height: '6px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '3px', overflow: 'hidden' }}>
-              <div style={{ height: '100%', width: `${cat.score}%`, backgroundColor: cat.score >= 85 ? '#10b981' : cat.score >= 70 ? 'var(--accent)' : '#f59e0b', borderRadius: '3px' }} />
-            </div>
-          </div>
-        ))}
-      </div>
+      <ChartCard title="Posts by Category" period={periodLabel} className="animate-in-delay-2" style={{ marginTop: '24px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+          {['Semantic Clarity', 'Logical Structure', 'Citation Readiness', 'Entity Recognition'].map((category, i) => {
+            const categoryKey = category === 'Semantic Clarity' ? 'semanticClarity' : category === 'Logical Structure' ? 'logicalStructure' : category === 'Citation Readiness' ? 'citationReadiness' : 'entityRecognition'
+            const categoryPosts = postsData.filter(post => {
+              const postDate = new Date(post.publishDate)
+              const cutoffDate = new Date()
+              cutoffDate.setDate(cutoffDate.getDate() - selectedPeriod)
+              return postDate >= cutoffDate
+            }).sort((a, b) => b.categories[categoryKey] - a.categories[categoryKey]).slice(0, 4)
+            
+            return (
+              <div key={i} style={{ backgroundColor: 'var(--bg-tertiary)', borderRadius: '10px', padding: '16px' }}>
+                <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '12px', color: 'var(--accent)' }}>{category}</div>
+                {categoryPosts.length === 0 ? (
+                  <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>No posts in this period</div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {categoryPosts.map((post, j) => (
+                      <div key={post.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 10px', backgroundColor: 'var(--bg-secondary)', borderRadius: '6px' }}>
+                        <span style={{ fontSize: '12px', color: 'var(--text-primary)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginRight: '8px' }}>{post.title}</span>
+                        <span style={{ 
+                          fontSize: '12px', 
+                          fontWeight: 600, 
+                          padding: '2px 8px', 
+                          borderRadius: '10px',
+                          backgroundColor: post.categories[categoryKey] >= 85 ? 'rgba(16, 185, 129, 0.15)' : post.categories[categoryKey] >= 70 ? 'rgba(34, 211, 238, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+                          color: post.categories[categoryKey] >= 85 ? '#10b981' : post.categories[categoryKey] >= 70 ? '#22d3ee' : '#f59e0b'
+                        }}>{post.categories[categoryKey]}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </ChartCard>
     </>
   )
 }
@@ -2197,12 +2317,21 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
 function ContentSignalsPage({ selectedPeriod, setSelectedPeriod }) {
   const periodLabel = TIME_PERIODS.find(p => p.value === selectedPeriod)?.label || 'Last 30 Days'
   
-  const getFilteredData = () => {
-    if (selectedPeriod === 7) return []
-    if (selectedPeriod === 30) return scatterData.slice(0, 6)
-    return scatterData
+  const getFilteredPosts = () => {
+    return postsData.filter(post => {
+      const postDate = new Date(post.publishDate)
+      const cutoffDate = new Date()
+      cutoffDate.setDate(cutoffDate.getDate() - selectedPeriod)
+      return postDate >= cutoffDate
+    }).map(post => ({
+      wordCount: post.wordCount,
+      score: post.overallScore,
+      title: post.title,
+      author: post.author,
+      publishDate: post.publishDate
+    }))
   }
-  const filteredData = getFilteredData()
+  const filteredData = getFilteredPosts()
   
   return (
     <>
