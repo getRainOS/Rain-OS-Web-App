@@ -1,8 +1,8 @@
-# Rain OS SEO Analyzer - WordPress Plugin
+# Rain OS AEO Analyzer - WordPress Plugin
 
 ## Overview
 
-Rain OS SEO Analyzer is a WordPress plugin that provides AI-powered content analysis for Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO). The plugin analyzes content through three pillars: AI Readability, Digital Authority, and Conversion Readiness. It integrates with an external Rain OS API backend to perform content analysis and provides Pro features including title suggestions, meta description generation, content summarization, and sentence rewriting.
+Rain OS AEO Analyzer is a WordPress plugin that provides AI-powered content analysis for Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO). The plugin analyzes content through three pillars: AI Readability, Digital Authority, and Conversion Readiness. It integrates with an external Rain OS API backend to perform content analysis and provides Pro features including title suggestions, meta description generation, content summarization, and sentence rewriting.
 
 ## User Preferences
 
@@ -141,3 +141,20 @@ Location: `WordpressPluginStudio/dashboard-preview/`
 - **Built-in Optimization Tools**: Six non-API tools in Getting Started: Readability Calculator, Sentence Length Analyzer, Keyword Density Checker, Heading Structure Validator, Question Detection, Entity Highlighter
 - **AI Messaging**: Documentation emphasizes "AI-powered analysis" and "advanced AI technology" without referencing specific AI providers
 - **Documentation Navigation**: Restructured with sub-links (Getting Started, Troubleshooting, Learn About AI Readability, Improve Your Score)
+
+### AEO Branding & UX Updates (December 2024)
+- **SEO to AEO Rename**: All references changed from "SEO" to "AEO" (Answer Engine Optimization) throughout the codebase
+- **Feedback Link**: Added "Send Feedback" link in sidebar footer below support email
+- **Donut Chart Score Display**: Content Analyzer Overview tab now shows donut chart with 3 pillars (AI Readability cyan, Digital Authority green, Conversion Readiness purple) with center score and legend
+- **Functional Save/Publish Buttons**: Save and Publish buttons in Content Analyzer toolbar now have click handlers with visual feedback (color change, status update from DRAFT to PUBLISHED)
+- **Interactive Action Buttons**: Quick Tools buttons (Suggest Titles, Meta Description, Summarize, Rewrite Selection) now trigger alert dialogs explaining their function
+- **Run Full Analysis Button**: Overview tab button is now clickable with alert feedback
+- **Understanding Your Dashboard**: New documentation section in Getting Started explaining:
+  - Performance History Chart (gradient area chart)
+  - Baseline (70) - dashed line representing minimum recommended score
+  - KPI Cards (Total Analyses, Average Score, Content Health, API Usage)
+  - Pillar Breakdown (donut chart with 3 pillars)
+  - Analysis Categories (vertical bar chart)
+  - Post Performance Indicators (green/yellow/red lights based on score ranges)
+- **Chart Colors**: AI Readability (#22d3ee cyan), Digital Authority (#10b981 green), Conversion Readiness (#a855f7 purple)
+- **Score Thresholds**: Green ≥80, Yellow 65-79, Red <65

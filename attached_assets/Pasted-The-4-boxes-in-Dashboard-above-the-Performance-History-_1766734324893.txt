@@ -1,0 +1,36 @@
+The 4 boxes in Dashboard above the Performance History Line graph should not be clickable
+
+The numbers in the 4 boxes in the dashboard above the Performance History Line graph should be represented by a speedometer chart
+
+Make Sure the New Analysis link on the Dashboard page is actually functional and when clicked goes to the Content Analyzer page
+
+In Performance History in the AI Readability Dashboard, remove the three trend lines and make one average score line and display it as a gradiant lightly shaded area chart
+
+In the AI Readability Dashboard, change the Analysis Categories into vertical bar charts
+
+Make sure each of the sublinks pages match each of the respective changes that were made in the AI Readability Dashboard
+
+Under Post Categories in Category Scores, list all of the posts, then next to them put lights indicating performance with green being good, yellow meaning okay, and red being poor, with score based on the average of AI readability, Digital Authority and Conversion Readiness Metrics
+
+In the Documentation, make sure each and every part of the various analysis and data interfaces are explained clearly, including but not limited to the “Baseline” number in Performance History
+
+‘Content Analyzer’ should be its own main link listen below AI Readability Dashboard, and not underneath AI Readability Dashboard as a sublink
+
+In the ‘Content Analyzer’ the WordPress Admin left sidebar should be collapsable, but the right box should not be collapsable and remain open
+
+In the ‘Content Analyzer’ with Overview, Metrics, Actions and History, Place the Actions tab next to the Overview tab, the circular chart should be a donut chart AI Readability, Digital Authority and Conversion Readiness indicated separately by colors with the single donut chart, the Run Full Analysis button should function, the buttons under the Actions tab should function and the tabs under the History tab should function and make sure the same information that is under the Improve Your Readability is the same information that is part of the Critical Issues under the rain Analysis tab
+
+
+In the ‘Content Analyzer’ screen and all other screens, change the dummy text from AEO to something about technology and make the dummy text in the Content Analayzer screen longer form 
+
+ In the ‘Content Analyzer’ make sure the Save and Publish buttons actually work
+
+Replace all mentions of ‘SEO’ on the site to ‘Answer Engine Optimization’  or ‘AEO’
+
+Remove API endpoint on the Settings page 
+
+Add a Feedback link under the support@getrainos.com link that connects to support@getrainos.com
+
+Make sure that the Analysis Preferences under Settings are functional
+
+

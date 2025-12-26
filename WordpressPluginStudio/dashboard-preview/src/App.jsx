@@ -3,7 +3,8 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
   PieChart, Pie, Cell,
   BarChart, Bar,
-  ScatterChart, Scatter, ZAxis
+  ScatterChart, Scatter, ZAxis,
+  AreaChart, Area
 } from 'recharts'
 import {
   LayoutDashboard, FileText, Settings, HelpCircle, Star,
@@ -12,8 +13,6 @@ import {
   Microscope, ShieldCheck, RefreshCw, Wand2, Fingerprint, History,
   PanelRightClose, PanelRightOpen, Eye, EyeOff, Save, Send
 } from 'lucide-react'
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
-import 'react-circular-progressbar/dist/styles.css'
 import './index.css'
 
 const performanceData = [
@@ -71,7 +70,7 @@ const getRelativeDate = (daysAgo) => {
 }
 
 const postsData = [
-  { id: 1, title: 'Ultimate Guide to SEO', slug: 'ultimate-seo-guide', author: 'John Smith', publishDate: getRelativeDate(2), wordCount: 2100, overallScore: 94, trend: +5, pillars: { aiReadability: 96, digitalAuthority: 92, conversionReadiness: 94 }, categories: { semanticClarity: 95, logicalStructure: 92, citationReadiness: 88, entityRecognition: 90 } },
+  { id: 1, title: 'Ultimate Guide to AEO', slug: 'ultimate-aeo-guide', author: 'John Smith', publishDate: getRelativeDate(2), wordCount: 2100, overallScore: 94, trend: +5, pillars: { aiReadability: 96, digitalAuthority: 92, conversionReadiness: 94 }, categories: { semanticClarity: 95, logicalStructure: 92, citationReadiness: 88, entityRecognition: 90 } },
   { id: 2, title: 'How to Optimize Content', slug: 'optimize-content', author: 'Jane Doe', publishDate: getRelativeDate(4), wordCount: 1800, overallScore: 92, trend: +3, pillars: { aiReadability: 91, digitalAuthority: 94, conversionReadiness: 91 }, categories: { semanticClarity: 90, logicalStructure: 88, citationReadiness: 95, entityRecognition: 87 } },
   { id: 3, title: 'Complete Tutorial Series', slug: 'tutorial-series', author: 'Mike Johnson', publishDate: getRelativeDate(8), wordCount: 1500, overallScore: 88, trend: +2, pillars: { aiReadability: 89, digitalAuthority: 86, conversionReadiness: 89 }, categories: { semanticClarity: 87, logicalStructure: 91, citationReadiness: 82, entityRecognition: 85 } },
   { id: 4, title: 'Deep Dive Analysis', slug: 'deep-dive-analysis', author: 'Sarah Wilson', publishDate: getRelativeDate(12), wordCount: 1200, overallScore: 85, trend: +4, pillars: { aiReadability: 87, digitalAuthority: 83, conversionReadiness: 85 }, categories: { semanticClarity: 84, logicalStructure: 86, citationReadiness: 80, entityRecognition: 88 } },
@@ -102,9 +101,9 @@ const navItems = [
       { label: 'Pillar Breakdown', page: 'pillars' },
       { label: 'Category Scores', page: 'categories' },
       { label: 'Content Signals', page: 'signals' },
-      { label: 'Content Analyzer', page: 'analyzer' },
     ]
   },
+  { icon: FileText, label: 'Content Analyzer', page: 'analyzer' },
   { 
     icon: HelpCircle, 
     label: 'Documentation', 
@@ -251,6 +250,18 @@ function Sidebar({ currentPage, setCurrentPage }) {
       
       <div style={{ padding: '12px', borderTop: '1px solid var(--border-color)' }}>
         <span style={{ color: 'var(--text-muted)', fontSize: '11px' }}>support@getrainos.com</span>
+        <a 
+          href="mailto:support@getrainos.com?subject=Feedback"
+          style={{ 
+            display: 'block',
+            color: 'var(--accent)', 
+            fontSize: '11px', 
+            marginTop: '4px',
+            textDecoration: 'none',
+          }}
+        >
+          Send Feedback
+        </a>
       </div>
     </div>
   )
@@ -276,7 +287,48 @@ function AdminBar() {
   )
 }
 
-function KPICard({ icon: Icon, title, value, subtitle, color, delay }) {
+function SpeedometerChart({ value, maxValue, color }) {
+  const percentage = Math.min((value / maxValue) * 100, 100)
+  const angle = (percentage / 100) * 180
+  const startAngle = -90
+  const endAngle = startAngle + angle
+  
+  const polarToCartesian = (cx, cy, r, angleDeg) => {
+    const angleRad = (angleDeg * Math.PI) / 180
+    return {
+      x: cx + r * Math.cos(angleRad),
+      y: cy + r * Math.sin(angleRad)
+    }
+  }
+  
+  const describeArc = (cx, cy, r, startAng, endAng) => {
+    const start = polarToCartesian(cx, cy, r, endAng)
+    const end = polarToCartesian(cx, cy, r, startAng)
+    const largeArcFlag = endAng - startAng <= 180 ? 0 : 1
+    return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`
+  }
+  
+  return (
+    <svg width="60" height="35" viewBox="0 0 60 35">
+      <path
+        d={describeArc(30, 30, 25, -180, 0)}
+        fill="none"
+        stroke="rgba(255,255,255,0.1)"
+        strokeWidth="6"
+        strokeLinecap="round"
+      />
+      <path
+        d={describeArc(30, 30, 25, -180, -180 + angle)}
+        fill="none"
+        stroke={color}
+        strokeWidth="6"
+        strokeLinecap="round"
+      />
+    </svg>
+  )
+}
+
+function KPICard({ icon: Icon, title, value, subtitle, color, delay, gaugeValue, gaugeMax }) {
   return (
     <div
       className={`animate-in-delay-${delay}`}
@@ -285,18 +337,6 @@ function KPICard({ icon: Icon, title, value, subtitle, color, delay }) {
         border: '1px solid var(--border-color)',
         borderRadius: '12px',
         padding: '24px',
-        transition: 'all 0.3s ease',
-        cursor: 'pointer',
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-2px)'
-        e.currentTarget.style.borderColor = 'var(--border-hover)'
-        e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.3)'
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)'
-        e.currentTarget.style.borderColor = 'var(--border-color)'
-        e.currentTarget.style.boxShadow = 'none'
       }}
     >
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
@@ -311,7 +351,7 @@ function KPICard({ icon: Icon, title, value, subtitle, color, delay }) {
         }}>
           <Icon size={20} color={color} />
         </div>
-        <ChevronRight size={16} color="var(--text-muted)" />
+        <SpeedometerChart value={gaugeValue} maxValue={gaugeMax} color={color} />
       </div>
       <div style={{ fontSize: '32px', fontWeight: 700, marginBottom: '4px' }}>{value}</div>
       <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '8px' }}>{title}</div>
@@ -434,14 +474,32 @@ function ContentAnalyzerPage({ setCurrentPage }) {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [activeTab, setActiveTab] = useState('overview')
   const [heatmapEnabled, setHeatmapEnabled] = useState(false)
-  const [title, setTitle] = useState('How to Optimize Your Content for AI Search Engines')
-  const [content, setContent] = useState(`In the rapidly evolving landscape of digital marketing, understanding how AI-powered search engines process and rank content has become essential for content creators and marketers alike.
+  const [saved, setSaved] = useState(false)
+  const [published, setPublished] = useState(false)
+  const [postStatus, setPostStatus] = useState('DRAFT')
+  const [title, setTitle] = useState('The Future of Artificial Intelligence in Modern Technology')
+  
+  const handleSave = () => {
+    setSaved(true)
+    setTimeout(() => setSaved(false), 2000)
+  }
+  
+  const handlePublish = () => {
+    setPublished(true)
+    setPostStatus('PUBLISHED')
+    setTimeout(() => setPublished(false), 2000)
+  }
+  const [content, setContent] = useState(`Artificial intelligence has fundamentally transformed the technology landscape, reshaping how businesses operate, how consumers interact with digital products, and how society approaches complex problem-solving. From machine learning algorithms that power recommendation engines to natural language processing systems that enable conversational interfaces, AI has become an integral part of our technological infrastructure.
 
-This comprehensive guide explores the key strategies for optimizing your content to perform well in AI-driven search environments. We'll cover semantic clarity, entity recognition, and the importance of structured data.
+The evolution of neural networks and deep learning architectures has accelerated innovation across multiple domains. Computer vision systems now rival human accuracy in image recognition tasks, while generative AI models produce creative content that blurs the line between human and machine output. These advancements have profound implications for industries ranging from healthcare diagnostics to autonomous vehicle development.
 
-The first principle of AEO (Answer Engine Optimization) is ensuring your content directly answers user queries. AI systems are designed to extract concise, accurate answers from web content, so structuring your information clearly is paramount.
+Edge computing represents another frontier where AI and technology converge. By processing data locally on devices rather than relying solely on cloud infrastructure, edge AI enables real-time decision-making in applications where latency is critical. Smart sensors, IoT devices, and mobile applications increasingly leverage on-device machine learning to deliver responsive, privacy-preserving experiences.
 
-Additionally, establishing digital authority through proper citations, expert authorship, and consistent branding signals helps AI systems trust and prioritize your content in search results.`)
+The intersection of AI with quantum computing promises to unlock computational capabilities previously thought impossible. Quantum machine learning algorithms could revolutionize drug discovery, materials science, and cryptography by solving optimization problems that classical computers cannot efficiently address.
+
+However, the rapid advancement of AI technology also raises important considerations around ethics, bias, and governance. Responsible AI development requires thoughtful frameworks that balance innovation with accountability, ensuring that these powerful technologies serve humanity's best interests while minimizing potential harms.
+
+Looking ahead, the convergence of AI with emerging technologies like 5G networks, augmented reality, and blockchain will create new possibilities for intelligent applications. Organizations that successfully navigate this technological transformation will be positioned to lead in an increasingly AI-driven future.`)
 
   const getScoreLabel = (score) => {
     if (score >= 80) return { text: 'GOOD', color: '#10b981' }
@@ -465,8 +523,8 @@ Additionally, establishing digital authority through proper citations, expert au
 
   const tabs = [
     { id: 'overview', label: 'Overview' },
-    { id: 'metrics', label: 'Metrics' },
     { id: 'actions', label: 'Actions' },
+    { id: 'metrics', label: 'Metrics' },
     { id: 'history', label: 'History' }
   ]
 
@@ -481,17 +539,50 @@ Additionally, establishing digital authority through proper citations, expert au
               padding: '24px',
               textAlign: 'center',
             }}>
-              <div style={{ width: '120px', height: '120px', margin: '0 auto 16px' }}>
-                <CircularProgressbar
-                  value={mockAnalysis.overallScore}
-                  text={`${mockAnalysis.overallScore}`}
-                  styles={buildStyles({
-                    textSize: '28px',
-                    pathColor: '#22d3ee',
-                    textColor: '#f8fafc',
-                    trailColor: 'rgba(255,255,255,0.1)',
-                  })}
-                />
+              <div style={{ width: '140px', height: '140px', margin: '0 auto 16px', position: 'relative' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={[
+                        { name: 'AI Readability', value: mockAnalysis.pillarScores.aiReadability, color: '#22d3ee' },
+                        { name: 'Digital Authority', value: mockAnalysis.pillarScores.digitalAuthority, color: '#10b981' },
+                        { name: 'Conversion', value: mockAnalysis.pillarScores.conversionReadiness, color: '#a855f7' },
+                      ]}
+                      innerRadius={40}
+                      outerRadius={60}
+                      paddingAngle={2}
+                      dataKey="value"
+                    >
+                      <Cell fill="#22d3ee" />
+                      <Cell fill="#10b981" />
+                      <Cell fill="#a855f7" />
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+                <div style={{ 
+                  position: 'absolute', 
+                  top: '50%', 
+                  left: '50%', 
+                  transform: 'translate(-50%, -50%)',
+                  textAlign: 'center',
+                }}>
+                  <div style={{ fontSize: '24px', fontWeight: 700 }}>{mockAnalysis.overallScore}</div>
+                  <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Overall</div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginBottom: '12px', flexWrap: 'wrap' }}>
+                <span style={{ fontSize: '10px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#22d3ee' }} />
+                  AI Read
+                </span>
+                <span style={{ fontSize: '10px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#10b981' }} />
+                  Authority
+                </span>
+                <span style={{ fontSize: '10px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#a855f7' }} />
+                  Conversion
+                </span>
               </div>
               <span style={{
                 display: 'inline-block',
@@ -505,6 +596,7 @@ Additionally, establishing digital authority through proper citations, expert au
                 {scoreLabel.text}
               </span>
               <button
+                onClick={() => alert('Running full analysis... This would trigger the API in a real implementation.')}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -669,12 +761,14 @@ Additionally, establishing digital authority through proper citations, expert au
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               {[
-                { icon: Wand2, label: 'Suggest Titles', color: '#22d3ee' },
-                { icon: FileText, label: 'Meta Description', color: '#10b981' },
-                { icon: Fingerprint, label: 'Summarize', color: '#a855f7' },
-                { icon: RefreshCw, label: 'Rewrite Selection', color: '#f59e0b' },
-              ].map((action, i) => (
-                <button key={i} style={{
+                { icon: Wand2, label: 'Suggest Titles', color: '#22d3ee', action: () => alert('Generating AI-powered title suggestions based on your content...') },
+                { icon: FileText, label: 'Meta Description', color: '#10b981', action: () => alert('Creating optimized meta description for your content...') },
+                { icon: Fingerprint, label: 'Summarize', color: '#a855f7', action: () => alert('Generating content summary for featured snippets...') },
+                { icon: RefreshCw, label: 'Rewrite Selection', color: '#f59e0b', action: () => alert('Select text in the editor first, then use this to rewrite for clarity.') },
+              ].map((actionItem, i) => (
+                <button key={i} 
+                onClick={actionItem.action}
+                style={{
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
@@ -688,7 +782,7 @@ Additionally, establishing digital authority through proper citations, expert au
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = 'rgba(34, 211, 238, 0.1)'
-                  e.currentTarget.style.borderColor = action.color
+                  e.currentTarget.style.borderColor = actionItem.color
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)'
@@ -699,14 +793,14 @@ Additionally, establishing digital authority through proper citations, expert au
                     width: '44px',
                     height: '44px',
                     borderRadius: '10px',
-                    backgroundColor: `${action.color}20`,
+                    backgroundColor: `${actionItem.color}20`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}>
-                    <action.icon size={22} color={action.color} />
+                    <actionItem.icon size={22} color={actionItem.color} />
                   </div>
-                  <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)' }}>{action.label}</span>
+                  <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)' }}>{actionItem.label}</span>
                 </button>
               ))}
             </div>
@@ -827,11 +921,11 @@ Additionally, establishing digital authority through proper citations, expert au
             <span style={{
               padding: '3px 10px',
               borderRadius: '4px',
-              backgroundColor: 'rgba(245, 158, 11, 0.2)',
-              color: '#f59e0b',
+              backgroundColor: postStatus === 'PUBLISHED' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)',
+              color: postStatus === 'PUBLISHED' ? '#10b981' : '#f59e0b',
               fontSize: '11px',
               fontWeight: 600,
-            }}>DRAFT</span>
+            }}>{postStatus}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <button
@@ -853,36 +947,44 @@ Additionally, establishing digital authority through proper citations, expert au
               {heatmapEnabled ? <Eye size={14} /> : <EyeOff size={14} />}
               AI Heatmap
             </button>
-            <button style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '8px 14px',
-              borderRadius: '6px',
-              backgroundColor: 'var(--bg-tertiary)',
-              border: '1px solid var(--border-color)',
-              color: 'var(--text-secondary)',
-              fontSize: '13px',
-              cursor: 'pointer',
-            }}>
+            <button 
+              onClick={handleSave}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '8px 14px',
+                borderRadius: '6px',
+                backgroundColor: saved ? 'rgba(16, 185, 129, 0.2)' : 'var(--bg-tertiary)',
+                border: `1px solid ${saved ? '#10b981' : 'var(--border-color)'}`,
+                color: saved ? '#10b981' : 'var(--text-secondary)',
+                fontSize: '13px',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+            >
               <Save size={14} />
-              Save
+              {saved ? 'Saved!' : 'Save'}
             </button>
-            <button style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '8px 14px',
-              borderRadius: '6px',
-              backgroundColor: 'var(--accent)',
-              border: 'none',
-              color: '#000',
-              fontSize: '13px',
-              fontWeight: 600,
-              cursor: 'pointer',
-            }}>
+            <button 
+              onClick={handlePublish}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '8px 14px',
+                borderRadius: '6px',
+                backgroundColor: published ? '#10b981' : 'var(--accent)',
+                border: 'none',
+                color: '#000',
+                fontSize: '13px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+            >
               <Send size={14} />
-              Publish
+              {published ? 'Published!' : 'Publish'}
             </button>
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -1042,11 +1144,22 @@ Additionally, establishing digital authority through proper citations, expert au
 }
 
 function SettingsPage() {
+  const [autoAnalyze, setAutoAnalyze] = useState(true)
+  const [provenanceTracking, setProvenanceTracking] = useState(true)
+  const [scoreAlerts, setScoreAlerts] = useState(false)
+  const [alertThreshold, setAlertThreshold] = useState(70)
+  const [saved, setSaved] = useState(false)
+  
+  const handleSave = () => {
+    setSaved(true)
+    setTimeout(() => setSaved(false), 2000)
+  }
+  
   return (
     <>
       <header className="animate-in" style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '4px' }}>Settings</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Configure your Rain OS SEO Analyzer preferences</p>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Configure your Rain OS AEO Analyzer preferences</p>
       </header>
       
       <div style={{ display: 'grid', gap: '24px' }}>
@@ -1072,65 +1185,84 @@ function SettingsPage() {
                 }}
               />
             </div>
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>
-                <ExternalLink size={14} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-                API Endpoint
-              </label>
-              <input
-                type="text"
-                placeholder="https://api.getrainos.com"
-                defaultValue="https://api.getrainos.com/v1"
-                style={{
-                  width: '100%',
-                  padding: '12px 16px',
-                  backgroundColor: 'var(--bg-tertiary)',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: '8px',
-                  color: 'var(--text-primary)',
-                  fontSize: '14px',
-                }}
-              />
-            </div>
           </div>
         </ChartCard>
         
         <ChartCard title="Analysis Preferences" className="animate-in">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {[
-              { icon: Sliders, label: 'Auto-analyze on publish', checked: true },
-              { icon: Shield, label: 'Enable provenance tracking', checked: true },
-              { icon: Bell, label: 'Score alerts below threshold', checked: false },
-            ].map((item, i) => (
-              <label key={i} style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: '12px 16px',
-                backgroundColor: 'var(--bg-tertiary)',
-                borderRadius: '8px',
-                cursor: 'pointer',
-              }}>
-                <input type="checkbox" defaultChecked={item.checked} style={{ accentColor: 'var(--accent)' }} />
-                <item.icon size={16} color="var(--text-secondary)" />
-                <span>{item.label}</span>
-              </label>
-            ))}
+            <label style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              padding: '12px 16px',
+              backgroundColor: 'var(--bg-tertiary)',
+              borderRadius: '8px',
+              cursor: 'pointer',
+            }}>
+              <input type="checkbox" checked={autoAnalyze} onChange={(e) => setAutoAnalyze(e.target.checked)} style={{ accentColor: 'var(--accent)' }} />
+              <Sliders size={16} color="var(--text-secondary)" />
+              <span>Auto-analyze on publish</span>
+            </label>
+            <label style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              padding: '12px 16px',
+              backgroundColor: 'var(--bg-tertiary)',
+              borderRadius: '8px',
+              cursor: 'pointer',
+            }}>
+              <input type="checkbox" checked={provenanceTracking} onChange={(e) => setProvenanceTracking(e.target.checked)} style={{ accentColor: 'var(--accent)' }} />
+              <Shield size={16} color="var(--text-secondary)" />
+              <span>Enable provenance tracking</span>
+            </label>
+            <label style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              padding: '12px 16px',
+              backgroundColor: 'var(--bg-tertiary)',
+              borderRadius: '8px',
+              cursor: 'pointer',
+            }}>
+              <input type="checkbox" checked={scoreAlerts} onChange={(e) => setScoreAlerts(e.target.checked)} style={{ accentColor: 'var(--accent)' }} />
+              <Bell size={16} color="var(--text-secondary)" />
+              <span>Score alerts below threshold</span>
+            </label>
+            {scoreAlerts && (
+              <div style={{ padding: '12px 16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: 'var(--text-secondary)' }}>
+                  Alert Threshold: {alertThreshold}
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={alertThreshold}
+                  onChange={(e) => setAlertThreshold(parseInt(e.target.value))}
+                  style={{ width: '100%', accentColor: 'var(--accent)' }}
+                />
+              </div>
+            )}
           </div>
         </ChartCard>
         
-        <button style={{
-          padding: '12px 24px',
-          borderRadius: '8px',
-          backgroundColor: 'var(--accent)',
-          border: 'none',
-          color: '#000',
-          fontSize: '14px',
-          fontWeight: 600,
-          cursor: 'pointer',
-          alignSelf: 'flex-start',
-        }}>
-          Save Settings
+        <button 
+          onClick={handleSave}
+          style={{
+            padding: '12px 24px',
+            borderRadius: '8px',
+            backgroundColor: saved ? '#10b981' : 'var(--accent)',
+            border: 'none',
+            color: '#000',
+            fontSize: '14px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            alignSelf: 'flex-start',
+            transition: 'all 0.2s ease',
+          }}
+        >
+          {saved ? 'Saved!' : 'Save Settings'}
         </button>
       </div>
     </>
@@ -1139,7 +1271,7 @@ function SettingsPage() {
 
 function DocsPage({ setCurrentPage }) {
   const docs = [
-    { title: 'Getting Started', desc: 'Learn how to set up Rain OS SEO Analyzer', page: 'docs-getting-started' },
+    { title: 'Getting Started', desc: 'Learn how to set up Rain OS AEO Analyzer', page: 'docs-getting-started' },
     { title: 'Troubleshooting', desc: 'Common issues and solutions', page: 'docs-troubleshooting' },
     { title: 'Learn About AI Readability', desc: 'Understand how AI systems read and interpret your content', page: 'learn-ai-readability' },
     { title: 'Improve Your Score', desc: 'Practical tips and strategies to boost your content scores', page: 'improve-score' },
@@ -1149,7 +1281,7 @@ function DocsPage({ setCurrentPage }) {
     <>
       <header className="animate-in" style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '4px' }}>Documentation</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Learn how to use Rain OS SEO Analyzer effectively</p>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Learn how to use Rain OS AEO Analyzer effectively</p>
       </header>
       
       <div style={{ display: 'grid', gap: '16px' }}>
@@ -1196,7 +1328,7 @@ function GettingStartedPage() {
     <>
       <div className="animate-in" style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Getting Started</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Learn how to set up Rain OS SEO Analyzer</p>
+        <p style={{ color: 'var(--text-secondary)' }}>Learn how to set up Rain OS AEO Analyzer</p>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -1204,7 +1336,7 @@ function GettingStartedPage() {
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Installation</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {[
-              { step: '1', title: 'Download the Plugin', desc: 'Download the Rain OS SEO Analyzer plugin from your account dashboard or the WordPress plugin repository.' },
+              { step: '1', title: 'Download the Plugin', desc: 'Download the Rain OS AEO Analyzer plugin from your account dashboard or the WordPress plugin repository.' },
               { step: '2', title: 'Upload to WordPress', desc: 'Go to Plugins > Add New > Upload Plugin in your WordPress admin. Select the downloaded ZIP file and click Install Now.' },
               { step: '3', title: 'Activate the Plugin', desc: 'After installation, click Activate Plugin. You will see a new "Rain OS" menu item in your WordPress admin sidebar.' },
               { step: '4', title: 'Enter Your API Key', desc: 'Navigate to Rain OS > Settings and enter your API key. You can find your API key in your Rain OS account dashboard.' },
@@ -1232,6 +1364,25 @@ function GettingStartedPage() {
             <li style={{ marginBottom: '8px' }}>Our AI engine processes your content using natural language understanding</li>
             <li>Review your scores across all three pillars: AI Readability, Digital Authority, and Conversion Readiness</li>
           </ol>
+        </div>
+
+        <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Understanding Your Dashboard</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {[
+              { term: 'Performance History Chart', desc: 'The gradient area chart shows your average content score over time. The shaded area represents your performance trend, making it easy to visualize improvement.' },
+              { term: 'Baseline (70)', desc: 'The dashed horizontal line at 70 represents the minimum recommended score for well-optimized content. Content scoring above this baseline is considered ready for AI-driven answer engines.' },
+              { term: 'KPI Cards', desc: 'The four cards at the top show Total Analyses (content pieces analyzed), Average Score (mean across all pillars), Content Health (percentage of content above baseline), and API Usage (your quota consumption).' },
+              { term: 'Pillar Breakdown', desc: 'The donut chart displays your scores across three pillars: AI Readability (cyan), Digital Authority (green), and Conversion Readiness (purple).' },
+              { term: 'Analysis Categories', desc: 'The vertical bar chart breaks down specific metrics like Semantic Clarity, Entity Recognition, and Citation Readiness.' },
+              { term: 'Post Performance Indicators', desc: 'Green lights indicate good performance (80+), yellow indicates acceptable (65-79), and red indicates content needing improvement (below 65).' },
+            ].map((item, i) => (
+              <div key={i} style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                <div style={{ fontWeight: 600, color: 'var(--accent)', marginBottom: '6px', fontSize: '14px' }}>{item.term}</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: 1.6 }}>{item.desc}</div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
@@ -1363,7 +1514,7 @@ function ProFeaturesPage() {
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
             {[
-              { title: 'Suggest Titles', desc: 'Generate multiple AI-optimized title variations based on your content. Perfect for A/B testing and SEO optimization.' },
+              { title: 'Suggest Titles', desc: 'Generate multiple AI-optimized title variations based on your content. Perfect for A/B testing and Answer Engine Optimization.' },
               { title: 'Generate Meta Description', desc: 'Create compelling meta descriptions that improve click-through rates and are optimized for search engines.' },
               { title: 'Summarize Content', desc: 'Get a concise AI-generated summary of your content, perfect for social media or featured snippets.' },
               { title: 'Rewrite Sentence', desc: 'Select any sentence and get AI-powered rewrites that improve clarity and readability.' },
@@ -1797,6 +1948,8 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
           subtitle={periodLabel}
           color="#22d3ee"
           delay="1"
+          gaugeValue={selectedPeriod === 7 ? 42 : selectedPeriod === 30 ? 156 : 247}
+          gaugeMax={300}
         />
         <KPICard
           icon={TrendingUp}
@@ -1805,6 +1958,8 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
           subtitle={periodLabel}
           color="#10b981"
           delay="2"
+          gaugeValue={selectedPeriod === 7 ? 81 : selectedPeriod === 30 ? 78 : 76}
+          gaugeMax={100}
         />
         <KPICard
           icon={Target}
@@ -1813,6 +1968,8 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
           subtitle={periodLabel}
           color="#a855f7"
           delay="3"
+          gaugeValue={selectedPeriod === 7 ? 85 : selectedPeriod === 30 ? 82 : 79}
+          gaugeMax={100}
         />
         <KPICard
           icon={Zap}
@@ -1821,6 +1978,8 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
           subtitle="This Billing Cycle"
           color="#f59e0b"
           delay="4"
+          gaugeValue={47}
+          gaugeMax={100}
         />
       </div>
 
@@ -1836,7 +1995,13 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
           ) : (
             <div style={{ height: '300px' }}>
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={filteredPerformanceData}>
+                <AreaChart data={filteredPerformanceData}>
+                  <defs>
+                    <linearGradient id="averageGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#22d3ee" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#22d3ee" stopOpacity={0.05}/>
+                    </linearGradient>
+                  </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
                   <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} />
                   <YAxis stroke="var(--text-muted)" fontSize={12} domain={[60, 100]} />
@@ -1850,43 +2015,17 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
                     dot={false}
                     name="Baseline"
                   />
-                  <Line
-                    type="monotone"
-                    dataKey="aiReadability"
-                    stroke="#22d3ee"
-                    strokeWidth={2}
-                    dot={{ fill: '#22d3ee', strokeWidth: 0, r: 3 }}
-                    activeDot={{ r: 5, fill: '#22d3ee' }}
-                    name="AI Readability"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="digitalAuthority"
-                    stroke="#10b981"
-                    strokeWidth={2}
-                    dot={{ fill: '#10b981', strokeWidth: 0, r: 3 }}
-                    activeDot={{ r: 5, fill: '#10b981' }}
-                    name="Digital Authority"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="conversionReadiness"
-                    stroke="#f59e0b"
-                    strokeWidth={2}
-                    dot={{ fill: '#f59e0b', strokeWidth: 0, r: 3 }}
-                    activeDot={{ r: 5, fill: '#f59e0b' }}
-                    name="Conversion Readiness"
-                  />
-                  <Line
+                  <Area
                     type="monotone"
                     dataKey="average"
-                    stroke="#a855f7"
-                    strokeWidth={3}
-                    dot={{ fill: '#a855f7', strokeWidth: 0, r: 4 }}
-                    activeDot={{ r: 6, fill: '#a855f7' }}
-                    name="Average"
+                    stroke="#22d3ee"
+                    strokeWidth={2}
+                    fill="url(#averageGradient)"
+                    dot={{ fill: '#22d3ee', strokeWidth: 0, r: 4 }}
+                    activeDot={{ r: 6, fill: '#22d3ee' }}
+                    name="Average Score"
                   />
-                </LineChart>
+                </AreaChart>
               </ResponsiveContainer>
             </div>
           )}
@@ -1944,12 +2083,12 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
         <ChartCard title="Analysis Categories" period={periodLabel} className="animate-in-delay-4">
           <div style={{ height: '300px' }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={categoryData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" horizontal={false} />
-                <XAxis type="number" stroke="var(--text-muted)" fontSize={12} domain={[0, 100]} />
-                <YAxis dataKey="name" type="category" stroke="var(--text-muted)" fontSize={11} width={120} />
+              <BarChart data={categoryData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
+                <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={10} angle={-15} textAnchor="end" height={60} />
+                <YAxis stroke="var(--text-muted)" fontSize={12} domain={[0, 100]} />
                 <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="score" fill="var(--accent)" radius={[0, 4, 4, 0]} name="Score" />
+                <Bar dataKey="score" fill="var(--accent)" radius={[4, 4, 0, 0]} name="Score" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -2048,18 +2187,21 @@ function PerformancePage({ selectedPeriod, setSelectedPeriod }) {
         ) : (
           <div style={{ height: '400px' }}>
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={filteredData}>
+              <AreaChart data={filteredData}>
+                <defs>
+                  <linearGradient id="performanceGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#22d3ee" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#22d3ee" stopOpacity={0.05}/>
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
                 <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} />
                 <YAxis stroke="var(--text-muted)" fontSize={12} domain={[60, 100]} />
                 <Tooltip content={<CustomTooltip />} />
                 <Legend wrapperStyle={{ paddingTop: '10px' }} />
                 <Line type="monotone" dataKey="baseline" stroke="var(--text-muted)" strokeDasharray="5 5" dot={false} name="Baseline" />
-                <Line type="monotone" dataKey="aiReadability" stroke="#22d3ee" strokeWidth={2} dot={{ fill: '#22d3ee', strokeWidth: 0, r: 3 }} activeDot={{ r: 5, fill: '#22d3ee' }} name="AI Readability" />
-                <Line type="monotone" dataKey="digitalAuthority" stroke="#10b981" strokeWidth={2} dot={{ fill: '#10b981', strokeWidth: 0, r: 3 }} activeDot={{ r: 5, fill: '#10b981' }} name="Digital Authority" />
-                <Line type="monotone" dataKey="conversionReadiness" stroke="#f59e0b" strokeWidth={2} dot={{ fill: '#f59e0b', strokeWidth: 0, r: 3 }} activeDot={{ r: 5, fill: '#f59e0b' }} name="Conversion Readiness" />
-                <Line type="monotone" dataKey="average" stroke="#a855f7" strokeWidth={3} dot={{ fill: '#a855f7', strokeWidth: 0, r: 4 }} activeDot={{ r: 6, fill: '#a855f7' }} name="Average" />
-              </LineChart>
+                <Area type="monotone" dataKey="average" stroke="#22d3ee" strokeWidth={2} fill="url(#performanceGradient)" dot={{ fill: '#22d3ee', strokeWidth: 0, r: 4 }} activeDot={{ r: 6, fill: '#22d3ee' }} name="Average Score" />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         )}
@@ -2291,56 +2433,58 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
       </header>
 
       <ChartCard title="All Categories" period={periodLabel} className="animate-in-delay-1">
-        <div style={{ height: '450px' }}>
+        <div style={{ height: '350px' }}>
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={filteredCategoryData} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" horizontal={false} />
-              <XAxis type="number" stroke="var(--text-muted)" fontSize={12} domain={[0, 100]} />
-              <YAxis dataKey="name" type="category" stroke="var(--text-muted)" fontSize={11} width={140} />
+            <BarChart data={filteredCategoryData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
+              <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={9} angle={-20} textAnchor="end" height={80} />
+              <YAxis stroke="var(--text-muted)" fontSize={12} domain={[0, 100]} />
               <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="score" fill="var(--accent)" radius={[0, 4, 4, 0]} name="Score" />
+              <Bar dataKey="score" fill="var(--accent)" radius={[4, 4, 0, 0]} name="Score" />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </ChartCard>
 
-      <ChartCard title="Posts by Category" period={periodLabel} className="animate-in-delay-2" style={{ marginTop: '24px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
-          {['Semantic Clarity', 'Logical Structure', 'Citation Readiness', 'Entity Recognition'].map((category, i) => {
-            const categoryKey = category === 'Semantic Clarity' ? 'semanticClarity' : category === 'Logical Structure' ? 'logicalStructure' : category === 'Citation Readiness' ? 'citationReadiness' : 'entityRecognition'
-            const categoryPosts = postsData.filter(post => {
-              const postDate = new Date(post.publishDate)
-              const cutoffDate = new Date()
-              cutoffDate.setDate(cutoffDate.getDate() - selectedPeriod)
-              return postDate >= cutoffDate
-            }).sort((a, b) => b.categories[categoryKey] - a.categories[categoryKey]).slice(0, 4)
-            
-            return (
-              <div key={i} style={{ backgroundColor: 'var(--bg-tertiary)', borderRadius: '10px', padding: '16px' }}>
-                <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '12px', color: 'var(--accent)' }}>{category}</div>
-                {categoryPosts.length === 0 ? (
-                  <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>No posts in this period</div>
-                ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    {categoryPosts.map((post, j) => (
-                      <div key={post.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 10px', backgroundColor: 'var(--bg-secondary)', borderRadius: '6px' }}>
-                        <span style={{ fontSize: '12px', color: 'var(--text-primary)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginRight: '8px' }}>{post.title}</span>
-                        <span style={{ 
-                          fontSize: '12px', 
-                          fontWeight: 600, 
-                          padding: '2px 8px', 
-                          borderRadius: '10px',
-                          backgroundColor: post.categories[categoryKey] >= 85 ? 'rgba(16, 185, 129, 0.15)' : post.categories[categoryKey] >= 70 ? 'rgba(34, 211, 238, 0.15)' : 'rgba(245, 158, 11, 0.15)',
-                          color: post.categories[categoryKey] >= 85 ? '#10b981' : post.categories[categoryKey] >= 70 ? '#22d3ee' : '#f59e0b'
-                        }}>{post.categories[categoryKey]}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
+      <ChartCard title="Post Performance" period={periodLabel} className="animate-in-delay-2" style={{ marginTop: '24px' }}>
+        {(() => {
+          const filteredPosts = postsData.filter(post => {
+            const postDate = new Date(post.publishDate)
+            const cutoffDate = new Date()
+            cutoffDate.setDate(cutoffDate.getDate() - selectedPeriod)
+            return postDate >= cutoffDate
+          })
+          
+          if (filteredPosts.length === 0) {
+            return <EmptyState message="No posts in this time period" />
+          }
+          
+          return (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 100px 80px', gap: '12px', padding: '8px 12px', borderBottom: '1px solid var(--border-color)' }}>
+                <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Post Title</span>
+                <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', textAlign: 'center' }}>Avg Score</span>
+                <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', textAlign: 'center' }}>Status</span>
               </div>
-            )
-          })}
-        </div>
+              {filteredPosts.map((post) => {
+                const avgScore = Math.round((post.pillars.aiReadability + post.pillars.digitalAuthority + post.pillars.conversionReadiness) / 3)
+                const statusColor = avgScore >= 80 ? '#10b981' : avgScore >= 65 ? '#f59e0b' : '#ef4444'
+                const statusLabel = avgScore >= 80 ? 'Good' : avgScore >= 65 ? 'Okay' : 'Poor'
+                
+                return (
+                  <div key={post.id} style={{ display: 'grid', gridTemplateColumns: '1fr 100px 80px', gap: '12px', padding: '10px 12px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px', alignItems: 'center' }}>
+                    <span style={{ fontSize: '13px', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{post.title}</span>
+                    <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', textAlign: 'center' }}>{avgScore}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                      <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: statusColor, boxShadow: `0 0 8px ${statusColor}` }} />
+                      <span style={{ fontSize: '12px', color: statusColor, fontWeight: 500 }}>{statusLabel}</span>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )
+        })()}
       </ChartCard>
     </>
   )
@@ -2573,7 +2717,7 @@ function LearnAIReadabilityPage() {
                 { term: 'AEO', def: 'Answer Engine Optimization - optimizing for AI answer systems' },
                 { term: 'GEO', def: 'Generative Engine Optimization - optimizing for generative AI' },
                 { term: 'E-E-A-T', def: 'Experience, Expertise, Authoritativeness, Trust' },
-                { term: 'Semantic SEO', def: 'Optimizing for meaning, not just keywords' },
+                { term: 'Semantic AEO', def: 'Optimizing for meaning, not just keywords' },
                 { term: 'Entity', def: 'A distinct concept AI can identify and understand' },
               ].map((item, i) => (
                 <div key={i} style={{ padding: '12px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '6px' }}>
