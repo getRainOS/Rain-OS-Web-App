@@ -64,6 +64,21 @@ const scatterData = [
   { wordCount: 2100, score: 94, title: 'Comprehensive Guide' },
 ]
 
+const postsData = [
+  { id: 1, title: 'Ultimate Guide to SEO', slug: 'ultimate-seo-guide', author: 'John Smith', publishDate: '2024-12-20', wordCount: 2100, overallScore: 94, trend: +5, pillars: { aiReadability: 96, digitalAuthority: 92, conversionReadiness: 94 }, categories: { semanticClarity: 95, logicalStructure: 92, citationReadiness: 88, entityRecognition: 90 } },
+  { id: 2, title: 'How to Optimize Content', slug: 'optimize-content', author: 'Jane Doe', publishDate: '2024-12-18', wordCount: 1800, overallScore: 92, trend: +3, pillars: { aiReadability: 91, digitalAuthority: 94, conversionReadiness: 91 }, categories: { semanticClarity: 90, logicalStructure: 88, citationReadiness: 95, entityRecognition: 87 } },
+  { id: 3, title: 'Complete Tutorial Series', slug: 'tutorial-series', author: 'Mike Johnson', publishDate: '2024-12-15', wordCount: 1500, overallScore: 88, trend: +2, pillars: { aiReadability: 89, digitalAuthority: 86, conversionReadiness: 89 }, categories: { semanticClarity: 87, logicalStructure: 91, citationReadiness: 82, entityRecognition: 85 } },
+  { id: 4, title: 'Deep Dive Analysis', slug: 'deep-dive-analysis', author: 'Sarah Wilson', publishDate: '2024-12-12', wordCount: 1200, overallScore: 85, trend: +4, pillars: { aiReadability: 87, digitalAuthority: 83, conversionReadiness: 85 }, categories: { semanticClarity: 84, logicalStructure: 86, citationReadiness: 80, entityRecognition: 88 } },
+  { id: 5, title: 'Best Practices Guide', slug: 'best-practices', author: 'Tom Brown', publishDate: '2024-12-10', wordCount: 1100, overallScore: 83, trend: 0, pillars: { aiReadability: 84, digitalAuthority: 82, conversionReadiness: 83 }, categories: { semanticClarity: 82, logicalStructure: 85, citationReadiness: 79, entityRecognition: 84 } },
+  { id: 6, title: 'Case Study Review', slug: 'case-study-review', author: 'Emily Chen', publishDate: '2024-12-08', wordCount: 950, overallScore: 81, trend: -1, pillars: { aiReadability: 82, digitalAuthority: 80, conversionReadiness: 81 }, categories: { semanticClarity: 80, logicalStructure: 83, citationReadiness: 78, entityRecognition: 81 } },
+  { id: 7, title: 'How-To Guide Basics', slug: 'how-to-basics', author: 'John Smith', publishDate: '2024-12-05', wordCount: 820, overallScore: 78, trend: +2, pillars: { aiReadability: 79, digitalAuthority: 77, conversionReadiness: 78 }, categories: { semanticClarity: 77, logicalStructure: 80, citationReadiness: 75, entityRecognition: 79 } },
+  { id: 8, title: 'Comparison Article', slug: 'comparison-article', author: 'Jane Doe', publishDate: '2024-12-02', wordCount: 720, overallScore: 74, trend: -2, pillars: { aiReadability: 75, digitalAuthority: 73, conversionReadiness: 74 }, categories: { semanticClarity: 73, logicalStructure: 76, citationReadiness: 71, entityRecognition: 75 } },
+  { id: 9, title: 'Product Review Post', slug: 'product-review', author: 'Mike Johnson', publishDate: '2024-11-28', wordCount: 650, overallScore: 71, trend: +1, pillars: { aiReadability: 72, digitalAuthority: 70, conversionReadiness: 71 }, categories: { semanticClarity: 70, logicalStructure: 73, citationReadiness: 68, entityRecognition: 72 } },
+  { id: 10, title: 'FAQ Page Content', slug: 'faq-page', author: 'Sarah Wilson', publishDate: '2024-11-25', wordCount: 550, overallScore: 67, trend: 0, pillars: { aiReadability: 68, digitalAuthority: 66, conversionReadiness: 67 }, categories: { semanticClarity: 66, logicalStructure: 69, citationReadiness: 64, entityRecognition: 68 } },
+  { id: 11, title: 'Quick Tips Article', slug: 'quick-tips', author: 'Tom Brown', publishDate: '2024-11-20', wordCount: 450, overallScore: 62, trend: -3, pillars: { aiReadability: 63, digitalAuthority: 61, conversionReadiness: 62 }, categories: { semanticClarity: 61, logicalStructure: 64, citationReadiness: 59, entityRecognition: 63 } },
+  { id: 12, title: 'News Update Brief', slug: 'news-update', author: 'Emily Chen', publishDate: '2024-11-15', wordCount: 380, overallScore: 58, trend: -4, pillars: { aiReadability: 59, digitalAuthority: 57, conversionReadiness: 58 }, categories: { semanticClarity: 57, logicalStructure: 60, citationReadiness: 55, entityRecognition: 59 } },
+]
+
 const TIME_PERIODS = [
   { value: 7, label: 'Last 7 Days' },
   { value: 30, label: 'Last 30 Days' },
@@ -81,6 +96,7 @@ const navItems = [
       { label: 'Pillar Breakdown', page: 'pillars' },
       { label: 'Category Scores', page: 'categories' },
       { label: 'Content Signals', page: 'signals' },
+      { label: 'Content Analyzer', page: 'analyzer' },
     ]
   },
   { 
@@ -95,7 +111,6 @@ const navItems = [
       { label: 'Improve Your Score', page: 'improve-score' },
     ]
   },
-  { icon: FileText, label: 'Content Analyzer', page: 'analyzer', isSub: true },
   { icon: Settings, label: 'Settings', page: 'settings', isSub: true },
 ]
 
