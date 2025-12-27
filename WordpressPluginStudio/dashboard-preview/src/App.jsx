@@ -1063,24 +1063,7 @@ The evolution toward edge computing extends cloud capabilities closer to end use
               <Send size={14} />
               {published ? 'Published!' : 'Publish'}
             </button>
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '6px',
-                backgroundColor: sidebarOpen ? 'rgba(34, 211, 238, 0.2)' : 'var(--bg-tertiary)',
-                border: `1px solid ${sidebarOpen ? 'var(--accent)' : 'var(--border-color)'}`,
-                color: sidebarOpen ? 'var(--accent)' : 'var(--text-secondary)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-              }}
-            >
-              {sidebarOpen ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}
-            </button>
-          </div>
+                      </div>
         </div>
 
         <div style={{
@@ -1225,8 +1208,7 @@ The evolution toward edge computing extends cloud capabilities closer to end use
         </div>
       </div>
 
-      {sidebarOpen && (
-        <div style={{
+      <div style={{
           width: '400px',
           backgroundColor: 'var(--bg-secondary)',
           borderLeft: '1px solid var(--border-color)',
@@ -1293,7 +1275,6 @@ The evolution toward edge computing extends cloud capabilities closer to end use
             {renderTabContent()}
           </div>
         </div>
-      )}
 
       <style>{`
         @keyframes slideInFromRight {
