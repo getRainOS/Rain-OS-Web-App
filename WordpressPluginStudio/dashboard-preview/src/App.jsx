@@ -2770,39 +2770,7 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
         <TimePeriodDropdown selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
       </header>
 
-      <ChartCard title="All Categories" period={periodLabel} className="animate-in-delay-1">
-        <div style={{ height: '350px' }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={filteredCategoryData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
-              <XAxis dataKey="name" stroke="#fff" fontSize={11} angle={-20} textAnchor="end" height={80} fontWeight={600} />
-              <YAxis stroke="var(--text-muted)" fontSize={12} domain={[0, 100]} />
-              <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="score" radius={[4, 4, 0, 0]} name="Score">
-                {filteredCategoryData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={getCategoryPillarColor(entry.pillar)} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginTop: '16px' }}>
-          <span style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px', color: '#fff' }}>
-            <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#22d3ee' }} />
-            AI Readability
-          </span>
-          <span style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px', color: '#fff' }}>
-            <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#10b981' }} />
-            Digital Authority
-          </span>
-          <span style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px', color: '#fff' }}>
-            <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#a855f7' }} />
-            Conversion Readiness
-          </span>
-        </div>
-      </ChartCard>
-
-      <ChartCard title="Score Trend Details" period={periodLabel} className="animate-in-delay-2" style={{ marginTop: '24px' }}>
+      <ChartCard title="Score Trend Details" period={periodLabel} className="animate-in-delay-1">
         {(() => {
           const filteredPosts = postsData.filter(post => {
             const postDate = new Date(post.publishDate)
