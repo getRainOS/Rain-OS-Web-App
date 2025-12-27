@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
   PieChart, Pie, Cell,
@@ -517,6 +517,102 @@ function ContentAnalyzerPage({ setCurrentPage }) {
     if (searchQuery.trim()) {
       alert(`Searching for: "${searchQuery}"`)
     }
+  }
+
+  const editorRef = useRef(null)
+  const grammarTimeoutRef = useRef(null)
+  const [grammarErrors, setGrammarErrors] = useState([])
+  const [isCheckingGrammar, setIsCheckingGrammar] = useState(false)
+
+  const execFormatCommand = useCallback((command, value = null) => {
+    editorRef.current?.focus()
+    document.execCommand(command, false, value)
+  }, [])
+
+  const handleBold = () => execFormatCommand('bold')
+  const handleItalic = () => execFormatCommand('italic')
+  const handleUnderline = () => execFormatCommand('underline')
+  const handleH1 = () => execFormatCommand('formatBlock', 'h1')
+  const handleH2 = () => execFormatCommand('formatBlock', 'h2')
+  const handleH3 = () => execFormatCommand('formatBlock', 'h3')
+  const handleList = () => execFormatCommand('insertUnorderedList')
+  const handleLink = () => {
+    const url = prompt('Enter URL:')
+    if (url) {
+      execFormatCommand('createLink', url)
+    }
+  }
+
+  const checkGrammar = useCallback(async (text) => {
+    if (!text || text.length < 10) {
+      setGrammarErrors([])
+      return
+    }
+
+    setIsCheckingGrammar(true)
+    try {
+      const response = await fetch('https://api.languagetool.org/v2/check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          text: text,
+          language: 'en-US'
+        })
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        setGrammarErrors(data.matches || [])
+      }
+    } catch (error) {
+      console.error('Grammar check failed:', error)
+    } finally {
+      setIsCheckingGrammar(false)
+    }
+  }, [])
+
+  const debouncedGrammarCheck = useCallback((text) => {
+    if (grammarTimeoutRef.current) {
+      clearTimeout(grammarTimeoutRef.current)
+    }
+    grammarTimeoutRef.current = setTimeout(() => {
+      checkGrammar(text)
+    }, 1500)
+  }, [checkGrammar])
+
+  const handleEditorInput = (e) => {
+    const plainText = e.target.innerText || ''
+    setContent(plainText)
+    debouncedGrammarCheck(plainText)
+  }
+
+  useEffect(() => {
+    debouncedGrammarCheck(content)
+    return () => {
+      if (grammarTimeoutRef.current) {
+        clearTimeout(grammarTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  const highlightGrammarErrors = (text, errors) => {
+    if (!errors.length) return text.split('\n\n').join('<br><br>')
+    
+    let result = text
+    const sortedErrors = [...errors].sort((a, b) => b.offset - a.offset)
+    
+    for (const error of sortedErrors) {
+      const before = result.slice(0, error.offset)
+      const match = result.slice(error.offset, error.offset + error.length)
+      const after = result.slice(error.offset + error.length)
+      result = before + 
+        `<mark style="background: rgba(245, 158, 11, 0.4); padding: 2px 4px; border-radius: 3px; cursor: help;" title="${error.message}">${match}</mark>` + 
+        after
+    }
+    
+    return result.split('\n\n').join('<br><br>')
   }
 
   const getPillarColor = (pillar) => {
