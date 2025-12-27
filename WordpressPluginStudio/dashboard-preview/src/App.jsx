@@ -258,9 +258,9 @@ function Sidebar({ currentPage, setCurrentPage }) {
       </nav>
       
       <div style={{ padding: '12px', borderTop: '1px solid var(--border-color)' }}>
-        <span style={{ color: 'var(--text-muted)', fontSize: '11px' }}>support@getrainos.com</span>
+        <span style={{ color: 'var(--text-muted)', fontSize: '11px' }}>support@rainos.com</span>
         <a 
-          href="mailto:support@getrainos.com?subject=Feedback"
+          href="mailto:support@rainos.com?subject=Feedback"
           style={{ 
             display: 'block',
             color: 'var(--accent)', 
@@ -1945,9 +1945,10 @@ function TroubleshootingPage() {
         <div className="animate-in-delay-5" style={{ backgroundColor: 'linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(168, 85, 247, 0.1))', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px', textAlign: 'center' }}>
           <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '8px' }}>Still need help?</h3>
           <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '16px' }}>
-            Contact our support team at support@getrainos.com
+            Contact our support team at support@rainos.com
           </p>
-          <button style={{
+          <a href="mailto:support@rainos.com" style={{
+            display: 'inline-block',
             padding: '12px 24px',
             backgroundColor: 'var(--accent)',
             color: '#000',
@@ -1955,9 +1956,10 @@ function TroubleshootingPage() {
             borderRadius: '8px',
             fontWeight: 600,
             cursor: 'pointer',
+            textDecoration: 'none',
           }}>
             Contact Support
-          </button>
+          </a>
         </div>
       </div>
     </>
@@ -2033,7 +2035,8 @@ function UpgradePage() {
               </li>
             ))}
           </ul>
-          <button style={{
+          <a href="https://www.app.getrainos.com" target="_blank" rel="noopener noreferrer" style={{
+            display: 'block',
             width: '100%',
             marginTop: '24px',
             padding: '14px',
@@ -2044,10 +2047,13 @@ function UpgradePage() {
             fontSize: '14px',
             fontWeight: 600,
             cursor: 'pointer',
+            textAlign: 'center',
+            textDecoration: 'none',
+            boxSizing: 'border-box',
           }}>
             <Cloud size={16} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
             Upgrade to Business
-          </button>
+          </a>
         </div>
         
         <div className="animate-in" style={{
@@ -2076,7 +2082,8 @@ function UpgradePage() {
               </li>
             ))}
           </ul>
-          <button style={{
+          <a href="https://www.app.getrainos.com" target="_blank" rel="noopener noreferrer" style={{
+            display: 'block',
             width: '100%',
             marginTop: '24px',
             padding: '14px',
@@ -2087,10 +2094,13 @@ function UpgradePage() {
             fontSize: '14px',
             fontWeight: 600,
             cursor: 'pointer',
+            textAlign: 'center',
+            textDecoration: 'none',
+            boxSizing: 'border-box',
           }}>
             <Star size={16} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
             Upgrade to Pro
-          </button>
+          </a>
         </div>
       </div>
     </>
