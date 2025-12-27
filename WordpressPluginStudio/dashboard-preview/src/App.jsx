@@ -2736,70 +2736,7 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
         <TimePeriodDropdown selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
       </header>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '24px' }}>
-        <div className="animate-in-delay-1">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: 500 }}>Overall Score</h3>
-            <span style={{ fontSize: '12px', color: 'var(--text-muted)', backgroundColor: 'var(--bg-tertiary)', padding: '4px 10px', borderRadius: '4px' }}>{periodLabel}</span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div style={{ textAlign: 'center', padding: '20px 0' }}>
-              <div style={{ fontSize: '48px', fontWeight: 700, color: '#fff' }}>{overallScore}%</div>
-              <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' }}>Overall Score</div>
-            </div>
-            
-            {[
-              { name: 'AI Readability', score: filteredPillarData[0]?.value || 82, colors: ['#22d3ee', '#67e8f9', '#06b6d4'], subcategories: [
-                { name: 'Semantic Clarity', value: 85 },
-                { name: 'Readability Score', value: 78 },
-                { name: 'Logical Structure', value: 82 }
-              ]},
-              { name: 'Digital Authority', score: filteredPillarData[1]?.value || 85, colors: ['#10b981', '#34d399', '#059669'], subcategories: [
-                { name: 'Entity Recognition', value: 75 },
-                { name: 'Citation Readiness', value: 88 },
-                { name: 'Schema Extraction', value: 72 }
-              ]},
-              { name: 'Conversion Readiness', score: filteredPillarData[2]?.value || 79, colors: ['#a855f7', '#c084fc', '#7c3aed'], subcategories: [
-                { name: 'AEO Alignment', value: 80 },
-                { name: 'QA-Format', value: 76 },
-                { name: 'Metadata Audit', value: 84 }
-              ]}
-            ].map((pillar, pillarIdx) => {
-              const total = pillar.subcategories.reduce((sum, s) => sum + s.value, 0)
-              return (
-                <div key={pillarIdx} style={{ padding: '12px 0' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                    <span style={{ fontSize: '13px', fontWeight: 600, color: pillar.colors[0] }}>{pillar.name}</span>
-                    <span style={{ fontSize: '14px', fontWeight: 700, color: pillar.colors[0] }}>{pillar.score}</span>
-                  </div>
-                  <div style={{ display: 'flex', height: '10px', borderRadius: '5px', overflow: 'hidden' }}>
-                    {pillar.subcategories.map((sub, subIdx) => (
-                      <div 
-                        key={subIdx} 
-                        style={{ 
-                          width: `${(sub.value / total) * 100}%`, 
-                          backgroundColor: pillar.colors[subIdx],
-                          transition: 'width 0.5s ease'
-                        }} 
-                        title={`${sub.name}: ${sub.value}`}
-                      />
-                    ))}
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px', gap: '4px' }}>
-                    {pillar.subcategories.map((sub, subIdx) => (
-                      <div key={subIdx} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '9px' }}>
-                        <div style={{ width: '8px', height: '8px', borderRadius: '2px', backgroundColor: pillar.colors[subIdx] }} />
-                        <span style={{ color: 'var(--text-muted)' }}>{sub.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {filteredPillarData.map((pillar, i) => {
             const pillarKey = pillar.name === 'AI Readability' ? 'aiReadability' : pillar.name === 'Digital Authority' ? 'digitalAuthority' : 'conversionReadiness'
             const pillarPosts = postsData.filter(post => {
@@ -2849,7 +2786,6 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
               </div>
             )
           })}
-        </div>
       </div>
     </>
   )
