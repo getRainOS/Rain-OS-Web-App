@@ -734,56 +734,6 @@ The evolution toward edge computing extends cloud capabilities closer to end use
               ))}
             </div>
 
-            <div style={{
-              background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.08), rgba(168, 85, 247, 0.08))',
-              border: '1px solid rgba(34, 211, 238, 0.3)',
-              borderRadius: '12px',
-              padding: '16px',
-            }}>
-              <h4 style={{ fontSize: '13px', fontWeight: 600, marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--accent)' }}>
-                <CheckSquare size={14} />
-                Local Content Audit
-              </h4>
-              <p style={{ fontSize: '10px', color: 'var(--text-muted)', marginBottom: '12px' }}>
-                WordPress-powered checks (no API required)
-              </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                {[
-                  { label: 'Sentences under 20 words', pass: true },
-                  { label: 'Clear H2/H3 headings', pass: true },
-                  { label: 'Questions answered early', pass: false },
-                  { label: 'Technical terms defined', pass: true },
-                  { label: 'Content uses lists', pass: true },
-                  { label: 'Paragraphs 2-4 sentences', pass: false },
-                ].map((check, i) => (
-                  <div key={i} style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '8px',
-                    padding: '6px 8px',
-                    backgroundColor: 'rgba(255,255,255,0.03)',
-                    borderRadius: '4px',
-                  }}>
-                    <span style={{ 
-                      width: '16px', 
-                      height: '16px', 
-                      borderRadius: '3px', 
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '10px',
-                      fontWeight: 700,
-                      backgroundColor: check.pass ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
-                      color: check.pass ? '#10b981' : '#ef4444',
-                    }}>
-                      {check.pass ? '✓' : '✗'}
-                    </span>
-                    <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{check.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             <div>
               <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '12px', color: 'var(--text-secondary)' }}>Critical Issues</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -1141,52 +1091,136 @@ The evolution toward edge computing extends cloud capabilities closer to end use
           justifyContent: 'center',
         }}>
           <div style={{ maxWidth: '768px', width: '100%' }}>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Add title"
-              style={{
-                width: '100%',
-                fontSize: '36px',
-                fontWeight: 700,
-                fontFamily: 'Georgia, serif',
-                background: 'none',
-                border: 'none',
-                color: 'var(--text-primary)',
-                marginBottom: '24px',
-                outline: 'none',
-              }}
-            />
-            <div
-              contentEditable
-              suppressContentEditableWarning
-              style={{
-                fontSize: '18px',
-                lineHeight: '1.8',
-                color: 'var(--text-secondary)',
-                outline: 'none',
-                minHeight: '400px',
-              }}
-              dangerouslySetInnerHTML={{
-                __html: heatmapEnabled
-                  ? content
-                      .replace(/cloud computing/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">cloud computing</span>')
-                      .replace(/infrastructure/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">infrastructure</span>')
-                      .replace(/distributed computing/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Term">distributed computing</span>')
-                      .replace(/load balancing/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Concept">load balancing</span>')
-                      .replace(/microservices/gi, '<span style="background: rgba(168, 85, 247, 0.3); padding: 2px 4px; border-radius: 3px;" title="Conversion Readiness - Action Term">microservices</span>')
-                      .replace(/database/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Entity">database</span>')
-                      .replace(/security/gi, '<span style="background: rgba(245, 158, 11, 0.3); padding: 2px 4px; border-radius: 3px;" title="Warning - Needs Citation">security</span>')
-                      .replace(/scalability/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">scalability</span>')
-                      .replace(/performance optimization/gi, '<span style="background: rgba(168, 85, 247, 0.3); padding: 2px 4px; border-radius: 3px;" title="Conversion Readiness - CTA">performance optimization</span>')
-                      .replace(/container orchestration/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Term">container orchestration</span>')
-                      .replace(/zero-trust/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Industry Standard">zero-trust</span>')
-                      .replace(/observability/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Concept">observability</span>')
-                      .split('\n\n').join('<br><br>')
-                  : content.split('\n\n').join('<br><br>')
-              }}
-            />
+            <div style={{
+              backgroundColor: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '12px 16px',
+                backgroundColor: 'var(--bg-tertiary)',
+                borderBottom: '1px solid var(--border-color)',
+              }}>
+                <button style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '12px', cursor: 'pointer' }}>B</button>
+                <button style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '12px', fontStyle: 'italic', cursor: 'pointer' }}>I</button>
+                <button style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '12px', textDecoration: 'underline', cursor: 'pointer' }}>U</button>
+                <div style={{ width: '1px', height: '20px', backgroundColor: 'var(--border-color)', margin: '0 4px' }} />
+                <button style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '12px', cursor: 'pointer' }}>H1</button>
+                <button style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '12px', cursor: 'pointer' }}>H2</button>
+                <button style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '12px', cursor: 'pointer' }}>H3</button>
+                <div style={{ width: '1px', height: '20px', backgroundColor: 'var(--border-color)', margin: '0 4px' }} />
+                <button style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '11px', cursor: 'pointer' }}>List</button>
+                <button style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '11px', cursor: 'pointer' }}>Link</button>
+                <div style={{ flex: 1 }} />
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{content.split(/\s+/).filter(w => w).length} words</span>
+              </div>
+              
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Add title"
+                style={{
+                  width: '100%',
+                  fontSize: '32px',
+                  fontWeight: 700,
+                  fontFamily: 'Georgia, serif',
+                  background: 'none',
+                  border: 'none',
+                  borderBottom: '1px solid var(--border-color)',
+                  color: 'var(--text-primary)',
+                  padding: '20px 24px',
+                  outline: 'none',
+                }}
+              />
+              <div
+                contentEditable
+                suppressContentEditableWarning
+                style={{
+                  fontSize: '17px',
+                  lineHeight: '1.9',
+                  color: 'var(--text-secondary)',
+                  outline: 'none',
+                  minHeight: '350px',
+                  padding: '24px',
+                }}
+                dangerouslySetInnerHTML={{
+                  __html: heatmapEnabled
+                    ? content
+                        .replace(/cloud computing/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">cloud computing</span>')
+                        .replace(/infrastructure/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">infrastructure</span>')
+                        .replace(/distributed computing/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Term">distributed computing</span>')
+                        .replace(/load balancing/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Concept">load balancing</span>')
+                        .replace(/microservices/gi, '<span style="background: rgba(168, 85, 247, 0.3); padding: 2px 4px; border-radius: 3px;" title="Conversion Readiness - Action Term">microservices</span>')
+                        .replace(/database/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Entity">database</span>')
+                        .replace(/security/gi, '<span style="background: rgba(245, 158, 11, 0.3); padding: 2px 4px; border-radius: 3px;" title="Warning - Needs Citation">security</span>')
+                        .replace(/scalability/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">scalability</span>')
+                        .replace(/performance optimization/gi, '<span style="background: rgba(168, 85, 247, 0.3); padding: 2px 4px; border-radius: 3px;" title="Conversion Readiness - CTA">performance optimization</span>')
+                        .replace(/container orchestration/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Term">container orchestration</span>')
+                        .replace(/zero-trust/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Industry Standard">zero-trust</span>')
+                        .replace(/observability/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Concept">observability</span>')
+                        .split('\n\n').join('<br><br>')
+                    : content.split('\n\n').join('<br><br>')
+                }}
+              />
+            </div>
+            
+            <div style={{
+              marginTop: '24px',
+              background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.08), rgba(168, 85, 247, 0.08))',
+              border: '1px solid rgba(34, 211, 238, 0.3)',
+              borderRadius: '12px',
+              padding: '20px',
+            }}>
+              <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--accent)' }}>
+                <CheckSquare size={16} />
+                Local Content Audit
+              </h4>
+              <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '16px' }}>
+                WordPress-powered checks (no API required)
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+                {[
+                  { label: 'Sentences under 20 words', pass: true },
+                  { label: 'Clear H2/H3 headings', pass: true },
+                  { label: 'Questions answered early', pass: false },
+                  { label: 'Technical terms defined', pass: true },
+                  { label: 'Content uses lists', pass: true },
+                  { label: 'Paragraphs 2-4 sentences', pass: false },
+                ].map((check, i) => (
+                  <div key={i} style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '10px',
+                    padding: '10px 12px',
+                    backgroundColor: 'rgba(255,255,255,0.05)',
+                    borderRadius: '8px',
+                    border: `1px solid ${check.pass ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
+                  }}>
+                    <span style={{ 
+                      width: '20px', 
+                      height: '20px', 
+                      borderRadius: '4px', 
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      backgroundColor: check.pass ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                      color: check.pass ? '#10b981' : '#ef4444',
+                    }}>
+                      {check.pass ? '✓' : '✗'}
+                    </span>
+                    <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{check.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -2704,72 +2738,53 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '24px' }}>
         <ChartCard title="Overall Score" period={periodLabel} className="animate-in-delay-1">
-          <div style={{ height: '280px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-            {(() => {
-              const subcategoryRings = [
-                { name: 'Semantic Clarity', value: 85, color: '#22d3ee', pillar: 'AI Readability' },
-                { name: 'Readability Score', value: 78, color: '#67e8f9', pillar: 'AI Readability' },
-                { name: 'Logical Structure', value: 82, color: '#06b6d4', pillar: 'AI Readability' },
-                { name: 'Entity Recognition', value: 75, color: '#10b981', pillar: 'Digital Authority' },
-                { name: 'Citation Readiness', value: 88, color: '#34d399', pillar: 'Digital Authority' },
-                { name: 'Schema Extraction', value: 72, color: '#059669', pillar: 'Digital Authority' },
-                { name: 'AEO Alignment', value: 80, color: '#a855f7', pillar: 'Conversion' },
-                { name: 'QA-Format', value: 76, color: '#c084fc', pillar: 'Conversion' },
-                { name: 'Metadata Audit', value: 84, color: '#7c3aed', pillar: 'Conversion' },
-              ]
-              
-              return (
-                <>
-                  <div style={{ position: 'relative', width: '200px', height: '200px' }}>
-                    <svg width="200" height="200" viewBox="0 0 200 200">
-                      {subcategoryRings.map((ring, i) => {
-                        const cx = 100
-                        const cy = 100
-                        const baseRadius = 90 - (i * 9)
-                        const strokeWidth = 7
-                        const circumference = 2 * Math.PI * baseRadius
-                        const progress = (ring.value / 100) * circumference
-                        
-                        return (
-                          <g key={i}>
-                            <circle
-                              cx={cx}
-                              cy={cy}
-                              r={baseRadius}
-                              fill="none"
-                              stroke="rgba(255,255,255,0.08)"
-                              strokeWidth={strokeWidth}
-                            />
-                            <circle
-                              cx={cx}
-                              cy={cy}
-                              r={baseRadius}
-                              fill="none"
-                              stroke={ring.color}
-                              strokeWidth={strokeWidth}
-                              strokeLinecap="round"
-                              strokeDasharray={`${progress} ${circumference}`}
-                              transform={`rotate(-90 ${cx} ${cy})`}
-                              style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }}
-                            />
-                          </g>
-                        )
-                      })}
-                      <text x="100" y="95" textAnchor="middle" fill="#fff" fontSize="24" fontWeight="700">{overallScore}%</text>
-                      <text x="100" y="112" textAnchor="middle" fill="var(--text-muted)" fontSize="11">Overall</text>
-                    </svg>
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px', marginTop: '8px', width: '100%' }}>
-                    {subcategoryRings.map((ring, i) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '9px' }}>
-                        <div style={{ width: '6px', height: '6px', borderRadius: '2px', backgroundColor: ring.color, flexShrink: 0 }} />
-                        <span style={{ color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ring.name}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ textAlign: 'center', padding: '20px 0' }}>
+              <div style={{ fontSize: '48px', fontWeight: 700, color: '#fff' }}>{overallScore}%</div>
+              <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' }}>Overall Score</div>
+            </div>
+            
+            {[
+              { name: 'AI Readability', score: filteredPillarData[0]?.value || 82, colors: ['#22d3ee', '#67e8f9', '#06b6d4'], subcategories: [
+                { name: 'Semantic Clarity', value: 85 },
+                { name: 'Readability Score', value: 78 },
+                { name: 'Logical Structure', value: 82 }
+              ]},
+              { name: 'Digital Authority', score: filteredPillarData[1]?.value || 85, colors: ['#10b981', '#34d399', '#059669'], subcategories: [
+                { name: 'Entity Recognition', value: 75 },
+                { name: 'Citation Readiness', value: 88 },
+                { name: 'Schema Extraction', value: 72 }
+              ]},
+              { name: 'Conversion Readiness', score: filteredPillarData[2]?.value || 79, colors: ['#a855f7', '#c084fc', '#7c3aed'], subcategories: [
+                { name: 'AEO Alignment', value: 80 },
+                { name: 'QA-Format', value: 76 },
+                { name: 'Metadata Audit', value: 84 }
+              ]}
+            ].map((pillar, pillarIdx) => (
+              <div key={pillarIdx} style={{ padding: '12px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 600, color: pillar.colors[0] }}>{pillar.name}</span>
+                  <span style={{ fontSize: '14px', fontWeight: 700, color: pillar.colors[0] }}>{pillar.score}</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {pillar.subcategories.map((sub, subIdx) => (
+                    <div key={subIdx} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '10px', color: 'var(--text-muted)', width: '90px', flexShrink: 0 }}>{sub.name}</span>
+                      <div style={{ flex: 1, height: '8px', backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: '4px', overflow: 'hidden' }}>
+                        <div style={{ 
+                          height: '100%', 
+                          width: `${sub.value}%`, 
+                          backgroundColor: pillar.colors[subIdx], 
+                          borderRadius: '4px',
+                          transition: 'width 0.5s ease'
+                        }} />
                       </div>
-                    ))}
-                  </div>
-                </>
-              )
-            })()}
+                      <span style={{ fontSize: '10px', fontWeight: 600, color: pillar.colors[subIdx], width: '24px', textAlign: 'right' }}>{sub.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </ChartCard>
 

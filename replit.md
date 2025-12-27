@@ -37,3 +37,29 @@ The plugin follows WordPress plugin architecture standards, utilizing a modular,
 - **PHP**: Minimum version 7.4+, with `curl`, `json`, and `mbstring` extensions.
 - **jQuery**: Utilized for front-end interactions (bundled with WordPress).
 - **Google Fonts**: Roboto, loaded via CSS import for consistent typography.
+
+## Recent Updates
+
+### Pillar Breakdown Page (December 2024)
+- **Horizontal Bar Charts**: Replaced 9-ring concentric chart with horizontal bar visualization
+  - Large overall score percentage displayed at top
+  - Three sections (one per pillar) each with 3 subcategory horizontal bars
+  - Distinctive colors per subcategory within each pillar
+  - AI Readability: Semantic Clarity, Readability Score, Logical Structure (cyan shades)
+  - Digital Authority: Entity Recognition, Citation Readiness, Schema Extraction (green shades)
+  - Conversion Readiness: AEO Alignment, QA-Format, Metadata Audit (purple shades)
+
+### Content Analyzer Updates (December 2024)
+- **Enhanced Content Editor**: Robust editor with:
+  - Toolbar with formatting buttons (B, I, U, H1, H2, H3, List, Link)
+  - Word count display
+  - Bordered container with rounded corners and shadow
+  - Title input with separator line
+- **Local Content Audit Repositioned**: Moved from sidebar to below content editor
+  - 3-column grid layout for checklist items
+  - Larger checkboxes with border indicators for pass/fail
+  - More prominent styling with gradient background
+
+### Post Performance Table (Category Scores)
+- Shows Overall Score, AI Readability, Digital Authority, and Conversion columns
+- All score badges use red/yellow/green coloring based on score thresholds (green ≥80, yellow 65-79, red <65)
