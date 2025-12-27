@@ -108,7 +108,7 @@ const navItems = [
     subItems: [
       { label: 'Performance', page: 'performance' },
       { label: 'Pillar Breakdown', page: 'pillars' },
-      { label: 'Category Scores', page: 'categories' },
+      { label: 'Score History', page: 'categories' },
       { label: 'Content Signals', page: 'signals' },
     ]
   },
@@ -2920,13 +2920,13 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
     <>
       <header className="animate-in" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
         <div>
-          <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Category Scores</h1>
-          <p style={{ color: 'var(--text-secondary)' }}>Detailed breakdown of all analysis categories</p>
+          <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Score History</h1>
+          <p style={{ color: 'var(--text-secondary)' }}>Breakdown of post pillar scores</p>
         </div>
         <TimePeriodDropdown selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
       </header>
 
-      <ChartCard title="Score Trend Details" period={periodLabel} className="animate-in-delay-1">
+      <ChartCard title="Score Details" period={periodLabel} className="animate-in-delay-1">
         {(() => {
           const filteredPosts = postsData.filter(post => {
             const postDate = new Date(post.publishDate)
