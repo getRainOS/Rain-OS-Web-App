@@ -338,14 +338,6 @@ function SpeedometerChart({ value, maxValue, color }) {
 }
 
 function KPICard({ icon: Icon, title, value, subtitle, color, delay, gaugeValue, gaugeMax }) {
-  const numericValue = typeof value === 'string' ? parseInt(value) : value
-  const getScoreIndicatorColor = (score) => {
-    if (score >= 80) return '#10b981'
-    if (score >= 65) return '#f59e0b'
-    return '#ef4444'
-  }
-  const indicatorColor = getScoreIndicatorColor(numericValue)
-  
   return (
     <div
       className={`animate-in-delay-${delay}`}
@@ -370,16 +362,7 @@ function KPICard({ icon: Icon, title, value, subtitle, color, delay, gaugeValue,
         </div>
         <SpeedometerChart value={gaugeValue} maxValue={gaugeMax} color={color} />
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-        <span style={{
-          width: '10px',
-          height: '10px',
-          borderRadius: '50%',
-          backgroundColor: indicatorColor,
-          boxShadow: `0 0 8px ${indicatorColor}`,
-        }} />
-        <span style={{ fontSize: '32px', fontWeight: 700 }}>{value}</span>
-      </div>
+      <div style={{ fontSize: '32px', fontWeight: 700, marginBottom: '4px' }}>{value}</div>
       <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '8px' }}>{title}</div>
       {subtitle && (
         <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{subtitle}</div>
@@ -2866,48 +2849,68 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
                           <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>/{post.slug}/</div>
                         </td>
                         <td style={{ padding: '14px 8px', textAlign: 'center' }}>
-                          <span style={{ 
-                            display: 'inline-block',
-                            padding: '4px 12px',
-                            borderRadius: '12px',
-                            backgroundColor: `${getScoreColor(avgScore)}20`,
-                            color: getScoreColor(avgScore),
-                            fontSize: '13px',
-                            fontWeight: 600,
-                          }}>{avgScore}</span>
+                          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{
+                              width: '8px',
+                              height: '8px',
+                              borderRadius: '50%',
+                              backgroundColor: getScoreColor(avgScore),
+                              boxShadow: `0 0 6px ${getScoreColor(avgScore)}`,
+                            }} />
+                            <span style={{ 
+                              fontSize: '13px',
+                              fontWeight: 600,
+                              color: getScoreColor(avgScore),
+                            }}>{avgScore}</span>
+                          </div>
                         </td>
                         <td style={{ padding: '14px 8px', textAlign: 'center' }}>
-                          <span style={{ 
-                            display: 'inline-block',
-                            padding: '4px 12px',
-                            borderRadius: '12px',
-                            backgroundColor: `${getScoreColor(post.pillars.aiReadability)}20`,
-                            color: getScoreColor(post.pillars.aiReadability),
-                            fontSize: '13px',
-                            fontWeight: 600,
-                          }}>{post.pillars.aiReadability}</span>
+                          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{
+                              width: '8px',
+                              height: '8px',
+                              borderRadius: '50%',
+                              backgroundColor: getScoreColor(post.pillars.aiReadability),
+                              boxShadow: `0 0 6px ${getScoreColor(post.pillars.aiReadability)}`,
+                            }} />
+                            <span style={{ 
+                              fontSize: '13px',
+                              fontWeight: 600,
+                              color: getScoreColor(post.pillars.aiReadability),
+                            }}>{post.pillars.aiReadability}</span>
+                          </div>
                         </td>
                         <td style={{ padding: '14px 8px', textAlign: 'center' }}>
-                          <span style={{ 
-                            display: 'inline-block',
-                            padding: '4px 12px',
-                            borderRadius: '12px',
-                            backgroundColor: `${getScoreColor(post.pillars.digitalAuthority)}20`,
-                            color: getScoreColor(post.pillars.digitalAuthority),
-                            fontSize: '13px',
-                            fontWeight: 600,
-                          }}>{post.pillars.digitalAuthority}</span>
+                          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{
+                              width: '8px',
+                              height: '8px',
+                              borderRadius: '50%',
+                              backgroundColor: getScoreColor(post.pillars.digitalAuthority),
+                              boxShadow: `0 0 6px ${getScoreColor(post.pillars.digitalAuthority)}`,
+                            }} />
+                            <span style={{ 
+                              fontSize: '13px',
+                              fontWeight: 600,
+                              color: getScoreColor(post.pillars.digitalAuthority),
+                            }}>{post.pillars.digitalAuthority}</span>
+                          </div>
                         </td>
                         <td style={{ padding: '14px 8px', textAlign: 'center' }}>
-                          <span style={{ 
-                            display: 'inline-block',
-                            padding: '4px 12px',
-                            borderRadius: '12px',
-                            backgroundColor: `${getScoreColor(post.pillars.conversionReadiness)}20`,
-                            color: getScoreColor(post.pillars.conversionReadiness),
-                            fontSize: '13px',
-                            fontWeight: 600,
-                          }}>{post.pillars.conversionReadiness}</span>
+                          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{
+                              width: '8px',
+                              height: '8px',
+                              borderRadius: '50%',
+                              backgroundColor: getScoreColor(post.pillars.conversionReadiness),
+                              boxShadow: `0 0 6px ${getScoreColor(post.pillars.conversionReadiness)}`,
+                            }} />
+                            <span style={{ 
+                              fontSize: '13px',
+                              fontWeight: 600,
+                              color: getScoreColor(post.pillars.conversionReadiness),
+                            }}>{post.pillars.conversionReadiness}</span>
+                          </div>
                         </td>
                       </tr>
                     )
