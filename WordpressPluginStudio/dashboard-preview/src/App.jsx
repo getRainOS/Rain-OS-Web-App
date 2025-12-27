@@ -2391,71 +2391,58 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
 
         <ChartCard title="Pillar Breakdown" period={periodLabel} className="animate-in-delay-3">
           <div style={{ height: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-            {(() => {
-              const subcategoryRings = [
-                { name: 'Semantic Clarity', value: 85, color: '#22d3ee', pillar: 'AI Readability' },
-                { name: 'Readability Score', value: 78, color: '#67e8f9', pillar: 'AI Readability' },
-                { name: 'Logical Structure', value: 82, color: '#06b6d4', pillar: 'AI Readability' },
-                { name: 'Entity Recognition', value: 75, color: '#10b981', pillar: 'Digital Authority' },
-                { name: 'Citation Readiness', value: 88, color: '#34d399', pillar: 'Digital Authority' },
-                { name: 'Schema Extraction', value: 72, color: '#059669', pillar: 'Digital Authority' },
-                { name: 'AEO Alignment', value: 80, color: '#a855f7', pillar: 'Conversion' },
-                { name: 'QA-Format', value: 76, color: '#c084fc', pillar: 'Conversion' },
-                { name: 'Metadata Audit', value: 84, color: '#7c3aed', pillar: 'Conversion' },
-              ]
-              
-              return (
-                <>
-                  <div style={{ position: 'relative', width: '200px', height: '200px' }}>
-                    <svg width="200" height="200" viewBox="0 0 200 200">
-                      {subcategoryRings.map((ring, i) => {
-                        const cx = 100
-                        const cy = 100
-                        const baseRadius = 90 - (i * 9)
-                        const strokeWidth = 7
-                        const circumference = 2 * Math.PI * baseRadius
-                        const progress = (ring.value / 100) * circumference
-                        
-                        return (
-                          <g key={i}>
-                            <circle
-                              cx={cx}
-                              cy={cy}
-                              r={baseRadius}
-                              fill="none"
-                              stroke="rgba(255,255,255,0.08)"
-                              strokeWidth={strokeWidth}
-                            />
-                            <circle
-                              cx={cx}
-                              cy={cy}
-                              r={baseRadius}
-                              fill="none"
-                              stroke={ring.color}
-                              strokeWidth={strokeWidth}
-                              strokeLinecap="round"
-                              strokeDasharray={`${progress} ${circumference}`}
-                              transform={`rotate(-90 ${cx} ${cy})`}
-                              style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }}
-                            />
-                          </g>
-                        )
-                      })}
-                      <text x="100" y="95" textAnchor="middle" fill="#fff" fontSize="24" fontWeight="700">{overallScore}%</text>
-                      <text x="100" y="112" textAnchor="middle" fill="var(--text-muted)" fontSize="11">Overall</text>
-                    </svg>
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginTop: '12px', width: '100%' }}>
-                    {subcategoryRings.map((ring, i) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '10px' }}>
-                        <div style={{ width: '8px', height: '8px', borderRadius: '2px', backgroundColor: ring.color, flexShrink: 0 }} />
-                        <span style={{ color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ring.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              )
-            })()}
+            <div style={{ position: 'relative', width: '200px', height: '200px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <defs>
+                    <linearGradient id="grad-cyan-3d" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#67e8f9" />
+                      <stop offset="50%" stopColor="#22d3ee" />
+                      <stop offset="100%" stopColor="#0891b2" />
+                    </linearGradient>
+                    <linearGradient id="grad-green-3d" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#34d399" />
+                      <stop offset="50%" stopColor="#10b981" />
+                      <stop offset="100%" stopColor="#047857" />
+                    </linearGradient>
+                    <linearGradient id="grad-purple-3d" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#c084fc" />
+                      <stop offset="50%" stopColor="#a855f7" />
+                      <stop offset="100%" stopColor="#7c3aed" />
+                    </linearGradient>
+                  </defs>
+                  <Pie
+                    data={pillarData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={55}
+                    outerRadius={85}
+                    paddingAngle={3}
+                    dataKey="value"
+                    stroke="rgba(255,255,255,0.1)"
+                    strokeWidth={1}
+                    style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.4)) drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }}
+                  >
+                    <Cell fill="url(#grad-cyan-3d)" />
+                    <Cell fill="url(#grad-green-3d)" />
+                    <Cell fill="url(#grad-purple-3d)" />
+                  </Pie>
+                  <Tooltip content={<CustomTooltip />} />
+                </PieChart>
+              </ResponsiveContainer>
+              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
+                <div style={{ fontSize: '32px', fontWeight: 700 }}>{overallScore}</div>
+                <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Overall</div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '12px' }}>
+              {pillarData.map((pillar, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px' }}>
+                  <div style={{ width: '10px', height: '10px', borderRadius: '3px', backgroundColor: pillar.color }} />
+                  <span style={{ color: 'var(--text-secondary)' }}>{pillar.name}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </ChartCard>
       </div>
@@ -2718,22 +2705,71 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '24px' }}>
         <ChartCard title="Overall Score" period={periodLabel} className="animate-in-delay-1">
           <div style={{ height: '280px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ position: 'relative', width: '200px', height: '200px' }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={filteredPillarData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={3} dataKey="value">
-                    {filteredPillarData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
+            {(() => {
+              const subcategoryRings = [
+                { name: 'Semantic Clarity', value: 85, color: '#22d3ee', pillar: 'AI Readability' },
+                { name: 'Readability Score', value: 78, color: '#67e8f9', pillar: 'AI Readability' },
+                { name: 'Logical Structure', value: 82, color: '#06b6d4', pillar: 'AI Readability' },
+                { name: 'Entity Recognition', value: 75, color: '#10b981', pillar: 'Digital Authority' },
+                { name: 'Citation Readiness', value: 88, color: '#34d399', pillar: 'Digital Authority' },
+                { name: 'Schema Extraction', value: 72, color: '#059669', pillar: 'Digital Authority' },
+                { name: 'AEO Alignment', value: 80, color: '#a855f7', pillar: 'Conversion' },
+                { name: 'QA-Format', value: 76, color: '#c084fc', pillar: 'Conversion' },
+                { name: 'Metadata Audit', value: 84, color: '#7c3aed', pillar: 'Conversion' },
+              ]
+              
+              return (
+                <>
+                  <div style={{ position: 'relative', width: '200px', height: '200px' }}>
+                    <svg width="200" height="200" viewBox="0 0 200 200">
+                      {subcategoryRings.map((ring, i) => {
+                        const cx = 100
+                        const cy = 100
+                        const baseRadius = 90 - (i * 9)
+                        const strokeWidth = 7
+                        const circumference = 2 * Math.PI * baseRadius
+                        const progress = (ring.value / 100) * circumference
+                        
+                        return (
+                          <g key={i}>
+                            <circle
+                              cx={cx}
+                              cy={cy}
+                              r={baseRadius}
+                              fill="none"
+                              stroke="rgba(255,255,255,0.08)"
+                              strokeWidth={strokeWidth}
+                            />
+                            <circle
+                              cx={cx}
+                              cy={cy}
+                              r={baseRadius}
+                              fill="none"
+                              stroke={ring.color}
+                              strokeWidth={strokeWidth}
+                              strokeLinecap="round"
+                              strokeDasharray={`${progress} ${circumference}`}
+                              transform={`rotate(-90 ${cx} ${cy})`}
+                              style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }}
+                            />
+                          </g>
+                        )
+                      })}
+                      <text x="100" y="95" textAnchor="middle" fill="#fff" fontSize="24" fontWeight="700">{overallScore}%</text>
+                      <text x="100" y="112" textAnchor="middle" fill="var(--text-muted)" fontSize="11">Overall</text>
+                    </svg>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px', marginTop: '8px', width: '100%' }}>
+                    {subcategoryRings.map((ring, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '9px' }}>
+                        <div style={{ width: '6px', height: '6px', borderRadius: '2px', backgroundColor: ring.color, flexShrink: 0 }} />
+                        <span style={{ color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ring.name}</span>
+                      </div>
                     ))}
-                  </Pie>
-                  <Tooltip content={<CustomTooltip />} />
-                </PieChart>
-              </ResponsiveContainer>
-              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
-                <div style={{ fontSize: '36px', fontWeight: 700 }}>{overallScore}</div>
-                <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Overall</div>
-              </div>
-            </div>
+                  </div>
+                </>
+              )
+            })()}
           </div>
         </ChartCard>
 
@@ -2903,8 +2939,8 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
                             display: 'inline-block',
                             padding: '4px 12px',
                             borderRadius: '12px',
-                            backgroundColor: '#22d3ee20',
-                            color: '#22d3ee',
+                            backgroundColor: `${getScoreColor(post.pillars.aiReadability)}20`,
+                            color: getScoreColor(post.pillars.aiReadability),
                             fontSize: '13px',
                             fontWeight: 600,
                           }}>{post.pillars.aiReadability}</span>
@@ -2914,8 +2950,8 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
                             display: 'inline-block',
                             padding: '4px 12px',
                             borderRadius: '12px',
-                            backgroundColor: '#10b98120',
-                            color: '#10b981',
+                            backgroundColor: `${getScoreColor(post.pillars.digitalAuthority)}20`,
+                            color: getScoreColor(post.pillars.digitalAuthority),
                             fontSize: '13px',
                             fontWeight: 600,
                           }}>{post.pillars.digitalAuthority}</span>
@@ -2925,8 +2961,8 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
                             display: 'inline-block',
                             padding: '4px 12px',
                             borderRadius: '12px',
-                            backgroundColor: '#a855f720',
-                            color: '#a855f7',
+                            backgroundColor: `${getScoreColor(post.pillars.conversionReadiness)}20`,
+                            color: getScoreColor(post.pillars.conversionReadiness),
                             fontSize: '13px',
                             fontWeight: 600,
                           }}>{post.pillars.conversionReadiness}</span>
