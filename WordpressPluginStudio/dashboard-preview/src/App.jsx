@@ -2772,7 +2772,7 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
                     <span style={{ fontSize: '13px', fontWeight: 600, color: pillar.colors[0] }}>{pillar.name}</span>
                     <span style={{ fontSize: '14px', fontWeight: 700, color: pillar.colors[0] }}>{pillar.score}</span>
                   </div>
-                  <div style={{ display: 'flex', height: '14px', borderRadius: '4px', overflow: 'hidden' }}>
+                  <div style={{ display: 'flex', height: '8px', borderRadius: '4px', overflow: 'hidden' }}>
                     {pillar.subcategories.map((sub, subIdx) => (
                       <div 
                         key={subIdx} 
