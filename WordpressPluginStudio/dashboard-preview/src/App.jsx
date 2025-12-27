@@ -2737,7 +2737,11 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
       </header>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '24px' }}>
-        <ChartCard title="Overall Score" period={periodLabel} className="animate-in-delay-1">
+        <div className="animate-in-delay-1">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 500 }}>Overall Score</h3>
+            <span style={{ fontSize: '12px', color: 'var(--text-muted)', backgroundColor: 'var(--bg-tertiary)', padding: '4px 10px', borderRadius: '4px' }}>{periodLabel}</span>
+          </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ textAlign: 'center', padding: '20px 0' }}>
               <div style={{ fontSize: '48px', fontWeight: 700, color: '#fff' }}>{overallScore}%</div>
@@ -2793,7 +2797,7 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
               )
             })}
           </div>
-        </ChartCard>
+        </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {filteredPillarData.map((pillar, i) => {
