@@ -1185,17 +1185,21 @@ The evolution toward edge computing extends cloud capabilities closer to end use
                 backgroundColor: 'var(--bg-tertiary)',
                 borderBottom: '1px solid var(--border-color)',
               }}>
-                <button style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '12px', cursor: 'pointer' }}>B</button>
-                <button style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '12px', fontStyle: 'italic', cursor: 'pointer' }}>I</button>
-                <button style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '12px', textDecoration: 'underline', cursor: 'pointer' }}>U</button>
+                <button onClick={handleBold} style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>B</button>
+                <button onClick={handleItalic} style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '12px', fontStyle: 'italic', cursor: 'pointer' }}>I</button>
+                <button onClick={handleUnderline} style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '12px', textDecoration: 'underline', cursor: 'pointer' }}>U</button>
                 <div style={{ width: '1px', height: '20px', backgroundColor: 'var(--border-color)', margin: '0 4px' }} />
-                <button style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '12px', cursor: 'pointer' }}>H1</button>
-                <button style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '12px', cursor: 'pointer' }}>H2</button>
-                <button style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '12px', cursor: 'pointer' }}>H3</button>
+                <button onClick={handleH1} style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '12px', cursor: 'pointer' }}>H1</button>
+                <button onClick={handleH2} style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '12px', cursor: 'pointer' }}>H2</button>
+                <button onClick={handleH3} style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '12px', cursor: 'pointer' }}>H3</button>
                 <div style={{ width: '1px', height: '20px', backgroundColor: 'var(--border-color)', margin: '0 4px' }} />
-                <button style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '11px', cursor: 'pointer' }}>List</button>
-                <button style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '11px', cursor: 'pointer' }}>Link</button>
+                <button onClick={handleList} style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '11px', cursor: 'pointer' }}>List</button>
+                <button onClick={handleLink} style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '11px', cursor: 'pointer' }}>Link</button>
                 <div style={{ flex: 1 }} />
+                {isCheckingGrammar && <span style={{ fontSize: '11px', color: 'var(--accent)' }}>Checking grammar...</span>}
+                {grammarErrors.length > 0 && !isCheckingGrammar && (
+                  <span style={{ fontSize: '11px', color: '#f59e0b', marginRight: '8px' }}>{grammarErrors.length} issue{grammarErrors.length !== 1 ? 's' : ''}</span>
+                )}
                 <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{content.split(/\s+/).filter(w => w).length} words</span>
               </div>
               
@@ -1218,8 +1222,10 @@ The evolution toward edge computing extends cloud capabilities closer to end use
                 }}
               />
               <div
+                ref={editorRef}
                 contentEditable
                 suppressContentEditableWarning
+                onInput={handleEditorInput}
                 style={{
                   fontSize: '17px',
                   lineHeight: '1.9',
@@ -1244,7 +1250,7 @@ The evolution toward edge computing extends cloud capabilities closer to end use
                         .replace(/zero-trust/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Industry Standard">zero-trust</span>')
                         .replace(/observability/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Concept">observability</span>')
                         .split('\n\n').join('<br><br>')
-                    : content.split('\n\n').join('<br><br>')
+                    : highlightGrammarErrors(content, grammarErrors)
                 }}
               />
             </div>
