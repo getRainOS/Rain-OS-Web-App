@@ -2426,12 +2426,12 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
         <ChartCard title="Pillar Breakdown" period={periodLabel} className="animate-in-delay-3">
           <div style={{ height: '300px' }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={pillarData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" horizontal={true} vertical={false} />
-                <XAxis type="number" stroke="var(--text-muted)" fontSize={12} domain={[0, 100]} />
-                <YAxis type="category" dataKey="name" stroke="var(--text-muted)" fontSize={12} width={130} />
+              <BarChart data={pillarData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
+                <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={11} />
+                <YAxis stroke="var(--text-muted)" fontSize={12} domain={[0, 100]} />
                 <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="value" radius={[0, 4, 4, 0]} name="Score">
+                <Bar dataKey="value" radius={[4, 4, 0, 0]} name="Score">
                   {pillarData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
