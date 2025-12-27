@@ -1058,6 +1058,7 @@ The evolution toward edge computing extends cloud capabilities closer to end use
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <button
               onClick={() => setHeatmapEnabled(!heatmapEnabled)}
+              title="AI Heatmap highlights keywords and technical terms in your content, color-coded by pillar category (cyan for AI Readability, green for Digital Authority, purple for Conversion Readiness) to show how AI engines will interpret your content."
               style={{
                 display: 'flex',
                 alignItems: 'center',
