@@ -2639,7 +2639,7 @@ function PerformancePage({ selectedPeriod, setSelectedPeriod }) {
         ))}
       </div>
 
-      <ChartCard title="Post Trend Details" period={periodLabel} className="animate-in-delay-3" style={{ marginTop: '24px' }}>
+      <ChartCard title="Score Trend Details" period={periodLabel} className="animate-in-delay-3" style={{ marginTop: '24px' }}>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
             <thead>
@@ -2911,7 +2911,7 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
         </div>
       </ChartCard>
 
-      <ChartCard title="Post Trend Details" period={periodLabel} className="animate-in-delay-2" style={{ marginTop: '24px' }}>
+      <ChartCard title="Score Trend Details" period={periodLabel} className="animate-in-delay-2" style={{ marginTop: '24px' }}>
         {(() => {
           const filteredPosts = postsData.filter(post => {
             const postDate = new Date(post.publishDate)
