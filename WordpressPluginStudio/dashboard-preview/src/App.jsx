@@ -2763,7 +2763,7 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
             ].map((pillar, pillarIdx) => {
               const total = pillar.subcategories.reduce((sum, s) => sum + s.value, 0)
               return (
-                <div key={pillarIdx} style={{ padding: '12px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                <div key={pillarIdx} style={{ padding: '12px 0' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                     <span style={{ fontSize: '13px', fontWeight: 600, color: pillar.colors[0] }}>{pillar.name}</span>
                     <span style={{ fontSize: '14px', fontWeight: 700, color: pillar.colors[0] }}>{pillar.score}</span>
