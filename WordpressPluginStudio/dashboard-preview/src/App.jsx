@@ -2738,13 +2738,11 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {filteredPillarData.map((pillar, i) => {
-            const pillarKey = pillar.name === 'AI Readability' ? 'aiReadability' : pillar.name === 'Digital Authority' ? 'digitalAuthority' : 'conversionReadiness'
-            const pillarPosts = postsData.filter(post => {
-              const postDate = new Date(post.publishDate)
-              const cutoffDate = new Date()
-              cutoffDate.setDate(cutoffDate.getDate() - selectedPeriod)
-              return postDate >= cutoffDate
-            }).sort((a, b) => b.pillars[pillarKey] - a.pillars[pillarKey]).slice(0, 3)
+            const subcategories = pillar.name === 'AI Readability' 
+              ? [{ name: 'Semantic Clarity', value: 85 }, { name: 'Readability Score', value: 78 }, { name: 'Logical Structure', value: 82 }]
+              : pillar.name === 'Digital Authority'
+              ? [{ name: 'Entity Recognition', value: 75 }, { name: 'Citation Readiness', value: 88 }, { name: 'Schema Extraction', value: 72 }]
+              : [{ name: 'AEO Alignment', value: 80 }, { name: 'QA-Format', value: 76 }, { name: 'Metadata Audit', value: 84 }]
             
             return (
               <div key={i} className={`animate-in-delay-${i + 2}`} style={{
@@ -2769,19 +2767,15 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
                   {pillar.name === 'Conversion Readiness' && 'Assesses user engagement potential and action-driving effectiveness.'}
                 </p>
                 <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
-                  <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '12px', fontWeight: 500 }}>TOP POSTS BY {pillar.name.toUpperCase()}</div>
-                  {pillarPosts.length === 0 ? (
-                    <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>No posts in this period</div>
-                  ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                      {pillarPosts.map((post, j) => (
-                        <div key={post.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
-                          <span style={{ fontSize: '13px', color: 'var(--text-primary)' }}>{post.title}</span>
-                          <span style={{ fontSize: '13px', fontWeight: 600, color: pillar.color }}>{post.pillars[pillarKey]}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '12px', fontWeight: 500 }}>SUBCATEGORIES</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {subcategories.map((sub, j) => (
+                      <div key={j} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                        <span style={{ fontSize: '13px', color: 'var(--text-primary)' }}>{sub.name}</span>
+                        <span style={{ fontSize: '13px', fontWeight: 600, color: pillar.color }}>{sub.value}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             )
