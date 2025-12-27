@@ -190,3 +190,18 @@ Location: `WordpressPluginStudio/dashboard-preview/`
   - Subtitle: "WordPress-powered checks (no API required)"
   - 6 checklist items with pass/fail indicators
   - Gradient background to differentiate from AI-powered analysis sections
+
+### Dashboard Updates (December 2024)
+- **9-Ring Pillar Breakdown Chart**: Dashboard Pillar Breakdown now shows 9 concentric rings representing all subcategories:
+  - 3 cyan tones for AI Readability (Semantic Clarity, Readability Score, Logical Structure)
+  - 3 green tones for Digital Authority (Entity Recognition, Citation Readiness, Schema Extraction)
+  - 3 purple tones for Conversion Readiness (AEO Alignment, QA-Format, Metadata Audit)
+  - SVG-based with strokeDasharray for progress visualization
+  - Overall percentage displayed in center
+- **Post Performance Table**: Updated to show AEO-relevant metrics:
+  - Columns: #, Title, Overall Score, AI Readability, Digital Authority, Conversion
+  - Color-coded score badges (green/yellow/red for overall, pillar colors for individual scores)
+  - Removed Status, Indexing Allowed, Mobile Usability columns
+- **Upgrade Page Buttons**: Both Business and Pro buttons now use gradient styling with Cloud icon
+- **KPI Cards**: Non-clickable div elements with speedometer gauges for visual representation
+- **New Analysis Button**: Navigates to Content Analyzer page
