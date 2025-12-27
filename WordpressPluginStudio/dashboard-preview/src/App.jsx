@@ -524,9 +524,6 @@ function ContentAnalyzerPage({ setCurrentPage }) {
   }
 
   const editorRef = useRef(null)
-  const grammarTimeoutRef = useRef(null)
-  const [grammarErrors, setGrammarErrors] = useState([])
-  const [isCheckingGrammar, setIsCheckingGrammar] = useState(false)
 
   const execFormatCommand = useCallback((command, value = null) => {
     editorRef.current?.focus()
@@ -547,105 +544,13 @@ function ContentAnalyzerPage({ setCurrentPage }) {
     }
   }
 
-  const checkGrammar = useCallback(async (text) => {
-    if (!text || text.length < 10) {
-      setGrammarErrors([])
-      return
-    }
-
-    setIsCheckingGrammar(true)
-    try {
-      const response = await fetch('https://api.languagetool.org/v2/check', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          text: text,
-          language: 'en-US'
-        })
-      })
-      
-      if (response.ok) {
-        const data = await response.json()
-        setGrammarErrors(data.matches || [])
-      }
-    } catch (error) {
-      console.error('Grammar check failed:', error)
-    } finally {
-      setIsCheckingGrammar(false)
-    }
-  }, [])
-
-  const debouncedGrammarCheck = useCallback((text) => {
-    if (grammarTimeoutRef.current) {
-      clearTimeout(grammarTimeoutRef.current)
-    }
-    grammarTimeoutRef.current = setTimeout(() => {
-      checkGrammar(text)
-    }, 1500)
-  }, [checkGrammar])
-
   const [htmlContent, setHtmlContent] = useState('')
-  const [showGrammarHighlights, setShowGrammarHighlights] = useState(false)
 
   const handleEditorInput = (e) => {
     const html = e.target.innerHTML || ''
     const plainText = e.target.innerText || ''
     setHtmlContent(html)
     setContent(plainText)
-    debouncedGrammarCheck(plainText)
-  }
-
-  useEffect(() => {
-    debouncedGrammarCheck(content)
-    return () => {
-      if (grammarTimeoutRef.current) {
-        clearTimeout(grammarTimeoutRef.current)
-      }
-    }
-  }, [])
-
-  const highlightGrammarErrors = (html, plainText, errors) => {
-    const baseHtml = html || plainText.split('\n\n').join('<br><br>')
-    if (!errors.length) return baseHtml
-    
-    const sortedErrors = [...errors].sort((a, b) => b.offset - a.offset)
-    
-    const stripHtml = (htmlStr) => {
-      const temp = document.createElement('div')
-      temp.innerHTML = htmlStr
-      return temp.textContent || temp.innerText || ''
-    }
-    
-    const extractedText = stripHtml(baseHtml)
-    
-    let markedText = extractedText
-    for (const error of sortedErrors) {
-      const before = markedText.slice(0, error.offset)
-      const match = markedText.slice(error.offset, error.offset + error.length)
-      const after = markedText.slice(error.offset + error.length)
-      markedText = before + 
-        `<mark style="background: rgba(245, 158, 11, 0.4); padding: 2px 4px; border-radius: 3px; cursor: help;" title="${error.message.replace(/"/g, '&quot;')}">${match}</mark>` + 
-        after
-    }
-    
-    const tempDiv = document.createElement('div')
-    tempDiv.innerHTML = baseHtml
-    
-    const originalElements = []
-    const walker = document.createTreeWalker(tempDiv, NodeFilter.SHOW_ELEMENT, null, false)
-    let el
-    while (el = walker.nextNode()) {
-      if (['B', 'STRONG', 'I', 'EM', 'U', 'H1', 'H2', 'H3', 'A', 'UL', 'OL', 'LI'].includes(el.tagName)) {
-        originalElements.push({
-          tag: el.tagName.toLowerCase(),
-          text: el.textContent
-        })
-      }
-    }
-    
-    return markedText.split('\n\n').join('<br><br>')
   }
 
   const applyHeatmapToHtml = (html, plainText) => {
@@ -1246,25 +1151,6 @@ The evolution toward edge computing extends cloud capabilities closer to end use
                 <button onClick={handleList} style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '11px', cursor: 'pointer' }}>List</button>
                 <button onClick={handleLink} style={{ padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '11px', cursor: 'pointer' }}>Link</button>
                 <div style={{ flex: 1 }} />
-                {isCheckingGrammar && <span style={{ fontSize: '11px', color: 'var(--accent)' }}>Checking grammar...</span>}
-                {grammarErrors.length > 0 && !isCheckingGrammar && (
-                  <span 
-                    onClick={() => setShowGrammarHighlights(!showGrammarHighlights)}
-                    style={{ 
-                      fontSize: '11px', 
-                      color: showGrammarHighlights ? '#000' : '#f59e0b', 
-                      marginRight: '8px',
-                      cursor: 'pointer',
-                      padding: '4px 8px',
-                      borderRadius: '4px',
-                      backgroundColor: showGrammarHighlights ? '#f59e0b' : 'transparent',
-                      border: '1px solid #f59e0b',
-                      transition: 'all 0.2s ease',
-                    }}
-                  >
-                    {grammarErrors.length} issue{grammarErrors.length !== 1 ? 's' : ''}
-                  </span>
-                )}
                 <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{content.split(/\s+/).filter(w => w).length} words</span>
               </div>
               
@@ -1286,7 +1172,7 @@ The evolution toward edge computing extends cloud capabilities closer to end use
                   outline: 'none',
                 }}
               />
-              {(heatmapEnabled || showGrammarHighlights) ? (
+              {heatmapEnabled ? (
                 <div
                   style={{
                     fontSize: '17px',
@@ -1297,14 +1183,9 @@ The evolution toward edge computing extends cloud capabilities closer to end use
                     padding: '24px',
                     cursor: 'text',
                   }}
-                  onClick={() => {
-                    setHeatmapEnabled(false)
-                    setShowGrammarHighlights(false)
-                  }}
+                  onClick={() => setHeatmapEnabled(false)}
                   dangerouslySetInnerHTML={{
-                    __html: heatmapEnabled
-                      ? applyHeatmapToHtml(htmlContent, content)
-                      : highlightGrammarErrors(htmlContent, content, grammarErrors)
+                    __html: applyHeatmapToHtml(htmlContent, content)
                   }}
                 />
               ) : (
