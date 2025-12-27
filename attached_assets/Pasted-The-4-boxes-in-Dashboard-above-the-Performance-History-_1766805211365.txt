@@ -1,0 +1,84 @@
+The 4 boxes in Dashboard above the Performance History Line graph should not be clickable
+
+The numbers in the 4 boxes in the dashboard above the Performance History Line graph should be represented by a speedometer chart
+
+Make Sure the New Analysis link on the Dashboard page is actually functional and when clicked goes to the Content Analyzer page
+
+In Performance History in the AI Readability Dashboard, remove the three trend lines and make one average score line and display it as a gradiant lightly shaded area chart
+
+In the AI Readability Dashboard, change the Analysis Categories into vertical bar charts
+
+Make sure each of the sublinks pages match each of the respective changes that were made in the AI Readability Dashboard
+
+In the Documentation, make sure each and every part of the various analysis and data interfaces are explained clearly, including but not limited to the “Baseline” number in Performance History
+
+‘Content Analyzer’ should be its own main link listen below AI Readability Dashboard, and not underneath AI Readability Dashboard as a sublink
+
+Replace all mentions of ‘SEO’ on the site to ‘Answer Engine Optimization’  or ‘AEO’
+
+Remove API endpoint on the Settings page 
+
+Add a Feedback link under the support@getrainos.com link that connects to support@getrainos.com
+
+Make sure that the Analysis Preferences under Settings are functional
+
+ In the ‘Content Analyzer’ make sure the Save button actually saves content and the Publish button actually ensure content is published and make the search button actually search, and make the AI heatmap actually functional and do not make anything dummy and Make sure the bell in the Dashboard is fully functioning 
+
+Under Post Categories Sub category bars should be color coated to demonstrate which pillar they fall imder and text underneath should be larger and bright white
+
+In the ‘Content Analyzer’ screen and all other screens, change the dummy text from AEO to something about technology and nothing to do with AI and make the dummy text in the Content Analyzer screen longer form and have all of the other screens use that dummy text base as analysis
+
+In Content Analyzer in Metrics, there is only 7 of the 9 sub categories and there should 9
+
+The buttons underneath the history tabs should be full functional
+
+Make sure that Built - in Optimization Tools are actually part of the plugin as discussed in our plugin text
+
+The Upgrade Now text in the bottom rectangle is right justified and should be centered and replace the star placeholder with our logo symbol which is the third attachment
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Under Post Performance in Category Scores, ‘don’t change the style, the layout should look like the previous attachment but be relevant to what we are able to measure/analyze with nothing about status, indexing allow and mobile usability
+
+Change the circular chart In the ‘Content Analyzer’ page to stacked donut chart with AI Readability, Digital Authority and Conversion Readiness just like the attachment and make it 3D
+
+Place the Local Content Audit Quick checklist underneath the written content box in the improve your score page on the Content Analyze page and make the content box more robust
+
+Change the Get Started button under Business to look like the same button in Pro that reads and looks like ‘Upgrade to Pro’
+
+The Overall Score circular chart under pillar breakdown should be a bold representation of each of the 9 subcategories
+  
+
+ 
+ 
+

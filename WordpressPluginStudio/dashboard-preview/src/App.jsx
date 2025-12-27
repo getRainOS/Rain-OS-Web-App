@@ -1953,14 +1953,15 @@ function UpgradePage() {
             marginTop: '24px',
             padding: '14px',
             borderRadius: '8px',
-            backgroundColor: 'var(--bg-tertiary)',
-            border: '1px solid var(--border-color)',
-            color: 'var(--text-primary)',
+            background: 'linear-gradient(135deg, var(--accent), var(--purple))',
+            border: 'none',
+            color: '#000',
             fontSize: '14px',
             fontWeight: 600,
             cursor: 'pointer',
           }}>
-            Get Started
+            <Cloud size={16} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+            Upgrade to Business
           </button>
         </div>
         
@@ -2390,44 +2391,71 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
 
         <ChartCard title="Pillar Breakdown" period={periodLabel} className="animate-in-delay-3">
           <div style={{ height: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ position: 'relative', width: '180px', height: '180px' }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={pillarData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={55}
-                    outerRadius={80}
-                    paddingAngle={3}
-                    dataKey="value"
-                  >
-                    {pillarData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
+            {(() => {
+              const subcategoryRings = [
+                { name: 'Semantic Clarity', value: 85, color: '#22d3ee', pillar: 'AI Readability' },
+                { name: 'Readability Score', value: 78, color: '#67e8f9', pillar: 'AI Readability' },
+                { name: 'Logical Structure', value: 82, color: '#06b6d4', pillar: 'AI Readability' },
+                { name: 'Entity Recognition', value: 75, color: '#10b981', pillar: 'Digital Authority' },
+                { name: 'Citation Readiness', value: 88, color: '#34d399', pillar: 'Digital Authority' },
+                { name: 'Schema Extraction', value: 72, color: '#059669', pillar: 'Digital Authority' },
+                { name: 'AEO Alignment', value: 80, color: '#a855f7', pillar: 'Conversion' },
+                { name: 'QA-Format', value: 76, color: '#c084fc', pillar: 'Conversion' },
+                { name: 'Metadata Audit', value: 84, color: '#7c3aed', pillar: 'Conversion' },
+              ]
+              
+              return (
+                <>
+                  <div style={{ position: 'relative', width: '200px', height: '200px' }}>
+                    <svg width="200" height="200" viewBox="0 0 200 200">
+                      {subcategoryRings.map((ring, i) => {
+                        const cx = 100
+                        const cy = 100
+                        const baseRadius = 90 - (i * 9)
+                        const strokeWidth = 7
+                        const circumference = 2 * Math.PI * baseRadius
+                        const progress = (ring.value / 100) * circumference
+                        
+                        return (
+                          <g key={i}>
+                            <circle
+                              cx={cx}
+                              cy={cy}
+                              r={baseRadius}
+                              fill="none"
+                              stroke="rgba(255,255,255,0.08)"
+                              strokeWidth={strokeWidth}
+                            />
+                            <circle
+                              cx={cx}
+                              cy={cy}
+                              r={baseRadius}
+                              fill="none"
+                              stroke={ring.color}
+                              strokeWidth={strokeWidth}
+                              strokeLinecap="round"
+                              strokeDasharray={`${progress} ${circumference}`}
+                              transform={`rotate(-90 ${cx} ${cy})`}
+                              style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }}
+                            />
+                          </g>
+                        )
+                      })}
+                      <text x="100" y="95" textAnchor="middle" fill="#fff" fontSize="24" fontWeight="700">{overallScore}%</text>
+                      <text x="100" y="112" textAnchor="middle" fill="var(--text-muted)" fontSize="11">Overall</text>
+                    </svg>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginTop: '12px', width: '100%' }}>
+                    {subcategoryRings.map((ring, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '10px' }}>
+                        <div style={{ width: '8px', height: '8px', borderRadius: '2px', backgroundColor: ring.color, flexShrink: 0 }} />
+                        <span style={{ color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ring.name}</span>
+                      </div>
                     ))}
-                  </Pie>
-                  <Tooltip content={<CustomTooltip />} />
-                </PieChart>
-              </ResponsiveContainer>
-              <div style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                textAlign: 'center',
-              }}>
-                <div style={{ fontSize: '28px', fontWeight: 700 }}>{overallScore}</div>
-                <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Overall</div>
-              </div>
-            </div>
-            <div style={{ display: 'flex', gap: '16px', marginTop: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
-              {pillarData.map((p, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px' }}>
-                  <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: p.color }} />
-                  <span style={{ color: 'var(--text-secondary)' }}>{p.name}</span>
-                </div>
-              ))}
-            </div>
+                  </div>
+                </>
+              )
+            })()}
           </div>
         </ChartCard>
       </div>
@@ -2841,15 +2869,16 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
                   <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
                     <th style={{ textAlign: 'left', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>#</th>
                     <th style={{ textAlign: 'left', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>Title</th>
-                    <th style={{ textAlign: 'center', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>Status</th>
-                    <th style={{ textAlign: 'center', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>Indexing Allowed</th>
-                    <th style={{ textAlign: 'center', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>Mobile Usability</th>
+                    <th style={{ textAlign: 'center', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>Overall Score</th>
+                    <th style={{ textAlign: 'center', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>AI Readability</th>
+                    <th style={{ textAlign: 'center', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>Digital Authority</th>
+                    <th style={{ textAlign: 'center', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>Conversion</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredPosts.map((post, idx) => {
+                    const getScoreColor = (score) => score >= 80 ? '#10b981' : score >= 65 ? '#f59e0b' : '#ef4444'
                     const avgScore = Math.round((post.pillars.aiReadability + post.pillars.digitalAuthority + post.pillars.conversionReadiness) / 3)
-                    const statusColor = avgScore >= 80 ? '#10b981' : avgScore >= 65 ? '#f59e0b' : '#ef4444'
                     
                     return (
                       <tr key={post.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
@@ -2857,49 +2886,50 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
                         <td style={{ padding: '14px 8px' }}>
                           <div style={{ fontSize: '14px', fontWeight: 500, color: '#fff' }}>{post.title}</div>
                           <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>/{post.slug}/</div>
-                          <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>Google: Submitted and indexed</div>
                         </td>
                         <td style={{ padding: '14px 8px', textAlign: 'center' }}>
                           <span style={{ 
-                            display: 'inline-flex', 
-                            width: '24px', 
-                            height: '24px', 
-                            borderRadius: '50%', 
-                            backgroundColor: statusColor,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: '#fff',
-                            fontSize: '12px',
+                            display: 'inline-block',
+                            padding: '4px 12px',
+                            borderRadius: '12px',
+                            backgroundColor: `${getScoreColor(avgScore)}20`,
+                            color: getScoreColor(avgScore),
+                            fontSize: '13px',
                             fontWeight: 600,
-                          }}>✓</span>
+                          }}>{avgScore}</span>
                         </td>
                         <td style={{ padding: '14px 8px', textAlign: 'center' }}>
                           <span style={{ 
-                            display: 'inline-flex', 
-                            width: '24px', 
-                            height: '24px', 
-                            borderRadius: '50%', 
-                            backgroundColor: post.indexing ? '#10b981' : '#ef4444',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: '#fff',
-                            fontSize: '12px',
+                            display: 'inline-block',
+                            padding: '4px 12px',
+                            borderRadius: '12px',
+                            backgroundColor: '#22d3ee20',
+                            color: '#22d3ee',
+                            fontSize: '13px',
                             fontWeight: 600,
-                          }}>{post.indexing ? '✓' : '✕'}</span>
+                          }}>{post.pillars.aiReadability}</span>
                         </td>
                         <td style={{ padding: '14px 8px', textAlign: 'center' }}>
                           <span style={{ 
-                            display: 'inline-flex', 
-                            width: '24px', 
-                            height: '24px', 
-                            borderRadius: '50%', 
-                            backgroundColor: post.mobileUsability ? '#10b981' : '#ef4444',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: '#fff',
-                            fontSize: '12px',
+                            display: 'inline-block',
+                            padding: '4px 12px',
+                            borderRadius: '12px',
+                            backgroundColor: '#10b98120',
+                            color: '#10b981',
+                            fontSize: '13px',
                             fontWeight: 600,
-                          }}>{post.mobileUsability ? '✓' : '✕'}</span>
+                          }}>{post.pillars.digitalAuthority}</span>
+                        </td>
+                        <td style={{ padding: '14px 8px', textAlign: 'center' }}>
+                          <span style={{ 
+                            display: 'inline-block',
+                            padding: '4px 12px',
+                            borderRadius: '12px',
+                            backgroundColor: '#a855f720',
+                            color: '#a855f7',
+                            fontSize: '13px',
+                            fontWeight: 600,
+                          }}>{post.pillars.conversionReadiness}</span>
                         </td>
                       </tr>
                     )
