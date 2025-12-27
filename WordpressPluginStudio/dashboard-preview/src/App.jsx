@@ -1090,7 +1090,7 @@ The evolution toward edge computing extends cloud capabilities closer to end use
           display: 'flex',
           justifyContent: 'center',
         }}>
-          <div style={{ maxWidth: '768px', width: '100%' }}>
+          <div style={{ width: '100%' }}>
             <div style={{
               backgroundColor: 'var(--bg-secondary)',
               border: '1px solid var(--border-color)',
