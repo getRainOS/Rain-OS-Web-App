@@ -582,8 +582,13 @@ function ContentAnalyzerPage({ setCurrentPage }) {
     }, 1500)
   }, [checkGrammar])
 
+  const [htmlContent, setHtmlContent] = useState('')
+  const [showGrammarHighlights, setShowGrammarHighlights] = useState(false)
+
   const handleEditorInput = (e) => {
+    const html = e.target.innerHTML || ''
     const plainText = e.target.innerText || ''
+    setHtmlContent(html)
     setContent(plainText)
     debouncedGrammarCheck(plainText)
   }
@@ -1198,7 +1203,22 @@ The evolution toward edge computing extends cloud capabilities closer to end use
                 <div style={{ flex: 1 }} />
                 {isCheckingGrammar && <span style={{ fontSize: '11px', color: 'var(--accent)' }}>Checking grammar...</span>}
                 {grammarErrors.length > 0 && !isCheckingGrammar && (
-                  <span style={{ fontSize: '11px', color: '#f59e0b', marginRight: '8px' }}>{grammarErrors.length} issue{grammarErrors.length !== 1 ? 's' : ''}</span>
+                  <span 
+                    onClick={() => setShowGrammarHighlights(!showGrammarHighlights)}
+                    style={{ 
+                      fontSize: '11px', 
+                      color: showGrammarHighlights ? '#000' : '#f59e0b', 
+                      marginRight: '8px',
+                      cursor: 'pointer',
+                      padding: '4px 8px',
+                      borderRadius: '4px',
+                      backgroundColor: showGrammarHighlights ? '#f59e0b' : 'transparent',
+                      border: '1px solid #f59e0b',
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    {grammarErrors.length} issue{grammarErrors.length !== 1 ? 's' : ''}
+                  </span>
                 )}
                 <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{content.split(/\s+/).filter(w => w).length} words</span>
               </div>
@@ -1221,38 +1241,59 @@ The evolution toward edge computing extends cloud capabilities closer to end use
                   outline: 'none',
                 }}
               />
-              <div
-                ref={editorRef}
-                contentEditable
-                suppressContentEditableWarning
-                onInput={handleEditorInput}
-                style={{
-                  fontSize: '17px',
-                  lineHeight: '1.9',
-                  color: 'var(--text-secondary)',
-                  outline: 'none',
-                  minHeight: '350px',
-                  padding: '24px',
-                }}
-                dangerouslySetInnerHTML={{
-                  __html: heatmapEnabled
-                    ? content
-                        .replace(/cloud computing/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">cloud computing</span>')
-                        .replace(/infrastructure/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">infrastructure</span>')
-                        .replace(/distributed computing/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Term">distributed computing</span>')
-                        .replace(/load balancing/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Concept">load balancing</span>')
-                        .replace(/microservices/gi, '<span style="background: rgba(168, 85, 247, 0.3); padding: 2px 4px; border-radius: 3px;" title="Conversion Readiness - Action Term">microservices</span>')
-                        .replace(/database/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Entity">database</span>')
-                        .replace(/security/gi, '<span style="background: rgba(245, 158, 11, 0.3); padding: 2px 4px; border-radius: 3px;" title="Warning - Needs Citation">security</span>')
-                        .replace(/scalability/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">scalability</span>')
-                        .replace(/performance optimization/gi, '<span style="background: rgba(168, 85, 247, 0.3); padding: 2px 4px; border-radius: 3px;" title="Conversion Readiness - CTA">performance optimization</span>')
-                        .replace(/container orchestration/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Term">container orchestration</span>')
-                        .replace(/zero-trust/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Industry Standard">zero-trust</span>')
-                        .replace(/observability/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Concept">observability</span>')
-                        .split('\n\n').join('<br><br>')
-                    : highlightGrammarErrors(content, grammarErrors)
-                }}
-              />
+              {(heatmapEnabled || showGrammarHighlights) ? (
+                <div
+                  style={{
+                    fontSize: '17px',
+                    lineHeight: '1.9',
+                    color: 'var(--text-secondary)',
+                    outline: 'none',
+                    minHeight: '350px',
+                    padding: '24px',
+                    cursor: 'text',
+                  }}
+                  onClick={() => {
+                    setHeatmapEnabled(false)
+                    setShowGrammarHighlights(false)
+                  }}
+                  dangerouslySetInnerHTML={{
+                    __html: heatmapEnabled
+                      ? content
+                          .replace(/cloud computing/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">cloud computing</span>')
+                          .replace(/infrastructure/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">infrastructure</span>')
+                          .replace(/distributed computing/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Term">distributed computing</span>')
+                          .replace(/load balancing/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Concept">load balancing</span>')
+                          .replace(/microservices/gi, '<span style="background: rgba(168, 85, 247, 0.3); padding: 2px 4px; border-radius: 3px;" title="Conversion Readiness - Action Term">microservices</span>')
+                          .replace(/database/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Entity">database</span>')
+                          .replace(/security/gi, '<span style="background: rgba(245, 158, 11, 0.3); padding: 2px 4px; border-radius: 3px;" title="Warning - Needs Citation">security</span>')
+                          .replace(/scalability/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">scalability</span>')
+                          .replace(/performance optimization/gi, '<span style="background: rgba(168, 85, 247, 0.3); padding: 2px 4px; border-radius: 3px;" title="Conversion Readiness - CTA">performance optimization</span>')
+                          .replace(/container orchestration/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Term">container orchestration</span>')
+                          .replace(/zero-trust/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Industry Standard">zero-trust</span>')
+                          .replace(/observability/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Concept">observability</span>')
+                          .split('\n\n').join('<br><br>')
+                      : highlightGrammarErrors(content, grammarErrors)
+                  }}
+                />
+              ) : (
+                <div
+                  ref={editorRef}
+                  contentEditable
+                  suppressContentEditableWarning
+                  onInput={handleEditorInput}
+                  style={{
+                    fontSize: '17px',
+                    lineHeight: '1.9',
+                    color: 'var(--text-secondary)',
+                    outline: 'none',
+                    minHeight: '350px',
+                    padding: '24px',
+                  }}
+                  dangerouslySetInnerHTML={{
+                    __html: htmlContent || content.split('\n\n').join('<br><br>')
+                  }}
+                />
+              )}
             </div>
             
             <div style={{
