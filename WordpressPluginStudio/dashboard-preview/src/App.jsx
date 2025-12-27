@@ -2297,7 +2297,7 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
                 border: '1px solid var(--border-color)',
                 borderRadius: '12px',
                 boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
-                zIndex: 100,
+                zIndex: 9999,
                 overflow: 'hidden',
               }}>
                 <div style={{ padding: '16px', borderBottom: '1px solid var(--border-color)' }}>
