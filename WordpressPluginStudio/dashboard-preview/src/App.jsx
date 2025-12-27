@@ -338,6 +338,14 @@ function SpeedometerChart({ value, maxValue, color }) {
 }
 
 function KPICard({ icon: Icon, title, value, subtitle, color, delay, gaugeValue, gaugeMax }) {
+  const numericValue = typeof value === 'string' ? parseInt(value) : value
+  const getScoreIndicatorColor = (score) => {
+    if (score >= 80) return '#10b981'
+    if (score >= 65) return '#f59e0b'
+    return '#ef4444'
+  }
+  const indicatorColor = getScoreIndicatorColor(numericValue)
+  
   return (
     <div
       className={`animate-in-delay-${delay}`}
@@ -362,7 +370,16 @@ function KPICard({ icon: Icon, title, value, subtitle, color, delay, gaugeValue,
         </div>
         <SpeedometerChart value={gaugeValue} maxValue={gaugeMax} color={color} />
       </div>
-      <div style={{ fontSize: '32px', fontWeight: 700, marginBottom: '4px' }}>{value}</div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
+        <span style={{
+          width: '10px',
+          height: '10px',
+          borderRadius: '50%',
+          backgroundColor: indicatorColor,
+          boxShadow: `0 0 8px ${indicatorColor}`,
+        }} />
+        <span style={{ fontSize: '32px', fontWeight: 700 }}>{value}</span>
+      </div>
       <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '8px' }}>{title}</div>
       {subtitle && (
         <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{subtitle}</div>
