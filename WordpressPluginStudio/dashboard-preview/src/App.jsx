@@ -2860,7 +2860,7 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
                             <span style={{ 
                               fontSize: '13px',
                               fontWeight: 600,
-                              color: getScoreColor(avgScore),
+                              color: '#fff',
                             }}>{avgScore}</span>
                           </div>
                         </td>
@@ -2876,7 +2876,7 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
                             <span style={{ 
                               fontSize: '13px',
                               fontWeight: 600,
-                              color: getScoreColor(post.pillars.aiReadability),
+                              color: '#fff',
                             }}>{post.pillars.aiReadability}</span>
                           </div>
                         </td>
@@ -2892,7 +2892,7 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
                             <span style={{ 
                               fontSize: '13px',
                               fontWeight: 600,
-                              color: getScoreColor(post.pillars.digitalAuthority),
+                              color: '#fff',
                             }}>{post.pillars.digitalAuthority}</span>
                           </div>
                         </td>
@@ -2908,7 +2908,7 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
                             <span style={{ 
                               fontSize: '13px',
                               fontWeight: 600,
-                              color: getScoreColor(post.pillars.conversionReadiness),
+                              color: '#fff',
                             }}>{post.pillars.conversionReadiness}</span>
                           </div>
                         </td>
