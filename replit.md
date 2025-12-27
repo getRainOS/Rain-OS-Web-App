@@ -51,10 +51,23 @@ The plugin follows WordPress plugin architecture standards, utilizing a modular,
 
 ### Content Analyzer Updates (December 2024)
 - **Enhanced Content Editor**: Robust editor with:
-  - Toolbar with formatting buttons (B, I, U, H1, H2, H3, List, Link)
+  - Toolbar with formatting buttons (B, I, U, H1, H2, H3, List, Link) - all functional
   - Word count display
   - Bordered container with rounded corners and shadow
   - Title input with separator line
+  - Full-width layout with permanently visible analysis sidebar
+- **Functional Formatting Toolbar**: 
+  - Bold, Italic, Underline via document.execCommand
+  - Heading levels (H1, H2, H3) for semantic structure
+  - Unordered list creation
+  - Link insertion with URL prompt
+  - HTML content preserved when saving/publishing
+- **Grammar Detection**: 
+  - Integrated LanguageTool API for grammar checking
+  - Debounced API calls (1.5 second delay after typing stops)
+  - Grammar errors highlighted in yellow with tooltips showing error messages
+  - Issue count displayed in toolbar, click to toggle grammar highlight view
+  - Two-mode contract: edit mode preserves HTML formatting, grammar view shows plain text with highlights
 - **Local Content Audit Repositioned**: Moved from sidebar to below content editor
   - 3-column grid layout for checklist items
   - Larger checkboxes with border indicators for pass/fail
