@@ -1996,10 +1996,23 @@ function UpgradePage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px', maxWidth: '900px', margin: '0 auto' }}>
         <div className="animate-in" style={{
           backgroundColor: 'var(--bg-secondary)',
-          border: '1px solid var(--border-color)',
+          border: '2px solid var(--accent)',
           borderRadius: '16px',
           padding: '32px',
+          position: 'relative',
         }}>
+          <span style={{
+            position: 'absolute',
+            top: '-12px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: 'linear-gradient(135deg, var(--accent), var(--purple))',
+            color: '#000',
+            padding: '4px 12px',
+            borderRadius: '12px',
+            fontSize: '12px',
+            fontWeight: 600,
+          }}>RECOMMENDED</span>
           <h3 style={{ fontSize: '20px', marginBottom: '8px', color: 'var(--accent)' }}>Business</h3>
           <div style={{ fontSize: '36px', fontWeight: 700, marginBottom: '8px' }}>$29.99<span style={{ fontSize: '16px', color: 'var(--text-secondary)' }}>/month</span></div>
           <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '24px', lineHeight: 1.5 }}>
@@ -2039,23 +2052,10 @@ function UpgradePage() {
         
         <div className="animate-in" style={{
           backgroundColor: 'var(--bg-secondary)',
-          border: '2px solid var(--accent)',
+          border: '1px solid var(--border-color)',
           borderRadius: '16px',
           padding: '32px',
-          position: 'relative',
         }}>
-          <span style={{
-            position: 'absolute',
-            top: '-12px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            background: 'linear-gradient(135deg, var(--accent), var(--purple))',
-            color: '#000',
-            padding: '4px 12px',
-            borderRadius: '12px',
-            fontSize: '12px',
-            fontWeight: 600,
-          }}>RECOMMENDED</span>
           <h3 style={{ fontSize: '20px', marginBottom: '8px', color: 'var(--accent)' }}>Pro</h3>
           <div style={{ fontSize: '36px', fontWeight: 700, marginBottom: '8px' }}>$99.99<span style={{ fontSize: '16px', color: 'var(--text-secondary)' }}>/month</span></div>
           <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '24px', lineHeight: 1.5 }}>
