@@ -2760,31 +2760,38 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
                 { name: 'QA-Format', value: 76 },
                 { name: 'Metadata Audit', value: 84 }
               ]}
-            ].map((pillar, pillarIdx) => (
-              <div key={pillarIdx} style={{ padding: '12px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                  <span style={{ fontSize: '13px', fontWeight: 600, color: pillar.colors[0] }}>{pillar.name}</span>
-                  <span style={{ fontSize: '14px', fontWeight: 700, color: pillar.colors[0] }}>{pillar.score}</span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  {pillar.subcategories.map((sub, subIdx) => (
-                    <div key={subIdx} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ fontSize: '10px', color: 'var(--text-muted)', width: '90px', flexShrink: 0 }}>{sub.name}</span>
-                      <div style={{ flex: 1, height: '8px', backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: '4px', overflow: 'hidden' }}>
-                        <div style={{ 
-                          height: '100%', 
-                          width: `${sub.value}%`, 
-                          backgroundColor: pillar.colors[subIdx], 
-                          borderRadius: '4px',
+            ].map((pillar, pillarIdx) => {
+              const total = pillar.subcategories.reduce((sum, s) => sum + s.value, 0)
+              return (
+                <div key={pillarIdx} style={{ padding: '12px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                    <span style={{ fontSize: '13px', fontWeight: 600, color: pillar.colors[0] }}>{pillar.name}</span>
+                    <span style={{ fontSize: '14px', fontWeight: 700, color: pillar.colors[0] }}>{pillar.score}</span>
+                  </div>
+                  <div style={{ display: 'flex', height: '14px', borderRadius: '4px', overflow: 'hidden' }}>
+                    {pillar.subcategories.map((sub, subIdx) => (
+                      <div 
+                        key={subIdx} 
+                        style={{ 
+                          width: `${(sub.value / total) * 100}%`, 
+                          backgroundColor: pillar.colors[subIdx],
                           transition: 'width 0.5s ease'
-                        }} />
+                        }} 
+                        title={`${sub.name}: ${sub.value}`}
+                      />
+                    ))}
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px', gap: '4px' }}>
+                    {pillar.subcategories.map((sub, subIdx) => (
+                      <div key={subIdx} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '9px' }}>
+                        <div style={{ width: '8px', height: '8px', borderRadius: '2px', backgroundColor: pillar.colors[subIdx] }} />
+                        <span style={{ color: 'var(--text-muted)' }}>{sub.name}</span>
                       </div>
-                      <span style={{ fontSize: '10px', fontWeight: 600, color: pillar.colors[subIdx], width: '24px', textAlign: 'right' }}>{sub.value}</span>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </ChartCard>
 
