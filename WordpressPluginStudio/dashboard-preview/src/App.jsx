@@ -499,16 +499,20 @@ function ContentAnalyzerPage({ setCurrentPage }) {
   
   const handleSave = () => {
     setSaved(true)
+    const currentHtml = htmlContent || editorRef.current?.innerHTML || content.split('\n\n').join('<br><br>')
     localStorage.setItem('saved_title', title)
-    localStorage.setItem('saved_content', content)
+    localStorage.setItem('saved_content', currentHtml)
+    localStorage.setItem('saved_plain_text', content)
     setTimeout(() => setSaved(false), 2000)
   }
   
   const handlePublish = () => {
     setPublished(true)
     setPostStatus('PUBLISHED')
+    const currentHtml = htmlContent || editorRef.current?.innerHTML || content.split('\n\n').join('<br><br>')
     localStorage.setItem('published_title', title)
-    localStorage.setItem('published_content', content)
+    localStorage.setItem('published_content', currentHtml)
+    localStorage.setItem('published_plain_text', content)
     localStorage.setItem('published_date', new Date().toISOString())
     setTimeout(() => setPublished(false), 2000)
   }
@@ -602,22 +606,63 @@ function ContentAnalyzerPage({ setCurrentPage }) {
     }
   }, [])
 
-  const highlightGrammarErrors = (text, errors) => {
-    if (!errors.length) return text.split('\n\n').join('<br><br>')
+  const highlightGrammarErrors = (html, plainText, errors) => {
+    const baseHtml = html || plainText.split('\n\n').join('<br><br>')
+    if (!errors.length) return baseHtml
     
-    let result = text
     const sortedErrors = [...errors].sort((a, b) => b.offset - a.offset)
     
+    const stripHtml = (htmlStr) => {
+      const temp = document.createElement('div')
+      temp.innerHTML = htmlStr
+      return temp.textContent || temp.innerText || ''
+    }
+    
+    const extractedText = stripHtml(baseHtml)
+    
+    let markedText = extractedText
     for (const error of sortedErrors) {
-      const before = result.slice(0, error.offset)
-      const match = result.slice(error.offset, error.offset + error.length)
-      const after = result.slice(error.offset + error.length)
-      result = before + 
-        `<mark style="background: rgba(245, 158, 11, 0.4); padding: 2px 4px; border-radius: 3px; cursor: help;" title="${error.message}">${match}</mark>` + 
+      const before = markedText.slice(0, error.offset)
+      const match = markedText.slice(error.offset, error.offset + error.length)
+      const after = markedText.slice(error.offset + error.length)
+      markedText = before + 
+        `<mark style="background: rgba(245, 158, 11, 0.4); padding: 2px 4px; border-radius: 3px; cursor: help;" title="${error.message.replace(/"/g, '&quot;')}">${match}</mark>` + 
         after
     }
     
-    return result.split('\n\n').join('<br><br>')
+    const tempDiv = document.createElement('div')
+    tempDiv.innerHTML = baseHtml
+    
+    const originalElements = []
+    const walker = document.createTreeWalker(tempDiv, NodeFilter.SHOW_ELEMENT, null, false)
+    let el
+    while (el = walker.nextNode()) {
+      if (['B', 'STRONG', 'I', 'EM', 'U', 'H1', 'H2', 'H3', 'A', 'UL', 'OL', 'LI'].includes(el.tagName)) {
+        originalElements.push({
+          tag: el.tagName.toLowerCase(),
+          text: el.textContent
+        })
+      }
+    }
+    
+    return markedText.split('\n\n').join('<br><br>')
+  }
+
+  const applyHeatmapToHtml = (html, plainText) => {
+    const baseContent = html || plainText.split('\n\n').join('<br><br>')
+    return baseContent
+      .replace(/cloud computing/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">cloud computing</span>')
+      .replace(/infrastructure/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">infrastructure</span>')
+      .replace(/distributed computing/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Term">distributed computing</span>')
+      .replace(/load balancing/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Concept">load balancing</span>')
+      .replace(/microservices/gi, '<span style="background: rgba(168, 85, 247, 0.3); padding: 2px 4px; border-radius: 3px;" title="Conversion Readiness - Action Term">microservices</span>')
+      .replace(/database/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Entity">database</span>')
+      .replace(/security/gi, '<span style="background: rgba(245, 158, 11, 0.3); padding: 2px 4px; border-radius: 3px;" title="Warning - Needs Citation">security</span>')
+      .replace(/scalability/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">scalability</span>')
+      .replace(/performance optimization/gi, '<span style="background: rgba(168, 85, 247, 0.3); padding: 2px 4px; border-radius: 3px;" title="Conversion Readiness - CTA">performance optimization</span>')
+      .replace(/container orchestration/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Term">container orchestration</span>')
+      .replace(/zero-trust/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Industry Standard">zero-trust</span>')
+      .replace(/observability/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Concept">observability</span>')
   }
 
   const getPillarColor = (pillar) => {
@@ -1258,21 +1303,8 @@ The evolution toward edge computing extends cloud capabilities closer to end use
                   }}
                   dangerouslySetInnerHTML={{
                     __html: heatmapEnabled
-                      ? content
-                          .replace(/cloud computing/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">cloud computing</span>')
-                          .replace(/infrastructure/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">infrastructure</span>')
-                          .replace(/distributed computing/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Term">distributed computing</span>')
-                          .replace(/load balancing/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Concept">load balancing</span>')
-                          .replace(/microservices/gi, '<span style="background: rgba(168, 85, 247, 0.3); padding: 2px 4px; border-radius: 3px;" title="Conversion Readiness - Action Term">microservices</span>')
-                          .replace(/database/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Entity">database</span>')
-                          .replace(/security/gi, '<span style="background: rgba(245, 158, 11, 0.3); padding: 2px 4px; border-radius: 3px;" title="Warning - Needs Citation">security</span>')
-                          .replace(/scalability/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Entity">scalability</span>')
-                          .replace(/performance optimization/gi, '<span style="background: rgba(168, 85, 247, 0.3); padding: 2px 4px; border-radius: 3px;" title="Conversion Readiness - CTA">performance optimization</span>')
-                          .replace(/container orchestration/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Technical Term">container orchestration</span>')
-                          .replace(/zero-trust/gi, '<span style="background: rgba(16, 185, 129, 0.3); padding: 2px 4px; border-radius: 3px;" title="Digital Authority - Industry Standard">zero-trust</span>')
-                          .replace(/observability/gi, '<span style="background: rgba(34, 211, 238, 0.3); padding: 2px 4px; border-radius: 3px;" title="AI Readability - Key Concept">observability</span>')
-                          .split('\n\n').join('<br><br>')
-                      : highlightGrammarErrors(content, grammarErrors)
+                      ? applyHeatmapToHtml(htmlContent, content)
+                      : highlightGrammarErrors(htmlContent, content, grammarErrors)
                   }}
                 />
               ) : (
