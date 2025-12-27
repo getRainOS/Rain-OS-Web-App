@@ -482,7 +482,7 @@ const mockAnalysis = {
 }
 
 function ContentAnalyzerPage({ setCurrentPage }) {
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('overview')
   const [heatmapEnabled, setHeatmapEnabled] = useState(false)
   const [saved, setSaved] = useState(false)
