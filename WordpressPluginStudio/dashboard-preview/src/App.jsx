@@ -2424,59 +2424,20 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
         </ChartCard>
 
         <ChartCard title="Pillar Breakdown" period={periodLabel} className="animate-in-delay-3">
-          <div style={{ height: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ position: 'relative', width: '200px', height: '200px' }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <defs>
-                    <linearGradient id="grad-cyan-3d" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#67e8f9" />
-                      <stop offset="50%" stopColor="#22d3ee" />
-                      <stop offset="100%" stopColor="#0891b2" />
-                    </linearGradient>
-                    <linearGradient id="grad-green-3d" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#34d399" />
-                      <stop offset="50%" stopColor="#10b981" />
-                      <stop offset="100%" stopColor="#047857" />
-                    </linearGradient>
-                    <linearGradient id="grad-purple-3d" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#c084fc" />
-                      <stop offset="50%" stopColor="#a855f7" />
-                      <stop offset="100%" stopColor="#7c3aed" />
-                    </linearGradient>
-                  </defs>
-                  <Pie
-                    data={pillarData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={55}
-                    outerRadius={85}
-                    paddingAngle={3}
-                    dataKey="value"
-                    stroke="rgba(255,255,255,0.1)"
-                    strokeWidth={1}
-                    style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.4)) drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }}
-                  >
-                    <Cell fill="url(#grad-cyan-3d)" />
-                    <Cell fill="url(#grad-green-3d)" />
-                    <Cell fill="url(#grad-purple-3d)" />
-                  </Pie>
-                  <Tooltip content={<CustomTooltip />} />
-                </PieChart>
-              </ResponsiveContainer>
-              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
-                <div style={{ fontSize: '32px', fontWeight: 700 }}>{overallScore}</div>
-                <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Overall</div>
-              </div>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '12px' }}>
-              {pillarData.map((pillar, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px' }}>
-                  <div style={{ width: '10px', height: '10px', borderRadius: '3px', backgroundColor: pillar.color }} />
-                  <span style={{ color: 'var(--text-secondary)' }}>{pillar.name}</span>
-                </div>
-              ))}
-            </div>
+          <div style={{ height: '300px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={pillarData} layout="vertical">
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" horizontal={true} vertical={false} />
+                <XAxis type="number" stroke="var(--text-muted)" fontSize={12} domain={[0, 100]} />
+                <YAxis type="category" dataKey="name" stroke="var(--text-muted)" fontSize={12} width={130} />
+                <Tooltip content={<CustomTooltip />} />
+                <Bar dataKey="value" radius={[0, 4, 4, 0]} name="Score">
+                  {pillarData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </ChartCard>
       </div>
