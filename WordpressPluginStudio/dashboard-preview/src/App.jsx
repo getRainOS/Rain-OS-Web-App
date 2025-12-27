@@ -2158,6 +2158,8 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
         alignItems: 'center',
         justifyContent: 'space-between',
         marginBottom: '32px',
+        position: 'relative',
+        zIndex: 1000,
       }}>
         <div>
           <h1 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '4px' }}>Dashboard</h1>
