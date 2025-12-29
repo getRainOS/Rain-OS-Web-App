@@ -175,3 +175,11 @@ Focus: Is your content structured to provide answers?
 - Three-pillar analysis hierarchy with 9 subcategories
 - Billion-dollar SaaS aesthetic with dark mode
 - Glassmorphism effects and neon accents
+
+## Recent Updates (December 2024)
+
+### URL and Email Standardization
+- All upgrade/login URLs standardized to `https://app.getrainos.com/#/login`
+- All support emails standardized to `support@getrainos.com`
+- API base URL: `https://api.getrainos.com/v1`
+- Files updated: settings.php, upgrade.php, documentation.php, help.php, class-rain-os-settings.php, class-rain-os-api-client.php, readme.txt, App.jsx
