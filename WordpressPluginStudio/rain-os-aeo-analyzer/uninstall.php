@@ -1,8 +1,9 @@
 <?php
 /**
- * Rain OS AEO Analyzer Uninstall
+ * Uninstall Rain OS AEO Analyzer
  *
- * Removes all plugin data when uninstalled.
+ * This file runs when the plugin is uninstalled (deleted).
+ * It removes all plugin data from the database.
  *
  * @package Rain_OS_AEO_Analyzer
  */
