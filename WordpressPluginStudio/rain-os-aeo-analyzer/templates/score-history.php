@@ -3,8 +3,22 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-$admin = new Rain_OS_Admin( rain_os_aeo()->get_api_client() );
-$analysis_data = $admin->get_analysis_data( 30 );
+global $wpdb;
+$table_name = $wpdb->prefix . 'rain_os_analysis_history';
+$period = isset( $_GET['period'] ) ? absint( $_GET['period'] ) : 30;
+$date_limit = gmdate( 'Y-m-d H:i:s', strtotime( "-{$period} days" ) );
+
+$analysis_data = $wpdb->get_results(
+    $wpdb->prepare(
+        "SELECT h.*, p.post_title, p.post_name 
+        FROM {$table_name} h 
+        LEFT JOIN {$wpdb->posts} p ON h.post_id = p.ID 
+        WHERE h.analyzed_at >= %s 
+        ORDER BY h.analyzed_at DESC",
+        $date_limit
+    ),
+    ARRAY_A
+);
 
 function rain_os_score_class( $score ) {
     if ( $score >= 80 ) {
@@ -26,9 +40,9 @@ function rain_os_score_class( $score ) {
             <div class="rain-os-header-actions">
                 <div class="rain-os-period-select">
                     <select id="rain-os-period">
-                        <option value="7"><?php esc_html_e( 'Last 7 Days', 'rain-os-aeo-analyzer' ); ?></option>
-                        <option value="30" selected><?php esc_html_e( 'Last 30 Days', 'rain-os-aeo-analyzer' ); ?></option>
-                        <option value="90"><?php esc_html_e( 'Last 90 Days', 'rain-os-aeo-analyzer' ); ?></option>
+                        <option value="7" <?php selected( $period, 7 ); ?>><?php esc_html_e( 'Last 7 Days', 'rain-os-aeo-analyzer' ); ?></option>
+                        <option value="30" <?php selected( $period, 30 ); ?>><?php esc_html_e( 'Last 30 Days', 'rain-os-aeo-analyzer' ); ?></option>
+                        <option value="90" <?php selected( $period, 90 ); ?>><?php esc_html_e( 'Last 90 Days', 'rain-os-aeo-analyzer' ); ?></option>
                     </select>
                 </div>
             </div>
@@ -44,7 +58,12 @@ function rain_os_score_class( $score ) {
         <div class="rain-os-chart-card">
             <div class="rain-os-chart-header">
                 <h3><?php esc_html_e( 'Score Details', 'rain-os-aeo-analyzer' ); ?></h3>
-                <span class="rain-os-chart-period"><?php esc_html_e( 'Last 30 Days', 'rain-os-aeo-analyzer' ); ?></span>
+                <span class="rain-os-chart-period"><?php 
+                    printf( 
+                        esc_html__( 'Last %d Days', 'rain-os-aeo-analyzer' ), 
+                        $period 
+                    ); 
+                ?></span>
             </div>
             <div class="rain-os-chart-body">
                 <?php if ( ! empty( $analysis_data ) ) : ?>
@@ -64,28 +83,28 @@ function rain_os_score_class( $score ) {
                         $count = 0;
                         foreach ( $analysis_data as $item ) : 
                             $count++;
-                            $avg_score = round( ( $item['ai_readability'] + $item['digital_authority'] + $item['conversion_readiness'] ) / 3 );
+                            $avg_score = round( ( intval( $item['ai_readability'] ) + intval( $item['digital_authority'] ) + intval( $item['conversion_readiness'] ) ) / 3 );
                         ?>
                         <tr>
                             <td class="rain-os-row-num"><?php echo esc_html( $count ); ?></td>
                             <td>
-                                <div class="rain-os-post-title"><?php echo esc_html( $item['post_title'] ); ?></div>
-                                <div class="rain-os-post-slug">/<?php echo esc_html( $item['post_name'] ); ?>/</div>
+                                <div class="rain-os-post-title"><?php echo esc_html( $item['post_title'] ? $item['post_title'] : __( 'Untitled', 'rain-os-aeo-analyzer' ) ); ?></div>
+                                <div class="rain-os-post-slug">/<?php echo esc_html( $item['post_name'] ? $item['post_name'] : '' ); ?>/</div>
                             </td>
                             <td class="rain-os-score-cell">
                                 <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_score_class( $avg_score ) ); ?>"></span>
                                 <span class="rain-os-score-value"><?php echo esc_html( $avg_score ); ?></span>
                             </td>
                             <td class="rain-os-score-cell">
-                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_score_class( $item['ai_readability'] ) ); ?>"></span>
+                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_score_class( intval( $item['ai_readability'] ) ) ); ?>"></span>
                                 <span class="rain-os-score-value"><?php echo esc_html( $item['ai_readability'] ); ?></span>
                             </td>
                             <td class="rain-os-score-cell">
-                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_score_class( $item['digital_authority'] ) ); ?>"></span>
+                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_score_class( intval( $item['digital_authority'] ) ) ); ?>"></span>
                                 <span class="rain-os-score-value"><?php echo esc_html( $item['digital_authority'] ); ?></span>
                             </td>
                             <td class="rain-os-score-cell">
-                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_score_class( $item['conversion_readiness'] ) ); ?>"></span>
+                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_score_class( intval( $item['conversion_readiness'] ) ) ); ?>"></span>
                                 <span class="rain-os-score-value"><?php echo esc_html( $item['conversion_readiness'] ); ?></span>
                             </td>
                         </tr>

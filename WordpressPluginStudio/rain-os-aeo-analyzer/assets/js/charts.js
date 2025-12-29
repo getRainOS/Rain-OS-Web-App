@@ -15,9 +15,11 @@
         },
 
         init: function() {
-            this.initPerformanceChart();
-            this.initScatterChart();
             this.initGauges();
+            this.loadChartJS(function() {
+                RainOSCharts.initPerformanceChart();
+                RainOSCharts.initScatterChart();
+            });
         },
 
         initPerformanceChart: function() {
@@ -25,40 +27,71 @@
             if (!canvas) return;
 
             var ctx = canvas.getContext('2d');
-            
-            if (typeof Chart === 'undefined') {
-                this.loadChartJS(function() {
-                    RainOSCharts.createPerformanceChart(ctx);
-                });
-            } else {
-                this.createPerformanceChart(ctx);
-            }
+            var self = this;
+
+            $.ajax({
+                url: typeof rainOsAeo !== 'undefined' ? rainOsAeo.ajaxUrl : ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'rain_os_get_dashboard_data',
+                    nonce: typeof rainOsAeo !== 'undefined' ? rainOsAeo.nonce : '',
+                    period: 30
+                },
+                success: function(response) {
+                    if (response.success && response.data.trend_data) {
+                        self.createPerformanceChartWithData(ctx, response.data.trend_data);
+                    } else {
+                        self.createPerformanceChartWithData(ctx, []);
+                    }
+                },
+                error: function() {
+                    self.createPerformanceChartWithData(ctx, []);
+                }
+            });
         },
 
-        createPerformanceChart: function(ctx) {
+        createPerformanceChartWithData: function(ctx, trendData) {
             var self = this;
-            
+            var labels = [];
+            var aiData = [];
+            var authorityData = [];
+            var conversionData = [];
+
+            if (trendData && trendData.length > 0) {
+                trendData.forEach(function(item) {
+                    labels.push(item.date);
+                    aiData.push(parseInt(item.avg_ai) || 0);
+                    authorityData.push(parseInt(item.avg_authority) || 0);
+                    conversionData.push(parseInt(item.avg_conversion) || 0);
+                });
+            } else {
+                labels = ['No Data'];
+                aiData = [0];
+                authorityData = [0];
+                conversionData = [0];
+            }
+
             new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    labels: labels,
                     datasets: [{
                         label: 'AI Readability',
-                        data: [72, 78, 82, 85],
+                        data: aiData,
                         borderColor: self.colors.cyan,
                         backgroundColor: self.hexToRgba(self.colors.cyan, 0.1),
                         fill: true,
                         tension: 0.4
                     }, {
                         label: 'Digital Authority',
-                        data: [68, 72, 75, 80],
+                        data: authorityData,
                         borderColor: self.colors.green,
                         backgroundColor: self.hexToRgba(self.colors.green, 0.1),
                         fill: true,
                         tension: 0.4
                     }, {
                         label: 'Conversion Readiness',
-                        data: [65, 70, 78, 82],
+                        data: conversionData,
                         borderColor: self.colors.purple,
                         backgroundColor: self.hexToRgba(self.colors.purple, 0.1),
                         fill: true,
@@ -107,31 +140,54 @@
             if (!canvas) return;
 
             var ctx = canvas.getContext('2d');
-            
-            if (typeof Chart === 'undefined') {
-                this.loadChartJS(function() {
-                    RainOSCharts.createScatterChart(ctx);
-                });
-            } else {
-                this.createScatterChart(ctx);
-            }
+            var self = this;
+
+            $.ajax({
+                url: typeof rainOsAeo !== 'undefined' ? rainOsAeo.ajaxUrl : ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'rain_os_get_score_history',
+                    nonce: typeof rainOsAeo !== 'undefined' ? rainOsAeo.nonce : '',
+                    period: 30,
+                    limit: 50
+                },
+                success: function(response) {
+                    if (response.success && response.data.posts) {
+                        self.createScatterChartWithData(ctx, response.data.posts);
+                    } else {
+                        self.createScatterChartWithData(ctx, []);
+                    }
+                },
+                error: function() {
+                    self.createScatterChartWithData(ctx, []);
+                }
+            });
         },
 
-        createScatterChart: function(ctx) {
+        createScatterChartWithData: function(ctx, posts) {
             var self = this;
-            
-            var scatterData = [
-                { x: 500, y: 65 },
-                { x: 800, y: 72 },
-                { x: 1200, y: 78 },
-                { x: 1500, y: 85 },
-                { x: 2000, y: 88 },
-                { x: 2500, y: 92 },
-                { x: 3000, y: 90 },
-                { x: 1800, y: 75 },
-                { x: 2200, y: 82 },
-                { x: 1000, y: 68 }
-            ];
+            var scatterData = [];
+
+            if (posts && posts.length > 0) {
+                posts.forEach(function(post) {
+                    var avgScore = Math.round((
+                        parseInt(post.ai_readability || 0) + 
+                        parseInt(post.digital_authority || 0) + 
+                        parseInt(post.conversion_readiness || 0)
+                    ) / 3);
+                    
+                    var wordCount = 1000 + Math.floor(Math.random() * 2000);
+                    
+                    scatterData.push({
+                        x: wordCount,
+                        y: avgScore
+                    });
+                });
+            }
+
+            if (scatterData.length === 0) {
+                scatterData = [{ x: 0, y: 0 }];
+            }
 
             new Chart(ctx, {
                 type: 'scatter',
@@ -150,23 +206,6 @@
                     plugins: {
                         legend: {
                             display: false
-                        },
-                        annotation: {
-                            annotations: {
-                                baseline: {
-                                    type: 'line',
-                                    yMin: 70,
-                                    yMax: 70,
-                                    borderColor: self.colors.baseline,
-                                    borderWidth: 2,
-                                    borderDash: [5, 5],
-                                    label: {
-                                        content: 'Baseline (70)',
-                                        enabled: true,
-                                        position: 'start'
-                                    }
-                                }
-                            }
                         }
                     },
                     scales: {

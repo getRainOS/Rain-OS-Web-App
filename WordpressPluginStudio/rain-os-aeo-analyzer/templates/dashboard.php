@@ -3,15 +3,53 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-$admin = new Rain_OS_Admin( rain_os_aeo()->get_api_client() );
-$averages = $admin->get_average_scores( 30 );
-$analysis_data = $admin->get_analysis_data( 30 );
+global $wpdb;
+$table_name = $wpdb->prefix . 'rain_os_analysis_history';
+$period = isset( $_GET['period'] ) ? absint( $_GET['period'] ) : 30;
+$date_limit = gmdate( 'Y-m-d H:i:s', strtotime( "-{$period} days" ) );
 
-$overall_score = isset( $averages['avg_overall'] ) ? round( $averages['avg_overall'] ) : 0;
-$ai_readability = isset( $averages['avg_ai_readability'] ) ? round( $averages['avg_ai_readability'] ) : 0;
-$digital_authority = isset( $averages['avg_digital_authority'] ) ? round( $averages['avg_digital_authority'] ) : 0;
-$conversion_readiness = isset( $averages['avg_conversion_readiness'] ) ? round( $averages['avg_conversion_readiness'] ) : 0;
+$averages = $wpdb->get_row(
+    $wpdb->prepare(
+        "SELECT 
+            ROUND(AVG(overall_score)) as avg_overall,
+            ROUND(AVG(ai_readability)) as avg_ai_readability,
+            ROUND(AVG(digital_authority)) as avg_digital_authority,
+            ROUND(AVG(conversion_readiness)) as avg_conversion_readiness,
+            COUNT(*) as total_analyzed
+        FROM {$table_name} 
+        WHERE analyzed_at >= %s",
+        $date_limit
+    ),
+    ARRAY_A
+);
+
+$analysis_data = $wpdb->get_results(
+    $wpdb->prepare(
+        "SELECT h.*, p.post_title, p.post_name 
+        FROM {$table_name} h 
+        LEFT JOIN {$wpdb->posts} p ON h.post_id = p.ID 
+        WHERE h.analyzed_at >= %s 
+        ORDER BY h.analyzed_at DESC
+        LIMIT 10",
+        $date_limit
+    ),
+    ARRAY_A
+);
+
+$overall_score = isset( $averages['avg_overall'] ) ? intval( $averages['avg_overall'] ) : 0;
+$ai_readability = isset( $averages['avg_ai_readability'] ) ? intval( $averages['avg_ai_readability'] ) : 0;
+$digital_authority = isset( $averages['avg_digital_authority'] ) ? intval( $averages['avg_digital_authority'] ) : 0;
+$conversion_readiness = isset( $averages['avg_conversion_readiness'] ) ? intval( $averages['avg_conversion_readiness'] ) : 0;
 $total_analyzed = isset( $averages['total_analyzed'] ) ? intval( $averages['total_analyzed'] ) : 0;
+
+function rain_os_get_score_class( $score ) {
+    if ( $score >= 80 ) {
+        return 'green';
+    } elseif ( $score >= 65 ) {
+        return 'yellow';
+    }
+    return 'red';
+}
 ?>
 
 <div class="rain-os-wrap">
@@ -35,9 +73,9 @@ $total_analyzed = isset( $averages['total_analyzed'] ) ? intval( $averages['tota
                 </div>
                 <div class="rain-os-period-select">
                     <select id="rain-os-period">
-                        <option value="7"><?php esc_html_e( 'Last 7 Days', 'rain-os-aeo-analyzer' ); ?></option>
-                        <option value="30" selected><?php esc_html_e( 'Last 30 Days', 'rain-os-aeo-analyzer' ); ?></option>
-                        <option value="90"><?php esc_html_e( 'Last 90 Days', 'rain-os-aeo-analyzer' ); ?></option>
+                        <option value="7" <?php selected( $period, 7 ); ?>><?php esc_html_e( 'Last 7 Days', 'rain-os-aeo-analyzer' ); ?></option>
+                        <option value="30" <?php selected( $period, 30 ); ?>><?php esc_html_e( 'Last 30 Days', 'rain-os-aeo-analyzer' ); ?></option>
+                        <option value="90" <?php selected( $period, 90 ); ?>><?php esc_html_e( 'Last 90 Days', 'rain-os-aeo-analyzer' ); ?></option>
                     </select>
                 </div>
             </div>
@@ -104,7 +142,12 @@ $total_analyzed = isset( $averages['total_analyzed'] ) ? intval( $averages['tota
             <div class="rain-os-chart-card">
                 <div class="rain-os-chart-header">
                     <h3><?php esc_html_e( 'Performance History', 'rain-os-aeo-analyzer' ); ?></h3>
-                    <span class="rain-os-chart-period"><?php esc_html_e( 'Last 30 Days', 'rain-os-aeo-analyzer' ); ?></span>
+                    <span class="rain-os-chart-period"><?php 
+                        printf( 
+                            esc_html__( 'Last %d Days', 'rain-os-aeo-analyzer' ), 
+                            $period 
+                        ); 
+                    ?></span>
                 </div>
                 <div class="rain-os-chart-body">
                     <canvas id="rain-os-performance-chart" height="300"></canvas>
@@ -174,28 +217,28 @@ $total_analyzed = isset( $averages['total_analyzed'] ) ? intval( $averages['tota
                         foreach ( $analysis_data as $item ) : 
                             if ( $count >= 5 ) break;
                             $count++;
-                            $avg_score = round( ( $item['ai_readability'] + $item['digital_authority'] + $item['conversion_readiness'] ) / 3 );
+                            $avg_score = round( ( intval( $item['ai_readability'] ) + intval( $item['digital_authority'] ) + intval( $item['conversion_readiness'] ) ) / 3 );
                         ?>
                         <tr>
                             <td><?php echo esc_html( $count ); ?></td>
                             <td>
-                                <div class="rain-os-post-title"><?php echo esc_html( $item['post_title'] ); ?></div>
-                                <div class="rain-os-post-slug">/<?php echo esc_html( $item['post_name'] ); ?>/</div>
+                                <div class="rain-os-post-title"><?php echo esc_html( $item['post_title'] ? $item['post_title'] : __( 'Untitled', 'rain-os-aeo-analyzer' ) ); ?></div>
+                                <div class="rain-os-post-slug">/<?php echo esc_html( $item['post_name'] ? $item['post_name'] : '' ); ?>/</div>
                             </td>
                             <td>
                                 <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_get_score_class( $avg_score ) ); ?>"></span>
                                 <?php echo esc_html( $avg_score ); ?>
                             </td>
                             <td>
-                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_get_score_class( $item['ai_readability'] ) ); ?>"></span>
+                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_get_score_class( intval( $item['ai_readability'] ) ) ); ?>"></span>
                                 <?php echo esc_html( $item['ai_readability'] ); ?>
                             </td>
                             <td>
-                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_get_score_class( $item['digital_authority'] ) ); ?>"></span>
+                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_get_score_class( intval( $item['digital_authority'] ) ) ); ?>"></span>
                                 <?php echo esc_html( $item['digital_authority'] ); ?>
                             </td>
                             <td>
-                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_get_score_class( $item['conversion_readiness'] ) ); ?>"></span>
+                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_get_score_class( intval( $item['conversion_readiness'] ) ) ); ?>"></span>
                                 <?php echo esc_html( $item['conversion_readiness'] ); ?>
                             </td>
                             <td><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $item['analyzed_at'] ) ) ); ?></td>
@@ -216,14 +259,3 @@ $total_analyzed = isset( $averages['total_analyzed'] ) ? intval( $averages['tota
         </div>
     </div>
 </div>
-
-<?php
-function rain_os_get_score_class( $score ) {
-    if ( $score >= 80 ) {
-        return 'green';
-    } elseif ( $score >= 65 ) {
-        return 'yellow';
-    }
-    return 'red';
-}
-?>
