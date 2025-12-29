@@ -1,0 +1,199 @@
+Base URL + auth
+
+All endpoints are prefixed with /api 
+
+README
+
+Protected routes require:
+Authorization: Bearer <your_rain_os_api_key> 
+
+README
+
+CORS / headers
+
+Backend exposes X-Usage-Info so browser clients can read it 
+
+index
+
+1) POST /api/analyze (core engine endpoint)
+Request body (action router)
+
+The backend supports multiple actions via action 
+
+analyze
+
+:
+
+full analysis
+
+{ "action": "full_analysis", "content": "...", "industry": "..." }
+
+
+content and industry are required 
+
+analyze
+
+suggest titles
+
+{ "action": "suggest_titles", "content": "..." }
+
+
+content required 
+
+analyze
+
+generate meta description
+
+{ "action": "generate_description", "content": "..." }
+
+
+content required 
+
+analyze
+
+summarize content
+
+{ "action": "summarize_content", "content": "..." }
+
+
+content required 
+
+analyze
+
+rewrite a sentence
+
+{ "action": "rewrite_sentence", "sentence": "..." }
+
+
+sentence required 
+
+analyze
+
+Success responses
+
+For full_analysis, the response shape is AnalysisResult 
+
+types
+
+:
+
+{
+  "overallScore": 0-100,
+  "pillarScores": { "aiReadability": 0-100, "digitalAuthority": 0-100, "conversionReadiness": 0-100 },
+  "subScores": [ { "category": "string", "score": 0-100 }, ... ],
+  "recommendations": ["..."],
+  "keywords": ["..."],
+  "authorship": { "hash": "string", "timestamp": "ISO string", "status": "string" }
+}
+
+
+(fields defined in repo types) 
+
+types
+
+The engine’s mock data shows the 9 subScore categories you should render in the plugin UI (Semantic Clarity, Logical Structure, etc.) 
+
+geminiService
+
+For other actions, the repo implementations return:
+
+suggest_titles → { "titles": string[] } 
+
+geminiService
+
+generate_description → { "description": string } 
+
+geminiService
+
+summarize_content → { "summary": string } 
+
+geminiService
+
+rewrite_sentence → { "rewritten": string } 
+
+geminiService
+
+Usage/quota header on success
+
+After any successful /api/analyze call, backend sets:
+
+X-Usage-Info: <JSON> containing the updated usage object 
+
+analyze
+
+
+So the plugin should parse it and refresh the usage widget immediately.
+
+Error behaviors (important for plugin UX)
+
+POST /api/analyze can return:
+
+401 unauthorized if API key missing/invalid 
+
+analyze
+
+402 payment_required if subscription not active 
+
+analyze
+
+429 rate_limit_exceeded if usage count >= limit 
+
+analyze
+
+400 bad_request for missing required parameters per action 
+
+analyze
+
+ 
+
+analyze
+
+2) GET /api/users/me (plugin “Test connection” + usage display)
+Request
+
+Header: Authorization: Bearer <apiKey> 
+
+me
+
+Response
+
+Returns a “client safe” user object including subscriptionStatus, stripePriceId, and usage 
+
+me
+
+:
+
+{
+  "id": "...",
+  "email": "...",
+  "subscriptionStatus": "...",
+  "stripePriceId": "...",
+  "usage": { "count": 0, "limit": 0 },
+  "createdAt": "...",
+  "apiKey": "..."
+}
+
+
+(Actual handler includes usage and subscriptionStatus) 
+
+me
+
+3) Route registration (to prove paths are correct)
+
+The server registers:
+
+POST /api/analyze
+
+GET /api/users/me
+
+POST /api/users/me/regenerate-key
+
+plus other endpoints 
+
+index
+
+What to tell Replit
+
+You can paste the above and add this one-liner:
+
+“The plugin client should call POST {API_BASE_URL}/api/analyze with the action router payloads and parse X-Usage-Info for live quota updates; connection/usage comes from GET {API_BASE_URL}/api/users/me.”
