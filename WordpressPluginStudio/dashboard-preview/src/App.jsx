@@ -1355,11 +1355,71 @@ function SettingsPage() {
   const [scoreAlerts, setScoreAlerts] = useState(false)
   const [alertThreshold, setAlertThreshold] = useState(70)
   const [saved, setSaved] = useState(false)
+  const [showApiKey, setShowApiKey] = useState(false)
+  const [apiKey, setApiKey] = useState('sk-rain-a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6')
+  const [industry, setIndustry] = useState('technology')
+  const [cacheTime, setCacheTime] = useState('3600')
+  const [connectionStatus, setConnectionStatus] = useState(null)
+  const [testing, setTesting] = useState(false)
+  const [activeTooltip, setActiveTooltip] = useState(null)
   
   const handleSave = () => {
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
   }
+  
+  const handleTestConnection = () => {
+    setTesting(true)
+    setConnectionStatus(null)
+    setTimeout(() => {
+      setTesting(false)
+      setConnectionStatus({ success: true, email: 'user@example.com' })
+    }, 1500)
+  }
+
+  const Tooltip = ({ id, text, children }) => (
+    <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
+      {children}
+      <div
+        onMouseEnter={() => setActiveTooltip(id)}
+        onMouseLeave={() => setActiveTooltip(null)}
+        style={{ marginLeft: '8px', cursor: 'help', display: 'inline-flex' }}
+      >
+        <HelpCircle size={14} color="var(--text-muted)" />
+      </div>
+      {activeTooltip === id && (
+        <div style={{
+          position: 'absolute',
+          bottom: 'calc(100% + 10px)',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '280px',
+          padding: '12px 16px',
+          backgroundColor: '#1e293b',
+          border: '1px solid var(--border-color)',
+          borderRadius: '8px',
+          color: '#cbd5e1',
+          fontSize: '12px',
+          lineHeight: '1.5',
+          zIndex: 1000,
+          boxShadow: '0 10px 30px rgba(0,0,0,0.4)',
+        }}>
+          {text}
+          <div style={{
+            position: 'absolute',
+            bottom: '-6px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 0,
+            height: 0,
+            borderLeft: '6px solid transparent',
+            borderRight: '6px solid transparent',
+            borderTop: '6px solid #1e293b',
+          }} />
+        </div>
+      )}
+    </div>
+  )
   
   return (
     <>
@@ -1368,109 +1428,346 @@ function SettingsPage() {
         <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Configure your Rain OS AEO Analyzer preferences</p>
       </header>
       
-      <div style={{ display: 'grid', gap: '24px' }}>
-        <ChartCard title="API Configuration" className="animate-in">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>
-                <Key size={14} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-                API Key
-              </label>
-              <input
-                type="password"
-                placeholder="Enter your API key"
-                defaultValue="sk-rain-****************************"
-                style={{
-                  width: '100%',
-                  padding: '12px 16px',
-                  backgroundColor: 'var(--bg-tertiary)',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: '8px',
-                  color: 'var(--text-primary)',
-                  fontSize: '14px',
-                }}
-              />
-            </div>
-          </div>
-        </ChartCard>
-        
-        <ChartCard title="Analysis Preferences" className="animate-in">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <label style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              padding: '12px 16px',
-              backgroundColor: 'var(--bg-tertiary)',
-              borderRadius: '8px',
-              cursor: 'pointer',
-            }}>
-              <input type="checkbox" checked={autoAnalyze} onChange={(e) => setAutoAnalyze(e.target.checked)} style={{ accentColor: 'var(--accent)' }} />
-              <Sliders size={16} color="var(--text-secondary)" />
-              <span>Auto-analyze on publish</span>
-            </label>
-            <label style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              padding: '12px 16px',
-              backgroundColor: 'var(--bg-tertiary)',
-              borderRadius: '8px',
-              cursor: 'pointer',
-            }}>
-              <input type="checkbox" checked={provenanceTracking} onChange={(e) => setProvenanceTracking(e.target.checked)} style={{ accentColor: 'var(--accent)' }} />
-              <Shield size={16} color="var(--text-secondary)" />
-              <span>Enable provenance tracking</span>
-            </label>
-            <label style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              padding: '12px 16px',
-              backgroundColor: 'var(--bg-tertiary)',
-              borderRadius: '8px',
-              cursor: 'pointer',
-            }}>
-              <input type="checkbox" checked={scoreAlerts} onChange={(e) => setScoreAlerts(e.target.checked)} style={{ accentColor: 'var(--accent)' }} />
-              <Bell size={16} color="var(--text-secondary)" />
-              <span>Score alerts below threshold</span>
-            </label>
-            {scoreAlerts && (
-              <div style={{ padding: '12px 16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: 'var(--text-secondary)' }}>
-                  Alert Threshold: {alertThreshold}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '24px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <ChartCard title="API Configuration" className="animate-in">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>
+                  <Key size={14} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+                  API Key
                 </label>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={alertThreshold}
-                  onChange={(e) => setAlertThreshold(parseInt(e.target.value))}
-                  style={{ width: '100%', accentColor: 'var(--accent)' }}
-                />
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input
+                    type={showApiKey ? 'text' : 'password'}
+                    placeholder="Enter your API key"
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                    style={{
+                      flex: 1,
+                      padding: '12px 16px',
+                      backgroundColor: 'var(--bg-tertiary)',
+                      border: '1px solid var(--border-color)',
+                      borderRadius: '8px',
+                      color: 'var(--text-primary)',
+                      fontSize: '14px',
+                    }}
+                  />
+                  <button
+                    onClick={() => setShowApiKey(!showApiKey)}
+                    style={{
+                      padding: '12px 16px',
+                      backgroundColor: 'var(--bg-tertiary)',
+                      border: '1px solid var(--border-color)',
+                      borderRadius: '8px',
+                      color: 'var(--text-secondary)',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      fontSize: '13px',
+                    }}
+                  >
+                    {showApiKey ? <EyeOff size={16} /> : <Eye size={16} />}
+                    {showApiKey ? 'Hide' : 'View'}
+                  </button>
+                  <button
+                    onClick={handleTestConnection}
+                    disabled={testing}
+                    style={{
+                      padding: '12px 16px',
+                      backgroundColor: 'var(--bg-tertiary)',
+                      border: '1px solid var(--border-color)',
+                      borderRadius: '8px',
+                      color: 'var(--text-secondary)',
+                      cursor: testing ? 'not-allowed' : 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      fontSize: '13px',
+                      opacity: testing ? 0.6 : 1,
+                    }}
+                  >
+                    <RefreshCw size={16} className={testing ? 'spin' : ''} style={{ animation: testing ? 'spin 1s linear infinite' : 'none' }} />
+                    Test Connection
+                  </button>
+                </div>
+                <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '8px' }}>
+                  Get your API key from <a href="https://www.app.getrainos.com" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>app.getrainos.com</a>
+                </p>
+                {connectionStatus && (
+                  <div style={{
+                    marginTop: '12px',
+                    padding: '10px 16px',
+                    borderRadius: '8px',
+                    backgroundColor: connectionStatus.success ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                    border: `1px solid ${connectionStatus.success ? '#10b981' : '#ef4444'}`,
+                    color: connectionStatus.success ? '#10b981' : '#ef4444',
+                    fontSize: '13px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }}>
+                    {connectionStatus.success ? (
+                      <>
+                        <CheckSquare size={16} />
+                        Connected! Account: {connectionStatus.email}
+                      </>
+                    ) : (
+                      <>Connection failed. Please check your API key.</>
+                    )}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </ChartCard>
-        
-        <button 
-          onClick={handleSave}
-          style={{
-            padding: '12px 24px',
-            borderRadius: '8px',
-            backgroundColor: saved ? '#10b981' : 'var(--accent)',
-            border: 'none',
-            color: '#000',
-            fontSize: '14px',
-            fontWeight: 600,
-            cursor: 'pointer',
-            alignSelf: 'flex-start',
-            transition: 'all 0.2s ease',
-          }}
-        >
-          {saved ? 'Saved!' : 'Save Settings'}
-        </button>
+              
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>
+                  Default Industry
+                </label>
+                <select
+                  value={industry}
+                  onChange={(e) => setIndustry(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '12px 16px',
+                    backgroundColor: 'var(--bg-tertiary)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '8px',
+                    color: 'var(--text-primary)',
+                    fontSize: '14px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <option value="">Select Industry...</option>
+                  <option value="technology">Technology</option>
+                  <option value="healthcare">Healthcare</option>
+                  <option value="finance">Finance</option>
+                  <option value="ecommerce">E-commerce</option>
+                  <option value="education">Education</option>
+                  <option value="marketing">Marketing</option>
+                  <option value="legal">Legal</option>
+                  <option value="realestate">Real Estate</option>
+                  <option value="travel">Travel & Hospitality</option>
+                  <option value="other">Other</option>
+                </select>
+                <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '8px' }}>
+                  Industry context helps the AI provide more relevant and accurate analysis.
+                </p>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-secondary)' }}>
+                  Cache Duration
+                </label>
+                <select
+                  value={cacheTime}
+                  onChange={(e) => setCacheTime(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '12px 16px',
+                    backgroundColor: 'var(--bg-tertiary)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '8px',
+                    color: 'var(--text-primary)',
+                    fontSize: '14px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <option value="1800">30 minutes</option>
+                  <option value="3600">1 hour</option>
+                  <option value="7200">2 hours</option>
+                  <option value="86400">24 hours</option>
+                </select>
+                <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '8px' }}>
+                  How long to cache analysis results before refreshing.
+                </p>
+              </div>
+            </div>
+          </ChartCard>
+          
+          <ChartCard 
+            title="Analysis Preferences" 
+            className="animate-in"
+            style={{ position: 'relative' }}
+          >
+            <div style={{ 
+              position: 'absolute', 
+              top: '24px', 
+              right: '24px',
+              padding: '4px 10px',
+              backgroundColor: 'rgba(34, 211, 238, 0.15)',
+              color: 'var(--accent)',
+              borderRadius: '4px',
+              fontSize: '11px',
+              fontWeight: 600,
+              textTransform: 'uppercase',
+            }}>
+              Local Settings
+            </div>
+            <p style={{ color: 'var(--text-muted)', fontSize: '13px', marginBottom: '20px', paddingBottom: '16px', borderBottom: '1px solid var(--border-color)' }}>
+              These settings control how the plugin behaves within your WordPress site. They do not require API calls.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '12px 16px',
+                backgroundColor: 'var(--bg-tertiary)',
+                borderRadius: '8px',
+                cursor: 'pointer',
+              }}>
+                <input type="checkbox" checked={autoAnalyze} onChange={(e) => setAutoAnalyze(e.target.checked)} style={{ accentColor: 'var(--accent)', width: '18px', height: '18px' }} />
+                <Sliders size={16} color="var(--text-secondary)" />
+                <Tooltip id="auto-analyze" text="When enabled, the plugin will automatically run an AEO analysis every time you publish or update a post. This uses one API credit per analysis. Disable this if you prefer to manually trigger analyses.">
+                  <span>Auto-Analyze on Publish</span>
+                </Tooltip>
+              </label>
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '12px 16px',
+                backgroundColor: 'var(--bg-tertiary)',
+                borderRadius: '8px',
+                cursor: 'pointer',
+              }}>
+                <input type="checkbox" checked={provenanceTracking} onChange={(e) => setProvenanceTracking(e.target.checked)} style={{ accentColor: 'var(--accent)', width: '18px', height: '18px' }} />
+                <Fingerprint size={16} color="var(--text-secondary)" />
+                <Tooltip id="provenance" text="Provenance tracking creates a cryptographic hash of your content at the time of analysis, serving as proof of authorship. This helps establish content ownership and can be useful for copyright protection or demonstrating when content was created.">
+                  <span>Enable Provenance Tracking</span>
+                </Tooltip>
+              </label>
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '12px 16px',
+                backgroundColor: 'var(--bg-tertiary)',
+                borderRadius: '8px',
+                cursor: 'pointer',
+              }}>
+                <input type="checkbox" checked={scoreAlerts} onChange={(e) => setScoreAlerts(e.target.checked)} style={{ accentColor: 'var(--accent)', width: '18px', height: '18px' }} />
+                <Bell size={16} color="var(--text-secondary)" />
+                <Tooltip id="score-alerts" text="When enabled, you will receive a notification in your WordPress dashboard whenever a post scores below the threshold you set. This helps you identify content that may need improvement for better AI visibility.">
+                  <span>Score Alerts Below Threshold</span>
+                </Tooltip>
+              </label>
+              {scoreAlerts && (
+                <div style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px', marginLeft: '30px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                    <label style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+                      Alert Threshold:
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      max="100"
+                      value={alertThreshold}
+                      onChange={(e) => setAlertThreshold(parseInt(e.target.value) || 0)}
+                      style={{
+                        width: '70px',
+                        padding: '8px 12px',
+                        backgroundColor: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '6px',
+                        color: 'var(--text-primary)',
+                        fontSize: '14px',
+                        textAlign: 'center',
+                      }}
+                    />
+                  </div>
+                  <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: 0 }}>
+                    Notify when score falls below this value (0-100)
+                  </p>
+                </div>
+              )}
+            </div>
+          </ChartCard>
+          
+          <button 
+            onClick={handleSave}
+            style={{
+              padding: '14px 28px',
+              borderRadius: '8px',
+              backgroundColor: saved ? '#10b981' : 'var(--accent)',
+              border: 'none',
+              color: '#000',
+              fontSize: '14px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              alignSelf: 'flex-start',
+              transition: 'all 0.2s ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
+            <Save size={16} />
+            {saved ? 'Saved!' : 'Save Settings'}
+          </button>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <ChartCard title="Account Status" className="animate-in">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Status</span>
+                <span style={{ 
+                  padding: '4px 10px', 
+                  backgroundColor: 'rgba(16, 185, 129, 0.2)', 
+                  color: '#10b981', 
+                  borderRadius: '4px', 
+                  fontSize: '12px', 
+                  fontWeight: 600 
+                }}>Active</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Plan</span>
+                <span style={{ 
+                  padding: '4px 10px', 
+                  backgroundColor: 'rgba(168, 85, 247, 0.2)', 
+                  color: '#a855f7', 
+                  borderRadius: '4px', 
+                  fontSize: '12px', 
+                  fontWeight: 600 
+                }}>Business</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Usage</span>
+                <span style={{ fontSize: '13px' }}>47 / 100</span>
+              </div>
+              <div style={{ height: '6px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '3px', overflow: 'hidden' }}>
+                <div style={{ width: '47%', height: '100%', backgroundColor: 'var(--accent)', borderRadius: '3px' }} />
+              </div>
+            </div>
+          </ChartCard>
+
+          <ChartCard title="Need Help?" className="animate-in">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '13px', padding: '8px 0' }}>
+                <BookOpen size={16} color="var(--accent)" />
+                Documentation
+              </a>
+              <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '13px', padding: '8px 0' }}>
+                <HelpCircle size={16} color="var(--accent)" />
+                Troubleshooting
+              </a>
+              <a href="mailto:support@rainos.com" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '13px', padding: '8px 0' }}>
+                <Mail size={16} color="var(--accent)" />
+                Contact Support
+              </a>
+            </div>
+          </ChartCard>
+        </div>
       </div>
+
+      <style>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </>
   )
 }
