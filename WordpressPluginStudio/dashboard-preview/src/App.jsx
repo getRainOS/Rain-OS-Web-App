@@ -1745,15 +1745,26 @@ function SettingsPage() {
 
           <ChartCard title="Need Help?" className="animate-in">
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '13px', padding: '8px 0' }}>
+              <a href="https://docs.getrainos.com" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '13px', padding: '8px 0', cursor: 'pointer' }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+              >
                 <BookOpen size={16} color="var(--accent)" />
                 Documentation
+                <ExternalLink size={12} style={{ marginLeft: 'auto', opacity: 0.5 }} />
               </a>
-              <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '13px', padding: '8px 0' }}>
+              <a href="https://docs.getrainos.com/troubleshooting" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '13px', padding: '8px 0', cursor: 'pointer' }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+              >
                 <HelpCircle size={16} color="var(--accent)" />
                 Troubleshooting
+                <ExternalLink size={12} style={{ marginLeft: 'auto', opacity: 0.5 }} />
               </a>
-              <a href="mailto:support@rainos.com" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '13px', padding: '8px 0' }}>
+              <a href="mailto:support@getrainos.com" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '13px', padding: '8px 0', cursor: 'pointer' }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+              >
                 <Mail size={16} color="var(--accent)" />
                 Contact Support
               </a>
