@@ -1349,7 +1349,7 @@ The evolution toward edge computing extends cloud capabilities closer to end use
   )
 }
 
-function SettingsPage() {
+function SettingsPage({ setCurrentPage }) {
   const [autoAnalyze, setAutoAnalyze] = useState(true)
   const [provenanceTracking, setProvenanceTracking] = useState(true)
   const [scoreAlerts, setScoreAlerts] = useState(false)
@@ -1493,7 +1493,7 @@ function SettingsPage() {
                   </button>
                 </div>
                 <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '8px' }}>
-                  Get your API key from <a href="https://www.app.getrainos.com" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>app.getrainos.com</a>
+                  Get your API key from <a href="https://app.getrainos.com/#/login" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>app.getrainos.com</a>
                 </p>
                 {connectionStatus && (
                   <div style={{
@@ -1745,21 +1745,21 @@ function SettingsPage() {
 
           <ChartCard title="Need Help?" className="animate-in">
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <a href="https://docs.getrainos.com" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '13px', padding: '8px 0', cursor: 'pointer' }}
+              <a href="#docs" onClick={(e) => { e.preventDefault(); setCurrentPage('docs'); }} style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '13px', padding: '8px 0', cursor: 'pointer' }}
                 onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'}
                 onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
               >
                 <BookOpen size={16} color="var(--accent)" />
                 Documentation
-                <ExternalLink size={12} style={{ marginLeft: 'auto', opacity: 0.5 }} />
+                <ChevronRight size={14} style={{ marginLeft: 'auto', opacity: 0.5 }} />
               </a>
-              <a href="https://docs.getrainos.com/troubleshooting" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '13px', padding: '8px 0', cursor: 'pointer' }}
+              <a href="#docs-troubleshooting" onClick={(e) => { e.preventDefault(); setCurrentPage('docs-troubleshooting'); }} style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '13px', padding: '8px 0', cursor: 'pointer' }}
                 onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'}
                 onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
               >
                 <HelpCircle size={16} color="var(--accent)" />
                 Troubleshooting
-                <ExternalLink size={12} style={{ marginLeft: 'auto', opacity: 0.5 }} />
+                <ChevronRight size={14} style={{ marginLeft: 'auto', opacity: 0.5 }} />
               </a>
               <a href="mailto:support@getrainos.com" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '13px', padding: '8px 0', cursor: 'pointer' }}
                 onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'}
@@ -2253,9 +2253,9 @@ function TroubleshootingPage() {
         <div className="animate-in-delay-5" style={{ backgroundColor: 'linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(168, 85, 247, 0.1))', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px', textAlign: 'center' }}>
           <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '8px' }}>Still need help?</h3>
           <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '16px' }}>
-            Contact our support team at support@rainos.com
+            Contact our support team at support@getrainos.com
           </p>
-          <a href="mailto:support@rainos.com" style={{
+          <a href="mailto:support@getrainos.com" style={{
             display: 'inline-block',
             padding: '12px 24px',
             backgroundColor: 'var(--accent)',
@@ -2343,7 +2343,7 @@ function UpgradePage() {
               </li>
             ))}
           </ul>
-          <a href="https://www.app.getrainos.com" target="_blank" rel="noopener noreferrer" style={{
+          <a href="https://app.getrainos.com/#/login" target="_blank" rel="noopener noreferrer" style={{
             display: 'block',
             width: '100%',
             marginTop: '24px',
@@ -2390,7 +2390,7 @@ function UpgradePage() {
               </li>
             ))}
           </ul>
-          <a href="https://www.app.getrainos.com" target="_blank" rel="noopener noreferrer" style={{
+          <a href="https://app.getrainos.com/#/login" target="_blank" rel="noopener noreferrer" style={{
             display: 'block',
             width: '100%',
             marginTop: '24px',
@@ -3742,7 +3742,7 @@ function App() {
       case 'analyzer':
         return <ContentAnalyzerPage setCurrentPage={setCurrentPage} />
       case 'settings':
-        return <SettingsPage />
+        return <SettingsPage setCurrentPage={setCurrentPage} />
       case 'docs':
         return <DocsPage setCurrentPage={setCurrentPage} />
       case 'upgrade':
