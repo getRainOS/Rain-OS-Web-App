@@ -1795,8 +1795,24 @@ function DocsPage({ setCurrentPage }) {
     <>
       <header className="animate-in" style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '4px' }}>Documentation</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Learn how to use Rain OS AEO Analyzer effectively</p>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Rain OS AEO Analyzer is a diagnostic tool for Answer Engine Optimization</p>
       </header>
+      
+      <div className="animate-in" style={{ 
+        padding: '16px 20px', 
+        backgroundColor: 'rgba(34, 211, 238, 0.1)', 
+        border: '1px solid rgba(34, 211, 238, 0.3)', 
+        borderRadius: '8px', 
+        marginBottom: '24px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px'
+      }}>
+        <Microscope size={20} color="var(--accent)" />
+        <p style={{ color: 'var(--text-secondary)', fontSize: '13px', margin: 0, lineHeight: 1.5 }}>
+          <strong style={{ color: 'var(--text-primary)' }}>This is a diagnostic tool.</strong> It analyzes your content and provides recommendations — it does not automatically modify your content. You implement the suggestions to improve your scores.
+        </p>
+      </div>
       
       <div style={{ display: 'grid', gap: '16px' }}>
         {docs.map((doc, i) => (
@@ -1846,6 +1862,38 @@ function GettingStartedPage() {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div className="animate-in" style={{ 
+          background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(168, 85, 247, 0.1))', 
+          border: '1px solid var(--accent)', 
+          borderRadius: '12px', 
+          padding: '32px' 
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+            <Microscope size={24} color="var(--accent)" />
+            <h2 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--accent)', margin: 0 }}>What is Rain OS AEO Analyzer?</h2>
+          </div>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.8, marginBottom: '16px' }}>
+            <strong style={{ color: 'var(--text-primary)' }}>Rain OS AEO Analyzer is a diagnostic tool</strong> designed to help you understand how AI-powered search engines and answer engines interpret your content. It does not automatically fix or modify your content — instead, it provides detailed analysis and actionable recommendations that you can use to improve your content's visibility in AI-driven platforms like ChatGPT, Perplexity, Gemini, and Claude.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+            <div style={{ padding: '16px', backgroundColor: 'rgba(34, 211, 238, 0.15)', borderRadius: '8px', textAlign: 'center' }}>
+              <div style={{ fontSize: '24px', marginBottom: '8px' }}>🔍</div>
+              <div style={{ fontWeight: 600, fontSize: '13px', color: 'var(--accent)' }}>Diagnose</div>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>Analyze content structure & clarity</div>
+            </div>
+            <div style={{ padding: '16px', backgroundColor: 'rgba(16, 185, 129, 0.15)', borderRadius: '8px', textAlign: 'center' }}>
+              <div style={{ fontSize: '24px', marginBottom: '8px' }}>📊</div>
+              <div style={{ fontWeight: 600, fontSize: '13px', color: '#10b981' }}>Score</div>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>Get scores across 9 categories</div>
+            </div>
+            <div style={{ padding: '16px', backgroundColor: 'rgba(168, 85, 247, 0.15)', borderRadius: '8px', textAlign: 'center' }}>
+              <div style={{ fontSize: '24px', marginBottom: '8px' }}>💡</div>
+              <div style={{ fontWeight: 600, fontSize: '13px', color: '#a855f7' }}>Recommend</div>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>Receive actionable suggestions</div>
+            </div>
+          </div>
+        </div>
+
         <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Installation</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -1867,16 +1915,17 @@ function GettingStartedPage() {
         </div>
 
         <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
-          <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Your First Analysis</h2>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Running Your First Diagnostic</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
-            Rain OS uses advanced AI technology to analyze your content and provide actionable insights. Once installed, you can analyze any post or page content. Here's how to run your first analysis:
+            Rain OS analyzes your content and provides a comprehensive diagnostic report. The plugin does not make changes to your content — it identifies issues and provides recommendations that you can implement. Here's how to run your first diagnostic:
           </p>
           <ol style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.8, paddingLeft: '20px' }}>
             <li style={{ marginBottom: '8px' }}>Open any post or page in the WordPress editor</li>
             <li style={{ marginBottom: '8px' }}>Look for the "Rain OS Analysis" panel in the sidebar (Gutenberg) or below the editor (Classic)</li>
-            <li style={{ marginBottom: '8px' }}>Click the "Analyze Content" button</li>
-            <li style={{ marginBottom: '8px' }}>Our AI engine processes your content using natural language understanding</li>
-            <li>Review your scores across all three pillars: AI Readability, Digital Authority, and Conversion Readiness</li>
+            <li style={{ marginBottom: '8px' }}>Click the "Analyze Content" button to run the diagnostic</li>
+            <li style={{ marginBottom: '8px' }}>Our AI engine evaluates your content across 9 diagnostic categories</li>
+            <li style={{ marginBottom: '8px' }}>Review your scores across all three pillars: AI Readability, Digital Authority, and Conversion Readiness</li>
+            <li>Read the recommendations and implement the suggested improvements manually</li>
           </ol>
         </div>
 
