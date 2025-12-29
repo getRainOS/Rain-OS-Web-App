@@ -16,10 +16,8 @@
 
         init: function() {
             this.initGauges();
-            this.loadChartJS(function() {
-                RainOSCharts.initPerformanceChart();
-                RainOSCharts.initScatterChart();
-            });
+            this.initPerformanceChart();
+            this.initScatterChart();
         },
 
         initPerformanceChart: function() {
@@ -289,18 +287,6 @@
             svg.appendChild(valueCircle);
 
             container.appendChild(svg);
-        },
-
-        loadChartJS: function(callback) {
-            if (typeof Chart !== 'undefined') {
-                callback();
-                return;
-            }
-
-            var script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
-            script.onload = callback;
-            document.head.appendChild(script);
         },
 
         hexToRgba: function(hex, alpha) {

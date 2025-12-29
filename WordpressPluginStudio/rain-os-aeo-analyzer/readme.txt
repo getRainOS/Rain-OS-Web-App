@@ -1,6 +1,6 @@
 === Rain OS AEO Analyzer ===
 Contributors: rainos
-Tags: aeo, seo, ai, content optimization, answer engine, geo
+Tags: aeo, ai, content optimization, answer engine, seo
 Requires at least: 5.8
 Tested up to: 6.4
 Requires PHP: 7.4
@@ -36,6 +36,18 @@ Rain OS AEO Analyzer helps you optimize your content for AI-powered answer engin
 * WordPress 5.8 or higher
 * PHP 7.4 or higher
 * Rain OS API key (get yours at https://app.getrainos.com/#/login)
+
+= External Service =
+
+This plugin connects to the Rain OS API service (https://api.getrainos.com) to perform AI-powered content analysis. The service provides:
+
+* Content scoring across three pillars (AI Readability, Digital Authority, Conversion Readiness)
+* Pro features including title suggestions, meta descriptions, summarization, and sentence rewriting
+* Usage tracking and subscription management
+
+By using this plugin, you agree to the Rain OS Terms of Service. For privacy information, please visit https://getrainos.com/privacy.
+
+Note: Pro features (Quick Tools) are provided by the external Rain OS service and require an active subscription. All plugin code is fully available - premium features are processed server-side by the Rain OS API.
 
 == Installation ==
 

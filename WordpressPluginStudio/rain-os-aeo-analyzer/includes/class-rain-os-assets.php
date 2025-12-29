@@ -30,9 +30,17 @@ class Rain_OS_Assets {
         );
 
         wp_enqueue_script(
+            'chartjs',
+            RAIN_OS_AEO_PLUGIN_URL . 'assets/js/chart.min.js',
+            array(),
+            '4.4.1',
+            true
+        );
+
+        wp_enqueue_script(
             'rain-os-charts',
             RAIN_OS_AEO_PLUGIN_URL . 'assets/js/charts.js',
-            array( 'jquery' ),
+            array( 'jquery', 'chartjs' ),
             RAIN_OS_AEO_VERSION,
             true
         );
