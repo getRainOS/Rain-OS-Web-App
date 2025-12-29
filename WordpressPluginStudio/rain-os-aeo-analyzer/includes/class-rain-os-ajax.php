@@ -22,6 +22,8 @@ class Rain_OS_Ajax {
         add_action( 'wp_ajax_rain_os_mark_notification_read', array( $this, 'mark_notification_read' ) );
         add_action( 'wp_ajax_rain_os_get_pillar_details', array( $this, 'get_pillar_details' ) );
         add_action( 'wp_ajax_rain_os_quick_tool', array( $this, 'quick_tool' ) );
+        add_action( 'wp_ajax_rain_os_test_connection', array( $this, 'test_connection' ) );
+        add_action( 'wp_ajax_rain_os_get_usage', array( $this, 'get_usage' ) );
     }
 
     private function verify_nonce() {
@@ -40,25 +42,37 @@ class Rain_OS_Ajax {
         $this->verify_nonce();
         $this->check_capability();
 
-        $content = isset( $_POST['content'] ) ? wp_kses_post( wp_unslash( $_POST['content'] ) ) : '';
-        $title   = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '';
-        $post_id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
+        $content  = isset( $_POST['content'] ) ? wp_kses_post( wp_unslash( $_POST['content'] ) ) : '';
+        $title    = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '';
+        $industry = isset( $_POST['industry'] ) ? sanitize_text_field( wp_unslash( $_POST['industry'] ) ) : '';
+        $post_id  = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
 
         if ( empty( $content ) ) {
             wp_send_json_error( array( 'message' => __( 'Content is required.', 'rain-os-aeo-analyzer' ) ) );
         }
 
-        $result = $this->api_client->analyze_content( $title, $content );
+        $full_content = $title ? $title . "\n\n" . $content : $content;
+        $result = $this->api_client->analyze_content( $full_content, $industry );
 
         if ( is_wp_error( $result ) ) {
-            wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+            wp_send_json_error( array( 
+                'message' => $result->get_error_message(),
+                'code'    => $result->get_error_code(),
+            ) );
         }
+
+        $parsed = $this->api_client->parse_analysis_response( $result );
 
         if ( $post_id > 0 ) {
-            $this->save_analysis_to_history( $post_id, $result );
+            $this->save_analysis_to_history( $post_id, $parsed );
         }
 
-        wp_send_json_success( $result );
+        $usage_info = $this->api_client->get_last_usage_info();
+
+        wp_send_json_success( array(
+            'analysis' => $parsed,
+            'usage'    => $usage_info,
+        ) );
     }
 
     private function save_analysis_to_history( $post_id, $analysis ) {
@@ -70,9 +84,9 @@ class Rain_OS_Ajax {
             array(
                 'post_id'              => $post_id,
                 'overall_score'        => isset( $analysis['overall_score'] ) ? absint( $analysis['overall_score'] ) : 0,
-                'ai_readability'       => isset( $analysis['pillars']['ai_readability'] ) ? absint( $analysis['pillars']['ai_readability'] ) : 0,
-                'digital_authority'    => isset( $analysis['pillars']['digital_authority'] ) ? absint( $analysis['pillars']['digital_authority'] ) : 0,
-                'conversion_readiness' => isset( $analysis['pillars']['conversion_readiness'] ) ? absint( $analysis['pillars']['conversion_readiness'] ) : 0,
+                'ai_readability'       => isset( $analysis['ai_readability'] ) ? absint( $analysis['ai_readability'] ) : 0,
+                'digital_authority'    => isset( $analysis['digital_authority'] ) ? absint( $analysis['digital_authority'] ) : 0,
+                'conversion_readiness' => isset( $analysis['conversion_readiness'] ) ? absint( $analysis['conversion_readiness'] ) : 0,
                 'analysis_data'        => wp_json_encode( $analysis ),
                 'analyzed_at'          => current_time( 'mysql' ),
             ),
@@ -331,12 +345,57 @@ class Rain_OS_Ajax {
             wp_send_json_error( array( 'message' => __( 'Invalid tool specified.', 'rain-os-aeo-analyzer' ) ) );
         }
 
-        $result = $this->api_client->quick_tool( $tool, $content );
-
-        if ( is_wp_error( $result ) ) {
-            wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+        $options = array();
+        if ( 'rewrite' === $tool && isset( $_POST['sentence'] ) ) {
+            $options['sentence'] = sanitize_text_field( wp_unslash( $_POST['sentence'] ) );
         }
 
-        wp_send_json_success( $result );
+        $result = $this->api_client->quick_tool( $tool, $content, $options );
+
+        if ( is_wp_error( $result ) ) {
+            wp_send_json_error( array( 
+                'message' => $result->get_error_message(),
+                'code'    => $result->get_error_code(),
+            ) );
+        }
+
+        $usage_info = $this->api_client->get_last_usage_info();
+
+        wp_send_json_success( array(
+            'result' => $result,
+            'usage'  => $usage_info,
+        ) );
+    }
+
+    public function test_connection() {
+        $this->verify_nonce();
+        $this->check_capability( 'manage_options' );
+
+        $user_info = $this->api_client->get_user_info();
+
+        if ( is_wp_error( $user_info ) ) {
+            wp_send_json_error( array( 
+                'message' => $user_info->get_error_message(),
+                'code'    => $user_info->get_error_code(),
+            ) );
+        }
+
+        wp_send_json_success( array(
+            'connected' => true,
+            'user'      => array(
+                'email'               => isset( $user_info['email'] ) ? $user_info['email'] : '',
+                'subscription_status' => isset( $user_info['subscriptionStatus'] ) ? $user_info['subscriptionStatus'] : 'inactive',
+                'usage'               => isset( $user_info['usage'] ) ? $user_info['usage'] : array( 'count' => 0, 'limit' => 10 ),
+            ),
+        ) );
+    }
+
+    public function get_usage() {
+        $this->verify_nonce();
+        $this->check_capability();
+
+        $subscription = $this->api_client->get_subscription_status();
+
+        wp_send_json_success( $subscription );
     }
 }
