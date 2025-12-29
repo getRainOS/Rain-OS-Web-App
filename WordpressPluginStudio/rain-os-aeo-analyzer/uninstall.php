@@ -2,7 +2,7 @@
 /**
  * Uninstall Rain OS AEO Analyzer
  *
- * This file runs when the plugin is uninstalled (deleted).
+ * This file runs when the plugin is uninstalled (deleted) from WordPress.
  * It removes all plugin data from the database.
  *
  * @package Rain_OS_AEO_Analyzer

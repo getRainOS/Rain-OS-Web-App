@@ -1,97 +1,87 @@
 === Rain OS AEO Analyzer ===
 Contributors: rainos
-Donate link: https://www.rainos.com
-Tags: aeo, seo, ai optimization, content analysis, answer engine optimization
+Tags: aeo, seo, ai, content optimization, answer engine, geo
 Requires at least: 5.8
 Tested up to: 6.4
-Stable tag: 1.0.0
 Requires PHP: 7.4
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-AI-powered Answer Engine Optimization (AEO) plugin that analyzes your content for AI readability, digital authority, and conversion readiness.
+AI-powered Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO) for WordPress.
 
 == Description ==
 
-Rain OS AEO Analyzer helps you optimize your content for modern AI-powered search engines and answer engines like Google's AI Overviews, ChatGPT, Perplexity, and Claude.
+Rain OS AEO Analyzer helps you optimize your content for AI-powered answer engines like Google AI Overviews, ChatGPT, Perplexity, Claude, and Gemini.
 
-= Key Features =
+= Features =
 
-* **Three Pillar Analysis** - Get scores across AI Readability, Digital Authority, and Conversion Readiness
+* **Three Pillars Analysis** - Analyze your content across AI Readability, Digital Authority, and Conversion Readiness
 * **Content Analyzer** - Full-featured editor with formatting toolbar and real-time analysis
-* **AI Heatmap** - Visual highlighting of keywords by pillar category
+* **AI Heatmap** - Color-coded highlighting showing keyword relevance by category
 * **Score History** - Track your content performance over time
-* **Pillar Breakdown** - Detailed subcategory scores for each pillar
-* **Content Signals** - Visualize the relationship between content length and performance
+* **Pillar Breakdown** - Detailed subcategory scores with visual charts
+* **Content Signals** - Word count vs score correlation analysis
 * **Quick Tools (Pro)** - AI-powered title suggestions, meta descriptions, summarization, and rewriting
+* **Dark Theme Dashboard** - Beautiful, modern admin interface
 
-= The Three Pillars =
+= Three Pillars =
 
-**AI Readability (Cyan)**
-Measures how easily AI systems can parse and understand your content, including semantic clarity, readability score, and logical structure.
+1. **AI Readability** - Measures how easily AI systems can parse and understand your content
+2. **Digital Authority** - Assesses credibility, trust signals, and citation readiness
+3. **Conversion Readiness** - Evaluates content structure for direct answers and engagement
 
-**Digital Authority (Green)**
-Assesses the credibility and trustworthiness of your content through entity recognition, citation readiness, and schema extraction.
+= Requirements =
 
-**Conversion Readiness (Purple)**
-Evaluates how well your content drives engagement with AEO alignment, QA-format detection, and metadata audit.
-
-= Getting Started =
-
-1. Install and activate the plugin
-2. Get your API key from [app.getrainos.com](https://www.app.getrainos.com)
-3. Configure your API key in Rain OS > Settings
-4. Start analyzing your content!
+* WordPress 5.8 or higher
+* PHP 7.4 or higher
+* Rain OS API key (get yours at app.getrainos.com)
 
 == Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/rain-os-aeo-analyzer` directory, or install the plugin through the WordPress plugins screen directly.
-2. Activate the plugin through the 'Plugins' screen in WordPress.
-3. Navigate to Rain OS > Settings to configure your API key.
-4. Get your API key from [app.getrainos.com](https://www.app.getrainos.com).
+1. Upload the plugin files to `/wp-content/plugins/rain-os-aeo-analyzer/` or install through WordPress plugins screen
+2. Activate the plugin through the 'Plugins' screen in WordPress
+3. Go to Rain OS > Settings and enter your API key
+4. Start analyzing your content!
 
 == Frequently Asked Questions ==
 
-= Do I need an API key? =
+= Where do I get an API key? =
 
-Yes, Rain OS AEO Analyzer requires an API key to perform content analysis. You can get your API key by signing up at [app.getrainos.com](https://www.app.getrainos.com).
-
-= What are the three pillars? =
-
-The three pillars are AI Readability (how well AI can understand your content), Digital Authority (how trustworthy your content appears), and Conversion Readiness (how well your content drives engagement).
+Visit https://www.app.getrainos.com to create an account and get your API key.
 
 = What is AEO? =
 
-AEO stands for Answer Engine Optimization. It's the practice of optimizing your content to appear in AI-powered answer engines like Google's AI Overviews, ChatGPT, Perplexity, and Claude.
+Answer Engine Optimization (AEO) is the practice of optimizing content for AI-powered answer engines that provide direct responses to user queries.
 
-= Is there a free plan? =
+= How is this different from SEO? =
 
-Rain OS offers various pricing tiers. Visit [app.getrainos.com](https://www.app.getrainos.com) to see current pricing and plans.
+While SEO focuses on ranking in traditional search results, AEO focuses on having your content selected and cited by AI systems that generate direct answers.
 
 = What are Quick Tools? =
 
-Quick Tools are AI-powered features available to Pro subscribers that help you quickly generate title suggestions, meta descriptions, content summaries, and text rewrites.
+Quick Tools are Pro features that provide AI-powered micro-actions like title suggestions, meta description generation, content summarization, and sentence rewriting.
 
 == Screenshots ==
 
-1. Dashboard - View your overall AEO scores and performance trends
-2. Content Analyzer - Analyze content with the rich text editor
-3. Score History - Track scores over time with colored indicators
-4. Pillar Breakdown - See detailed subcategory scores
-5. Settings - Configure your API key and preferences
+1. Dashboard with KPI cards and performance charts
+2. Content Analyzer with formatting toolbar
+3. Score History with colored indicators
+4. Pillar Breakdown with horizontal bar charts
+5. Settings page with API configuration
 
 == Changelog ==
 
 = 1.0.0 =
 * Initial release
-* Three pillar analysis (AI Readability, Digital Authority, Conversion Readiness)
+* Three Pillars analysis (AI Readability, Digital Authority, Conversion Readiness)
 * Content Analyzer with rich text editor
-* AI Heatmap keyword highlighting
+* AI Heatmap visualization
 * Score History tracking
-* Pillar Breakdown visualization
+* Pillar Breakdown charts
 * Content Signals scatter plot
-* Documentation and Help pages
-* Settings with API key configuration
+* Quick Tools (Pro features)
+* Dark theme admin dashboard
 
 == Upgrade Notice ==
 
