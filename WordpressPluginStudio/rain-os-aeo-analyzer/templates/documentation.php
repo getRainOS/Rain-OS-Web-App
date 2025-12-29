@@ -51,7 +51,7 @@ $sections = array(
                     <ol class="rain-os-docs-steps">
                         <li>
                             <strong><?php esc_html_e( 'Sign Up or Log In', 'rain-os-aeo-analyzer' ); ?></strong>
-                            <p><?php printf( wp_kses( __( 'Visit <a href="%s" target="_blank">app.getrainos.com</a> to create your account or log in.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array(), 'target' => array() ) ) ), 'https://www.app.getrainos.com' ); ?></p>
+                            <p><?php printf( wp_kses( __( 'Visit <a href="%s" target="_blank">app.getrainos.com</a> to create your account or log in.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array(), 'target' => array() ) ) ), 'https://app.getrainos.com/#/login' ); ?></p>
                         </li>
                         <li>
                             <strong><?php esc_html_e( 'Copy Your API Key', 'rain-os-aeo-analyzer' ); ?></strong>

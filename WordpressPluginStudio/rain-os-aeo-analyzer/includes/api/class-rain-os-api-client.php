@@ -61,7 +61,7 @@ class Rain_OS_API_Client {
         }
 
         if ( 402 === $status_code ) {
-            return new WP_Error( 'payment_required', __( 'Your subscription is not active. Please upgrade your plan at app.getrainos.com', 'rain-os-aeo-analyzer' ), array( 'status' => 402 ) );
+            return new WP_Error( 'payment_required', __( 'Your subscription is not active. Please upgrade your plan at https://app.getrainos.com/#/login', 'rain-os-aeo-analyzer' ), array( 'status' => 402 ) );
         }
 
         if ( 429 === $status_code ) {

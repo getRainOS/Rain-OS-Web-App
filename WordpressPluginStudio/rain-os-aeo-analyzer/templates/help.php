@@ -88,8 +88,8 @@ $troubleshooting_items = array(
 
         <div class="rain-os-help-contact">
             <h3><?php esc_html_e( 'Still need help?', 'rain-os-aeo-analyzer' ); ?></h3>
-            <p><?php esc_html_e( 'Contact our support team at support@rainos.com', 'rain-os-aeo-analyzer' ); ?></p>
-            <a href="mailto:support@rainos.com" class="rain-os-btn rain-os-btn-primary">
+            <p><?php esc_html_e( 'Contact our support team at support@getrainos.com', 'rain-os-aeo-analyzer' ); ?></p>
+            <a href="mailto:support@getrainos.com" class="rain-os-btn rain-os-btn-primary">
                 <?php esc_html_e( 'Contact Support', 'rain-os-aeo-analyzer' ); ?>
             </a>
         </div>

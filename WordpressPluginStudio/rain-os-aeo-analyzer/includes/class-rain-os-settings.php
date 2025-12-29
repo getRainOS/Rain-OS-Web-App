@@ -138,7 +138,7 @@ class Rain_OS_Settings {
     }
 
     public function render_api_section() {
-        echo '<p>' . esc_html__( 'Configure your Rain OS API settings. Get your API key from', 'rain-os-aeo-analyzer' ) . ' <a href="https://www.app.getrainos.com" target="_blank">app.getrainos.com</a></p>';
+        echo '<p>' . esc_html__( 'Configure your Rain OS API settings. Get your API key from', 'rain-os-aeo-analyzer' ) . ' <a href="https://app.getrainos.com/#/login" target="_blank">app.getrainos.com</a></p>';
     }
 
     public function render_api_key_field() {

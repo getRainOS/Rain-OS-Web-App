@@ -258,9 +258,9 @@ function Sidebar({ currentPage, setCurrentPage }) {
       </nav>
       
       <div style={{ padding: '12px', borderTop: '1px solid var(--border-color)' }}>
-        <span style={{ color: 'var(--text-muted)', fontSize: '11px' }}>support@rainos.com</span>
+        <span style={{ color: 'var(--text-muted)', fontSize: '11px' }}>support@getrainos.com</span>
         <a 
-          href="mailto:support@rainos.com?subject=Feedback"
+          href="mailto:support@getrainos.com?subject=Feedback"
           style={{ 
             display: 'block',
             color: 'var(--accent)', 

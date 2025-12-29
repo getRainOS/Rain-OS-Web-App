@@ -70,7 +70,7 @@ $score_threshold = get_option( 'rain_os_score_threshold', 70 );
                                             __( 'Get your API key from <a href="%s" target="_blank">app.getrainos.com</a>', 'rain-os-aeo-analyzer' ),
                                             array( 'a' => array( 'href' => array(), 'target' => array() ) )
                                         ),
-                                        'https://www.app.getrainos.com'
+                                        'https://app.getrainos.com/#/login'
                                     );
                                     ?>
                                 </p>
@@ -225,7 +225,7 @@ $score_threshold = get_option( 'rain_os_score_threshold', 70 );
                                 <div class="rain-os-usage-fill" style="width: <?php echo esc_attr( min( 100, ( $subscription['usage_count'] / max( 1, $subscription['usage_limit'] ) ) * 100 ) ); ?>%;"></div>
                             </div>
                             <?php if ( ! $subscription['is_pro'] ) : ?>
-                            <a href="https://www.app.getrainos.com" target="_blank" class="rain-os-btn rain-os-btn-primary rain-os-btn-full">
+                            <a href="https://app.getrainos.com/#/login" target="_blank" class="rain-os-btn rain-os-btn-primary rain-os-btn-full">
                                 <?php esc_html_e( 'Upgrade Plan', 'rain-os-aeo-analyzer' ); ?>
                             </a>
                             <?php endif; ?>
@@ -234,7 +234,7 @@ $score_threshold = get_option( 'rain_os_score_threshold', 70 );
                         <div class="rain-os-no-api-key">
                             <span class="dashicons dashicons-warning"></span>
                             <p><?php esc_html_e( 'No API key configured', 'rain-os-aeo-analyzer' ); ?></p>
-                            <a href="https://www.app.getrainos.com" target="_blank" class="rain-os-btn rain-os-btn-primary">
+                            <a href="https://app.getrainos.com/#/login" target="_blank" class="rain-os-btn rain-os-btn-primary">
                                 <?php esc_html_e( 'Get API Key', 'rain-os-aeo-analyzer' ); ?>
                             </a>
                         </div>
@@ -261,7 +261,7 @@ $score_threshold = get_option( 'rain_os_score_threshold', 70 );
                                 </a>
                             </li>
                             <li>
-                                <a href="mailto:support@rainos.com">
+                                <a href="mailto:support@getrainos.com">
                                     <span class="dashicons dashicons-email"></span>
                                     <?php esc_html_e( 'Contact Support', 'rain-os-aeo-analyzer' ); ?>
                                 </a>

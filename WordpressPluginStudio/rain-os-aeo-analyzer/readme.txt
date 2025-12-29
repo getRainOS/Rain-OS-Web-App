@@ -35,7 +35,7 @@ Rain OS AEO Analyzer helps you optimize your content for AI-powered answer engin
 
 * WordPress 5.8 or higher
 * PHP 7.4 or higher
-* Rain OS API key (get yours at app.getrainos.com)
+* Rain OS API key (get yours at https://app.getrainos.com/#/login)
 
 == Installation ==
 
@@ -48,7 +48,7 @@ Rain OS AEO Analyzer helps you optimize your content for AI-powered answer engin
 
 = Where do I get an API key? =
 
-Visit https://www.app.getrainos.com to create an account and get your API key.
+Visit https://app.getrainos.com/#/login to create an account and get your API key.
 
 = What is AEO? =
 

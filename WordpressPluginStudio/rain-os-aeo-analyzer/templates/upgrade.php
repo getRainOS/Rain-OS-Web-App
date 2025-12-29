@@ -49,7 +49,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'QA-Format Detection: Question/Answer optimization', 'rain-os-aeo-analyzer' ); ?></li>
                 </ul>
 
-                <a href="https://www.app.getrainos.com" target="_blank" rel="noopener noreferrer" class="rain-os-btn rain-os-btn-primary rain-os-btn-full">
+                <a href="https://app.getrainos.com/#/login" target="_blank" rel="noopener noreferrer" class="rain-os-btn rain-os-btn-primary rain-os-btn-full">
                     <span class="dashicons dashicons-cloud"></span>
                     <?php esc_html_e( 'Upgrade to Business', 'rain-os-aeo-analyzer' ); ?>
                 </a>
@@ -69,7 +69,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'Priority e-mail Support', 'rain-os-aeo-analyzer' ); ?></li>
                 </ul>
 
-                <a href="https://www.app.getrainos.com" target="_blank" rel="noopener noreferrer" class="rain-os-btn rain-os-btn-primary rain-os-btn-full">
+                <a href="https://app.getrainos.com/#/login" target="_blank" rel="noopener noreferrer" class="rain-os-btn rain-os-btn-primary rain-os-btn-full">
                     <span class="dashicons dashicons-star-filled"></span>
                     <?php esc_html_e( 'Upgrade to Pro', 'rain-os-aeo-analyzer' ); ?>
                 </a>
