@@ -1,0 +1,140 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
+class Rain_OS_Settings {
+
+    private $options = array();
+
+    public function __construct() {
+        $this->options = array(
+            'rain_os_api_key'    => get_option( 'rain_os_api_key', '' ),
+            'rain_os_api_url'    => get_option( 'rain_os_api_url', RAIN_OS_AEO_API_URL ),
+            'rain_os_cache_time' => get_option( 'rain_os_cache_time', 3600 ),
+        );
+
+        add_action( 'admin_init', array( $this, 'register_settings' ) );
+        add_action( 'admin_notices', array( $this, 'show_api_key_notice' ) );
+    }
+
+    public function register_settings() {
+        register_setting(
+            'rain_os_aeo_settings',
+            'rain_os_api_key',
+            array(
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+                'default'           => '',
+            )
+        );
+
+        register_setting(
+            'rain_os_aeo_settings',
+            'rain_os_api_url',
+            array(
+                'type'              => 'string',
+                'sanitize_callback' => 'esc_url_raw',
+                'default'           => RAIN_OS_AEO_API_URL,
+            )
+        );
+
+        register_setting(
+            'rain_os_aeo_settings',
+            'rain_os_cache_time',
+            array(
+                'type'              => 'integer',
+                'sanitize_callback' => 'absint',
+                'default'           => 3600,
+            )
+        );
+
+        add_settings_section(
+            'rain_os_api_section',
+            __( 'API Configuration', 'rain-os-aeo-analyzer' ),
+            array( $this, 'render_api_section' ),
+            'rain_os_aeo_settings'
+        );
+
+        add_settings_field(
+            'rain_os_api_key',
+            __( 'API Key', 'rain-os-aeo-analyzer' ),
+            array( $this, 'render_api_key_field' ),
+            'rain_os_aeo_settings',
+            'rain_os_api_section'
+        );
+
+        add_settings_field(
+            'rain_os_cache_time',
+            __( 'Cache Duration', 'rain-os-aeo-analyzer' ),
+            array( $this, 'render_cache_field' ),
+            'rain_os_aeo_settings',
+            'rain_os_api_section'
+        );
+    }
+
+    public function render_api_section() {
+        echo '<p>' . esc_html__( 'Configure your Rain OS API settings. Get your API key from', 'rain-os-aeo-analyzer' ) . ' <a href="https://www.app.getrainos.com" target="_blank">app.getrainos.com</a></p>';
+    }
+
+    public function render_api_key_field() {
+        $value = get_option( 'rain_os_api_key', '' );
+        ?>
+        <input type="password" 
+               id="rain_os_api_key" 
+               name="rain_os_api_key" 
+               value="<?php echo esc_attr( $value ); ?>" 
+               class="regular-text"
+               autocomplete="off" />
+        <p class="description"><?php esc_html_e( 'Enter your Rain OS API key.', 'rain-os-aeo-analyzer' ); ?></p>
+        <?php
+    }
+
+    public function render_cache_field() {
+        $value = get_option( 'rain_os_cache_time', 3600 );
+        ?>
+        <select id="rain_os_cache_time" name="rain_os_cache_time">
+            <option value="1800" <?php selected( $value, 1800 ); ?>><?php esc_html_e( '30 minutes', 'rain-os-aeo-analyzer' ); ?></option>
+            <option value="3600" <?php selected( $value, 3600 ); ?>><?php esc_html_e( '1 hour', 'rain-os-aeo-analyzer' ); ?></option>
+            <option value="7200" <?php selected( $value, 7200 ); ?>><?php esc_html_e( '2 hours', 'rain-os-aeo-analyzer' ); ?></option>
+            <option value="86400" <?php selected( $value, 86400 ); ?>><?php esc_html_e( '24 hours', 'rain-os-aeo-analyzer' ); ?></option>
+        </select>
+        <p class="description"><?php esc_html_e( 'How long to cache analysis results.', 'rain-os-aeo-analyzer' ); ?></p>
+        <?php
+    }
+
+    public function show_api_key_notice() {
+        $screen = get_current_screen();
+        if ( strpos( $screen->id, 'rain-os-aeo' ) === false ) {
+            return;
+        }
+
+        $api_key = get_option( 'rain_os_api_key', '' );
+        if ( empty( $api_key ) ) {
+            ?>
+            <div class="notice notice-warning is-dismissible">
+                <p>
+                    <?php
+                    printf(
+                        wp_kses(
+                            __( 'Rain OS AEO Analyzer requires an API key to function. <a href="%s">Configure your API key</a> to get started.', 'rain-os-aeo-analyzer' ),
+                            array( 'a' => array( 'href' => array() ) )
+                        ),
+                        esc_url( admin_url( 'admin.php?page=rain-os-aeo-settings' ) )
+                    );
+                    ?>
+                </p>
+            </div>
+            <?php
+        }
+    }
+
+    public function get_option( $key, $default = '' ) {
+        return isset( $this->options[ $key ] ) ? $this->options[ $key ] : $default;
+    }
+
+    public static function has_valid_api_key() {
+        $api_key = get_option( 'rain_os_api_key', '' );
+        return ! empty( $api_key );
+    }
+}
