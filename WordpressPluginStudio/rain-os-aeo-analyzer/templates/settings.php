@@ -2,6 +2,14 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
+
+$api_key = get_option( 'rain_os_api_key', '' );
+$industry = get_option( 'rain_os_industry', '' );
+$cache_time = get_option( 'rain_os_cache_time', 3600 );
+$auto_analyze = get_option( 'rain_os_auto_analyze', 'no' );
+$provenance_tracking = get_option( 'rain_os_provenance_tracking', 'no' );
+$score_alerts = get_option( 'rain_os_score_alerts', 'no' );
+$score_threshold = get_option( 'rain_os_score_threshold', 70 );
 ?>
 
 <div class="rain-os-wrap">
@@ -42,11 +50,13 @@ if ( ! defined( 'ABSPATH' ) ) {
                                     <input type="password" 
                                            id="rain_os_api_key" 
                                            name="rain_os_api_key" 
-                                           value="<?php echo esc_attr( get_option( 'rain_os_api_key', '' ) ); ?>" 
+                                           value="<?php echo esc_attr( $api_key ); ?>" 
                                            class="rain-os-input"
+                                           placeholder="<?php esc_attr_e( 'Enter your Rain OS API key...', 'rain-os-aeo-analyzer' ); ?>"
                                            autocomplete="off" />
-                                    <button type="button" class="rain-os-btn rain-os-btn-icon" id="toggle-api-key">
+                                    <button type="button" class="rain-os-btn rain-os-btn-icon rain-os-btn-toggle" id="toggle-api-key" title="<?php esc_attr_e( 'Show/Hide API Key', 'rain-os-aeo-analyzer' ); ?>">
                                         <span class="dashicons dashicons-visibility"></span>
+                                        <span class="rain-os-toggle-text"><?php esc_html_e( 'View', 'rain-os-aeo-analyzer' ); ?></span>
                                     </button>
                                     <button type="button" class="rain-os-btn rain-os-btn-secondary" id="test-connection">
                                         <span class="dashicons dashicons-update"></span>
@@ -70,7 +80,6 @@ if ( ! defined( 'ABSPATH' ) ) {
                             <div class="rain-os-form-group">
                                 <label for="rain_os_industry"><?php esc_html_e( 'Default Industry', 'rain-os-aeo-analyzer' ); ?></label>
                                 <select id="rain_os_industry" name="rain_os_industry" class="rain-os-select">
-                                    <?php $industry = get_option( 'rain_os_industry', '' ); ?>
                                     <option value="" <?php selected( $industry, '' ); ?>><?php esc_html_e( 'Select Industry...', 'rain-os-aeo-analyzer' ); ?></option>
                                     <option value="technology" <?php selected( $industry, 'technology' ); ?>><?php esc_html_e( 'Technology', 'rain-os-aeo-analyzer' ); ?></option>
                                     <option value="healthcare" <?php selected( $industry, 'healthcare' ); ?>><?php esc_html_e( 'Healthcare', 'rain-os-aeo-analyzer' ); ?></option>
@@ -79,21 +88,103 @@ if ( ! defined( 'ABSPATH' ) ) {
                                     <option value="education" <?php selected( $industry, 'education' ); ?>><?php esc_html_e( 'Education', 'rain-os-aeo-analyzer' ); ?></option>
                                     <option value="marketing" <?php selected( $industry, 'marketing' ); ?>><?php esc_html_e( 'Marketing', 'rain-os-aeo-analyzer' ); ?></option>
                                     <option value="legal" <?php selected( $industry, 'legal' ); ?>><?php esc_html_e( 'Legal', 'rain-os-aeo-analyzer' ); ?></option>
+                                    <option value="realestate" <?php selected( $industry, 'realestate' ); ?>><?php esc_html_e( 'Real Estate', 'rain-os-aeo-analyzer' ); ?></option>
+                                    <option value="travel" <?php selected( $industry, 'travel' ); ?>><?php esc_html_e( 'Travel & Hospitality', 'rain-os-aeo-analyzer' ); ?></option>
                                     <option value="other" <?php selected( $industry, 'other' ); ?>><?php esc_html_e( 'Other', 'rain-os-aeo-analyzer' ); ?></option>
                                 </select>
-                                <p class="rain-os-form-help"><?php esc_html_e( 'Industry context helps improve analysis accuracy.', 'rain-os-aeo-analyzer' ); ?></p>
+                                <p class="rain-os-form-help"><?php esc_html_e( 'Industry context helps the AI provide more relevant and accurate analysis for your content.', 'rain-os-aeo-analyzer' ); ?></p>
                             </div>
 
                             <div class="rain-os-form-group">
                                 <label for="rain_os_cache_time"><?php esc_html_e( 'Cache Duration', 'rain-os-aeo-analyzer' ); ?></label>
                                 <select id="rain_os_cache_time" name="rain_os_cache_time" class="rain-os-select">
-                                    <?php $cache_time = get_option( 'rain_os_cache_time', 3600 ); ?>
                                     <option value="1800" <?php selected( $cache_time, 1800 ); ?>><?php esc_html_e( '30 minutes', 'rain-os-aeo-analyzer' ); ?></option>
                                     <option value="3600" <?php selected( $cache_time, 3600 ); ?>><?php esc_html_e( '1 hour', 'rain-os-aeo-analyzer' ); ?></option>
                                     <option value="7200" <?php selected( $cache_time, 7200 ); ?>><?php esc_html_e( '2 hours', 'rain-os-aeo-analyzer' ); ?></option>
                                     <option value="86400" <?php selected( $cache_time, 86400 ); ?>><?php esc_html_e( '24 hours', 'rain-os-aeo-analyzer' ); ?></option>
                                 </select>
                                 <p class="rain-os-form-help"><?php esc_html_e( 'How long to cache analysis results before refreshing.', 'rain-os-aeo-analyzer' ); ?></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rain-os-card">
+                        <div class="rain-os-card-header">
+                            <h3><?php esc_html_e( 'Analysis Preferences', 'rain-os-aeo-analyzer' ); ?></h3>
+                            <span class="rain-os-card-badge"><?php esc_html_e( 'Local Settings', 'rain-os-aeo-analyzer' ); ?></span>
+                        </div>
+                        <div class="rain-os-card-body">
+                            <p class="rain-os-card-description"><?php esc_html_e( 'These settings control how the plugin behaves within your WordPress site. They do not require API calls.', 'rain-os-aeo-analyzer' ); ?></p>
+
+                            <div class="rain-os-form-group rain-os-toggle-group">
+                                <div class="rain-os-toggle-row">
+                                    <label class="rain-os-toggle-label">
+                                        <input type="checkbox" 
+                                               name="rain_os_auto_analyze" 
+                                               value="yes" 
+                                               <?php checked( $auto_analyze, 'yes' ); ?> 
+                                               class="rain-os-checkbox" />
+                                        <span class="rain-os-toggle-switch"></span>
+                                        <span class="rain-os-toggle-title">
+                                            <?php esc_html_e( 'Auto-Analyze on Publish', 'rain-os-aeo-analyzer' ); ?>
+                                            <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'When enabled, the plugin will automatically run an AEO analysis every time you publish or update a post. This uses one API credit per analysis. Disable this if you prefer to manually trigger analyses.', 'rain-os-aeo-analyzer' ); ?>">
+                                                <span class="dashicons dashicons-info-outline"></span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                                <p class="rain-os-form-help"><?php esc_html_e( 'Automatically analyze content when publishing or updating posts.', 'rain-os-aeo-analyzer' ); ?></p>
+                            </div>
+
+                            <div class="rain-os-form-group rain-os-toggle-group">
+                                <div class="rain-os-toggle-row">
+                                    <label class="rain-os-toggle-label">
+                                        <input type="checkbox" 
+                                               name="rain_os_provenance_tracking" 
+                                               value="yes" 
+                                               <?php checked( $provenance_tracking, 'yes' ); ?> 
+                                               class="rain-os-checkbox" />
+                                        <span class="rain-os-toggle-switch"></span>
+                                        <span class="rain-os-toggle-title">
+                                            <?php esc_html_e( 'Enable Provenance Tracking', 'rain-os-aeo-analyzer' ); ?>
+                                            <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'Provenance tracking creates a cryptographic hash of your content at the time of analysis, serving as proof of authorship. This helps establish content ownership and can be useful for copyright protection or demonstrating when content was created.', 'rain-os-aeo-analyzer' ); ?>">
+                                                <span class="dashicons dashicons-info-outline"></span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                                <p class="rain-os-form-help"><?php esc_html_e( 'Record content authorship and timestamp data for provenance verification.', 'rain-os-aeo-analyzer' ); ?></p>
+                            </div>
+
+                            <div class="rain-os-form-group rain-os-toggle-group">
+                                <div class="rain-os-toggle-row">
+                                    <label class="rain-os-toggle-label">
+                                        <input type="checkbox" 
+                                               name="rain_os_score_alerts" 
+                                               value="yes" 
+                                               <?php checked( $score_alerts, 'yes' ); ?> 
+                                               class="rain-os-checkbox" />
+                                        <span class="rain-os-toggle-switch"></span>
+                                        <span class="rain-os-toggle-title">
+                                            <?php esc_html_e( 'Score Alerts Below Threshold', 'rain-os-aeo-analyzer' ); ?>
+                                            <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'When enabled, you will receive a notification in your WordPress dashboard whenever a post scores below the threshold you set. This helps you identify content that may need improvement for better AI visibility.', 'rain-os-aeo-analyzer' ); ?>">
+                                                <span class="dashicons dashicons-info-outline"></span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="rain-os-threshold-input" id="threshold-container" style="<?php echo $score_alerts !== 'yes' ? 'display:none;' : ''; ?>">
+                                    <label for="rain_os_score_threshold"><?php esc_html_e( 'Alert Threshold:', 'rain-os-aeo-analyzer' ); ?></label>
+                                    <input type="number" 
+                                           id="rain_os_score_threshold" 
+                                           name="rain_os_score_threshold" 
+                                           value="<?php echo esc_attr( $score_threshold ); ?>" 
+                                           min="0" 
+                                           max="100" 
+                                           class="rain-os-input rain-os-input-small" />
+                                    <span class="rain-os-threshold-hint"><?php esc_html_e( 'Notify when score falls below this value (0-100)', 'rain-os-aeo-analyzer' ); ?></span>
+                                </div>
+                                <p class="rain-os-form-help"><?php esc_html_e( 'Receive alerts when analyzed content scores below a certain threshold.', 'rain-os-aeo-analyzer' ); ?></p>
                             </div>
                         </div>
                     </div>
@@ -111,7 +202,6 @@ if ( ! defined( 'ABSPATH' ) ) {
                     </div>
                     <div class="rain-os-card-body" id="account-status-container">
                         <?php 
-                        $api_key = get_option( 'rain_os_api_key', '' );
                         if ( ! empty( $api_key ) ) :
                             $api_client = rain_os_aeo()->get_api_client();
                             $subscription = $api_client->get_subscription_status();
@@ -191,12 +281,23 @@ if ( ! defined( 'ABSPATH' ) ) {
     $('#toggle-api-key').on('click', function() {
         var input = $('#rain_os_api_key');
         var icon = $(this).find('.dashicons');
+        var text = $(this).find('.rain-os-toggle-text');
         if (input.attr('type') === 'password') {
             input.attr('type', 'text');
             icon.removeClass('dashicons-visibility').addClass('dashicons-hidden');
+            text.text('<?php echo esc_js( __( 'Hide', 'rain-os-aeo-analyzer' ) ); ?>');
         } else {
             input.attr('type', 'password');
             icon.removeClass('dashicons-hidden').addClass('dashicons-visibility');
+            text.text('<?php echo esc_js( __( 'View', 'rain-os-aeo-analyzer' ) ); ?>');
+        }
+    });
+
+    $('input[name="rain_os_score_alerts"]').on('change', function() {
+        if ($(this).is(':checked')) {
+            $('#threshold-container').slideDown(200);
+        } else {
+            $('#threshold-container').slideUp(200);
         }
     });
 
@@ -290,5 +391,155 @@ if ( ! defined( 'ABSPATH' ) ) {
 .rain-os-btn-full {
     width: 100%;
     margin-top: 15px;
+}
+.rain-os-btn-toggle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 80px;
+}
+.rain-os-toggle-text {
+    font-size: 12px;
+}
+.rain-os-card-badge {
+    background: rgba(34, 211, 238, 0.15);
+    color: #22d3ee;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.rain-os-card-description {
+    color: #94a3b8;
+    font-size: 13px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.rain-os-toggle-group {
+    margin-bottom: 20px;
+}
+.rain-os-toggle-row {
+    display: flex;
+    align-items: center;
+}
+.rain-os-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+.rain-os-checkbox {
+    display: none;
+}
+.rain-os-toggle-switch {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background: #374151;
+    border-radius: 12px;
+    transition: background 0.3s;
+    flex-shrink: 0;
+}
+.rain-os-toggle-switch::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+.rain-os-checkbox:checked + .rain-os-toggle-switch {
+    background: #22d3ee;
+}
+.rain-os-checkbox:checked + .rain-os-toggle-switch::after {
+    transform: translateX(20px);
+}
+.rain-os-toggle-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #e2e8f0;
+    font-weight: 500;
+}
+.rain-os-tooltip {
+    position: relative;
+    cursor: help;
+}
+.rain-os-tooltip .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: #64748b;
+    transition: color 0.2s;
+}
+.rain-os-tooltip:hover .dashicons {
+    color: #22d3ee;
+}
+.rain-os-tooltip::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 280px;
+    padding: 12px 15px;
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #cbd5e1;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    z-index: 1000;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+}
+.rain-os-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 2px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #1e293b;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+}
+.rain-os-tooltip:hover::before,
+.rain-os-tooltip:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+.rain-os-threshold-input {
+    margin-top: 12px;
+    padding: 12px 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.rain-os-threshold-input label {
+    color: #94a3b8;
+    font-size: 13px;
+}
+.rain-os-input-small {
+    width: 70px !important;
+    text-align: center;
+}
+.rain-os-threshold-hint {
+    color: #64748b;
+    font-size: 11px;
 }
 </style>

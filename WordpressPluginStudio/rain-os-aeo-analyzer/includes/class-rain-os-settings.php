@@ -9,9 +9,14 @@ class Rain_OS_Settings {
 
     public function __construct() {
         $this->options = array(
-            'rain_os_api_key'    => get_option( 'rain_os_api_key', '' ),
-            'rain_os_api_url'    => get_option( 'rain_os_api_url', RAIN_OS_AEO_API_URL ),
-            'rain_os_cache_time' => get_option( 'rain_os_cache_time', 3600 ),
+            'rain_os_api_key'             => get_option( 'rain_os_api_key', '' ),
+            'rain_os_api_url'             => get_option( 'rain_os_api_url', RAIN_OS_AEO_API_URL ),
+            'rain_os_cache_time'          => get_option( 'rain_os_cache_time', 3600 ),
+            'rain_os_industry'            => get_option( 'rain_os_industry', '' ),
+            'rain_os_auto_analyze'        => get_option( 'rain_os_auto_analyze', 'no' ),
+            'rain_os_provenance_tracking' => get_option( 'rain_os_provenance_tracking', 'no' ),
+            'rain_os_score_alerts'        => get_option( 'rain_os_score_alerts', 'no' ),
+            'rain_os_score_threshold'     => get_option( 'rain_os_score_threshold', 70 ),
         );
 
         add_action( 'admin_init', array( $this, 'register_settings' ) );
@@ -49,6 +54,56 @@ class Rain_OS_Settings {
             )
         );
 
+        register_setting(
+            'rain_os_aeo_settings',
+            'rain_os_industry',
+            array(
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+                'default'           => '',
+            )
+        );
+
+        register_setting(
+            'rain_os_aeo_settings',
+            'rain_os_auto_analyze',
+            array(
+                'type'              => 'string',
+                'sanitize_callback' => array( $this, 'sanitize_checkbox' ),
+                'default'           => 'no',
+            )
+        );
+
+        register_setting(
+            'rain_os_aeo_settings',
+            'rain_os_provenance_tracking',
+            array(
+                'type'              => 'string',
+                'sanitize_callback' => array( $this, 'sanitize_checkbox' ),
+                'default'           => 'no',
+            )
+        );
+
+        register_setting(
+            'rain_os_aeo_settings',
+            'rain_os_score_alerts',
+            array(
+                'type'              => 'string',
+                'sanitize_callback' => array( $this, 'sanitize_checkbox' ),
+                'default'           => 'no',
+            )
+        );
+
+        register_setting(
+            'rain_os_aeo_settings',
+            'rain_os_score_threshold',
+            array(
+                'type'              => 'integer',
+                'sanitize_callback' => array( $this, 'sanitize_threshold' ),
+                'default'           => 70,
+            )
+        );
+
         add_settings_section(
             'rain_os_api_section',
             __( 'API Configuration', 'rain-os-aeo-analyzer' ),
@@ -71,6 +126,15 @@ class Rain_OS_Settings {
             'rain_os_aeo_settings',
             'rain_os_api_section'
         );
+    }
+
+    public function sanitize_checkbox( $value ) {
+        return 'yes' === $value ? 'yes' : 'no';
+    }
+
+    public function sanitize_threshold( $value ) {
+        $value = absint( $value );
+        return max( 0, min( 100, $value ) );
     }
 
     public function render_api_section() {
@@ -136,5 +200,25 @@ class Rain_OS_Settings {
     public static function has_valid_api_key() {
         $api_key = get_option( 'rain_os_api_key', '' );
         return ! empty( $api_key );
+    }
+
+    public static function is_auto_analyze_enabled() {
+        return 'yes' === get_option( 'rain_os_auto_analyze', 'no' );
+    }
+
+    public static function is_provenance_tracking_enabled() {
+        return 'yes' === get_option( 'rain_os_provenance_tracking', 'no' );
+    }
+
+    public static function is_score_alerts_enabled() {
+        return 'yes' === get_option( 'rain_os_score_alerts', 'no' );
+    }
+
+    public static function get_score_threshold() {
+        return absint( get_option( 'rain_os_score_threshold', 70 ) );
+    }
+
+    public static function get_default_industry() {
+        return get_option( 'rain_os_industry', '' );
     }
 }
