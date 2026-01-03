@@ -927,7 +927,7 @@ The evolution toward edge computing extends cloud capabilities closer to end use
               borderRadius: '12px',
               padding: '20px',
             }}>
-              <h4 style={{ fontSize: '14px', fontWeight: 600, margin: '0 0 16px' }}>AI - Powered Proprietary LLM Readability Analysis</h4>
+              <h4 style={{ fontSize: '14px', fontWeight: 600, margin: '0 0 16px' }}>AI Readiness Scores</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {[
                   { label: 'Readability', key: 'readability' },
