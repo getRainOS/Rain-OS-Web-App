@@ -1,0 +1,123 @@
+
+ABSOLUTE RULES:
+- Do NOT redesign UI
+- Do NOT remove, rename, or refactor existing functions, hooks, classes, or files
+- Do NOT change existing behavior
+- All changes must be additive and backward compatible
+
+GOAL:
+Integrate the plugin with a new headless AI-readiness backend while keeping the existing backend functional. Add a Passive Numeric Score Panel, handle llms.txt and content chunking, and ensure safe, feature-flagged rollout.
+
+ASSUME:
+- Existing backend integration is active and must continue working
+- New backend may or may not exist
+- Both old and new backends can coexist
+- Plugin must auto-detect new backend capability at runtime
+
+-------------------------------
+BACKEND API CONTRACT (NEW)
+-------------------------------
+
+Base URL: configurable in plugin settings
+
+Endpoints:
+
+POST   /v1/ai/normalize
+GET    /v1/ai/content/{contentId}
+GET    /v1/ai/site/llms
+GET    /v1/ai/diagnostics/{contentId}
+
+POST /v1/ai/normalize payload:
+{
+  contentId: string,
+  text?: string,
+  html?: string,
+  canonicalUrl?: string
+}
+
+Response (example):
+{
+  profileId: string,
+  scores: {
+    readability: number,
+    structure: number,
+    freshness: number,
+    citation: number,
+    visibility: number
+  },
+  version: string
+}
+
+-------------------------------
+FEATURES TO IMPLEMENT
+-------------------------------
+
+1. Capability Detection
+- Check GET /v1/ai/site/llms before using new endpoints
+- If unavailable, fallback silently to old backend
+
+2. Passive Numeric Score Panel (WordPress Editor)
+- Additive, collapsible meta box in post editor
+- Displays numeric scores: readability, structure, freshness, citation readiness, AI visibility
+- Populated from /v1/ai/content/{contentId}
+- Uses WordPress transients for caching (TTL ≥ 6 hours)
+- Shown only if feature flag is enabled
+- Default: collapsed
+- No layout or style changes
+
+3. Content Normalization
+- On post save or manual trigger:
+  - POST contentId + html/text to /v1/ai/normalize
+  - Backend handles chunking
+  - Non-blocking, async
+  - Do not affect save flow
+  - Feature-flagged
+
+4. llms.txt / Site Manifest
+- Fetch GET /v1/ai/site/llms for connectivity verification
+- Invisible to users
+- Do not auto-publish or render
+
+5. Dual Backend Handling
+- Default: old backend
+- New backend optional, runtime-detected
+- Must not break old backend
+- Silent fallback if new backend unavailable
+
+6. Error Handling & Performance
+- Fail silently
+- Log only to existing debug/logger
+- No repeated calls per contentId
+- No blocking requests
+- No polling
+
+7. Safety Rules
+- No LLM prompts
+- No content generation
+- No content rewriting
+- Analysis only
+
+8. Feature Flags
+- All new features behind boolean flags
+- Default OFF
+- Respect existing plugin settings patterns
+
+-------------------------------
+DEVELOPER NOTES
+-------------------------------
+
+- Use existing WordPress hooks (`add_meta_box`) for the panel
+- Fetch API asynchronously using wp_remote_request
+- Aggregate scores from chunked backend content
+- Use cached results (WordPress transients) when possible
+- Capabilities detection before using new endpoints
+- Additive code only — no deletion, no renaming
+- Existing UI and workflows must remain exactly the same if flags are OFF or backend unavailable
+
+FINAL GUARANTEE:
+- If the new backend is down or feature flags are OFF:
+  - plugin behaves identically to current production
+  - zero UI changes, zero errors, zero regressions
+- Supports phased rollout safely and incrementally
+
+

@@ -189,6 +189,84 @@ $score_threshold = get_option( 'rain_os_score_threshold', 70 );
                         </div>
                     </div>
 
+                    <?php
+                    $ai_backend_enabled = get_option( 'rain_os_ai_backend_enabled', 'no' );
+                    $ai_score_panel = get_option( 'rain_os_ai_score_panel', 'no' );
+                    $ai_normalize = get_option( 'rain_os_ai_normalize', 'no' );
+                    ?>
+                    <div class="rain-os-card">
+                        <div class="rain-os-card-header">
+                            <h3><?php esc_html_e( 'AI Readiness Backend', 'rain-os-aeo-analyzer' ); ?></h3>
+                            <span class="rain-os-card-badge rain-os-card-badge-beta"><?php esc_html_e( 'Beta', 'rain-os-aeo-analyzer' ); ?></span>
+                        </div>
+                        <div class="rain-os-card-body">
+                            <p class="rain-os-card-description"><?php esc_html_e( 'Enable new AI readiness features. These features require the new backend API and are optional.', 'rain-os-aeo-analyzer' ); ?></p>
+
+                            <div class="rain-os-form-group rain-os-toggle-group">
+                                <div class="rain-os-toggle-row">
+                                    <label class="rain-os-toggle-label">
+                                        <input type="checkbox" 
+                                               name="rain_os_ai_backend_enabled" 
+                                               value="yes" 
+                                               <?php checked( $ai_backend_enabled, 'yes' ); ?> 
+                                               class="rain-os-checkbox"
+                                               id="rain_os_ai_backend_enabled" />
+                                        <span class="rain-os-toggle-switch"></span>
+                                        <span class="rain-os-toggle-title">
+                                            <?php esc_html_e( 'Enable AI Readiness Backend', 'rain-os-aeo-analyzer' ); ?>
+                                            <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'Master switch for new AI backend features. When disabled, all AI readiness features below are inactive.', 'rain-os-aeo-analyzer' ); ?>">
+                                                <span class="dashicons dashicons-info-outline"></span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                                <p class="rain-os-form-help"><?php esc_html_e( 'Enable new AI readiness analysis backend integration.', 'rain-os-aeo-analyzer' ); ?></p>
+                            </div>
+
+                            <div class="rain-os-ai-backend-options" id="ai-backend-options" style="<?php echo $ai_backend_enabled !== 'yes' ? 'display:none;' : ''; ?>">
+                                <div class="rain-os-form-group rain-os-toggle-group">
+                                    <div class="rain-os-toggle-row">
+                                        <label class="rain-os-toggle-label">
+                                            <input type="checkbox" 
+                                                   name="rain_os_ai_score_panel" 
+                                                   value="yes" 
+                                                   <?php checked( $ai_score_panel, 'yes' ); ?> 
+                                                   class="rain-os-checkbox" />
+                                            <span class="rain-os-toggle-switch"></span>
+                                            <span class="rain-os-toggle-title">
+                                                <?php esc_html_e( 'AI Score Panel in Editor', 'rain-os-aeo-analyzer' ); ?>
+                                                <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'Displays a sidebar panel in the post editor showing AI readiness scores: Readability, Structure, Freshness, Citation Readiness, and AI Visibility.', 'rain-os-aeo-analyzer' ); ?>">
+                                                    <span class="dashicons dashicons-info-outline"></span>
+                                                </span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <p class="rain-os-form-help"><?php esc_html_e( 'Show AI readiness scores in the post editor sidebar.', 'rain-os-aeo-analyzer' ); ?></p>
+                                </div>
+
+                                <div class="rain-os-form-group rain-os-toggle-group">
+                                    <div class="rain-os-toggle-row">
+                                        <label class="rain-os-toggle-label">
+                                            <input type="checkbox" 
+                                                   name="rain_os_ai_normalize" 
+                                                   value="yes" 
+                                                   <?php checked( $ai_normalize, 'yes' ); ?> 
+                                                   class="rain-os-checkbox" />
+                                            <span class="rain-os-toggle-switch"></span>
+                                            <span class="rain-os-toggle-title">
+                                                <?php esc_html_e( 'Content Normalization on Save', 'rain-os-aeo-analyzer' ); ?>
+                                                <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'Automatically sends content to the AI backend for normalization when saving posts. This runs in the background and does not affect the save process.', 'rain-os-aeo-analyzer' ); ?>">
+                                                    <span class="dashicons dashicons-info-outline"></span>
+                                                </span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <p class="rain-os-form-help"><?php esc_html_e( 'Normalize content for AI analysis when saving posts (async, non-blocking).', 'rain-os-aeo-analyzer' ); ?></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="rain-os-settings-actions">
                         <?php submit_button( __( 'Save Settings', 'rain-os-aeo-analyzer' ), 'rain-os-btn rain-os-btn-primary', 'submit', false ); ?>
                     </div>
@@ -301,6 +379,14 @@ $score_threshold = get_option( 'rain_os_score_threshold', 70 );
         }
     });
 
+    $('#rain_os_ai_backend_enabled').on('change', function() {
+        if ($(this).is(':checked')) {
+            $('#ai-backend-options').slideDown(200);
+        } else {
+            $('#ai-backend-options').slideUp(200);
+        }
+    });
+
     $('#test-connection').on('click', function() {
         var $btn = $(this);
         var $status = $('#connection-status');
@@ -409,6 +495,15 @@ $score_threshold = get_option( 'rain_os_score_threshold', 70 );
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
+}
+.rain-os-card-badge-beta {
+    background: rgba(168, 85, 247, 0.15);
+    color: #a855f7;
+}
+.rain-os-ai-backend-options {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 .rain-os-card-description {
     color: #94a3b8;

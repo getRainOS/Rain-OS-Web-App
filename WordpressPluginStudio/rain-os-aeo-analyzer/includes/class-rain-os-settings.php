@@ -17,10 +17,21 @@ class Rain_OS_Settings {
             'rain_os_provenance_tracking' => get_option( 'rain_os_provenance_tracking', 'no' ),
             'rain_os_score_alerts'        => get_option( 'rain_os_score_alerts', 'no' ),
             'rain_os_score_threshold'     => get_option( 'rain_os_score_threshold', 70 ),
+            'rain_os_ai_backend_enabled'  => get_option( 'rain_os_ai_backend_enabled', 'no' ),
+            'rain_os_ai_score_panel'      => get_option( 'rain_os_ai_score_panel', 'no' ),
+            'rain_os_ai_normalize'        => get_option( 'rain_os_ai_normalize', 'no' ),
         );
 
         add_action( 'admin_init', array( $this, 'register_settings' ) );
         add_action( 'admin_notices', array( $this, 'show_api_key_notice' ) );
+        add_action( 'update_option_rain_os_api_key', array( $this, 'clear_ai_backend_cache' ) );
+        add_action( 'update_option_rain_os_ai_backend_enabled', array( $this, 'clear_ai_backend_cache' ) );
+    }
+
+    public function clear_ai_backend_cache() {
+        if ( class_exists( 'Rain_OS_AI_Backend' ) ) {
+            Rain_OS_AI_Backend::clear_capability_cache();
+        }
     }
 
     public function register_settings() {
@@ -101,6 +112,36 @@ class Rain_OS_Settings {
                 'type'              => 'integer',
                 'sanitize_callback' => array( $this, 'sanitize_threshold' ),
                 'default'           => 70,
+            )
+        );
+
+        register_setting(
+            'rain_os_aeo_settings',
+            'rain_os_ai_backend_enabled',
+            array(
+                'type'              => 'string',
+                'sanitize_callback' => array( $this, 'sanitize_checkbox' ),
+                'default'           => 'no',
+            )
+        );
+
+        register_setting(
+            'rain_os_aeo_settings',
+            'rain_os_ai_score_panel',
+            array(
+                'type'              => 'string',
+                'sanitize_callback' => array( $this, 'sanitize_checkbox' ),
+                'default'           => 'no',
+            )
+        );
+
+        register_setting(
+            'rain_os_aeo_settings',
+            'rain_os_ai_normalize',
+            array(
+                'type'              => 'string',
+                'sanitize_callback' => array( $this, 'sanitize_checkbox' ),
+                'default'           => 'no',
             )
         );
 

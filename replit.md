@@ -70,3 +70,38 @@ The plugin follows WordPress plugin architecture standards, utilizing a modular,
 ### Post Performance Table (Category Scores)
 - Shows Overall Score, AI Readability, Digital Authority, and Conversion columns
 - All score badges use red/yellow/green coloring based on score thresholds (green ≥80, yellow 65-79, red <65)
+
+### AI Readiness Backend Integration (January 2025)
+- **New Headless AI Backend**: Added integration with new AI readiness backend API (v1/ai/*)
+  - Feature-flagged with all features OFF by default for safe phased rollout
+  - Capability detection via GET /v1/ai/site/llms before using new endpoints
+  - Silent fallback to old backend if new backend unavailable
+  - Dual backend support - old backend remains fully functional
+
+- **AI Score Panel**: Passive numeric score panel in WordPress post editor
+  - Collapsible meta box in sidebar showing 5 AI readiness scores:
+    - Readability, Structure, Freshness, Citation Readiness, AI Visibility
+  - AJAX-loaded from /v1/ai/content/{contentId}
+  - WordPress transients caching (6+ hour TTL)
+  - Color-coded score badges (green/yellow/red)
+
+- **Content Normalization**: Async content normalization on post save
+  - POST to /v1/ai/normalize with contentId, html, text, canonicalUrl
+  - Non-blocking (blocking=false), does not affect save flow
+  - Backend handles chunking
+
+- **Feature Flags** (Settings > AI Readiness Backend):
+  - `rain_os_ai_backend_enabled`: Master switch (default: OFF)
+  - `rain_os_ai_score_panel`: Enable score panel in editor (default: OFF)
+  - `rain_os_ai_normalize`: Enable content normalization on save (default: OFF)
+
+- **New Files**:
+  - `includes/api/class-rain-os-ai-backend.php`: New AI backend API client
+  - `includes/class-rain-os-ai-score-panel.php`: Meta box implementation
+  - `assets/js/ai-score-panel.js`: AJAX loading for score panel
+
+- **Safety Guarantees**:
+  - Zero UI changes if flags OFF or backend unavailable
+  - No LLM prompts, no content generation - analysis only
+  - Fail silently, log to existing debug logger
+  - No polling, no repeated calls per contentId

@@ -30,6 +30,8 @@ require_once RAIN_OS_AEO_PLUGIN_DIR . 'includes/class-rain-os-assets.php';
 require_once RAIN_OS_AEO_PLUGIN_DIR . 'includes/class-rain-os-settings.php';
 require_once RAIN_OS_AEO_PLUGIN_DIR . 'includes/class-rain-os-ajax.php';
 require_once RAIN_OS_AEO_PLUGIN_DIR . 'includes/api/class-rain-os-api-client.php';
+require_once RAIN_OS_AEO_PLUGIN_DIR . 'includes/api/class-rain-os-ai-backend.php';
+require_once RAIN_OS_AEO_PLUGIN_DIR . 'includes/class-rain-os-ai-score-panel.php';
 
 final class Rain_OS_AEO_Analyzer {
 
@@ -40,6 +42,8 @@ final class Rain_OS_AEO_Analyzer {
     private $settings;
     private $ajax;
     private $api_client;
+    private $ai_backend;
+    private $ai_score_panel;
 
     public static function instance() {
         if ( is_null( self::$instance ) ) {
@@ -60,6 +64,9 @@ final class Rain_OS_AEO_Analyzer {
         $this->settings   = new Rain_OS_Settings();
         $this->admin      = new Rain_OS_Admin( $this->api_client );
         $this->ajax       = new Rain_OS_Ajax( $this->api_client );
+
+        $this->ai_backend     = new Rain_OS_AI_Backend();
+        $this->ai_score_panel = new Rain_OS_AI_Score_Panel();
     }
 
     private function init_hooks() {
@@ -67,6 +74,26 @@ final class Rain_OS_AEO_Analyzer {
         register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
         add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
+
+        add_action( 'save_post', array( $this, 'handle_post_save_normalize' ), 99, 3 );
+    }
+
+    public function handle_post_save_normalize( $post_id, $post, $update ) {
+        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+            return;
+        }
+
+        if ( wp_is_post_revision( $post_id ) ) {
+            return;
+        }
+
+        if ( ! in_array( $post->post_type, array( 'post', 'page' ), true ) ) {
+            return;
+        }
+
+        if ( Rain_OS_AI_Backend::is_normalize_enabled() ) {
+            $this->ai_backend->normalize_content_async( $post_id );
+        }
     }
 
     public function activate() {
