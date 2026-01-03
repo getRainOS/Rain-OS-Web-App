@@ -650,7 +650,7 @@ The evolution toward edge computing extends cloud capabilities closer to end use
 
   const tabs = [
     { id: 'overview', label: 'Overview' },
-    { id: 'ai-readiness', label: 'AI Readiness' },
+    { id: 'ai-readiness', label: 'AI - Powered Readability Analysis' },
     { id: 'actions', label: 'Actions' },
     { id: 'metrics', label: 'Metrics' },
     { id: 'history', label: 'History' }
