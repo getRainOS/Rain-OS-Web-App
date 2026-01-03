@@ -2,12 +2,15 @@
     'use strict';
 
     var RainOSAdmin = {
+        currentContentId: null,
+
         init: function() {
             this.bindEvents();
             this.initEditor();
             this.initSearch();
             this.initNotifications();
             this.initLocalAudit();
+            this.initAIBackend();
         },
 
         bindEvents: function() {
@@ -19,6 +22,7 @@
             $(document).on('change', '#rain-os-period', this.handlePeriodChange.bind(this));
             $(document).on('input', '#rain-os-content-editor', this.updateWordCount.bind(this));
             $(document).on('input', '#rain-os-content-editor, #rain-os-content-title', this.runLocalAudit.bind(this));
+            $(document).on('click', '#rain-os-normalize-btn', this.normalizeContent.bind(this));
         },
 
         initEditor: function() {
@@ -396,6 +400,176 @@
             var url = new URL(window.location.href);
             url.searchParams.set('period', period);
             window.location.href = url.toString();
+        },
+
+        initAIBackend: function() {
+            var self = this;
+            var $status = $('#rain-os-ai-backend-status');
+            
+            if (!$status.length) {
+                return;
+            }
+
+            $.ajax({
+                url: rainOsAeo.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'rain_os_check_ai_backend',
+                    nonce: rainOsAeo.nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        self.updateBackendStatus(response.data.available, response.data.enabled);
+                    } else {
+                        self.updateBackendStatus(false, false);
+                    }
+                },
+                error: function() {
+                    self.updateBackendStatus(false, false);
+                }
+            });
+        },
+
+        updateBackendStatus: function(available, enabled) {
+            var $status = $('#rain-os-ai-backend-status');
+            var $dot = $status.find('.rain-os-status-dot');
+            var $text = $status.find('.rain-os-status-text');
+
+            $dot.removeClass('rain-os-status-checking rain-os-status-connected rain-os-status-offline rain-os-status-disabled');
+
+            if (!enabled) {
+                $dot.addClass('rain-os-status-disabled');
+                $text.text('Disabled in Settings');
+            } else if (available) {
+                $dot.addClass('rain-os-status-connected');
+                $text.text('Connected');
+            } else {
+                $dot.addClass('rain-os-status-offline');
+                $text.text('Offline');
+            }
+        },
+
+        normalizeContent: function(e) {
+            e.preventDefault();
+            var self = this;
+            var $btn = $(e.currentTarget);
+            var $editor = $('#rain-os-content-editor');
+            var html = $editor.html();
+            var text = $editor.text();
+
+            if (!html.trim()) {
+                alert('Please enter content first.');
+                return;
+            }
+
+            $btn.prop('disabled', true);
+            $btn.find('.dashicons').addClass('spin');
+
+            $.ajax({
+                url: rainOsAeo.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'rain_os_normalize_content',
+                    nonce: rainOsAeo.nonce,
+                    content_id: self.currentContentId || '',
+                    html: html,
+                    text: text
+                },
+                success: function(response) {
+                    if (response.success) {
+                        self.currentContentId = response.data.content_id;
+                        self.showNormalizeSuccess(response.data.message);
+                        setTimeout(function() {
+                            self.fetchAIScores(self.currentContentId);
+                        }, 2000);
+                    } else {
+                        self.showNormalizeError(response.data.message);
+                    }
+                },
+                error: function() {
+                    self.showNormalizeError('Failed to send content for normalization.');
+                },
+                complete: function() {
+                    $btn.prop('disabled', false);
+                    $btn.find('.dashicons').removeClass('spin');
+                }
+            });
+        },
+
+        showNormalizeSuccess: function(message) {
+            var $wrap = $('.rain-os-ai-normalize-wrap');
+            var $msg = $wrap.find('.rain-os-normalize-message');
+            
+            if (!$msg.length) {
+                $wrap.append('<div class="rain-os-normalize-message rain-os-normalize-success"></div>');
+                $msg = $wrap.find('.rain-os-normalize-message');
+            }
+            
+            $msg.removeClass('rain-os-normalize-error').addClass('rain-os-normalize-success').text(message).show();
+            setTimeout(function() {
+                $msg.fadeOut();
+            }, 5000);
+        },
+
+        showNormalizeError: function(message) {
+            var $wrap = $('.rain-os-ai-normalize-wrap');
+            var $msg = $wrap.find('.rain-os-normalize-message');
+            
+            if (!$msg.length) {
+                $wrap.append('<div class="rain-os-normalize-message rain-os-normalize-error"></div>');
+                $msg = $wrap.find('.rain-os-normalize-message');
+            }
+            
+            $msg.removeClass('rain-os-normalize-success').addClass('rain-os-normalize-error').text(message).show();
+        },
+
+        fetchAIScores: function(contentId) {
+            var self = this;
+
+            $.ajax({
+                url: rainOsAeo.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'rain_os_get_ai_readiness_scores',
+                    nonce: rainOsAeo.nonce,
+                    content_id: contentId
+                },
+                success: function(response) {
+                    if (response.success && response.data.scores) {
+                        self.displayAIScores(response.data.scores);
+                    }
+                }
+            });
+        },
+
+        displayAIScores: function(scores) {
+            var scoreMap = {
+                'readability': scores.readability,
+                'structure': scores.structure,
+                'freshness': scores.freshness,
+                'citation': scores.citation,
+                'visibility': scores.visibility
+            };
+
+            for (var key in scoreMap) {
+                if (scoreMap.hasOwnProperty(key)) {
+                    var value = scoreMap[key];
+                    var $el = $('[data-score="' + key + '"]');
+                    
+                    if (typeof value === 'number') {
+                        $el.text(value);
+                        $el.removeClass('score-high score-medium score-low');
+                        
+                        if (value >= 80) {
+                            $el.addClass('score-high');
+                        } else if (value >= 60) {
+                            $el.addClass('score-medium');
+                        } else {
+                            $el.addClass('score-low');
+                        }
+                    }
+                }
+            }
         }
     };
 

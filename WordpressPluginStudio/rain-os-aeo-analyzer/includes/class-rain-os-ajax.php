@@ -24,6 +24,9 @@ class Rain_OS_Ajax {
         add_action( 'wp_ajax_rain_os_quick_tool', array( $this, 'quick_tool' ) );
         add_action( 'wp_ajax_rain_os_test_connection', array( $this, 'test_connection' ) );
         add_action( 'wp_ajax_rain_os_get_usage', array( $this, 'get_usage' ) );
+        add_action( 'wp_ajax_rain_os_check_ai_backend', array( $this, 'check_ai_backend' ) );
+        add_action( 'wp_ajax_rain_os_get_ai_readiness_scores', array( $this, 'get_ai_readiness_scores' ) );
+        add_action( 'wp_ajax_rain_os_normalize_content', array( $this, 'normalize_content' ) );
     }
 
     private function verify_nonce() {
@@ -397,5 +400,71 @@ class Rain_OS_Ajax {
         $subscription = $this->api_client->get_subscription_status();
 
         wp_send_json_success( $subscription );
+    }
+
+    public function check_ai_backend() {
+        $this->verify_nonce();
+        $this->check_capability();
+
+        $ai_backend = new Rain_OS_AI_Backend();
+        $available  = $ai_backend->check_capability();
+
+        wp_send_json_success( array(
+            'available' => $available,
+            'enabled'   => Rain_OS_AI_Backend::is_enabled(),
+        ) );
+    }
+
+    public function get_ai_readiness_scores() {
+        $this->verify_nonce();
+        $this->check_capability();
+
+        $content_id = isset( $_POST['content_id'] ) ? sanitize_text_field( wp_unslash( $_POST['content_id'] ) ) : '';
+
+        if ( empty( $content_id ) ) {
+            wp_send_json_error( array( 'message' => __( 'Content ID is required.', 'rain-os-aeo-analyzer' ) ) );
+        }
+
+        $ai_backend = new Rain_OS_AI_Backend();
+        $scores     = $ai_backend->get_content_scores( $content_id );
+
+        if ( null === $scores ) {
+            wp_send_json_error( array( 'message' => __( 'Scores unavailable.', 'rain-os-aeo-analyzer' ) ) );
+        }
+
+        wp_send_json_success( $scores );
+    }
+
+    public function normalize_content() {
+        $this->verify_nonce();
+        $this->check_capability();
+
+        $content_id = isset( $_POST['content_id'] ) ? sanitize_text_field( wp_unslash( $_POST['content_id'] ) ) : '';
+        $html       = isset( $_POST['html'] ) ? wp_kses_post( wp_unslash( $_POST['html'] ) ) : '';
+        $text       = isset( $_POST['text'] ) ? sanitize_textarea_field( wp_unslash( $_POST['text'] ) ) : '';
+
+        if ( empty( $content_id ) ) {
+            $content_id = 'analyzer_' . wp_generate_uuid4();
+        }
+
+        $ai_backend = new Rain_OS_AI_Backend();
+
+        if ( ! $ai_backend->check_capability() ) {
+            wp_send_json_error( array( 'message' => __( 'AI backend is not available.', 'rain-os-aeo-analyzer' ) ) );
+        }
+
+        $result = $ai_backend->normalize_content( $content_id, array(
+            'html' => $html,
+            'text' => $text,
+        ) );
+
+        if ( $result ) {
+            wp_send_json_success( array(
+                'content_id' => $content_id,
+                'message'    => __( 'Content sent for normalization.', 'rain-os-aeo-analyzer' ),
+            ) );
+        } else {
+            wp_send_json_error( array( 'message' => __( 'Failed to normalize content.', 'rain-os-aeo-analyzer' ) ) );
+        }
     }
 }
