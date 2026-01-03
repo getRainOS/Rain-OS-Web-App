@@ -614,8 +614,43 @@ The evolution toward edge computing extends cloud capabilities closer to end use
 
   const scoreLabel = getScoreLabel(mockAnalysis.overallScore)
 
+  const [aiBackendStatus, setAiBackendStatus] = useState('connected')
+  const [aiReadinessScores, setAiReadinessScores] = useState({
+    readability: 78,
+    structure: 85,
+    freshness: 72,
+    citation: 68,
+    visibility: 81
+  })
+  const [normalizing, setNormalizing] = useState(false)
+  const [normalizeMessage, setNormalizeMessage] = useState('')
+
+  const handleNormalize = () => {
+    setNormalizing(true)
+    setNormalizeMessage('')
+    setTimeout(() => {
+      setNormalizing(false)
+      setNormalizeMessage('Content sent for normalization.')
+      setAiReadinessScores({
+        readability: 82,
+        structure: 88,
+        freshness: 75,
+        citation: 72,
+        visibility: 85
+      })
+      setTimeout(() => setNormalizeMessage(''), 5000)
+    }, 2000)
+  }
+
+  const getAiScoreClass = (score) => {
+    if (score >= 80) return { bg: 'rgba(16, 185, 129, 0.2)', color: '#10b981' }
+    if (score >= 60) return { bg: 'rgba(245, 158, 11, 0.2)', color: '#f59e0b' }
+    return { bg: 'rgba(239, 68, 68, 0.2)', color: '#ef4444' }
+  }
+
   const tabs = [
     { id: 'overview', label: 'Overview' },
+    { id: 'ai-readiness', label: 'AI Readiness' },
     { id: 'actions', label: 'Actions' },
     { id: 'metrics', label: 'Metrics' },
     { id: 'history', label: 'History' }
@@ -879,6 +914,144 @@ The evolution toward edge computing extends cloud capabilities closer to end use
                   <span style={{ fontSize: '12px' }}>v{mockAnalysis.authorship.engineVersion}</span>
                 </div>
               </div>
+            </div>
+          </div>
+        )
+
+      case 'ai-readiness':
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(34, 211, 238, 0.05))',
+              border: '1px solid rgba(168, 85, 247, 0.3)',
+              borderRadius: '12px',
+              padding: '20px',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+                <h4 style={{ fontSize: '14px', fontWeight: 600, margin: 0 }}>AI Backend Status</h4>
+                <span style={{
+                  padding: '2px 8px',
+                  borderRadius: '4px',
+                  backgroundColor: 'rgba(168, 85, 247, 0.2)',
+                  color: '#a855f7',
+                  fontSize: '10px',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                }}>Beta</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{
+                  width: '10px',
+                  height: '10px',
+                  borderRadius: '50%',
+                  backgroundColor: aiBackendStatus === 'connected' ? '#10b981' : aiBackendStatus === 'offline' ? '#ef4444' : '#6b7280',
+                  boxShadow: aiBackendStatus === 'connected' ? '0 0 8px rgba(16, 185, 129, 0.5)' : 'none',
+                }} />
+                <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+                  {aiBackendStatus === 'connected' ? 'Connected' : aiBackendStatus === 'offline' ? 'Offline' : 'Disabled in Settings'}
+                </span>
+              </div>
+            </div>
+
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(34, 211, 238, 0.05))',
+              border: '1px solid rgba(168, 85, 247, 0.3)',
+              borderRadius: '12px',
+              padding: '20px',
+            }}>
+              <h4 style={{ fontSize: '14px', fontWeight: 600, margin: '0 0 16px' }}>AI Readiness Scores</h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {[
+                  { label: 'Readability', key: 'readability' },
+                  { label: 'Structure', key: 'structure' },
+                  { label: 'Freshness', key: 'freshness' },
+                  { label: 'Citation Readiness', key: 'citation' },
+                  { label: 'AI Visibility', key: 'visibility' },
+                ].map((item) => {
+                  const score = aiReadinessScores[item.key]
+                  const scoreStyle = getAiScoreClass(score)
+                  return (
+                    <div key={item.key} style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      padding: '8px 0',
+                      borderBottom: '1px solid var(--border-color)',
+                    }}>
+                      <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{item.label}</span>
+                      <span style={{
+                        fontSize: '14px',
+                        fontWeight: 600,
+                        padding: '2px 10px',
+                        borderRadius: '4px',
+                        minWidth: '40px',
+                        textAlign: 'center',
+                        backgroundColor: scoreStyle.bg,
+                        color: scoreStyle.color,
+                      }}>{score}</span>
+                    </div>
+                  )
+                })}
+              </div>
+
+              <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid var(--border-color)' }}>
+                <button
+                  onClick={handleNormalize}
+                  disabled={normalizing}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    width: '100%',
+                    padding: '10px 16px',
+                    borderRadius: '8px',
+                    backgroundColor: 'var(--bg-tertiary)',
+                    border: '1px solid var(--border-color)',
+                    color: 'var(--text-primary)',
+                    fontSize: '13px',
+                    fontWeight: 500,
+                    cursor: normalizing ? 'not-allowed' : 'pointer',
+                    opacity: normalizing ? 0.7 : 1,
+                    transition: 'all 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => { if (!normalizing) e.currentTarget.style.borderColor = '#a855f7' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border-color)' }}
+                >
+                  <Cloud size={16} style={{ animation: normalizing ? 'spin 1s linear infinite' : 'none' }} />
+                  {normalizing ? 'Normalizing...' : 'Normalize Content'}
+                </button>
+                <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: '8px 0 0', textAlign: 'center' }}>
+                  Send content to AI backend for analysis
+                </p>
+                {normalizeMessage && (
+                  <div style={{
+                    marginTop: '10px',
+                    padding: '8px 12px',
+                    borderRadius: '4px',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    border: '1px solid #10b981',
+                    color: '#10b981',
+                    fontSize: '12px',
+                    textAlign: 'center',
+                  }}>
+                    {normalizeMessage}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div style={{
+              backgroundColor: 'var(--bg-tertiary)',
+              borderRadius: '12px',
+              padding: '20px',
+              border: '1px solid var(--border-color)',
+            }}>
+              <h4 style={{ fontSize: '14px', fontWeight: 600, margin: '0 0 12px' }}>About AI Readiness</h4>
+              <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>
+                AI Readiness scores measure how well your content is optimized for AI-powered search engines and answer engines. 
+                The scores reflect readability, structural clarity, freshness signals, citation readiness, and overall visibility to AI systems.
+              </p>
             </div>
           </div>
         )
