@@ -116,7 +116,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             </div>
 
             <div class="rain-os-sidebar-section rain-os-ai-scores-section">
-                <h3><?php esc_html_e( 'AI Readiness Scores', 'rain-os-aeo-analyzer' ); ?></h3>
+                <h3><?php esc_html_e( 'AI - Powered Proprietary LLM Readability Analysis', 'rain-os-aeo-analyzer' ); ?></h3>
                 <div id="rain-os-ai-readiness-scores" class="rain-os-ai-readiness-scores">
                     <div class="rain-os-ai-score-row">
                         <span class="rain-os-ai-score-label"><?php esc_html_e( 'Readability', 'rain-os-aeo-analyzer' ); ?></span>
