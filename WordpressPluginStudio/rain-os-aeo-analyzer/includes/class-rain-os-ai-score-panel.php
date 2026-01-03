@@ -29,7 +29,7 @@ class Rain_OS_AI_Score_Panel {
         foreach ( $post_types as $post_type ) {
             add_meta_box(
                 'rain-os-ai-score-panel',
-                __( 'AI - Powered Proprietary LLM Readability Analysis', 'rain-os-aeo-analyzer' ),
+                __( 'AI Readiness Scores', 'rain-os-aeo-analyzer' ),
                 array( $this, 'render_score_panel' ),
                 $post_type,
                 'side',
