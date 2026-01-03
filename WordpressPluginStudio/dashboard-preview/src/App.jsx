@@ -650,7 +650,7 @@ The evolution toward edge computing extends cloud capabilities closer to end use
 
   const tabs = [
     { id: 'overview', label: 'Overview' },
-    { id: 'ai-readiness', label: 'AI - Powered Readability Analysis' },
+    { id: 'ai-readiness', label: 'AI Readiness' },
     { id: 'actions', label: 'Actions' },
     { id: 'metrics', label: 'Metrics' },
     { id: 'history', label: 'History' }
@@ -927,7 +927,7 @@ The evolution toward edge computing extends cloud capabilities closer to end use
               borderRadius: '12px',
               padding: '20px',
             }}>
-              <h4 style={{ fontSize: '14px', fontWeight: 600, margin: '0 0 16px' }}>AI-Powered Analysis</h4>
+              <h4 style={{ fontSize: '14px', fontWeight: 600, margin: '0 0 16px' }}>AI - Powered Readability Analysis</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {[
                   { label: 'Readability', key: 'readability' },
