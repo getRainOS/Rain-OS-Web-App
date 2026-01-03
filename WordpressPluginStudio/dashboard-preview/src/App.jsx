@@ -927,38 +927,6 @@ The evolution toward edge computing extends cloud capabilities closer to end use
               borderRadius: '12px',
               padding: '20px',
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-                <h4 style={{ fontSize: '14px', fontWeight: 600, margin: 0 }}>AI Backend Status</h4>
-                <span style={{
-                  padding: '2px 8px',
-                  borderRadius: '4px',
-                  backgroundColor: 'rgba(168, 85, 247, 0.2)',
-                  color: '#a855f7',
-                  fontSize: '10px',
-                  fontWeight: 600,
-                  textTransform: 'uppercase',
-                }}>Beta</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{
-                  width: '10px',
-                  height: '10px',
-                  borderRadius: '50%',
-                  backgroundColor: aiBackendStatus === 'connected' ? '#10b981' : aiBackendStatus === 'offline' ? '#ef4444' : '#6b7280',
-                  boxShadow: aiBackendStatus === 'connected' ? '0 0 8px rgba(16, 185, 129, 0.5)' : 'none',
-                }} />
-                <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-                  {aiBackendStatus === 'connected' ? 'Connected' : aiBackendStatus === 'offline' ? 'Offline' : 'Disabled in Settings'}
-                </span>
-              </div>
-            </div>
-
-            <div style={{
-              background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(34, 211, 238, 0.05))',
-              border: '1px solid rgba(168, 85, 247, 0.3)',
-              borderRadius: '12px',
-              padding: '20px',
-            }}>
               <h4 style={{ fontSize: '14px', fontWeight: 600, margin: '0 0 16px' }}>AI Readiness Scores</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {[

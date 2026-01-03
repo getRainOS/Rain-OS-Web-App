@@ -103,18 +103,6 @@ if ( ! defined( 'ABSPATH' ) ) {
         </div>
 
         <div class="rain-os-analyzer-sidebar">
-            <div class="rain-os-sidebar-section rain-os-ai-backend-section">
-                <h3><?php esc_html_e( 'AI Backend Status', 'rain-os-aeo-analyzer' ); ?>
-                    <span class="rain-os-beta-badge"><?php esc_html_e( 'Beta', 'rain-os-aeo-analyzer' ); ?></span>
-                </h3>
-                <div id="rain-os-ai-backend-status" class="rain-os-ai-backend-status">
-                    <div class="rain-os-status-indicator">
-                        <span class="rain-os-status-dot rain-os-status-checking"></span>
-                        <span class="rain-os-status-text"><?php esc_html_e( 'Checking connectivity...', 'rain-os-aeo-analyzer' ); ?></span>
-                    </div>
-                </div>
-            </div>
-
             <div class="rain-os-sidebar-section rain-os-ai-scores-section">
                 <h3><?php esc_html_e( 'AI Readiness Scores', 'rain-os-aeo-analyzer' ); ?></h3>
                 <div id="rain-os-ai-readiness-scores" class="rain-os-ai-readiness-scores">
