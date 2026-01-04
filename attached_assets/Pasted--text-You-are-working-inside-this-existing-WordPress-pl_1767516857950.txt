@@ -1,0 +1,203 @@
+```text
+You are working inside this existing WordPress plugin codebase:
+
+WordpressPluginStudio/rain-os-seo/
+- includes/class-rain-os-api.php
+- includes/class-rain-os-settings.php
+- assets/js/admin.js
+- templates/meta-box.php
+
+GOAL
+Make the plugin seamlessly work with the updated backend changes we just made:
+- New backend endpoint: GET  /api/plugin/content/:contentId/analysis  -> returns { scores, recommendations }
+- Existing backend endpoints already in plugin: /api/analyze, /api/users/me
+- Existing backend plugin endpoints already present server-side: 
+  POST /api/plugin/content/:contentId/normalize
+  GET  /api/plugin/content/:contentId/scores
+  GET  /api/plugin/diagnostics/:contentId
+  GET  /api/plugin/site/llms
+  GET  /api/plugin/health
+
+CONSTRAINTS (IMPORTANT)
+- Do NOT modify or remove existing functionality. Additive + backward-compatible only.
+- Do NOT change UI behavior directly. (No new screens, no changing layouts, no new buttons.)
+- Do NOT edit WordPress content.
+- Do NOT increase LLM usage significantly.
+- Keep the existing “Analyze Content” button. It should still work.
+- Prefer the new /api/plugin/* workflow when available; fall back to the existing /api/analyze (LLM) workflow only if needed.
+
+WHAT TO BUILD (PLUGIN-SIDE)
+1) Add new API client methods (PHP) to call the backend plugin endpoints:
+   - normalize_content(contentId, text, html, canonicalUrl)
+   - get_content_analysis(contentId)
+   - get_content_scores(contentId) (optional but nice)
+   - health()/manifest() helpers (optional)
+
+2) Add two NEW WordPress AJAX actions (PHP) — additive only:
+   - rain_os_plugin_normalize_content
+   - rain_os_plugin_get_analysis
+
+   They must:
+   - Authenticate using existing nonce checks
+   - Require edit_posts capability
+   - Use the saved plugin settings: rain_os_api_endpoint + rain_os_api_key
+   - Never modify post content
+   - Identify contentId deterministically from the current post:
+       contentId = "wp_post_" . post_id   (string)
+     (Do NOT change existing IDs anywhere else; this is additive.)
+
+3) Update the existing JS behavior (admin.js) WITHOUT changing the UI:
+   - When user clicks “Analyze Content”:
+     A) Try the new workflow:
+        - Send normalize request via WP AJAX: action=rain_os_plugin_normalize_content
+        - Immediately poll WP AJAX: action=rain_os_plugin_get_analysis
+          (poll up to ~5 times over ~10–15s with backoff; stop early if analysis timestamp changes)
+        - If analysis is returned, display it using existing UI rendering.
+     B) If new workflow is unavailable (404/disabled/not configured), fall back to the existing AJAX action
+        action=rain_os_analyze_content (which calls /api/analyze) exactly as today.
+
+   IMPORTANT: This avoids “live analysis” and avoids extra LLM calls, because the new flow uses the backend cache + normalization.
+
+4) Make the client-side renderer compatible with BOTH response shapes:
+   - Old shape from /api/analyze:
+       { overallScore, pillarScores, subScores, recommendations: string[], keywords: string[] }
+   - New shape from /api/plugin/content/:id/analysis:
+       { scores: { readability, structure, freshness, citation, visibility }, recommendations: AIRecommendation[] }
+   Because the existing UI expects the old shape, transform the NEW shape into the OLD shape *before calling displayResults*.
+   Recommended mapping (simple + stable):
+     overallScore = average(readability, structure, freshness, citation, visibility) rounded
+     pillarScores:
+       aiReadability      = average(readability, structure)
+       digitalAuthority   = average(citation, visibility)
+       conversionReadiness= average(freshness, visibility)   (light approximation; DO NOT change UI)
+     subScores: produce 5 items that match the five categories (category label = Title Case)
+     recommendations: convert AIRecommendation[] -> string[] like:
+       "[HIGH][structure][document] Missing subheadings — Add H2/H3 subheadings to break up long sections. (+12)"
+     keywords: [] (empty) unless backend provides it (do not add new backend calls)
+
+5) Fix the current DOM ID mismatch WITHOUT changing templates:
+   In templates/meta-box.php the container is:
+     #rain-os-pillars
+   But admin.js currently tries to render into:
+     #rain-os-pillar-scores, #rain-os-sub-scores, #rain-os-recommendations (which don’t exist in meta box)
+   Make admin.js resilient:
+   - If #rain-os-pillar-scores doesn’t exist, render pillar cards into #rain-os-pillars instead.
+   - If subscore/recommendation containers don’t exist, do nothing (no errors).
+   This is a compatibility fix; do NOT redesign the template.
+
+IMPLEMENTATION DETAILS (EXACT CHANGES)
+
+A) PHP: includes/class-rain-os-api.php
+- Add new PUBLIC methods (do not remove existing methods):
+  - public function normalize_content($content_id, $text = '', $html = '', $canonical_url = '')
+  - public function get_content_analysis($content_id)
+  - public function get_content_scores($content_id)
+  - public function get_plugin_health()   (optional)
+
+- Use the existing make_request() and headers.
+- Endpoints MUST be:
+    api/plugin/content/{contentId}/normalize  (POST)
+    api/plugin/content/{contentId}/analysis   (GET)
+    api/plugin/content/{contentId}/scores     (GET)
+    api/plugin/health                         (GET)
+  Note: class uses trailingslashit(api_endpoint) so pass paths WITHOUT leading slash consistently like existing calls.
+
+Example additions:
+
+public function normalize_content($content_id, $text = '', $html = '', $canonical_url = '') {
+  $body = array();
+  if (!empty($text)) $body['text'] = $text;
+  if (!empty($html)) $body['html'] = $html;
+  if (!empty($canonical_url)) $body['canonicalUrl'] = $canonical_url;
+  return $this->make_request('api/plugin/content/' . rawurlencode($content_id) . '/normalize', 'POST', $body);
+}
+
+public function get_content_analysis($content_id) {
+  return $this->make_request('api/plugin/content/' . rawurlencode($content_id) . '/analysis', 'GET');
+}
+
+public function get_content_scores($content_id) {
+  return $this->make_request('api/plugin/content/' . rawurlencode($content_id) . '/scores', 'GET');
+}
+
+B) PHP: includes/class-rain-os-settings.php
+- Add two NEW ajax actions in constructor (add only):
+  add_action('wp_ajax_rain_os_plugin_normalize_content', array($this, 'ajax_plugin_normalize_content'));
+  add_action('wp_ajax_rain_os_plugin_get_analysis', array($this, 'ajax_plugin_get_analysis'));
+
+- Implement handlers (add only):
+  1) ajax_plugin_normalize_content:
+     - check_ajax_referer('rain_os_nonce','nonce')
+     - current_user_can('edit_posts')
+     - read post_id from $_POST['post_id'] (int)
+     - derive:
+         $content_id = 'wp_post_' . $post_id
+         $canonical = get_permalink($post_id) ?: ''
+     - accept both:
+         html (raw editor HTML) and text (plain)
+       but DO NOT require both (backend allows either)
+     - call $api->normalize_content($content_id, $text, $html, $canonical)
+     - Always return success even if backend says 202/204; return:
+         { contentId, accepted: true }
+       If WP_Error return wp_send_json_error(message)
+
+  2) ajax_plugin_get_analysis:
+     - same nonce + capability + post_id parsing
+     - call $api->get_content_analysis($content_id)
+     - If backend returns empty/204 or WP_Error, return:
+         success: true, data: { status: 'not_ready' }
+       (Do NOT throw hard error; avoid UI disruption)
+     - If analysis exists:
+         Transform the new response into the old UI format:
+           { overallScore, pillarScores, subScores, recommendations, keywords }
+         and return it as response.data.
+
+Transformation helper (additive private method in class):
+  private function transform_plugin_analysis_to_legacy($analysis) { ... }
+
+C) JS: assets/js/admin.js
+- Update analyze click handler to:
+  1) Collect:
+     postId = RainOS.getPostId()
+     htmlContent = raw HTML from editor (new helper getEditorHtml())
+     textContent = existing getEditorContent() (plain text)
+  2) If postId exists:
+     - First call AJAX action rain_os_plugin_normalize_content with post_id, html, text
+     - Then call AJAX action rain_os_plugin_get_analysis with post_id
+       Poll up to 5 attempts with backoff (e.g. 500ms, 1000ms, 2000ms, 4000ms, 4000ms)
+       Stop if response.success && response.data.overallScore exists (legacy shape)
+     - If after polling there is still no analysis ready, show a non-intrusive alert:
+         type=info or warning: “Refresh accepted. Results will update shortly.”
+       Then fall back to old LLM analyze only IF user clicks again (do not auto-trigger LLM).
+  3) If postId is missing OR normalize endpoint errors with 404/missing_config:
+     fall back to the existing AJAX analyze workflow exactly as today.
+
+- Renderer resilience fix:
+  In displayResults:
+   - If $('#rain-os-pillar-scores') exists, write there (as now)
+   - Else if $('#rain-os-pillars') exists, render pillar cards into #rain-os-pillars instead
+   - Guard missing containers:
+     if $('#rain-os-sub-scores').length === 0, skip
+     if $('#rain-os-recommendations').length === 0, skip
+  Do NOT change HTML templates.
+
+- IMPORTANT: Do not break existing localStorage behavior. Keep saveResults/loadSavedResults as-is.
+
+D) templates/meta-box.php
+- Do NOT change template markup. (All compatibility fixes must be in JS.)
+
+QUALITY CHECKS
+- Existing features still work:
+  - Settings save/test/usage refresh
+  - Old analyze path still works if new endpoints not available
+- New endpoints are used only when postId exists and plugin is configured
+- No WP content is modified
+- No extra LLM calls are introduced; we reduce LLM usage by preferring plugin analysis cache
+- No JS console errors when meta-box lacks certain containers
+
+DELIVERABLE
+Make all the above changes in the existing files. Add only, backward compatible.
+After changes: clicking “Analyze Content” should “Reanalyze/Refresh” by requesting normalize + polling cached analysis if supported, otherwise it behaves exactly as before.
+
+Now implement.
+```

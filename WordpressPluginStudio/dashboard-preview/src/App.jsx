@@ -625,6 +625,7 @@ The evolution toward edge computing extends cloud capabilities closer to end use
   const [normalizing, setNormalizing] = useState(false)
   const [normalizeMessage, setNormalizeMessage] = useState('')
   const [reanalyzing, setReanalyzing] = useState(false)
+  const [reanalyzeStatus, setReanalyzeStatus] = useState('')
   const [recommendations, setRecommendations] = useState([
     {
       scope: 'document',
@@ -686,17 +687,33 @@ The evolution toward edge computing extends cloud capabilities closer to end use
 
   const handleReanalyze = () => {
     setReanalyzing(true)
+    setReanalyzeStatus('Normalizing content...')
+    
     setTimeout(() => {
-      setAiReadinessScores({
-        readability: Math.min(100, aiReadinessScores.readability + Math.floor(Math.random() * 5)),
-        structure: Math.min(100, aiReadinessScores.structure + Math.floor(Math.random() * 5)),
-        freshness: Math.min(100, aiReadinessScores.freshness + Math.floor(Math.random() * 5)),
-        citation: Math.min(100, aiReadinessScores.citation + Math.floor(Math.random() * 5)),
-        visibility: Math.min(100, aiReadinessScores.visibility + Math.floor(Math.random() * 5))
-      })
-      setRecommendations(prev => prev.slice(0, Math.max(2, prev.length - 1)))
-      setReanalyzing(false)
-    }, 2000)
+      setReanalyzeStatus('Polling for analysis (1/5)...')
+      
+      setTimeout(() => {
+        setReanalyzeStatus('Polling for analysis (2/5)...')
+        
+        setTimeout(() => {
+          setReanalyzeStatus('Analysis complete')
+          const newScores = {
+            readability: Math.min(100, aiReadinessScores.readability + Math.floor(Math.random() * 5)),
+            structure: Math.min(100, aiReadinessScores.structure + Math.floor(Math.random() * 5)),
+            freshness: Math.min(100, aiReadinessScores.freshness + Math.floor(Math.random() * 5)),
+            citation: Math.min(100, aiReadinessScores.citation + Math.floor(Math.random() * 5)),
+            visibility: Math.min(100, aiReadinessScores.visibility + Math.floor(Math.random() * 5))
+          }
+          setAiReadinessScores(newScores)
+          setRecommendations(prev => prev.slice(0, Math.max(2, prev.length - 1)))
+          
+          setTimeout(() => {
+            setReanalyzing(false)
+            setReanalyzeStatus('')
+          }, 500)
+        }, 1000)
+      }, 1000)
+    }, 1000)
   }
 
   const getRecommendationsByCategory = () => {
@@ -1132,6 +1149,17 @@ The evolution toward edge computing extends cloud capabilities closer to end use
                 <RefreshCw size={16} style={{ animation: reanalyzing ? 'spin 1s linear infinite' : 'none' }} />
                 {reanalyzing ? 'Reanalyzing...' : 'Reanalyze Content'}
               </button>
+              {reanalyzeStatus && (
+                <p style={{ 
+                  fontSize: '11px', 
+                  color: reanalyzeStatus === 'Analysis complete' ? '#10b981' : 'var(--text-muted)', 
+                  margin: '8px 0 0', 
+                  textAlign: 'center',
+                  fontStyle: 'italic',
+                }}>
+                  {reanalyzeStatus}
+                </p>
+              )}
             </div>
 
             <div style={{
