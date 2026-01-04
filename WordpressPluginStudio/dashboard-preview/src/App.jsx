@@ -626,6 +626,72 @@ The evolution toward edge computing extends cloud capabilities closer to end use
   const [normalizeMessage, setNormalizeMessage] = useState('')
   const [reanalyzing, setReanalyzing] = useState(false)
   const [reanalyzeStatus, setReanalyzeStatus] = useState('')
+  const [actionResult, setActionResult] = useState(null)
+  const [actionLoading, setActionLoading] = useState(false)
+
+  const handleSuggestTitles = () => {
+    setActionLoading(true)
+    setActionResult(null)
+    setTimeout(() => {
+      setActionLoading(false)
+      setActionResult({
+        type: 'titles',
+        title: 'AI-Generated Title Suggestions',
+        items: [
+          { text: 'Understanding Cloud Infrastructure: A Complete Guide for Modern Businesses', score: 92 },
+          { text: 'Cloud Computing Explained: Scalability, Security & Cost Optimization', score: 88 },
+          { text: 'The Future of Cloud Infrastructure: What Every Developer Should Know', score: 85 },
+          { text: 'From On-Premise to Cloud: A Strategic Migration Roadmap', score: 82 },
+          { text: 'Cloud Infrastructure Best Practices for Enterprise Applications', score: 79 },
+        ]
+      })
+    }, 1500)
+  }
+
+  const handleMetaDescription = () => {
+    setActionLoading(true)
+    setActionResult(null)
+    setTimeout(() => {
+      setActionLoading(false)
+      setActionResult({
+        type: 'meta',
+        title: 'Optimized Meta Description',
+        text: 'Discover how cloud infrastructure transforms business operations with scalable computing, enhanced security, and cost-effective solutions. Learn best practices for migration and optimization.',
+        charCount: 198,
+        maxChars: 160
+      })
+    }, 1500)
+  }
+
+  const handleSummarize = () => {
+    setActionLoading(true)
+    setActionResult(null)
+    setTimeout(() => {
+      setActionLoading(false)
+      setActionResult({
+        type: 'summary',
+        title: 'Content Summary',
+        text: 'Cloud infrastructure provides scalable, on-demand computing resources accessed over the internet. Key benefits include: (1) Scalability - automatically adjust resources based on demand, (2) Cost efficiency - pay only for what you use, (3) Security - enterprise-grade protection with compliance features, (4) Flexibility - deploy globally with minimal setup. Modern organizations use hybrid approaches combining cloud and edge computing for optimal performance.',
+        wordCount: 68
+      })
+    }, 1500)
+  }
+
+  const handleRewriteSelection = () => {
+    setActionLoading(true)
+    setActionResult(null)
+    setTimeout(() => {
+      setActionLoading(false)
+      setActionResult({
+        type: 'rewrite',
+        title: 'Rewritten for Clarity',
+        original: 'The evolution toward edge computing extends cloud capabilities closer to end users and data sources.',
+        rewritten: 'Edge computing brings cloud power directly to users and their data, reducing delays and improving real-time performance.',
+        improvements: ['Simplified sentence structure', 'Active voice', 'Clearer terminology']
+      })
+    }, 1500)
+  }
+
   const [recommendations, setRecommendations] = useState([
     {
       scope: 'document',
@@ -1032,13 +1098,14 @@ The evolution toward edge computing extends cloud capabilities closer to end use
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               {[
-                { icon: Wand2, label: 'Suggest Titles', color: '#22d3ee', action: () => alert('Generating AI-powered title suggestions based on your content...') },
-                { icon: FileText, label: 'Meta Description', color: '#10b981', action: () => alert('Creating optimized meta description for your content...') },
-                { icon: Fingerprint, label: 'Summarize', color: '#a855f7', action: () => alert('Generating content summary for featured snippets...') },
-                { icon: RefreshCw, label: 'Rewrite Selection', color: '#f59e0b', action: () => alert('Select text in the editor first, then use this to rewrite for clarity.') },
+                { icon: Wand2, label: 'Suggest Titles', color: '#22d3ee', action: handleSuggestTitles },
+                { icon: FileText, label: 'Meta Description', color: '#10b981', action: handleMetaDescription },
+                { icon: Fingerprint, label: 'Summarize', color: '#a855f7', action: handleSummarize },
+                { icon: RefreshCw, label: 'Rewrite Selection', color: '#f59e0b', action: handleRewriteSelection },
               ].map((actionItem, i) => (
                 <button key={i} 
                 onClick={actionItem.action}
+                disabled={actionLoading}
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
@@ -1048,12 +1115,15 @@ The evolution toward edge computing extends cloud capabilities closer to end use
                   backgroundColor: 'var(--bg-tertiary)',
                   border: '1px solid var(--border-color)',
                   borderRadius: '10px',
-                  cursor: 'pointer',
+                  cursor: actionLoading ? 'not-allowed' : 'pointer',
                   transition: 'all 0.2s ease',
+                  opacity: actionLoading ? 0.6 : 1,
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(34, 211, 238, 0.1)'
-                  e.currentTarget.style.borderColor = actionItem.color
+                  if (!actionLoading) {
+                    e.currentTarget.style.backgroundColor = 'rgba(34, 211, 238, 0.1)'
+                    e.currentTarget.style.borderColor = actionItem.color
+                  }
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)'
@@ -1075,6 +1145,129 @@ The evolution toward edge computing extends cloud capabilities closer to end use
                 </button>
               ))}
             </div>
+
+            {actionLoading && (
+              <div style={{
+                backgroundColor: 'var(--bg-tertiary)',
+                borderRadius: '12px',
+                padding: '24px',
+                border: '1px solid var(--border-color)',
+                textAlign: 'center',
+              }}>
+                <RefreshCw size={24} style={{ color: 'var(--accent)', animation: 'spin 1s linear infinite' }} />
+                <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '12px' }}>Generating...</p>
+              </div>
+            )}
+
+            {actionResult && !actionLoading && (
+              <div style={{
+                backgroundColor: 'var(--bg-tertiary)',
+                borderRadius: '12px',
+                padding: '20px',
+                border: '1px solid var(--accent)',
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                  <h4 style={{ fontSize: '14px', fontWeight: 600, margin: 0 }}>{actionResult.title}</h4>
+                  <button
+                    onClick={() => setActionResult(null)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: 'var(--text-muted)',
+                      cursor: 'pointer',
+                      fontSize: '18px',
+                    }}
+                  >×</button>
+                </div>
+
+                {actionResult.type === 'titles' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {actionResult.items.map((item, idx) => (
+                      <div key={idx} style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        padding: '12px',
+                        backgroundColor: 'rgba(0,0,0,0.2)',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => { setTitle(item.text); setActionResult(null); }}
+                      >
+                        <span style={{ fontSize: '12px', color: 'var(--text-secondary)', flex: 1 }}>{item.text}</span>
+                        <span style={{
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          padding: '2px 8px',
+                          borderRadius: '4px',
+                          backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                          color: '#10b981',
+                          marginLeft: '12px',
+                        }}>{item.score}</span>
+                      </div>
+                    ))}
+                    <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '8px' }}>Click a title to use it</p>
+                  </div>
+                )}
+
+                {actionResult.type === 'meta' && (
+                  <div>
+                    <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '12px' }}>
+                      {actionResult.text}
+                    </p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
+                      <span style={{ color: actionResult.charCount > actionResult.maxChars ? '#f59e0b' : '#10b981' }}>
+                        {actionResult.charCount} / {actionResult.maxChars} characters
+                      </span>
+                      <button style={{
+                        background: 'none',
+                        border: 'none',
+                        color: 'var(--accent)',
+                        cursor: 'pointer',
+                        fontSize: '11px',
+                      }}>Copy to clipboard</button>
+                    </div>
+                  </div>
+                )}
+
+                {actionResult.type === 'summary' && (
+                  <div>
+                    <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '12px' }}>
+                      {actionResult.text}
+                    </p>
+                    <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{actionResult.wordCount} words</span>
+                  </div>
+                )}
+
+                {actionResult.type === 'rewrite' && (
+                  <div>
+                    <div style={{ marginBottom: '16px' }}>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Original</span>
+                      <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px', padding: '10px', backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: '6px' }}>
+                        {actionResult.original}
+                      </p>
+                    </div>
+                    <div style={{ marginBottom: '12px' }}>
+                      <span style={{ fontSize: '11px', color: '#10b981', textTransform: 'uppercase' }}>Rewritten</span>
+                      <p style={{ fontSize: '12px', color: 'var(--text-primary)', marginTop: '4px', padding: '10px', backgroundColor: 'rgba(16, 185, 129, 0.1)', borderRadius: '6px', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                        {actionResult.rewritten}
+                      </p>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      {actionResult.improvements.map((imp, idx) => (
+                        <span key={idx} style={{
+                          fontSize: '10px',
+                          padding: '4px 8px',
+                          backgroundColor: 'rgba(34, 211, 238, 0.1)',
+                          borderRadius: '4px',
+                          color: 'var(--accent)',
+                        }}>{imp}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             <div style={{
               backgroundColor: 'var(--bg-tertiary)',
