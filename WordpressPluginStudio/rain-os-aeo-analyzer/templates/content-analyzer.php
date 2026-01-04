@@ -104,7 +104,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
         <div class="rain-os-analyzer-sidebar">
             <div class="rain-os-sidebar-section rain-os-ai-scores-section">
-                <h3><?php esc_html_e( 'AI-Powered Analysis', 'rain-os-aeo-analyzer' ); ?></h3>
+                <h3><?php esc_html_e( 'AI - Powered Readability Analysis', 'rain-os-aeo-analyzer' ); ?></h3>
                 <div id="rain-os-ai-readiness-scores" class="rain-os-ai-readiness-scores">
                     <div class="rain-os-ai-score-row">
                         <span class="rain-os-ai-score-label"><?php esc_html_e( 'Readability', 'rain-os-aeo-analyzer' ); ?></span>
@@ -147,6 +147,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <div id="rain-os-recommendations" class="rain-os-recommendations">
                     <p class="rain-os-no-recommendations"><?php esc_html_e( 'No recommendations at this time.', 'rain-os-aeo-analyzer' ); ?></p>
                 </div>
+            </div>
+
+            <div class="rain-os-sidebar-section rain-os-about-section">
+                <h3><?php esc_html_e( 'About AI Readiness', 'rain-os-aeo-analyzer' ); ?></h3>
+                <p class="rain-os-about-text"><?php esc_html_e( 'AI Readiness scores measure how well your content is optimized for AI-powered search engines and answer engines. The scores reflect readability, structural clarity, freshness signals, citation readiness, and overall visibility to AI systems.', 'rain-os-aeo-analyzer' ); ?></p>
             </div>
 
             <div class="rain-os-sidebar-section">

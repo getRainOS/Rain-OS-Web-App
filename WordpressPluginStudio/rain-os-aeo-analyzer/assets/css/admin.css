@@ -1531,3 +1531,14 @@
 .rain-os-recommendation-action {
     color: var(--rain-text-secondary);
 }
+
+.rain-os-about-section {
+    background: var(--rain-bg-tertiary);
+}
+
+.rain-os-about-text {
+    font-size: 12px;
+    color: var(--rain-text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
