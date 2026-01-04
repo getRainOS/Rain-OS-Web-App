@@ -1427,7 +1427,7 @@ The evolution toward edge computing extends cloud capabilities closer to end use
                 <span style={{ color: '#22d3ee' }}>ai</span>
                 <span style={{ color: '#ffffff' }}>n</span>
               </span>
-              <span style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Analysis</span>
+              <span style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>AI-Powered Analysis</span>
               <span style={{
                 padding: '2px 8px',
                 borderRadius: '4px',
