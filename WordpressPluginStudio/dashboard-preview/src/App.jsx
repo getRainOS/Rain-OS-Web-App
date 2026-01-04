@@ -1432,7 +1432,7 @@ The evolution toward edge computing extends cloud capabilities closer to end use
                   }}
                 >
                   <Cloud size={14} style={{ animation: normalizing ? 'spin 1s linear infinite' : 'none' }} />
-                  {normalizing ? 'Normalizing...' : 'Normalize Content'}
+                  {normalizing ? 'Committing...' : 'Commit Content'}
                 </button>
                 <button
                   onClick={handleReanalyze}
