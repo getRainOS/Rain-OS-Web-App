@@ -1451,3 +1451,83 @@
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
+
+.rain-os-ai-reanalyze-wrap {
+    margin-top: 12px;
+}
+
+.rain-os-ai-reanalyze-wrap .rain-os-btn-primary {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(34, 211, 238, 0.1);
+    border: 1px solid var(--rain-accent);
+    color: var(--rain-accent);
+}
+
+.rain-os-ai-reanalyze-wrap .rain-os-btn-primary:hover {
+    background: rgba(34, 211, 238, 0.2);
+}
+
+.rain-os-recommendations-section {
+    background: var(--rain-bg-tertiary);
+}
+
+.rain-os-recommendations {
+    font-size: 12px;
+}
+
+.rain-os-no-recommendations {
+    color: var(--rain-text-muted);
+    margin: 0;
+    font-style: italic;
+}
+
+.rain-os-recommendation-group {
+    margin-bottom: 16px;
+}
+
+.rain-os-recommendation-group:last-child {
+    margin-bottom: 0;
+}
+
+.rain-os-recommendation-category {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--rain-text-secondary);
+    margin: 0 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rain-os-recommendation-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.rain-os-recommendation-item {
+    padding: 8px 0 8px 12px;
+    border-left: 2px solid var(--rain-border-color);
+    color: var(--rain-text-secondary);
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.rain-os-recommendation-item:last-child {
+    margin-bottom: 0;
+}
+
+.rain-os-recommendation-issue {
+    color: var(--rain-text-primary);
+}
+
+.rain-os-recommendation-arrow {
+    color: var(--rain-text-muted);
+}
+
+.rain-os-recommendation-action {
+    color: var(--rain-text-secondary);
+}

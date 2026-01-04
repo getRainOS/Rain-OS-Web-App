@@ -133,6 +133,19 @@ if ( ! defined( 'ABSPATH' ) ) {
                         </button>
                         <p class="rain-os-normalize-help"><?php esc_html_e( 'Send content to AI backend for analysis', 'rain-os-aeo-analyzer' ); ?></p>
                     </div>
+                    <div class="rain-os-ai-reanalyze-wrap">
+                        <button type="button" id="rain-os-reanalyze-btn" class="rain-os-btn rain-os-btn-primary rain-os-btn-small">
+                            <span class="dashicons dashicons-update"></span>
+                            <?php esc_html_e( 'Reanalyze Content', 'rain-os-aeo-analyzer' ); ?>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rain-os-sidebar-section rain-os-recommendations-section">
+                <h3><?php esc_html_e( 'Recommendations', 'rain-os-aeo-analyzer' ); ?></h3>
+                <div id="rain-os-recommendations" class="rain-os-recommendations">
+                    <p class="rain-os-no-recommendations"><?php esc_html_e( 'No recommendations at this time.', 'rain-os-aeo-analyzer' ); ?></p>
                 </div>
             </div>
 

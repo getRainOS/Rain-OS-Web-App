@@ -23,6 +23,7 @@
             $(document).on('input', '#rain-os-content-editor', this.updateWordCount.bind(this));
             $(document).on('input', '#rain-os-content-editor, #rain-os-content-title', this.runLocalAudit.bind(this));
             $(document).on('click', '#rain-os-normalize-btn', this.normalizeContent.bind(this));
+            $(document).on('click', '#rain-os-reanalyze-btn', this.reanalyzeContent.bind(this));
         },
 
         initEditor: function() {
@@ -154,6 +155,9 @@
                 success: function(response) {
                     if (response.success) {
                         self.displayResults(response.data);
+                        if (response.data.recommendations) {
+                            self.displayRecommendations(response.data.recommendations);
+                        }
                     } else {
                         $results.html('<div class="rain-os-error">' + (response.data.message || rainOsAeo.i18n.error) + '</div>');
                     }
@@ -570,6 +574,108 @@
                     }
                 }
             }
+        },
+
+        reanalyzeContent: function(e) {
+            e.preventDefault();
+            var self = this;
+            var $btn = $(e.currentTarget);
+            var $editor = $('#rain-os-content-editor');
+            var $title = $('#rain-os-content-title');
+            var $results = $('#rain-os-analysis-results');
+
+            var content = $editor.html();
+            var title = $title.val();
+
+            if (!content.trim()) {
+                alert(rainOsAeo.i18n.contentRequired || 'Please enter content to analyze.');
+                return;
+            }
+
+            $btn.prop('disabled', true);
+            $btn.find('.dashicons').addClass('spin');
+
+            $.ajax({
+                url: rainOsAeo.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'rain_os_analyze_content',
+                    nonce: rainOsAeo.nonce,
+                    content: content,
+                    title: title
+                },
+                success: function(response) {
+                    if (response.success) {
+                        self.displayResults(response.data);
+                        if (response.data.recommendations) {
+                            self.displayRecommendations(response.data.recommendations);
+                        }
+                        if (response.data.ai_scores) {
+                            self.displayAIScores(response.data.ai_scores);
+                        }
+                    } else {
+                        $results.html('<div class="rain-os-error">' + (response.data.message || rainOsAeo.i18n.error) + '</div>');
+                    }
+                },
+                error: function() {
+                    $results.html('<div class="rain-os-error">' + rainOsAeo.i18n.error + '</div>');
+                },
+                complete: function() {
+                    $btn.prop('disabled', false);
+                    $btn.find('.dashicons').removeClass('spin');
+                }
+            });
+        },
+
+        displayRecommendations: function(recommendations) {
+            var $container = $('#rain-os-recommendations');
+            
+            if (!recommendations || recommendations.length === 0) {
+                $container.html('<p class="rain-os-no-recommendations">' + (rainOsAeo.i18n.noRecommendations || 'No recommendations at this time.') + '</p>');
+                return;
+            }
+
+            var categoryLabels = {
+                'readability': 'Readability',
+                'structure': 'Structure',
+                'freshness': 'Freshness',
+                'citation': 'Citation Readiness',
+                'visibility': 'AI Visibility'
+            };
+
+            var grouped = {};
+            for (var i = 0; i < recommendations.length; i++) {
+                var rec = recommendations[i];
+                var cat = rec.category || 'other';
+                if (!grouped[cat]) {
+                    grouped[cat] = [];
+                }
+                grouped[cat].push(rec);
+            }
+
+            var html = '';
+            for (var category in grouped) {
+                if (grouped.hasOwnProperty(category)) {
+                    var label = categoryLabels[category] || category;
+                    html += '<div class="rain-os-recommendation-group">';
+                    html += '<h4 class="rain-os-recommendation-category">[' + label + ']</h4>';
+                    html += '<ul class="rain-os-recommendation-list">';
+                    
+                    for (var j = 0; j < grouped[category].length; j++) {
+                        var item = grouped[category][j];
+                        html += '<li class="rain-os-recommendation-item">';
+                        html += '<span class="rain-os-recommendation-issue">' + item.issue + '</span>';
+                        html += ' <span class="rain-os-recommendation-arrow">&rarr;</span> ';
+                        html += '<span class="rain-os-recommendation-action">' + item.recommendation + '</span>';
+                        html += '</li>';
+                    }
+                    
+                    html += '</ul>';
+                    html += '</div>';
+                }
+            }
+
+            $container.html(html);
         }
     };
 
