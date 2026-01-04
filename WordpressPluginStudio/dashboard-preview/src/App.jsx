@@ -11,7 +11,7 @@ import {
   Search, Bell, Plus, TrendingUp, Target, Zap,
   ChevronRight, BookOpen, Mail, Key, Sliders, Shield, ExternalLink,
   Microscope, ShieldCheck, RefreshCw, Wand2, Fingerprint, History,
-  PanelRightClose, PanelRightOpen, Eye, EyeOff, Save, Send, Cloud, CheckSquare
+  PanelRightClose, PanelRightOpen, Eye, EyeOff, Save, Send, Cloud, CheckSquare, Sparkles
 } from 'lucide-react'
 import './index.css'
 
@@ -1550,6 +1550,185 @@ The evolution toward edge computing extends cloud capabilities closer to end use
               )}
             </div>
             
+            {/* AI Readiness Section */}
+            <div style={{
+              marginTop: '24px',
+              background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(34, 211, 238, 0.05))',
+              border: '1px solid rgba(168, 85, 247, 0.3)',
+              borderRadius: '12px',
+              padding: '20px',
+            }}>
+              <h4 style={{ fontSize: '14px', fontWeight: 600, margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Sparkles size={16} style={{ color: '#a855f7' }} />
+                AI Readiness
+              </h4>
+              
+              <div style={{
+                background: 'rgba(0,0,0,0.2)',
+                borderRadius: '8px',
+                padding: '16px',
+                marginBottom: '16px',
+              }}>
+                <h5 style={{ fontSize: '13px', fontWeight: 600, margin: '0 0 12px' }}>AI - Powered Readability Analysis</h5>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {[
+                    { label: 'Readability', key: 'readability' },
+                    { label: 'Structure', key: 'structure' },
+                    { label: 'Freshness', key: 'freshness' },
+                    { label: 'Citation Readiness', key: 'citation' },
+                    { label: 'AI Visibility', key: 'visibility' },
+                  ].map((item) => {
+                    const score = aiReadinessScores[item.key]
+                    const scoreStyle = getAiScoreClass(score)
+                    return (
+                      <div key={item.key} style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        padding: '6px 0',
+                        borderBottom: '1px solid var(--border-color)',
+                      }}>
+                        <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{item.label}</span>
+                        <span style={{
+                          fontSize: '13px',
+                          fontWeight: 600,
+                          padding: '2px 8px',
+                          borderRadius: '4px',
+                          minWidth: '36px',
+                          textAlign: 'center',
+                          backgroundColor: scoreStyle.bg,
+                          color: scoreStyle.color,
+                        }}>{score}</span>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
+                <button
+                  onClick={handleNormalize}
+                  disabled={normalizing}
+                  style={{
+                    flex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    padding: '10px 14px',
+                    borderRadius: '8px',
+                    backgroundColor: 'var(--bg-tertiary)',
+                    border: '1px solid var(--border-color)',
+                    color: 'var(--text-primary)',
+                    fontSize: '12px',
+                    fontWeight: 500,
+                    cursor: normalizing ? 'not-allowed' : 'pointer',
+                    opacity: normalizing ? 0.7 : 1,
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  <Cloud size={14} style={{ animation: normalizing ? 'spin 1s linear infinite' : 'none' }} />
+                  {normalizing ? 'Normalizing...' : 'Normalize Content'}
+                </button>
+                <button
+                  onClick={handleReanalyze}
+                  disabled={reanalyzing}
+                  style={{
+                    flex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    padding: '10px 14px',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(34, 211, 238, 0.1)',
+                    border: '1px solid var(--accent)',
+                    color: 'var(--accent)',
+                    fontSize: '12px',
+                    fontWeight: 500,
+                    cursor: reanalyzing ? 'not-allowed' : 'pointer',
+                    opacity: reanalyzing ? 0.7 : 1,
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  <RefreshCw size={14} style={{ animation: reanalyzing ? 'spin 1s linear infinite' : 'none' }} />
+                  {reanalyzing ? 'Reanalyzing...' : 'Reanalyze Content'}
+                </button>
+              </div>
+
+              {(normalizeMessage || reanalyzeStatus) && (
+                <div style={{
+                  marginBottom: '16px',
+                  padding: '8px 12px',
+                  borderRadius: '4px',
+                  backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                  border: '1px solid #10b981',
+                  color: '#10b981',
+                  fontSize: '12px',
+                  textAlign: 'center',
+                }}>
+                  {normalizeMessage || reanalyzeStatus}
+                </div>
+              )}
+
+              <div style={{
+                background: 'rgba(0,0,0,0.2)',
+                borderRadius: '8px',
+                padding: '16px',
+                marginBottom: '16px',
+              }}>
+                <h5 style={{ fontSize: '13px', fontWeight: 600, margin: '0 0 12px' }}>Recommendations</h5>
+                {recommendations.length === 0 ? (
+                  <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0 }}>
+                    No recommendations at this time.
+                  </p>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {Object.entries(getRecommendationsByCategory()).map(([category, recs]) => (
+                      <div key={category}>
+                        <h6 style={{
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          color: 'var(--text-secondary)',
+                          margin: '0 0 6px',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px',
+                        }}>
+                          [{categoryLabels[category] || category}]
+                        </h6>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                          {recs.map((rec, idx) => (
+                            <div key={idx} style={{
+                              fontSize: '11px',
+                              color: 'var(--text-secondary)',
+                              lineHeight: 1.5,
+                              paddingLeft: '10px',
+                              borderLeft: '2px solid var(--border-color)',
+                            }}>
+                              <span style={{ color: 'var(--text-primary)' }}>{rec.issue}</span>
+                              <span style={{ color: 'var(--text-muted)' }}> → </span>
+                              <span>{rec.recommendation}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div style={{
+                background: 'rgba(0,0,0,0.2)',
+                borderRadius: '8px',
+                padding: '12px 16px',
+              }}>
+                <h5 style={{ fontSize: '12px', fontWeight: 600, margin: '0 0 8px' }}>About AI Readiness</h5>
+                <p style={{ fontSize: '11px', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
+                  AI Readiness scores measure how well your content is optimized for AI-powered search engines and answer engines.
+                </p>
+              </div>
+            </div>
+
             <div style={{
               marginTop: '24px',
               background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.08), rgba(168, 85, 247, 0.08))',
