@@ -1,0 +1,131 @@
+DO NOT refactor, redesign, or remove any existing UI or logic.
+ALL changes must be additive and non-breaking.
+
+GOAL:
+Expose backend-generated content recommendations to users in a clean,
+minimal, readable way without changing the plugin’s visual layout.
+
+ASSUME:
+- The backend already returns scores:
+  readability, structure, freshness, citation readiness, AI visibility
+- The backend now ALSO returns:
+  recommendations[] from the analysis endpoint
+- Each recommendation includes:
+  {
+    scope,
+    category,
+    severity,
+    issue,
+    recommendation,
+    expectedImpact,
+    chunkId?
+  }
+
+---
+
+PART 1 — API CONSUMPTION (ADD ONLY)
+
+Extend the existing analysis API response handler to also read:
+
+response.recommendations
+
+DO NOT change how scores are fetched or displayed.
+
+---
+
+PART 2 — DATA MODEL (ADD ONLY)
+
+Add a client-side structure:
+
+type Recommendation = {
+  scope: 'chunk' | 'section' | 'document';
+  category: 'readability' | 'structure' | 'freshness' | 'citation' | 'visibility';
+  severity: 'low' | 'medium' | 'high';
+  issue: string;
+  recommendation: string;
+  expectedImpact: number;
+};
+
+Store recommendations in plugin state ONLY after analysis runs.
+
+---
+
+PART 3 — UI DISPLAY (NO REDESIGN)
+
+Below the existing score panels, add a simple section:
+
+Title:
+"Recommendations"
+
+Behavior:
+- Group recommendations by category
+- Display ONLY text (no icons, no charts)
+- Each recommendation shows:
+  • Issue (short sentence)
+  • Recommendation (clear action)
+
+Example layout (text-only):
+
+[Readability]
+- Paragraph is too long → Split into shorter paragraphs
+
+[Structure]
+- Missing subheadings → Add H2 or H3 headings
+
+NO inline editing.
+NO auto-application.
+NO visual complexity.
+
+---
+
+PART 4 — REANALYZE FLOW (REQUIRED)
+
+Add ONE button if not already present:
+
+Button label:
+"Reanalyze Content"
+
+Behavior:
+- Sends current content to existing analysis endpoint
+- Refreshes:
+  - scores
+  - recommendations
+- Does NOT auto-normalize
+- Does NOT mutate content
+
+---
+
+PART 5 — NORMALIZE BUTTON (CLARIFICATION)
+
+If a "Normalize Content" button already exists:
+- Leave it unchanged
+- Do NOT trigger it automatically
+- It remains optional and manual
+
+Recommendations NEVER auto-edit content.
+
+---
+
+PART 6 — ERROR & EMPTY STATES
+
+If recommendations[] is empty:
+Display:
+"No recommendations at this time."
+
+If API fails:
+Do NOT affect scores UI.
+
+---
+
+STRICT CONSTRAINTS
+
+- No UI redesign
+- No backend assumptions beyond API contract
+- No content mutation
+- No new dependencies
+- No increase in API calls
+- No removal of existing features
+
+---
+
+END

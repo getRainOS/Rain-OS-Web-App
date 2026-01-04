@@ -624,6 +624,99 @@ The evolution toward edge computing extends cloud capabilities closer to end use
   })
   const [normalizing, setNormalizing] = useState(false)
   const [normalizeMessage, setNormalizeMessage] = useState('')
+  const [reanalyzing, setReanalyzing] = useState(false)
+  const [recommendations, setRecommendations] = useState([
+    {
+      scope: 'document',
+      category: 'readability',
+      severity: 'high',
+      issue: 'Paragraph is too long',
+      recommendation: 'Split into shorter paragraphs for better readability',
+      expectedImpact: 8
+    },
+    {
+      scope: 'section',
+      category: 'readability',
+      severity: 'medium',
+      issue: 'Complex sentence structure detected',
+      recommendation: 'Simplify sentences to improve clarity',
+      expectedImpact: 5
+    },
+    {
+      scope: 'document',
+      category: 'structure',
+      severity: 'high',
+      issue: 'Missing subheadings',
+      recommendation: 'Add H2 or H3 headings to organize content',
+      expectedImpact: 9
+    },
+    {
+      scope: 'section',
+      category: 'structure',
+      severity: 'medium',
+      issue: 'Inconsistent heading hierarchy',
+      recommendation: 'Ensure headings follow a logical order (H1 > H2 > H3)',
+      expectedImpact: 6
+    },
+    {
+      scope: 'document',
+      category: 'freshness',
+      severity: 'low',
+      issue: 'No date references found',
+      recommendation: 'Add publication or update date for freshness signals',
+      expectedImpact: 4
+    },
+    {
+      scope: 'chunk',
+      category: 'citation',
+      severity: 'medium',
+      issue: 'Claims lack supporting sources',
+      recommendation: 'Add citations or references to support key claims',
+      expectedImpact: 7
+    },
+    {
+      scope: 'document',
+      category: 'visibility',
+      severity: 'high',
+      issue: 'Missing meta description',
+      recommendation: 'Add a concise meta description for AI discovery',
+      expectedImpact: 8
+    }
+  ])
+
+  const handleReanalyze = () => {
+    setReanalyzing(true)
+    setTimeout(() => {
+      setAiReadinessScores({
+        readability: Math.min(100, aiReadinessScores.readability + Math.floor(Math.random() * 5)),
+        structure: Math.min(100, aiReadinessScores.structure + Math.floor(Math.random() * 5)),
+        freshness: Math.min(100, aiReadinessScores.freshness + Math.floor(Math.random() * 5)),
+        citation: Math.min(100, aiReadinessScores.citation + Math.floor(Math.random() * 5)),
+        visibility: Math.min(100, aiReadinessScores.visibility + Math.floor(Math.random() * 5))
+      })
+      setRecommendations(prev => prev.slice(0, Math.max(2, prev.length - 1)))
+      setReanalyzing(false)
+    }, 2000)
+  }
+
+  const getRecommendationsByCategory = () => {
+    const grouped = {}
+    recommendations.forEach(rec => {
+      if (!grouped[rec.category]) {
+        grouped[rec.category] = []
+      }
+      grouped[rec.category].push(rec)
+    })
+    return grouped
+  }
+
+  const categoryLabels = {
+    readability: 'Readability',
+    structure: 'Structure',
+    freshness: 'Freshness',
+    citation: 'Citation Readiness',
+    visibility: 'AI Visibility'
+  }
 
   const handleNormalize = () => {
     setNormalizing(true)
@@ -1007,6 +1100,84 @@ The evolution toward edge computing extends cloud capabilities closer to end use
                   </div>
                 )}
               </div>
+            </div>
+
+            <div style={{
+              backgroundColor: 'var(--bg-tertiary)',
+              borderRadius: '12px',
+              padding: '16px',
+              border: '1px solid var(--border-color)',
+            }}>
+              <button
+                onClick={handleReanalyze}
+                disabled={reanalyzing}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  width: '100%',
+                  padding: '10px 16px',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(34, 211, 238, 0.1)',
+                  border: '1px solid var(--accent)',
+                  color: 'var(--accent)',
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  cursor: reanalyzing ? 'not-allowed' : 'pointer',
+                  opacity: reanalyzing ? 0.7 : 1,
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                <RefreshCw size={16} style={{ animation: reanalyzing ? 'spin 1s linear infinite' : 'none' }} />
+                {reanalyzing ? 'Reanalyzing...' : 'Reanalyze Content'}
+              </button>
+            </div>
+
+            <div style={{
+              backgroundColor: 'var(--bg-tertiary)',
+              borderRadius: '12px',
+              padding: '20px',
+              border: '1px solid var(--border-color)',
+            }}>
+              <h4 style={{ fontSize: '14px', fontWeight: 600, margin: '0 0 16px' }}>Recommendations</h4>
+              {recommendations.length === 0 ? (
+                <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0 }}>
+                  No recommendations at this time.
+                </p>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {Object.entries(getRecommendationsByCategory()).map(([category, recs]) => (
+                    <div key={category}>
+                      <h5 style={{
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        color: 'var(--text-secondary)',
+                        margin: '0 0 8px',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px',
+                      }}>
+                        [{categoryLabels[category] || category}]
+                      </h5>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {recs.map((rec, idx) => (
+                          <div key={idx} style={{
+                            fontSize: '12px',
+                            color: 'var(--text-secondary)',
+                            lineHeight: 1.5,
+                            paddingLeft: '12px',
+                            borderLeft: '2px solid var(--border-color)',
+                          }}>
+                            <span style={{ color: 'var(--text-primary)' }}>{rec.issue}</span>
+                            <span style={{ color: 'var(--text-muted)' }}> → </span>
+                            <span>{rec.recommendation}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div style={{
