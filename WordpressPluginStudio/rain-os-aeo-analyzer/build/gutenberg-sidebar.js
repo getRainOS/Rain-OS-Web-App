@@ -8,6 +8,10 @@
   const apiFetch = wp.apiFetch;
   const el = createElement;
 
+  if (window.rainOsAeo && window.rainOsAeo.nonce) {
+    apiFetch.use(apiFetch.createNonceMiddleware(window.rainOsAeo.nonce));
+  }
+
   const ScoreDisplay = ({ score, isAnalyzing }) => {
     const circumference = 2 * Math.PI * 52;
     const offset = circumference - (score / 100) * circumference;
