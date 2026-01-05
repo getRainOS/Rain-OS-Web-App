@@ -32,6 +32,7 @@ require_once RAIN_OS_AEO_PLUGIN_DIR . 'includes/class-rain-os-ajax.php';
 require_once RAIN_OS_AEO_PLUGIN_DIR . 'includes/api/class-rain-os-api-client.php';
 require_once RAIN_OS_AEO_PLUGIN_DIR . 'includes/api/class-rain-os-ai-backend.php';
 require_once RAIN_OS_AEO_PLUGIN_DIR . 'includes/class-rain-os-ai-score-panel.php';
+require_once RAIN_OS_AEO_PLUGIN_DIR . 'includes/class-rain-os-gutenberg.php';
 
 final class Rain_OS_AEO_Analyzer {
 
@@ -44,6 +45,7 @@ final class Rain_OS_AEO_Analyzer {
     private $api_client;
     private $ai_backend;
     private $ai_score_panel;
+    private $gutenberg;
 
     public static function instance() {
         if ( is_null( self::$instance ) ) {
@@ -67,6 +69,7 @@ final class Rain_OS_AEO_Analyzer {
 
         $this->ai_backend     = new Rain_OS_AI_Backend();
         $this->ai_score_panel = new Rain_OS_AI_Score_Panel();
+        $this->gutenberg      = new Rain_OS_Gutenberg( $this->api_client );
     }
 
     private function init_hooks() {

@@ -1,0 +1,24 @@
+{
+  "name": "rain-os-aeo-analyzer",
+  "version": "1.0.0",
+  "description": "Rain OS AEO Analyzer - Gutenberg Sidebar",
+  "scripts": {
+    "build": "wp-scripts build",
+    "start": "wp-scripts start",
+    "lint:js": "wp-scripts lint-js",
+    "format": "wp-scripts format"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^27.0.0"
+  },
+  "dependencies": {
+    "@wordpress/components": "^27.0.0",
+    "@wordpress/compose": "^6.0.0",
+    "@wordpress/data": "^9.0.0",
+    "@wordpress/edit-post": "^7.0.0",
+    "@wordpress/element": "^5.0.0",
+    "@wordpress/i18n": "^4.0.0",
+    "@wordpress/icons": "^9.0.0",
+    "@wordpress/plugins": "^6.0.0"
+  }
+}
