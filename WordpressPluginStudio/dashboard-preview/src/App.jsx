@@ -113,6 +113,7 @@ const navItems = [
     ]
   },
   { icon: FileText, label: 'Content Analyzer', page: 'analyzer' },
+  { icon: PanelRightOpen, label: 'Gutenberg Sidebar', page: 'gutenberg-sidebar' },
   { 
     icon: HelpCircle, 
     label: 'Documentation', 
