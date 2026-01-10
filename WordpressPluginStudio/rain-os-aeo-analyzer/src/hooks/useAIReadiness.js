@@ -1,10 +1,72 @@
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect, useCallback } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
+
+const SEVERITY_MAP = {
+  high: { icon: '🔴', color: '#ef4444' },
+  medium: { icon: '🟠', color: '#f59e0b' },
+  low: { icon: '💡', color: '#22d3ee' },
+};
+
+const CATEGORY_COLORS = {
+  readability: '#22d3ee',
+  structure: '#22d3ee',
+  freshness: '#10b981',
+  citation: '#10b981',
+  visibility: '#a855f7',
+};
+
+const adaptBackendRecommendations = (backendRecs) => {
+  if (!backendRecs || !Array.isArray(backendRecs)) return [];
+
+  const seen = new Set();
+  const adapted = [];
+
+  for (const rec of backendRecs) {
+    const stableKey = `${rec.category || ''}:${rec.scope || ''}:${rec.chunkId || ''}:${rec.issue || ''}:${rec.recommendation || ''}`;
+
+    if (seen.has(stableKey)) continue;
+    seen.add(stableKey);
+
+    const severity = SEVERITY_MAP[rec.severity] || SEVERITY_MAP.low;
+    const categoryColor = CATEGORY_COLORS[rec.category] || '#22d3ee';
+
+    adapted.push({
+      icon: severity.icon,
+      title: rec.issue || 'Recommendation',
+      description: rec.recommendation || '',
+      color: categoryColor,
+      _fromBackend: true,
+    });
+  }
+
+  return adapted;
+};
+
+const mergeRecommendations = (existing, backendRecs) => {
+  if (!backendRecs || backendRecs.length === 0) return existing || [];
+  if (!existing || existing.length === 0) return backendRecs;
+
+  const existingKeys = new Set(
+    existing.map((r) => `${r.title || ''}:${r.description || ''}`)
+  );
+
+  const merged = [...existing];
+  for (const rec of backendRecs) {
+    const key = `${rec.title || ''}:${rec.description || ''}`;
+    if (!existingKeys.has(key)) {
+      merged.push(rec);
+      existingKeys.add(key);
+    }
+  }
+
+  return merged;
+};
 
 export const useAIReadiness = (postId) => {
   const [scores, setScores] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [backendScores, setBackendScores] = useState(null);
 
   useEffect(() => {
     if (!postId) return;
@@ -42,5 +104,53 @@ export const useAIReadiness = (postId) => {
     fetchScores();
   }, [postId]);
 
-  return { scores, isLoading, error };
+  return { scores, isLoading, error, backendScores };
+};
+
+export const refreshBackendAnalysis = async (postId, currentRecommendations, setAnalysisData) => {
+  if (!postId) return null;
+
+  try {
+    const response = await apiFetch({
+      path: `/rain-os-aeo/v1/backend-analysis/${postId}`,
+      parse: false,
+    });
+
+    if (response.status === 204) {
+      return null;
+    }
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+
+    if (!data) {
+      return null;
+    }
+
+    if (data.recommendations && data.recommendations.length > 0) {
+      const adaptedRecs = adaptBackendRecommendations(data.recommendations);
+      const mergedRecs = mergeRecommendations(currentRecommendations, adaptedRecs);
+
+      if (setAnalysisData) {
+        setAnalysisData((prev) =>
+          prev
+            ? {
+                ...prev,
+                recommendations: mergedRecs,
+              }
+            : null
+        );
+      }
+    }
+
+    return data;
+  } catch (err) {
+    if (window.rainOsAeo?.debug) {
+      console.log('Rain OS: Backend analysis fetch failed:', err);
+    }
+    return null;
+  }
 };

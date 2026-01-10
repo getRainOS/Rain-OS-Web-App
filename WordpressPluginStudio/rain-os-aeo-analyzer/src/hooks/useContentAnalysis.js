@@ -1,6 +1,7 @@
 import { useState, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
+import { refreshBackendAnalysis } from './useAIReadiness';
 
 export const useContentAnalysis = (postId, title, content) => {
   const [analysisData, setAnalysisData] = useState(null);
@@ -65,6 +66,12 @@ export const useContentAnalysis = (postId, title, content) => {
         });
 
         setTimeout(() => setStatusMessage(null), 3000);
+
+        refreshBackendAnalysis(
+          postId,
+          response.data.recommendations || [],
+          setAnalysisData
+        );
       } else {
         throw new Error(response.message || 'Analysis failed');
       }
@@ -127,6 +134,12 @@ export const useContentAnalysis = (postId, title, content) => {
               });
               setIsCommitting(false);
               setTimeout(() => setCommitStatus(null), 3000);
+
+              refreshBackendAnalysis(
+                postId,
+                analysisData?.recommendations || [],
+                setAnalysisData
+              );
             } else if (statusResponse.status === 'failed') {
               clearInterval(pollInterval);
               setCommitStatus({

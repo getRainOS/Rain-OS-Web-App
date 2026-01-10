@@ -4,21 +4,26 @@ const DependencyExtractionWebpackPlugin = require('@wordpress/dependency-extract
 
 module.exports = {
   entry: {
-    'gutenberg-sidebar': './src/gutenberg-sidebar/index.tsx',
+    'gutenberg-sidebar': './src/index.js',
   },
   output: {
     path: path.resolve(__dirname, 'build'),
     filename: '[name].js',
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    extensions: ['.js', '.jsx'],
   },
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
+        test: /\.jsx?$/,
         exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-react'],
+          },
+        },
       },
       {
         test: /\.css$/,
