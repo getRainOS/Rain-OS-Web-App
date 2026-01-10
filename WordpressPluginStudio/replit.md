@@ -1,7 +1,7 @@
-# Rain OS AI Readability Optimization - WordPress Plugin
+# Rain OS AI Readability Analyzer - WordPress Plugin
 
 ## Overview
-A professional, production-ready WordPress plugin called "Rain OS" that provides AI-powered content analysis for Answer Engine Optimization (AEO). The plugin features a billion-dollar SaaS aesthetic with dark mode glassmorphism design matching the Rain OS marketing website, multiple donut charts for the 3-pillar analysis hierarchy, and premium UI elements.
+A professional, production-ready WordPress plugin called "Rain OS AI Readability Analyzer" that provides AI-powered content analysis for Answer Engine Optimization. The plugin features a billion-dollar SaaS aesthetic with dark mode glassmorphism design, three-pillar analysis hierarchy (AI Readability, Digital Authority, Conversion Readiness), and premium UI elements. All user-facing labels emphasize "AI Readability" terminology for clarity.
 
 ## Project Structure
 ```
@@ -24,21 +24,12 @@ rain-os-seo/
     └── images/
         └── rain-os-logo.png     # Rain OS cloud logo
 
-preview/                         # PHP-based preview system (legacy)
-├── index.php                    # Preview router
-├── dashboard-preview.php        # Dashboard preview with 3 pillars
-├── content-analyzer-preview.php # Content analyzer with Pro features
-├── settings-preview.php         # Settings preview
-├── preview.css                  # Preview-specific styles
-├── preview.js                   # Preview interactions
-└── rain-os-logo.png             # Logo for preview
-
 dashboard-preview/               # React-based analytics dashboard (current)
 ├── src/
 │   ├── App.jsx                  # Main dashboard with Recharts charts
 │   ├── index.css                # Dark theme CSS with animations
 │   └── main.jsx                 # React entry point
-├── vite.config.js               # Vite config (port 5000, allowedHosts)
+├── vite.config.js               # Vite config (port 5000, allowedHosts, polling)
 └── package.json                 # Dependencies (recharts, lucide-react)
 ```
 
@@ -63,7 +54,7 @@ Focus: Is your content credible and trustworthy?
 
 ### Pillar 3: Conversion Readiness (Purple #A855F7)
 Focus: Is your content structured to provide answers?
-- **AEO Alignment**: Direct conversational answers for voice/chat
+- **AI Alignment**: Direct conversational answers for voice/chat
 - **Schema Extraction**: FAQ schema, How-to schema detection
 - **QA-Format Detection**: Question & Answer formatting quality
 

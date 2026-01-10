@@ -8,7 +8,7 @@ $current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( 
 $sections = array(
     'getting-started' => __( 'Getting Started', 'rain-os-aeo-analyzer' ),
     'three-pillars'   => __( 'The Three Pillars', 'rain-os-aeo-analyzer' ),
-    'content-analyzer' => __( 'Content Analyzer', 'rain-os-aeo-analyzer' ),
+    'content-analyzer' => __( 'Gutenberg Sidebar', 'rain-os-aeo-analyzer' ),
     'quick-tools'     => __( 'Quick Tools', 'rain-os-aeo-analyzer' ),
     'best-practices'  => __( 'Best Practices', 'rain-os-aeo-analyzer' ),
 );
@@ -43,8 +43,8 @@ $sections = array(
         <div class="rain-os-docs-content">
             <?php if ( 'getting-started' === $current_section ) : ?>
             <div class="rain-os-docs-section">
-                <h1><?php esc_html_e( 'Getting Started with Rain OS AEO Analyzer', 'rain-os-aeo-analyzer' ); ?></h1>
-                <p class="rain-os-docs-intro"><?php esc_html_e( 'Welcome to Rain OS AEO Analyzer! This guide will help you set up and start optimizing your content for AI-powered answer engines.', 'rain-os-aeo-analyzer' ); ?></p>
+                <h1><?php esc_html_e( 'Getting Started with Rain OS AI Readability Analyzer', 'rain-os-aeo-analyzer' ); ?></h1>
+                <p class="rain-os-docs-intro"><?php esc_html_e( 'Welcome to Rain OS AI Readability Analyzer! This guide will help you set up and start optimizing your content for AI-powered answer engines.', 'rain-os-aeo-analyzer' ); ?></p>
 
                 <div class="rain-os-docs-card">
                     <h2><?php esc_html_e( 'Step 1: Get Your API Key', 'rain-os-aeo-analyzer' ); ?></h2>
@@ -66,7 +66,7 @@ $sections = array(
 
                 <div class="rain-os-docs-card">
                     <h2><?php esc_html_e( 'Step 2: Analyze Your First Content', 'rain-os-aeo-analyzer' ); ?></h2>
-                    <p><?php printf( wp_kses( __( 'Navigate to <a href="%s">Content Analyzer</a> and paste your content to receive your first AEO analysis.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array() ) ) ), esc_url( admin_url( 'admin.php?page=rain-os-aeo-analyzer' ) ) ); ?></p>
+                    <p><?php printf( wp_kses( __( 'Open any post in the block editor and look for the Rain OS AI Readability panel in the sidebar to receive your first AI Readability analysis.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array() ) ) ), esc_url( admin_url( 'edit.php' ) ) ); ?></p>
                 </div>
             </div>
 
@@ -99,7 +99,7 @@ $sections = array(
                     <h2><?php esc_html_e( 'Conversion Readiness', 'rain-os-aeo-analyzer' ); ?></h2>
                     <p><?php esc_html_e( 'Evaluates how well your content drives engagement and action. Includes:', 'rain-os-aeo-analyzer' ); ?></p>
                     <ul>
-                        <li><strong><?php esc_html_e( 'AEO Alignment', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Content structured to provide direct answers', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'AI Alignment', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Content structured to provide direct answers', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'QA-Format', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Question and answer optimization', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'Metadata Audit', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Schema and HTML verification', 'rain-os-aeo-analyzer' ); ?></li>
                     </ul>
@@ -108,15 +108,15 @@ $sections = array(
 
             <?php elseif ( 'content-analyzer' === $current_section ) : ?>
             <div class="rain-os-docs-section">
-                <h1><?php esc_html_e( 'Using the Content Analyzer', 'rain-os-aeo-analyzer' ); ?></h1>
-                <p class="rain-os-docs-intro"><?php esc_html_e( 'The Content Analyzer is your primary tool for evaluating and improving your content AEO performance.', 'rain-os-aeo-analyzer' ); ?></p>
+                <h1><?php esc_html_e( 'Using the Gutenberg Sidebar', 'rain-os-aeo-analyzer' ); ?></h1>
+                <p class="rain-os-docs-intro"><?php esc_html_e( 'The Gutenberg Sidebar is your primary tool for evaluating and improving your content AI Readability performance directly in the WordPress block editor.', 'rain-os-aeo-analyzer' ); ?></p>
 
                 <div class="rain-os-docs-card">
-                    <h2><?php esc_html_e( 'Editor Features', 'rain-os-aeo-analyzer' ); ?></h2>
+                    <h2><?php esc_html_e( 'Sidebar Features', 'rain-os-aeo-analyzer' ); ?></h2>
                     <ul>
-                        <li><strong><?php esc_html_e( 'Rich Text Toolbar', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Format your content with headings, bold, italic, lists, and links', 'rain-os-aeo-analyzer' ); ?></li>
-                        <li><strong><?php esc_html_e( 'AI Heatmap', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Color-coded highlighting showing which parts of your content relate to each pillar', 'rain-os-aeo-analyzer' ); ?></li>
-                        <li><strong><?php esc_html_e( 'Word Count', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Real-time word count as you type', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'AI Readability Score', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'See your overall score and pillar breakdown at a glance', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Quick Actions', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Generate titles, meta descriptions, summaries, and rewrites', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Detailed Metrics', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'View sub-scores for each pillar category', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'Local Audit', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Quick checks for title, length, headings, and formatting', 'rain-os-aeo-analyzer' ); ?></li>
                     </ul>
                 </div>
@@ -140,7 +140,7 @@ $sections = array(
 
             <?php elseif ( 'best-practices' === $current_section ) : ?>
             <div class="rain-os-docs-section">
-                <h1><?php esc_html_e( 'AEO Best Practices', 'rain-os-aeo-analyzer' ); ?></h1>
+                <h1><?php esc_html_e( 'AI Readability Best Practices', 'rain-os-aeo-analyzer' ); ?></h1>
                 <p class="rain-os-docs-intro"><?php esc_html_e( 'Follow these guidelines to maximize your content performance in AI answer engines.', 'rain-os-aeo-analyzer' ); ?></p>
 
                 <div class="rain-os-docs-card">

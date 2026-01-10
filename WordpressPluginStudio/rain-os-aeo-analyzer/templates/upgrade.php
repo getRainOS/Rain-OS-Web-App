@@ -44,7 +44,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'Logical Structure: Heading hierarchy analysis', 'rain-os-aeo-analyzer' ); ?></li>
                     <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'Entity Recognition: Knowledge graph linking', 'rain-os-aeo-analyzer' ); ?></li>
                     <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'Citation Readiness: Quotable snippet detection', 'rain-os-aeo-analyzer' ); ?></li>
-                    <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'AEO Alignment: Direct answer scoring', 'rain-os-aeo-analyzer' ); ?></li>
+                    <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'AI Alignment: Direct answer scoring', 'rain-os-aeo-analyzer' ); ?></li>
                     <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'Schema Extraction: Structured data opportunities', 'rain-os-aeo-analyzer' ); ?></li>
                     <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'QA-Format Detection: Question/Answer optimization', 'rain-os-aeo-analyzer' ); ?></li>
                 </ul>

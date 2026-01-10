@@ -12,11 +12,11 @@ const RainOSAEOPlugin = () => {
         target="rain-os-aeo-sidebar"
         icon={cloud}
       >
-        {__('Rain OS AEO Analyzer', 'rain-os-aeo-analyzer')}
+        {__('Rain OS AI Readability', 'rain-os-aeo-analyzer')}
       </PluginSidebarMoreMenuItem>
       <PluginSidebar
         name="rain-os-aeo-sidebar"
-        title={__('Rain OS AEO', 'rain-os-aeo-analyzer')}
+        title={__('Rain OS AI Readability', 'rain-os-aeo-analyzer')}
         icon={cloud}
         className="rain-os-aeo-sidebar"
       >
