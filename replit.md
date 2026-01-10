@@ -105,3 +105,38 @@ The plugin follows WordPress plugin architecture standards, utilizing a modular,
   - No LLM prompts, no content generation - analysis only
   - Fail silently, log to existing debug logger
   - No polling, no repeated calls per contentId
+
+### Gutenberg Sidebar Integration (January 2025)
+- **Modern Block Editor Integration**: Converted from PHP meta boxes to React-based Gutenberg sidebar panel
+  - Uses WordPress's built-in React globals (wp.element, wp.plugins, wp.data) for WordPress.org compatibility
+  - Pre-built JavaScript approach avoids npm build requirements
+  - Nonce middleware for REST API authentication
+
+- **Sidebar Features**:
+  - Circular score ring display with animated progress
+  - Three pillar cards with progress bars (AI Readability, Digital Authority, Conversion Readiness)
+  - Tab navigation: Overview, Actions, Metrics, History
+  - Real-time content access via wp.data.useSelect
+  - Quick Actions: Suggest Titles, Meta Description, Summarize, Rewrite
+  - AI Readiness section with commit functionality
+  - Local Content Audit checklist
+
+- **REST API Endpoints** (rain-os-aeo/v1/):
+  - POST /analyze - Full content analysis
+  - POST /normalize - Content normalization for AI backend
+  - GET /normalize/status/{task_id} - Normalization status
+  - GET /ai-scores/{post_id} - AI readiness scores
+  - GET /history/{post_id} - Analysis history
+  - POST /quick-action - Quick actions (titles, meta, summarize, rewrite)
+
+- **New Files**:
+  - `build/gutenberg-sidebar.js`: Pre-built React sidebar using WordPress globals
+  - `build/gutenberg-sidebar.css`: Dark theme styling
+  - `build/gutenberg-sidebar.asset.php`: Dependency declaration
+  - `includes/class-rain-os-gutenberg.php`: Asset enqueuing and REST routes
+
+### Dashboard Preview Updates (January 2025)
+- **Gutenberg Sidebar Preview Page**: Added interactive preview of the Gutenberg sidebar
+  - Shows how the sidebar appears in WordPress block editor
+  - Includes all features: score display, pillar cards, tabs, quick actions, AI readiness, local audit
+  - Simulated analyze and quick action functionality for demonstration
