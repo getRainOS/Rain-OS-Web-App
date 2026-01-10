@@ -153,11 +153,20 @@ The plugin follows WordPress plugin architecture standards, utilizing a modular,
   - If backend errors: silent failure, existing behavior preserved
   - Debug logging only when WP_DEBUG is enabled
 
-- **New Files**:
-  - `build/gutenberg-sidebar.js`: Pre-built React sidebar using WordPress globals
-  - `build/gutenberg-sidebar.css`: Dark theme styling
-  - `build/gutenberg-sidebar.asset.php`: Dependency declaration
+- **Source Files** (`src/`):
+  - `src/index.js`: Plugin registration with PluginSidebar
+  - `src/index.css`: Dark theme styling
+  - `src/components/AEOSidebar.js`: Main sidebar component
+  - `src/hooks/useContentAnalysis.js`: Content analysis and commit logic
+  - `src/hooks/useAIReadiness.js`: AI scores and backend analysis refresh
+  - Webpack build outputs to `build/gutenberg-sidebar.js`, `.css`, `.asset.php`
+
+- **PHP Integration**:
   - `includes/class-rain-os-gutenberg.php`: Asset enqueuing and REST routes
+
+- **Stale Closure Fix** (January 2025):
+  - Added `analysisData` to `commitContent` dependency array to ensure backend refresh receives current recommendations
+  - Removed unused `backendScores` state and `useCallback` import from `useAIReadiness.js`
 
 ### Dashboard Preview Updates (January 2025)
 - **Gutenberg Sidebar Preview Page**: Added interactive preview of the Gutenberg sidebar
