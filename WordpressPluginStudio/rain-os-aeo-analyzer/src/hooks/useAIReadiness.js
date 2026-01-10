@@ -62,6 +62,9 @@ const mergeRecommendations = (existing, backendRecs) => {
   return merged;
 };
 
+const CACHE_TTL_MS = 5 * 60 * 1000;
+const backendAnalysisCache = new Map();
+
 export const useAIReadiness = (postId) => {
   const [scores, setScores] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -109,6 +112,26 @@ export const useAIReadiness = (postId) => {
 export const refreshBackendAnalysis = async (postId, currentRecommendations, setAnalysisData) => {
   if (!postId) return null;
 
+  const cached = backendAnalysisCache.get(postId);
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+    if (cached.data?.recommendations && cached.data.recommendations.length > 0) {
+      const adaptedRecs = adaptBackendRecommendations(cached.data.recommendations);
+      const mergedRecs = mergeRecommendations(currentRecommendations, adaptedRecs);
+
+      if (setAnalysisData) {
+        setAnalysisData((prev) =>
+          prev
+            ? {
+                ...prev,
+                recommendations: mergedRecs,
+              }
+            : null
+        );
+      }
+    }
+    return cached.data;
+  }
+
   try {
     const response = await apiFetch({
       path: `/rain-os-aeo/v1/backend-analysis/${postId}`,
@@ -116,6 +139,7 @@ export const refreshBackendAnalysis = async (postId, currentRecommendations, set
     });
 
     if (response.status === 204) {
+      backendAnalysisCache.set(postId, { data: null, timestamp: Date.now() });
       return null;
     }
 
@@ -126,8 +150,11 @@ export const refreshBackendAnalysis = async (postId, currentRecommendations, set
     const data = await response.json();
 
     if (!data) {
+      backendAnalysisCache.set(postId, { data: null, timestamp: Date.now() });
       return null;
     }
+
+    backendAnalysisCache.set(postId, { data, timestamp: Date.now() });
 
     if (data.recommendations && data.recommendations.length > 0) {
       const adaptedRecs = adaptBackendRecommendations(data.recommendations);

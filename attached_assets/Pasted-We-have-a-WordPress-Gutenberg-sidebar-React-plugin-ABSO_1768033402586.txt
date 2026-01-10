@@ -1,0 +1,43 @@
+We have a WordPress Gutenberg sidebar React plugin.
+
+ABSOLUTE RULES:
+- Do not change any UI behavior, layout, labels, styling, or existing API endpoints.
+- All changes must be additive and backward-compatible.
+- Do not add live analysis while typing.
+- Do not increase LLM usage; only fetch cached backend analysis results after manual actions complete.
+- Do not call the Node backend directly; use the existing WP REST proxy endpoint:
+  GET /wp-json/rain-os-aeo/v1/backend-analysis/:post_id
+
+Context:
+The sidebar is registered in src/index.js using registerPlugin('rain-os-aeo-analyzer') and PluginSidebar name="rain-os-aeo-sidebar".
+If there is a duplicate sidebar showing, it is because there is another registerPlugin call or another sidebar bundle being enqueued. Fix that by removing/guarding the duplicate registration so only src/index.js registers a sidebar.
+
+Implementation tasks:
+
+1) Remove duplicate sidebar
+- Search repo for "registerPlugin(" and "PluginSidebar".
+- Ensure only src/index.js registers the sidebar.
+- If any other file registers a Gutenberg sidebar plugin, disable it by removing that registration or guarding it behind a constant false flag.
+- Confirm only one sidebar appears.
+
+2) Add backend analysis refresh wiring (additive)
+- In src/hooks/useAIReadiness.js, add a new async function:
+  refreshBackendAnalysis(postId)
+  - Call wp.apiFetch with path `/rain-os-aeo/v1/backend-analysis/${postId}`
+  - If response is null, undefined, or returns 204 => return null, do nothing.
+  - Cache results in-memory for 5 minutes keyed by postId.
+  - If response includes recommendations, adapt them to the existing recommendation item shape used by the UI WITHOUT changing UI components.
+  - Merge adapted recommendations into existing recommendation state (append after existing) and de-dupe by a stable key:
+    `${category}:${scope}:${chunkId||''}:${issue}:${recommendation}`
+
+3) Call refreshBackendAnalysis only after existing manual flows complete successfully
+- In src/hooks/useContentAnalysis.js:
+  A) After the code that sets “Analysis complete!” status message, call refreshBackendAnalysis(postId) once.
+  B) After the commit polling detects status === 'complete' and sets “Content committed successfully!”, call refreshBackendAnalysis(postId) once.
+- Do not add any new polling.
+- Do not call refreshBackendAnalysis on typing, autosave, or editor changes.
+
+Deliver:
+- Show exact files changed and final code for those files.
+- Confirm existing buttons still call the same endpoints and behave the same.
+- Confirm only one sidebar appears.
