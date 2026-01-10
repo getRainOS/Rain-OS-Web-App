@@ -12,6 +12,145 @@
     apiFetch.use(apiFetch.createNonceMiddleware(window.rainOsAeo.nonce));
   }
 
+  // Backend Analysis Cache (5-minute TTL) - client-side cache for session
+  const backendAnalysisCache = new Map();
+  const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
+  /**
+   * Fetches backend analysis via WordPress REST route (API key stays server-side).
+   * Returns cached result if available and not expired.
+   * @param {string} contentId - The content/post ID
+   * @returns {Promise<Object|null>} Backend analysis data or null if unavailable/error
+   */
+  const fetchBackendAnalysis = async (contentId) => {
+    if (!contentId) return null;
+
+    const cacheKey = String(contentId);
+    const cached = backendAnalysisCache.get(cacheKey);
+    
+    // Return cached data if still valid (client-side cache supplements server-side transient cache)
+    if (cached && (Date.now() - cached.timestamp) < CACHE_TTL_MS) {
+      return cached.data;
+    }
+
+    try {
+      // Use WordPress REST route - API key handled server-side
+      const response = await apiFetch({
+        path: '/rain-os-aeo/v1/backend-analysis/' + contentId,
+        method: 'GET',
+        parse: false // Handle response manually to check status
+      });
+
+      // Handle 204 No Content - feature flag OFF or no data
+      if (response.status === 204) {
+        return null;
+      }
+
+      // Handle success
+      if (response.ok) {
+        const data = await response.json();
+        if (data) {
+          backendAnalysisCache.set(cacheKey, { data, timestamp: Date.now() });
+          return data;
+        }
+      }
+
+      // Any other status - return null silently (no UI errors per spec)
+      return null;
+    } catch (error) {
+      // Log only if debug flag exists
+      if (window.rainOsAeo?.debug) {
+        console.log('Rain OS: Backend analysis fetch failed:', error);
+      }
+      return null;
+    }
+  };
+
+  /**
+   * Adapts backend recommendations to match existing UI shape.
+   * Maps: issue -> title, recommendation -> description, severity -> color
+   * @param {Array} backendRecs - Recommendations from backend
+   * @returns {Array} Adapted recommendations for UI
+   */
+  const adaptBackendRecommendations = (backendRecs) => {
+    if (!backendRecs || !Array.isArray(backendRecs)) return [];
+
+    // Severity to color/icon mapping
+    const severityMap = {
+      high: { color: '#ef4444', icon: '🔴' },    // critical/red
+      medium: { color: '#f59e0b', icon: '🟠' },  // warning/orange
+      low: { color: '#22d3ee', icon: '💡' }      // info/cyan
+    };
+
+    // Category to color mapping (pillar colors)
+    const categoryColors = {
+      readability: '#22d3ee',    // AI Readability - cyan
+      structure: '#22d3ee',      // AI Readability - cyan
+      freshness: '#10b981',      // Digital Authority - green
+      citation: '#10b981',       // Digital Authority - green
+      visibility: '#a855f7'      // Conversion Readiness - purple
+    };
+
+    // De-dupe by stable key
+    const seen = new Set();
+    const adapted = [];
+
+    for (const rec of backendRecs) {
+      const stableKey = `${rec.category || ''}:${rec.scope || ''}:${rec.chunkId || ''}:${rec.issue || ''}:${rec.recommendation || ''}`;
+      
+      if (seen.has(stableKey)) continue;
+      seen.add(stableKey);
+
+      const severity = severityMap[rec.severity] || severityMap.low;
+      const categoryColor = categoryColors[rec.category] || '#22d3ee';
+
+      adapted.push({
+        icon: severity.icon,
+        title: rec.issue || 'Recommendation',
+        description: rec.recommendation || '',
+        color: categoryColor,
+        // Preserve additional fields for potential future use
+        _category: rec.category,
+        _scope: rec.scope,
+        _severity: rec.severity,
+        _expectedImpact: rec.expectedImpact,
+        _chunkId: rec.chunkId,
+        _sectionId: rec.sectionId,
+        _fromBackend: true
+      });
+    }
+
+    return adapted;
+  };
+
+  /**
+   * Merges backend recommendations with existing recommendations.
+   * Backend recs are appended after existing ones, de-duped by key.
+   * @param {Array} existing - Current recommendations
+   * @param {Array} backendRecs - Backend recommendations (already adapted)
+   * @returns {Array} Merged recommendations
+   */
+  const mergeRecommendations = (existing, backendRecs) => {
+    if (!backendRecs || backendRecs.length === 0) return existing || [];
+    if (!existing || existing.length === 0) return backendRecs;
+
+    // Build set of existing keys for de-dupe
+    const existingKeys = new Set(
+      existing.map(r => `${r.title || ''}:${r.description || ''}`)
+    );
+
+    const merged = [...existing];
+    for (const rec of backendRecs) {
+      const key = `${rec.title || ''}:${rec.description || ''}`;
+      if (!existingKeys.has(key)) {
+        merged.push(rec);
+        existingKeys.add(key);
+      }
+    }
+
+    return merged;
+  };
+
   const ScoreDisplay = ({ score, isAnalyzing }) => {
     const circumference = 2 * Math.PI * 52;
     const offset = circumference - (score / 100) * circumference;
@@ -386,6 +525,9 @@
     const [statusMessage, setStatusMessage] = useState(null);
     const [isCommitting, setIsCommitting] = useState(false);
     const [commitStatus, setCommitStatus] = useState(null);
+    // Backend analysis state (additive - does not replace existing state)
+    const [backendFiveScores, setBackendFiveScores] = useState(null);
+    const [backendMeta, setBackendMeta] = useState(null);
 
     const { title, content, postId } = useSelect((select) => {
       const editor = select('core/editor');
@@ -415,7 +557,10 @@
         });
 
         if (response.success && response.data) {
-          setAnalysisData({
+          const baseRecommendations = response.data.recommendations || [];
+          
+          // Build initial analysis data
+          const newAnalysisData = {
             overallScore: response.data.overall_score || 0,
             pillars: {
               aiReadability: { score: response.data.ai_readability || 0, label: 'AI Readability', color: '#22d3ee' },
@@ -423,10 +568,46 @@
               conversionReadiness: { score: response.data.conversion_readiness || 0, label: 'Conversion Readiness', color: '#a855f7' }
             },
             subScores: response.data.sub_scores || {},
-            recommendations: response.data.recommendations || []
-          });
+            recommendations: baseRecommendations
+          };
+          
+          setAnalysisData(newAnalysisData);
           setStatusMessage({ type: 'success', message: __('Analysis complete!', 'rain-os-aeo-analyzer') });
           setTimeout(() => setStatusMessage(null), 3000);
+
+          // After successful analysis, fetch backend analysis (fire-and-forget, non-blocking)
+          // Does NOT block button state - runs asynchronously after UI update
+          fetchBackendAnalysis(postId).then(backend => {
+            if (backend) {
+              // Store backend five scores if available
+              if (backend.scores) {
+                setBackendFiveScores(backend.scores);
+              }
+              // Store backend metadata
+              if (backend.timestamp || backend.version || backend.engineVersion) {
+                setBackendMeta({
+                  timestamp: backend.timestamp,
+                  version: backend.version,
+                  engineVersion: backend.engineVersion
+                });
+              }
+              // Merge backend recommendations with existing
+              if (backend.recommendations && backend.recommendations.length > 0) {
+                const adaptedRecs = adaptBackendRecommendations(backend.recommendations);
+                const mergedRecs = mergeRecommendations(baseRecommendations, adaptedRecs);
+                setAnalysisData(prev => ({
+                  ...prev,
+                  recommendations: mergedRecs
+                }));
+              }
+            }
+            // If backend returns null (204, error, etc.), do nothing - existing behavior preserved
+          }).catch(backendError => {
+            // Silent failure - no UI change per spec
+            if (window.rainOsAeo?.debug) {
+              console.log('Rain OS: Backend analysis integration silent fail:', backendError);
+            }
+          });
         }
       } catch (error) {
         setStatusMessage({ type: 'error', message: error.message || __('Analysis failed.', 'rain-os-aeo-analyzer') });
@@ -454,13 +635,48 @@
         if (response.success) {
           setCommitStatus({ type: 'success', message: __('Content committed!', 'rain-os-aeo-analyzer') });
           setTimeout(() => setCommitStatus(null), 3000);
+
+          // After successful commit, fetch backend analysis (fire-and-forget, non-blocking)
+          // Does NOT block button state - runs asynchronously after UI update
+          fetchBackendAnalysis(postId).then(backend => {
+            if (backend) {
+              // Store backend five scores if available
+              if (backend.scores) {
+                setBackendFiveScores(backend.scores);
+              }
+              // Store backend metadata
+              if (backend.timestamp || backend.version || backend.engineVersion) {
+                setBackendMeta({
+                  timestamp: backend.timestamp,
+                  version: backend.version,
+                  engineVersion: backend.engineVersion
+                });
+              }
+              // Merge backend recommendations with existing analysis data
+              if (backend.recommendations && backend.recommendations.length > 0 && analysisData) {
+                const adaptedRecs = adaptBackendRecommendations(backend.recommendations);
+                const currentRecs = analysisData.recommendations || [];
+                const mergedRecs = mergeRecommendations(currentRecs, adaptedRecs);
+                setAnalysisData(prev => prev ? {
+                  ...prev,
+                  recommendations: mergedRecs
+                } : null);
+              }
+            }
+            // If backend returns null (204, error, etc.), do nothing - existing behavior preserved
+          }).catch(backendError => {
+            // Silent failure - no UI change per spec
+            if (window.rainOsAeo?.debug) {
+              console.log('Rain OS: Backend analysis integration silent fail on commit:', backendError);
+            }
+          });
         }
       } catch (error) {
         setCommitStatus({ type: 'error', message: error.message || __('Commit failed.', 'rain-os-aeo-analyzer') });
       } finally {
         setIsCommitting(false);
       }
-    }, [postId, title, content]);
+    }, [postId, title, content, analysisData]);
 
     const pillars = analysisData?.pillars || {
       aiReadability: { score: 0, label: 'AI Readability', color: '#22d3ee' },

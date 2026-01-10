@@ -51,11 +51,12 @@ class Rain_OS_Gutenberg {
             'rain-os-aeo-gutenberg-sidebar',
             'rainOsAeo',
             array(
-                'apiUrl'      => RAIN_OS_AEO_API_URL,
-                'nonce'       => wp_create_nonce( 'wp_rest' ),
-                'postId'      => get_the_ID(),
-                'isPro'       => $this->is_pro_user(),
+                'apiUrl'           => RAIN_OS_AEO_API_URL,
+                'nonce'            => wp_create_nonce( 'wp_rest' ),
+                'postId'           => get_the_ID(),
+                'isPro'            => $this->is_pro_user(),
                 'aiBackendEnabled' => Rain_OS_AI_Backend::is_enabled(),
+                'debug'            => defined( 'WP_DEBUG' ) && WP_DEBUG,
             )
         );
     }
@@ -99,6 +100,12 @@ class Rain_OS_Gutenberg {
         register_rest_route( 'rain-os-aeo/v1', '/quick-action', array(
             'methods'             => 'POST',
             'callback'            => array( $this, 'handle_quick_action' ),
+            'permission_callback' => array( $this, 'check_edit_permission' ),
+        ) );
+
+        register_rest_route( 'rain-os-aeo/v1', '/backend-analysis/(?P<post_id>\d+)', array(
+            'methods'             => 'GET',
+            'callback'            => array( $this, 'handle_backend_analysis' ),
             'permission_callback' => array( $this, 'check_edit_permission' ),
         ) );
     }
@@ -477,5 +484,58 @@ class Rain_OS_Gutenberg {
                     'message' => __( 'Unknown action.', 'rain-os-aeo-analyzer' ),
                 ), 400 );
         }
+    }
+
+    public function handle_backend_analysis( $request ) {
+        $post_id = absint( $request->get_param( 'post_id' ) );
+
+        if ( ! $post_id ) {
+            return new WP_REST_Response( null, 204 );
+        }
+
+        $api_key = get_option( 'rain_os_api_key', '' );
+
+        if ( empty( $api_key ) ) {
+            return new WP_REST_Response( null, 204 );
+        }
+
+        $cache_key = 'rain_os_backend_analysis_' . $post_id;
+        $cached = get_transient( $cache_key );
+
+        if ( false !== $cached ) {
+            return new WP_REST_Response( $cached, 200 );
+        }
+
+        $response = wp_remote_get( RAIN_OS_AEO_API_URL . '/api/plugin/content/' . $post_id . '/analysis', array(
+            'headers' => array(
+                'Authorization' => 'Bearer ' . $api_key,
+                'Content-Type'  => 'application/json',
+            ),
+            'timeout' => 15,
+        ) );
+
+        if ( is_wp_error( $response ) ) {
+            return new WP_REST_Response( null, 204 );
+        }
+
+        $status_code = wp_remote_retrieve_response_code( $response );
+
+        if ( 204 === $status_code ) {
+            return new WP_REST_Response( null, 204 );
+        }
+
+        if ( 200 !== $status_code ) {
+            return new WP_REST_Response( null, 204 );
+        }
+
+        $body = json_decode( wp_remote_retrieve_body( $response ), true );
+
+        if ( empty( $body ) ) {
+            return new WP_REST_Response( null, 204 );
+        }
+
+        set_transient( $cache_key, $body, 5 * MINUTE_IN_SECONDS );
+
+        return new WP_REST_Response( $body, 200 );
     }
 }
