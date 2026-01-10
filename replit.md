@@ -128,6 +128,30 @@ The plugin follows WordPress plugin architecture standards, utilizing a modular,
   - GET /ai-scores/{post_id} - AI readiness scores
   - GET /history/{post_id} - Analysis history
   - POST /quick-action - Quick actions (titles, meta, summarize, rewrite)
+  - GET /backend-analysis/{post_id} - Proxy to backend analysis endpoint (API key server-side)
+
+### Backend Analysis Endpoint Integration (January 2025)
+- **New Backend Endpoint Integration**: Wired Gutenberg sidebar to fetch cached recommendations from backend
+  - Calls `GET /api/plugin/content/:contentId/analysis` via WordPress REST proxy
+  - API key stays server-side (security), never exposed to client JavaScript
+  - Fire-and-forget pattern ensures buttons reset immediately (no blocking)
+  - 5-minute caching: server-side WordPress transients + client-side Map cache
+  
+- **Adapter Pattern**: `adaptBackendRecommendations()` maps backend response to existing UI shape
+  - Maps: issue -> title, recommendation -> description
+  - Severity mapping: high -> critical (red), medium -> warning (orange), low -> info (cyan)
+  - Category colors match pillar colors (readability/structure=cyan, freshness/citation=green, visibility=purple)
+  - De-duplication by stable key to prevent duplicate recommendations
+
+- **Merge Logic**: Backend recommendations append to existing ones after manual actions
+  - Only triggers after successful Analyze Content or Commit Content
+  - No polling, no autosave triggers
+  - Silent fallback if endpoint returns 204 or errors (no UI changes)
+
+- **Feature Guarding**:
+  - If backend returns 204 (feature flag OFF or no data): no UI change
+  - If backend errors: silent failure, existing behavior preserved
+  - Debug logging only when WP_DEBUG is enabled
 
 - **New Files**:
   - `build/gutenberg-sidebar.js`: Pre-built React sidebar using WordPress globals
