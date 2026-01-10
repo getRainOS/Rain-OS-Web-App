@@ -112,7 +112,7 @@ const navItems = [
       { label: 'Content Signals', page: 'signals' },
     ]
   },
-  { icon: PanelRightOpen, label: 'Gutenberg Sidebar', page: 'gutenberg-sidebar' },
+  { icon: PanelRightOpen, label: 'Content Analyzer', page: 'gutenberg-sidebar' },
   { 
     icon: HelpCircle, 
     label: 'Documentation', 
