@@ -1,0 +1,132 @@
+You are working inside an existing WordPress plugin codebase called “Rain OS AEO Analyzer”.
+It is a JS/React Gutenberg sidebar panel (wp-admin) with existing buttons and API calls.
+
+ABSOLUTE RULES:
+- DO NOT change any existing UI behavior, copy, layout, button labels, order, styling, selectors, component structure, or existing API endpoints.
+- DO NOT remove/rename/refactor existing functions, hooks, reducers, actions, stores, components, or API client methods.
+- ALL changes must be ADDITIVE and BACKWARD-COMPATIBLE.
+- DO NOT edit WordPress content.
+- DO NOT add background/live analysis; only run requests when the user clicks existing buttons/actions OR when the plugin already polls after those actions.
+- DO NOT increase LLM usage: the new endpoint(s) only fetch cached/computed recommendations + scores; they must NOT trigger new analysis runs.
+- If the new endpoint returns 204 or fails, the plugin must behave exactly as before with no new errors shown.
+
+GOAL:
+Wire the Gutenberg sidebar UI to read from this NEW backend plugin endpoint (same base URL + API key already used by the plugin):
+GET  /api/plugin/content/:contentId/analysis
+
+This endpoint returns JSON:
+{
+  scores: {
+    readability: number,
+    structure: number,
+    freshness: number,
+    citation: number,
+    visibility: number
+  },
+  recommendations: Array<{
+    scope: 'chunk'|'section'|'document',
+    chunkId?: string,
+    sectionId?: string,
+    category: 'readability'|'structure'|'freshness'|'citation'|'visibility',
+    severity: 'low'|'medium'|'high',
+    issue: string,
+    recommendation: string,
+    expectedImpact: number
+  }>,
+  timestamp?: string,
+  version?: string,
+  engineVersion?: string
+}
+
+WHAT TO IMPLEMENT (ADD ONLY):
+
+1) Add ONE new API client method (do not change existing ones):
+- Locate the existing API client module (e.g. `src/api/client.ts`, `src/lib/api.ts`, `src/services/api.ts`, etc.).
+- Add:
+  async function fetchBackendAnalysis(contentId: string): Promise<BackendAnalysis | null>
+  - It must call `${baseUrl}/api/plugin/content/${contentId}/analysis`
+  - Use Authorization header exactly like other calls: `Authorization: Bearer ${apiKey}`
+  - Handle responses:
+    - 200: parse JSON and return it
+    - 204: return null
+    - other: return null (no UI errors)
+  - Add a small in-memory cache (Map) with TTL 5 minutes keyed by contentId to avoid repeat calls during the same edit session.
+  - If the plugin already has a caching layer, re-use it; otherwise implement a tiny local cache in the api client file.
+
+2) Add a safe adapter to match EXISTING UI recommendation/state shape:
+- Create a new file `src/adapters/backendRecommendations.ts` (or similar) that exports:
+  - adaptBackendRecommendations(backendRecs, existingShapeHint?) => returns data in the exact shape the UI already consumes
+- DO NOT change UI components to accept a new model.
+- The adapter must:
+  - map `issue` -> existing title/label field
+  - map `recommendation` -> existing detail/body field
+  - map severity:
+      high -> 'critical' or existing highest severity
+      medium -> 'warning'
+      low -> 'info'
+    (use whatever enums the plugin already uses)
+  - preserve category as one of the five buckets (readability/structure/freshness/citation/visibility)
+  - de-dupe appended items by a stable key: `${category}:${scope}:${chunkId||''}:${issue}:${recommendation}`
+
+3) Wire the new endpoint into the EXISTING manual action flows WITHOUT changing them:
+Find the code paths that already run when the user clicks any of these existing buttons:
+- “Commit Content”
+- “Normalize Content”
+- “Reanalyze Content”
+- “Run Full Analysis”
+There is likely a shared handler or thunk/saga like `runAnalysis`, `reanalyze`, `commitContent`, `normalizeContent`, etc.
+
+After the plugin’s existing flow finishes successfully (i.e. wherever it already sets “analysis complete”, or stops polling, or updates scores), ADD one extra step:
+- const backend = await fetchBackendAnalysis(contentId)
+- if backend is not null:
+   - adapt recommendations via adaptBackendRecommendations(backend.recommendations)
+   - merge into existing recommendations state ONLY if recommendations UI already exists
+   - optionally store backend.scores into the existing 5-score state ONLY if compatible; otherwise store into a new internal field and do not render new UI
+- if backend is null: do nothing
+IMPORTANT:
+- Do NOT add extra polling.
+- Do NOT call this on typing/autosave.
+- Only call it after existing manual flows complete successfully (or at the end of the existing polling loop that already exists).
+
+4) Do not break current endpoints:
+All existing calls like:
+POST /api/analyze (full_analysis, suggest_titles, generate_description, summarize_content, rewrite_sentence)
+POST /api/plugin/content/:contentId/normalize
+GET  /api/plugin/content/:contentId/scores
+GET  /api/plugin/diagnostics/:contentId
+must remain unchanged and must continue to work.
+
+5) Minimal state changes (additive):
+- If there is a Redux store / Zustand / Context store:
+  - Add optional fields:
+    - backendRecommendations?: ...
+    - backendFiveScores?: ...
+    - backendMeta?: { timestamp, version, engineVersion }
+  - Do NOT remove or rename existing fields.
+  - Merge logic must be additive: existing recommendations remain; backend ones append after (or merge if same key).
+
+6) Feature guarding:
+- If endpoint returns 204, null, or errors: no UI change, no new error toasts, no new notices.
+- Only log to console if a debug flag already exists in the plugin; otherwise do not log.
+
+7) Tests / verification (add as code comments, do not add UI):
+- With backend AI feature flag OFF => endpoint returns 204 => plugin should behave exactly as before.
+- With backend AI feature flag ON => after a manual action completes, recommendations list populates more richly (no new buttons, no new UI sections).
+- Confirm only 1 extra GET call per completion (and cached for 5 minutes).
+- Confirm no increase in /api/analyze LLM calls.
+
+IMPLEMENTATION INSTRUCTIONS:
+- Inspect the repository structure and find:
+  a) the API client module
+  b) the analysis action handlers (thunks/sagas/hooks)
+  c) the recommendations state shape and renderer expectations
+- Implement exactly the changes above using the repo’s existing patterns (TypeScript types, fetch wrapper, error handling).
+- DO NOT change component props. If adapter is needed, do it in the action layer before dispatching to store.
+- Ensure the code compiles and lint passes.
+
+DELIVERABLE:
+- Add the new API method, adapter, and wiring into the existing completion path(s).
+- Do not change UI.
+- Keep existing buttons and workflows identical.
+
+Now implement these changes in the plugin codebase with correct filenames and minimal diff.
