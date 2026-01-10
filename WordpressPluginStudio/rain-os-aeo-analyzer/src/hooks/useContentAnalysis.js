@@ -172,7 +172,7 @@ export const useContentAnalysis = (postId, title, content) => {
       });
       setIsCommitting(false);
     }
-  }, [postId, title, content]);
+  }, [postId, title, content, analysisData]);
 
   return {
     analysisData,

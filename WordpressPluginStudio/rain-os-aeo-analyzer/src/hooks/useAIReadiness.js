@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from '@wordpress/element';
+import { useState, useEffect } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 
 const SEVERITY_MAP = {
@@ -66,7 +66,6 @@ export const useAIReadiness = (postId) => {
   const [scores, setScores] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [backendScores, setBackendScores] = useState(null);
 
   useEffect(() => {
     if (!postId) return;
@@ -104,7 +103,7 @@ export const useAIReadiness = (postId) => {
     fetchScores();
   }, [postId]);
 
-  return { scores, isLoading, error, backendScores };
+  return { scores, isLoading, error };
 };
 
 export const refreshBackendAnalysis = async (postId, currentRecommendations, setAnalysisData) => {
