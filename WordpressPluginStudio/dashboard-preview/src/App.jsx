@@ -43,7 +43,7 @@ const categoryData = [
   { name: 'Entity Recognition', score: 75, pillar: 'digitalAuthority' },
   { name: 'Citation Readiness', score: 77, pillar: 'digitalAuthority' },
   { name: 'Metadata Audit', score: 78, pillar: 'digitalAuthority' },
-  { name: 'AEO Alignment', score: 86, pillar: 'conversionReadiness' },
+  { name: 'AI Alignment', score: 86, pillar: 'conversionReadiness' },
   { name: 'Schema Extraction', score: 80, pillar: 'conversionReadiness' },
   { name: 'QA-Format Detection', score: 86, pillar: 'conversionReadiness' },
 ]
@@ -460,7 +460,7 @@ const mockAnalysis = {
     { name: "Entity Recognition", score: 72, status: "warning", pillar: "digitalAuthority" },
     { name: "Citation Readiness", score: 65, status: "warning", pillar: "digitalAuthority" },
     { name: "Metadata Audit", score: 78, status: "warning", pillar: "digitalAuthority" },
-    { name: "AEO Alignment", score: 88, status: "good", pillar: "conversionReadiness" },
+    { name: "AI Alignment", score: 88, status: "good", pillar: "conversionReadiness" },
     { name: "QA-format Detection", score: 95, status: "good", pillar: "conversionReadiness" },
     { name: "Schema Extraction", score: 40, status: "critical", pillar: "conversionReadiness" }
   ],
@@ -506,7 +506,7 @@ function GutenbergSidebarPage() {
     recommendations: [
       { icon: '📝', title: 'Add Subheadings', description: 'Break up your content with H2 or H3 headings for better structure.', color: '#22d3ee' },
       { icon: '🔗', title: 'Add External Links', description: 'Include authoritative external links to support your content.', color: '#10b981' },
-      { icon: '✅', title: 'Great Job!', description: 'Your content meets the basic AEO requirements.', color: '#10b981' },
+      { icon: '✅', title: 'Great Job!', description: 'Your content meets the basic AI Readability requirements.', color: '#10b981' },
     ]
   }
 
@@ -565,7 +565,7 @@ function GutenbergSidebarPage() {
           </svg>
           <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: 32, fontWeight: 700, color: '#fff' }}>{isLoading ? '...' : score}</div>
         </div>
-        <div style={{ fontSize: 14, color: 'var(--text-secondary)', textAlign: 'center' }}>{isLoading ? 'Analyzing...' : 'Overall AEO Score'}</div>
+        <div style={{ fontSize: 14, color: 'var(--text-secondary)', textAlign: 'center' }}>{isLoading ? 'Analyzing...' : 'AI Readability Score'}</div>
       </div>
     )
   }
@@ -594,7 +594,7 @@ function GutenbergSidebarPage() {
 
   const quickActions = [
     { id: 'suggest_titles', icon: '✍️', title: 'Suggest Titles', desc: 'Generate optimized title variations' },
-    { id: 'generate_meta', icon: '📝', title: 'Meta Description', desc: 'Create SEO meta description' },
+    { id: 'generate_meta', icon: '📝', title: 'Meta Description', desc: 'Create AI-optimized meta description' },
     { id: 'summarize', icon: '📋', title: 'Summarize', desc: 'Get a concise content summary' },
     { id: 'rewrite', icon: '🔄', title: 'Rewrite Selection', desc: 'Improve selected text' },
   ]
@@ -623,7 +623,7 @@ function GutenbergSidebarPage() {
   return (
     <div>
       <h1 style={{ fontSize: '24px', fontWeight: 600, marginBottom: '8px' }}>Gutenberg Sidebar Preview</h1>
-      <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>This is a preview of how the AEO Analyzer appears in the WordPress block editor sidebar.</p>
+      <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>This is a preview of how the AI Readability Analyzer appears in the WordPress block editor sidebar.</p>
 
       <div style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
         <div style={{ flex: 1, backgroundColor: 'var(--bg-secondary)', borderRadius: '12px', padding: '24px', border: '1px solid var(--border-color)' }}>
@@ -655,7 +655,7 @@ function GutenbergSidebarPage() {
             <span style={{ fontSize: '16px', fontWeight: 600 }}>
               <span style={{ color: '#fff' }}>r</span><span style={{ color: '#22d3ee' }}>ai</span><span style={{ color: '#fff' }}>n</span>
             </span>
-            <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>AEO Analyzer</span>
+            <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>AI Readability</span>
           </div>
 
           <ScoreRing score={analysisData?.overallScore || 0} isLoading={isAnalyzing} />
@@ -693,7 +693,7 @@ function GutenbergSidebarPage() {
               )}
               {!analysisData && !isAnalyzing && (
                 <div style={{ textAlign: 'center', padding: 20, color: '#64748b', fontSize: 13 }}>
-                  Click "Analyze Content" to get your AEO score and recommendations.
+                  Click "Analyze Content" to get your AI Readability score and recommendations.
                 </div>
               )}
             </div>
@@ -1693,7 +1693,7 @@ The evolution toward edge computing extends cloud capabilities closer to end use
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: '16px', fontWeight: 600 }}>{entry.score}</div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>AEO Score</div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>AI Readability Score</div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{entry.date}</div>
@@ -2295,7 +2295,7 @@ function SettingsPage({ setCurrentPage }) {
     <>
       <header className="animate-in" style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '4px' }}>Settings</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Configure your Rain OS AEO Analyzer preferences</p>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Configure your Rain OS AI Readability Analyzer preferences</p>
       </header>
       
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '24px' }}>
@@ -2489,7 +2489,7 @@ function SettingsPage({ setCurrentPage }) {
               }}>
                 <input type="checkbox" checked={autoAnalyze} onChange={(e) => setAutoAnalyze(e.target.checked)} style={{ accentColor: 'var(--accent)', width: '18px', height: '18px' }} />
                 <Sliders size={16} color="var(--text-secondary)" />
-                <Tooltip id="auto-analyze" text="When enabled, the plugin will automatically run an AEO analysis every time you publish or update a post. This uses one API credit per analysis. Disable this if you prefer to manually trigger analyses.">
+                <Tooltip id="auto-analyze" text="When enabled, the plugin will automatically run an AI Readability analysis every time you publish or update a post. This uses one API credit per analysis. Disable this if you prefer to manually trigger analyses.">
                   <span>Auto-Analyze on Publish</span>
                 </Tooltip>
               </label>
@@ -2655,7 +2655,7 @@ function SettingsPage({ setCurrentPage }) {
 
 function DocsPage({ setCurrentPage }) {
   const docs = [
-    { title: 'Getting Started', desc: 'Learn how to set up Rain OS AEO Analyzer', page: 'docs-getting-started' },
+    { title: 'Getting Started', desc: 'Learn how to set up Rain OS AI Readability Analyzer', page: 'docs-getting-started' },
     { title: 'Troubleshooting', desc: 'Common issues and solutions', page: 'docs-troubleshooting' },
     { title: 'Learn About AI Readability', desc: 'Understand how AI systems read and interpret your content', page: 'learn-ai-readability' },
     { title: 'Improve Your Score', desc: 'Practical tips and strategies to boost your content scores', page: 'improve-score' },
@@ -2665,7 +2665,7 @@ function DocsPage({ setCurrentPage }) {
     <>
       <header className="animate-in" style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '4px' }}>Documentation</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Rain OS AEO Analyzer is a diagnostic tool for Answer Engine Optimization</p>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Rain OS AI Readability Analyzer is a diagnostic tool for AI Readability and Answer Engine Optimization</p>
       </header>
       
       <div className="animate-in" style={{ 
@@ -2728,7 +2728,7 @@ function GettingStartedPage() {
     <>
       <div className="animate-in" style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Getting Started</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Learn how to set up Rain OS AEO Analyzer</p>
+        <p style={{ color: 'var(--text-secondary)' }}>Learn how to set up Rain OS AI Readability Analyzer</p>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -2740,10 +2740,10 @@ function GettingStartedPage() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
             <Microscope size={24} color="var(--accent)" />
-            <h2 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--accent)', margin: 0 }}>What is Rain OS AEO Analyzer?</h2>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--accent)', margin: 0 }}>What is Rain OS AI Readability Analyzer?</h2>
           </div>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.8, marginBottom: '16px' }}>
-            <strong style={{ color: 'var(--text-primary)' }}>Rain OS AEO Analyzer is a diagnostic tool</strong> designed to help you understand how AI-powered search engines and answer engines interpret your content. It does not automatically fix or modify your content — instead, it provides detailed analysis and actionable recommendations that you can use to improve your content's visibility in AI-driven platforms like ChatGPT, Perplexity, Gemini, and Claude.
+            <strong style={{ color: 'var(--text-primary)' }}>Rain OS AI Readability Analyzer is a diagnostic tool</strong> designed to help you understand how AI-powered search engines and answer engines interpret your content. It does not automatically fix or modify your content — instead, it provides detailed analysis and actionable recommendations that you can use to improve your content's visibility in AI-driven platforms like ChatGPT, Perplexity, Gemini, and Claude.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
             <div style={{ padding: '16px', backgroundColor: 'rgba(34, 211, 238, 0.15)', borderRadius: '8px', textAlign: 'center' }}>
@@ -2768,7 +2768,7 @@ function GettingStartedPage() {
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Installation</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {[
-              { step: '1', title: 'Download the Plugin', desc: 'Download the Rain OS AEO Analyzer plugin from your account dashboard or the WordPress plugin repository.' },
+              { step: '1', title: 'Download the Plugin', desc: 'Download the Rain OS AI Readability Analyzer plugin from your account dashboard or the WordPress plugin repository.' },
               { step: '2', title: 'Upload to WordPress', desc: 'Go to Plugins > Add New > Upload Plugin in your WordPress admin. Select the downloaded ZIP file and click Install Now.' },
               { step: '3', title: 'Activate the Plugin', desc: 'After installation, click Activate Plugin. You will see a new "Rain OS" menu item in your WordPress admin sidebar.' },
               { step: '4', title: 'Enter Your API Key', desc: 'Navigate to Rain OS > Settings and enter your API key. You can find your API key in your Rain OS account dashboard.' },
@@ -3400,7 +3400,7 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
       }}>
         <div>
           <h1 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '4px' }}>Dashboard</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Monitor your content performance and AEO metrics</p>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Monitor your content performance and AI Readability metrics</p>
         </div>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -3980,7 +3980,7 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
               ? [{ name: 'Semantic Clarity', value: 85 }, { name: 'Readability Score', value: 78 }, { name: 'Logical Structure', value: 82 }]
               : pillar.name === 'Digital Authority'
               ? [{ name: 'Entity Recognition', value: 75 }, { name: 'Citation Readiness', value: 88 }, { name: 'Schema Extraction', value: 72 }]
-              : [{ name: 'AEO Alignment', value: 80 }, { name: 'QA-Format', value: 76 }, { name: 'Metadata Audit', value: 84 }]
+              : [{ name: 'AI Alignment', value: 80 }, { name: 'QA-Format', value: 76 }, { name: 'Metadata Audit', value: 84 }]
             
             return (
               <div key={i} className={`animate-in-delay-${i + 2}`} style={{
@@ -4386,10 +4386,10 @@ function LearnAIReadabilityPage() {
             <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>Key Terms</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {[
-                { term: 'AEO', def: 'Answer Engine Optimization - optimizing for AI answer systems' },
+                { term: 'AI Readability', def: 'How well AI systems can understand and interpret your content' },
                 { term: 'GEO', def: 'Generative Engine Optimization - optimizing for generative AI' },
                 { term: 'E-E-A-T', def: 'Experience, Expertise, Authoritativeness, Trust' },
-                { term: 'Semantic AEO', def: 'Optimizing for meaning, not just keywords' },
+                { term: 'Semantic Clarity', def: 'Optimizing for meaning, not just keywords' },
                 { term: 'Entity', def: 'A distinct concept AI can identify and understand' },
               ].map((item, i) => (
                 <div key={i} style={{ padding: '12px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '6px' }}>

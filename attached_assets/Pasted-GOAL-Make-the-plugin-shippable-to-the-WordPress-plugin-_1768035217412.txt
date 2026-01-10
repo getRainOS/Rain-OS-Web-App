@@ -1,0 +1,79 @@
+GOAL: Make the plugin shippable to the WordPress plugin repository by reaching a stable, final build with no duplicate sidebars, no behavior changes, and a frozen backend contract.
+
+HARD RULES:
+- Do NOT change any UI behavior, layout, button labels, or user flows.
+- Do NOT add live analysis or background analysis while typing.
+- Do NOT expose the API key in JS (must stay server-side in PHP).
+- All changes must be additive and backward-compatible.
+- Do NOT increase LLM usage.
+
+CONTEXT:
+- Gutenberg sidebar is built from src/index.js and bundled to build/gutenberg-sidebar.js via webpack config:
+  entry: { 'gutenberg-sidebar': './src/index.js' }
+  output: build/[name].js
+- The sidebar is registered via registerPlugin('rain-os-aeo-analyzer') in src/index.js.
+- PHP enqueues build/gutenberg-sidebar.js and uses gutenberg-sidebar.asset.php.
+- The plugin already has a WP REST proxy endpoint:
+  GET /wp-json/rain-os-aeo/v1/backend-analysis/:post_id
+  which proxies to the Node backend endpoint:
+  GET {RAIN_OS_AEO_API_URL}/api/plugin/content/{post_id}/analysis
+
+TASK 1 — ELIMINATE DUPLICATE SIDEBAR (CRITICAL)
+1) Search the entire plugin repo for:
+   - "registerPlugin("
+   - "PluginSidebar"
+   - "rain-os-aeo-sidebar"
+   - "rain-os-aeo-analyzer"
+2) Ensure there is exactly ONE sidebar registration, in src/index.js.
+3) Ensure webpack has exactly ONE entry outputting build/gutenberg-sidebar.js (already true).
+4) Ensure PHP enqueues ONLY build/gutenberg-sidebar.js (and its asset + css) and does not enqueue any other Gutenberg sidebar bundle.
+5) If any additional sidebar JS file exists in build/ or any other enqueue/registerPlugin exists, remove it or guard it so it never runs.
+ACCEPTANCE: Editing a post shows only ONE “Rain OS AEO” sidebar item and ONE panel.
+
+TASK 2 — FREEZE BACKEND ANALYSIS CONTRACT (NO UI CHANGES)
+Backend analysis response (through WP proxy) must be exactly:
+{
+  "scores": {
+    "readability": number,
+    "structure": number,
+    "freshness": number,
+    "citation": number,
+    "visibility": number
+  },
+  "recommendations": [
+    {
+      "category": "readability|structure|freshness|citation|visibility",
+      "scope": "chunk|section|document",
+      "chunkId": string|null,
+      "issue": string,
+      "recommendation": string,
+      "severity": "low|medium|high"
+    }
+  ]
+}
+If backend returns 204 or null => UI should do nothing (existing behavior).
+
+TASK 3 — SEAMLESS REFRESH AFTER EXISTING MANUAL ACTIONS (ADDITIVE)
+- In src/hooks/useAIReadiness.js there is already:
+  - mergeRecommendations() (dedupe)
+  - a 5-minute TTL cache Map
+  - refreshBackendAnalysis() that fetches /backend-analysis/:postId
+- Ensure refreshBackendAnalysis() returns recommendations in the same format already used by the UI and does not remap unless needed.
+- In src/hooks/useContentAnalysis.js, after the existing success messages:
+  A) After “Analysis complete!” is set, call refreshBackendAnalysis(postId) once.
+  B) After commit polling ends with status === 'complete' and “Content committed successfully!” is set, call refreshBackendAnalysis(postId) once.
+- Do not add polling, do not add extra calls on typing, and do not change button behavior.
+
+TASK 4 — BUILD + SUBMISSION READINESS
+1) Run the build to regenerate:
+   - build/gutenberg-sidebar.js
+   - build/gutenberg-sidebar.css
+   - build/gutenberg-sidebar.asset.php
+2) Ensure the repo ships build/ outputs (WordPress.org expects built assets) but src/ remains the source of truth.
+3) Confirm no secrets exist in JS bundles and API key stays only in WP/PHP options server-side.
+
+DELIVERABLES:
+- List the exact files changed.
+- Confirm only one sidebar appears.
+- Confirm all existing buttons behave the same.
+- Confirm backend-analysis recommendations load only after manual actions and are cached 5 minutes.

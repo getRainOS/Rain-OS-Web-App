@@ -26,7 +26,7 @@ const ActionsTab = ({ content, title }) => {
       id: 'meta',
       icon: '📝',
       title: __('Meta Description', 'rain-os-aeo-analyzer'),
-      desc: __('Create SEO meta description', 'rain-os-aeo-analyzer'),
+      desc: __('Create AI-optimized meta description', 'rain-os-aeo-analyzer'),
       handler: () => generateMeta(content, title),
     },
     {

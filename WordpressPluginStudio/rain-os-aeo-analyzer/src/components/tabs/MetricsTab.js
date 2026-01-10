@@ -13,7 +13,7 @@ const MetricsTab = ({ analysisData }) => {
       { name: __('Schema Extraction', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.schemaExtraction || 0 },
     ],
     conversionReadiness: [
-      { name: __('AEO Alignment', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.aeoAlignment || 0 },
+      { name: __('AI Alignment', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.aeoAlignment || 0 },
       { name: __('QA-Format', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.qaFormat || 0 },
       { name: __('Metadata Audit', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.metadataAudit || 0 },
     ],

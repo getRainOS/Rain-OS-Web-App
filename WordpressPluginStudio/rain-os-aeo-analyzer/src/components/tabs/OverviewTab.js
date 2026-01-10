@@ -52,7 +52,7 @@ const OverviewTab = ({ analysisData, isAnalyzing, analyzeContent, statusMessage 
           color: '#64748b', 
           fontSize: '13px' 
         }}>
-          {__('Click "Analyze Content" to get your AEO score and recommendations.', 'rain-os-aeo-analyzer')}
+          {__('Click "Analyze Content" to get your AI Readability score and recommendations.', 'rain-os-aeo-analyzer')}
         </div>
       )}
     </div>

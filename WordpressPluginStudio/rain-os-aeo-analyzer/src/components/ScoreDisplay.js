@@ -41,7 +41,7 @@ const ScoreDisplay = ({ score, isAnalyzing }) => {
       <div className="rain-os-score-label">
         {isAnalyzing
           ? __('Analyzing...', 'rain-os-aeo-analyzer')
-          : __('Overall AEO Score', 'rain-os-aeo-analyzer')}
+          : __('AI Readability Score', 'rain-os-aeo-analyzer')}
       </div>
     </div>
   );
