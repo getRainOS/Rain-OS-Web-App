@@ -1,0 +1,50 @@
+Search plugin repo for:
+•	registerPlugin(
+•	PluginSidebar
+•	'rain-os-aeo-sidebar'
+•	'rain-os-aeo-analyzer'
+There should only be one file in src/ (this one) doing it. If there’s another, disable it.
+________________________________________
+2) Where to wire the new backend-analysis fetch (no UI changes)
+The exact correct insertion points are the ones in useContentAnalysis.js:
+A) After Analysis complete
+setStatusMessage({
+  type: 'success',
+  message: __('Analysis complete!', 'rain-os-aeo-analyzer'),
+});
+Add ONE additive call:
+•	await refreshBackendAnalysis(postId) (or triggerBackendAnalysisRefresh())
+This should:
+•	call the WP proxy endpoint /rain-os-aeo/v1/backend-analysis/:postId
+•	merge recommendations into existing state
+•	optionally update the 5 score breakdown state if your UI already expects it
+B) After Content committed successfully
+setCommitStatus({
+  type: 'success',
+  message: __('Content committed successfully!', 'rain-os-aeo-analyzer'),
+});
+Add the same refresh call once.
+C) After Content queued for processing
+In the max attempts case we have:
+message: __('Content queued for processing.', 'rain-os-aeo-analyzer'),
+call refresh only on “complete”
+3) The safest pattern (so nothing breaks)
+DO NOT put the fetch directly into UI components.
+Instead:
+Add a new function in useAIReadiness.js
+Something like:
+•	refreshBackendAnalysis(postId)
+•	fetches: wp.apiFetch({ path: '/rain-os-aeo/v1/backend-analysis/' + postId })
+•	if null/204 -> do nothing
+•	if data exists -> merge into state
+Then useContentAnalysis.js simply calls it after completion.
+This keeps responsibilities clean and additive.
+4) The only thing to confirm: how recommendations are stored today
+Refresh function should:
+•	map backend recommendations into the same object shape your RecommendationItem component expects.
+Adapter should map:
+•	title = issue
+•	description = recommendation
+•	severity -> icon/color (or whatever you already do)
+And then merge (append), de-dupe.
+
