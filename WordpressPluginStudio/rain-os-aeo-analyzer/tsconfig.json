@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "jsx": "react",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": false,
+    "declarationMap": false,
+    "noEmit": false,
+    "outDir": "./build",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["src/gutenberg-sidebar/components/*"],
+      "@hooks/*": ["src/gutenberg-sidebar/hooks/*"],
+      "@utils/*": ["src/gutenberg-sidebar/utils/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules", "build"]
+}
