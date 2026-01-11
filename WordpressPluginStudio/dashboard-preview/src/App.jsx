@@ -739,7 +739,6 @@ function GutenbergSidebarPage() {
             </div>
             <div>
               <div style={{ fontSize: '14px', fontWeight: 500 }}>Block Editor Content Area</div>
-              <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Your post content appears here</div>
             </div>
           </div>
           <div style={{ padding: '20px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px', minHeight: '400px', maxHeight: '600px', overflowY: 'auto' }}>
