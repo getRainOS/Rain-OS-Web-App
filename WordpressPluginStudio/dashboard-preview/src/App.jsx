@@ -581,28 +581,53 @@ function GutenbergSidebarPage() {
     }, 1500)
   }
 
+  const generateCommitRecommendations = (scores) => {
+    const recs = []
+    const getLevel = (s) => s >= 80 ? 'good' : s >= 60 ? 'warning' : 'critical'
+    
+    if (getLevel(scores.readability) === 'critical') {
+      recs.push({ icon: '🔴', title: 'Critical: Improve Readability', description: 'Your content is difficult for AI to parse. Simplify sentence structure and use clearer language.', severity: 'critical' })
+    } else if (getLevel(scores.readability) === 'warning') {
+      recs.push({ icon: '🟡', title: 'Enhance Readability', description: 'Some sentences are complex. Consider breaking them down for better AI comprehension.', severity: 'warning' })
+    }
+    
+    if (getLevel(scores.structure) === 'critical') {
+      recs.push({ icon: '🔴', title: 'Critical: Fix Content Structure', description: 'Your content lacks clear organization. Add headings, subheadings, and logical sections.', severity: 'critical' })
+    } else if (getLevel(scores.structure) === 'warning') {
+      recs.push({ icon: '🟡', title: 'Improve Structure', description: 'Add more subheadings to break up content and improve navigation for AI crawlers.', severity: 'warning' })
+    }
+    
+    if (getLevel(scores.freshness) === 'critical') {
+      recs.push({ icon: '🔴', title: 'Critical: Update Content', description: 'Your content appears outdated. Update statistics, dates, and references to current information.', severity: 'critical' })
+    } else if (getLevel(scores.freshness) === 'warning') {
+      recs.push({ icon: '🟡', title: 'Refresh Content', description: 'Some information may be dated. Consider updating examples and references.', severity: 'warning' })
+    }
+    
+    if (getLevel(scores.citation_readiness) === 'critical') {
+      recs.push({ icon: '🔴', title: 'Critical: Add Citations', description: 'AI cannot verify your claims. Add authoritative sources and external references.', severity: 'critical' })
+    } else if (getLevel(scores.citation_readiness) === 'warning') {
+      recs.push({ icon: '🟡', title: 'Strengthen Citations', description: 'Include more external links to authoritative sources to boost credibility.', severity: 'warning' })
+    }
+    
+    if (getLevel(scores.ai_visibility) === 'critical') {
+      recs.push({ icon: '🔴', title: 'Critical: Improve AI Visibility', description: 'Your content is not optimized for AI discovery. Add structured data and clear topic signals.', severity: 'critical' })
+    } else if (getLevel(scores.ai_visibility) === 'warning') {
+      recs.push({ icon: '🟡', title: 'Boost AI Visibility', description: 'Add schema markup and ensure your content answers common questions directly.', severity: 'warning' })
+    }
+    
+    if (recs.length === 0) {
+      recs.push({ icon: '✅', title: 'Great AI Readiness!', description: 'Your content is well-optimized for AI systems. Keep maintaining this quality.', severity: 'success' })
+    }
+    
+    return recs.slice(0, 4)
+  }
+
   const handleCommit = () => {
     setIsCommitting(true)
     setCommitResult(null)
     setTimeout(() => {
       setCommitResult({
-        success: true,
-        hash: 'a7f3b2c9e8d4' + Math.random().toString(36).slice(2, 6),
-        timestamp: new Date().toISOString(),
-        contentId: 'post_' + Math.floor(Math.random() * 10000),
-        version: '1.0.' + Math.floor(Math.random() * 100),
-        status: 'Committed',
-        engineVersion: '2.4.1',
-        chunks: Math.floor(Math.random() * 5) + 3,
-        normalizedAt: new Date().toISOString(),
-        aiIndexed: true,
-        scores: {
-          readability: aiReadinessScores.readability,
-          structure: aiReadinessScores.structure,
-          freshness: aiReadinessScores.freshness,
-          citation_readiness: aiReadinessScores.citation_readiness,
-          ai_visibility: aiReadinessScores.ai_visibility
-        }
+        recommendations: generateCommitRecommendations(aiReadinessScores)
       })
       setIsCommitting(false)
     }, 1500)
@@ -877,29 +902,26 @@ function GutenbergSidebarPage() {
                   {isCommitting ? 'Committing...' : 'Commit Content'}
                 </button>
                 
-                {commitResult && (
-                  <div style={{ backgroundColor: '#0d2818', border: '1px solid #10b981', borderRadius: 8, padding: 12, marginBottom: 12 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                      <div style={{ width: 20, height: 20, borderRadius: '50%', backgroundColor: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12 }}>✓</div>
-                      <span style={{ fontSize: 14, fontWeight: 600, color: '#10b981' }}>Content Committed Successfully</span>
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, fontSize: 11 }}>
-                      <div style={{ color: '#64748b' }}>Hash:</div>
-                      <div style={{ color: '#e2e8f0', fontFamily: 'monospace' }}>{commitResult.hash}</div>
-                      <div style={{ color: '#64748b' }}>Content ID:</div>
-                      <div style={{ color: '#e2e8f0' }}>{commitResult.contentId}</div>
-                      <div style={{ color: '#64748b' }}>Version:</div>
-                      <div style={{ color: '#e2e8f0' }}>{commitResult.version}</div>
-                      <div style={{ color: '#64748b' }}>Chunks:</div>
-                      <div style={{ color: '#e2e8f0' }}>{commitResult.chunks} segments</div>
-                      <div style={{ color: '#64748b' }}>AI Indexed:</div>
-                      <div style={{ color: '#10b981' }}>{commitResult.aiIndexed ? 'Yes' : 'No'}</div>
-                      <div style={{ color: '#64748b' }}>Engine:</div>
-                      <div style={{ color: '#e2e8f0' }}>v{commitResult.engineVersion}</div>
-                    </div>
-                    <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid #1e3a2f', fontSize: 10, color: '#64748b' }}>
-                      Committed at {new Date(commitResult.timestamp).toLocaleString()}
-                    </div>
+                {commitResult && commitResult.recommendations && (
+                  <div style={{ marginBottom: 12 }}>
+                    <div style={{ fontSize: 11, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>AI Readiness Recommendations</div>
+                    {commitResult.recommendations.map((rec, i) => (
+                      <div key={i} style={{ 
+                        backgroundColor: rec.severity === 'critical' ? '#2d1f1f' : rec.severity === 'warning' ? '#2d2a1f' : '#1f2d1f', 
+                        border: `1px solid ${rec.severity === 'critical' ? '#ef4444' : rec.severity === 'warning' ? '#f59e0b' : '#10b981'}`,
+                        borderRadius: 8, 
+                        padding: 10, 
+                        marginBottom: 8 
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                          <span style={{ fontSize: 14 }}>{rec.icon}</span>
+                          <div>
+                            <div style={{ fontSize: 12, fontWeight: 600, color: rec.severity === 'critical' ? '#ef4444' : rec.severity === 'warning' ? '#f59e0b' : '#10b981', marginBottom: 4 }}>{rec.title}</div>
+                            <div style={{ fontSize: 11, color: '#94a3b8', lineHeight: 1.4 }}>{rec.description}</div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
                 
