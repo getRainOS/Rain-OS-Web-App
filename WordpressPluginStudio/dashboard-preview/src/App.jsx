@@ -486,6 +486,7 @@ function GutenbergSidebarPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [analysisData, setAnalysisData] = useState(null)
   const [isCommitting, setIsCommitting] = useState(false)
+  const [commitResult, setCommitResult] = useState(null)
   const [quickActionLoading, setQuickActionLoading] = useState(null)
   const [quickActionResult, setQuickActionResult] = useState(null)
   const [aiReadinessExpanded, setAiReadinessExpanded] = useState(true)
