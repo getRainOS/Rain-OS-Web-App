@@ -1698,19 +1698,19 @@ function APIReferencePage() {
   )
 }
 
-function ProFeaturesPage() {
+function QuickToolsPage() {
   return (
     <>
       <div className="animate-in" style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Pro Features</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Explore advanced features and micro-actions</p>
+        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Quick Tools</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Explore AI-powered features and micro-actions available to all subscribers</p>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Quick Tools (Micro-Actions)</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
-            Pro users get access to powerful AI-powered quick tools that help optimize content in seconds:
+            Access powerful AI-powered quick tools that help optimize content in seconds:
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
             {[
@@ -1749,7 +1749,7 @@ function ProFeaturesPage() {
         <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Detailed Sub-Scores</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
-            Pro users see granular breakdowns within each pillar. Click any sub-score to see detailed explanations and specific recommendations.
+            See granular breakdowns within each pillar. Click any sub-score to see detailed explanations and specific recommendations.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {[
@@ -1772,7 +1772,7 @@ function ProFeaturesPage() {
         <div className="animate-in-delay-4" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Usage Tracking</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7 }}>
-            Pro accounts include real-time usage tracking. See how many analyses you have used and remaining, with automatic notifications when approaching limits. Usage resets monthly based on your billing cycle.
+            All accounts include real-time usage tracking. See how many analyses you have used and remaining, with automatic notifications when approaching limits. Usage resets monthly based on your billing cycle.
           </p>
         </div>
       </div>
@@ -1985,9 +1985,9 @@ function TroubleshootingPage() {
             steps: ['Check internet connection', 'Increase PHP max_execution_time', 'Try analyzing smaller content first', 'Contact support if issue persists']
           },
           {
-            q: 'Quick Tools (Pro) are not available',
-            a: 'Quick Tools require an active Pro subscription. Verify your subscription status in your Rain OS account dashboard. If you recently upgraded, try logging out and back in to refresh your access.',
-            steps: ['Verify Pro subscription', 'Log out and log back in', 'Clear plugin cache', 'Re-enter API key']
+            q: 'Quick Tools are not available',
+            a: 'Quick Tools require a valid API key and active subscription. Verify your subscription status in your Rain OS account dashboard. If you recently subscribed, try logging out and back in to refresh your access.',
+            steps: ['Verify subscription status', 'Log out and log back in', 'Clear plugin cache', 'Re-enter API key']
           },
           {
             q: 'Usage quota shows incorrect numbers',
@@ -3612,7 +3612,7 @@ function App() {
       case 'docs-api-reference':
         return <APIReferencePage />
       case 'docs-pro-features':
-        return <ProFeaturesPage />
+        return <QuickToolsPage />
       case 'docs-three-pillars':
         return <ThreePillarsPage />
       case 'docs-troubleshooting':
