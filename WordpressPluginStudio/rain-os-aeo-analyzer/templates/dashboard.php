@@ -57,7 +57,7 @@ function rain_os_get_score_class( $score ) {
         <div class="rain-os-header-content">
             <div class="rain-os-logo">
                 <span class="rain-os-title"><span class="rain-white">r</span><span class="rain-blue">ai</span><span class="rain-white">n</span></span>
-                <span class="rain-os-badge"><?php esc_html_e( 'AEO Analyzer', 'rain-os-aeo-analyzer' ); ?></span>
+                <span class="rain-os-badge"><?php esc_html_e( 'AI Readability', 'rain-os-aeo-analyzer' ); ?></span>
             </div>
             <div class="rain-os-header-actions">
                 <div class="rain-os-search-wrap">

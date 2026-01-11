@@ -1,7 +1,7 @@
-# Rain OS AEO Analyzer - WordPress Plugin
+# rain OS AI Readability - WordPress Plugin
 
 ## Overview
-Rain OS AEO Analyzer is a WordPress plugin designed for Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO). It provides AI-powered content analysis across three pillars: AI Readability, Digital Authority, and Conversion Readiness. The plugin integrates with an external Rain OS API to offer advanced features such as title suggestions, meta description generation, content summarization, and sentence rewriting. Its primary purpose is to help users optimize their content for modern AI-driven search engines and enhance content performance and discoverability. The plugin aims to position itself as a critical tool for content creators and marketers in the evolving landscape of AI-powered content consumption.
+rain OS AI Readability is a WordPress plugin designed for Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO). It provides AI-powered content analysis across three pillars: AI Readability, Digital Authority, and Conversion Readiness. The plugin integrates with an external Rain OS API to offer advanced features such as title suggestions, meta description generation, content summarization, and sentence rewriting. Its primary purpose is to help users optimize their content for modern AI-driven search engines and enhance content performance and discoverability. The plugin aims to position itself as a critical tool for content creators and marketers in the evolving landscape of AI-powered content consumption.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
