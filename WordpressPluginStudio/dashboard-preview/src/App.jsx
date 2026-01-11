@@ -622,7 +622,7 @@ function GutenbergSidebarPage() {
   return (
     <div>
       <h1 style={{ fontSize: '24px', fontWeight: 600, marginBottom: '8px' }}>Analyze Your Content For AI Readability</h1>
-      <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>Your content is analyzed for AI Readability, Digital Authority and Conversion Readiness</p>
+      <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>Your content is analyzed for AI Readability, Digital Authority and Conversion Readiness, then, Recommendations are made</p>
 
       <div style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
         <div style={{ flex: 1, backgroundColor: 'var(--bg-secondary)', borderRadius: '12px', padding: '24px', border: '1px solid var(--border-color)' }}>
