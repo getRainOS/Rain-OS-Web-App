@@ -222,7 +222,7 @@ class Rain_OS_Settings {
                     <?php
                     printf(
                         wp_kses(
-                            __( 'rain OS AI Readability requires an API key to function. <a href="%s">Configure your API key</a> to get started.', 'rain-os-aeo-analyzer' ),
+                            __( 'rain OS AI Readability Optimizer requires an API key to function. <a href="%s">Configure your API key</a> to get started.', 'rain-os-aeo-analyzer' ),
                             array( 'a' => array( 'href' => array() ) )
                         ),
                         esc_url( admin_url( 'admin.php?page=rain-os-aeo-settings' ) )

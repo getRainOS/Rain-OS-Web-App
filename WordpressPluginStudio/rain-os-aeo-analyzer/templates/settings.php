@@ -31,7 +31,7 @@ $score_threshold = get_option( 'rain_os_score_threshold', 70 );
     <div class="rain-os-content rain-os-settings-content">
         <header class="rain-os-page-header">
             <h1><?php esc_html_e( 'Settings', 'rain-os-aeo-analyzer' ); ?></h1>
-            <p><?php esc_html_e( 'Configure your rain OS AI Readability', 'rain-os-aeo-analyzer' ); ?></p>
+            <p><?php esc_html_e( 'Configure your rain OS AI Readability Optimizer', 'rain-os-aeo-analyzer' ); ?></p>
         </header>
 
         <div class="rain-os-settings-grid">

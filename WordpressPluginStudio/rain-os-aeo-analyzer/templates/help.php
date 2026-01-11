@@ -66,7 +66,7 @@ $troubleshooting_items = array(
     <div class="rain-os-content">
         <header class="rain-os-page-header">
             <h1><?php esc_html_e( 'Help & Troubleshooting', 'rain-os-aeo-analyzer' ); ?></h1>
-            <p><?php esc_html_e( 'Common issues and solutions for rain OS AI Readability', 'rain-os-aeo-analyzer' ); ?></p>
+            <p><?php esc_html_e( 'Common issues and solutions for rain OS AI Readability Optimizer', 'rain-os-aeo-analyzer' ); ?></p>
         </header>
 
         <div class="rain-os-help-grid">

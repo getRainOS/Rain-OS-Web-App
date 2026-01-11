@@ -1,6 +1,6 @@
 <?php
 /**
- * Uninstall rain OS AI Readability
+ * Uninstall rain OS AI Readability Optimizer
  *
  * This file runs when the plugin is uninstalled (deleted) from WordPress.
  * It removes all plugin data from the database.
