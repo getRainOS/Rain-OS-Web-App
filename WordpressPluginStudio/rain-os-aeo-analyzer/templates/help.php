@@ -35,10 +35,10 @@ $troubleshooting_items = array(
         ),
     ),
     array(
-        'question' => __( 'Quick Tools (Pro) are not available', 'rain-os-aeo-analyzer' ),
-        'answer'   => __( 'Quick Tools require an active Pro subscription. Verify your subscription status in your Rain OS account dashboard. If you recently upgraded, try logging out and back in to refresh your access.', 'rain-os-aeo-analyzer' ),
+        'question' => __( 'Quick Tools are not available', 'rain-os-aeo-analyzer' ),
+        'answer'   => __( 'Quick Tools require a valid API key and active subscription. Verify your subscription status in your Rain OS account dashboard. If you recently subscribed, try logging out and back in to refresh your access.', 'rain-os-aeo-analyzer' ),
         'steps'    => array(
-            __( 'Verify Pro subscription', 'rain-os-aeo-analyzer' ),
+            __( 'Verify subscription status', 'rain-os-aeo-analyzer' ),
             __( 'Log out and log back in', 'rain-os-aeo-analyzer' ),
             __( 'Clear plugin cache', 'rain-os-aeo-analyzer' ),
             __( 'Re-enter API key', 'rain-os-aeo-analyzer' ),

@@ -22,7 +22,7 @@ rain OS AI Readability Optimizer helps you optimize your content for AI-powered 
 * **Score History** - Track your content performance over time
 * **Pillar Breakdown** - Detailed subcategory scores with visual charts
 * **Content Signals** - Word count vs score correlation analysis
-* **Quick Tools (Pro)** - AI-powered title suggestions, meta descriptions, summarization, and rewriting
+* **Quick Tools** - AI-powered title suggestions, meta descriptions, summarization, and rewriting
 * **Dark Theme Dashboard** - Beautiful, modern admin interface
 
 = Three Pillars =
@@ -42,12 +42,12 @@ rain OS AI Readability Optimizer helps you optimize your content for AI-powered 
 This plugin connects to the Rain OS API service (https://api.getrainos.com) to perform AI-powered content analysis. The service provides:
 
 * Content scoring across three pillars (AI Readability, Digital Authority, Conversion Readiness)
-* Pro features including title suggestions, meta descriptions, summarization, and sentence rewriting
+* Quick Tools including title suggestions, meta descriptions, summarization, and sentence rewriting
 * Usage tracking and subscription management
 
 By using this plugin, you agree to the Rain OS Terms of Service. For privacy information, please visit https://getrainos.com/privacy.
 
-Note: Pro features (Quick Tools) are provided by the external Rain OS service and require an active subscription. All plugin code is fully available - premium features are processed server-side by the Rain OS API.
+Note: Quick Tools features are provided by the external Rain OS service and require an active subscription. All plugin code is fully available - these features are processed server-side by the Rain OS API.
 
 == Installation ==
 
@@ -72,7 +72,7 @@ While SEO focuses on ranking in traditional search results, AEO focuses on havin
 
 = What are Quick Tools? =
 
-Quick Tools are Pro features that provide AI-powered micro-actions like title suggestions, meta description generation, content summarization, and sentence rewriting.
+Quick Tools are AI-powered features that provide micro-actions like title suggestions, meta description generation, content summarization, and sentence rewriting. They are available to all users with an active subscription.
 
 == Screenshots ==
 
@@ -92,7 +92,7 @@ Quick Tools are Pro features that provide AI-powered micro-actions like title su
 * Score History tracking
 * Pillar Breakdown charts
 * Content Signals scatter plot
-* Quick Tools (Pro features)
+* Quick Tools
 * Dark theme admin dashboard
 
 == Upgrade Notice ==

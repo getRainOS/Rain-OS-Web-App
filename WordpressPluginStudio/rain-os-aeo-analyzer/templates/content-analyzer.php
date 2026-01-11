@@ -165,9 +165,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             </div>
 
             <div class="rain-os-sidebar-section rain-os-quick-tools">
-                <h3><?php esc_html_e( 'Quick Tools', 'rain-os-aeo-analyzer' ); ?>
-                    <span class="rain-os-pro-badge"><?php esc_html_e( 'Pro', 'rain-os-aeo-analyzer' ); ?></span>
-                </h3>
+                <h3><?php esc_html_e( 'Quick Tools', 'rain-os-aeo-analyzer' ); ?></h3>
                 <div class="rain-os-quick-tools-grid">
                     <button type="button" class="rain-os-quick-tool" data-tool="title_suggestion">
                         <span class="dashicons dashicons-edit"></span>

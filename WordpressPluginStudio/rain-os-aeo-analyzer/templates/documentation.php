@@ -126,8 +126,8 @@ $sections = array(
 
             <?php elseif ( 'quick-tools' === $current_section ) : ?>
             <div class="rain-os-docs-section">
-                <h1><?php esc_html_e( 'Quick Tools (Pro Feature)', 'rain-os-aeo-analyzer' ); ?></h1>
-                <p class="rain-os-docs-intro"><?php esc_html_e( 'Quick Tools provide AI-powered micro-actions to enhance your content quickly.', 'rain-os-aeo-analyzer' ); ?></p>
+                <h1><?php esc_html_e( 'Quick Tools', 'rain-os-aeo-analyzer' ); ?></h1>
+                <p class="rain-os-docs-intro"><?php esc_html_e( 'Quick Tools provide AI-powered micro-actions to enhance your content quickly. Available to all subscribers.', 'rain-os-aeo-analyzer' ); ?></p>
 
                 <div class="rain-os-docs-card">
                     <h2><?php esc_html_e( 'Available Tools', 'rain-os-aeo-analyzer' ); ?></h2>
@@ -188,12 +188,12 @@ $sections = array(
                 </div>
 
                 <div class="rain-os-troubleshoot-item">
-                    <h3><?php esc_html_e( 'Quick Tools (Pro) are not available', 'rain-os-aeo-analyzer' ); ?></h3>
-                    <p><?php esc_html_e( 'Quick Tools require an active Pro subscription. Verify your subscription status in your Rain OS account dashboard. If you recently upgraded, try logging out and back in to refresh your access.', 'rain-os-aeo-analyzer' ); ?></p>
+                    <h3><?php esc_html_e( 'Quick Tools are not available', 'rain-os-aeo-analyzer' ); ?></h3>
+                    <p><?php esc_html_e( 'Quick Tools require a valid API key and active subscription. Verify your subscription status in your Rain OS account dashboard. If you recently subscribed, try logging out and back in to refresh your access.', 'rain-os-aeo-analyzer' ); ?></p>
                     <div class="rain-os-troubleshoot-steps">
                         <strong><?php esc_html_e( 'Steps to resolve:', 'rain-os-aeo-analyzer' ); ?></strong>
                         <ol>
-                            <li><?php esc_html_e( 'Verify Pro subscription', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Verify subscription status', 'rain-os-aeo-analyzer' ); ?></li>
                             <li><?php esc_html_e( 'Log out and log back in', 'rain-os-aeo-analyzer' ); ?></li>
                             <li><?php esc_html_e( 'Clear plugin cache', 'rain-os-aeo-analyzer' ); ?></li>
                             <li><?php esc_html_e( 'Re-enter API key', 'rain-os-aeo-analyzer' ); ?></li>
