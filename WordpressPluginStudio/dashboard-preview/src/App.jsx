@@ -583,7 +583,29 @@ function GutenbergSidebarPage() {
 
   const handleCommit = () => {
     setIsCommitting(true)
-    setTimeout(() => setIsCommitting(false), 1200)
+    setCommitResult(null)
+    setTimeout(() => {
+      setCommitResult({
+        success: true,
+        hash: 'a7f3b2c9e8d4' + Math.random().toString(36).slice(2, 6),
+        timestamp: new Date().toISOString(),
+        contentId: 'post_' + Math.floor(Math.random() * 10000),
+        version: '1.0.' + Math.floor(Math.random() * 100),
+        status: 'Committed',
+        engineVersion: '2.4.1',
+        chunks: Math.floor(Math.random() * 5) + 3,
+        normalizedAt: new Date().toISOString(),
+        aiIndexed: true,
+        scores: {
+          readability: aiReadinessScores.readability,
+          structure: aiReadinessScores.structure,
+          freshness: aiReadinessScores.freshness,
+          citation_readiness: aiReadinessScores.citation_readiness,
+          ai_visibility: aiReadinessScores.ai_visibility
+        }
+      })
+      setIsCommitting(false)
+    }, 1500)
   }
 
   const handleQuickAction = (action) => {
@@ -854,6 +876,33 @@ function GutenbergSidebarPage() {
                 <button onClick={handleCommit} disabled={isCommitting} style={{ width: '100%', padding: 12, backgroundColor: '#22d3ee', color: '#0f1419', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', marginBottom: 12, opacity: isCommitting ? 0.6 : 1 }}>
                   {isCommitting ? 'Committing...' : 'Commit Content'}
                 </button>
+                
+                {commitResult && (
+                  <div style={{ backgroundColor: '#0d2818', border: '1px solid #10b981', borderRadius: 8, padding: 12, marginBottom: 12 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                      <div style={{ width: 20, height: 20, borderRadius: '50%', backgroundColor: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12 }}>✓</div>
+                      <span style={{ fontSize: 14, fontWeight: 600, color: '#10b981' }}>Content Committed Successfully</span>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, fontSize: 11 }}>
+                      <div style={{ color: '#64748b' }}>Hash:</div>
+                      <div style={{ color: '#e2e8f0', fontFamily: 'monospace' }}>{commitResult.hash}</div>
+                      <div style={{ color: '#64748b' }}>Content ID:</div>
+                      <div style={{ color: '#e2e8f0' }}>{commitResult.contentId}</div>
+                      <div style={{ color: '#64748b' }}>Version:</div>
+                      <div style={{ color: '#e2e8f0' }}>{commitResult.version}</div>
+                      <div style={{ color: '#64748b' }}>Chunks:</div>
+                      <div style={{ color: '#e2e8f0' }}>{commitResult.chunks} segments</div>
+                      <div style={{ color: '#64748b' }}>AI Indexed:</div>
+                      <div style={{ color: '#10b981' }}>{commitResult.aiIndexed ? 'Yes' : 'No'}</div>
+                      <div style={{ color: '#64748b' }}>Engine:</div>
+                      <div style={{ color: '#e2e8f0' }}>v{commitResult.engineVersion}</div>
+                    </div>
+                    <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid #1e3a2f', fontSize: 10, color: '#64748b' }}>
+                      Committed at {new Date(commitResult.timestamp).toLocaleString()}
+                    </div>
+                  </div>
+                )}
+                
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8 }}>
                   {aiScoreItems.map(item => (
                     <div key={item.key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 8, backgroundColor: '#252b3b', borderRadius: 6 }}>
