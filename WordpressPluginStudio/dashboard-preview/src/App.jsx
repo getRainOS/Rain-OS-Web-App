@@ -100,6 +100,7 @@ const TIME_PERIODS = [
 ]
 
 const navItems = [
+  { icon: BookOpen, label: 'Learn About AI Readability', page: 'learn-ai-readability' },
   { 
     icon: LayoutDashboard, 
     label: 'AI Readability Dashboard', 
@@ -121,7 +122,6 @@ const navItems = [
     subItems: [
       { label: 'Getting Started', page: 'docs-getting-started' },
       { label: 'Troubleshooting', page: 'docs-troubleshooting' },
-      { label: 'Learn About AI Readability', page: 'learn-ai-readability' },
       { label: 'Improve Your Score', page: 'improve-score' },
     ]
   },
