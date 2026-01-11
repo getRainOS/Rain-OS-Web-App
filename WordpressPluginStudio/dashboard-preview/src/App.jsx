@@ -674,7 +674,7 @@ function GutenbergSidebarPage() {
     { date: '2025-01-02', overallScore: 75, aiReadability: 79, digitalAuthority: 70, conversionReadiness: 76 },
   ]
 
-  const pillars = analysisData?.pillars || mockAnalysisData.pillars
+  const pillars = analysisData?.pillars || mockPillars
 
   return (
     <div>
@@ -3329,9 +3329,26 @@ function EmptyState({ message = "No data available for this time period" }) {
 }
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('dashboard')
+  const getPageFromHash = () => {
+    const hash = window.location.hash.slice(1)
+    return hash || 'dashboard'
+  }
+  
+  const [currentPage, setCurrentPage] = useState(getPageFromHash)
   const [selectedPeriod, setSelectedPeriod] = useState(30)
   const overallScore = Math.round(pillarData.reduce((sum, p) => sum + p.value, 0) / pillarData.length)
+  
+  useEffect(() => {
+    const handleHashChange = () => setCurrentPage(getPageFromHash())
+    window.addEventListener('hashchange', handleHashChange)
+    return () => window.removeEventListener('hashchange', handleHashChange)
+  }, [])
+  
+  useEffect(() => {
+    if (window.location.hash.slice(1) !== currentPage) {
+      window.location.hash = currentPage
+    }
+  }, [currentPage])
 
   const renderPage = () => {
     switch (currentPage) {
