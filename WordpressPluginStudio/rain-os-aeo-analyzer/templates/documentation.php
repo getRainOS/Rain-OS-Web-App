@@ -36,7 +36,7 @@ $sections = array(
         <nav class="rain-os-docs-nav">
             <?php foreach ( $sections as $key => $label ) : ?>
             <a href="<?php echo esc_url( admin_url( 'admin.php?page=rain-os-aeo-docs&section=' . $key ) ); ?>" 
-               class="rain-os-docs-nav-item <?php echo $current_section === $key ? 'active' : ''; ?>">
+               class="rain-os-docs-nav-item <?php echo esc_attr( $current_section === $key ? 'active' : '' ); ?>">
                 <?php echo esc_html( $label ); ?>
             </a>
             <?php endforeach; ?>

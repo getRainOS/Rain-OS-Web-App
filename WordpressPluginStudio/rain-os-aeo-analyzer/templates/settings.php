@@ -173,7 +173,7 @@ $score_threshold = get_option( 'rain_os_score_threshold', 70 );
                                         </span>
                                     </label>
                                 </div>
-                                <div class="rain-os-threshold-input" id="threshold-container" style="<?php echo $score_alerts !== 'yes' ? 'display:none;' : ''; ?>">
+                                <div class="rain-os-threshold-input" id="threshold-container" style="<?php echo esc_attr( $score_alerts !== 'yes' ? 'display:none;' : '' ); ?>">
                                     <label for="rain_os_score_threshold"><?php esc_html_e( 'Alert Threshold:', 'rain-os-aeo-analyzer' ); ?></label>
                                     <input type="number" 
                                            id="rain_os_score_threshold" 
@@ -223,7 +223,7 @@ $score_threshold = get_option( 'rain_os_score_threshold', 70 );
                                 <p class="rain-os-form-help"><?php esc_html_e( 'Enable new AI readiness analysis backend integration.', 'rain-os-aeo-analyzer' ); ?></p>
                             </div>
 
-                            <div class="rain-os-ai-backend-options" id="ai-backend-options" style="<?php echo $ai_backend_enabled !== 'yes' ? 'display:none;' : ''; ?>">
+                            <div class="rain-os-ai-backend-options" id="ai-backend-options" style="<?php echo esc_attr( $ai_backend_enabled !== 'yes' ? 'display:none;' : '' ); ?>">
                                 <div class="rain-os-form-group rain-os-toggle-group">
                                     <div class="rain-os-toggle-row">
                                         <label class="rain-os-toggle-label">
