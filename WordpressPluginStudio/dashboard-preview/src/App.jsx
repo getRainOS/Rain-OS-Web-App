@@ -574,7 +574,8 @@ function GutenbergSidebarPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 500, cursor: tooltip ? 'help' : 'default' }}>
           <div style={{ width: 10, height: 10, borderRadius: 3, backgroundColor: color }} />
-          {name}
+          <span style={{ borderBottom: tooltip ? '1px dashed #64748b' : 'none' }}>{name}</span>
+          {tooltip && <span style={{ fontSize: 10, color: '#64748b', marginLeft: 2 }}>ⓘ</span>}
         </div>
         <div style={{ fontSize: 16, fontWeight: 600, color }}>{score}</div>
       </div>
