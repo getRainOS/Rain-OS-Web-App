@@ -24,9 +24,18 @@ class Rain_OS_Admin {
             __( 'Rain OS', 'rain-os-aeo-analyzer' ),
             'edit_posts',
             'rain-os-aeo',
-            array( $this, 'render_admin_page' ),
+            array( $this, 'render_learn_page' ),
             'data:image/svg+xml;base64,' . base64_encode( $this->get_menu_icon() ),
             30
+        );
+
+        add_submenu_page(
+            'rain-os-aeo',
+            __( 'Learn About AI Readability', 'rain-os-aeo-analyzer' ),
+            __( 'Learn AI Readability', 'rain-os-aeo-analyzer' ),
+            'edit_posts',
+            'rain-os-aeo-learn',
+            array( $this, 'render_learn_page' )
         );
 
         add_submenu_page(
@@ -34,7 +43,7 @@ class Rain_OS_Admin {
             __( 'Dashboard', 'rain-os-aeo-analyzer' ),
             __( 'Dashboard', 'rain-os-aeo-analyzer' ),
             'edit_posts',
-            'rain-os-aeo',
+            'rain-os-aeo-dashboard',
             array( $this, 'render_admin_page' )
         );
 
@@ -85,15 +94,6 @@ class Rain_OS_Admin {
 
         add_submenu_page(
             'rain-os-aeo',
-            __( 'Help', 'rain-os-aeo-analyzer' ),
-            __( 'Help', 'rain-os-aeo-analyzer' ),
-            'edit_posts',
-            'rain-os-aeo-help',
-            array( $this, 'render_help_page' )
-        );
-
-        add_submenu_page(
-            'rain-os-aeo',
             __( 'Upgrade', 'rain-os-aeo-analyzer' ),
             __( 'Upgrade', 'rain-os-aeo-analyzer' ),
             'manage_options',
@@ -119,6 +119,13 @@ class Rain_OS_Admin {
 
     private function get_menu_icon() {
         return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>';
+    }
+
+    public function render_learn_page() {
+        if ( ! current_user_can( 'edit_posts' ) ) {
+            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-aeo-analyzer' ) );
+        }
+        include RAIN_OS_AEO_PLUGIN_DIR . 'templates/learn-ai-readability.php';
     }
 
     public function render_admin_page() {
@@ -161,13 +168,6 @@ class Rain_OS_Admin {
             wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-aeo-analyzer' ) );
         }
         include RAIN_OS_AEO_PLUGIN_DIR . 'templates/documentation.php';
-    }
-
-    public function render_help_page() {
-        if ( ! current_user_can( 'edit_posts' ) ) {
-            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-aeo-analyzer' ) );
-        }
-        include RAIN_OS_AEO_PLUGIN_DIR . 'templates/help.php';
     }
 
     public function render_upgrade_page() {

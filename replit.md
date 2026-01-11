@@ -173,3 +173,39 @@ The plugin follows WordPress plugin architecture standards, utilizing a modular,
   - Shows how the sidebar appears in WordPress block editor
   - Includes all features: score display, pillar cards, tabs, quick actions, AI readiness, local audit
   - Simulated analyze and quick action functionality for demonstration
+
+### Learn About AI Readability Page (January 2025)
+- **New Educational Page**: Added comprehensive "Learn About AI Readability" page
+  - First menu item in admin navigation to establish conceptual foundation
+  - Educational cards explaining AI Readability vs AEO distinction
+  - Three Pillars explanation with color-coded pillar cards
+  - AI Processing Sequence (Parsing → Understanding → Extraction → Ranking)
+  - Translator vs Interpreter analogy (AI Readability = Interpreter, AEO = Translator)
+  - Core concept: "AI Readability is the premise. AEO is the thesis."
+  - Layered system flow: SEO → AI Readability → AEO
+
+### Admin Menu Structure Update (January 2025)
+- **Reorganized Navigation**: Updated admin menu to match prototype
+  - "Learn AI Readability" as first submenu item (rain-os-aeo-learn slug)
+  - Dashboard moved to separate slug (rain-os-aeo-dashboard)
+  - Removed duplicate Help page (consolidated into Documentation)
+  - All "Back to Dashboard" links updated to new dashboard slug
+
+### Documentation Sections Added (January 2025)
+- **Troubleshooting Section**: Common issues and resolution steps
+  - API key and connection issues
+  - Score inconsistency debugging
+  - Performance timeout solutions
+  - Pro features availability
+  - Usage quota sync
+- **Improve Your Score Section**: Practical tips per pillar
+  - AI Readability (Semantic Clarity, Readability Score, Logical Structure)
+  - Digital Authority (Entity Recognition, Citation Readiness, Schema Extraction)
+  - Conversion Readiness (AI Alignment, QA-Format, Metadata Audit)
+  - Quick wins checklist
+
+### CSS Styling Updates (January 2025)
+- Added extensive Learn page component styles
+- Pillar cards, process steps, analogy grids
+- Sequence steps, distinction cards, layer flow
+- Troubleshooting and tip card styles

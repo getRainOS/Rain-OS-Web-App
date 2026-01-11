@@ -6,11 +6,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 $current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'getting-started';
 
 $sections = array(
-    'getting-started' => __( 'Getting Started', 'rain-os-aeo-analyzer' ),
-    'three-pillars'   => __( 'The Three Pillars', 'rain-os-aeo-analyzer' ),
-    'content-analyzer' => __( 'Gutenberg Sidebar', 'rain-os-aeo-analyzer' ),
-    'quick-tools'     => __( 'Quick Tools', 'rain-os-aeo-analyzer' ),
-    'best-practices'  => __( 'Best Practices', 'rain-os-aeo-analyzer' ),
+    'getting-started'   => __( 'Getting Started', 'rain-os-aeo-analyzer' ),
+    'three-pillars'     => __( 'The Three Pillars', 'rain-os-aeo-analyzer' ),
+    'content-analyzer'  => __( 'Gutenberg Sidebar', 'rain-os-aeo-analyzer' ),
+    'quick-tools'       => __( 'Quick Tools', 'rain-os-aeo-analyzer' ),
+    'troubleshooting'   => __( 'Troubleshooting', 'rain-os-aeo-analyzer' ),
+    'improve-score'     => __( 'Improve Your Score', 'rain-os-aeo-analyzer' ),
+    'best-practices'    => __( 'Best Practices', 'rain-os-aeo-analyzer' ),
 );
 ?>
 
@@ -22,7 +24,7 @@ $sections = array(
                 <span class="rain-os-badge"><?php esc_html_e( 'Documentation', 'rain-os-aeo-analyzer' ); ?></span>
             </div>
             <div class="rain-os-header-actions">
-                <a href="<?php echo esc_url( admin_url( 'admin.php?page=rain-os-aeo' ) ); ?>" class="rain-os-btn rain-os-btn-secondary">
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=rain-os-aeo-dashboard' ) ); ?>" class="rain-os-btn rain-os-btn-secondary">
                     <span class="dashicons dashicons-arrow-left-alt"></span>
                     <?php esc_html_e( 'Back to Dashboard', 'rain-os-aeo-analyzer' ); ?>
                 </a>
@@ -134,6 +136,136 @@ $sections = array(
                         <li><strong><?php esc_html_e( 'Meta Description', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Create compelling meta descriptions automatically', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'Summarize', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Generate a concise summary of your content', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'Rewrite', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Get alternative versions of selected text', 'rain-os-aeo-analyzer' ); ?></li>
+                    </ul>
+                </div>
+            </div>
+
+            <?php elseif ( 'troubleshooting' === $current_section ) : ?>
+            <div class="rain-os-docs-section">
+                <h1><?php esc_html_e( 'Troubleshooting', 'rain-os-aeo-analyzer' ); ?></h1>
+                <p class="rain-os-docs-intro"><?php esc_html_e( 'Common issues and solutions', 'rain-os-aeo-analyzer' ); ?></p>
+
+                <div class="rain-os-troubleshoot-item">
+                    <h3><?php esc_html_e( 'Analysis is not working or returns an error', 'rain-os-aeo-analyzer' ); ?></h3>
+                    <p><?php esc_html_e( 'First, check that your API key is correctly entered in Rain OS > Settings. Verify your subscription is active and you have remaining API credits. If the issue persists, check your server error logs for PHP errors.', 'rain-os-aeo-analyzer' ); ?></p>
+                    <div class="rain-os-troubleshoot-steps">
+                        <strong><?php esc_html_e( 'Steps to resolve:', 'rain-os-aeo-analyzer' ); ?></strong>
+                        <ol>
+                            <li><?php esc_html_e( 'Verify API key in Settings', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Check subscription status', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Ensure PHP curl extension is enabled', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Check server error logs', 'rain-os-aeo-analyzer' ); ?></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="rain-os-troubleshoot-item">
+                    <h3><?php esc_html_e( 'Scores seem inconsistent or unexpected', 'rain-os-aeo-analyzer' ); ?></h3>
+                    <p><?php esc_html_e( 'AI analysis can produce slightly different results each time due to the nature of AI models. However, scores should be generally consistent. If you see major variations, try clearing your browser cache and running the analysis again.', 'rain-os-aeo-analyzer' ); ?></p>
+                    <div class="rain-os-troubleshoot-steps">
+                        <strong><?php esc_html_e( 'Steps to resolve:', 'rain-os-aeo-analyzer' ); ?></strong>
+                        <ol>
+                            <li><?php esc_html_e( 'Clear browser cache', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Wait a few minutes and re-analyze', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Ensure content has saved properly', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Check for special characters that may affect parsing', 'rain-os-aeo-analyzer' ); ?></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="rain-os-troubleshoot-item">
+                    <h3><?php esc_html_e( 'The plugin is slow or timing out', 'rain-os-aeo-analyzer' ); ?></h3>
+                    <p><?php esc_html_e( 'Analysis requires sending content to our API servers. Large content (10,000+ words) may take longer. Check your internet connection and server timeout settings. You may need to increase PHP max_execution_time.', 'rain-os-aeo-analyzer' ); ?></p>
+                    <div class="rain-os-troubleshoot-steps">
+                        <strong><?php esc_html_e( 'Steps to resolve:', 'rain-os-aeo-analyzer' ); ?></strong>
+                        <ol>
+                            <li><?php esc_html_e( 'Check internet connection', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Increase PHP max_execution_time', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Try analyzing smaller content first', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Contact support if issue persists', 'rain-os-aeo-analyzer' ); ?></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="rain-os-troubleshoot-item">
+                    <h3><?php esc_html_e( 'Quick Tools (Pro) are not available', 'rain-os-aeo-analyzer' ); ?></h3>
+                    <p><?php esc_html_e( 'Quick Tools require an active Pro subscription. Verify your subscription status in your Rain OS account dashboard. If you recently upgraded, try logging out and back in to refresh your access.', 'rain-os-aeo-analyzer' ); ?></p>
+                    <div class="rain-os-troubleshoot-steps">
+                        <strong><?php esc_html_e( 'Steps to resolve:', 'rain-os-aeo-analyzer' ); ?></strong>
+                        <ol>
+                            <li><?php esc_html_e( 'Verify Pro subscription', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Log out and log back in', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Clear plugin cache', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Re-enter API key', 'rain-os-aeo-analyzer' ); ?></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="rain-os-troubleshoot-item">
+                    <h3><?php esc_html_e( 'Usage quota shows incorrect numbers', 'rain-os-aeo-analyzer' ); ?></h3>
+                    <p><?php esc_html_e( 'Usage is tracked on our servers and may take a few minutes to sync. The quota resets at the beginning of each billing cycle. Check your account dashboard for the most accurate usage information.', 'rain-os-aeo-analyzer' ); ?></p>
+                    <div class="rain-os-troubleshoot-steps">
+                        <strong><?php esc_html_e( 'Steps to resolve:', 'rain-os-aeo-analyzer' ); ?></strong>
+                        <ol>
+                            <li><?php esc_html_e( 'Refresh the page', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Check account dashboard', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Wait a few minutes for sync', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Contact support if discrepancy persists', 'rain-os-aeo-analyzer' ); ?></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="rain-os-support-cta">
+                    <h3><?php esc_html_e( 'Still need help?', 'rain-os-aeo-analyzer' ); ?></h3>
+                    <p><?php esc_html_e( 'Contact our support team at support@getrainos.com', 'rain-os-aeo-analyzer' ); ?></p>
+                    <a href="mailto:support@getrainos.com" class="rain-os-btn rain-os-btn-primary">
+                        <?php esc_html_e( 'Contact Support', 'rain-os-aeo-analyzer' ); ?>
+                    </a>
+                </div>
+            </div>
+
+            <?php elseif ( 'improve-score' === $current_section ) : ?>
+            <div class="rain-os-docs-section">
+                <h1><?php esc_html_e( 'Improve Your Score', 'rain-os-aeo-analyzer' ); ?></h1>
+                <p class="rain-os-docs-intro"><?php esc_html_e( 'Practical tips and strategies to boost your content scores', 'rain-os-aeo-analyzer' ); ?></p>
+
+                <div class="rain-os-tip-card">
+                    <h3><?php esc_html_e( 'AI Readability (Cyan Pillar)', 'rain-os-aeo-analyzer' ); ?></h3>
+                    <ul>
+                        <li><strong><?php esc_html_e( 'Semantic Clarity:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Use precise, unambiguous language. Avoid jargon or define it when used. Write sentences that express one clear idea each.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Readability Score:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Aim for shorter sentences (15-20 words average). Use active voice. Break up long paragraphs into digestible chunks.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Logical Structure:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Use proper heading hierarchy (H1, H2, H3). Organize content from general to specific. Include transition phrases between sections.', 'rain-os-aeo-analyzer' ); ?></li>
+                    </ul>
+                </div>
+
+                <div class="rain-os-tip-card">
+                    <h3><?php esc_html_e( 'Digital Authority (Green Pillar)', 'rain-os-aeo-analyzer' ); ?></h3>
+                    <ul>
+                        <li><strong><?php esc_html_e( 'Entity Recognition:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Mention well-known entities (people, companies, concepts) by their full names. Link to authoritative sources like Wikipedia for key terms.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Citation Readiness:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Include quotable statements that stand alone. Write "soundbite" sentences that summarize key points. Use statistics and data points with sources.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Schema Extraction:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Add structured data markup (FAQ, HowTo, Article schemas). Use lists and tables for easily extractable information.', 'rain-os-aeo-analyzer' ); ?></li>
+                    </ul>
+                </div>
+
+                <div class="rain-os-tip-card">
+                    <h3><?php esc_html_e( 'Conversion Readiness (Purple Pillar)', 'rain-os-aeo-analyzer' ); ?></h3>
+                    <ul>
+                        <li><strong><?php esc_html_e( 'AI Alignment:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Structure content to directly answer common questions. Start paragraphs with the key information. Use "What is X?" and "How to Y" formats.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'QA-Format:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Include FAQ sections with clear questions and concise answers. Format Q&A pairs so AI can easily extract them.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Metadata Audit:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Ensure meta title and description are present and optimized. Validate HTML markup. Check that schema data is error-free.', 'rain-os-aeo-analyzer' ); ?></li>
+                    </ul>
+                </div>
+
+                <div class="rain-os-tip-card">
+                    <h3><?php esc_html_e( 'Quick Wins for Better Scores', 'rain-os-aeo-analyzer' ); ?></h3>
+                    <ul>
+                        <li><?php esc_html_e( 'Add a clear, descriptive title that includes your main topic', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><?php esc_html_e( 'Write a compelling meta description (150-160 characters)', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><?php esc_html_e( 'Include an FAQ section with 3-5 common questions', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><?php esc_html_e( 'Add alt text to all images', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><?php esc_html_e( 'Include internal links to related content on your site', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><?php esc_html_e( 'Add external links to authoritative sources', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><?php esc_html_e( 'Break content into sections with descriptive subheadings', 'rain-os-aeo-analyzer' ); ?></li>
                     </ul>
                 </div>
             </div>
