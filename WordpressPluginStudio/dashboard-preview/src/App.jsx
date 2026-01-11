@@ -493,9 +493,9 @@ function GutenbergSidebarPage() {
   const mockAnalysisData = {
     overallScore: 82,
     pillars: {
-      aiReadability: { score: 88, label: 'AI Readability', color: '#22d3ee' },
-      digitalAuthority: { score: 75, label: 'Digital Authority', color: '#10b981' },
-      conversionReadiness: { score: 83, label: 'Conversion Readiness', color: '#a855f7' },
+      aiReadability: { score: 88, label: 'AI Readability', color: '#22d3ee', tooltip: 'Measures how easily AI systems can understand your content. Includes semantic clarity, readability, and logical structure.' },
+      digitalAuthority: { score: 75, label: 'Digital Authority', color: '#10b981', tooltip: 'Assesses your content\'s credibility and trustworthiness. Includes entity recognition, citation readiness, and schema extraction.' },
+      conversionReadiness: { score: 83, label: 'Conversion Readiness', color: '#a855f7', tooltip: 'Evaluates how well your content drives engagement. Includes AI alignment, Q&A format optimization, and metadata audit.' },
     },
     subScores: {
       semanticClarity: 85, readabilityScore: 90, logicalStructure: 89,
@@ -569,10 +569,10 @@ function GutenbergSidebarPage() {
     )
   }
 
-  const PillarCard = ({ name, score, color }) => (
-    <div style={{ backgroundColor: 'var(--bg-tertiary)', borderRadius: 8, padding: 12, marginBottom: 8 }}>
+  const PillarCard = ({ name, score, color, tooltip }) => (
+    <div style={{ backgroundColor: 'var(--bg-tertiary)', borderRadius: 8, padding: 12, marginBottom: 8 }} title={tooltip}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 500 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 500, cursor: tooltip ? 'help' : 'default' }}>
           <div style={{ width: 10, height: 10, borderRadius: 3, backgroundColor: color }} />
           {name}
         </div>
@@ -660,7 +660,7 @@ function GutenbergSidebarPage() {
           <ScoreRing score={analysisData?.overallScore || 0} isLoading={isAnalyzing} />
 
           {Object.entries(pillars).map(([key, data]) => (
-            <PillarCard key={key} name={data.label} score={analysisData ? data.score : 0} color={data.color} />
+            <PillarCard key={key} name={data.label} score={analysisData ? data.score : 0} color={data.color} tooltip={data.tooltip} />
           ))}
 
           <div style={{ display: 'flex', gap: 4, marginBottom: 16, padding: 4, backgroundColor: '#252b3b', borderRadius: 8 }}>
