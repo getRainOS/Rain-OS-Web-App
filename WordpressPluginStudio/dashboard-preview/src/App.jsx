@@ -586,37 +586,37 @@ function GutenbergSidebarPage() {
     const getLevel = (s) => s >= 80 ? 'good' : s >= 60 ? 'warning' : 'critical'
     
     if (getLevel(scores.readability) === 'critical') {
-      recs.push({ icon: '🔴', title: 'Critical: Improve Readability', description: 'Your content is difficult for AI to parse. Simplify sentence structure and use clearer language.', severity: 'critical' })
+      recs.push({ icon: '🔴', title: 'Critical: AI Parsing Issue', description: 'Your content is difficult for AI to parse. Simplify sentence structure and use clearer language.', severity: 'critical' })
     } else if (getLevel(scores.readability) === 'warning') {
-      recs.push({ icon: '🟡', title: 'Enhance Readability', description: 'Some sentences are complex. Consider breaking them down for better AI comprehension.', severity: 'warning' })
+      recs.push({ icon: '🟡', title: 'Improve AI Parsing', description: 'Some sentences are complex. Consider breaking them down for better AI comprehension.', severity: 'warning' })
     }
     
     if (getLevel(scores.structure) === 'critical') {
-      recs.push({ icon: '🔴', title: 'Critical: Fix Content Structure', description: 'Your content lacks clear organization. Add headings, subheadings, and logical sections.', severity: 'critical' })
+      recs.push({ icon: '🔴', title: 'Critical: Crawler Structure', description: 'Your content lacks clear organization for AI crawlers. Add headings and logical sections.', severity: 'critical' })
     } else if (getLevel(scores.structure) === 'warning') {
-      recs.push({ icon: '🟡', title: 'Improve Structure', description: 'Add more subheadings to break up content and improve navigation for AI crawlers.', severity: 'warning' })
+      recs.push({ icon: '🟡', title: 'Optimize Crawler Structure', description: 'Add more subheadings to improve navigation for AI crawlers.', severity: 'warning' })
     }
     
     if (getLevel(scores.freshness) === 'critical') {
-      recs.push({ icon: '🔴', title: 'Critical: Update Content', description: 'Your content appears outdated. Update statistics, dates, and references to current information.', severity: 'critical' })
+      recs.push({ icon: '🔴', title: 'Critical: Content Freshness', description: 'Your content appears outdated. AI prefers recent content. Update statistics and references.', severity: 'critical' })
     } else if (getLevel(scores.freshness) === 'warning') {
-      recs.push({ icon: '🟡', title: 'Refresh Content', description: 'Some information may be dated. Consider updating examples and references.', severity: 'warning' })
+      recs.push({ icon: '🟡', title: 'Improve Content Freshness', description: 'Some information may be dated. Consider updating examples and references.', severity: 'warning' })
     }
     
     if (getLevel(scores.citation_readiness) === 'critical') {
-      recs.push({ icon: '🔴', title: 'Critical: Add Citations', description: 'AI cannot verify your claims. Add authoritative sources and external references.', severity: 'critical' })
+      recs.push({ icon: '🔴', title: 'Critical: Citation Likelihood Low', description: 'AI is unlikely to cite your content. Add authoritative sources and quotable statements.', severity: 'critical' })
     } else if (getLevel(scores.citation_readiness) === 'warning') {
-      recs.push({ icon: '🟡', title: 'Strengthen Citations', description: 'Include more external links to authoritative sources to boost credibility.', severity: 'warning' })
+      recs.push({ icon: '🟡', title: 'Boost Citation Likelihood', description: 'Include more external links to authoritative sources so AI is more likely to quote you.', severity: 'warning' })
     }
     
     if (getLevel(scores.ai_visibility) === 'critical') {
-      recs.push({ icon: '🔴', title: 'Critical: Improve AI Visibility', description: 'Your content is not optimized for AI discovery. Add structured data and clear topic signals.', severity: 'critical' })
+      recs.push({ icon: '🔴', title: 'Critical: Low AI Discoverability', description: 'AI assistants may not find your content. Add structured data and clear topic signals.', severity: 'critical' })
     } else if (getLevel(scores.ai_visibility) === 'warning') {
-      recs.push({ icon: '🟡', title: 'Boost AI Visibility', description: 'Add schema markup and ensure your content answers common questions directly.', severity: 'warning' })
+      recs.push({ icon: '🟡', title: 'Improve AI Discoverability', description: 'Add schema markup so AI assistants can better discover and recommend your content.', severity: 'warning' })
     }
     
     if (recs.length === 0) {
-      recs.push({ icon: '✅', title: 'Great AI Readiness!', description: 'Your content is well-optimized for AI systems. Keep maintaining this quality.', severity: 'success' })
+      recs.push({ icon: '✅', title: 'Excellent AI Readiness!', description: 'Your content is well-optimized for AI indexing and citation. Keep up the great work!', severity: 'success' })
     }
     
     return recs.slice(0, 4)
@@ -711,9 +711,11 @@ function GutenbergSidebarPage() {
   ]
 
   const aiScoreItems = [
-    { key: 'readability', label: 'Readability' }, { key: 'structure', label: 'Structure' },
-    { key: 'freshness', label: 'Freshness' }, { key: 'citation_readiness', label: 'Citation Ready' },
-    { key: 'ai_visibility', label: 'AI Visibility' },
+    { key: 'readability', label: 'AI Parsing', tooltip: 'How easily AI can parse your sentences' },
+    { key: 'structure', label: 'Crawler Structure', tooltip: 'How well organized for AI crawlers' },
+    { key: 'freshness', label: 'Content Freshness', tooltip: 'How current (AI prefers recent content)' },
+    { key: 'citation_readiness', label: 'Citation Likelihood', tooltip: 'How likely AI will quote/cite you' },
+    { key: 'ai_visibility', label: 'AI Discoverability', tooltip: 'How discoverable by AI assistants' },
   ]
 
   const historyData = [
@@ -927,8 +929,8 @@ function GutenbergSidebarPage() {
                 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8 }}>
                   {aiScoreItems.map(item => (
-                    <div key={item.key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 8, backgroundColor: '#252b3b', borderRadius: 6 }}>
-                      <span style={{ fontSize: 11, color: '#64748b' }}>{item.label}</span>
+                    <div key={item.key} title={item.tooltip} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 8, backgroundColor: '#252b3b', borderRadius: 6, cursor: 'help' }}>
+                      <span style={{ fontSize: 11, color: '#64748b', borderBottom: '1px dashed #4a5568' }}>{item.label}</span>
                       <span style={{ fontSize: 14, fontWeight: 600, color: getScoreColor(aiReadinessScores[item.key]) }}>{aiReadinessScores[item.key]}</span>
                     </div>
                   ))}
