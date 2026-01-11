@@ -810,7 +810,10 @@ function GutenbergSidebarPage() {
           </div>
 
           <div style={{ marginTop: 16 }}>
-            <div style={{ fontSize: 11, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>Local Content Audit</div>
+            <div style={{ fontSize: 11, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8, cursor: 'help' }} title="Basic content quality checks performed locally in your browser. These verify essential elements like titles, headings, images, and links are present in your content.">
+              <span style={{ borderBottom: '1px dashed #64748b' }}>Safeguards</span>
+              <span style={{ fontSize: 10, marginLeft: 4 }}>ⓘ</span>
+            </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 6 }}>
               {auditItems.map(item => (
                 <div key={item.key} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: 8, backgroundColor: '#252b3b', borderRadius: 6, fontSize: 12 }}>
