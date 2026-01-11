@@ -901,7 +901,7 @@ function GutenbergSidebarPage() {
             {aiReadinessExpanded && (
               <>
                 <button onClick={handleCommit} disabled={isCommitting} style={{ width: '100%', padding: 12, backgroundColor: '#22d3ee', color: '#0f1419', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', marginBottom: 12, opacity: isCommitting ? 0.6 : 1 }}>
-                  {isCommitting ? 'Committing...' : 'Commit Content'}
+                  {isCommitting ? 'Verifying...' : 'Verify AI Readiness'}
                 </button>
                 
                 {commitResult && commitResult.recommendations && (
