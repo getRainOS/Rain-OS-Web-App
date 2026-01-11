@@ -2880,7 +2880,7 @@ function ContentSignalsPage({ selectedPeriod, setSelectedPeriod }) {
   )
 }
 
-function LearnAIReadabilityPage() {
+function LearnAIReadabilityPage({ setCurrentPage }) {
   return (
     <>
       <div className="animate-in" style={{ marginBottom: '32px' }}>
@@ -3020,7 +3020,9 @@ function LearnAIReadabilityPage() {
             <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '16px' }}>
               Now that you understand AI Readability, learn practical strategies to boost your score.
             </p>
-            <button style={{
+            <button 
+              onClick={() => setCurrentPage('improve-score')}
+              style={{
               width: '100%',
               padding: '12px',
               backgroundColor: 'var(--accent)',
@@ -3290,7 +3292,7 @@ function App() {
       case 'signals':
         return <ContentSignalsPage selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
       case 'learn-ai-readability':
-        return <LearnAIReadabilityPage />
+        return <LearnAIReadabilityPage setCurrentPage={setCurrentPage} />
       case 'improve-score':
         return <ImproveScorePage />
       case 'docs-getting-started':
