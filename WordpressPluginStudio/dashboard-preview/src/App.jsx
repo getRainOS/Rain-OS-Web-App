@@ -490,6 +490,26 @@ function GutenbergSidebarPage() {
   const [quickActionLoading, setQuickActionLoading] = useState(null)
   const [quickActionResult, setQuickActionResult] = useState(null)
   const [aiReadinessExpanded, setAiReadinessExpanded] = useState(true)
+  const [heatmapActive, setHeatmapActive] = useState(false)
+
+  const heatmapKeywords = {
+    aiReadability: ['cloud computing', 'infrastructure', 'distributed computing', 'load balancing', 'high availability', 'fault tolerance', 'continuous integration', 'continuous delivery', 'CI/CD', 'microservices'],
+    digitalAuthority: ['CNCF', '2024 survey', '78%', '40-60%', 'GDPR', 'HIPAA', 'SOC 2', 'PCI-DSS', 'zero-trust', 'E-E-A-T'],
+    conversionReadiness: ['revolutionized', 'unprecedented flexibility', 'essential', 'gold standard', 'critical requirements', 'comprehensive', 'best practices']
+  }
+
+  const highlightText = (text) => {
+    if (!heatmapActive) return text
+    let result = text
+    Object.entries(heatmapKeywords).forEach(([pillar, keywords]) => {
+      const color = pillar === 'aiReadability' ? '#22d3ee' : pillar === 'digitalAuthority' ? '#10b981' : '#a855f7'
+      keywords.forEach(keyword => {
+        const regex = new RegExp(`(${keyword})`, 'gi')
+        result = result.replace(regex, `<span style="background-color: ${color}33; color: ${color}; padding: 1px 4px; border-radius: 3px; font-weight: 500;">$1</span>`)
+      })
+    })
+    return result
+  }
 
   const aiReadinessScores = { readability: 85, structure: 78, freshness: 92, citation_readiness: 70, ai_visibility: 88 }
 
@@ -733,44 +753,105 @@ function GutenbergSidebarPage() {
 
       <div style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
         <div style={{ flex: 1, backgroundColor: 'var(--bg-secondary)', borderRadius: '12px', padding: '24px', border: '1px solid var(--border-color)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px', paddingBottom: '16px', borderBottom: '1px solid var(--border-color)' }}>
-            <div style={{ width: '32px', height: '32px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <FileText size={16} style={{ color: 'var(--text-muted)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', paddingBottom: '16px', borderBottom: '1px solid var(--border-color)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ width: '32px', height: '32px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <FileText size={16} style={{ color: 'var(--text-muted)' }} />
+              </div>
+              <div>
+                <div style={{ fontSize: '14px', fontWeight: 500 }}>Block Editor Content Area</div>
+              </div>
             </div>
-            <div>
-              <div style={{ fontSize: '14px', fontWeight: 500 }}>Block Editor Content Area</div>
-            </div>
+            <button
+              onClick={() => setHeatmapActive(!heatmapActive)}
+              title="AI Heatmap: Highlights keywords color-coded by pillar category"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 16px',
+                backgroundColor: heatmapActive ? 'var(--accent)' : 'var(--bg-tertiary)',
+                color: heatmapActive ? '#0f1419' : 'var(--text-secondary)',
+                border: `1px solid ${heatmapActive ? 'var(--accent)' : 'var(--border-color)'}`,
+                borderRadius: '6px',
+                fontSize: '13px',
+                fontWeight: 500,
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+            >
+              <span style={{ fontSize: '16px' }}>🔥</span>
+              AI Heatmap
+            </button>
           </div>
+          
+          {heatmapActive && (
+            <div style={{ 
+              display: 'flex', 
+              gap: '16px', 
+              padding: '12px 16px', 
+              backgroundColor: 'var(--bg-tertiary)', 
+              borderRadius: '8px', 
+              marginBottom: '16px',
+              border: '1px solid var(--border-color)'
+            }}>
+              <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)' }}>Heatmap Legend:</div>
+              <div style={{ display: 'flex', gap: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <div style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#22d3ee' }}></div>
+                  <span style={{ fontSize: '12px', color: '#22d3ee' }}>AI Readability</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <div style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#10b981' }}></div>
+                  <span style={{ fontSize: '12px', color: '#10b981' }}>Digital Authority</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <div style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#a855f7' }}></div>
+                  <span style={{ fontSize: '12px', color: '#a855f7' }}>Conversion Readiness</span>
+                </div>
+              </div>
+            </div>
+          )}
           <div style={{ padding: '20px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px', minHeight: '400px', maxHeight: '600px', overflowY: 'auto' }}>
-            <h2 style={{ fontSize: '20px', marginBottom: '16px', color: 'var(--text-primary)' }}>Enterprise Cloud Computing Infrastructure: A Comprehensive Technical Guide for Modern Organizations</h2>
+            <h2 
+              style={{ fontSize: '20px', marginBottom: '16px', color: 'var(--text-primary)' }}
+              dangerouslySetInnerHTML={{ __html: highlightText('Enterprise Cloud Computing Infrastructure: A Comprehensive Technical Guide for Modern Organizations') }}
+            />
             
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '16px' }}>
-              Cloud computing has fundamentally revolutionized how organizations deploy, manage, and scale their technology infrastructure in the digital age. By leveraging distributed computing resources accessed over the internet, businesses can significantly reduce capital expenditure while gaining unprecedented flexibility in resource allocation, enabling them to respond rapidly to changing market conditions and customer demands.
-            </p>
+            <p 
+              style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '16px' }}
+              dangerouslySetInnerHTML={{ __html: highlightText('Cloud computing has fundamentally revolutionized how organizations deploy, manage, and scale their technology infrastructure in the digital age. By leveraging distributed computing resources accessed over the internet, businesses can significantly reduce capital expenditure while gaining unprecedented flexibility in resource allocation, enabling them to respond rapidly to changing market conditions and customer demands.') }}
+            />
 
             <h3 style={{ fontSize: '16px', marginBottom: '10px', marginTop: '20px', color: 'var(--text-primary)' }}>Understanding Cloud Architecture Fundamentals</h3>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '16px' }}>
-              Modern cloud architectures employ sophisticated load balancing techniques to distribute workloads across multiple servers and geographic regions. This multi-region approach ensures high availability and fault tolerance—critical requirements for mission-critical applications that demand 99.99% uptime guarantees. Organizations implementing these patterns typically see a 40-60% reduction in infrastructure costs within the first year of migration.
-            </p>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '16px' }}>
-              The Infrastructure-as-Code (IaC) paradigm has become essential for managing cloud resources at scale. Tools like Terraform, AWS CloudFormation, and Pulumi enable teams to define infrastructure declaratively, ensuring reproducibility and version control for all deployment configurations. This approach eliminates configuration drift and provides audit trails for compliance requirements.
-            </p>
+            <p 
+              style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '16px' }}
+              dangerouslySetInnerHTML={{ __html: highlightText('Modern cloud architectures employ sophisticated load balancing techniques to distribute workloads across multiple servers and geographic regions. This multi-region approach ensures high availability and fault tolerance—critical requirements for mission-critical applications that demand 99.99% uptime guarantees. Organizations implementing these patterns typically see a 40-60% reduction in infrastructure costs within the first year of migration.') }}
+            />
+            <p 
+              style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '16px' }}
+              dangerouslySetInnerHTML={{ __html: highlightText('The Infrastructure-as-Code (IaC) paradigm has become essential for managing cloud resources at scale. Tools like Terraform, AWS CloudFormation, and Pulumi enable teams to define infrastructure declaratively, ensuring reproducibility and version control for all deployment configurations. This approach eliminates configuration drift and provides audit trails for compliance requirements.') }}
+            />
 
             <h3 style={{ fontSize: '16px', marginBottom: '10px', marginTop: '20px', color: 'var(--text-primary)' }}>Container Orchestration and Microservices</h3>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '16px' }}>
-              Container orchestration platforms such as Kubernetes, Docker Swarm, and Amazon ECS have emerged as essential tools for managing microservices deployments at enterprise scale. These platforms enable development teams to achieve continuous integration and delivery (CI/CD) pipelines that accelerate time-to-market while maintaining strict quality controls and automated testing protocols.
-            </p>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '16px' }}>
-              Service mesh technologies like Istio and Linkerd provide advanced traffic management, security policies, and observability features that are crucial for operating complex distributed systems. According to the Cloud Native Computing Foundation's 2024 survey, over 78% of enterprises now run production workloads on Kubernetes, representing a 23% increase from the previous year.
-            </p>
+            <p 
+              style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '16px' }}
+              dangerouslySetInnerHTML={{ __html: highlightText('Container orchestration platforms such as Kubernetes, Docker Swarm, and Amazon ECS have emerged as essential tools for managing microservices deployments at enterprise scale. These platforms enable development teams to achieve continuous integration and delivery (CI/CD) pipelines that accelerate time-to-market while maintaining strict quality controls and automated testing protocols.') }}
+            />
+            <p 
+              style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '16px' }}
+              dangerouslySetInnerHTML={{ __html: highlightText('Service mesh technologies like Istio and Linkerd provide advanced traffic management, security policies, and observability features that are crucial for operating complex distributed systems. According to the Cloud Native Computing Foundation\'s 2024 survey, over 78% of enterprises now run production workloads on Kubernetes, representing a 23% increase from the previous year.') }}
+            />
 
             <h3 style={{ fontSize: '16px', marginBottom: '10px', marginTop: '20px', color: 'var(--text-primary)' }}>Security and Compliance Considerations</h3>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '16px' }}>
-              Zero-trust security models have become the gold standard for cloud-native applications, requiring continuous verification of every user, device, and connection attempting to access resources. Identity and Access Management (IAM) policies, combined with encryption at rest and in transit, form the foundation of a robust cloud security posture that meets regulatory requirements including GDPR, HIPAA, SOC 2, and PCI-DSS.
-            </p>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7 }}>
-              Organizations must also implement comprehensive monitoring and logging strategies using tools like Prometheus, Grafana, and the ELK stack (Elasticsearch, Logstash, Kibana) to maintain visibility into their cloud environments. These observability practices enable rapid incident response, capacity planning, and cost optimization initiatives that directly impact the bottom line.
-            </p>
+            <p 
+              style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '16px' }}
+              dangerouslySetInnerHTML={{ __html: highlightText('Zero-trust security models have become the gold standard for cloud-native applications, requiring continuous verification of every user, device, and connection attempting to access resources. Identity and Access Management (IAM) policies, combined with encryption at rest and in transit, form the foundation of a robust cloud security posture that meets regulatory requirements including GDPR, HIPAA, SOC 2, and PCI-DSS.') }}
+            />
+            <p 
+              style={{ color: 'var(--text-secondary)', lineHeight: 1.7 }}
+              dangerouslySetInnerHTML={{ __html: highlightText('Organizations must also implement comprehensive monitoring and logging strategies using tools like Prometheus, Grafana, and the ELK stack (Elasticsearch, Logstash, Kibana) to maintain visibility into their cloud environments. These observability practices enable rapid incident response, capacity planning, and cost optimization initiatives that directly impact the bottom line.') }}
+            />
           </div>
         </div>
 

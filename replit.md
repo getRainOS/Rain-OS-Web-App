@@ -18,7 +18,7 @@ The plugin follows WordPress plugin architecture standards, utilizing a modular,
 
 ### Technical Implementations
 - **Three Pillars Scoring**: Content is analyzed and scored based on AI Readability (semantic clarity, structure), Digital Authority (credibility, citation readiness), and Conversion Readiness (engagement, calls to action).
-- **Pro Features**: Includes a "Quick Tools" panel for micro-actions (title suggestions, meta descriptions, summarization, rewriting), authorship/provenance tracking, detailed sub-score breakdowns, and real-time usage quota tracking.
+- **Quick Tools**: A panel for micro-actions available to all subscribers (title suggestions, meta descriptions, summarization, rewriting), plus authorship/provenance tracking, detailed sub-score breakdowns, and real-time usage quota tracking.
 - **API Communication**: All analysis requests are routed through a dedicated API class, using a configurable base URL and API key for authentication via bearer tokens.
 - **Data Storage**: Plugin settings are stored in WordPress options, while analysis results and provenance data are cached in post meta.
 - **Local Content Audit**: Incorporates WordPress-powered checks for content quality that do not require API interaction (e.g., title presence, content length, image alt tags, internal/external links, heading structure).
@@ -173,6 +173,15 @@ The plugin follows WordPress plugin architecture standards, utilizing a modular,
   - Shows how the sidebar appears in WordPress block editor
   - Includes all features: score display, pillar cards, tabs, quick actions, AI readiness, local audit
   - Simulated analyze and quick action functionality for demonstration
+- **AI Heatmap Feature**: Added to Content Analyzer page
+  - Toggle button to enable/disable keyword highlighting
+  - Color-coded highlights by pillar category (cyan=AI Readability, green=Digital Authority, purple=Conversion Readiness)
+  - Legend displayed when heatmap is active
+  - Keywords include technical terms, authority signals, and conversion phrases
+- **Pro Terminology Removed**: Renamed all "Pro" references throughout the dashboard preview
+  - ProFeaturesPage renamed to QuickToolsPage
+  - Quick Tools now available to all subscribers (not Pro-only)
+  - Troubleshooting content updated to remove Pro subscription references
 
 ### Learn About AI Readability Page (January 2025)
 - **New Educational Page**: Added comprehensive "Learn About AI Readability" page
