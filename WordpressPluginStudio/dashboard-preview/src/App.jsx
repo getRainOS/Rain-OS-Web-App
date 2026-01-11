@@ -490,25 +490,6 @@ function GutenbergSidebarPage() {
   const [quickActionResult, setQuickActionResult] = useState(null)
   const [aiReadinessExpanded, setAiReadinessExpanded] = useState(true)
 
-  const mockAnalysisData = {
-    overallScore: 82,
-    pillars: {
-      aiReadability: { score: 88, label: 'AI Readability', color: '#22d3ee', tooltip: 'Measures how easily AI systems can understand your content. Includes semantic clarity, readability, and logical structure.' },
-      digitalAuthority: { score: 75, label: 'Digital Authority', color: '#10b981', tooltip: 'Assesses your content\'s credibility and trustworthiness. Includes entity recognition, citation readiness, and schema extraction.' },
-      conversionReadiness: { score: 83, label: 'Conversion Readiness', color: '#a855f7', tooltip: 'Evaluates how well your content drives engagement. Includes AI alignment, Q&A format optimization, and metadata audit.' },
-    },
-    subScores: {
-      semanticClarity: 85, readabilityScore: 90, logicalStructure: 89,
-      entityRecognition: 72, citationReadiness: 78, schemaExtraction: 75,
-      aiAlignment: 84, qaFormat: 80, metadataAudit: 85,
-    },
-    recommendations: [
-      { icon: '📝', title: 'Add Subheadings', description: 'Break up your content with H2 or H3 headings for better structure.', color: '#22d3ee' },
-      { icon: '🔗', title: 'Add External Links', description: 'Include authoritative external links to support your content.', color: '#10b981' },
-      { icon: '✅', title: 'Great Job!', description: 'Your content meets the basic AI Readability requirements.', color: '#10b981' },
-    ]
-  }
-
   const aiReadinessScores = { readability: 85, structure: 78, freshness: 92, citation_readiness: 70, ai_visibility: 88 }
 
   const localAuditResults = {
@@ -516,10 +497,85 @@ function GutenbergSidebarPage() {
     hasAltTags: true, hasInternalLinks: true, hasExternalLinks: false, wordCountOk: true
   }
 
+  const generateDynamicRecommendations = (pillars, subScores, aiScores, audit) => {
+    const recommendations = []
+    const getLevel = (score) => score >= 80 ? 'good' : score >= 60 ? 'warning' : 'critical'
+    
+    if (getLevel(subScores.logicalStructure) !== 'good' || !audit.hasHeadings) {
+      recommendations.push({ icon: '📝', title: 'Improve Content Structure', description: 'Break up your content with H2 or H3 headings for better logical flow and AI parsing.', color: '#22d3ee', priority: !audit.hasHeadings ? 1 : 2 })
+    }
+    if (getLevel(subScores.semanticClarity) !== 'good') {
+      recommendations.push({ icon: '✍️', title: 'Enhance Semantic Clarity', description: 'Use clearer, more direct language. Avoid ambiguous pronouns and complex nested sentences.', color: '#22d3ee', priority: 2 })
+    }
+    if (getLevel(subScores.readabilityScore) !== 'good') {
+      recommendations.push({ icon: '📖', title: 'Simplify Your Writing', description: 'Shorten sentences and use simpler vocabulary to improve readability scores.', color: '#22d3ee', priority: 2 })
+    }
+    if (getLevel(subScores.entityRecognition) !== 'good') {
+      recommendations.push({ icon: '🏷️', title: 'Define Key Entities', description: 'Clearly introduce and define important terms, people, and concepts in your content.', color: '#10b981', priority: 2 })
+    }
+    if (getLevel(subScores.citationReadiness) !== 'good' || !audit.hasExternalLinks) {
+      recommendations.push({ icon: '🔗', title: 'Add Authoritative Sources', description: 'Include external links to credible sources to boost citation readiness and trust.', color: '#10b981', priority: !audit.hasExternalLinks ? 1 : 2 })
+    }
+    if (getLevel(subScores.schemaExtraction) !== 'good') {
+      recommendations.push({ icon: '📊', title: 'Add Structured Data', description: 'Include schema markup or structured content patterns for rich snippet opportunities.', color: '#10b981', priority: 3 })
+    }
+    if (getLevel(subScores.qaFormat) !== 'good') {
+      recommendations.push({ icon: '❓', title: 'Add Q&A Format', description: 'Include question-and-answer sections to optimize for voice search and AI assistants.', color: '#a855f7', priority: 2 })
+    }
+    if (getLevel(subScores.aiAlignment) !== 'good') {
+      recommendations.push({ icon: '🎯', title: 'Improve AI Alignment', description: 'Structure content to provide direct, concise answers that AI can easily extract.', color: '#a855f7', priority: 2 })
+    }
+    if (!audit.hasImages) {
+      recommendations.push({ icon: '🖼️', title: 'Add Visual Content', description: 'Include relevant images to enhance engagement and provide visual context.', color: '#f59e0b', priority: 2 })
+    }
+    if (!audit.hasAltTags && audit.hasImages) {
+      recommendations.push({ icon: '🏷️', title: 'Add Alt Text to Images', description: 'Describe your images with alt text for accessibility and AI understanding.', color: '#f59e0b', priority: 1 })
+    }
+    if (!audit.hasInternalLinks) {
+      recommendations.push({ icon: '🔀', title: 'Add Internal Links', description: 'Link to other relevant content on your site to improve navigation and authority.', color: '#f59e0b', priority: 2 })
+    }
+    if (getLevel(aiScores.citation_readiness) === 'critical') {
+      recommendations.push({ icon: '⚠️', title: 'Critical: Citation Readiness Low', description: 'Your content is unlikely to be cited by AI. Add quotable statements and clear facts.', color: '#ef4444', priority: 0 })
+    }
+    if (getLevel(aiScores.structure) !== 'good') {
+      recommendations.push({ icon: '📋', title: 'Strengthen Document Structure', description: 'Use consistent heading hierarchy and clear section breaks for better AI parsing.', color: '#f59e0b', priority: 2 })
+    }
+    
+    recommendations.sort((a, b) => a.priority - b.priority)
+    
+    if (recommendations.length === 0) {
+      recommendations.push({ icon: '✅', title: 'Excellent Work!', description: 'Your content meets all AI Readability requirements. Keep up the great work!', color: '#10b981', priority: 10 })
+    }
+    
+    return recommendations.slice(0, 5)
+  }
+
+  const mockPillars = {
+    aiReadability: { score: 88, label: 'AI Readability', color: '#22d3ee', tooltip: 'Measures how easily AI systems can understand your content. Includes semantic clarity, readability, and logical structure.' },
+    digitalAuthority: { score: 75, label: 'Digital Authority', color: '#10b981', tooltip: 'Assesses your content\'s credibility and trustworthiness. Includes entity recognition, citation readiness, and schema extraction.' },
+    conversionReadiness: { score: 83, label: 'Conversion Readiness', color: '#a855f7', tooltip: 'Evaluates how well your content drives engagement. Includes AI alignment, Q&A format optimization, and metadata audit.' },
+  }
+
+  const mockSubScores = {
+    semanticClarity: 85, readabilityScore: 90, logicalStructure: 89,
+    entityRecognition: 72, citationReadiness: 78, schemaExtraction: 75,
+    aiAlignment: 84, qaFormat: 80, metadataAudit: 85,
+  }
+
+  const generateMockAnalysisData = () => {
+    const recommendations = generateDynamicRecommendations(mockPillars, mockSubScores, aiReadinessScores, localAuditResults)
+    return {
+      overallScore: 82,
+      pillars: mockPillars,
+      subScores: mockSubScores,
+      recommendations
+    }
+  }
+
   const handleAnalyze = () => {
     setIsAnalyzing(true)
     setTimeout(() => {
-      setAnalysisData(mockAnalysisData)
+      setAnalysisData(generateMockAnalysisData())
       setIsAnalyzing(false)
     }, 1500)
   }
