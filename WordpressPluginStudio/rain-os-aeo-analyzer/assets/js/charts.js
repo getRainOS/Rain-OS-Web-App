@@ -174,7 +174,7 @@
                         parseInt(post.conversion_readiness || 0)
                     ) / 3);
                     
-                    var wordCount = 1000 + Math.floor(Math.random() * 2000);
+                    var wordCount = parseInt(post.word_count || 0);
                     
                     scatterData.push({
                         x: wordCount,

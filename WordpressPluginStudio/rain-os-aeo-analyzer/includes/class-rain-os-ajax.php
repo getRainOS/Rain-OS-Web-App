@@ -212,7 +212,7 @@ class Rain_OS_Ajax {
 
         $results = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT h.*, p.post_title, p.post_name 
+                "SELECT h.*, p.post_title, p.post_name, p.post_content 
                 FROM {$table_name} h 
                 LEFT JOIN {$wpdb->posts} p ON h.post_id = p.ID 
                 WHERE h.analyzed_at >= %s 
@@ -224,6 +224,12 @@ class Rain_OS_Ajax {
             ),
             ARRAY_A
         );
+
+        foreach ( $results as &$row ) {
+            $plain_text = wp_strip_all_tags( $row['post_content'] ?? '' );
+            $row['word_count'] = str_word_count( $plain_text );
+            unset( $row['post_content'] );
+        }
 
         wp_send_json_success(
             array(
