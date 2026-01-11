@@ -1789,13 +1789,86 @@ function ThreePillarsPage() {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '2px solid #22d3ee', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '2px solid var(--accent)', borderRadius: '12px', padding: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+            <div style={{ width: '16px', height: '16px', borderRadius: '4px', background: 'linear-gradient(135deg, #22d3ee 0%, #a855f7 100%)' }} />
+            <h2 style={{ fontSize: '22px', fontWeight: 600, color: 'var(--accent)' }}>AI Readability vs. Answer Engine Optimization</h2>
+          </div>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
+            As digital marketing evolves, the industry has shifted from traditional SEO to Answer Engine Optimization (AEO)—optimizing content so AI systems can surface it as direct answers. However, there is a foundational reality often overlooked:
+          </p>
+          <p style={{ color: 'var(--text-primary)', fontSize: '16px', fontWeight: 500, lineHeight: 1.7, marginBottom: '16px', padding: '16px', backgroundColor: 'rgba(34, 211, 238, 0.1)', borderRadius: '8px', borderLeft: '4px solid var(--accent)' }}>
+            You cannot optimize for answers if AI cannot first understand what you are saying. AI Readability is the premise. AEO is the thesis.
+          </p>
+          
+          <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '12px', marginTop: '20px' }}>The Translator vs. Interpreter Analogy</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', marginBottom: '20px' }}>
+            <div style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+              <div style={{ fontWeight: 600, marginBottom: '8px', color: '#22d3ee' }}>AI Readability = The Interpreter</div>
+              <div style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: 1.6 }}>Ensures AI can understand what you are saying in the first place. If your content is unclear or poorly structured, AI cannot interpret it—making you invisible.</div>
+            </div>
+            <div style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+              <div style={{ fontWeight: 600, marginBottom: '8px', color: '#a855f7' }}>AEO = The Translator</div>
+              <div style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: 1.6 }}>Comes after understanding. AI summarizes your ideas, reformats them as answers, and potentially cites your content. Translation cannot happen without interpretation.</div>
+            </div>
+          </div>
+
+          <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '12px' }}>The AI Processing Sequence</h3>
+          <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
+            {[
+              { step: '1', title: 'Interpretation', desc: 'AI determines if it understands your content' },
+              { step: '2', title: 'Meaning Mapping', desc: 'AI converts language into structured representations' },
+              { step: '3', title: 'Answer Generation', desc: 'AI summarizes and delivers answers—possibly citing you' },
+            ].map((item, i) => (
+              <div key={i} style={{ flex: 1, padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px', textAlign: 'center' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'var(--accent)', color: '#0f1419', fontWeight: 700, fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 8px' }}>{item.step}</div>
+                <div style={{ fontWeight: 500, marginBottom: '4px', fontSize: '13px' }}>{item.title}</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '11px', lineHeight: 1.5 }}>{item.desc}</div>
+              </div>
+            ))}
+          </div>
+
+          <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '12px' }}>The Core Distinction</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', marginBottom: '20px' }}>
+            <div style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px', borderLeft: '4px solid #22d3ee' }}>
+              <div style={{ fontWeight: 500, marginBottom: '6px' }}>AI Readability asks:</div>
+              <div style={{ color: '#22d3ee', fontSize: '14px' }}>Can an AI understand this content?</div>
+              <div style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>Determines eligibility</div>
+            </div>
+            <div style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px', borderLeft: '4px solid #a855f7' }}>
+              <div style={{ fontWeight: 500, marginBottom: '6px' }}>AEO asks:</div>
+              <div style={{ color: '#a855f7', fontSize: '14px' }}>Can this understood content be selected as the best answer?</div>
+              <div style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>Determines selection</div>
+            </div>
+          </div>
+
+          <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '12px' }}>A Layered System</h3>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.7, marginBottom: '12px' }}>
+            These are not competing strategies—they are sequential:
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            <span style={{ padding: '8px 14px', backgroundColor: 'rgba(100, 116, 139, 0.2)', borderRadius: '6px', fontSize: '13px' }}>SEO helps AI find your content</span>
+            <span style={{ color: 'var(--text-muted)' }}>→</span>
+            <span style={{ padding: '8px 14px', backgroundColor: 'rgba(34, 211, 238, 0.2)', color: '#22d3ee', borderRadius: '6px', fontSize: '13px' }}>AI Readability ensures AI understands it</span>
+            <span style={{ color: 'var(--text-muted)' }}>→</span>
+            <span style={{ padding: '8px 14px', backgroundColor: 'rgba(168, 85, 247, 0.2)', color: '#a855f7', borderRadius: '6px', fontSize: '13px' }}>AEO determines if it becomes the answer</span>
+          </div>
+
+          <div style={{ marginTop: '24px', padding: '16px', backgroundColor: 'rgba(239, 68, 68, 0.1)', borderRadius: '8px', borderLeft: '4px solid #ef4444' }}>
+            <div style={{ fontWeight: 600, marginBottom: '8px', color: '#ef4444' }}>Why This Matters</div>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.6, margin: 0 }}>
+              If you are not being interpreted, you are not being paraphrased. If you are not being paraphrased, you are not being mentioned. If you are not being mentioned, you do not exist in AI-generated answers. AI Readability is not optional—it is the cost of being understood.
+            </p>
+          </div>
+        </div>
+
+        <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '2px solid #22d3ee', borderRadius: '12px', padding: '32px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
             <div style={{ width: '16px', height: '16px', borderRadius: '4px', backgroundColor: '#22d3ee' }} />
             <h2 style={{ fontSize: '22px', fontWeight: 600, color: '#22d3ee' }}>AI Readability</h2>
           </div>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
-            AI Readability measures how well artificial intelligence systems can understand and process your content. This pillar evaluates the clarity, structure, and semantic quality of your writing from an AI perspective.
+            This pillar evaluates how clearly your ideas are expressed and whether meaning survives machine interpretation. From a marketing standpoint, AI Readability determines whether your content is eligible to be considered, your ideas remain intact when summarized, and your expertise is recognized instead of distorted.
           </p>
           <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '12px' }}>Key Components:</h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
