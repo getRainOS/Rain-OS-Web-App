@@ -3115,7 +3115,96 @@ function LearnAIReadabilityPage({ setCurrentPage }) {
 
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '2px solid var(--accent)', borderRadius: '12px', padding: '32px' }}>
+          <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>What is AI Readability?</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
+              AI Readability is the degree to which artificial intelligence systems can accurately parse, comprehend, and structure your content. This is not about keywords, prompts, or rankings—it is about whether meaning survives machine interpretation.
+            </p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7 }}>
+              From a marketing standpoint, AI Readability determines whether your content is even eligible to be considered, your ideas remain intact when summarized, your expertise is recognized instead of distorted, and your brand is mentioned rather than ignored.
+            </p>
+          </div>
+
+          <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Why Does It Matter?</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
+              The way people search for information is changing. Instead of typing keywords and clicking through links, users are increasingly asking AI assistants direct questions and expecting comprehensive answers. This shift requires optimizing your content for AI Readability - ensuring AI systems can understand, process, and cite your content effectively.
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '20px' }}>
+              {[
+                { title: 'AI Citations', desc: 'AI systems cite content they understand clearly and trust' },
+                { title: 'Voice Search', desc: 'Voice assistants prefer content with clear, direct answers' },
+                { title: 'Featured Snippets', desc: 'Well-structured content appears in rich search results' },
+                { title: 'Chatbot Recommendations', desc: 'AI chatbots recommend content they can easily summarize' },
+              ].map((item, i) => (
+                <div key={i} style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                  <div style={{ fontWeight: 500, marginBottom: '6px' }}>{item.title}</div>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>{item.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>The Three Pillars Explained</h2>
+            
+            <div style={{ marginBottom: '24px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#22d3ee' }}></span>
+                AI Readability
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.7, paddingLeft: '22px' }}>
+                This pillar measures how easily AI can parse and understand your content. It evaluates semantic clarity (are your ideas expressed clearly?), logical structure (does your content flow in a sensible order?), and readability metrics (sentence length, vocabulary complexity, and paragraph organization). High AI Readability means your content speaks the language that AI understands best.
+              </p>
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#10b981' }}></span>
+                Digital Authority
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.7, paddingLeft: '22px' }}>
+                AI systems evaluate whether your content is trustworthy and authoritative. This pillar looks at credibility signals like proper citations, author expertise, factual accuracy, and E-E-A-T markers (Experience, Expertise, Authoritativeness, Trustworthiness). Content with strong Digital Authority is more likely to be cited by AI as a reliable source.
+              </p>
+            </div>
+
+            <div>
+              <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#a855f7' }}></span>
+                Conversion Readiness
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.7, paddingLeft: '22px' }}>
+                Beyond being understood and trusted, your content should drive action. This pillar measures user engagement potential, clear calls-to-action, and how effectively your content guides readers toward meaningful next steps. AI systems recognize and reward content that provides complete, actionable information.
+              </p>
+            </div>
+          </div>
+
+          <div className="animate-in-delay-4" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>How AI Reads Your Content</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
+              Rain OS leverages AI to simulate how search engines and answer engines process your content. Here's what our AI analysis examines:
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {[
+                { step: '1', title: 'Tokenization', desc: 'AI breaks your text into tokens (words and word pieces) to process it' },
+                { step: '2', title: 'Entity Recognition', desc: 'It identifies key entities: people, places, concepts, products, and their relationships' },
+                { step: '3', title: 'Semantic Analysis', desc: 'AI understands the meaning behind your words, not just the words themselves' },
+                { step: '4', title: 'Structure Mapping', desc: 'It recognizes headings, lists, paragraphs, and how ideas are organized' },
+                { step: '5', title: 'Context Building', desc: 'AI connects your content to broader knowledge and evaluates relevance' },
+                { step: '6', title: 'Quality Scoring', desc: 'Finally, it assigns trust and quality scores based on all these factors' },
+              ].map((item, i) => (
+                <div key={i} style={{ display: 'flex', gap: '16px', padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--accent)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, flexShrink: 0 }}>{item.step}</div>
+                  <div>
+                    <div style={{ fontWeight: 500, marginBottom: '4px' }}>{item.title}</div>
+                    <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>{item.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="animate-in-delay-5" style={{ backgroundColor: 'var(--bg-secondary)', border: '2px solid var(--accent)', borderRadius: '12px', padding: '32px' }}>
             <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>AI Readability vs. Answer Engine Optimization</h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
               As digital marketing evolves, the industry has shifted from traditional SEO to Answer Engine Optimization (AEO)—optimizing content so AI systems can surface it as direct answers. However, there is a foundational reality often overlooked:
@@ -3182,95 +3271,6 @@ function LearnAIReadabilityPage({ setCurrentPage }) {
               <p style={{ color: 'var(--text-secondary)', fontSize: '12px', lineHeight: 1.5, margin: 0 }}>
                 If you are not being interpreted, you are not being paraphrased. If you are not being paraphrased, you are not being mentioned. If you are not being mentioned, you do not exist in AI-generated answers. AI Readability is not optional—it is the cost of being understood.
               </p>
-            </div>
-          </div>
-
-          <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>What is AI Readability?</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
-              AI Readability is the degree to which artificial intelligence systems can accurately parse, comprehend, and structure your content. This is not about keywords, prompts, or rankings—it is about whether meaning survives machine interpretation.
-            </p>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7 }}>
-              From a marketing standpoint, AI Readability determines whether your content is even eligible to be considered, your ideas remain intact when summarized, your expertise is recognized instead of distorted, and your brand is mentioned rather than ignored.
-            </p>
-          </div>
-
-          <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Why Does It Matter?</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
-              The way people search for information is changing. Instead of typing keywords and clicking through links, users are increasingly asking AI assistants direct questions and expecting comprehensive answers. This shift requires optimizing your content for AI Readability - ensuring AI systems can understand, process, and cite your content effectively.
-            </p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '20px' }}>
-              {[
-                { title: 'AI Citations', desc: 'AI systems cite content they understand clearly and trust' },
-                { title: 'Voice Search', desc: 'Voice assistants prefer content with clear, direct answers' },
-                { title: 'Featured Snippets', desc: 'Well-structured content appears in rich search results' },
-                { title: 'Chatbot Recommendations', desc: 'AI chatbots recommend content they can easily summarize' },
-              ].map((item, i) => (
-                <div key={i} style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
-                  <div style={{ fontWeight: 500, marginBottom: '6px' }}>{item.title}</div>
-                  <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>{item.desc}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="animate-in-delay-4" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>The Three Pillars Explained</h2>
-            
-            <div style={{ marginBottom: '24px' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#22d3ee' }}></span>
-                AI Readability
-              </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.7, paddingLeft: '22px' }}>
-                This pillar measures how easily AI can parse and understand your content. It evaluates semantic clarity (are your ideas expressed clearly?), logical structure (does your content flow in a sensible order?), and readability metrics (sentence length, vocabulary complexity, and paragraph organization). High AI Readability means your content speaks the language that AI understands best.
-              </p>
-            </div>
-
-            <div style={{ marginBottom: '24px' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#10b981' }}></span>
-                Digital Authority
-              </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.7, paddingLeft: '22px' }}>
-                AI systems evaluate whether your content is trustworthy and authoritative. This pillar looks at credibility signals like proper citations, author expertise, factual accuracy, and E-E-A-T markers (Experience, Expertise, Authoritativeness, Trustworthiness). Content with strong Digital Authority is more likely to be cited by AI as a reliable source.
-              </p>
-            </div>
-
-            <div>
-              <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#a855f7' }}></span>
-                Conversion Readiness
-              </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.7, paddingLeft: '22px' }}>
-                Beyond being understood and trusted, your content should drive action. This pillar measures user engagement potential, clear calls-to-action, and how effectively your content guides readers toward meaningful next steps. AI systems recognize and reward content that provides complete, actionable information.
-              </p>
-            </div>
-          </div>
-
-          <div className="animate-in-delay-5" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>How AI Reads Your Content</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
-              Rain OS leverages AI to simulate how search engines and answer engines process your content. Here's what our AI analysis examines:
-            </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {[
-                { step: '1', title: 'Tokenization', desc: 'AI breaks your text into tokens (words and word pieces) to process it' },
-                { step: '2', title: 'Entity Recognition', desc: 'It identifies key entities: people, places, concepts, products, and their relationships' },
-                { step: '3', title: 'Semantic Analysis', desc: 'AI understands the meaning behind your words, not just the words themselves' },
-                { step: '4', title: 'Structure Mapping', desc: 'It recognizes headings, lists, paragraphs, and how ideas are organized' },
-                { step: '5', title: 'Context Building', desc: 'AI connects your content to broader knowledge and evaluates relevance' },
-                { step: '6', title: 'Quality Scoring', desc: 'Finally, it assigns trust and quality scores based on all these factors' },
-              ].map((item, i) => (
-                <div key={i} style={{ display: 'flex', gap: '16px', padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
-                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--accent)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, flexShrink: 0 }}>{item.step}</div>
-                  <div>
-                    <div style={{ fontWeight: 500, marginBottom: '4px' }}>{item.title}</div>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>{item.desc}</div>
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
         </div>
