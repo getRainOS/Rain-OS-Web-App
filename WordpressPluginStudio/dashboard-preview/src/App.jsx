@@ -895,7 +895,7 @@ function GutenbergSidebarPage() {
 
           <div style={{ backgroundColor: '#1a1f2e', border: '1px solid #334155', borderRadius: 8, padding: 12, marginTop: 16, marginBottom: 12 }}>
             <div onClick={() => setAiReadinessExpanded(!aiReadinessExpanded)} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: aiReadinessExpanded ? 12 : 0, cursor: 'pointer' }}>
-              <span style={{ fontSize: 14, fontWeight: 600, color: '#e2e8f0' }}>AI Readiness</span>
+              <span style={{ fontSize: 14, fontWeight: 600, color: '#e2e8f0' }}>Verification</span>
               <span style={{ color: '#64748b', fontSize: 12 }}>{aiReadinessExpanded ? '▼' : '▶'}</span>
             </div>
             {aiReadinessExpanded && (
