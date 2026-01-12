@@ -1,0 +1,91 @@
+You are working inside a WordPress plugin repo that contains a Gutenberg sidebar built with React/webpack.
+The plugin PHP loader only enqueues the sidebar if these build artifacts exist:
+
+- build/gutenberg-sidebar.js
+- build/gutenberg-sidebar.css
+- build/gutenberg-sidebar.asset.php
+
+Right now the Gutenberg sidebar is not appearing because the build/ folder is missing and Replit’s npm installs are incomplete (dependencies end up missing/empty due to registry/network issues). Fix this in a robust, WordPress.org-friendly way WITHOUT changing any plugin UI behavior or PHP logic.
+
+GOALS
+1) Make `npm install` / `npm ci` reliable in Replit.
+2) Ensure `npm run build` produces the required build artifacts every time.
+3) Ensure the final plugin ZIP includes the build/ folder (but excludes node_modules).
+4) Keep changes minimal and additive.
+
+DO THIS STEP-BY-STEP:
+
+A) REPLIT ENV + NPM REGISTRY HARDENING
+- Add/modify a `.npmrc` in the plugin root with the following settings:
+  registry=https://registry.npmjs.org/
+  fetch-retries=5
+  fetch-retry-mintimeout=20000
+  fetch-retry-maxtimeout=120000
+  network-timeout=300000
+  audit=false
+  fund=false
+  progress=false
+
+- In the Replit Shell, run the following commands exactly (add them to a `scripts/replit-build.sh` file too):
+  1) node -v && npm -v
+  2) rm -rf node_modules package-lock.json
+  3) npm cache clean --force
+  4) npm config set registry https://registry.npmjs.org/
+  5) npm install --no-audit --no-fund
+  6) npm run build
+
+- After build, verify:
+  ls -la build
+  and confirm all three files exist:
+    gutenberg-sidebar.js
+    gutenberg-sidebar.css
+    gutenberg-sidebar.asset.php
+
+B) GUARANTEE BUILD OUTPUT PATHS MATCH PHP EXPECTATIONS
+- Confirm webpack.config.js outputs into `build/` and the entry name is `gutenberg-sidebar`.
+- Confirm DependencyExtractionWebpackPlugin outputs `[name].asset.php` and MiniCssExtractPlugin outputs `[name].css`.
+- Do NOT change plugin PHP code. Only adjust build config if paths/names differ from the above required filenames.
+
+C) ADD “ONE COMMAND” REPLIT BUILD + ZIP PACKAGING
+- Add the following npm scripts to package.json (additive only):
+  "build:clean": "rm -rf build",
+  "build:replit": "npm run build:clean && webpack --mode production",
+  "zip:wporg": "node scripts/zip-wporg.js"
+
+- Create `scripts/zip-wporg.js` that:
+  1) verifies the build artifacts exist (fail with clear message if missing)
+  2) creates a WordPress.org-ready zip named `rain-os-ai-readability-optimizer.zip`
+  3) zips the plugin folder INCLUDING build/ but EXCLUDING:
+     - node_modules/
+     - src/ (optional to exclude; keep if you want, but WP.org doesn’t need it)
+     - .git/
+     - *.map
+     - any dev files you choose
+  Use Node’s `child_process` to call `zip` (assume Replit has zip installed) or use a JS zip library.
+
+D) REPLIT BUTTONS / WORKFLOW
+- Configure Replit so that running “Build” executes:
+  npm run build:replit
+- Add a second run command “Package” that executes:
+  npm run zip:wporg
+- Confirm that after “Package” you can download the produced zip and it contains:
+  rain-os-ai-readability-optimizer/
+    rain-os-aeo-analyzer.php (or main plugin file)
+    build/gutenberg-sidebar.js
+    build/gutenberg-sidebar.css
+    build/gutenberg-sidebar.asset.php
+    includes/...
+    readme.txt
+  and does NOT contain node_modules.
+
+E) OUTPUT
+- Implement the files and edits above.
+- Then print:
+  1) the exact shell commands to run in Replit to rebuild and package
+  2) the resulting folder tree (showing build/ exists)
+  3) confirmation checklist: sidebar should now appear because build/gutenberg-sidebar.asset.php exists.
+
+IMPORTANT CONSTRAINTS
+- Do not modify the plugin’s UI behavior.
+- Do not change any WordPress/PHP enqueue logic except to fix missing build artifacts (prefer leaving PHP untouched).
+- Keep everything backward-compatible.

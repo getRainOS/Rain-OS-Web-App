@@ -1,7 +1,7 @@
 modules = ["php-8.2", "nodejs-20"]
 [nix]
 channel = "stable-25_05"
-packages = ["unzip"]
+packages = ["unzip", "zip"]
 
 [agent]
 expertMode = true
@@ -18,6 +18,10 @@ author = "agent"
 task = "workflow.run"
 args = "Dashboard Preview"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Build Plugin"
+
 [[workflows.workflow]]
 name = "Dashboard Preview"
 author = "agent"
@@ -29,6 +33,17 @@ outputType = "webview"
 task = "shell.exec"
 args = "cd \"rain OS AI Readability Optimizer/dashboard-preview\" && npm run dev"
 waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Build Plugin"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd \"rain OS AI Readability Optimizer/rain-os-aeo-analyzer\" && npm run build:replit"
+
+[workflows.workflow.metadata]
+outputType = "console"
 
 [[ports]]
 localPort = 5000

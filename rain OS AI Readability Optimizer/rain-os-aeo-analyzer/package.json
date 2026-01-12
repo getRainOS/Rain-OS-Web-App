@@ -4,6 +4,10 @@
   "description": "rain OS AI Readability Optimizer - WordPress Plugin Build",
   "scripts": {
     "build": "webpack --mode production",
+    "build:clean": "rm -rf build",
+    "build:replit": "bash scripts/replit-build.sh",
+    "zip:wporg": "node scripts/zip-wporg.js",
+    "package": "npm run build:replit && npm run zip:wporg",
     "dev": "webpack --mode development --watch",
     "start": "webpack --mode development --watch",
     "lint:js": "eslint src/**/*.{ts,tsx}",
