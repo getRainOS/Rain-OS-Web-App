@@ -1,0 +1,186 @@
+import { useState, useCallback } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
+import apiFetch from '@wordpress/api-fetch';
+import { refreshBackendAnalysis } from './useAIReadiness';
+
+export const useContentAnalysis = (postId, title, content) => {
+  const [analysisData, setAnalysisData] = useState(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [statusMessage, setStatusMessage] = useState(null);
+  const [isCommitting, setIsCommitting] = useState(false);
+  const [commitStatus, setCommitStatus] = useState(null);
+
+  const analyzeContent = useCallback(async () => {
+    if (!content || content.trim().length < 50) {
+      setStatusMessage({
+        type: 'error',
+        message: __('Please add more content before analyzing (minimum 50 characters).', 'ai-readability-optimizer'),
+      });
+      return;
+    }
+
+    setIsAnalyzing(true);
+    setStatusMessage({
+      type: 'info',
+      message: __('Analyzing your content...', 'ai-readability-optimizer'),
+    });
+
+    try {
+      const response = await apiFetch({
+        path: '/ai-readability/v1/analyze',
+        method: 'POST',
+        data: {
+          post_id: postId,
+          title: title,
+          content: content,
+        },
+      });
+
+      if (response.success && response.data) {
+        setAnalysisData({
+          overallScore: response.data.overall_score || 0,
+          pillars: {
+            aiReadability: {
+              score: response.data.ai_readability || 0,
+              label: 'AI Readability',
+              color: '#22d3ee',
+            },
+            digitalAuthority: {
+              score: response.data.digital_authority || 0,
+              label: 'Digital Authority',
+              color: '#10b981',
+            },
+            conversionReadiness: {
+              score: response.data.conversion_readiness || 0,
+              label: 'Conversion Readiness',
+              color: '#a855f7',
+            },
+          },
+          subScores: response.data.sub_scores || {},
+          recommendations: response.data.recommendations || [],
+        });
+
+        setStatusMessage({
+          type: 'success',
+          message: __('Analysis complete!', 'ai-readability-optimizer'),
+        });
+
+        setTimeout(() => setStatusMessage(null), 3000);
+
+        refreshBackendAnalysis(
+          postId,
+          response.data.recommendations || [],
+          setAnalysisData
+        );
+      } else {
+        throw new Error(response.message || 'Analysis failed');
+      }
+    } catch (error) {
+      setStatusMessage({
+        type: 'error',
+        message: error.message || __('Failed to analyze content. Please try again.', 'ai-readability-optimizer'),
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
+  }, [postId, title, content]);
+
+  const commitContent = useCallback(async () => {
+    if (!content || content.trim().length < 50) {
+      setCommitStatus({
+        type: 'error',
+        message: __('Please add more content before committing.', 'ai-readability-optimizer'),
+      });
+      return;
+    }
+
+    setIsCommitting(true);
+    setCommitStatus({
+      type: 'info',
+      message: __('Committing content...', 'ai-readability-optimizer'),
+    });
+
+    try {
+      const response = await apiFetch({
+        path: '/ai-readability/v1/normalize',
+        method: 'POST',
+        data: {
+          post_id: postId,
+          title: title,
+          content: content,
+        },
+      });
+
+      if (response.success) {
+        setCommitStatus({
+          type: 'info',
+          message: __('Processing...', 'ai-readability-optimizer'),
+        });
+
+        let attempts = 0;
+        const maxAttempts = 10;
+        const pollInterval = setInterval(async () => {
+          attempts++;
+          try {
+            const statusResponse = await apiFetch({
+              path: `/ai-readability/v1/normalize/status/${response.task_id}`,
+            });
+
+            if (statusResponse.status === 'complete') {
+              clearInterval(pollInterval);
+              setCommitStatus({
+                type: 'success',
+                message: __('Content committed successfully!', 'ai-readability-optimizer'),
+              });
+              setIsCommitting(false);
+              setTimeout(() => setCommitStatus(null), 3000);
+
+              refreshBackendAnalysis(
+                postId,
+                analysisData?.recommendations || [],
+                setAnalysisData
+              );
+            } else if (statusResponse.status === 'failed') {
+              clearInterval(pollInterval);
+              setCommitStatus({
+                type: 'error',
+                message: statusResponse.message || __('Commit failed.', 'ai-readability-optimizer'),
+              });
+              setIsCommitting(false);
+            } else if (attempts >= maxAttempts) {
+              clearInterval(pollInterval);
+              setCommitStatus({
+                type: 'success',
+                message: __('Content queued for processing.', 'ai-readability-optimizer'),
+              });
+              setIsCommitting(false);
+            }
+          } catch (pollError) {
+            if (attempts >= maxAttempts) {
+              clearInterval(pollInterval);
+              setIsCommitting(false);
+            }
+          }
+        }, 2000);
+      } else {
+        throw new Error(response.message || 'Commit failed');
+      }
+    } catch (error) {
+      setCommitStatus({
+        type: 'error',
+        message: error.message || __('Failed to commit content.', 'ai-readability-optimizer'),
+      });
+      setIsCommitting(false);
+    }
+  }, [postId, title, content, analysisData]);
+
+  return {
+    analysisData,
+    isAnalyzing,
+    analyzeContent,
+    statusMessage,
+    commitContent,
+    isCommitting,
+    commitStatus,
+  };
+};

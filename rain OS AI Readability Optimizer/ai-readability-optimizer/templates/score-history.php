@@ -1,0 +1,123 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
+global $wpdb;
+$table_name = $wpdb->prefix . 'ai_readability_analysis_history';
+$period = isset( $_GET['period'] ) ? absint( $_GET['period'] ) : 30;
+$date_limit = gmdate( 'Y-m-d H:i:s', strtotime( "-{$period} days" ) );
+
+$analysis_data = $wpdb->get_results(
+    $wpdb->prepare(
+        "SELECT h.*, p.post_title, p.post_name 
+        FROM {$table_name} h 
+        LEFT JOIN {$wpdb->posts} p ON h.post_id = p.ID 
+        WHERE h.analyzed_at >= %s 
+        ORDER BY h.analyzed_at DESC",
+        $date_limit
+    ),
+    ARRAY_A
+);
+
+function ai_readability_score_class( $score ) {
+    if ( $score >= 80 ) {
+        return 'green';
+    } elseif ( $score >= 65 ) {
+        return 'yellow';
+    }
+    return 'red';
+}
+?>
+
+<div class="rain-os-wrap">
+    <div class="rain-os-header">
+        <div class="rain-os-header-content">
+            <div class="rain-os-logo">
+                <span class="rain-os-title"><span class="rain-white">r</span><span class="rain-blue">ai</span><span class="rain-white">n</span></span>
+                <span class="rain-os-badge"><?php esc_html_e( 'Score History', 'ai-readability-optimizer' ); ?></span>
+            </div>
+            <div class="rain-os-header-actions">
+                <div class="rain-os-period-select">
+                    <select id="rain-os-period">
+                        <option value="7" <?php selected( $period, 7 ); ?>><?php esc_html_e( 'Last 7 Days', 'ai-readability-optimizer' ); ?></option>
+                        <option value="30" <?php selected( $period, 30 ); ?>><?php esc_html_e( 'Last 30 Days', 'ai-readability-optimizer' ); ?></option>
+                        <option value="90" <?php selected( $period, 90 ); ?>><?php esc_html_e( 'Last 90 Days', 'ai-readability-optimizer' ); ?></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="rain-os-content">
+        <header class="rain-os-page-header">
+            <h1><?php esc_html_e( 'Score History', 'ai-readability-optimizer' ); ?></h1>
+            <p><?php esc_html_e( 'Breakdown of post pillar scores', 'ai-readability-optimizer' ); ?></p>
+        </header>
+
+        <div class="rain-os-chart-card">
+            <div class="rain-os-chart-header">
+                <h3><?php esc_html_e( 'Score Details', 'ai-readability-optimizer' ); ?></h3>
+                <span class="rain-os-chart-period"><?php 
+                    printf( 
+                        esc_html__( 'Last %d Days', 'ai-readability-optimizer' ), 
+                        $period 
+                    ); 
+                ?></span>
+            </div>
+            <div class="rain-os-chart-body">
+                <?php if ( ! empty( $analysis_data ) ) : ?>
+                <table class="rain-os-table rain-os-score-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th><?php esc_html_e( 'Title', 'ai-readability-optimizer' ); ?></th>
+                            <th><?php esc_html_e( 'Overall Score', 'ai-readability-optimizer' ); ?></th>
+                            <th><?php esc_html_e( 'AI Readability', 'ai-readability-optimizer' ); ?></th>
+                            <th><?php esc_html_e( 'Digital Authority', 'ai-readability-optimizer' ); ?></th>
+                            <th><?php esc_html_e( 'Conversion', 'ai-readability-optimizer' ); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        $count = 0;
+                        foreach ( $analysis_data as $item ) : 
+                            $count++;
+                            $avg_score = round( ( intval( $item['ai_readability'] ) + intval( $item['digital_authority'] ) + intval( $item['conversion_readiness'] ) ) / 3 );
+                        ?>
+                        <tr>
+                            <td class="rain-os-row-num"><?php echo esc_html( $count ); ?></td>
+                            <td>
+                                <div class="rain-os-post-title"><?php echo esc_html( $item['post_title'] ? $item['post_title'] : __( 'Untitled', 'ai-readability-optimizer' ) ); ?></div>
+                                <div class="rain-os-post-slug">/<?php echo esc_html( $item['post_name'] ? $item['post_name'] : '' ); ?>/</div>
+                            </td>
+                            <td class="rain-os-score-cell">
+                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( ai_readability_score_class( $avg_score ) ); ?>"></span>
+                                <span class="rain-os-score-value"><?php echo esc_html( $avg_score ); ?></span>
+                            </td>
+                            <td class="rain-os-score-cell">
+                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( ai_readability_score_class( intval( $item['ai_readability'] ) ) ); ?>"></span>
+                                <span class="rain-os-score-value"><?php echo esc_html( $item['ai_readability'] ); ?></span>
+                            </td>
+                            <td class="rain-os-score-cell">
+                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( ai_readability_score_class( intval( $item['digital_authority'] ) ) ); ?>"></span>
+                                <span class="rain-os-score-value"><?php echo esc_html( $item['digital_authority'] ); ?></span>
+                            </td>
+                            <td class="rain-os-score-cell">
+                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( ai_readability_score_class( intval( $item['conversion_readiness'] ) ) ); ?>"></span>
+                                <span class="rain-os-score-value"><?php echo esc_html( $item['conversion_readiness'] ); ?></span>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <?php else : ?>
+                <div class="rain-os-empty-state">
+                    <span class="dashicons dashicons-chart-area"></span>
+                    <p><?php esc_html_e( 'No score history available for this period.', 'ai-readability-optimizer' ); ?></p>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>

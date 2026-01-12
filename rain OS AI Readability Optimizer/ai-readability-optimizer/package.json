@@ -1,0 +1,41 @@
+{
+  "name": "ai-readability-optimizer",
+  "version": "1.0.0",
+  "description": "AI Readability Optimizer - WordPress Plugin Build",
+  "scripts": {
+    "build": "webpack --mode production",
+    "build:clean": "rm -rf build",
+    "build:replit": "bash scripts/replit-build.sh",
+    "zip:wporg": "node scripts/zip-wporg.js",
+    "package": "npm run build:replit && npm run zip:wporg",
+    "dev": "webpack --mode development --watch",
+    "start": "webpack --mode development --watch",
+    "lint:js": "eslint src/**/*.{ts,tsx}",
+    "format": "prettier --write src/**/*.{ts,tsx}"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/preset-react": "^7.28.5",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@wordpress/dependency-extraction-webpack-plugin": "^5.0.0",
+    "babel-loader": "^10.0.0",
+    "css-loader": "^6.8.1",
+    "mini-css-extract-plugin": "^2.7.6",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "@wordpress/api-fetch": "^6.44.0",
+    "@wordpress/components": "^27.0.0",
+    "@wordpress/compose": "^6.0.0",
+    "@wordpress/data": "^9.0.0",
+    "@wordpress/edit-post": "^7.0.0",
+    "@wordpress/element": "^5.0.0",
+    "@wordpress/i18n": "^4.0.0",
+    "@wordpress/icons": "^9.0.0",
+    "@wordpress/plugins": "^6.0.0"
+  }
+}
