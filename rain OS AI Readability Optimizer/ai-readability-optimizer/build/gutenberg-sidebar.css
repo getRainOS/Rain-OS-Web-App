@@ -13,27 +13,27 @@
   --rain-os-border: #334155;
 }
 
-.rain-os-aeo-sidebar {
+.ai-readability-sidebar {
   background-color: var(--rain-os-bg-primary) !important;
 }
 
-.rain-os-aeo-sidebar .components-panel {
+.ai-readability-sidebar .components-panel {
   background-color: var(--rain-os-bg-primary);
   border: none;
 }
 
-.rain-os-aeo-sidebar .components-panel__body {
+.ai-readability-sidebar .components-panel__body {
   background-color: var(--rain-os-bg-secondary);
   border: 1px solid var(--rain-os-border);
   border-radius: 8px;
   margin: 8px;
 }
 
-.rain-os-aeo-sidebar .components-panel__body-title button {
+.ai-readability-sidebar .components-panel__body-title button {
   color: var(--rain-os-text-primary);
 }
 
-.rain-os-aeo-sidebar .components-panel__body-title button:hover {
+.ai-readability-sidebar .components-panel__body-title button:hover {
   color: var(--rain-os-accent);
 }
 
