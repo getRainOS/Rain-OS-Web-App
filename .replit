@@ -22,6 +22,10 @@ args = "Dashboard Preview"
 task = "workflow.run"
 args = "Build Plugin"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Package Plugin"
+
 [[workflows.workflow]]
 name = "Dashboard Preview"
 author = "agent"
@@ -41,6 +45,17 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd \"rain OS AI Readability Optimizer/rain-os-aeo-analyzer\" && npm run build:replit"
+
+[workflows.workflow.metadata]
+outputType = "console"
+
+[[workflows.workflow]]
+name = "Package Plugin"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd \"rain OS AI Readability Optimizer/rain-os-aeo-analyzer\" && npm run zip:wporg"
 
 [workflows.workflow.metadata]
 outputType = "console"
