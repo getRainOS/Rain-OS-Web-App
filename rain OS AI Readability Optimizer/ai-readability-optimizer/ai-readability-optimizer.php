@@ -9,7 +9,6 @@
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: ai-readability-optimizer
- * Domain Path: /languages
  * Requires at least: 5.8
  * Requires PHP: 7.4
  */
@@ -75,8 +74,6 @@ final class AI_Readability_Analyzer {
     private function init_hooks() {
         register_activation_hook( __FILE__, array( $this, 'activate' ) );
         register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
-
-        add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 
         add_action( 'save_post', array( $this, 'handle_post_save_normalize' ), 99, 3 );
     }
@@ -144,14 +141,6 @@ final class AI_Readability_Analyzer {
 
     public function deactivate() {
         flush_rewrite_rules();
-    }
-
-    public function load_textdomain() {
-        load_plugin_textdomain(
-            'ai-readability-optimizer',
-            false,
-            dirname( AI_READABILITY_PLUGIN_BASENAME ) . '/languages'
-        );
     }
 
     public function get_api_client() {
