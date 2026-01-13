@@ -137,7 +137,7 @@ class AI_Readability_Gutenberg {
             ), 200 );
         }
 
-        $response = wp_remote_post( AI_READABILITY_API_URL . '/analyze', array(
+        $response = wp_remote_post( trailingslashit( AI_READABILITY_API_URL ) . 'api/analyze', array(
             'headers' => array(
                 'Authorization' => 'Bearer ' . $api_key,
                 'Content-Type'  => 'application/json',
@@ -402,7 +402,7 @@ class AI_Readability_Gutenberg {
             return $this->mock_quick_action( $action, $content, $title );
         }
 
-        $response = wp_remote_post( AI_READABILITY_API_URL . '/analyze', array(
+        $response = wp_remote_post( trailingslashit( AI_READABILITY_API_URL ) . 'api/analyze', array(
             'headers' => array(
                 'Authorization' => 'Bearer ' . $api_key,
                 'Content-Type'  => 'application/json',
