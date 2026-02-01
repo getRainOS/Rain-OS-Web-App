@@ -25,7 +25,7 @@ class AI_Readability_API_Client {
 
     private function make_request( $endpoint, $method = 'GET', $body = array() ) {
         if ( empty( $this->api_key ) ) {
-            return new WP_Error( 'no_api_key', __( 'API key is not configured. Please add your API key in Settings.', 'ai-readability-optimizer' ) );
+            return new WP_Error( 'no_api_key', __( 'API key is not configured. Please add your API key in Settings.', 'rain-os-ai-readability-optimizer' ) );
         }
 
         $url = trailingslashit( $this->api_url ) . 'api/' . ltrim( $endpoint, '/' );
@@ -57,24 +57,24 @@ class AI_Readability_API_Client {
         }
 
         if ( 401 === $status_code ) {
-            return new WP_Error( 'unauthorized', __( 'Invalid or missing API key. Please check your API key in Settings.', 'ai-readability-optimizer' ), array( 'status' => 401 ) );
+            return new WP_Error( 'unauthorized', __( 'Invalid or missing API key. Please check your API key in Settings.', 'rain-os-ai-readability-optimizer' ), array( 'status' => 401 ) );
         }
 
         if ( 402 === $status_code ) {
-            return new WP_Error( 'payment_required', __( 'Your subscription is not active. Please upgrade your plan at https://app.getrainos.com/#/login', 'ai-readability-optimizer' ), array( 'status' => 402 ) );
+            return new WP_Error( 'payment_required', __( 'Your subscription is not active. Please upgrade your plan at https://app.getrainos.com/#/login', 'rain-os-ai-readability-optimizer' ), array( 'status' => 402 ) );
         }
 
         if ( 429 === $status_code ) {
-            return new WP_Error( 'rate_limit_exceeded', __( 'You have reached your usage limit. Please upgrade your plan for more analyses.', 'ai-readability-optimizer' ), array( 'status' => 429 ) );
+            return new WP_Error( 'rate_limit_exceeded', __( 'You have reached your usage limit. Please upgrade your plan for more analyses.', 'rain-os-ai-readability-optimizer' ), array( 'status' => 429 ) );
         }
 
         if ( 400 === $status_code ) {
-            $message = isset( $data['message'] ) ? $data['message'] : __( 'Missing required parameters.', 'ai-readability-optimizer' );
+            $message = isset( $data['message'] ) ? $data['message'] : __( 'Missing required parameters.', 'rain-os-ai-readability-optimizer' );
             return new WP_Error( 'bad_request', $message, array( 'status' => 400 ) );
         }
 
         if ( $status_code < 200 || $status_code >= 300 ) {
-            $message = isset( $data['message'] ) ? $data['message'] : __( 'API request failed.', 'ai-readability-optimizer' );
+            $message = isset( $data['message'] ) ? $data['message'] : __( 'API request failed.', 'rain-os-ai-readability-optimizer' );
             return new WP_Error( 'api_error', $message, array( 'status' => $status_code ) );
         }
 
@@ -217,7 +217,7 @@ class AI_Readability_API_Client {
                 $sentence = isset( $options['sentence'] ) ? $options['sentence'] : $content;
                 return $this->rewrite_sentence( $sentence );
             default:
-                return new WP_Error( 'invalid_tool', __( 'Invalid tool specified.', 'ai-readability-optimizer' ) );
+                return new WP_Error( 'invalid_tool', __( 'Invalid tool specified.', 'rain-os-ai-readability-optimizer' ) );
         }
     }
 

@@ -31,13 +31,13 @@ class AI_Readability_Ajax {
 
     private function verify_nonce() {
         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'ai_readability_aeo_nonce' ) ) {
-            wp_send_json_error( array( 'message' => __( 'Security check failed.', 'ai-readability-optimizer' ) ) );
+            wp_send_json_error( array( 'message' => __( 'Security check failed.', 'rain-os-ai-readability-optimizer' ) ) );
         }
     }
 
     private function check_capability( $capability = 'edit_posts' ) {
         if ( ! current_user_can( $capability ) ) {
-            wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'ai-readability-optimizer' ) ) );
+            wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'rain-os-ai-readability-optimizer' ) ) );
         }
     }
 
@@ -51,7 +51,7 @@ class AI_Readability_Ajax {
         $post_id  = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
 
         if ( empty( $content ) ) {
-            wp_send_json_error( array( 'message' => __( 'Content is required.', 'ai-readability-optimizer' ) ) );
+            wp_send_json_error( array( 'message' => __( 'Content is required.', 'rain-os-ai-readability-optimizer' ) ) );
         }
 
         $full_content = $title ? $title . "\n\n" . $content : $content;
@@ -104,7 +104,7 @@ class AI_Readability_Ajax {
         $post_id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
 
         if ( ! $post_id ) {
-            wp_send_json_error( array( 'message' => __( 'Post ID is required.', 'ai-readability-optimizer' ) ) );
+            wp_send_json_error( array( 'message' => __( 'Post ID is required.', 'rain-os-ai-readability-optimizer' ) ) );
         }
 
         global $wpdb;
@@ -122,7 +122,7 @@ class AI_Readability_Ajax {
             $result['analysis_data'] = json_decode( $result['analysis_data'], true );
             wp_send_json_success( $result );
         } else {
-            wp_send_json_error( array( 'message' => __( 'No analysis found for this post.', 'ai-readability-optimizer' ) ) );
+            wp_send_json_error( array( 'message' => __( 'No analysis found for this post.', 'rain-os-ai-readability-optimizer' ) ) );
         }
     }
 
@@ -315,7 +315,7 @@ class AI_Readability_Ajax {
         $post_id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
 
         if ( ! $post_id ) {
-            wp_send_json_error( array( 'message' => __( 'Post ID is required.', 'ai-readability-optimizer' ) ) );
+            wp_send_json_error( array( 'message' => __( 'Post ID is required.', 'rain-os-ai-readability-optimizer' ) ) );
         }
 
         global $wpdb;
@@ -333,7 +333,7 @@ class AI_Readability_Ajax {
             $data = json_decode( $result['analysis_data'], true );
             wp_send_json_success( $data );
         } else {
-            wp_send_json_error( array( 'message' => __( 'No analysis data found.', 'ai-readability-optimizer' ) ) );
+            wp_send_json_error( array( 'message' => __( 'No analysis data found.', 'rain-os-ai-readability-optimizer' ) ) );
         }
     }
 
@@ -345,13 +345,13 @@ class AI_Readability_Ajax {
         $content = isset( $_POST['content'] ) ? wp_kses_post( wp_unslash( $_POST['content'] ) ) : '';
 
         if ( empty( $tool ) || empty( $content ) ) {
-            wp_send_json_error( array( 'message' => __( 'Tool and content are required.', 'ai-readability-optimizer' ) ) );
+            wp_send_json_error( array( 'message' => __( 'Tool and content are required.', 'rain-os-ai-readability-optimizer' ) ) );
         }
 
         $valid_tools = array( 'title_suggestion', 'meta_description', 'summarize', 'rewrite' );
 
         if ( ! in_array( $tool, $valid_tools, true ) ) {
-            wp_send_json_error( array( 'message' => __( 'Invalid tool specified.', 'ai-readability-optimizer' ) ) );
+            wp_send_json_error( array( 'message' => __( 'Invalid tool specified.', 'rain-os-ai-readability-optimizer' ) ) );
         }
 
         $options = array();
@@ -428,14 +428,14 @@ class AI_Readability_Ajax {
         $content_id = isset( $_POST['content_id'] ) ? sanitize_text_field( wp_unslash( $_POST['content_id'] ) ) : '';
 
         if ( empty( $content_id ) ) {
-            wp_send_json_error( array( 'message' => __( 'Content ID is required.', 'ai-readability-optimizer' ) ) );
+            wp_send_json_error( array( 'message' => __( 'Content ID is required.', 'rain-os-ai-readability-optimizer' ) ) );
         }
 
         $ai_backend = new AI_Readability_AI_Backend();
         $scores     = $ai_backend->get_content_scores( $content_id );
 
         if ( null === $scores ) {
-            wp_send_json_error( array( 'message' => __( 'Scores unavailable.', 'ai-readability-optimizer' ) ) );
+            wp_send_json_error( array( 'message' => __( 'Scores unavailable.', 'rain-os-ai-readability-optimizer' ) ) );
         }
 
         wp_send_json_success( $scores );
@@ -456,7 +456,7 @@ class AI_Readability_Ajax {
         $ai_backend = new AI_Readability_AI_Backend();
 
         if ( ! $ai_backend->check_capability() ) {
-            wp_send_json_error( array( 'message' => __( 'AI backend is not available.', 'ai-readability-optimizer' ) ) );
+            wp_send_json_error( array( 'message' => __( 'AI backend is not available.', 'rain-os-ai-readability-optimizer' ) ) );
         }
 
         $result = $ai_backend->normalize_content( $content_id, array(
@@ -467,10 +467,10 @@ class AI_Readability_Ajax {
         if ( $result ) {
             wp_send_json_success( array(
                 'content_id' => $content_id,
-                'message'    => __( 'Content sent for normalization.', 'ai-readability-optimizer' ),
+                'message'    => __( 'Content sent for normalization.', 'rain-os-ai-readability-optimizer' ),
             ) );
         } else {
-            wp_send_json_error( array( 'message' => __( 'Failed to normalize content.', 'ai-readability-optimizer' ) ) );
+            wp_send_json_error( array( 'message' => __( 'Failed to normalize content.', 'rain-os-ai-readability-optimizer' ) ) );
         }
     }
 }

@@ -20,8 +20,8 @@ class AI_Readability_Admin {
 
     public function add_admin_menu() {
         add_menu_page(
-            __( 'Rain OS AEO', 'ai-readability-optimizer' ),
-            __( 'Rain OS', 'ai-readability-optimizer' ),
+            __( 'Rain OS AEO', 'rain-os-ai-readability-optimizer' ),
+            __( 'Rain OS', 'rain-os-ai-readability-optimizer' ),
             'edit_posts',
             'ai-readability',
             array( $this, 'render_learn_page' ),
@@ -31,8 +31,8 @@ class AI_Readability_Admin {
 
         add_submenu_page(
             'ai-readability',
-            __( 'Learn About AI Readability', 'ai-readability-optimizer' ),
-            __( 'Learn AI Readability', 'ai-readability-optimizer' ),
+            __( 'Learn About AI Readability', 'rain-os-ai-readability-optimizer' ),
+            __( 'Learn AI Readability', 'rain-os-ai-readability-optimizer' ),
             'edit_posts',
             'ai-readability-learn',
             array( $this, 'render_learn_page' )
@@ -40,8 +40,8 @@ class AI_Readability_Admin {
 
         add_submenu_page(
             'ai-readability',
-            __( 'Dashboard', 'ai-readability-optimizer' ),
-            __( 'Dashboard', 'ai-readability-optimizer' ),
+            __( 'Dashboard', 'rain-os-ai-readability-optimizer' ),
+            __( 'Dashboard', 'rain-os-ai-readability-optimizer' ),
             'edit_posts',
             'ai-readability-dashboard',
             array( $this, 'render_admin_page' )
@@ -49,17 +49,17 @@ class AI_Readability_Admin {
 
         add_submenu_page(
             'ai-readability',
-            __( 'Content Analyzer', 'ai-readability-optimizer' ),
-            __( 'Content Analyzer', 'ai-readability-optimizer' ),
+            __( 'Content Analyzer', 'rain-os-ai-readability-optimizer' ),
+            __( 'Content Analyzer', 'rain-os-ai-readability-optimizer' ),
             'edit_posts',
-            'ai-readability-optimizer',
+            'rain-os-ai-readability-optimizer',
             array( $this, 'render_analyzer_page' )
         );
 
         add_submenu_page(
             'ai-readability',
-            __( 'Score History', 'ai-readability-optimizer' ),
-            __( 'Score History', 'ai-readability-optimizer' ),
+            __( 'Score History', 'rain-os-ai-readability-optimizer' ),
+            __( 'Score History', 'rain-os-ai-readability-optimizer' ),
             'edit_posts',
             'ai-readability-history',
             array( $this, 'render_history_page' )
@@ -67,8 +67,8 @@ class AI_Readability_Admin {
 
         add_submenu_page(
             'ai-readability',
-            __( 'Pillar Breakdown', 'ai-readability-optimizer' ),
-            __( 'Pillar Breakdown', 'ai-readability-optimizer' ),
+            __( 'Pillar Breakdown', 'rain-os-ai-readability-optimizer' ),
+            __( 'Pillar Breakdown', 'rain-os-ai-readability-optimizer' ),
             'edit_posts',
             'ai-readability-pillars',
             array( $this, 'render_pillars_page' )
@@ -76,8 +76,8 @@ class AI_Readability_Admin {
 
         add_submenu_page(
             'ai-readability',
-            __( 'Content Signals', 'ai-readability-optimizer' ),
-            __( 'Content Signals', 'ai-readability-optimizer' ),
+            __( 'Content Signals', 'rain-os-ai-readability-optimizer' ),
+            __( 'Content Signals', 'rain-os-ai-readability-optimizer' ),
             'edit_posts',
             'ai-readability-signals',
             array( $this, 'render_signals_page' )
@@ -85,8 +85,8 @@ class AI_Readability_Admin {
 
         add_submenu_page(
             'ai-readability',
-            __( 'Documentation', 'ai-readability-optimizer' ),
-            __( 'Documentation', 'ai-readability-optimizer' ),
+            __( 'Documentation', 'rain-os-ai-readability-optimizer' ),
+            __( 'Documentation', 'rain-os-ai-readability-optimizer' ),
             'edit_posts',
             'ai-readability-docs',
             array( $this, 'render_docs_page' )
@@ -94,8 +94,8 @@ class AI_Readability_Admin {
 
         add_submenu_page(
             'ai-readability',
-            __( 'Upgrade', 'ai-readability-optimizer' ),
-            __( 'Upgrade', 'ai-readability-optimizer' ),
+            __( 'Upgrade', 'rain-os-ai-readability-optimizer' ),
+            __( 'Upgrade', 'rain-os-ai-readability-optimizer' ),
             'manage_options',
             'ai-readability-upgrade',
             array( $this, 'render_upgrade_page' )
@@ -103,8 +103,8 @@ class AI_Readability_Admin {
 
         add_submenu_page(
             'ai-readability',
-            __( 'Settings', 'ai-readability-optimizer' ),
-            __( 'Settings', 'ai-readability-optimizer' ),
+            __( 'Settings', 'rain-os-ai-readability-optimizer' ),
+            __( 'Settings', 'rain-os-ai-readability-optimizer' ),
             'manage_options',
             'ai-readability-settings',
             array( $this, 'render_settings_page' )
@@ -123,63 +123,63 @@ class AI_Readability_Admin {
 
     public function render_learn_page() {
         if ( ! current_user_can( 'edit_posts' ) ) {
-            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'ai-readability-optimizer' ) );
+            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-ai-readability-optimizer' ) );
         }
         include AI_READABILITY_PLUGIN_DIR . 'templates/learn-ai-readability.php';
     }
 
     public function render_admin_page() {
         if ( ! current_user_can( 'edit_posts' ) ) {
-            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'ai-readability-optimizer' ) );
+            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-ai-readability-optimizer' ) );
         }
         include AI_READABILITY_PLUGIN_DIR . 'templates/dashboard.php';
     }
 
     public function render_analyzer_page() {
         if ( ! current_user_can( 'edit_posts' ) ) {
-            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'ai-readability-optimizer' ) );
+            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-ai-readability-optimizer' ) );
         }
         include AI_READABILITY_PLUGIN_DIR . 'templates/content-analyzer.php';
     }
 
     public function render_history_page() {
         if ( ! current_user_can( 'edit_posts' ) ) {
-            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'ai-readability-optimizer' ) );
+            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-ai-readability-optimizer' ) );
         }
         include AI_READABILITY_PLUGIN_DIR . 'templates/score-history.php';
     }
 
     public function render_pillars_page() {
         if ( ! current_user_can( 'edit_posts' ) ) {
-            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'ai-readability-optimizer' ) );
+            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-ai-readability-optimizer' ) );
         }
         include AI_READABILITY_PLUGIN_DIR . 'templates/pillar-breakdown.php';
     }
 
     public function render_signals_page() {
         if ( ! current_user_can( 'edit_posts' ) ) {
-            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'ai-readability-optimizer' ) );
+            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-ai-readability-optimizer' ) );
         }
         include AI_READABILITY_PLUGIN_DIR . 'templates/content-signals.php';
     }
 
     public function render_docs_page() {
         if ( ! current_user_can( 'edit_posts' ) ) {
-            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'ai-readability-optimizer' ) );
+            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-ai-readability-optimizer' ) );
         }
         include AI_READABILITY_PLUGIN_DIR . 'templates/documentation.php';
     }
 
     public function render_upgrade_page() {
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'ai-readability-optimizer' ) );
+            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-ai-readability-optimizer' ) );
         }
         include AI_READABILITY_PLUGIN_DIR . 'templates/upgrade.php';
     }
 
     public function render_settings_page() {
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'ai-readability-optimizer' ) );
+            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-ai-readability-optimizer' ) );
         }
         include AI_READABILITY_PLUGIN_DIR . 'templates/settings.php';
     }

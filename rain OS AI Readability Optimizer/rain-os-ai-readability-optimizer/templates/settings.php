@@ -17,12 +17,12 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
         <div class="rain-os-header-content">
             <div class="rain-os-logo">
                 <span class="rain-os-title"><span class="rain-white">r</span><span class="rain-blue">ai</span><span class="rain-white">n</span></span>
-                <span class="rain-os-badge"><?php esc_html_e( 'Settings', 'ai-readability-optimizer' ); ?></span>
+                <span class="rain-os-badge"><?php esc_html_e( 'Settings', 'rain-os-ai-readability-optimizer' ); ?></span>
             </div>
             <div class="rain-os-header-actions">
                 <a href="<?php echo esc_url( admin_url( 'admin.php?page=ai-readability-dashboard' ) ); ?>" class="rain-os-btn rain-os-btn-secondary">
                     <span class="dashicons dashicons-arrow-left-alt"></span>
-                    <?php esc_html_e( 'Back to Dashboard', 'ai-readability-optimizer' ); ?>
+                    <?php esc_html_e( 'Back to Dashboard', 'rain-os-ai-readability-optimizer' ); ?>
                 </a>
             </div>
         </div>
@@ -30,8 +30,8 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
 
     <div class="rain-os-content rain-os-settings-content">
         <header class="rain-os-page-header">
-            <h1><?php esc_html_e( 'Settings', 'ai-readability-optimizer' ); ?></h1>
-            <p><?php esc_html_e( 'Configure your AI Readability Optimizer', 'ai-readability-optimizer' ); ?></p>
+            <h1><?php esc_html_e( 'Settings', 'rain-os-ai-readability-optimizer' ); ?></h1>
+            <p><?php esc_html_e( 'Configure your AI Readability Optimizer', 'rain-os-ai-readability-optimizer' ); ?></p>
         </header>
 
         <div class="rain-os-settings-grid">
@@ -41,33 +41,33 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
 
                     <div class="rain-os-card">
                         <div class="rain-os-card-header">
-                            <h3><?php esc_html_e( 'API Configuration', 'ai-readability-optimizer' ); ?></h3>
+                            <h3><?php esc_html_e( 'API Configuration', 'rain-os-ai-readability-optimizer' ); ?></h3>
                         </div>
                         <div class="rain-os-card-body">
                             <div class="rain-os-form-group">
-                                <label for="ai_readability_api_key"><?php esc_html_e( 'API Key', 'ai-readability-optimizer' ); ?></label>
+                                <label for="ai_readability_api_key"><?php esc_html_e( 'API Key', 'rain-os-ai-readability-optimizer' ); ?></label>
                                 <div class="rain-os-input-group">
                                     <input type="password" 
                                            id="ai_readability_api_key" 
                                            name="ai_readability_api_key" 
                                            value="<?php echo esc_attr( $api_key ); ?>" 
                                            class="rain-os-input"
-                                           placeholder="<?php esc_attr_e( 'Enter your Rain OS API key...', 'ai-readability-optimizer' ); ?>"
+                                           placeholder="<?php esc_attr_e( 'Enter your Rain OS API key...', 'rain-os-ai-readability-optimizer' ); ?>"
                                            autocomplete="off" />
-                                    <button type="button" class="rain-os-btn rain-os-btn-icon rain-os-btn-toggle" id="toggle-api-key" title="<?php esc_attr_e( 'Show/Hide API Key', 'ai-readability-optimizer' ); ?>">
+                                    <button type="button" class="rain-os-btn rain-os-btn-icon rain-os-btn-toggle" id="toggle-api-key" title="<?php esc_attr_e( 'Show/Hide API Key', 'rain-os-ai-readability-optimizer' ); ?>">
                                         <span class="dashicons dashicons-visibility"></span>
-                                        <span class="rain-os-toggle-text"><?php esc_html_e( 'View', 'ai-readability-optimizer' ); ?></span>
+                                        <span class="rain-os-toggle-text"><?php esc_html_e( 'View', 'rain-os-ai-readability-optimizer' ); ?></span>
                                     </button>
                                     <button type="button" class="rain-os-btn rain-os-btn-secondary" id="test-connection">
                                         <span class="dashicons dashicons-update"></span>
-                                        <?php esc_html_e( 'Test Connection', 'ai-readability-optimizer' ); ?>
+                                        <?php esc_html_e( 'Test Connection', 'rain-os-ai-readability-optimizer' ); ?>
                                     </button>
                                 </div>
                                 <p class="rain-os-form-help">
                                     <?php 
                                     printf(
                                         wp_kses(
-                                            __( 'Get your API key from <a href="%s" target="_blank">app.getrainos.com</a>', 'ai-readability-optimizer' ),
+                                            __( 'Get your API key from <a href="%s" target="_blank">app.getrainos.com</a>', 'rain-os-ai-readability-optimizer' ),
                                             array( 'a' => array( 'href' => array(), 'target' => array() ) )
                                         ),
                                         'https://app.getrainos.com/#/login'
@@ -78,43 +78,43 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                             </div>
 
                             <div class="rain-os-form-group">
-                                <label for="ai_readability_industry"><?php esc_html_e( 'Default Industry', 'ai-readability-optimizer' ); ?></label>
+                                <label for="ai_readability_industry"><?php esc_html_e( 'Default Industry', 'rain-os-ai-readability-optimizer' ); ?></label>
                                 <select id="ai_readability_industry" name="ai_readability_industry" class="rain-os-select">
-                                    <option value="" <?php selected( $industry, '' ); ?>><?php esc_html_e( 'Select Industry...', 'ai-readability-optimizer' ); ?></option>
-                                    <option value="technology" <?php selected( $industry, 'technology' ); ?>><?php esc_html_e( 'Technology', 'ai-readability-optimizer' ); ?></option>
-                                    <option value="healthcare" <?php selected( $industry, 'healthcare' ); ?>><?php esc_html_e( 'Healthcare', 'ai-readability-optimizer' ); ?></option>
-                                    <option value="finance" <?php selected( $industry, 'finance' ); ?>><?php esc_html_e( 'Finance', 'ai-readability-optimizer' ); ?></option>
-                                    <option value="ecommerce" <?php selected( $industry, 'ecommerce' ); ?>><?php esc_html_e( 'E-commerce', 'ai-readability-optimizer' ); ?></option>
-                                    <option value="education" <?php selected( $industry, 'education' ); ?>><?php esc_html_e( 'Education', 'ai-readability-optimizer' ); ?></option>
-                                    <option value="marketing" <?php selected( $industry, 'marketing' ); ?>><?php esc_html_e( 'Marketing', 'ai-readability-optimizer' ); ?></option>
-                                    <option value="legal" <?php selected( $industry, 'legal' ); ?>><?php esc_html_e( 'Legal', 'ai-readability-optimizer' ); ?></option>
-                                    <option value="realestate" <?php selected( $industry, 'realestate' ); ?>><?php esc_html_e( 'Real Estate', 'ai-readability-optimizer' ); ?></option>
-                                    <option value="travel" <?php selected( $industry, 'travel' ); ?>><?php esc_html_e( 'Travel & Hospitality', 'ai-readability-optimizer' ); ?></option>
-                                    <option value="other" <?php selected( $industry, 'other' ); ?>><?php esc_html_e( 'Other', 'ai-readability-optimizer' ); ?></option>
+                                    <option value="" <?php selected( $industry, '' ); ?>><?php esc_html_e( 'Select Industry...', 'rain-os-ai-readability-optimizer' ); ?></option>
+                                    <option value="technology" <?php selected( $industry, 'technology' ); ?>><?php esc_html_e( 'Technology', 'rain-os-ai-readability-optimizer' ); ?></option>
+                                    <option value="healthcare" <?php selected( $industry, 'healthcare' ); ?>><?php esc_html_e( 'Healthcare', 'rain-os-ai-readability-optimizer' ); ?></option>
+                                    <option value="finance" <?php selected( $industry, 'finance' ); ?>><?php esc_html_e( 'Finance', 'rain-os-ai-readability-optimizer' ); ?></option>
+                                    <option value="ecommerce" <?php selected( $industry, 'ecommerce' ); ?>><?php esc_html_e( 'E-commerce', 'rain-os-ai-readability-optimizer' ); ?></option>
+                                    <option value="education" <?php selected( $industry, 'education' ); ?>><?php esc_html_e( 'Education', 'rain-os-ai-readability-optimizer' ); ?></option>
+                                    <option value="marketing" <?php selected( $industry, 'marketing' ); ?>><?php esc_html_e( 'Marketing', 'rain-os-ai-readability-optimizer' ); ?></option>
+                                    <option value="legal" <?php selected( $industry, 'legal' ); ?>><?php esc_html_e( 'Legal', 'rain-os-ai-readability-optimizer' ); ?></option>
+                                    <option value="realestate" <?php selected( $industry, 'realestate' ); ?>><?php esc_html_e( 'Real Estate', 'rain-os-ai-readability-optimizer' ); ?></option>
+                                    <option value="travel" <?php selected( $industry, 'travel' ); ?>><?php esc_html_e( 'Travel & Hospitality', 'rain-os-ai-readability-optimizer' ); ?></option>
+                                    <option value="other" <?php selected( $industry, 'other' ); ?>><?php esc_html_e( 'Other', 'rain-os-ai-readability-optimizer' ); ?></option>
                                 </select>
-                                <p class="rain-os-form-help"><?php esc_html_e( 'Industry context helps the AI provide more relevant and accurate analysis for your content.', 'ai-readability-optimizer' ); ?></p>
+                                <p class="rain-os-form-help"><?php esc_html_e( 'Industry context helps the AI provide more relevant and accurate analysis for your content.', 'rain-os-ai-readability-optimizer' ); ?></p>
                             </div>
 
                             <div class="rain-os-form-group">
-                                <label for="ai_readability_cache_time"><?php esc_html_e( 'Cache Duration', 'ai-readability-optimizer' ); ?></label>
+                                <label for="ai_readability_cache_time"><?php esc_html_e( 'Cache Duration', 'rain-os-ai-readability-optimizer' ); ?></label>
                                 <select id="ai_readability_cache_time" name="ai_readability_cache_time" class="rain-os-select">
-                                    <option value="1800" <?php selected( $cache_time, 1800 ); ?>><?php esc_html_e( '30 minutes', 'ai-readability-optimizer' ); ?></option>
-                                    <option value="3600" <?php selected( $cache_time, 3600 ); ?>><?php esc_html_e( '1 hour', 'ai-readability-optimizer' ); ?></option>
-                                    <option value="7200" <?php selected( $cache_time, 7200 ); ?>><?php esc_html_e( '2 hours', 'ai-readability-optimizer' ); ?></option>
-                                    <option value="86400" <?php selected( $cache_time, 86400 ); ?>><?php esc_html_e( '24 hours', 'ai-readability-optimizer' ); ?></option>
+                                    <option value="1800" <?php selected( $cache_time, 1800 ); ?>><?php esc_html_e( '30 minutes', 'rain-os-ai-readability-optimizer' ); ?></option>
+                                    <option value="3600" <?php selected( $cache_time, 3600 ); ?>><?php esc_html_e( '1 hour', 'rain-os-ai-readability-optimizer' ); ?></option>
+                                    <option value="7200" <?php selected( $cache_time, 7200 ); ?>><?php esc_html_e( '2 hours', 'rain-os-ai-readability-optimizer' ); ?></option>
+                                    <option value="86400" <?php selected( $cache_time, 86400 ); ?>><?php esc_html_e( '24 hours', 'rain-os-ai-readability-optimizer' ); ?></option>
                                 </select>
-                                <p class="rain-os-form-help"><?php esc_html_e( 'How long to cache analysis results before refreshing.', 'ai-readability-optimizer' ); ?></p>
+                                <p class="rain-os-form-help"><?php esc_html_e( 'How long to cache analysis results before refreshing.', 'rain-os-ai-readability-optimizer' ); ?></p>
                             </div>
                         </div>
                     </div>
 
                     <div class="rain-os-card">
                         <div class="rain-os-card-header">
-                            <h3><?php esc_html_e( 'Analysis Preferences', 'ai-readability-optimizer' ); ?></h3>
-                            <span class="rain-os-card-badge"><?php esc_html_e( 'Local Settings', 'ai-readability-optimizer' ); ?></span>
+                            <h3><?php esc_html_e( 'Analysis Preferences', 'rain-os-ai-readability-optimizer' ); ?></h3>
+                            <span class="rain-os-card-badge"><?php esc_html_e( 'Local Settings', 'rain-os-ai-readability-optimizer' ); ?></span>
                         </div>
                         <div class="rain-os-card-body">
-                            <p class="rain-os-card-description"><?php esc_html_e( 'These settings control how the plugin behaves within your WordPress site. They do not require API calls.', 'ai-readability-optimizer' ); ?></p>
+                            <p class="rain-os-card-description"><?php esc_html_e( 'These settings control how the plugin behaves within your WordPress site. They do not require API calls.', 'rain-os-ai-readability-optimizer' ); ?></p>
 
                             <div class="rain-os-form-group rain-os-toggle-group">
                                 <div class="rain-os-toggle-row">
@@ -126,14 +126,14 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                                                class="rain-os-checkbox" />
                                         <span class="rain-os-toggle-switch"></span>
                                         <span class="rain-os-toggle-title">
-                                            <?php esc_html_e( 'Auto-Analyze on Publish', 'ai-readability-optimizer' ); ?>
-                                            <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'When enabled, the plugin will automatically run an AEO analysis every time you publish or update a post. This uses one API credit per analysis. Disable this if you prefer to manually trigger analyses.', 'ai-readability-optimizer' ); ?>">
+                                            <?php esc_html_e( 'Auto-Analyze on Publish', 'rain-os-ai-readability-optimizer' ); ?>
+                                            <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'When enabled, the plugin will automatically run an AEO analysis every time you publish or update a post. This uses one API credit per analysis. Disable this if you prefer to manually trigger analyses.', 'rain-os-ai-readability-optimizer' ); ?>">
                                                 <span class="dashicons dashicons-info-outline"></span>
                                             </span>
                                         </span>
                                     </label>
                                 </div>
-                                <p class="rain-os-form-help"><?php esc_html_e( 'Automatically analyze content when publishing or updating posts.', 'ai-readability-optimizer' ); ?></p>
+                                <p class="rain-os-form-help"><?php esc_html_e( 'Automatically analyze content when publishing or updating posts.', 'rain-os-ai-readability-optimizer' ); ?></p>
                             </div>
 
                             <div class="rain-os-form-group rain-os-toggle-group">
@@ -146,14 +146,14 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                                                class="rain-os-checkbox" />
                                         <span class="rain-os-toggle-switch"></span>
                                         <span class="rain-os-toggle-title">
-                                            <?php esc_html_e( 'Enable Provenance Tracking', 'ai-readability-optimizer' ); ?>
-                                            <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'Provenance tracking creates a cryptographic hash of your content at the time of analysis, serving as proof of authorship. This helps establish content ownership and can be useful for copyright protection or demonstrating when content was created.', 'ai-readability-optimizer' ); ?>">
+                                            <?php esc_html_e( 'Enable Provenance Tracking', 'rain-os-ai-readability-optimizer' ); ?>
+                                            <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'Provenance tracking creates a cryptographic hash of your content at the time of analysis, serving as proof of authorship. This helps establish content ownership and can be useful for copyright protection or demonstrating when content was created.', 'rain-os-ai-readability-optimizer' ); ?>">
                                                 <span class="dashicons dashicons-info-outline"></span>
                                             </span>
                                         </span>
                                     </label>
                                 </div>
-                                <p class="rain-os-form-help"><?php esc_html_e( 'Record content authorship and timestamp data for provenance verification.', 'ai-readability-optimizer' ); ?></p>
+                                <p class="rain-os-form-help"><?php esc_html_e( 'Record content authorship and timestamp data for provenance verification.', 'rain-os-ai-readability-optimizer' ); ?></p>
                             </div>
 
                             <div class="rain-os-form-group rain-os-toggle-group">
@@ -166,15 +166,15 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                                                class="rain-os-checkbox" />
                                         <span class="rain-os-toggle-switch"></span>
                                         <span class="rain-os-toggle-title">
-                                            <?php esc_html_e( 'Score Alerts Below Threshold', 'ai-readability-optimizer' ); ?>
-                                            <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'When enabled, you will receive a notification in your WordPress dashboard whenever a post scores below the threshold you set. This helps you identify content that may need improvement for better AI visibility.', 'ai-readability-optimizer' ); ?>">
+                                            <?php esc_html_e( 'Score Alerts Below Threshold', 'rain-os-ai-readability-optimizer' ); ?>
+                                            <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'When enabled, you will receive a notification in your WordPress dashboard whenever a post scores below the threshold you set. This helps you identify content that may need improvement for better AI visibility.', 'rain-os-ai-readability-optimizer' ); ?>">
                                                 <span class="dashicons dashicons-info-outline"></span>
                                             </span>
                                         </span>
                                     </label>
                                 </div>
                                 <div class="rain-os-threshold-input" id="threshold-container" style="<?php echo esc_attr( $score_alerts !== 'yes' ? 'display:none;' : '' ); ?>">
-                                    <label for="ai_readability_score_threshold"><?php esc_html_e( 'Alert Threshold:', 'ai-readability-optimizer' ); ?></label>
+                                    <label for="ai_readability_score_threshold"><?php esc_html_e( 'Alert Threshold:', 'rain-os-ai-readability-optimizer' ); ?></label>
                                     <input type="number" 
                                            id="ai_readability_score_threshold" 
                                            name="ai_readability_score_threshold" 
@@ -182,9 +182,9 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                                            min="0" 
                                            max="100" 
                                            class="rain-os-input rain-os-input-small" />
-                                    <span class="rain-os-threshold-hint"><?php esc_html_e( 'Notify when score falls below this value (0-100)', 'ai-readability-optimizer' ); ?></span>
+                                    <span class="rain-os-threshold-hint"><?php esc_html_e( 'Notify when score falls below this value (0-100)', 'rain-os-ai-readability-optimizer' ); ?></span>
                                 </div>
-                                <p class="rain-os-form-help"><?php esc_html_e( 'Receive alerts when analyzed content scores below a certain threshold.', 'ai-readability-optimizer' ); ?></p>
+                                <p class="rain-os-form-help"><?php esc_html_e( 'Receive alerts when analyzed content scores below a certain threshold.', 'rain-os-ai-readability-optimizer' ); ?></p>
                             </div>
                         </div>
                     </div>
@@ -196,11 +196,11 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                     ?>
                     <div class="rain-os-card">
                         <div class="rain-os-card-header">
-                            <h3><?php esc_html_e( 'AI Readiness Backend', 'ai-readability-optimizer' ); ?></h3>
-                            <span class="rain-os-card-badge rain-os-card-badge-beta"><?php esc_html_e( 'Beta', 'ai-readability-optimizer' ); ?></span>
+                            <h3><?php esc_html_e( 'AI Readiness Backend', 'rain-os-ai-readability-optimizer' ); ?></h3>
+                            <span class="rain-os-card-badge rain-os-card-badge-beta"><?php esc_html_e( 'Beta', 'rain-os-ai-readability-optimizer' ); ?></span>
                         </div>
                         <div class="rain-os-card-body">
-                            <p class="rain-os-card-description"><?php esc_html_e( 'Enable new AI readiness features. These features require the new backend API and are optional.', 'ai-readability-optimizer' ); ?></p>
+                            <p class="rain-os-card-description"><?php esc_html_e( 'Enable new AI readiness features. These features require the new backend API and are optional.', 'rain-os-ai-readability-optimizer' ); ?></p>
 
                             <div class="rain-os-form-group rain-os-toggle-group">
                                 <div class="rain-os-toggle-row">
@@ -213,14 +213,14 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                                                id="ai_readability_ai_backend_enabled" />
                                         <span class="rain-os-toggle-switch"></span>
                                         <span class="rain-os-toggle-title">
-                                            <?php esc_html_e( 'Enable AI Readiness Backend', 'ai-readability-optimizer' ); ?>
-                                            <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'Master switch for new AI backend features. When disabled, all AI readiness features below are inactive.', 'ai-readability-optimizer' ); ?>">
+                                            <?php esc_html_e( 'Enable AI Readiness Backend', 'rain-os-ai-readability-optimizer' ); ?>
+                                            <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'Master switch for new AI backend features. When disabled, all AI readiness features below are inactive.', 'rain-os-ai-readability-optimizer' ); ?>">
                                                 <span class="dashicons dashicons-info-outline"></span>
                                             </span>
                                         </span>
                                     </label>
                                 </div>
-                                <p class="rain-os-form-help"><?php esc_html_e( 'Enable new AI readiness analysis backend integration.', 'ai-readability-optimizer' ); ?></p>
+                                <p class="rain-os-form-help"><?php esc_html_e( 'Enable new AI readiness analysis backend integration.', 'rain-os-ai-readability-optimizer' ); ?></p>
                             </div>
 
                             <div class="rain-os-ai-backend-options" id="ai-backend-options" style="<?php echo esc_attr( $ai_backend_enabled !== 'yes' ? 'display:none;' : '' ); ?>">
@@ -234,14 +234,14 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                                                    class="rain-os-checkbox" />
                                             <span class="rain-os-toggle-switch"></span>
                                             <span class="rain-os-toggle-title">
-                                                <?php esc_html_e( 'AI Score Panel in Editor', 'ai-readability-optimizer' ); ?>
-                                                <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'Displays a sidebar panel in the post editor showing AI readiness scores: Readability, Structure, Freshness, Citation Readiness, and AI Visibility.', 'ai-readability-optimizer' ); ?>">
+                                                <?php esc_html_e( 'AI Score Panel in Editor', 'rain-os-ai-readability-optimizer' ); ?>
+                                                <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'Displays a sidebar panel in the post editor showing AI readiness scores: Readability, Structure, Freshness, Citation Readiness, and AI Visibility.', 'rain-os-ai-readability-optimizer' ); ?>">
                                                     <span class="dashicons dashicons-info-outline"></span>
                                                 </span>
                                             </span>
                                         </label>
                                     </div>
-                                    <p class="rain-os-form-help"><?php esc_html_e( 'Show AI readiness scores in the post editor sidebar.', 'ai-readability-optimizer' ); ?></p>
+                                    <p class="rain-os-form-help"><?php esc_html_e( 'Show AI readiness scores in the post editor sidebar.', 'rain-os-ai-readability-optimizer' ); ?></p>
                                 </div>
 
                                 <div class="rain-os-form-group rain-os-toggle-group">
@@ -254,21 +254,21 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                                                    class="rain-os-checkbox" />
                                             <span class="rain-os-toggle-switch"></span>
                                             <span class="rain-os-toggle-title">
-                                                <?php esc_html_e( 'Content Normalization on Save', 'ai-readability-optimizer' ); ?>
-                                                <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'Automatically sends content to the AI backend for normalization when saving posts. This runs in the background and does not affect the save process.', 'ai-readability-optimizer' ); ?>">
+                                                <?php esc_html_e( 'Content Normalization on Save', 'rain-os-ai-readability-optimizer' ); ?>
+                                                <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'Automatically sends content to the AI backend for normalization when saving posts. This runs in the background and does not affect the save process.', 'rain-os-ai-readability-optimizer' ); ?>">
                                                     <span class="dashicons dashicons-info-outline"></span>
                                                 </span>
                                             </span>
                                         </label>
                                     </div>
-                                    <p class="rain-os-form-help"><?php esc_html_e( 'Normalize content for AI analysis when saving posts (async, non-blocking).', 'ai-readability-optimizer' ); ?></p>
+                                    <p class="rain-os-form-help"><?php esc_html_e( 'Normalize content for AI analysis when saving posts (async, non-blocking).', 'rain-os-ai-readability-optimizer' ); ?></p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="rain-os-settings-actions">
-                        <?php submit_button( __( 'Save Settings', 'ai-readability-optimizer' ), 'rain-os-btn rain-os-btn-primary', 'submit', false ); ?>
+                        <?php submit_button( __( 'Save Settings', 'rain-os-ai-readability-optimizer' ), 'rain-os-btn rain-os-btn-primary', 'submit', false ); ?>
                     </div>
                 </form>
             </div>
@@ -276,7 +276,7 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
             <div class="rain-os-settings-sidebar">
                 <div class="rain-os-card">
                     <div class="rain-os-card-header">
-                        <h3><?php esc_html_e( 'Account Status', 'ai-readability-optimizer' ); ?></h3>
+                        <h3><?php esc_html_e( 'Account Status', 'rain-os-ai-readability-optimizer' ); ?></h3>
                     </div>
                     <div class="rain-os-card-body" id="account-status-container">
                         <?php 
@@ -286,17 +286,17 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                         ?>
                         <div class="rain-os-account-status">
                             <div class="rain-os-status-item">
-                                <span class="rain-os-status-label"><?php esc_html_e( 'Status', 'ai-readability-optimizer' ); ?></span>
+                                <span class="rain-os-status-label"><?php esc_html_e( 'Status', 'rain-os-ai-readability-optimizer' ); ?></span>
                                 <span class="rain-os-status-value rain-os-status-badge rain-os-status-<?php echo esc_attr( $subscription['subscription_status'] === 'active' ? 'active' : 'inactive' ); ?>">
                                     <?php echo esc_html( ucfirst( $subscription['subscription_status'] ) ); ?>
                                 </span>
                             </div>
                             <div class="rain-os-status-item">
-                                <span class="rain-os-status-label"><?php esc_html_e( 'Plan', 'ai-readability-optimizer' ); ?></span>
+                                <span class="rain-os-status-label"><?php esc_html_e( 'Plan', 'rain-os-ai-readability-optimizer' ); ?></span>
                                 <span class="rain-os-status-value rain-os-plan-badge"><?php echo esc_html( ucfirst( $subscription['plan'] ) ); ?></span>
                             </div>
                             <div class="rain-os-status-item">
-                                <span class="rain-os-status-label"><?php esc_html_e( 'Usage', 'ai-readability-optimizer' ); ?></span>
+                                <span class="rain-os-status-label"><?php esc_html_e( 'Usage', 'rain-os-ai-readability-optimizer' ); ?></span>
                                 <span class="rain-os-status-value"><?php echo esc_html( $subscription['usage_count'] . ' / ' . $subscription['usage_limit'] ); ?></span>
                             </div>
                             <div class="rain-os-usage-bar">
@@ -304,16 +304,16 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                             </div>
                             <?php if ( ! $subscription['is_pro'] ) : ?>
                             <a href="https://app.getrainos.com/#/login" target="_blank" class="rain-os-btn rain-os-btn-primary rain-os-btn-full">
-                                <?php esc_html_e( 'Upgrade Plan', 'ai-readability-optimizer' ); ?>
+                                <?php esc_html_e( 'Upgrade Plan', 'rain-os-ai-readability-optimizer' ); ?>
                             </a>
                             <?php endif; ?>
                         </div>
                         <?php else : ?>
                         <div class="rain-os-no-api-key">
                             <span class="dashicons dashicons-warning"></span>
-                            <p><?php esc_html_e( 'No API key configured', 'ai-readability-optimizer' ); ?></p>
+                            <p><?php esc_html_e( 'No API key configured', 'rain-os-ai-readability-optimizer' ); ?></p>
                             <a href="https://app.getrainos.com/#/login" target="_blank" class="rain-os-btn rain-os-btn-primary">
-                                <?php esc_html_e( 'Get API Key', 'ai-readability-optimizer' ); ?>
+                                <?php esc_html_e( 'Get API Key', 'rain-os-ai-readability-optimizer' ); ?>
                             </a>
                         </div>
                         <?php endif; ?>
@@ -322,26 +322,26 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
 
                 <div class="rain-os-card">
                     <div class="rain-os-card-header">
-                        <h3><?php esc_html_e( 'Need Help?', 'ai-readability-optimizer' ); ?></h3>
+                        <h3><?php esc_html_e( 'Need Help?', 'rain-os-ai-readability-optimizer' ); ?></h3>
                     </div>
                     <div class="rain-os-card-body">
                         <ul class="rain-os-help-links">
                             <li>
                                 <a href="<?php echo esc_url( admin_url( 'admin.php?page=ai-readability-docs' ) ); ?>">
                                     <span class="dashicons dashicons-book"></span>
-                                    <?php esc_html_e( 'Documentation', 'ai-readability-optimizer' ); ?>
+                                    <?php esc_html_e( 'Documentation', 'rain-os-ai-readability-optimizer' ); ?>
                                 </a>
                             </li>
                             <li>
                                 <a href="<?php echo esc_url( admin_url( 'admin.php?page=ai-readability-help' ) ); ?>">
                                     <span class="dashicons dashicons-sos"></span>
-                                    <?php esc_html_e( 'Troubleshooting', 'ai-readability-optimizer' ); ?>
+                                    <?php esc_html_e( 'Troubleshooting', 'rain-os-ai-readability-optimizer' ); ?>
                                 </a>
                             </li>
                             <li>
                                 <a href="mailto:support@getrainos.com">
                                     <span class="dashicons dashicons-email"></span>
-                                    <?php esc_html_e( 'Contact Support', 'ai-readability-optimizer' ); ?>
+                                    <?php esc_html_e( 'Contact Support', 'rain-os-ai-readability-optimizer' ); ?>
                                 </a>
                             </li>
                         </ul>
@@ -363,11 +363,11 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
         if (input.attr('type') === 'password') {
             input.attr('type', 'text');
             icon.removeClass('dashicons-visibility').addClass('dashicons-hidden');
-            text.text('<?php echo esc_js( __( 'Hide', 'ai-readability-optimizer' ) ); ?>');
+            text.text('<?php echo esc_js( __( 'Hide', 'rain-os-ai-readability-optimizer' ) ); ?>');
         } else {
             input.attr('type', 'password');
             icon.removeClass('dashicons-hidden').addClass('dashicons-visibility');
-            text.text('<?php echo esc_js( __( 'View', 'ai-readability-optimizer' ) ); ?>');
+            text.text('<?php echo esc_js( __( 'View', 'rain-os-ai-readability-optimizer' ) ); ?>');
         }
     });
 

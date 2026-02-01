@@ -1,4 +1,4 @@
-=== AI Readability Optimizer ===
+=== Rain OS AI Readability Optimizer ===
 Contributors: rainos
 Tags: aeo, ai, content optimization, answer engine, seo
 Requires at least: 5.8
@@ -12,7 +12,7 @@ AI-powered Answer Engine Optimization (AEO) and Generative Engine Optimization (
 
 == Description ==
 
-AI Readability Optimizer helps you optimize your content for AI-powered answer engines like Google AI Overviews, ChatGPT, Perplexity, Claude, and Gemini.
+Rain OS AI Readability Optimizer helps you optimize your content for AI-powered answer engines like Google AI Overviews, ChatGPT, Perplexity, Claude, and Gemini.
 
 = Features =
 

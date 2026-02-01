@@ -46,14 +46,14 @@ $cr_metadata = max( 0, min( 100, $conversion_readiness + 3 ) );
         <div class="rain-os-header-content">
             <div class="rain-os-logo">
                 <span class="rain-os-title"><span class="rain-white">r</span><span class="rain-blue">ai</span><span class="rain-white">n</span></span>
-                <span class="rain-os-badge"><?php esc_html_e( 'Pillar Breakdown', 'ai-readability-optimizer' ); ?></span>
+                <span class="rain-os-badge"><?php esc_html_e( 'Pillar Breakdown', 'rain-os-ai-readability-optimizer' ); ?></span>
             </div>
             <div class="rain-os-header-actions">
                 <div class="rain-os-period-select">
                     <select id="rain-os-period">
-                        <option value="7" <?php selected( $period, 7 ); ?>><?php esc_html_e( 'Last 7 Days', 'ai-readability-optimizer' ); ?></option>
-                        <option value="30" <?php selected( $period, 30 ); ?>><?php esc_html_e( 'Last 30 Days', 'ai-readability-optimizer' ); ?></option>
-                        <option value="90" <?php selected( $period, 90 ); ?>><?php esc_html_e( 'Last 90 Days', 'ai-readability-optimizer' ); ?></option>
+                        <option value="7" <?php selected( $period, 7 ); ?>><?php esc_html_e( 'Last 7 Days', 'rain-os-ai-readability-optimizer' ); ?></option>
+                        <option value="30" <?php selected( $period, 30 ); ?>><?php esc_html_e( 'Last 30 Days', 'rain-os-ai-readability-optimizer' ); ?></option>
+                        <option value="90" <?php selected( $period, 90 ); ?>><?php esc_html_e( 'Last 90 Days', 'rain-os-ai-readability-optimizer' ); ?></option>
                     </select>
                 </div>
             </div>
@@ -62,25 +62,25 @@ $cr_metadata = max( 0, min( 100, $conversion_readiness + 3 ) );
 
     <div class="rain-os-content">
         <header class="rain-os-page-header">
-            <h1><?php esc_html_e( 'Pillar Breakdown', 'ai-readability-optimizer' ); ?></h1>
-            <p><?php esc_html_e( 'Detailed analysis of your content across the three AI Readability pillars', 'ai-readability-optimizer' ); ?></p>
+            <h1><?php esc_html_e( 'Pillar Breakdown', 'rain-os-ai-readability-optimizer' ); ?></h1>
+            <p><?php esc_html_e( 'Detailed analysis of your content across the three AI Readability pillars', 'rain-os-ai-readability-optimizer' ); ?></p>
         </header>
 
         <div class="rain-os-overall-score-display">
             <div class="rain-os-score-circle">
                 <span class="rain-os-score-number"><?php echo esc_html( $overall_score ); ?>%</span>
             </div>
-            <div class="rain-os-score-label"><?php esc_html_e( 'Overall Score', 'ai-readability-optimizer' ); ?></div>
+            <div class="rain-os-score-label"><?php esc_html_e( 'Overall Score', 'rain-os-ai-readability-optimizer' ); ?></div>
         </div>
 
         <div class="rain-os-pillars-grid">
             <div class="rain-os-pillar-section rain-os-pillar-cyan">
-                <h3 class="rain-os-pillar-title"><?php esc_html_e( 'AI Readability', 'ai-readability-optimizer' ); ?></h3>
+                <h3 class="rain-os-pillar-title"><?php esc_html_e( 'AI Readability', 'rain-os-ai-readability-optimizer' ); ?></h3>
                 <div class="rain-os-pillar-score"><?php echo esc_html( $ai_readability ); ?>%</div>
                 
                 <div class="rain-os-subcategory">
                     <div class="rain-os-subcategory-header">
-                        <span><?php esc_html_e( 'Semantic Clarity', 'ai-readability-optimizer' ); ?></span>
+                        <span><?php esc_html_e( 'Semantic Clarity', 'rain-os-ai-readability-optimizer' ); ?></span>
                         <span><?php echo esc_html( $ai_semantic ); ?>%</span>
                     </div>
                     <div class="rain-os-bar-track">
@@ -90,7 +90,7 @@ $cr_metadata = max( 0, min( 100, $conversion_readiness + 3 ) );
                 
                 <div class="rain-os-subcategory">
                     <div class="rain-os-subcategory-header">
-                        <span><?php esc_html_e( 'Readability Score', 'ai-readability-optimizer' ); ?></span>
+                        <span><?php esc_html_e( 'Readability Score', 'rain-os-ai-readability-optimizer' ); ?></span>
                         <span><?php echo esc_html( $ai_read_score ); ?>%</span>
                     </div>
                     <div class="rain-os-bar-track">
@@ -100,7 +100,7 @@ $cr_metadata = max( 0, min( 100, $conversion_readiness + 3 ) );
                 
                 <div class="rain-os-subcategory">
                     <div class="rain-os-subcategory-header">
-                        <span><?php esc_html_e( 'Logical Structure', 'ai-readability-optimizer' ); ?></span>
+                        <span><?php esc_html_e( 'Logical Structure', 'rain-os-ai-readability-optimizer' ); ?></span>
                         <span><?php echo esc_html( $ai_structure ); ?>%</span>
                     </div>
                     <div class="rain-os-bar-track">
@@ -110,12 +110,12 @@ $cr_metadata = max( 0, min( 100, $conversion_readiness + 3 ) );
             </div>
 
             <div class="rain-os-pillar-section rain-os-pillar-green">
-                <h3 class="rain-os-pillar-title"><?php esc_html_e( 'Digital Authority', 'ai-readability-optimizer' ); ?></h3>
+                <h3 class="rain-os-pillar-title"><?php esc_html_e( 'Digital Authority', 'rain-os-ai-readability-optimizer' ); ?></h3>
                 <div class="rain-os-pillar-score"><?php echo esc_html( $digital_authority ); ?>%</div>
                 
                 <div class="rain-os-subcategory">
                     <div class="rain-os-subcategory-header">
-                        <span><?php esc_html_e( 'Entity Recognition', 'ai-readability-optimizer' ); ?></span>
+                        <span><?php esc_html_e( 'Entity Recognition', 'rain-os-ai-readability-optimizer' ); ?></span>
                         <span><?php echo esc_html( $da_entity ); ?>%</span>
                     </div>
                     <div class="rain-os-bar-track">
@@ -125,7 +125,7 @@ $cr_metadata = max( 0, min( 100, $conversion_readiness + 3 ) );
                 
                 <div class="rain-os-subcategory">
                     <div class="rain-os-subcategory-header">
-                        <span><?php esc_html_e( 'Citation Readiness', 'ai-readability-optimizer' ); ?></span>
+                        <span><?php esc_html_e( 'Citation Readiness', 'rain-os-ai-readability-optimizer' ); ?></span>
                         <span><?php echo esc_html( $da_citation ); ?>%</span>
                     </div>
                     <div class="rain-os-bar-track">
@@ -135,7 +135,7 @@ $cr_metadata = max( 0, min( 100, $conversion_readiness + 3 ) );
                 
                 <div class="rain-os-subcategory">
                     <div class="rain-os-subcategory-header">
-                        <span><?php esc_html_e( 'Schema Extraction', 'ai-readability-optimizer' ); ?></span>
+                        <span><?php esc_html_e( 'Schema Extraction', 'rain-os-ai-readability-optimizer' ); ?></span>
                         <span><?php echo esc_html( $da_schema ); ?>%</span>
                     </div>
                     <div class="rain-os-bar-track">
@@ -145,12 +145,12 @@ $cr_metadata = max( 0, min( 100, $conversion_readiness + 3 ) );
             </div>
 
             <div class="rain-os-pillar-section rain-os-pillar-purple">
-                <h3 class="rain-os-pillar-title"><?php esc_html_e( 'Conversion Readiness', 'ai-readability-optimizer' ); ?></h3>
+                <h3 class="rain-os-pillar-title"><?php esc_html_e( 'Conversion Readiness', 'rain-os-ai-readability-optimizer' ); ?></h3>
                 <div class="rain-os-pillar-score"><?php echo esc_html( $conversion_readiness ); ?>%</div>
                 
                 <div class="rain-os-subcategory">
                     <div class="rain-os-subcategory-header">
-                        <span><?php esc_html_e( 'AI Alignment', 'ai-readability-optimizer' ); ?></span>
+                        <span><?php esc_html_e( 'AI Alignment', 'rain-os-ai-readability-optimizer' ); ?></span>
                         <span><?php echo esc_html( $cr_alignment ); ?>%</span>
                     </div>
                     <div class="rain-os-bar-track">
@@ -160,7 +160,7 @@ $cr_metadata = max( 0, min( 100, $conversion_readiness + 3 ) );
                 
                 <div class="rain-os-subcategory">
                     <div class="rain-os-subcategory-header">
-                        <span><?php esc_html_e( 'QA-Format', 'ai-readability-optimizer' ); ?></span>
+                        <span><?php esc_html_e( 'QA-Format', 'rain-os-ai-readability-optimizer' ); ?></span>
                         <span><?php echo esc_html( $cr_qa ); ?>%</span>
                     </div>
                     <div class="rain-os-bar-track">
@@ -170,7 +170,7 @@ $cr_metadata = max( 0, min( 100, $conversion_readiness + 3 ) );
                 
                 <div class="rain-os-subcategory">
                     <div class="rain-os-subcategory-header">
-                        <span><?php esc_html_e( 'Metadata Audit', 'ai-readability-optimizer' ); ?></span>
+                        <span><?php esc_html_e( 'Metadata Audit', 'rain-os-ai-readability-optimizer' ); ?></span>
                         <span><?php echo esc_html( $cr_metadata ); ?>%</span>
                     </div>
                     <div class="rain-os-bar-track">

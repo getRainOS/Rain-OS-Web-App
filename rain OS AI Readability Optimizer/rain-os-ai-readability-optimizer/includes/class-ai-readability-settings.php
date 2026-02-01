@@ -147,14 +147,14 @@ class AI_Readability_Settings {
 
         add_settings_section(
             'ai_readability_api_section',
-            __( 'API Configuration', 'ai-readability-optimizer' ),
+            __( 'API Configuration', 'rain-os-ai-readability-optimizer' ),
             array( $this, 'render_api_section' ),
             'ai_readability_aeo_settings'
         );
 
         add_settings_field(
             'ai_readability_api_key',
-            __( 'API Key', 'ai-readability-optimizer' ),
+            __( 'API Key', 'rain-os-ai-readability-optimizer' ),
             array( $this, 'render_api_key_field' ),
             'ai_readability_aeo_settings',
             'ai_readability_api_section'
@@ -162,7 +162,7 @@ class AI_Readability_Settings {
 
         add_settings_field(
             'ai_readability_cache_time',
-            __( 'Cache Duration', 'ai-readability-optimizer' ),
+            __( 'Cache Duration', 'rain-os-ai-readability-optimizer' ),
             array( $this, 'render_cache_field' ),
             'ai_readability_aeo_settings',
             'ai_readability_api_section'
@@ -179,7 +179,7 @@ class AI_Readability_Settings {
     }
 
     public function render_api_section() {
-        echo '<p>' . esc_html__( 'Configure your Rain OS API settings. Get your API key from', 'ai-readability-optimizer' ) . ' <a href="https://app.getrainos.com/#/login" target="_blank">app.getrainos.com</a></p>';
+        echo '<p>' . esc_html__( 'Configure your Rain OS API settings. Get your API key from', 'rain-os-ai-readability-optimizer' ) . ' <a href="https://app.getrainos.com/#/login" target="_blank">app.getrainos.com</a></p>';
     }
 
     public function render_api_key_field() {
@@ -191,7 +191,7 @@ class AI_Readability_Settings {
                value="<?php echo esc_attr( $value ); ?>" 
                class="regular-text"
                autocomplete="off" />
-        <p class="description"><?php esc_html_e( 'Enter your Rain OS API key.', 'ai-readability-optimizer' ); ?></p>
+        <p class="description"><?php esc_html_e( 'Enter your Rain OS API key.', 'rain-os-ai-readability-optimizer' ); ?></p>
         <?php
     }
 
@@ -199,12 +199,12 @@ class AI_Readability_Settings {
         $value = get_option( 'ai_readability_cache_time', 3600 );
         ?>
         <select id="ai_readability_cache_time" name="ai_readability_cache_time">
-            <option value="1800" <?php selected( $value, 1800 ); ?>><?php esc_html_e( '30 minutes', 'ai-readability-optimizer' ); ?></option>
-            <option value="3600" <?php selected( $value, 3600 ); ?>><?php esc_html_e( '1 hour', 'ai-readability-optimizer' ); ?></option>
-            <option value="7200" <?php selected( $value, 7200 ); ?>><?php esc_html_e( '2 hours', 'ai-readability-optimizer' ); ?></option>
-            <option value="86400" <?php selected( $value, 86400 ); ?>><?php esc_html_e( '24 hours', 'ai-readability-optimizer' ); ?></option>
+            <option value="1800" <?php selected( $value, 1800 ); ?>><?php esc_html_e( '30 minutes', 'rain-os-ai-readability-optimizer' ); ?></option>
+            <option value="3600" <?php selected( $value, 3600 ); ?>><?php esc_html_e( '1 hour', 'rain-os-ai-readability-optimizer' ); ?></option>
+            <option value="7200" <?php selected( $value, 7200 ); ?>><?php esc_html_e( '2 hours', 'rain-os-ai-readability-optimizer' ); ?></option>
+            <option value="86400" <?php selected( $value, 86400 ); ?>><?php esc_html_e( '24 hours', 'rain-os-ai-readability-optimizer' ); ?></option>
         </select>
-        <p class="description"><?php esc_html_e( 'How long to cache analysis results.', 'ai-readability-optimizer' ); ?></p>
+        <p class="description"><?php esc_html_e( 'How long to cache analysis results.', 'rain-os-ai-readability-optimizer' ); ?></p>
         <?php
     }
 
@@ -222,7 +222,7 @@ class AI_Readability_Settings {
                     <?php
                     printf(
                         wp_kses(
-                            __( 'AI Readability Optimizer requires an API key to function. <a href="%s">Configure your API key</a> to get started.', 'ai-readability-optimizer' ),
+                            __( 'AI Readability Optimizer requires an API key to function. <a href="%s">Configure your API key</a> to get started.', 'rain-os-ai-readability-optimizer' ),
                             array( 'a' => array( 'href' => array() ) )
                         ),
                         esc_url( admin_url( 'admin.php?page=ai-readability-settings' ) )

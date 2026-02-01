@@ -53,11 +53,11 @@ class AI_Readability_Assets {
                 'nonce'     => wp_create_nonce( 'ai_readability_aeo_nonce' ),
                 'pluginUrl' => AI_READABILITY_PLUGIN_URL,
                 'i18n'      => array(
-                    'analyzing'    => __( 'Analyzing...', 'ai-readability-optimizer' ),
-                    'error'        => __( 'An error occurred. Please try again.', 'ai-readability-optimizer' ),
-                    'success'      => __( 'Analysis complete!', 'ai-readability-optimizer' ),
-                    'noApiKey'     => __( 'Please configure your API key in Settings.', 'ai-readability-optimizer' ),
-                    'confirm'      => __( 'Are you sure?', 'ai-readability-optimizer' ),
+                    'analyzing'    => __( 'Analyzing...', 'rain-os-ai-readability-optimizer' ),
+                    'error'        => __( 'An error occurred. Please try again.', 'rain-os-ai-readability-optimizer' ),
+                    'success'      => __( 'Analysis complete!', 'rain-os-ai-readability-optimizer' ),
+                    'noApiKey'     => __( 'Please configure your API key in Settings.', 'rain-os-ai-readability-optimizer' ),
+                    'confirm'      => __( 'Are you sure?', 'rain-os-ai-readability-optimizer' ),
                 ),
             )
         );

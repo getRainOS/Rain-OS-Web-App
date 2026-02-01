@@ -35,14 +35,14 @@ function ai_readability_score_class( $score ) {
         <div class="rain-os-header-content">
             <div class="rain-os-logo">
                 <span class="rain-os-title"><span class="rain-white">r</span><span class="rain-blue">ai</span><span class="rain-white">n</span></span>
-                <span class="rain-os-badge"><?php esc_html_e( 'Score History', 'ai-readability-optimizer' ); ?></span>
+                <span class="rain-os-badge"><?php esc_html_e( 'Score History', 'rain-os-ai-readability-optimizer' ); ?></span>
             </div>
             <div class="rain-os-header-actions">
                 <div class="rain-os-period-select">
                     <select id="rain-os-period">
-                        <option value="7" <?php selected( $period, 7 ); ?>><?php esc_html_e( 'Last 7 Days', 'ai-readability-optimizer' ); ?></option>
-                        <option value="30" <?php selected( $period, 30 ); ?>><?php esc_html_e( 'Last 30 Days', 'ai-readability-optimizer' ); ?></option>
-                        <option value="90" <?php selected( $period, 90 ); ?>><?php esc_html_e( 'Last 90 Days', 'ai-readability-optimizer' ); ?></option>
+                        <option value="7" <?php selected( $period, 7 ); ?>><?php esc_html_e( 'Last 7 Days', 'rain-os-ai-readability-optimizer' ); ?></option>
+                        <option value="30" <?php selected( $period, 30 ); ?>><?php esc_html_e( 'Last 30 Days', 'rain-os-ai-readability-optimizer' ); ?></option>
+                        <option value="90" <?php selected( $period, 90 ); ?>><?php esc_html_e( 'Last 90 Days', 'rain-os-ai-readability-optimizer' ); ?></option>
                     </select>
                 </div>
             </div>
@@ -51,16 +51,16 @@ function ai_readability_score_class( $score ) {
 
     <div class="rain-os-content">
         <header class="rain-os-page-header">
-            <h1><?php esc_html_e( 'Score History', 'ai-readability-optimizer' ); ?></h1>
-            <p><?php esc_html_e( 'Breakdown of post pillar scores', 'ai-readability-optimizer' ); ?></p>
+            <h1><?php esc_html_e( 'Score History', 'rain-os-ai-readability-optimizer' ); ?></h1>
+            <p><?php esc_html_e( 'Breakdown of post pillar scores', 'rain-os-ai-readability-optimizer' ); ?></p>
         </header>
 
         <div class="rain-os-chart-card">
             <div class="rain-os-chart-header">
-                <h3><?php esc_html_e( 'Score Details', 'ai-readability-optimizer' ); ?></h3>
+                <h3><?php esc_html_e( 'Score Details', 'rain-os-ai-readability-optimizer' ); ?></h3>
                 <span class="rain-os-chart-period"><?php 
                     printf( 
-                        esc_html__( 'Last %d Days', 'ai-readability-optimizer' ), 
+                        esc_html__( 'Last %d Days', 'rain-os-ai-readability-optimizer' ), 
                         $period 
                     ); 
                 ?></span>
@@ -71,11 +71,11 @@ function ai_readability_score_class( $score ) {
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th><?php esc_html_e( 'Title', 'ai-readability-optimizer' ); ?></th>
-                            <th><?php esc_html_e( 'Overall Score', 'ai-readability-optimizer' ); ?></th>
-                            <th><?php esc_html_e( 'AI Readability', 'ai-readability-optimizer' ); ?></th>
-                            <th><?php esc_html_e( 'Digital Authority', 'ai-readability-optimizer' ); ?></th>
-                            <th><?php esc_html_e( 'Conversion', 'ai-readability-optimizer' ); ?></th>
+                            <th><?php esc_html_e( 'Title', 'rain-os-ai-readability-optimizer' ); ?></th>
+                            <th><?php esc_html_e( 'Overall Score', 'rain-os-ai-readability-optimizer' ); ?></th>
+                            <th><?php esc_html_e( 'AI Readability', 'rain-os-ai-readability-optimizer' ); ?></th>
+                            <th><?php esc_html_e( 'Digital Authority', 'rain-os-ai-readability-optimizer' ); ?></th>
+                            <th><?php esc_html_e( 'Conversion', 'rain-os-ai-readability-optimizer' ); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -88,7 +88,7 @@ function ai_readability_score_class( $score ) {
                         <tr>
                             <td class="rain-os-row-num"><?php echo esc_html( $count ); ?></td>
                             <td>
-                                <div class="rain-os-post-title"><?php echo esc_html( $item['post_title'] ? $item['post_title'] : __( 'Untitled', 'ai-readability-optimizer' ) ); ?></div>
+                                <div class="rain-os-post-title"><?php echo esc_html( $item['post_title'] ? $item['post_title'] : __( 'Untitled', 'rain-os-ai-readability-optimizer' ) ); ?></div>
                                 <div class="rain-os-post-slug">/<?php echo esc_html( $item['post_name'] ? $item['post_name'] : '' ); ?>/</div>
                             </td>
                             <td class="rain-os-score-cell">
@@ -114,7 +114,7 @@ function ai_readability_score_class( $score ) {
                 <?php else : ?>
                 <div class="rain-os-empty-state">
                     <span class="dashicons dashicons-chart-area"></span>
-                    <p><?php esc_html_e( 'No score history available for this period.', 'ai-readability-optimizer' ); ?></p>
+                    <p><?php esc_html_e( 'No score history available for this period.', 'rain-os-ai-readability-optimizer' ); ?></p>
                 </div>
                 <?php endif; ?>
             </div>

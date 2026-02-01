@@ -29,7 +29,7 @@ class AI_Readability_AI_Score_Panel {
         foreach ( $post_types as $post_type ) {
             add_meta_box(
                 'rain-os-ai-score-panel',
-                __( 'AI Readiness Scores', 'ai-readability-optimizer' ),
+                __( 'AI Readiness Scores', 'rain-os-ai-readability-optimizer' ),
                 array( $this, 'render_score_panel' ),
                 $post_type,
                 'side',
@@ -46,41 +46,41 @@ class AI_Readability_AI_Score_Panel {
         <div id="rain-os-ai-score-panel" class="rain-os-ai-panel" data-content-id="<?php echo esc_attr( $content_id ); ?>" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
             <div class="rain-os-ai-panel-loading">
                 <span class="spinner is-active"></span>
-                <span><?php esc_html_e( 'Loading scores...', 'ai-readability-optimizer' ); ?></span>
+                <span><?php esc_html_e( 'Loading scores...', 'rain-os-ai-readability-optimizer' ); ?></span>
             </div>
             <div class="rain-os-ai-panel-content" style="display:none;">
                 <div class="rain-os-ai-score-list">
                     <div class="rain-os-ai-score-item" data-score="readability">
-                        <span class="score-label"><?php esc_html_e( 'Readability', 'ai-readability-optimizer' ); ?></span>
+                        <span class="score-label"><?php esc_html_e( 'Readability', 'rain-os-ai-readability-optimizer' ); ?></span>
                         <span class="score-value">--</span>
                     </div>
                     <div class="rain-os-ai-score-item" data-score="structure">
-                        <span class="score-label"><?php esc_html_e( 'Structure', 'ai-readability-optimizer' ); ?></span>
+                        <span class="score-label"><?php esc_html_e( 'Structure', 'rain-os-ai-readability-optimizer' ); ?></span>
                         <span class="score-value">--</span>
                     </div>
                     <div class="rain-os-ai-score-item" data-score="freshness">
-                        <span class="score-label"><?php esc_html_e( 'Freshness', 'ai-readability-optimizer' ); ?></span>
+                        <span class="score-label"><?php esc_html_e( 'Freshness', 'rain-os-ai-readability-optimizer' ); ?></span>
                         <span class="score-value">--</span>
                     </div>
                     <div class="rain-os-ai-score-item" data-score="citation">
-                        <span class="score-label"><?php esc_html_e( 'Citation Readiness', 'ai-readability-optimizer' ); ?></span>
+                        <span class="score-label"><?php esc_html_e( 'Citation Readiness', 'rain-os-ai-readability-optimizer' ); ?></span>
                         <span class="score-value">--</span>
                     </div>
                     <div class="rain-os-ai-score-item" data-score="visibility">
-                        <span class="score-label"><?php esc_html_e( 'AI Visibility', 'ai-readability-optimizer' ); ?></span>
+                        <span class="score-label"><?php esc_html_e( 'AI Visibility', 'rain-os-ai-readability-optimizer' ); ?></span>
                         <span class="score-value">--</span>
                     </div>
                 </div>
                 <div class="rain-os-ai-panel-version" style="margin-top:8px;font-size:11px;color:#666;">
-                    <span class="version-label"><?php esc_html_e( 'Profile:', 'ai-readability-optimizer' ); ?></span>
+                    <span class="version-label"><?php esc_html_e( 'Profile:', 'rain-os-ai-readability-optimizer' ); ?></span>
                     <span class="version-value">--</span>
                 </div>
             </div>
             <div class="rain-os-ai-panel-error" style="display:none;">
-                <p><?php esc_html_e( 'Unable to load AI scores. The service may be unavailable.', 'ai-readability-optimizer' ); ?></p>
+                <p><?php esc_html_e( 'Unable to load AI scores. The service may be unavailable.', 'rain-os-ai-readability-optimizer' ); ?></p>
             </div>
             <div class="rain-os-ai-panel-unavailable" style="display:none;">
-                <p><?php esc_html_e( 'No scores available for this content yet.', 'ai-readability-optimizer' ); ?></p>
+                <p><?php esc_html_e( 'No scores available for this content yet.', 'rain-os-ai-readability-optimizer' ); ?></p>
             </div>
         </div>
         <style>

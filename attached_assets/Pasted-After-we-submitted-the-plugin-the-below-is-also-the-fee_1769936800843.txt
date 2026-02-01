@@ -1,0 +1,35 @@
+After we submitted the plugin, the below is also the feedback that we received from WordPress, so please change the name of the plugin to: 
+
+
+Name: Rain OS AI Readability Optimizer Plugin for WordPress
+Slug:  Rain OS AI readability-optimizer Plugin for WordPress
+Is the name of this plugin descriptive and distinctive, and does it respect the trademarks and project names of others?
+
+
+Choosing a name for a plugin can be challenging - it needs to be distinctive and meaningful, but also carefully chosen to avoid overlapping with existing plugins or inadvertently use someone else's trademark or project name in a way that could lead to confusion.
+
+
+ General plugin name/slug requirements
+Plugin names and slugs must not be too generic; they should briefly describe what the plugin does.
+Plugin names and slugs can be original and unique, even if they don’t describe the functionality directly — as long as they are recognizable and distinctive.
+Plugin names and slugs must be distinguishable from those of other plugins to avoid confusion.
+Plugin names and slugs must respect others' trademarks and project names. If your plugin includes a trademark or project name that you do not own, you must clearly mention it in a way that denotes that there is no affiliation.
+
+
+This plugin display name(s) is/are "AI Readability Optimizer" and the slug is "ai-readability-optimizer" .
+
+
+We asked a trained AI about common issues with plugin names and it thinks there might be a problem.
+ The display name 'AI Readability Optimizer' begins with a short, generic term and the remainder of the name is a common descriptor. That makes the name non‑distinctive and likely to be confused with other similar plugins in the directory.
+
+
+Change the plugin name and slug to:  
+Name: Rain OS AI Readability Optimizer Plugin for WordPress
+Slug:  Rain OS AI readability-optimizer Plugin for WordPress
+
+
+ Steps to resolve this issue
+
+
+Update the display name in both the readme file and plugin headers.
+Update the slug in your plugin files, for example in the internationalization functions.

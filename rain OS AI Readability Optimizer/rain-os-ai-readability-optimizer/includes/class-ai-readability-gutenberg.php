@@ -122,7 +122,7 @@ class AI_Readability_Gutenberg {
         if ( empty( $content ) ) {
             return new WP_REST_Response( array(
                 'success' => false,
-                'message' => __( 'Content is required.', 'ai-readability-optimizer' ),
+                'message' => __( 'Content is required.', 'rain-os-ai-readability-optimizer' ),
             ), 400 );
         }
 
@@ -242,8 +242,8 @@ class AI_Readability_Gutenberg {
 
         if ( empty( $title ) ) {
             $recommendations[] = array(
-                'title'       => __( 'Add a Title', 'ai-readability-optimizer' ),
-                'description' => __( 'Your content needs a clear, descriptive title for better AI understanding.', 'ai-readability-optimizer' ),
+                'title'       => __( 'Add a Title', 'rain-os-ai-readability-optimizer' ),
+                'description' => __( 'Your content needs a clear, descriptive title for better AI understanding.', 'rain-os-ai-readability-optimizer' ),
                 'icon'        => '✍️',
                 'color'       => '#ef4444',
             );
@@ -251,8 +251,8 @@ class AI_Readability_Gutenberg {
 
         if ( $word_count < 300 ) {
             $recommendations[] = array(
-                'title'       => __( 'Increase Content Length', 'ai-readability-optimizer' ),
-                'description' => sprintf( __( 'Add more content. Aim for at least 300 words (currently %d).', 'ai-readability-optimizer' ), $word_count ),
+                'title'       => __( 'Increase Content Length', 'rain-os-ai-readability-optimizer' ),
+                'description' => sprintf( __( 'Add more content. Aim for at least 300 words (currently %d).', 'rain-os-ai-readability-optimizer' ), $word_count ),
                 'icon'        => '📝',
                 'color'       => '#f59e0b',
             );
@@ -260,8 +260,8 @@ class AI_Readability_Gutenberg {
 
         if ( ! preg_match( '/<h[2-6][^>]*>/i', $content ) ) {
             $recommendations[] = array(
-                'title'       => __( 'Add Subheadings', 'ai-readability-optimizer' ),
-                'description' => __( 'Break up your content with H2 or H3 headings for better structure.', 'ai-readability-optimizer' ),
+                'title'       => __( 'Add Subheadings', 'rain-os-ai-readability-optimizer' ),
+                'description' => __( 'Break up your content with H2 or H3 headings for better structure.', 'rain-os-ai-readability-optimizer' ),
                 'icon'        => '📋',
                 'color'       => '#22d3ee',
             );
@@ -269,8 +269,8 @@ class AI_Readability_Gutenberg {
 
         if ( ! preg_match( '/<a[^>]+href/i', $content ) ) {
             $recommendations[] = array(
-                'title'       => __( 'Add Links', 'ai-readability-optimizer' ),
-                'description' => __( 'Include internal or external links to support your content.', 'ai-readability-optimizer' ),
+                'title'       => __( 'Add Links', 'rain-os-ai-readability-optimizer' ),
+                'description' => __( 'Include internal or external links to support your content.', 'rain-os-ai-readability-optimizer' ),
                 'icon'        => '🔗',
                 'color'       => '#10b981',
             );
@@ -278,8 +278,8 @@ class AI_Readability_Gutenberg {
 
         if ( empty( $recommendations ) ) {
             $recommendations[] = array(
-                'title'       => __( 'Great Job!', 'ai-readability-optimizer' ),
-                'description' => __( 'Your content meets the basic AEO requirements.', 'ai-readability-optimizer' ),
+                'title'       => __( 'Great Job!', 'rain-os-ai-readability-optimizer' ),
+                'description' => __( 'Your content meets the basic AEO requirements.', 'rain-os-ai-readability-optimizer' ),
                 'icon'        => '✅',
                 'color'       => '#10b981',
             );
@@ -336,7 +336,7 @@ class AI_Readability_Gutenberg {
         return new WP_REST_Response( array(
             'success' => true,
             'task_id' => $task_id,
-            'message' => __( 'Content queued for processing.', 'ai-readability-optimizer' ),
+            'message' => __( 'Content queued for processing.', 'rain-os-ai-readability-optimizer' ),
         ), 200 );
     }
 
@@ -347,7 +347,7 @@ class AI_Readability_Gutenberg {
         if ( ! $data ) {
             return new WP_REST_Response( array(
                 'status'  => 'complete',
-                'message' => __( 'Task completed or expired.', 'ai-readability-optimizer' ),
+                'message' => __( 'Task completed or expired.', 'rain-os-ai-readability-optimizer' ),
             ), 200 );
         }
 
@@ -362,7 +362,7 @@ class AI_Readability_Gutenberg {
             return new WP_REST_Response( array(
                 'success' => false,
                 'code'    => 'no_scores',
-                'message' => __( 'No AI scores available.', 'ai-readability-optimizer' ),
+                'message' => __( 'No AI scores available.', 'rain-os-ai-readability-optimizer' ),
             ), 200 );
         }
 
@@ -481,7 +481,7 @@ class AI_Readability_Gutenberg {
             default:
                 return new WP_REST_Response( array(
                     'success' => false,
-                    'message' => __( 'Unknown action.', 'ai-readability-optimizer' ),
+                    'message' => __( 'Unknown action.', 'rain-os-ai-readability-optimizer' ),
                 ), 400 );
         }
     }
