@@ -83,20 +83,6 @@ class RAIRO_AI_Score_Panel {
                 <p><?php esc_html_e( 'No scores available for this content yet.', 'rain-os-ai-readability-optimizer' ); ?></p>
             </div>
         </div>
-        <style>
-            #rain-os-ai-score-panel .rain-os-ai-panel-loading { text-align: center; padding: 15px 0; }
-            #rain-os-ai-score-panel .rain-os-ai-panel-loading .spinner { float: none; margin: 0 5px 0 0; }
-            #rain-os-ai-score-panel .rain-os-ai-score-list { margin: 0; }
-            #rain-os-ai-score-panel .rain-os-ai-score-item { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #e0e0e0; }
-            #rain-os-ai-score-panel .rain-os-ai-score-item:last-child { border-bottom: none; }
-            #rain-os-ai-score-panel .score-label { font-weight: 500; color: #1e1e1e; }
-            #rain-os-ai-score-panel .score-value { font-weight: 600; padding: 2px 8px; border-radius: 3px; min-width: 35px; text-align: center; }
-            #rain-os-ai-score-panel .score-value.score-high { background: #d4edda; color: #155724; }
-            #rain-os-ai-score-panel .score-value.score-medium { background: #fff3cd; color: #856404; }
-            #rain-os-ai-score-panel .score-value.score-low { background: #f8d7da; color: #721c24; }
-            #rain-os-ai-score-panel .rain-os-ai-panel-error p,
-            #rain-os-ai-score-panel .rain-os-ai-panel-unavailable p { margin: 0; padding: 10px; background: #f0f0f0; border-radius: 3px; font-size: 12px; color: #666; }
-        </style>
         <?php
     }
 
@@ -131,6 +117,13 @@ class RAIRO_AI_Score_Panel {
         if ( ! in_array( $hook, array( 'post.php', 'post-new.php' ), true ) ) {
             return;
         }
+
+        wp_enqueue_style(
+            'rain-os-ai-score-panel',
+            RAIRO_PLUGIN_URL . 'assets/css/ai-score-panel.css',
+            array(),
+            RAIRO_VERSION
+        );
 
         wp_enqueue_script(
             'rain-os-ai-score-panel',

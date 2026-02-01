@@ -3,13 +3,13 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-$api_key = get_option( 'ai_readability_api_key', '' );
-$industry = get_option( 'ai_readability_industry', '' );
-$cache_time = get_option( 'ai_readability_cache_time', 3600 );
-$auto_analyze = get_option( 'ai_readability_auto_analyze', 'no' );
-$provenance_tracking = get_option( 'ai_readability_provenance_tracking', 'no' );
-$score_alerts = get_option( 'ai_readability_score_alerts', 'no' );
-$score_threshold = get_option( 'ai_readability_score_threshold', 70 );
+$api_key = get_option( 'rairo_api_key', '' );
+$industry = get_option( 'rairo_industry', '' );
+$cache_time = get_option( 'rairo_cache_time', 3600 );
+$auto_analyze = get_option( 'rairo_auto_analyze', 'no' );
+$provenance_tracking = get_option( 'rairo_provenance_tracking', 'no' );
+$score_alerts = get_option( 'rairo_score_alerts', 'no' );
+$score_threshold = get_option( 'rairo_score_threshold', 70 );
 ?>
 
 <div class="rain-os-wrap">
@@ -37,7 +37,7 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
         <div class="rain-os-settings-grid">
             <div class="rain-os-settings-main">
                 <form method="post" action="options.php" class="rain-os-settings-form">
-                    <?php settings_fields( 'ai_readability_aeo_settings' ); ?>
+                    <?php settings_fields( 'rairo_aeo_settings' ); ?>
 
                     <div class="rain-os-card">
                         <div class="rain-os-card-header">
@@ -45,7 +45,7 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                         </div>
                         <div class="rain-os-card-body">
                             <div class="rain-os-form-group">
-                                <label for="ai_readability_api_key"><?php esc_html_e( 'API Key', 'rain-os-ai-readability-optimizer' ); ?></label>
+                                <label for="rairo_api_key"><?php esc_html_e( 'API Key', 'rain-os-ai-readability-optimizer' ); ?></label>
                                 <div class="rain-os-input-group">
                                     <input type="password" 
                                            id="rairo_api_key" 
@@ -78,7 +78,7 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                             </div>
 
                             <div class="rain-os-form-group">
-                                <label for="ai_readability_industry"><?php esc_html_e( 'Default Industry', 'rain-os-ai-readability-optimizer' ); ?></label>
+                                <label for="rairo_industry"><?php esc_html_e( 'Default Industry', 'rain-os-ai-readability-optimizer' ); ?></label>
                                 <select id="rairo_industry" name="rairo_industry" class="rain-os-select">
                                     <option value="" <?php selected( $industry, '' ); ?>><?php esc_html_e( 'Select Industry...', 'rain-os-ai-readability-optimizer' ); ?></option>
                                     <option value="technology" <?php selected( $industry, 'technology' ); ?>><?php esc_html_e( 'Technology', 'rain-os-ai-readability-optimizer' ); ?></option>
@@ -96,7 +96,7 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                             </div>
 
                             <div class="rain-os-form-group">
-                                <label for="ai_readability_cache_time"><?php esc_html_e( 'Cache Duration', 'rain-os-ai-readability-optimizer' ); ?></label>
+                                <label for="rairo_cache_time"><?php esc_html_e( 'Cache Duration', 'rain-os-ai-readability-optimizer' ); ?></label>
                                 <select id="rairo_cache_time" name="rairo_cache_time" class="rain-os-select">
                                     <option value="1800" <?php selected( $cache_time, 1800 ); ?>><?php esc_html_e( '30 minutes', 'rain-os-ai-readability-optimizer' ); ?></option>
                                     <option value="3600" <?php selected( $cache_time, 3600 ); ?>><?php esc_html_e( '1 hour', 'rain-os-ai-readability-optimizer' ); ?></option>
@@ -174,7 +174,7 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                                     </label>
                                 </div>
                                 <div class="rain-os-threshold-input" id="threshold-container" style="<?php echo esc_attr( $score_alerts !== 'yes' ? 'display:none;' : '' ); ?>">
-                                    <label for="ai_readability_score_threshold"><?php esc_html_e( 'Alert Threshold:', 'rain-os-ai-readability-optimizer' ); ?></label>
+                                    <label for="rairo_score_threshold"><?php esc_html_e( 'Alert Threshold:', 'rain-os-ai-readability-optimizer' ); ?></label>
                                     <input type="number" 
                                            id="rairo_score_threshold" 
                                            name="rairo_score_threshold" 
@@ -190,9 +190,9 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                     </div>
 
                     <?php
-                    $ai_backend_enabled = get_option( 'ai_readability_ai_backend_enabled', 'no' );
-                    $ai_score_panel = get_option( 'ai_readability_ai_score_panel', 'no' );
-                    $ai_normalize = get_option( 'ai_readability_ai_normalize', 'no' );
+                    $ai_backend_enabled = get_option( 'rairo_ai_backend_enabled', 'no' );
+                    $ai_score_panel = get_option( 'rairo_ai_score_panel', 'no' );
+                    $ai_normalize = get_option( 'rairo_ai_normalize', 'no' );
                     ?>
                     <div class="rain-os-card">
                         <div class="rain-os-card-header">
@@ -351,290 +351,3 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
         </div>
     </div>
 </div>
-
-<script>
-(function($) {
-    'use strict';
-    
-    $('#toggle-api-key').on('click', function() {
-        var input = $('#ai_readability_api_key');
-        var icon = $(this).find('.dashicons');
-        var text = $(this).find('.rain-os-toggle-text');
-        if (input.attr('type') === 'password') {
-            input.attr('type', 'text');
-            icon.removeClass('dashicons-visibility').addClass('dashicons-hidden');
-            text.text('<?php echo esc_js( __( 'Hide', 'rain-os-ai-readability-optimizer' ) ); ?>');
-        } else {
-            input.attr('type', 'password');
-            icon.removeClass('dashicons-hidden').addClass('dashicons-visibility');
-            text.text('<?php echo esc_js( __( 'View', 'rain-os-ai-readability-optimizer' ) ); ?>');
-        }
-    });
-
-    $('input[name="rairo_score_alerts"]').on('change', function() {
-        if ($(this).is(':checked')) {
-            $('#threshold-container').slideDown(200);
-        } else {
-            $('#threshold-container').slideUp(200);
-        }
-    });
-
-    $('#ai_readability_ai_backend_enabled').on('change', function() {
-        if ($(this).is(':checked')) {
-            $('#ai-backend-options').slideDown(200);
-        } else {
-            $('#ai-backend-options').slideUp(200);
-        }
-    });
-
-    $('#test-connection').on('click', function() {
-        var $btn = $(this);
-        var $status = $('#connection-status');
-        
-        $btn.prop('disabled', true);
-        $btn.find('.dashicons').addClass('rain-os-spin');
-        $status.hide();
-
-        $.ajax({
-            url: rainOsAeo.ajaxUrl,
-            type: 'POST',
-            data: {
-                action: 'ai_readability_test_connection',
-                nonce: rainOsAeo.nonce
-            },
-            success: function(response) {
-                $btn.prop('disabled', false);
-                $btn.find('.dashicons').removeClass('rain-os-spin');
-                
-                if (response.success) {
-                    $status
-                        .removeClass('rain-os-error')
-                        .addClass('rain-os-success')
-                        .html('<span class="dashicons dashicons-yes-alt"></span> Connected! Account: ' + response.data.user.email)
-                        .show();
-                } else {
-                    $status
-                        .removeClass('rain-os-success')
-                        .addClass('rain-os-error')
-                        .html('<span class="dashicons dashicons-warning"></span> ' + response.data.message)
-                        .show();
-                }
-            },
-            error: function() {
-                $btn.prop('disabled', false);
-                $btn.find('.dashicons').removeClass('rain-os-spin');
-                $status
-                    .removeClass('rain-os-success')
-                    .addClass('rain-os-error')
-                    .html('<span class="dashicons dashicons-warning"></span> Connection failed. Please check your API key.')
-                    .show();
-            }
-        });
-    });
-})(jQuery);
-</script>
-
-<style>
-.rain-os-connection-status {
-    margin-top: 10px;
-    padding: 10px 15px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.rain-os-connection-status.rain-os-success {
-    background: rgba(16, 185, 129, 0.1);
-    border: 1px solid #10b981;
-    color: #10b981;
-}
-.rain-os-connection-status.rain-os-error {
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid #ef4444;
-    color: #ef4444;
-}
-.rain-os-spin {
-    animation: rain-os-spin 1s linear infinite;
-}
-@keyframes rain-os-spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-.rain-os-status-badge {
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 600;
-}
-.rain-os-status-active {
-    background: rgba(16, 185, 129, 0.2);
-    color: #10b981;
-}
-.rain-os-status-inactive {
-    background: rgba(239, 68, 68, 0.2);
-    color: #ef4444;
-}
-.rain-os-btn-full {
-    width: 100%;
-    margin-top: 15px;
-}
-.rain-os-btn-toggle {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    min-width: 80px;
-}
-.rain-os-toggle-text {
-    font-size: 12px;
-}
-.rain-os-card-badge {
-    background: rgba(34, 211, 238, 0.15);
-    color: #22d3ee;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-.rain-os-card-badge-beta {
-    background: rgba(168, 85, 247, 0.15);
-    color: #a855f7;
-}
-.rain-os-ai-backend-options {
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-.rain-os-card-description {
-    color: #94a3b8;
-    font-size: 13px;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-.rain-os-toggle-group {
-    margin-bottom: 20px;
-}
-.rain-os-toggle-row {
-    display: flex;
-    align-items: center;
-}
-.rain-os-toggle-label {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-}
-.rain-os-checkbox {
-    display: none;
-}
-.rain-os-toggle-switch {
-    position: relative;
-    width: 44px;
-    height: 24px;
-    background: #374151;
-    border-radius: 12px;
-    transition: background 0.3s;
-    flex-shrink: 0;
-}
-.rain-os-toggle-switch::after {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 20px;
-    height: 20px;
-    background: #fff;
-    border-radius: 50%;
-    transition: transform 0.3s;
-}
-.rain-os-checkbox:checked + .rain-os-toggle-switch {
-    background: #22d3ee;
-}
-.rain-os-checkbox:checked + .rain-os-toggle-switch::after {
-    transform: translateX(20px);
-}
-.rain-os-toggle-title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #e2e8f0;
-    font-weight: 500;
-}
-.rain-os-tooltip {
-    position: relative;
-    cursor: help;
-}
-.rain-os-tooltip .dashicons {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
-    color: #64748b;
-    transition: color 0.2s;
-}
-.rain-os-tooltip:hover .dashicons {
-    color: #22d3ee;
-}
-.rain-os-tooltip::before {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: calc(100% + 10px);
-    left: 50%;
-    transform: translateX(-50%);
-    width: 280px;
-    padding: 12px 15px;
-    background: #1e293b;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    color: #cbd5e1;
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 1.5;
-    text-align: left;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s, visibility 0.2s;
-    z-index: 1000;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    pointer-events: none;
-}
-.rain-os-tooltip::after {
-    content: '';
-    position: absolute;
-    bottom: calc(100% + 2px);
-    left: 50%;
-    transform: translateX(-50%);
-    border: 6px solid transparent;
-    border-top-color: #1e293b;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s, visibility 0.2s;
-}
-.rain-os-tooltip:hover::before,
-.rain-os-tooltip:hover::after {
-    opacity: 1;
-    visibility: visible;
-}
-.rain-os-threshold-input {
-    margin-top: 12px;
-    padding: 12px 15px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-.rain-os-threshold-input label {
-    color: #94a3b8;
-    font-size: 13px;
-}
-.rain-os-input-small {
-    width: 70px !important;
-    text-align: center;
-}
-.rain-os-threshold-hint {
-    color: #64748b;
-    font-size: 11px;
-}
-</style>

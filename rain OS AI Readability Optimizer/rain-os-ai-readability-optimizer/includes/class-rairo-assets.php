@@ -61,5 +61,32 @@ class RAIRO_Assets {
                 ),
             )
         );
+
+        if ( strpos( $hook, 'ai-readability-settings' ) !== false ) {
+            wp_enqueue_style(
+                'rain-os-settings',
+                RAIRO_PLUGIN_URL . 'assets/css/settings.css',
+                array( 'rain-os-admin' ),
+                RAIRO_VERSION
+            );
+
+            wp_enqueue_script(
+                'rain-os-settings',
+                RAIRO_PLUGIN_URL . 'assets/js/settings.js',
+                array( 'jquery', 'rain-os-admin' ),
+                RAIRO_VERSION,
+                true
+            );
+
+            wp_localize_script(
+                'rain-os-settings',
+                'rainOsSettings',
+                array(
+                    'textHide'         => __( 'Hide', 'rain-os-ai-readability-optimizer' ),
+                    'textView'         => __( 'View', 'rain-os-ai-readability-optimizer' ),
+                    'connectionFailed' => __( 'Connection failed. Please check your API key.', 'rain-os-ai-readability-optimizer' ),
+                )
+            );
+        }
     }
 }

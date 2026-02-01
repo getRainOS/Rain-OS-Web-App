@@ -1,0 +1,202 @@
+.rain-os-connection-status {
+    margin-top: 10px;
+    padding: 10px 15px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.rain-os-connection-status.rain-os-success {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid #10b981;
+    color: #10b981;
+}
+.rain-os-connection-status.rain-os-error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid #ef4444;
+    color: #ef4444;
+}
+.rain-os-spin {
+    animation: rain-os-spin 1s linear infinite;
+}
+@keyframes rain-os-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.rain-os-status-badge {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.rain-os-status-active {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+}
+.rain-os-status-inactive {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+.rain-os-btn-full {
+    width: 100%;
+    margin-top: 15px;
+}
+.rain-os-btn-toggle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 80px;
+}
+.rain-os-toggle-text {
+    font-size: 12px;
+}
+.rain-os-card-badge {
+    background: rgba(34, 211, 238, 0.15);
+    color: #22d3ee;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.rain-os-card-badge-beta {
+    background: rgba(168, 85, 247, 0.15);
+    color: #a855f7;
+}
+.rain-os-ai-backend-options {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.rain-os-card-description {
+    color: #94a3b8;
+    font-size: 13px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.rain-os-toggle-group {
+    margin-bottom: 20px;
+}
+.rain-os-toggle-row {
+    display: flex;
+    align-items: center;
+}
+.rain-os-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+.rain-os-checkbox {
+    display: none;
+}
+.rain-os-toggle-switch {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background: #374151;
+    border-radius: 12px;
+    transition: background 0.3s;
+    flex-shrink: 0;
+}
+.rain-os-toggle-switch::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+.rain-os-checkbox:checked + .rain-os-toggle-switch {
+    background: #22d3ee;
+}
+.rain-os-checkbox:checked + .rain-os-toggle-switch::after {
+    transform: translateX(20px);
+}
+.rain-os-toggle-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #e2e8f0;
+    font-weight: 500;
+}
+.rain-os-tooltip {
+    position: relative;
+    cursor: help;
+}
+.rain-os-tooltip .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: #64748b;
+    transition: color 0.2s;
+}
+.rain-os-tooltip:hover .dashicons {
+    color: #22d3ee;
+}
+.rain-os-tooltip::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 280px;
+    padding: 12px 15px;
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #cbd5e1;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    z-index: 1000;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+}
+.rain-os-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 2px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #1e293b;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+}
+.rain-os-tooltip:hover::before,
+.rain-os-tooltip:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+.rain-os-threshold-input {
+    margin-top: 12px;
+    padding: 12px 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.rain-os-threshold-input label {
+    color: #94a3b8;
+    font-size: 13px;
+}
+.rain-os-input-small {
+    width: 70px !important;
+    text-align: center;
+}
+.rain-os-threshold-hint {
+    color: #64748b;
+    font-size: 11px;
+}
