@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class AI_Readability_Loader {
+class RAIRO_Loader {
 
     protected $actions = array();
     protected $filters = array();

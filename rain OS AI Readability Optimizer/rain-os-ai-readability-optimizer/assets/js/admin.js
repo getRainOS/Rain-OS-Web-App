@@ -147,7 +147,7 @@
                 url: rainOsAeo.ajaxUrl,
                 type: 'POST',
                 data: {
-                    action: 'ai_readability_analyze_content',
+                    action: 'rairo_analyze_content',
                     nonce: rainOsAeo.nonce,
                     content: content,
                     title: title
@@ -241,7 +241,7 @@
                 url: rainOsAeo.ajaxUrl,
                 type: 'POST',
                 data: {
-                    action: 'ai_readability_quick_tool',
+                    action: 'rairo_quick_tool',
                     nonce: rainOsAeo.nonce,
                     tool: tool,
                     content: content
@@ -296,7 +296,7 @@
                 url: rainOsAeo.ajaxUrl,
                 type: 'POST',
                 data: {
-                    action: 'ai_readability_search_posts',
+                    action: 'rairo_search_posts',
                     nonce: rainOsAeo.nonce,
                     query: query
                 },
@@ -353,7 +353,7 @@
                 url: rainOsAeo.ajaxUrl,
                 type: 'POST',
                 data: {
-                    action: 'ai_readability_get_notifications',
+                    action: 'rairo_get_notifications',
                     nonce: rainOsAeo.nonce
                 },
                 success: function(response) {
@@ -389,7 +389,7 @@
                 url: rainOsAeo.ajaxUrl,
                 type: 'POST',
                 data: {
-                    action: 'ai_readability_mark_notification_read',
+                    action: 'rairo_mark_notification_read',
                     nonce: rainOsAeo.nonce,
                     notification_id: id
                 },
@@ -418,7 +418,7 @@
                 url: rainOsAeo.ajaxUrl,
                 type: 'POST',
                 data: {
-                    action: 'ai_readability_check_ai_backend',
+                    action: 'rairo_check_ai_backend',
                     nonce: rainOsAeo.nonce
                 },
                 success: function(response) {
@@ -473,7 +473,7 @@
                 url: rainOsAeo.ajaxUrl,
                 type: 'POST',
                 data: {
-                    action: 'ai_readability_normalize_content',
+                    action: 'rairo_normalize_content',
                     nonce: rainOsAeo.nonce,
                     content_id: self.currentContentId || '',
                     html: html,
@@ -534,7 +534,7 @@
                 url: rainOsAeo.ajaxUrl,
                 type: 'POST',
                 data: {
-                    action: 'ai_readability_get_ai_readiness_scores',
+                    action: 'rairo_get_ai_readiness_scores',
                     nonce: rainOsAeo.nonce,
                     content_id: contentId
                 },
@@ -599,7 +599,7 @@
                 url: rainOsAeo.ajaxUrl,
                 type: 'POST',
                 data: {
-                    action: 'ai_readability_analyze_content',
+                    action: 'rairo_analyze_content',
                     nonce: rainOsAeo.nonce,
                     content: content,
                     title: title

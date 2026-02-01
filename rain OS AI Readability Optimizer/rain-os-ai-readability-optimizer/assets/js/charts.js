@@ -31,7 +31,7 @@
                 url: typeof rainOsAeo !== 'undefined' ? rainOsAeo.ajaxUrl : ajaxurl,
                 type: 'POST',
                 data: {
-                    action: 'ai_readability_get_dashboard_data',
+                    action: 'rairo_get_dashboard_data',
                     nonce: typeof rainOsAeo !== 'undefined' ? rainOsAeo.nonce : '',
                     period: 30
                 },
@@ -144,7 +144,7 @@
                 url: typeof rainOsAeo !== 'undefined' ? rainOsAeo.ajaxUrl : ajaxurl,
                 type: 'POST',
                 data: {
-                    action: 'ai_readability_get_score_history',
+                    action: 'rairo_get_score_history',
                     nonce: typeof rainOsAeo !== 'undefined' ? rainOsAeo.nonce : '',
                     period: 30,
                     limit: 50

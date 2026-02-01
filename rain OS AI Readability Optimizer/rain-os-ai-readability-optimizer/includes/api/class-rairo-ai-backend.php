@@ -3,17 +3,17 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class AI_Readability_AI_Backend {
+class RAIRO_AI_Backend {
 
     private $api_url;
     private $api_key;
     private $timeout = 15;
-    private $capability_cache_key = 'ai_readability_ai_backend_capability';
+    private $capability_cache_key = 'rairo_ai_backend_capability';
     private $capability_cache_ttl = 21600;
 
     public function __construct() {
-        $this->api_url = get_option( 'ai_readability_api_url', AI_READABILITY_API_URL );
-        $this->api_key = get_option( 'ai_readability_api_key', '' );
+        $this->api_url = get_option( 'rairo_api_url', RAIRO_API_URL );
+        $this->api_key = get_option( 'rairo_api_key', '' );
     }
 
     private function get_headers() {
@@ -25,15 +25,15 @@ class AI_Readability_AI_Backend {
     }
 
     public static function is_enabled() {
-        return 'yes' === get_option( 'ai_readability_ai_backend_enabled', 'no' );
+        return 'yes' === get_option( 'rairo_ai_backend_enabled', 'no' );
     }
 
     public static function is_score_panel_enabled() {
-        return self::is_enabled() && 'yes' === get_option( 'ai_readability_ai_score_panel', 'no' );
+        return self::is_enabled() && 'yes' === get_option( 'rairo_ai_score_panel', 'no' );
     }
 
     public static function is_normalize_enabled() {
-        return self::is_enabled() && 'yes' === get_option( 'ai_readability_ai_normalize', 'no' );
+        return self::is_enabled() && 'yes' === get_option( 'rairo_ai_normalize', 'no' );
     }
 
     public function check_capability() {
@@ -71,7 +71,7 @@ class AI_Readability_AI_Backend {
             return null;
         }
 
-        $cache_key = 'ai_readability_ai_scores_' . md5( $content_id );
+        $cache_key = 'rairo_ai_scores_' . md5( $content_id );
         $cached    = get_transient( $cache_key );
 
         if ( false !== $cached ) {
@@ -184,6 +184,6 @@ class AI_Readability_AI_Backend {
     }
 
     public static function clear_capability_cache() {
-        delete_transient( 'ai_readability_ai_backend_capability' );
+        delete_transient( 'rairo_ai_backend_capability' );
     }
 }

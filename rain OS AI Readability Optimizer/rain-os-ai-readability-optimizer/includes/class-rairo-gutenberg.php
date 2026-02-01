@@ -2,14 +2,14 @@
 /**
  * Gutenberg Sidebar Integration
  *
- * @package AI_Readability_Analyzer
+ * @package RAIRO_Analyzer
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class AI_Readability_Gutenberg {
+class RAIRO_Gutenberg {
 
     private $api_client;
 
@@ -24,7 +24,7 @@ class AI_Readability_Gutenberg {
     }
 
     public function enqueue_sidebar_assets() {
-        $asset_file = AI_READABILITY_PLUGIN_DIR . 'build/gutenberg-sidebar.asset.php';
+        $asset_file = RAIRO_PLUGIN_DIR . 'build/gutenberg-sidebar.asset.php';
 
         if ( ! file_exists( $asset_file ) ) {
             return;
@@ -34,7 +34,7 @@ class AI_Readability_Gutenberg {
 
         wp_enqueue_script(
             'ai-readability-gutenberg-sidebar',
-            AI_READABILITY_PLUGIN_URL . 'build/gutenberg-sidebar.js',
+            RAIRO_PLUGIN_URL . 'build/gutenberg-sidebar.js',
             $asset['dependencies'],
             $asset['version'],
             true
@@ -42,7 +42,7 @@ class AI_Readability_Gutenberg {
 
         wp_enqueue_style(
             'ai-readability-gutenberg-sidebar',
-            AI_READABILITY_PLUGIN_URL . 'build/gutenberg-sidebar.css',
+            RAIRO_PLUGIN_URL . 'build/gutenberg-sidebar.css',
             array(),
             $asset['version']
         );
@@ -51,18 +51,18 @@ class AI_Readability_Gutenberg {
             'ai-readability-gutenberg-sidebar',
             'rainOsAeo',
             array(
-                'apiUrl'           => AI_READABILITY_API_URL,
+                'apiUrl'           => RAIRO_API_URL,
                 'nonce'            => wp_create_nonce( 'wp_rest' ),
                 'postId'           => get_the_ID(),
                 'isPro'            => $this->is_pro_user(),
-                'aiBackendEnabled' => AI_Readability_AI_Backend::is_enabled(),
+                'aiBackendEnabled' => RAIRO_AI_Backend::is_enabled(),
                 'debug'            => defined( 'WP_DEBUG' ) && WP_DEBUG,
             )
         );
     }
 
     private function is_pro_user() {
-        $api_key = get_option( 'ai_readability_api_key', '' );
+        $api_key = get_option( 'rairo_api_key', '' );
         return ! empty( $api_key );
     }
 
@@ -126,7 +126,7 @@ class AI_Readability_Gutenberg {
             ), 400 );
         }
 
-        $api_key = get_option( 'ai_readability_api_key', '' );
+        $api_key = get_option( 'rairo_api_key', '' );
 
         if ( empty( $api_key ) ) {
             $scores = $this->calculate_local_scores( $title, $content );
@@ -137,7 +137,7 @@ class AI_Readability_Gutenberg {
             ), 200 );
         }
 
-        $response = wp_remote_post( trailingslashit( AI_READABILITY_API_URL ) . 'api/analyze', array(
+        $response = wp_remote_post( trailingslashit( RAIRO_API_URL ) . 'api/analyze', array(
             'headers' => array(
                 'Authorization' => 'Bearer ' . $api_key,
                 'Content-Type'  => 'application/json',
@@ -290,7 +290,7 @@ class AI_Readability_Gutenberg {
 
     private function save_analysis_history( $post_id, $data ) {
         global $wpdb;
-        $table_name = $wpdb->prefix . 'ai_readability_analysis_history';
+        $table_name = $wpdb->prefix . 'rairo_analysis_history';
 
         $wpdb->insert(
             $table_name,
@@ -313,22 +313,22 @@ class AI_Readability_Gutenberg {
 
         $task_id = 'task_' . wp_generate_uuid4();
 
-        set_transient( 'ai_readability_normalize_' . $task_id, array(
+        set_transient( 'rairo_normalize_' . $task_id, array(
             'status'  => 'processing',
             'post_id' => $post_id,
         ), 300 );
 
-        if ( AI_Readability_AI_Backend::is_normalize_enabled() ) {
-            $ai_backend = new AI_Readability_AI_Backend();
+        if ( RAIRO_AI_Backend::is_normalize_enabled() ) {
+            $ai_backend = new RAIRO_AI_Backend();
             $result = $ai_backend->normalize_content_async( $post_id );
 
             if ( $result ) {
-                set_transient( 'ai_readability_normalize_' . $task_id, array(
+                set_transient( 'rairo_normalize_' . $task_id, array(
                     'status' => 'complete',
                 ), 300 );
             }
         } else {
-            set_transient( 'ai_readability_normalize_' . $task_id, array(
+            set_transient( 'rairo_normalize_' . $task_id, array(
                 'status' => 'complete',
             ), 300 );
         }
@@ -342,7 +342,7 @@ class AI_Readability_Gutenberg {
 
     public function handle_normalize_status( $request ) {
         $task_id = sanitize_text_field( $request->get_param( 'task_id' ) );
-        $data = get_transient( 'ai_readability_normalize_' . $task_id );
+        $data = get_transient( 'rairo_normalize_' . $task_id );
 
         if ( ! $data ) {
             return new WP_REST_Response( array(
@@ -375,7 +375,7 @@ class AI_Readability_Gutenberg {
     public function handle_get_history( $request ) {
         global $wpdb;
         $post_id = absint( $request->get_param( 'post_id' ) );
-        $table_name = $wpdb->prefix . 'ai_readability_analysis_history';
+        $table_name = $wpdb->prefix . 'rairo_analysis_history';
 
         $results = $wpdb->get_results( $wpdb->prepare(
             "SELECT overall_score as overallScore, ai_readability as aiReadability, 
@@ -396,13 +396,13 @@ class AI_Readability_Gutenberg {
         $content = wp_kses_post( $request->get_param( 'content' ) );
         $title   = sanitize_text_field( $request->get_param( 'title' ) );
 
-        $api_key = get_option( 'ai_readability_api_key', '' );
+        $api_key = get_option( 'rairo_api_key', '' );
 
         if ( empty( $api_key ) ) {
             return $this->mock_quick_action( $action, $content, $title );
         }
 
-        $response = wp_remote_post( trailingslashit( AI_READABILITY_API_URL ) . 'api/analyze', array(
+        $response = wp_remote_post( trailingslashit( RAIRO_API_URL ) . 'api/analyze', array(
             'headers' => array(
                 'Authorization' => 'Bearer ' . $api_key,
                 'Content-Type'  => 'application/json',
@@ -493,20 +493,20 @@ class AI_Readability_Gutenberg {
             return new WP_REST_Response( null, 204 );
         }
 
-        $api_key = get_option( 'ai_readability_api_key', '' );
+        $api_key = get_option( 'rairo_api_key', '' );
 
         if ( empty( $api_key ) ) {
             return new WP_REST_Response( null, 204 );
         }
 
-        $cache_key = 'ai_readability_backend_analysis_' . $post_id;
+        $cache_key = 'rairo_backend_analysis_' . $post_id;
         $cached = get_transient( $cache_key );
 
         if ( false !== $cached ) {
             return new WP_REST_Response( $cached, 200 );
         }
 
-        $response = wp_remote_get( AI_READABILITY_API_URL . '/api/plugin/content/' . $post_id . '/analysis', array(
+        $response = wp_remote_get( RAIRO_API_URL . '/api/plugin/content/' . $post_id . '/analysis', array(
             'headers' => array(
                 'Authorization' => 'Bearer ' . $api_key,
                 'Content-Type'  => 'application/json',

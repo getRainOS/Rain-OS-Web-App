@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class AI_Readability_API_Client {
+class RAIRO_API_Client {
 
     private $api_url;
     private $api_key;
@@ -11,8 +11,8 @@ class AI_Readability_API_Client {
     private $last_usage_info = null;
 
     public function __construct() {
-        $this->api_url = get_option( 'ai_readability_api_url', AI_READABILITY_API_URL );
-        $this->api_key = get_option( 'ai_readability_api_key', '' );
+        $this->api_url = get_option( 'rairo_api_url', RAIRO_API_URL );
+        $this->api_key = get_option( 'rairo_api_key', '' );
     }
 
     private function get_headers() {
@@ -83,7 +83,7 @@ class AI_Readability_API_Client {
 
     private function cache_usage_info( $usage_info ) {
         if ( ! empty( $usage_info ) ) {
-            set_transient( 'ai_readability_usage_info', $usage_info, HOUR_IN_SECONDS );
+            set_transient( 'rairo_usage_info', $usage_info, HOUR_IN_SECONDS );
         }
     }
 
@@ -91,7 +91,7 @@ class AI_Readability_API_Client {
         if ( $this->last_usage_info ) {
             return $this->last_usage_info;
         }
-        return get_transient( 'ai_readability_usage_info' );
+        return get_transient( 'rairo_usage_info' );
     }
 
     public function analyze_content( $content, $industry = '' ) {

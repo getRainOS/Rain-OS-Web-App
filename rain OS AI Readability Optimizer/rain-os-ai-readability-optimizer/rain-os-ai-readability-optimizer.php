@@ -17,23 +17,23 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'AI_READABILITY_VERSION', '1.0.0' );
-define( 'AI_READABILITY_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'AI_READABILITY_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'AI_READABILITY_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-define( 'AI_READABILITY_API_URL', 'https://api.getrainos.com/v1' );
+define( 'RAIRO_VERSION', '1.0.0' );
+define( 'RAIRO_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'RAIRO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'RAIRO_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+define( 'RAIRO_API_URL', 'https://api.getrainos.com/v1' );
 
-require_once AI_READABILITY_PLUGIN_DIR . 'includes/class-ai-readability-loader.php';
-require_once AI_READABILITY_PLUGIN_DIR . 'includes/class-ai-readability-admin.php';
-require_once AI_READABILITY_PLUGIN_DIR . 'includes/class-ai-readability-assets.php';
-require_once AI_READABILITY_PLUGIN_DIR . 'includes/class-ai-readability-settings.php';
-require_once AI_READABILITY_PLUGIN_DIR . 'includes/class-ai-readability-ajax.php';
-require_once AI_READABILITY_PLUGIN_DIR . 'includes/api/class-ai-readability-api-client.php';
-require_once AI_READABILITY_PLUGIN_DIR . 'includes/api/class-ai-readability-ai-backend.php';
-require_once AI_READABILITY_PLUGIN_DIR . 'includes/class-ai-readability-ai-score-panel.php';
-require_once AI_READABILITY_PLUGIN_DIR . 'includes/class-ai-readability-gutenberg.php';
+require_once RAIRO_PLUGIN_DIR . 'includes/class-rairo-loader.php';
+require_once RAIRO_PLUGIN_DIR . 'includes/class-rairo-admin.php';
+require_once RAIRO_PLUGIN_DIR . 'includes/class-rairo-assets.php';
+require_once RAIRO_PLUGIN_DIR . 'includes/class-rairo-settings.php';
+require_once RAIRO_PLUGIN_DIR . 'includes/class-rairo-ajax.php';
+require_once RAIRO_PLUGIN_DIR . 'includes/api/class-rairo-api-client.php';
+require_once RAIRO_PLUGIN_DIR . 'includes/api/class-rairo-ai-backend.php';
+require_once RAIRO_PLUGIN_DIR . 'includes/class-rairo-ai-score-panel.php';
+require_once RAIRO_PLUGIN_DIR . 'includes/class-rairo-gutenberg.php';
 
-final class AI_Readability_Analyzer {
+final class RAIRO_Analyzer {
 
     private static $instance = null;
     private $loader;
@@ -59,16 +59,16 @@ final class AI_Readability_Analyzer {
     }
 
     private function init_classes() {
-        $this->api_client = new AI_Readability_API_Client();
-        $this->loader     = new AI_Readability_Loader();
-        $this->assets     = new AI_Readability_Assets();
-        $this->settings   = new AI_Readability_Settings();
-        $this->admin      = new AI_Readability_Admin( $this->api_client );
-        $this->ajax       = new AI_Readability_Ajax( $this->api_client );
+        $this->api_client = new RAIRO_API_Client();
+        $this->loader     = new RAIRO_Loader();
+        $this->assets     = new RAIRO_Assets();
+        $this->settings   = new RAIRO_Settings();
+        $this->admin      = new RAIRO_Admin( $this->api_client );
+        $this->ajax       = new RAIRO_Ajax( $this->api_client );
 
-        $this->ai_backend     = new AI_Readability_AI_Backend();
-        $this->ai_score_panel = new AI_Readability_AI_Score_Panel();
-        $this->gutenberg      = new AI_Readability_Gutenberg( $this->api_client );
+        $this->ai_backend     = new RAIRO_AI_Backend();
+        $this->ai_score_panel = new RAIRO_AI_Score_Panel();
+        $this->gutenberg      = new RAIRO_Gutenberg( $this->api_client );
     }
 
     private function init_hooks() {
@@ -91,16 +91,16 @@ final class AI_Readability_Analyzer {
             return;
         }
 
-        if ( AI_Readability_AI_Backend::is_normalize_enabled() ) {
+        if ( RAIRO_AI_Backend::is_normalize_enabled() ) {
             $this->ai_backend->normalize_content_async( $post_id );
         }
     }
 
     public function activate() {
         $default_options = array(
-            'ai_readability_api_key'     => '',
-            'ai_readability_api_url'     => AI_READABILITY_API_URL,
-            'ai_readability_cache_time'  => 3600,
+            'rairo_api_key'     => '',
+            'rairo_api_url'     => RAIRO_API_URL,
+            'rairo_cache_time'  => 3600,
         );
 
         foreach ( $default_options as $key => $value ) {
@@ -119,7 +119,7 @@ final class AI_Readability_Analyzer {
 
         $charset_collate = $wpdb->get_charset_collate();
 
-        $table_name = $wpdb->prefix . 'ai_readability_analysis_history';
+        $table_name = $wpdb->prefix . 'rairo_analysis_history';
 
         $sql = "CREATE TABLE IF NOT EXISTS $table_name (
             id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -148,8 +148,8 @@ final class AI_Readability_Analyzer {
     }
 }
 
-function ai_readability_aeo() {
-    return AI_Readability_Analyzer::instance();
+function rairo_aeo() {
+    return RAIRO_Analyzer::instance();
 }
 
-ai_readability_aeo();
+rairo_aeo();

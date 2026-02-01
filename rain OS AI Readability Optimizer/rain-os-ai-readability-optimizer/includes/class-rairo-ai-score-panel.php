@@ -3,28 +3,28 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class AI_Readability_AI_Score_Panel {
+class RAIRO_AI_Score_Panel {
 
     private $ai_backend;
 
     public function __construct() {
-        if ( ! AI_Readability_AI_Backend::is_score_panel_enabled() ) {
+        if ( ! RAIRO_AI_Backend::is_score_panel_enabled() ) {
             return;
         }
 
-        $this->ai_backend = new AI_Readability_AI_Backend();
+        $this->ai_backend = new RAIRO_AI_Backend();
         $this->init_hooks();
     }
 
     private function init_hooks() {
         add_action( 'add_meta_boxes', array( $this, 'add_score_panel_meta_box' ) );
-        add_action( 'wp_ajax_ai_readability_get_ai_scores', array( $this, 'ajax_get_ai_scores' ) );
+        add_action( 'wp_ajax_rairo_get_ai_scores', array( $this, 'ajax_get_ai_scores' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_panel_scripts' ) );
     }
 
     public function add_score_panel_meta_box() {
         $post_types = array( 'post', 'page' );
-        $post_types = apply_filters( 'ai_readability_ai_score_panel_post_types', $post_types );
+        $post_types = apply_filters( 'rairo_ai_score_panel_post_types', $post_types );
 
         foreach ( $post_types as $post_type ) {
             add_meta_box(
@@ -41,7 +41,7 @@ class AI_Readability_AI_Score_Panel {
 
     public function render_score_panel( $post ) {
         $content_id = 'wp_post_' . $post->ID;
-        wp_nonce_field( 'ai_readability_ai_scores_nonce', 'ai_readability_ai_scores_nonce_field' );
+        wp_nonce_field( 'rairo_ai_scores_nonce', 'rairo_ai_scores_nonce_field' );
         ?>
         <div id="rain-os-ai-score-panel" class="rain-os-ai-panel" data-content-id="<?php echo esc_attr( $content_id ); ?>" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
             <div class="rain-os-ai-panel-loading">
@@ -101,7 +101,7 @@ class AI_Readability_AI_Score_Panel {
     }
 
     public function ajax_get_ai_scores() {
-        check_ajax_referer( 'ai_readability_ai_scores_nonce', 'nonce' );
+        check_ajax_referer( 'rairo_ai_scores_nonce', 'nonce' );
 
         if ( ! current_user_can( 'edit_posts' ) ) {
             wp_send_json_error( array( 'message' => 'Unauthorized' ) );
@@ -134,9 +134,9 @@ class AI_Readability_AI_Score_Panel {
 
         wp_enqueue_script(
             'rain-os-ai-score-panel',
-            AI_READABILITY_PLUGIN_URL . 'assets/js/ai-score-panel.js',
+            RAIRO_PLUGIN_URL . 'assets/js/ai-score-panel.js',
             array( 'jquery' ),
-            AI_READABILITY_VERSION,
+            RAIRO_VERSION,
             true
         );
 
@@ -145,7 +145,7 @@ class AI_Readability_AI_Score_Panel {
             'rainOsAiPanel',
             array(
                 'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-                'nonce'   => wp_create_nonce( 'ai_readability_ai_scores_nonce' ),
+                'nonce'   => wp_create_nonce( 'rairo_ai_scores_nonce' ),
             )
         );
     }

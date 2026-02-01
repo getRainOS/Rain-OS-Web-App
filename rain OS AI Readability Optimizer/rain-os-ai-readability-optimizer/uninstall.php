@@ -5,7 +5,7 @@
  * This file runs when the plugin is uninstalled (deleted) from WordPress.
  * It removes all plugin data from the database.
  *
- * @package AI_Readability_Analyzer
+ * @package RAIRO_Analyzer
  */
 
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
@@ -14,16 +14,16 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 
 global $wpdb;
 
-delete_option( 'ai_readability_api_key' );
-delete_option( 'ai_readability_api_url' );
-delete_option( 'ai_readability_cache_time' );
+delete_option( 'rairo_api_key' );
+delete_option( 'rairo_api_url' );
+delete_option( 'rairo_cache_time' );
 
-$table_name = $wpdb->prefix . 'ai_readability_analysis_history';
+$table_name = $wpdb->prefix . 'rairo_analysis_history';
 $wpdb->query( "DROP TABLE IF EXISTS {$table_name}" );
 
 $users = get_users( array( 'fields' => 'ID' ) );
 foreach ( $users as $user_id ) {
-    delete_user_meta( $user_id, 'ai_readability_notifications' );
+    delete_user_meta( $user_id, 'rairo_notifications' );
 }
 
 wp_cache_flush();

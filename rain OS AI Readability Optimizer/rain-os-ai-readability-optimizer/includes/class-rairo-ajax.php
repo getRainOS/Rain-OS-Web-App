@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class AI_Readability_Ajax {
+class RAIRO_Ajax {
 
     private $api_client;
 
@@ -13,24 +13,24 @@ class AI_Readability_Ajax {
     }
 
     private function register_ajax_handlers() {
-        add_action( 'wp_ajax_ai_readability_analyze_content', array( $this, 'analyze_content' ) );
-        add_action( 'wp_ajax_ai_readability_get_analysis', array( $this, 'get_analysis' ) );
-        add_action( 'wp_ajax_ai_readability_get_dashboard_data', array( $this, 'get_dashboard_data' ) );
-        add_action( 'wp_ajax_ai_readability_get_score_history', array( $this, 'get_score_history' ) );
-        add_action( 'wp_ajax_ai_readability_search_posts', array( $this, 'search_posts' ) );
-        add_action( 'wp_ajax_ai_readability_get_notifications', array( $this, 'get_notifications' ) );
-        add_action( 'wp_ajax_ai_readability_mark_notification_read', array( $this, 'mark_notification_read' ) );
-        add_action( 'wp_ajax_ai_readability_get_pillar_details', array( $this, 'get_pillar_details' ) );
-        add_action( 'wp_ajax_ai_readability_quick_tool', array( $this, 'quick_tool' ) );
-        add_action( 'wp_ajax_ai_readability_test_connection', array( $this, 'test_connection' ) );
-        add_action( 'wp_ajax_ai_readability_get_usage', array( $this, 'get_usage' ) );
-        add_action( 'wp_ajax_ai_readability_check_ai_backend', array( $this, 'check_ai_backend' ) );
-        add_action( 'wp_ajax_ai_readability_get_ai_readiness_scores', array( $this, 'get_ai_readiness_scores' ) );
-        add_action( 'wp_ajax_ai_readability_normalize_content', array( $this, 'normalize_content' ) );
+        add_action( 'wp_ajax_rairo_analyze_content', array( $this, 'analyze_content' ) );
+        add_action( 'wp_ajax_rairo_get_analysis', array( $this, 'get_analysis' ) );
+        add_action( 'wp_ajax_rairo_get_dashboard_data', array( $this, 'get_dashboard_data' ) );
+        add_action( 'wp_ajax_rairo_get_score_history', array( $this, 'get_score_history' ) );
+        add_action( 'wp_ajax_rairo_search_posts', array( $this, 'search_posts' ) );
+        add_action( 'wp_ajax_rairo_get_notifications', array( $this, 'get_notifications' ) );
+        add_action( 'wp_ajax_rairo_mark_notification_read', array( $this, 'mark_notification_read' ) );
+        add_action( 'wp_ajax_rairo_get_pillar_details', array( $this, 'get_pillar_details' ) );
+        add_action( 'wp_ajax_rairo_quick_tool', array( $this, 'quick_tool' ) );
+        add_action( 'wp_ajax_rairo_test_connection', array( $this, 'test_connection' ) );
+        add_action( 'wp_ajax_rairo_get_usage', array( $this, 'get_usage' ) );
+        add_action( 'wp_ajax_rairo_check_ai_backend', array( $this, 'check_ai_backend' ) );
+        add_action( 'wp_ajax_rairo_get_ai_readiness_scores', array( $this, 'get_ai_readiness_scores' ) );
+        add_action( 'wp_ajax_rairo_normalize_content', array( $this, 'normalize_content' ) );
     }
 
     private function verify_nonce() {
-        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'ai_readability_aeo_nonce' ) ) {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rairo_aeo_nonce' ) ) {
             wp_send_json_error( array( 'message' => __( 'Security check failed.', 'rain-os-ai-readability-optimizer' ) ) );
         }
     }
@@ -80,7 +80,7 @@ class AI_Readability_Ajax {
 
     private function save_analysis_to_history( $post_id, $analysis ) {
         global $wpdb;
-        $table_name = $wpdb->prefix . 'ai_readability_analysis_history';
+        $table_name = $wpdb->prefix . 'rairo_analysis_history';
 
         $wpdb->insert(
             $table_name,
@@ -108,7 +108,7 @@ class AI_Readability_Ajax {
         }
 
         global $wpdb;
-        $table_name = $wpdb->prefix . 'ai_readability_analysis_history';
+        $table_name = $wpdb->prefix . 'rairo_analysis_history';
 
         $result = $wpdb->get_row(
             $wpdb->prepare(
@@ -133,7 +133,7 @@ class AI_Readability_Ajax {
         $period = isset( $_POST['period'] ) ? absint( $_POST['period'] ) : 30;
 
         global $wpdb;
-        $table_name = $wpdb->prefix . 'ai_readability_analysis_history';
+        $table_name = $wpdb->prefix . 'rairo_analysis_history';
         $date_limit = gmdate( 'Y-m-d H:i:s', strtotime( "-{$period} days" ) );
 
         $averages = $wpdb->get_row(
@@ -200,7 +200,7 @@ class AI_Readability_Ajax {
         $offset = ( $page - 1 ) * $limit;
 
         global $wpdb;
-        $table_name = $wpdb->prefix . 'ai_readability_analysis_history';
+        $table_name = $wpdb->prefix . 'rairo_analysis_history';
         $date_limit = gmdate( 'Y-m-d H:i:s', strtotime( "-{$period} days" ) );
 
         $total = $wpdb->get_var(
@@ -252,7 +252,7 @@ class AI_Readability_Ajax {
         }
 
         global $wpdb;
-        $table_name = $wpdb->prefix . 'ai_readability_analysis_history';
+        $table_name = $wpdb->prefix . 'rairo_analysis_history';
 
         $results = $wpdb->get_results(
             $wpdb->prepare(
@@ -277,7 +277,7 @@ class AI_Readability_Ajax {
         $this->check_capability();
 
         $user_id       = get_current_user_id();
-        $notifications = get_user_meta( $user_id, 'ai_readability_notifications', true );
+        $notifications = get_user_meta( $user_id, 'rairo_notifications', true );
 
         if ( ! is_array( $notifications ) ) {
             $notifications = array();
@@ -293,7 +293,7 @@ class AI_Readability_Ajax {
         $notification_id = isset( $_POST['notification_id'] ) ? sanitize_text_field( wp_unslash( $_POST['notification_id'] ) ) : '';
         $user_id         = get_current_user_id();
 
-        $notifications = get_user_meta( $user_id, 'ai_readability_notifications', true );
+        $notifications = get_user_meta( $user_id, 'rairo_notifications', true );
 
         if ( is_array( $notifications ) ) {
             foreach ( $notifications as &$notification ) {
@@ -302,7 +302,7 @@ class AI_Readability_Ajax {
                     break;
                 }
             }
-            update_user_meta( $user_id, 'ai_readability_notifications', $notifications );
+            update_user_meta( $user_id, 'rairo_notifications', $notifications );
         }
 
         wp_send_json_success();
@@ -319,7 +319,7 @@ class AI_Readability_Ajax {
         }
 
         global $wpdb;
-        $table_name = $wpdb->prefix . 'ai_readability_analysis_history';
+        $table_name = $wpdb->prefix . 'rairo_analysis_history';
 
         $result = $wpdb->get_row(
             $wpdb->prepare(
@@ -412,12 +412,12 @@ class AI_Readability_Ajax {
         $this->verify_nonce();
         $this->check_capability();
 
-        $ai_backend = new AI_Readability_AI_Backend();
+        $ai_backend = new RAIRO_AI_Backend();
         $available  = $ai_backend->check_capability();
 
         wp_send_json_success( array(
             'available' => $available,
-            'enabled'   => AI_Readability_AI_Backend::is_enabled(),
+            'enabled'   => RAIRO_AI_Backend::is_enabled(),
         ) );
     }
 
@@ -431,7 +431,7 @@ class AI_Readability_Ajax {
             wp_send_json_error( array( 'message' => __( 'Content ID is required.', 'rain-os-ai-readability-optimizer' ) ) );
         }
 
-        $ai_backend = new AI_Readability_AI_Backend();
+        $ai_backend = new RAIRO_AI_Backend();
         $scores     = $ai_backend->get_content_scores( $content_id );
 
         if ( null === $scores ) {
@@ -453,7 +453,7 @@ class AI_Readability_Ajax {
             $content_id = 'analyzer_' . wp_generate_uuid4();
         }
 
-        $ai_backend = new AI_Readability_AI_Backend();
+        $ai_backend = new RAIRO_AI_Backend();
 
         if ( ! $ai_backend->check_capability() ) {
             wp_send_json_error( array( 'message' => __( 'AI backend is not available.', 'rain-os-ai-readability-optimizer' ) ) );

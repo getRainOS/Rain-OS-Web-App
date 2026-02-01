@@ -48,8 +48,8 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                                 <label for="ai_readability_api_key"><?php esc_html_e( 'API Key', 'rain-os-ai-readability-optimizer' ); ?></label>
                                 <div class="rain-os-input-group">
                                     <input type="password" 
-                                           id="ai_readability_api_key" 
-                                           name="ai_readability_api_key" 
+                                           id="rairo_api_key" 
+                                           name="rairo_api_key" 
                                            value="<?php echo esc_attr( $api_key ); ?>" 
                                            class="rain-os-input"
                                            placeholder="<?php esc_attr_e( 'Enter your Rain OS API key...', 'rain-os-ai-readability-optimizer' ); ?>"
@@ -79,7 +79,7 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
 
                             <div class="rain-os-form-group">
                                 <label for="ai_readability_industry"><?php esc_html_e( 'Default Industry', 'rain-os-ai-readability-optimizer' ); ?></label>
-                                <select id="ai_readability_industry" name="ai_readability_industry" class="rain-os-select">
+                                <select id="rairo_industry" name="rairo_industry" class="rain-os-select">
                                     <option value="" <?php selected( $industry, '' ); ?>><?php esc_html_e( 'Select Industry...', 'rain-os-ai-readability-optimizer' ); ?></option>
                                     <option value="technology" <?php selected( $industry, 'technology' ); ?>><?php esc_html_e( 'Technology', 'rain-os-ai-readability-optimizer' ); ?></option>
                                     <option value="healthcare" <?php selected( $industry, 'healthcare' ); ?>><?php esc_html_e( 'Healthcare', 'rain-os-ai-readability-optimizer' ); ?></option>
@@ -97,7 +97,7 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
 
                             <div class="rain-os-form-group">
                                 <label for="ai_readability_cache_time"><?php esc_html_e( 'Cache Duration', 'rain-os-ai-readability-optimizer' ); ?></label>
-                                <select id="ai_readability_cache_time" name="ai_readability_cache_time" class="rain-os-select">
+                                <select id="rairo_cache_time" name="rairo_cache_time" class="rain-os-select">
                                     <option value="1800" <?php selected( $cache_time, 1800 ); ?>><?php esc_html_e( '30 minutes', 'rain-os-ai-readability-optimizer' ); ?></option>
                                     <option value="3600" <?php selected( $cache_time, 3600 ); ?>><?php esc_html_e( '1 hour', 'rain-os-ai-readability-optimizer' ); ?></option>
                                     <option value="7200" <?php selected( $cache_time, 7200 ); ?>><?php esc_html_e( '2 hours', 'rain-os-ai-readability-optimizer' ); ?></option>
@@ -120,7 +120,7 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                                 <div class="rain-os-toggle-row">
                                     <label class="rain-os-toggle-label">
                                         <input type="checkbox" 
-                                               name="ai_readability_auto_analyze" 
+                                               name="rairo_auto_analyze" 
                                                value="yes" 
                                                <?php checked( $auto_analyze, 'yes' ); ?> 
                                                class="rain-os-checkbox" />
@@ -140,7 +140,7 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                                 <div class="rain-os-toggle-row">
                                     <label class="rain-os-toggle-label">
                                         <input type="checkbox" 
-                                               name="ai_readability_provenance_tracking" 
+                                               name="rairo_provenance_tracking" 
                                                value="yes" 
                                                <?php checked( $provenance_tracking, 'yes' ); ?> 
                                                class="rain-os-checkbox" />
@@ -160,7 +160,7 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                                 <div class="rain-os-toggle-row">
                                     <label class="rain-os-toggle-label">
                                         <input type="checkbox" 
-                                               name="ai_readability_score_alerts" 
+                                               name="rairo_score_alerts" 
                                                value="yes" 
                                                <?php checked( $score_alerts, 'yes' ); ?> 
                                                class="rain-os-checkbox" />
@@ -176,8 +176,8 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                                 <div class="rain-os-threshold-input" id="threshold-container" style="<?php echo esc_attr( $score_alerts !== 'yes' ? 'display:none;' : '' ); ?>">
                                     <label for="ai_readability_score_threshold"><?php esc_html_e( 'Alert Threshold:', 'rain-os-ai-readability-optimizer' ); ?></label>
                                     <input type="number" 
-                                           id="ai_readability_score_threshold" 
-                                           name="ai_readability_score_threshold" 
+                                           id="rairo_score_threshold" 
+                                           name="rairo_score_threshold" 
                                            value="<?php echo esc_attr( $score_threshold ); ?>" 
                                            min="0" 
                                            max="100" 
@@ -206,11 +206,11 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                                 <div class="rain-os-toggle-row">
                                     <label class="rain-os-toggle-label">
                                         <input type="checkbox" 
-                                               name="ai_readability_ai_backend_enabled" 
+                                               name="rairo_ai_backend_enabled" 
                                                value="yes" 
                                                <?php checked( $ai_backend_enabled, 'yes' ); ?> 
                                                class="rain-os-checkbox"
-                                               id="ai_readability_ai_backend_enabled" />
+                                               id="rairo_ai_backend_enabled" />
                                         <span class="rain-os-toggle-switch"></span>
                                         <span class="rain-os-toggle-title">
                                             <?php esc_html_e( 'Enable AI Readiness Backend', 'rain-os-ai-readability-optimizer' ); ?>
@@ -228,7 +228,7 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                                     <div class="rain-os-toggle-row">
                                         <label class="rain-os-toggle-label">
                                             <input type="checkbox" 
-                                                   name="ai_readability_ai_score_panel" 
+                                                   name="rairo_ai_score_panel" 
                                                    value="yes" 
                                                    <?php checked( $ai_score_panel, 'yes' ); ?> 
                                                    class="rain-os-checkbox" />
@@ -248,7 +248,7 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
                                     <div class="rain-os-toggle-row">
                                         <label class="rain-os-toggle-label">
                                             <input type="checkbox" 
-                                                   name="ai_readability_ai_normalize" 
+                                                   name="rairo_ai_normalize" 
                                                    value="yes" 
                                                    <?php checked( $ai_normalize, 'yes' ); ?> 
                                                    class="rain-os-checkbox" />
@@ -371,7 +371,7 @@ $score_threshold = get_option( 'ai_readability_score_threshold', 70 );
         }
     });
 
-    $('input[name="ai_readability_score_alerts"]').on('change', function() {
+    $('input[name="rairo_score_alerts"]').on('change', function() {
         if ($(this).is(':checked')) {
             $('#threshold-container').slideDown(200);
         } else {

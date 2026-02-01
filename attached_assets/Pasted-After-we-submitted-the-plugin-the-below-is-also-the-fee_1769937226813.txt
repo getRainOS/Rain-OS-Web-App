@@ -1,0 +1,94 @@
+After we submitted the plugin, the below is also the feedback that we received from WordPress:
+Have you checked for common technical issues?
+
+
+Please ensure that your plugin adheres to best practices, including the following:
+
+
+ Use Prefixes for declarations, globals and stored data
+
+
+ Why it matters: Prefixing avoid naming collisions with other themes, plugins, or WordPress core functions.
+A prefix is a string placed in front of a name to avoid collisions. It must be at least 4 characters long, feel distinct and unique to the plugin (do not use common words), and be separated by an underscore or dash.
+Please check the official WordPress docs on avoiding name collisions.
+
+
+ Identify not prefixed names: Look for any name that is used in a place where it can create a collision.
+Type of element
+Affected elements
+Declarations
+Functions, classes, etc (if not under a namespace)
+Globals
+Global variables, namespaces, define() .
+Data storage
+update_option() , set_transient() , update_post_meta() , etc.
+WordPress declarations
+add_shortcode() , register_post_type() , add_menu_page() , wp_register_script() , wp_localize_script() , add_action( 'wp_ajax_...' ) , etc.
+
+
+
+If the defined name for that is not prefixed, that’s a potential issue! 
+
+
+ Fix it: Always prefix those names, for example if your plugin is called "Rain OS AI Readability Optimizer Plugin for WordPress" then you could use names like these:
+function aireop_save_post(){ ... }
+class AIREOP_Admin { ... }
+update_option( 'aireop_options', $options );
+register_setting( 'aireop_settings', 'aireop_user_id', ... );
+define( 'AIREOP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+global $aireop_options;
+add_action('wp_ajax_aireop_save_data', ... );
+namespace rainosai\readability;
+Our tool has automatically detected these common issues, please check your code as there may be more names needing a prefix:
+# Using the common word "ai" as a prefix.
+ai-readability-optimizer.php:20 define('AI_READABILITY_VERSION', '1.0.0');
+ai-readability-optimizer.php:21 define('AI_READABILITY_PLUGIN_DIR', plugin_dir_path(__FILE__));
+ai-readability-optimizer.php:22 define('AI_READABILITY_PLUGIN_URL', plugin_dir_url(__FILE__));
+ai-readability-optimizer.php:23 define('AI_READABILITY_PLUGIN_BASENAME', plugin_basename(__FILE__));
+ai-readability-optimizer.php:24 define('AI_READABILITY_API_URL', 'https://api.getrainos.com/v1');
+ai-readability-optimizer.php:36 class AI_Readability_Analyzer
+includes/class-ai-readability-ai-score-panel.php:21 add_action('wp_ajax_ai_readability_get_ai_scores', array($this, 'ajax_get_ai_scores'));
+includes/class-ai-readability-ai-score-panel.php:6 class AI_Readability_AI_Score_Panel
+includes/class-ai-readability-loader.php:6 class AI_Readability_Loader
+includes/class-ai-readability-admin.php:6 class AI_Readability_Admin
+includes/api/class-ai-readability-api-client.php:86 set_transient('ai_readability_usage_info', $usage_info, HOUR_IN_SECONDS);
+includes/api/class-ai-readability-api-client.php:6 class AI_Readability_API_Client
+includes/api/class-ai-readability-ai-backend.php:57 set_transient($this->capability_cache_key, 0, 300);
+includes/api/class-ai-readability-ai-backend.php:64 set_transient($this->capability_cache_key, $available ? 1 : 0, $available ? $this->capability_cache_ttl : 300);
+includes/api/class-ai-readability-ai-backend.php:101 set_transient($cache_key, $data, $this->capability_cache_ttl);
+includes/api/class-ai-readability-ai-backend.php:6 class AI_Readability_AI_Backend
+includes/class-ai-readability-ajax.php:16 add_action('wp_ajax_ai_readability_analyze_content', array($this, 'analyze_content'));
+includes/class-ai-readability-ajax.php:17 add_action('wp_ajax_ai_readability_get_analysis', array($this, 'get_analysis'));
+includes/class-ai-readability-ajax.php:18 add_action('wp_ajax_ai_readability_get_dashboard_data', array($this, 'get_dashboard_data'));
+includes/class-ai-readability-ajax.php:19 add_action('wp_ajax_ai_readability_get_score_history', array($this, 'get_score_history'));
+includes/class-ai-readability-ajax.php:20 add_action('wp_ajax_ai_readability_search_posts', array($this, 'search_posts'));
+includes/class-ai-readability-ajax.php:21 add_action('wp_ajax_ai_readability_get_notifications', array($this, 'get_notifications'));
+includes/class-ai-readability-ajax.php:22 add_action('wp_ajax_ai_readability_mark_notification_read', array($this, 'mark_notification_read'));
+includes/class-ai-readability-ajax.php:23 add_action('wp_ajax_ai_readability_get_pillar_details', array($this, 'get_pillar_details'));
+includes/class-ai-readability-ajax.php:24 add_action('wp_ajax_ai_readability_quick_tool', array($this, 'quick_tool'));
+includes/class-ai-readability-ajax.php:25 add_action('wp_ajax_ai_readability_test_connection', array($this, 'test_connection'));
+includes/class-ai-readability-ajax.php:26 add_action('wp_ajax_ai_readability_get_usage', array($this, 'get_usage'));
+includes/class-ai-readability-ajax.php:27 add_action('wp_ajax_ai_readability_check_ai_backend', array($this, 'check_ai_backend'));
+includes/class-ai-readability-ajax.php:28 add_action('wp_ajax_ai_readability_get_ai_readiness_scores', array($this, 'get_ai_readiness_scores'));
+includes/class-ai-readability-ajax.php:29 add_action('wp_ajax_ai_readability_normalize_content', array($this, 'normalize_content'));
+includes/class-ai-readability-ajax.php:6 class AI_Readability_Ajax
+includes/class-ai-readability-assets.php:6 class AI_Readability_Assets
+includes/class-ai-readability-settings.php:38 register_setting('ai_readability_aeo_settings', 'ai_readability_api_key', array('type' => 'string', 'sanitize_callback' => 'sanitize_text_field', 'default' => ''));
+includes/class-ai-readability-settings.php:48 register_setting('ai_readability_aeo_settings', 'ai_readability_api_url', array('type' => 'string', 'sanitize_callback' => 'esc_url_raw', 'default' => AI_READABILITY_API_URL));
+includes/class-ai-readability-settings.php:58 register_setting('ai_readability_aeo_settings', 'ai_readability_cache_time', array('type' => 'integer', 'sanitize_callback' => 'absint', 'default' => 3600));
+includes/class-ai-readability-settings.php:68 register_setting('ai_readability_aeo_settings', 'ai_readability_industry', array('type' => 'string', 'sanitize_callback' => 'sanitize_text_field', 'default' => ''));
+includes/class-ai-readability-settings.php:78 register_setting('ai_readability_aeo_settings', 'ai_readability_auto_analyze', array('type' => 'string', 'sanitize_callback' => array($this, 'sanitize_checkbox'), 'default' => 'no'));
+includes/class-ai-readability-settings.php:88 register_setting('ai_readability_aeo_settings', 'ai_readability_provenance_tracking', array('type' => 'string', 'sanitize_callback' => array($this, 'sanitize_checkbox'), 'default' => 'no'));
+includes/class-ai-readability-settings.php:98 register_setting('ai_readability_aeo_settings', 'ai_readability_score_alerts', array('type' => 'string', 'sanitize_callback' => array($this, 'sanitize_checkbox'), 'default' => 'no'));
+includes/class-ai-readability-settings.php:108 register_setting('ai_readability_aeo_settings', 'ai_readability_score_threshold', array('type' => 'integer', 'sanitize_callback' => array($this, 'sanitize_threshold'), 'default' => 70));
+includes/class-ai-readability-settings.php:118 register_setting('ai_readability_aeo_settings', 'ai_readability_ai_backend_enabled', array('type' => 'string', 'sanitize_callback' => array($this, 'sanitize_checkbox'), 'default' => 'no'));
+includes/class-ai-readability-settings.php:128 register_setting('ai_readability_aeo_settings', 'ai_readability_ai_score_panel', array('type' => 'string', 'sanitize_callback' => array($this, 'sanitize_checkbox'), 'default' => 'no'));
+includes/class-ai-readability-settings.php:138 register_setting('ai_readability_aeo_settings', 'ai_readability_ai_normalize', array('type' => 'string', 'sanitize_callback' => array($this, 'sanitize_checkbox'), 'default' => 'no'));
+includes/class-ai-readability-settings.php:6 class AI_Readability_Settings
+includes/class-ai-readability-gutenberg.php:316 set_transient('ai_readability_normalize_' . $task_id, array('status' => 'processing', 'post_id' => $post_id), 300);
+includes/class-ai-readability-gutenberg.php:326 set_transient('ai_readability_normalize_' . $task_id, array('status' => 'complete'), 300);
+includes/class-ai-readability-gutenberg.php:331 set_transient('ai_readability_normalize_' . $task_id, array('status' => 'complete'), 300);
+includes/class-ai-readability-gutenberg.php:537 set_transient($cache_key, $body, 5 * MINUTE_IN_SECONDS);
+includes/class-ai-readability-gutenberg.php:12 class AI_Readability_Gutenberg
+
+

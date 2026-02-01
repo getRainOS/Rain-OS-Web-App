@@ -26,7 +26,7 @@
                 url: rainOsAiPanel.ajaxUrl,
                 type: 'POST',
                 data: {
-                    action: 'ai_readability_get_ai_scores',
+                    action: 'rairo_get_ai_scores',
                     nonce: rainOsAiPanel.nonce,
                     content_id: this.contentId,
                     post_id: this.postId

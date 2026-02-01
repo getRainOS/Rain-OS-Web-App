@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class AI_Readability_Admin {
+class RAIRO_Admin {
 
     private $api_client;
     private $current_page = 'dashboard';
@@ -125,68 +125,68 @@ class AI_Readability_Admin {
         if ( ! current_user_can( 'edit_posts' ) ) {
             wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-ai-readability-optimizer' ) );
         }
-        include AI_READABILITY_PLUGIN_DIR . 'templates/learn-ai-readability.php';
+        include RAIRO_PLUGIN_DIR . 'templates/learn-ai-readability.php';
     }
 
     public function render_admin_page() {
         if ( ! current_user_can( 'edit_posts' ) ) {
             wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-ai-readability-optimizer' ) );
         }
-        include AI_READABILITY_PLUGIN_DIR . 'templates/dashboard.php';
+        include RAIRO_PLUGIN_DIR . 'templates/dashboard.php';
     }
 
     public function render_analyzer_page() {
         if ( ! current_user_can( 'edit_posts' ) ) {
             wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-ai-readability-optimizer' ) );
         }
-        include AI_READABILITY_PLUGIN_DIR . 'templates/content-analyzer.php';
+        include RAIRO_PLUGIN_DIR . 'templates/content-analyzer.php';
     }
 
     public function render_history_page() {
         if ( ! current_user_can( 'edit_posts' ) ) {
             wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-ai-readability-optimizer' ) );
         }
-        include AI_READABILITY_PLUGIN_DIR . 'templates/score-history.php';
+        include RAIRO_PLUGIN_DIR . 'templates/score-history.php';
     }
 
     public function render_pillars_page() {
         if ( ! current_user_can( 'edit_posts' ) ) {
             wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-ai-readability-optimizer' ) );
         }
-        include AI_READABILITY_PLUGIN_DIR . 'templates/pillar-breakdown.php';
+        include RAIRO_PLUGIN_DIR . 'templates/pillar-breakdown.php';
     }
 
     public function render_signals_page() {
         if ( ! current_user_can( 'edit_posts' ) ) {
             wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-ai-readability-optimizer' ) );
         }
-        include AI_READABILITY_PLUGIN_DIR . 'templates/content-signals.php';
+        include RAIRO_PLUGIN_DIR . 'templates/content-signals.php';
     }
 
     public function render_docs_page() {
         if ( ! current_user_can( 'edit_posts' ) ) {
             wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-ai-readability-optimizer' ) );
         }
-        include AI_READABILITY_PLUGIN_DIR . 'templates/documentation.php';
+        include RAIRO_PLUGIN_DIR . 'templates/documentation.php';
     }
 
     public function render_upgrade_page() {
         if ( ! current_user_can( 'manage_options' ) ) {
             wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-ai-readability-optimizer' ) );
         }
-        include AI_READABILITY_PLUGIN_DIR . 'templates/upgrade.php';
+        include RAIRO_PLUGIN_DIR . 'templates/upgrade.php';
     }
 
     public function render_settings_page() {
         if ( ! current_user_can( 'manage_options' ) ) {
             wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-ai-readability-optimizer' ) );
         }
-        include AI_READABILITY_PLUGIN_DIR . 'templates/settings.php';
+        include RAIRO_PLUGIN_DIR . 'templates/settings.php';
     }
 
     public function get_analysis_data( $period = 30 ) {
         global $wpdb;
-        $table_name = $wpdb->prefix . 'ai_readability_analysis_history';
+        $table_name = $wpdb->prefix . 'rairo_analysis_history';
 
         $date_limit = gmdate( 'Y-m-d H:i:s', strtotime( "-{$period} days" ) );
 
@@ -207,7 +207,7 @@ class AI_Readability_Admin {
 
     public function get_average_scores( $period = 30 ) {
         global $wpdb;
-        $table_name = $wpdb->prefix . 'ai_readability_analysis_history';
+        $table_name = $wpdb->prefix . 'rairo_analysis_history';
 
         $date_limit = gmdate( 'Y-m-d H:i:s', strtotime( "-{$period} days" ) );
 
