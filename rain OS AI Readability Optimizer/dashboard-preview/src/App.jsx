@@ -1143,7 +1143,7 @@ function SettingsPage({ setCurrentPage }) {
     <>
       <header className="animate-in" style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '4px' }}>Settings</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Configure your Rain OS AI Readability Analyzer preferences</p>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Configure your Rain OS AI Readability Optimizer preferences</p>
       </header>
       
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '24px' }}>
@@ -1503,7 +1503,7 @@ function SettingsPage({ setCurrentPage }) {
 
 function DocsPage({ setCurrentPage }) {
   const docs = [
-    { title: 'Getting Started', desc: 'Learn how to set up Rain OS AI Readability Analyzer', page: 'docs-getting-started' },
+    { title: 'Getting Started', desc: 'Learn how to set up Rain OS AI Readability Optimizer', page: 'docs-getting-started' },
     { title: 'Troubleshooting', desc: 'Common issues and solutions', page: 'docs-troubleshooting' },
     { title: 'Learn About AI Readability', desc: 'Understand how AI systems read and interpret your content', page: 'learn-ai-readability' },
     { title: 'Improve Your Score', desc: 'Practical tips and strategies to boost your content scores', page: 'improve-score' },
@@ -1513,7 +1513,7 @@ function DocsPage({ setCurrentPage }) {
     <>
       <header className="animate-in" style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '4px' }}>Documentation</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Rain OS AI Readability Analyzer is a diagnostic tool for AI Readability and Answer Engine Optimization</p>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>Rain OS AI Readability Optimizer is a diagnostic tool for AI Readability and Answer Engine Optimization</p>
       </header>
       
       <div className="animate-in" style={{ 
@@ -1576,7 +1576,7 @@ function GettingStartedPage() {
     <>
       <div className="animate-in" style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Getting Started</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Learn how to set up Rain OS AI Readability Analyzer</p>
+        <p style={{ color: 'var(--text-secondary)' }}>Learn how to set up Rain OS AI Readability Optimizer</p>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -1588,10 +1588,10 @@ function GettingStartedPage() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
             <Microscope size={24} color="var(--accent)" />
-            <h2 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--accent)', margin: 0 }}>What is Rain OS AI Readability Analyzer?</h2>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--accent)', margin: 0 }}>What is Rain OS AI Readability Optimizer?</h2>
           </div>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.8, marginBottom: '16px' }}>
-            <strong style={{ color: 'var(--text-primary)' }}>Rain OS AI Readability Analyzer is a diagnostic tool</strong> designed to help you understand how AI-powered search engines and answer engines interpret your content. It does not automatically fix or modify your content — instead, it provides detailed analysis and actionable recommendations that you can use to improve your content's visibility in AI-driven platforms like ChatGPT, Perplexity, Gemini, and Claude.
+            <strong style={{ color: 'var(--text-primary)' }}>Rain OS AI Readability Optimizer is a diagnostic tool</strong> designed to help you understand how AI-powered search engines and answer engines interpret your content. It does not automatically fix or modify your content — instead, it provides detailed analysis and actionable recommendations that you can use to improve your content's visibility in AI-driven platforms like ChatGPT, Perplexity, Gemini, and Claude.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
             <div style={{ padding: '16px', backgroundColor: 'rgba(34, 211, 238, 0.15)', borderRadius: '8px', textAlign: 'center' }}>
@@ -1616,7 +1616,7 @@ function GettingStartedPage() {
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Installation</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {[
-              { step: '1', title: 'Download the Plugin', desc: 'Download the Rain OS AI Readability Analyzer plugin from your account dashboard or the WordPress plugin repository.' },
+              { step: '1', title: 'Download the Plugin', desc: 'Download the Rain OS AI Readability Optimizer plugin from your account dashboard or the WordPress plugin repository.' },
               { step: '2', title: 'Upload to WordPress', desc: 'Go to Plugins > Add New > Upload Plugin in your WordPress admin. Select the downloaded ZIP file and click Install Now.' },
               { step: '3', title: 'Activate the Plugin', desc: 'After installation, click Activate Plugin. You will see a new "Rain OS" menu item in your WordPress admin sidebar.' },
               { step: '4', title: 'Enter Your API Key', desc: 'Navigate to Rain OS > Settings and enter your API key. You can find your API key in your Rain OS account dashboard.' },

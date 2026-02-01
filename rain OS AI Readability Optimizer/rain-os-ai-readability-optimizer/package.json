@@ -1,7 +1,7 @@
 {
-  "name": "ai-readability-optimizer",
+  "name": "rain-os-ai-readability-optimizer",
   "version": "1.0.0",
-  "description": "AI Readability Optimizer - WordPress Plugin Build",
+  "description": "Rain OS AI Readability Optimizer - WordPress Plugin Build",
   "scripts": {
     "build": "webpack --mode production",
     "build:clean": "rm -rf build",

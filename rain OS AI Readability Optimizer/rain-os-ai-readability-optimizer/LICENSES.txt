@@ -1,4 +1,4 @@
-Third-Party Licenses for AI Readability Optimizer
+Third-Party Licenses for Rain OS AI Readability Optimizer
 ==========================================================
 
 This file documents the licenses of all third-party libraries included
