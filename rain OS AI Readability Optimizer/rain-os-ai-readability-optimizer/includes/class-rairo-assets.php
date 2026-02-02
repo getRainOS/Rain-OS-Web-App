@@ -33,7 +33,7 @@ class RAIRO_Assets {
             'chartjs',
             RAIRO_PLUGIN_URL . 'assets/js/chart.min.js',
             array(),
-            '4.4.1',
+            '4.5.1',
             true
         );
 
