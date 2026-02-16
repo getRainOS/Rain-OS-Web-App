@@ -16,24 +16,25 @@ import {
 import './index.css'
 
 const performanceData = [
-  { name: 'Jan', aiReadability: 67, digitalAuthority: 62, conversionReadiness: 66, average: 65, baseline: 70 },
-  { name: 'Feb', aiReadability: 70, digitalAuthority: 65, conversionReadiness: 69, average: 68, baseline: 70 },
-  { name: 'Mar', aiReadability: 74, digitalAuthority: 69, conversionReadiness: 73, average: 72, baseline: 70 },
-  { name: 'Apr', aiReadability: 72, digitalAuthority: 67, conversionReadiness: 71, average: 70, baseline: 70 },
-  { name: 'May', aiReadability: 77, digitalAuthority: 72, conversionReadiness: 76, average: 75, baseline: 70 },
-  { name: 'Jun', aiReadability: 80, digitalAuthority: 75, conversionReadiness: 79, average: 78, baseline: 70 },
-  { name: 'Jul', aiReadability: 84, digitalAuthority: 79, conversionReadiness: 83, average: 82, baseline: 70 },
-  { name: 'Aug', aiReadability: 81, digitalAuthority: 76, conversionReadiness: 80, average: 79, baseline: 70 },
-  { name: 'Sep', aiReadability: 87, digitalAuthority: 82, conversionReadiness: 86, average: 85, baseline: 70 },
-  { name: 'Oct', aiReadability: 85, digitalAuthority: 80, conversionReadiness: 84, average: 83, baseline: 70 },
-  { name: 'Nov', aiReadability: 90, digitalAuthority: 85, conversionReadiness: 89, average: 88, baseline: 70 },
-  { name: 'Dec', aiReadability: 93, digitalAuthority: 88, conversionReadiness: 92, average: 91, baseline: 70 },
+  { name: 'Jan', aiReadability: 67, digitalAuthority: 62, conversionReadiness: 66, productDiscoverability: 58, average: 65, baseline: 70 },
+  { name: 'Feb', aiReadability: 70, digitalAuthority: 65, conversionReadiness: 69, productDiscoverability: 61, average: 68, baseline: 70 },
+  { name: 'Mar', aiReadability: 74, digitalAuthority: 69, conversionReadiness: 73, productDiscoverability: 64, average: 72, baseline: 70 },
+  { name: 'Apr', aiReadability: 72, digitalAuthority: 67, conversionReadiness: 71, productDiscoverability: 63, average: 70, baseline: 70 },
+  { name: 'May', aiReadability: 77, digitalAuthority: 72, conversionReadiness: 76, productDiscoverability: 67, average: 75, baseline: 70 },
+  { name: 'Jun', aiReadability: 80, digitalAuthority: 75, conversionReadiness: 79, productDiscoverability: 70, average: 78, baseline: 70 },
+  { name: 'Jul', aiReadability: 84, digitalAuthority: 79, conversionReadiness: 83, productDiscoverability: 74, average: 82, baseline: 70 },
+  { name: 'Aug', aiReadability: 81, digitalAuthority: 76, conversionReadiness: 80, productDiscoverability: 72, average: 79, baseline: 70 },
+  { name: 'Sep', aiReadability: 87, digitalAuthority: 82, conversionReadiness: 86, productDiscoverability: 77, average: 85, baseline: 70 },
+  { name: 'Oct', aiReadability: 85, digitalAuthority: 80, conversionReadiness: 84, productDiscoverability: 76, average: 83, baseline: 70 },
+  { name: 'Nov', aiReadability: 90, digitalAuthority: 85, conversionReadiness: 89, productDiscoverability: 80, average: 88, baseline: 70 },
+  { name: 'Dec', aiReadability: 93, digitalAuthority: 88, conversionReadiness: 92, productDiscoverability: 83, average: 91, baseline: 70 },
 ]
 
 const pillarData = [
   { name: 'AI Readability', value: 88, color: '#22d3ee' },
   { name: 'Digital Authority', value: 78, color: '#10b981' },
   { name: 'Conversion Readiness', value: 84, color: '#a855f7' },
+  { name: 'Product Discoverability', value: 72, color: '#f59e0b' },
 ]
 
 const categoryData = [
@@ -46,6 +47,9 @@ const categoryData = [
   { name: 'AI Alignment', score: 86, pillar: 'conversionReadiness' },
   { name: 'Schema Extraction', score: 80, pillar: 'conversionReadiness' },
   { name: 'QA-Format Detection', score: 86, pillar: 'conversionReadiness' },
+  { name: 'Search Presence', score: 74, pillar: 'productDiscoverability' },
+  { name: 'Brand Visibility', score: 70, pillar: 'productDiscoverability' },
+  { name: 'Market Positioning', score: 72, pillar: 'productDiscoverability' },
 ]
 
 const getCategoryPillarColor = (pillar) => {
@@ -53,6 +57,7 @@ const getCategoryPillarColor = (pillar) => {
     case 'aiReadability': return '#22d3ee'
     case 'digitalAuthority': return '#10b981'
     case 'conversionReadiness': return '#a855f7'
+    case 'productDiscoverability': return '#f59e0b'
     default: return '#22d3ee'
   }
 }
@@ -79,18 +84,18 @@ const getRelativeDate = (daysAgo) => {
 }
 
 const postsData = [
-  { id: 1, title: 'Cloud Computing Infrastructure Guide', slug: 'cloud-computing-guide', author: 'John Smith', publishDate: getRelativeDate(2), wordCount: 2100, overallScore: 94, trend: +5, pillars: { aiReadability: 96, digitalAuthority: 92, conversionReadiness: 94 }, categories: { semanticClarity: 95, logicalStructure: 92, citationReadiness: 88, entityRecognition: 90 }, indexing: true, mobileUsability: true },
-  { id: 2, title: 'Database Optimization Techniques', slug: 'database-optimization', author: 'Jane Doe', publishDate: getRelativeDate(4), wordCount: 1800, overallScore: 92, trend: +3, pillars: { aiReadability: 91, digitalAuthority: 94, conversionReadiness: 91 }, categories: { semanticClarity: 90, logicalStructure: 88, citationReadiness: 95, entityRecognition: 87 }, indexing: true, mobileUsability: true },
-  { id: 3, title: 'Network Security Best Practices', slug: 'network-security', author: 'Mike Johnson', publishDate: getRelativeDate(8), wordCount: 1500, overallScore: 88, trend: +2, pillars: { aiReadability: 89, digitalAuthority: 86, conversionReadiness: 89 }, categories: { semanticClarity: 87, logicalStructure: 91, citationReadiness: 82, entityRecognition: 85 }, indexing: true, mobileUsability: true },
-  { id: 4, title: 'Microservices Architecture Deep Dive', slug: 'microservices-architecture', author: 'Sarah Wilson', publishDate: getRelativeDate(12), wordCount: 1200, overallScore: 85, trend: +4, pillars: { aiReadability: 87, digitalAuthority: 83, conversionReadiness: 85 }, categories: { semanticClarity: 84, logicalStructure: 86, citationReadiness: 80, entityRecognition: 88 }, indexing: true, mobileUsability: false },
-  { id: 5, title: 'DevOps Pipeline Implementation', slug: 'devops-pipeline', author: 'Tom Brown', publishDate: getRelativeDate(18), wordCount: 1100, overallScore: 83, trend: 0, pillars: { aiReadability: 84, digitalAuthority: 82, conversionReadiness: 83 }, categories: { semanticClarity: 82, logicalStructure: 85, citationReadiness: 79, entityRecognition: 84 }, indexing: true, mobileUsability: true },
-  { id: 6, title: 'API Gateway Configuration', slug: 'api-gateway-config', author: 'Emily Chen', publishDate: getRelativeDate(22), wordCount: 950, overallScore: 81, trend: -1, pillars: { aiReadability: 82, digitalAuthority: 80, conversionReadiness: 81 }, categories: { semanticClarity: 80, logicalStructure: 83, citationReadiness: 78, entityRecognition: 81 }, indexing: true, mobileUsability: true },
-  { id: 7, title: 'Container Orchestration Guide', slug: 'container-orchestration', author: 'John Smith', publishDate: getRelativeDate(28), wordCount: 820, overallScore: 78, trend: +2, pillars: { aiReadability: 79, digitalAuthority: 77, conversionReadiness: 78 }, categories: { semanticClarity: 77, logicalStructure: 80, citationReadiness: 75, entityRecognition: 79 }, indexing: true, mobileUsability: false },
-  { id: 8, title: 'RESTful API Design Patterns', slug: 'restful-api-patterns', author: 'Jane Doe', publishDate: getRelativeDate(35), wordCount: 720, overallScore: 74, trend: -2, pillars: { aiReadability: 75, digitalAuthority: 73, conversionReadiness: 74 }, categories: { semanticClarity: 73, logicalStructure: 76, citationReadiness: 71, entityRecognition: 75 }, indexing: true, mobileUsability: true },
-  { id: 9, title: 'Serverless Architecture Overview', slug: 'serverless-architecture', author: 'Mike Johnson', publishDate: getRelativeDate(42), wordCount: 650, overallScore: 71, trend: +1, pillars: { aiReadability: 72, digitalAuthority: 70, conversionReadiness: 71 }, categories: { semanticClarity: 70, logicalStructure: 73, citationReadiness: 68, entityRecognition: 72 }, indexing: true, mobileUsability: false },
-  { id: 10, title: 'Data Pipeline Architecture', slug: 'data-pipeline-architecture', author: 'Sarah Wilson', publishDate: getRelativeDate(48), wordCount: 550, overallScore: 67, trend: 0, pillars: { aiReadability: 68, digitalAuthority: 66, conversionReadiness: 67 }, categories: { semanticClarity: 66, logicalStructure: 69, citationReadiness: 64, entityRecognition: 68 }, indexing: false, mobileUsability: true },
-  { id: 11, title: 'Load Balancing Strategies', slug: 'load-balancing', author: 'Tom Brown', publishDate: getRelativeDate(55), wordCount: 450, overallScore: 62, trend: -3, pillars: { aiReadability: 63, digitalAuthority: 61, conversionReadiness: 62 }, categories: { semanticClarity: 61, logicalStructure: 64, citationReadiness: 59, entityRecognition: 63 }, indexing: true, mobileUsability: true },
-  { id: 12, title: 'Caching Mechanisms Overview', slug: 'caching-mechanisms', author: 'Emily Chen', publishDate: getRelativeDate(58), wordCount: 380, overallScore: 58, trend: -4, pillars: { aiReadability: 59, digitalAuthority: 57, conversionReadiness: 58 }, categories: { semanticClarity: 57, logicalStructure: 60, citationReadiness: 55, entityRecognition: 59 }, indexing: false, mobileUsability: false },
+  { id: 1, title: 'Cloud Computing Infrastructure Guide', slug: 'cloud-computing-guide', author: 'John Smith', publishDate: getRelativeDate(2), wordCount: 2100, overallScore: 94, trend: +5, pillars: { aiReadability: 96, digitalAuthority: 92, conversionReadiness: 94, productDiscoverability: 87 }, categories: { semanticClarity: 95, logicalStructure: 92, citationReadiness: 88, entityRecognition: 90 }, indexing: true, mobileUsability: true },
+  { id: 2, title: 'Database Optimization Techniques', slug: 'database-optimization', author: 'Jane Doe', publishDate: getRelativeDate(4), wordCount: 1800, overallScore: 92, trend: +3, pillars: { aiReadability: 91, digitalAuthority: 94, conversionReadiness: 91, productDiscoverability: 84 }, categories: { semanticClarity: 90, logicalStructure: 88, citationReadiness: 95, entityRecognition: 87 }, indexing: true, mobileUsability: true },
+  { id: 3, title: 'Network Security Best Practices', slug: 'network-security', author: 'Mike Johnson', publishDate: getRelativeDate(8), wordCount: 1500, overallScore: 88, trend: +2, pillars: { aiReadability: 89, digitalAuthority: 86, conversionReadiness: 89, productDiscoverability: 82 }, categories: { semanticClarity: 87, logicalStructure: 91, citationReadiness: 82, entityRecognition: 85 }, indexing: true, mobileUsability: true },
+  { id: 4, title: 'Microservices Architecture Deep Dive', slug: 'microservices-architecture', author: 'Sarah Wilson', publishDate: getRelativeDate(12), wordCount: 1200, overallScore: 85, trend: +4, pillars: { aiReadability: 87, digitalAuthority: 83, conversionReadiness: 85, productDiscoverability: 78 }, categories: { semanticClarity: 84, logicalStructure: 86, citationReadiness: 80, entityRecognition: 88 }, indexing: true, mobileUsability: false },
+  { id: 5, title: 'DevOps Pipeline Implementation', slug: 'devops-pipeline', author: 'Tom Brown', publishDate: getRelativeDate(18), wordCount: 1100, overallScore: 83, trend: 0, pillars: { aiReadability: 84, digitalAuthority: 82, conversionReadiness: 83, productDiscoverability: 76 }, categories: { semanticClarity: 82, logicalStructure: 85, citationReadiness: 79, entityRecognition: 84 }, indexing: true, mobileUsability: true },
+  { id: 6, title: 'API Gateway Configuration', slug: 'api-gateway-config', author: 'Emily Chen', publishDate: getRelativeDate(22), wordCount: 950, overallScore: 81, trend: -1, pillars: { aiReadability: 82, digitalAuthority: 80, conversionReadiness: 81, productDiscoverability: 74 }, categories: { semanticClarity: 80, logicalStructure: 83, citationReadiness: 78, entityRecognition: 81 }, indexing: true, mobileUsability: true },
+  { id: 7, title: 'Container Orchestration Guide', slug: 'container-orchestration', author: 'John Smith', publishDate: getRelativeDate(28), wordCount: 820, overallScore: 78, trend: +2, pillars: { aiReadability: 79, digitalAuthority: 77, conversionReadiness: 78, productDiscoverability: 71 }, categories: { semanticClarity: 77, logicalStructure: 80, citationReadiness: 75, entityRecognition: 79 }, indexing: true, mobileUsability: false },
+  { id: 8, title: 'RESTful API Design Patterns', slug: 'restful-api-patterns', author: 'Jane Doe', publishDate: getRelativeDate(35), wordCount: 720, overallScore: 74, trend: -2, pillars: { aiReadability: 75, digitalAuthority: 73, conversionReadiness: 74, productDiscoverability: 67 }, categories: { semanticClarity: 73, logicalStructure: 76, citationReadiness: 71, entityRecognition: 75 }, indexing: true, mobileUsability: true },
+  { id: 9, title: 'Serverless Architecture Overview', slug: 'serverless-architecture', author: 'Mike Johnson', publishDate: getRelativeDate(42), wordCount: 650, overallScore: 71, trend: +1, pillars: { aiReadability: 72, digitalAuthority: 70, conversionReadiness: 71, productDiscoverability: 64 }, categories: { semanticClarity: 70, logicalStructure: 73, citationReadiness: 68, entityRecognition: 72 }, indexing: true, mobileUsability: false },
+  { id: 10, title: 'Data Pipeline Architecture', slug: 'data-pipeline-architecture', author: 'Sarah Wilson', publishDate: getRelativeDate(48), wordCount: 550, overallScore: 67, trend: 0, pillars: { aiReadability: 68, digitalAuthority: 66, conversionReadiness: 67, productDiscoverability: 60 }, categories: { semanticClarity: 66, logicalStructure: 69, citationReadiness: 64, entityRecognition: 68 }, indexing: false, mobileUsability: true },
+  { id: 11, title: 'Load Balancing Strategies', slug: 'load-balancing', author: 'Tom Brown', publishDate: getRelativeDate(55), wordCount: 450, overallScore: 62, trend: -3, pillars: { aiReadability: 63, digitalAuthority: 61, conversionReadiness: 62, productDiscoverability: 55 }, categories: { semanticClarity: 61, logicalStructure: 64, citationReadiness: 59, entityRecognition: 63 }, indexing: true, mobileUsability: true },
+  { id: 12, title: 'Caching Mechanisms Overview', slug: 'caching-mechanisms', author: 'Emily Chen', publishDate: getRelativeDate(58), wordCount: 380, overallScore: 58, trend: -4, pillars: { aiReadability: 59, digitalAuthority: 57, conversionReadiness: 58, productDiscoverability: 51 }, categories: { semanticClarity: 57, logicalStructure: 60, citationReadiness: 55, entityRecognition: 59 }, indexing: false, mobileUsability: false },
 ]
 
 const TIME_PERIODS = [
@@ -450,7 +455,8 @@ const mockAnalysis = {
   pillarScores: {
     aiReadability: 78,
     digitalAuthority: 85,
-    conversionReadiness: 83
+    conversionReadiness: 83,
+    productDiscoverability: 70
   },
   subScores: [
     { name: "Semantic Clarity", score: 90, status: "good", pillar: "aiReadability" },
@@ -461,7 +467,10 @@ const mockAnalysis = {
     { name: "Metadata Audit", score: 78, status: "warning", pillar: "digitalAuthority" },
     { name: "AI Alignment", score: 88, status: "good", pillar: "conversionReadiness" },
     { name: "QA-format Detection", score: 95, status: "good", pillar: "conversionReadiness" },
-    { name: "Schema Extraction", score: 40, status: "critical", pillar: "conversionReadiness" }
+    { name: "Schema Extraction", score: 40, status: "critical", pillar: "conversionReadiness" },
+    { name: "Search Presence", score: 74, status: "warning", pillar: "productDiscoverability" },
+    { name: "Brand Visibility", score: 68, status: "warning", pillar: "productDiscoverability" },
+    { name: "Market Positioning", score: 70, status: "warning", pillar: "productDiscoverability" }
   ],
   recommendations: [
     { text: "Add structured entity definitions in first paragraph.", type: "critical" },
@@ -495,14 +504,15 @@ function GutenbergSidebarPage() {
   const heatmapKeywords = {
     aiReadability: ['cloud computing', 'infrastructure', 'distributed computing', 'load balancing', 'high availability', 'fault tolerance', 'continuous integration', 'continuous delivery', 'CI/CD', 'microservices'],
     digitalAuthority: ['CNCF', '2024 survey', '78%', '40-60%', 'GDPR', 'HIPAA', 'SOC 2', 'PCI-DSS', 'zero-trust', 'E-E-A-T'],
-    conversionReadiness: ['revolutionized', 'unprecedented flexibility', 'essential', 'gold standard', 'critical requirements', 'comprehensive', 'best practices']
+    conversionReadiness: ['revolutionized', 'unprecedented flexibility', 'essential', 'gold standard', 'critical requirements', 'comprehensive', 'best practices'],
+    productDiscoverability: ['product', 'brand', 'market', 'visibility', 'search', 'discover', 'position', 'competitive advantage']
   }
 
   const highlightText = (text) => {
     if (!heatmapActive) return text
     let result = text
     Object.entries(heatmapKeywords).forEach(([pillar, keywords]) => {
-      const color = pillar === 'aiReadability' ? '#22d3ee' : pillar === 'digitalAuthority' ? '#10b981' : '#a855f7'
+      const color = pillar === 'aiReadability' ? '#22d3ee' : pillar === 'digitalAuthority' ? '#10b981' : pillar === 'conversionReadiness' ? '#a855f7' : '#f59e0b'
       keywords.forEach(keyword => {
         const regex = new RegExp(`(${keyword})`, 'gi')
         result = result.replace(regex, `<span style="background-color: ${color}33; color: ${color}; padding: 1px 4px; border-radius: 3px; font-weight: 500;">$1</span>`)
@@ -575,12 +585,14 @@ function GutenbergSidebarPage() {
     aiReadability: { score: 88, label: 'AI Readability', color: '#22d3ee', tooltip: 'Measures how easily AI systems can understand your content. Includes semantic clarity, readability, and logical structure.' },
     digitalAuthority: { score: 75, label: 'Digital Authority', color: '#10b981', tooltip: 'Assesses your content\'s credibility and trustworthiness. Includes entity recognition, citation readiness, and schema extraction.' },
     conversionReadiness: { score: 83, label: 'Conversion Readiness', color: '#a855f7', tooltip: 'Evaluates how well your content drives engagement. Includes AI alignment, Q&A format optimization, and metadata audit.' },
+    productDiscoverability: { score: 72, label: 'Product Discoverability', color: '#f59e0b', tooltip: 'Measures how easily your product or service can be found through AI-powered search and recommendation systems.' },
   }
 
   const mockSubScores = {
     semanticClarity: 85, readabilityScore: 90, logicalStructure: 89,
     entityRecognition: 72, citationReadiness: 78, schemaExtraction: 75,
     aiAlignment: 84, qaFormat: 80, metadataAudit: 85,
+    searchPresence: 74, brandVisibility: 70, marketPositioning: 72,
   }
 
   const generateMockAnalysisData = () => {
@@ -739,9 +751,9 @@ function GutenbergSidebarPage() {
   ]
 
   const historyData = [
-    { date: '2025-01-08', overallScore: 82, aiReadability: 88, digitalAuthority: 75, conversionReadiness: 83 },
-    { date: '2025-01-05', overallScore: 78, aiReadability: 82, digitalAuthority: 72, conversionReadiness: 80 },
-    { date: '2025-01-02', overallScore: 75, aiReadability: 79, digitalAuthority: 70, conversionReadiness: 76 },
+    { date: '2025-01-08', overallScore: 82, aiReadability: 88, digitalAuthority: 75, conversionReadiness: 83, productDiscoverability: 70 },
+    { date: '2025-01-05', overallScore: 78, aiReadability: 82, digitalAuthority: 72, conversionReadiness: 80, productDiscoverability: 67 },
+    { date: '2025-01-02', overallScore: 75, aiReadability: 79, digitalAuthority: 70, conversionReadiness: 76, productDiscoverability: 63 },
   ]
 
   const pillars = analysisData?.pillars || mockPillars
@@ -749,7 +761,7 @@ function GutenbergSidebarPage() {
   return (
     <div>
       <h1 style={{ fontSize: '24px', fontWeight: 600, marginBottom: '8px' }}>Analyze Your Content For AI Readability</h1>
-      <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>Your content is analyzed against our Proprietary 3-pillar AI Readability Score, further verified for AI metrics, and Safeguards are monitored</p>
+      <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>Your content is analyzed against our Proprietary 4-pillar AI Readability Score, further verified for AI metrics, and Safeguards are monitored</p>
 
       <div style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
         <div style={{ flex: 1, backgroundColor: 'var(--bg-secondary)', borderRadius: '12px', padding: '24px', border: '1px solid var(--border-color)' }}>
@@ -808,6 +820,10 @@ function GutenbergSidebarPage() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <div style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#a855f7' }}></div>
                   <span style={{ fontSize: '12px', color: '#a855f7' }}>Conversion Readiness</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <div style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#f59e0b' }}></div>
+                  <span style={{ fontSize: '12px', color: '#f59e0b' }}>Product Discoverability</span>
                 </div>
               </div>
             </div>
@@ -954,7 +970,8 @@ function GutenbergSidebarPage() {
                 <>
                   {[{ pillar: 'aiReadability', label: 'AI Readability', color: '#22d3ee', scores: ['semanticClarity', 'readabilityScore', 'logicalStructure'] },
                     { pillar: 'digitalAuthority', label: 'Digital Authority', color: '#10b981', scores: ['entityRecognition', 'citationReadiness', 'schemaExtraction'] },
-                    { pillar: 'conversionReadiness', label: 'Conversion Readiness', color: '#a855f7', scores: ['aiAlignment', 'qaFormat', 'metadataAudit'] }
+                    { pillar: 'conversionReadiness', label: 'Conversion Readiness', color: '#a855f7', scores: ['aiAlignment', 'qaFormat', 'metadataAudit'] },
+                    { pillar: 'productDiscoverability', label: 'Product Discoverability', color: '#f59e0b', scores: ['searchPresence', 'brandVisibility', 'marketPositioning'] }
                   ].map(group => (
                     <div key={group.pillar} style={{ marginBottom: 16 }}>
                       <div style={{ fontSize: 11, fontWeight: 600, color: group.color, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>{group.label}</div>
@@ -984,6 +1001,7 @@ function GutenbergSidebarPage() {
                       <span style={{ fontSize: 11, color: '#22d3ee' }}>AI: {entry.aiReadability}</span>
                       <span style={{ fontSize: 11, color: '#10b981' }}>DA: {entry.digitalAuthority}</span>
                       <span style={{ fontSize: 11, color: '#a855f7' }}>CR: {entry.conversionReadiness}</span>
+                      <span style={{ fontSize: 11, color: '#f59e0b' }}>PD: {entry.productDiscoverability}</span>
                     </div>
                   </div>
                   <div style={{ fontSize: 18, fontWeight: 700, color: getScoreColor(entry.overallScore) }}>{entry.overallScore}</div>
@@ -1641,8 +1659,8 @@ function GettingStartedPage() {
             <li style={{ marginBottom: '8px' }}>Open any post or page in the WordPress editor</li>
             <li style={{ marginBottom: '8px' }}>Look for the "Rain OS Analysis" panel in the sidebar (Gutenberg) or below the editor (Classic)</li>
             <li style={{ marginBottom: '8px' }}>Click the "Analyze Content" button to run the diagnostic</li>
-            <li style={{ marginBottom: '8px' }}>Our AI engine evaluates your content across 9 diagnostic categories</li>
-            <li style={{ marginBottom: '8px' }}>Review your scores across all three pillars: AI Readability, Digital Authority, and Conversion Readiness</li>
+            <li style={{ marginBottom: '8px' }}>Our AI engine evaluates your content across 12 diagnostic categories</li>
+            <li style={{ marginBottom: '8px' }}>Review your scores across all four pillars: AI Readability, Digital Authority, Conversion Readiness, and Product Discoverability</li>
             <li>Read the recommendations and implement the suggested improvements manually</li>
           </ol>
         </div>
@@ -1654,7 +1672,7 @@ function GettingStartedPage() {
               { term: 'Performance History Chart', desc: 'The gradient area chart shows your average content score over time. The shaded area represents your performance trend, making it easy to visualize improvement.' },
               { term: 'Baseline (70)', desc: 'The dashed horizontal line at 70 represents the minimum recommended score for well-optimized content. Content scoring above this baseline is considered ready for AI-driven answer engines.' },
               { term: 'KPI Cards', desc: 'The four cards at the top show Total Analyses (content pieces analyzed), Average Score (mean across all pillars), Content Health (percentage of content above baseline), and API Usage (your quota consumption).' },
-              { term: 'Pillar Breakdown', desc: 'The donut chart displays your scores across three pillars: AI Readability (cyan), Digital Authority (green), and Conversion Readiness (purple).' },
+              { term: 'Pillar Breakdown', desc: 'The donut chart displays your scores across four pillars: AI Readability (cyan), Digital Authority (green), Conversion Readiness (purple), and Product Discoverability (orange).' },
               { term: 'Analysis Categories', desc: 'The vertical bar chart breaks down specific metrics like Semantic Clarity, Entity Recognition, and Citation Readiness.' },
               { term: 'Post Performance Indicators', desc: 'Green lights indicate good performance (80+), yellow indicates acceptable (65-79), and red indicates content needing improvement (below 65).' },
             ].map((item, i) => (
@@ -1837,6 +1855,7 @@ function QuickToolsPage() {
               { pillar: 'AI Readability', scores: ['Semantic Clarity', 'Logical Structure', 'Readability Index', 'Entity Recognition'] },
               { pillar: 'Digital Authority', scores: ['Citation Readiness', 'E-E-A-T Signals', 'Source Quality', 'Fact Density'] },
               { pillar: 'Conversion Readiness', scores: ['CTA Strength', 'Engagement Hooks', 'User Intent Match', 'Action Clarity'] },
+              { pillar: 'Product Discoverability', scores: ['Search Presence', 'Brand Visibility', 'Market Positioning', 'Competitive Edge'] },
             ].map((p, i) => (
               <div key={i} style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
                 <div style={{ fontWeight: 500, marginBottom: '8px' }}>{p.pillar}</div>
@@ -1865,8 +1884,8 @@ function ThreePillarsPage() {
   return (
     <>
       <div className="animate-in" style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>The Three Pillars</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Understanding AI Readability, Digital Authority, and Conversion Readiness</p>
+        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>The Four Pillars</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Understanding AI Readability, Digital Authority, Conversion Readiness, and Product Discoverability</p>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -2018,7 +2037,7 @@ function ThreePillarsPage() {
         <div className="animate-in-delay-4" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>How Scores Are Calculated</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
-            Each pillar is scored from 0-100 based on multiple sub-factors. The overall score is a weighted average of all three pillars. Scores are calculated using advanced AI models that simulate how modern search engines and AI systems evaluate content.
+            Each pillar is scored from 0-100 based on multiple sub-factors. The overall score is a weighted average of all four pillars. Scores are calculated using advanced AI models that simulate how modern search engines and AI systems evaluate content.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
             <div style={{ textAlign: 'center', padding: '20px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
@@ -2890,7 +2909,7 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
       <header className="animate-in" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
         <div>
           <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Pillar Breakdown</h1>
-          <p style={{ color: 'var(--text-secondary)' }}>Analyze your three core optimization pillars</p>
+          <p style={{ color: 'var(--text-secondary)' }}>Analyze your four core optimization pillars</p>
         </div>
         <TimePeriodDropdown selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
       </header>
@@ -2901,6 +2920,8 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
               ? [{ name: 'Semantic Clarity', value: 85 }, { name: 'Readability Score', value: 78 }, { name: 'Logical Structure', value: 82 }]
               : pillar.name === 'Digital Authority'
               ? [{ name: 'Entity Recognition', value: 75 }, { name: 'Citation Readiness', value: 88 }, { name: 'Schema Extraction', value: 72 }]
+              : pillar.name === 'Product Discoverability'
+              ? [{ name: 'Search Presence', value: 74 }, { name: 'Brand Visibility', value: 70 }, { name: 'Market Positioning', value: 72 }]
               : [{ name: 'AI Alignment', value: 80 }, { name: 'QA-Format', value: 76 }, { name: 'Metadata Audit', value: 84 }]
             
             return (
@@ -2924,6 +2945,7 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
                   {pillar.name === 'AI Readability' && 'Measures semantic clarity, logical structure, and overall readability for AI systems.'}
                   {pillar.name === 'Digital Authority' && 'Evaluates credibility signals, citation readiness, and trustworthiness indicators.'}
                   {pillar.name === 'Conversion Readiness' && 'Assesses user engagement potential and action-driving effectiveness.'}
+                  {pillar.name === 'Product Discoverability' && 'Measures how easily your product or service can be found through AI-powered search and recommendations.'}
                 </p>
                 <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
                   <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '12px', fontWeight: 500 }}>SUBCATEGORIES</div>
@@ -2992,12 +3014,13 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
                     <th style={{ textAlign: 'center', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>AI Readability</th>
                     <th style={{ textAlign: 'center', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>Digital Authority</th>
                     <th style={{ textAlign: 'center', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>Conversion</th>
+                    <th style={{ textAlign: 'center', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>Discoverability</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredPosts.map((post, idx) => {
                     const getScoreColor = (score) => score >= 80 ? '#10b981' : score >= 65 ? '#f59e0b' : '#ef4444'
-                    const avgScore = Math.round((post.pillars.aiReadability + post.pillars.digitalAuthority + post.pillars.conversionReadiness) / 3)
+                    const avgScore = Math.round((post.pillars.aiReadability + post.pillars.digitalAuthority + post.pillars.conversionReadiness + post.pillars.productDiscoverability) / 4)
                     
                     return (
                       <tr key={post.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
@@ -3068,6 +3091,22 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
                               fontWeight: 600,
                               color: '#fff',
                             }}>{post.pillars.conversionReadiness}</span>
+                          </div>
+                        </td>
+                        <td style={{ padding: '14px 8px', textAlign: 'center' }}>
+                          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{
+                              width: '8px',
+                              height: '8px',
+                              borderRadius: '50%',
+                              backgroundColor: getScoreColor(post.pillars.productDiscoverability),
+                              boxShadow: `0 0 6px ${getScoreColor(post.pillars.productDiscoverability)}`,
+                            }} />
+                            <span style={{ 
+                              fontSize: '13px',
+                              fontWeight: 600,
+                              color: '#fff',
+                            }}>{post.pillars.productDiscoverability}</span>
                           </div>
                         </td>
                       </tr>
@@ -3227,7 +3266,7 @@ function LearnAIReadabilityPage({ setCurrentPage }) {
           </div>
 
           <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>The Three Pillars Explained</h2>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>The Four Pillars Explained</h2>
             
             <div style={{ marginBottom: '24px' }}>
               <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -3249,13 +3288,23 @@ function LearnAIReadabilityPage({ setCurrentPage }) {
               </p>
             </div>
 
-            <div>
+            <div style={{ marginBottom: '24px' }}>
               <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#a855f7' }}></span>
                 Conversion Readiness
               </h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.7, paddingLeft: '22px' }}>
                 Beyond being understood and trusted, your content should drive action. This pillar measures user engagement potential, clear calls-to-action, and how effectively your content guides readers toward meaningful next steps. AI systems recognize and reward content that provides complete, actionable information.
+              </p>
+            </div>
+
+            <div>
+              <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#f59e0b' }}></span>
+                Product Discoverability
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.7, paddingLeft: '22px' }}>
+                Measures how easily your product or service can be found through AI-powered search and recommendation systems. This pillar evaluates search presence, brand visibility, and market positioning to ensure your offerings are discoverable when AI systems surface relevant results.
               </p>
             </div>
           </div>
