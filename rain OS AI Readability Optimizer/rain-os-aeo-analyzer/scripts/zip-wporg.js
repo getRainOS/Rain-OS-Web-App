@@ -65,11 +65,11 @@ console.log('');
 
 console.log('4. Creating WordPress.org-ready zip...');
 
-const excludeArgs = EXCLUDE_PATTERNS.map(p => `-x "${p}"`).join(' ');
-
 const pluginDir = process.cwd();
 const parentDir = path.dirname(pluginDir);
 const folderName = path.basename(pluginDir);
+
+const excludeArgs = EXCLUDE_PATTERNS.map(p => `-x "${folderName}/${p}"`).join(' ');
 
 try {
     execSync(`cd "${parentDir}" && zip -r "${path.resolve(zipPath)}" "${folderName}" ${excludeArgs}`, {

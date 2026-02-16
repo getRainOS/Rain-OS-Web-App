@@ -1,0 +1,169 @@
+/* ============================================================
+   RAIN OS — Pillar Cards
+   ============================================================ */
+APPEND the following to the END of the existing settings.css file. Do not delete anything:
+.rain-results-wrap { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+.rain-overall-score-block {
+  text-align: center;
+  padding: 24px 0 16px;
+}
+.rain-overall-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #6b7280; }
+.rain-overall-number { font-size: 3.5rem; font-weight: 800; color: #111; line-height: 1; }
+.rain-overall-sub { font-size: 1rem; color: #9ca3af; }
+
+.rain-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.rain-pillar-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.rain-pillar-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.rain-pillar-icon { font-size: 1.1rem; }
+.rain-pillar-label { flex: 1; font-size: 0.8rem; font-weight: 600; color: #374151; }
+.rain-pillar-score { font-size: 1.5rem; font-weight: 700; }
+.rain-pillar-description { font-size: 0.75rem; color: #6b7280; margin-bottom: 10px; }
+
+.rain-schema-footer {
+  display: flex;
+  gap: 8px;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 8px;
+  flex-wrap: wrap;
+}
+.rain-schema-badge, .rain-llms-badge {
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 99px;
+  background: #f3f4f6;
+}
+.rain-llms-badge { background: transparent; }
+
+/* ============================================================
+   RAIN OS — Section Divider
+   ============================================================ */
+.rain-section-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 24px 0 16px;
+}
+.rain-divider-line { flex: 1; border: none; border-top: 1px solid #e5e7eb; }
+.rain-divider-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #9ca3af;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   RAIN OS — Product Discoverability Panel (secondary feel)
+   ============================================================ */
+.rain-pd-panel {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+}
+.rain-pd-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.rain-pd-icon { font-size: 1rem; }
+.rain-pd-title { font-size: 0.85rem; font-weight: 600; color: #374151; flex: 1; }
+.rain-pd-score { font-size: 1.25rem; font-weight: 700; color: #6b7280; }
+.rain-pd-max { font-size: 0.7rem; color: #9ca3af; }
+.rain-pd-badge {
+  font-size: 0.65rem;
+  background: #ede9fe;
+  color: #7c3aed;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-weight: 600;
+}
+.rain-pd-description {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin: 0 0 14px;
+  line-height: 1.5;
+}
+.rain-pd-metrics { display: flex; flex-direction: column; gap: 12px; }
+.rain-pd-metric {}
+.rain-pd-metric-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: #374151;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.rain-pd-bar-wrap {
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.rain-pd-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+.rain-pd-hint { font-size: 0.68rem; color: #9ca3af; margin: 4px 0 0; }
+
+.rain-pd-badges-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.rain-pd-status-badge {
+  font-size: 0.7rem;
+  padding: 3px 10px;
+  border-radius: 99px;
+  border: 1px solid #d1d5db;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.rain-pd-maturity-scale {
+  display: flex;
+  gap: 0;
+  margin-top: 16px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
+}
+.rain-pd-level {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.35;
+}
+.rain-pd-level--active { opacity: 1; }
+.rain-pd-level-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #d1d5db;
+}
+.rain-pd-level--active .rain-pd-level-dot { background: #7c3aed; }
+.rain-pd-level-label { font-size: 0.6rem; text-align: center; color: #6b7280; }
+.rain-pd-level--active .rain-pd-level-label { color: #7c3aed; font-weight: 600; }
