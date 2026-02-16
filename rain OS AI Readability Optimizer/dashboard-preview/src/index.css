@@ -79,3 +79,174 @@ body {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+/* ============================================================
+   RAIN OS — Pillar Cards
+   ============================================================ */
+.rain-results-wrap { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+
+.rain-overall-score-block {
+  text-align: center;
+  padding: 24px 0 16px;
+}
+.rain-overall-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+.rain-overall-number { font-size: 3.5rem; font-weight: 800; color: var(--text-primary); line-height: 1; }
+.rain-overall-sub { font-size: 1rem; color: var(--text-muted); }
+
+.rain-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.rain-pillar-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.rain-pillar-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.rain-pillar-icon { font-size: 1.1rem; }
+.rain-pillar-label { flex: 1; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); }
+.rain-pillar-score { font-size: 1.5rem; font-weight: 700; }
+.rain-pillar-description { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px; }
+
+.rain-schema-footer {
+  display: flex;
+  gap: 8px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 8px;
+  flex-wrap: wrap;
+}
+.rain-schema-badge, .rain-llms-badge {
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+}
+.rain-llms-badge { background: transparent; }
+
+/* ============================================================
+   RAIN OS — Section Divider
+   ============================================================ */
+.rain-section-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 24px 0 16px;
+}
+.rain-divider-line { flex: 1; border: none; border-top: 1px solid var(--border-color); }
+.rain-divider-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   RAIN OS — Product Discoverability Panel (secondary feel)
+   ============================================================ */
+.rain-pd-panel {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+}
+.rain-pd-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.rain-pd-icon { font-size: 1rem; }
+.rain-pd-title { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); flex: 1; }
+.rain-pd-score { font-size: 1.25rem; font-weight: 700; color: var(--text-muted); }
+.rain-pd-max { font-size: 0.7rem; color: var(--text-muted); }
+.rain-pd-badge {
+  font-size: 0.65rem;
+  background: rgba(124, 58, 237, 0.15);
+  color: #a78bfa;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-weight: 600;
+}
+.rain-pd-description {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0 0 14px;
+  line-height: 1.5;
+}
+.rain-pd-metrics { display: flex; flex-direction: column; gap: 12px; }
+.rain-pd-metric {}
+.rain-pd-metric-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.rain-pd-bar-wrap {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.rain-pd-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+.rain-pd-hint { font-size: 0.68rem; color: var(--text-muted); margin: 4px 0 0; }
+
+.rain-pd-badges-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.rain-pd-status-badge {
+  font-size: 0.7rem;
+  padding: 3px 10px;
+  border-radius: 99px;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.rain-pd-maturity-scale {
+  display: flex;
+  gap: 0;
+  margin-top: 16px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 12px;
+}
+.rain-pd-level {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.35;
+}
+.rain-pd-level--active { opacity: 1; }
+.rain-pd-level-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+}
+.rain-pd-level--active .rain-pd-level-dot { background: #a78bfa; }
+.rain-pd-level-label { font-size: 0.6rem; text-align: center; color: var(--text-muted); }
+.rain-pd-level--active .rain-pd-level-label { color: #a78bfa; font-weight: 600; }
