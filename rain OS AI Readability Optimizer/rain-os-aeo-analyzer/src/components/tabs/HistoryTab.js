@@ -88,6 +88,9 @@ const HistoryTab = ({ postId }) => {
               <span style={{ fontSize: '11px', color: '#a855f7' }}>
                 CR: {entry.conversionReadiness}
               </span>
+              <span style={{ fontSize: '11px', color: '#f59e0b' }}>
+                PD: {entry.productDiscoverability}
+              </span>
             </div>
           </div>
           <div

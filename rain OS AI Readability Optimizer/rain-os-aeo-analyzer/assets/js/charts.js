@@ -54,6 +54,7 @@
             var aiData = [];
             var authorityData = [];
             var conversionData = [];
+            var discoverabilityData = [];
 
             if (trendData && trendData.length > 0) {
                 trendData.forEach(function(item) {
@@ -61,12 +62,14 @@
                     aiData.push(parseInt(item.avg_ai) || 0);
                     authorityData.push(parseInt(item.avg_authority) || 0);
                     conversionData.push(parseInt(item.avg_conversion) || 0);
+                    discoverabilityData.push(parseInt(item.avg_discoverability) || 0);
                 });
             } else {
                 labels = ['No Data'];
                 aiData = [0];
                 authorityData = [0];
                 conversionData = [0];
+                discoverabilityData = [0];
             }
 
             new Chart(ctx, {
@@ -92,6 +95,13 @@
                         data: conversionData,
                         borderColor: self.colors.purple,
                         backgroundColor: self.hexToRgba(self.colors.purple, 0.1),
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: 'Product Discoverability',
+                        data: discoverabilityData,
+                        borderColor: self.colors.yellow,
+                        backgroundColor: self.hexToRgba(self.colors.yellow, 0.1),
                         fill: true,
                         tension: 0.4
                     }]
@@ -171,8 +181,9 @@
                     var avgScore = Math.round((
                         parseInt(post.ai_readability || 0) + 
                         parseInt(post.digital_authority || 0) + 
-                        parseInt(post.conversion_readiness || 0)
-                    ) / 3);
+                        parseInt(post.conversion_readiness || 0) +
+                        parseInt(post.product_discoverability || 0)
+                    ) / 4);
                     
                     var wordCount = parseInt(post.word_count || 0);
                     

@@ -7,7 +7,7 @@ $current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( 
 
 $sections = array(
     'getting-started'   => __( 'Getting Started', 'rain-os-aeo-analyzer' ),
-    'three-pillars'     => __( 'The Three Pillars', 'rain-os-aeo-analyzer' ),
+    'three-pillars'     => __( 'The Four Pillars', 'rain-os-aeo-analyzer' ),
     'content-analyzer'  => __( 'Gutenberg Sidebar', 'rain-os-aeo-analyzer' ),
     'quick-tools'       => __( 'Quick Tools', 'rain-os-aeo-analyzer' ),
     'troubleshooting'   => __( 'Troubleshooting', 'rain-os-aeo-analyzer' ),
@@ -74,8 +74,8 @@ $sections = array(
 
             <?php elseif ( 'three-pillars' === $current_section ) : ?>
             <div class="rain-os-docs-section">
-                <h1><?php esc_html_e( 'Understanding the Three Pillars', 'rain-os-aeo-analyzer' ); ?></h1>
-                <p class="rain-os-docs-intro"><?php esc_html_e( 'Rain OS analyzes your content based on three key pillars that determine how well AI systems can understand, trust, and extract information from your content.', 'rain-os-aeo-analyzer' ); ?></p>
+                <h1><?php esc_html_e( 'Understanding the Four Pillars', 'rain-os-aeo-analyzer' ); ?></h1>
+                <p class="rain-os-docs-intro"><?php esc_html_e( 'Rain OS analyzes your content based on four key pillars that determine how well AI systems can understand, trust, extract information from, and discover your content.', 'rain-os-aeo-analyzer' ); ?></p>
 
                 <div class="rain-os-docs-card rain-os-pillar-doc rain-os-pillar-doc-cyan">
                     <h2><?php esc_html_e( 'AI Readability', 'rain-os-aeo-analyzer' ); ?></h2>
@@ -104,6 +104,16 @@ $sections = array(
                         <li><strong><?php esc_html_e( 'AI Alignment', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Content structured to provide direct answers', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'QA-Format', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Question and answer optimization', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'Metadata Audit', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Schema and HTML verification', 'rain-os-aeo-analyzer' ); ?></li>
+                    </ul>
+                </div>
+
+                <div class="rain-os-docs-card rain-os-pillar-doc rain-os-pillar-doc-orange">
+                    <h2><?php esc_html_e( 'Product Discoverability', 'rain-os-aeo-analyzer' ); ?></h2>
+                    <p><?php esc_html_e( 'Measures how easily your product or service can be found through AI-powered search and recommendation systems. Includes:', 'rain-os-aeo-analyzer' ); ?></p>
+                    <ul>
+                        <li><strong><?php esc_html_e( 'Search Presence', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Visibility in AI-powered search results and answer engines', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Brand Visibility', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'How prominently your brand appears in AI-generated recommendations', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Market Positioning', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'How well AI understands your competitive positioning and unique value', 'rain-os-aeo-analyzer' ); ?></li>
                     </ul>
                 </div>
             </div>
@@ -253,6 +263,15 @@ $sections = array(
                         <li><strong><?php esc_html_e( 'AI Alignment:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Structure content to directly answer common questions. Start paragraphs with the key information. Use "What is X?" and "How to Y" formats.', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'QA-Format:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Include FAQ sections with clear questions and concise answers. Format Q&A pairs so AI can easily extract them.', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'Metadata Audit:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Ensure meta title and description are present and optimized. Validate HTML markup. Check that schema data is error-free.', 'rain-os-aeo-analyzer' ); ?></li>
+                    </ul>
+                </div>
+
+                <div class="rain-os-tip-card">
+                    <h3><?php esc_html_e( 'Product Discoverability (Orange Pillar)', 'rain-os-aeo-analyzer' ); ?></h3>
+                    <ul>
+                        <li><strong><?php esc_html_e( 'Search Presence:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Ensure your product pages use descriptive, searchable language. Include product category terms and common search phrases naturally in your content.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Brand Visibility:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Mention your brand name consistently alongside product descriptions. Create content that associates your brand with key industry terms and solutions.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Market Positioning:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Clearly articulate what makes your product unique. Use comparison language and highlight differentiators that AI can extract and present to users.', 'rain-os-aeo-analyzer' ); ?></li>
                     </ul>
                 </div>
 

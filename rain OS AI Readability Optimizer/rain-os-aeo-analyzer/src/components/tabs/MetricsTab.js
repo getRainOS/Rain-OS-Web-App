@@ -17,12 +17,18 @@ const MetricsTab = ({ analysisData }) => {
       { name: __('QA-Format', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.qaFormat || 0 },
       { name: __('Metadata Audit', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.metadataAudit || 0 },
     ],
+    productDiscoverability: [
+      { name: __('Search Presence', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.searchPresence || 0 },
+      { name: __('Brand Visibility', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.brandVisibility || 0 },
+      { name: __('Market Positioning', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.marketPositioning || 0 },
+    ],
   };
 
   const pillarMeta = {
     aiReadability: { label: __('AI Readability', 'rain-os-aeo-analyzer'), color: '#22d3ee' },
     digitalAuthority: { label: __('Digital Authority', 'rain-os-aeo-analyzer'), color: '#10b981' },
     conversionReadiness: { label: __('Conversion Readiness', 'rain-os-aeo-analyzer'), color: '#a855f7' },
+    productDiscoverability: { label: __('Product Discoverability', 'rain-os-aeo-analyzer'), color: '#f59e0b' },
   };
 
   const getScoreColor = (score) => {

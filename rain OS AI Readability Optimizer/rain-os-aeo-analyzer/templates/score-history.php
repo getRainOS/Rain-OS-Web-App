@@ -76,6 +76,7 @@ function rain_os_score_class( $score ) {
                             <th><?php esc_html_e( 'AI Readability', 'rain-os-aeo-analyzer' ); ?></th>
                             <th><?php esc_html_e( 'Digital Authority', 'rain-os-aeo-analyzer' ); ?></th>
                             <th><?php esc_html_e( 'Conversion', 'rain-os-aeo-analyzer' ); ?></th>
+                            <th><?php esc_html_e( 'Discoverability', 'rain-os-aeo-analyzer' ); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -83,7 +84,7 @@ function rain_os_score_class( $score ) {
                         $count = 0;
                         foreach ( $analysis_data as $item ) : 
                             $count++;
-                            $avg_score = round( ( intval( $item['ai_readability'] ) + intval( $item['digital_authority'] ) + intval( $item['conversion_readiness'] ) ) / 3 );
+                            $avg_score = round( ( intval( $item['ai_readability'] ) + intval( $item['digital_authority'] ) + intval( $item['conversion_readiness'] ) + intval( $item['product_discoverability'] ?? 0 ) ) / 4 );
                         ?>
                         <tr>
                             <td class="rain-os-row-num"><?php echo esc_html( $count ); ?></td>
@@ -106,6 +107,10 @@ function rain_os_score_class( $score ) {
                             <td class="rain-os-score-cell">
                                 <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_score_class( intval( $item['conversion_readiness'] ) ) ); ?>"></span>
                                 <span class="rain-os-score-value"><?php echo esc_html( $item['conversion_readiness'] ); ?></span>
+                            </td>
+                            <td class="rain-os-score-cell">
+                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_score_class( intval( $item['product_discoverability'] ?? 0 ) ) ); ?>"></span>
+                                <span class="rain-os-score-value"><?php echo esc_html( $item['product_discoverability'] ?? 0 ); ?></span>
                             </td>
                         </tr>
                         <?php endforeach; ?>

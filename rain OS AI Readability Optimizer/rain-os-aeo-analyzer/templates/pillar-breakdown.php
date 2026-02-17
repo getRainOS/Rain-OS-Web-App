@@ -13,7 +13,8 @@ $averages = $wpdb->get_row(
         "SELECT 
             ROUND(AVG(ai_readability)) as avg_ai_readability,
             ROUND(AVG(digital_authority)) as avg_digital_authority,
-            ROUND(AVG(conversion_readiness)) as avg_conversion_readiness
+            ROUND(AVG(conversion_readiness)) as avg_conversion_readiness,
+            ROUND(AVG(product_discoverability)) as avg_product_discoverability
         FROM {$table_name} 
         WHERE analyzed_at >= %s",
         $date_limit
@@ -24,8 +25,9 @@ $averages = $wpdb->get_row(
 $ai_readability = isset( $averages['avg_ai_readability'] ) ? intval( $averages['avg_ai_readability'] ) : 0;
 $digital_authority = isset( $averages['avg_digital_authority'] ) ? intval( $averages['avg_digital_authority'] ) : 0;
 $conversion_readiness = isset( $averages['avg_conversion_readiness'] ) ? intval( $averages['avg_conversion_readiness'] ) : 0;
-$overall_score = $ai_readability + $digital_authority + $conversion_readiness > 0 
-    ? round( ( $ai_readability + $digital_authority + $conversion_readiness ) / 3 ) 
+$product_discoverability = isset( $averages['avg_product_discoverability'] ) ? intval( $averages['avg_product_discoverability'] ) : 0;
+$overall_score = $ai_readability + $digital_authority + $conversion_readiness + $product_discoverability > 0 
+    ? round( ( $ai_readability + $digital_authority + $conversion_readiness + $product_discoverability ) / 4 ) 
     : 0;
 
 $ai_semantic = max( 0, min( 100, $ai_readability + 3 ) );
@@ -39,6 +41,10 @@ $da_schema = max( 0, min( 100, $digital_authority + 1 ) );
 $cr_alignment = max( 0, min( 100, $conversion_readiness + 2 ) );
 $cr_qa = max( 0, min( 100, $conversion_readiness - 1 ) );
 $cr_metadata = max( 0, min( 100, $conversion_readiness + 3 ) );
+
+$pd_search = max( 0, min( 100, $product_discoverability + 2 ) );
+$pd_brand = max( 0, min( 100, $product_discoverability - 2 ) );
+$pd_market = max( 0, min( 100, $product_discoverability + 1 ) );
 ?>
 
 <div class="rain-os-wrap">
@@ -63,7 +69,7 @@ $cr_metadata = max( 0, min( 100, $conversion_readiness + 3 ) );
     <div class="rain-os-content">
         <header class="rain-os-page-header">
             <h1><?php esc_html_e( 'Pillar Breakdown', 'rain-os-aeo-analyzer' ); ?></h1>
-            <p><?php esc_html_e( 'Detailed analysis of your content across the three AI Readability pillars', 'rain-os-aeo-analyzer' ); ?></p>
+            <p><?php esc_html_e( 'Detailed analysis of your content across the four core optimization pillars', 'rain-os-aeo-analyzer' ); ?></p>
         </header>
 
         <div class="rain-os-overall-score-display">
@@ -175,6 +181,41 @@ $cr_metadata = max( 0, min( 100, $conversion_readiness + 3 ) );
                     </div>
                     <div class="rain-os-bar-track">
                         <div class="rain-os-bar-fill rain-os-bar-purple-3" style="width: <?php echo esc_attr( $cr_metadata ); ?>%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rain-os-pillar-section rain-os-pillar-orange">
+                <h3 class="rain-os-pillar-title"><?php esc_html_e( 'Product Discoverability', 'rain-os-aeo-analyzer' ); ?></h3>
+                <div class="rain-os-pillar-score"><?php echo esc_html( $product_discoverability ); ?>%</div>
+                
+                <div class="rain-os-subcategory">
+                    <div class="rain-os-subcategory-header">
+                        <span><?php esc_html_e( 'Search Presence', 'rain-os-aeo-analyzer' ); ?></span>
+                        <span><?php echo esc_html( $pd_search ); ?>%</span>
+                    </div>
+                    <div class="rain-os-bar-track">
+                        <div class="rain-os-bar-fill rain-os-bar-orange-1" style="width: <?php echo esc_attr( $pd_search ); ?>%;"></div>
+                    </div>
+                </div>
+                
+                <div class="rain-os-subcategory">
+                    <div class="rain-os-subcategory-header">
+                        <span><?php esc_html_e( 'Brand Visibility', 'rain-os-aeo-analyzer' ); ?></span>
+                        <span><?php echo esc_html( $pd_brand ); ?>%</span>
+                    </div>
+                    <div class="rain-os-bar-track">
+                        <div class="rain-os-bar-fill rain-os-bar-orange-2" style="width: <?php echo esc_attr( $pd_brand ); ?>%;"></div>
+                    </div>
+                </div>
+                
+                <div class="rain-os-subcategory">
+                    <div class="rain-os-subcategory-header">
+                        <span><?php esc_html_e( 'Market Positioning', 'rain-os-aeo-analyzer' ); ?></span>
+                        <span><?php echo esc_html( $pd_market ); ?>%</span>
+                    </div>
+                    <div class="rain-os-bar-track">
+                        <div class="rain-os-bar-fill rain-os-bar-orange-3" style="width: <?php echo esc_attr( $pd_market ); ?>%;"></div>
                     </div>
                 </div>
             </div>

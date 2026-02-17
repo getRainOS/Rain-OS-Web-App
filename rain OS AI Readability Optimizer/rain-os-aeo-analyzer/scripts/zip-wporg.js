@@ -24,6 +24,7 @@ const EXCLUDE_PATTERNS = [
     '.gitignore',
     '.npmrc',
     'package-lock.json',
+    'package.json',
     'tsconfig.json',
     'webpack.config.js',
     '*.map',
@@ -72,7 +73,7 @@ const folderName = path.basename(pluginDir);
 const excludeArgs = EXCLUDE_PATTERNS.map(p => `-x "${folderName}/${p}"`).join(' ');
 
 try {
-    execSync(`cd "${parentDir}" && zip -r "${path.resolve(zipPath)}" "${folderName}" ${excludeArgs}`, {
+    execSync(`cd "${parentDir}" && zip -r "${path.resolve(zipPath)}" "${folderName}" ${excludeArgs} -x "${folderName}/node_modules/*" -x "${folderName}/src/*" -x "${folderName}/scripts/*" -x "${folderName}/dist/*"`, {
         stdio: 'inherit'
     });
 } catch (error) {

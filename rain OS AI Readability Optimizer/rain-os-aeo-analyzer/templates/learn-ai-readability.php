@@ -44,7 +44,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             </div>
 
             <div class="rain-os-learn-card rain-os-learn-card-full">
-                <h3><?php esc_html_e( 'The Three Pillars Explained', 'rain-os-aeo-analyzer' ); ?></h3>
+                <h3><?php esc_html_e( 'The Four Pillars Explained', 'rain-os-aeo-analyzer' ); ?></h3>
                 <div class="rain-os-pillars-grid">
                     <div class="rain-os-pillar-card rain-os-pillar-cyan">
                         <div class="rain-os-pillar-indicator"></div>
@@ -74,6 +74,16 @@ if ( ! defined( 'ABSPATH' ) ) {
                             <li><?php esc_html_e( 'AI Alignment', 'rain-os-aeo-analyzer' ); ?></li>
                             <li><?php esc_html_e( 'QA-Format', 'rain-os-aeo-analyzer' ); ?></li>
                             <li><?php esc_html_e( 'Metadata Audit', 'rain-os-aeo-analyzer' ); ?></li>
+                        </ul>
+                    </div>
+                    <div class="rain-os-pillar-card rain-os-pillar-orange">
+                        <div class="rain-os-pillar-indicator"></div>
+                        <h4><?php esc_html_e( 'Product Discoverability', 'rain-os-aeo-analyzer' ); ?></h4>
+                        <p><?php esc_html_e( 'Measures how easily your product or service can be found through AI-powered search and recommendation systems.', 'rain-os-aeo-analyzer' ); ?></p>
+                        <ul>
+                            <li><?php esc_html_e( 'Search Presence', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Brand Visibility', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Market Positioning', 'rain-os-aeo-analyzer' ); ?></li>
                         </ul>
                     </div>
                 </div>

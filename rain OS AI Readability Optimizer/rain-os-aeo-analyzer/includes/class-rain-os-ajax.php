@@ -90,10 +90,11 @@ class Rain_OS_Ajax {
                 'ai_readability'       => isset( $analysis['ai_readability'] ) ? absint( $analysis['ai_readability'] ) : 0,
                 'digital_authority'    => isset( $analysis['digital_authority'] ) ? absint( $analysis['digital_authority'] ) : 0,
                 'conversion_readiness' => isset( $analysis['conversion_readiness'] ) ? absint( $analysis['conversion_readiness'] ) : 0,
+                'product_discoverability' => isset( $analysis['product_discoverability'] ) ? absint( $analysis['product_discoverability'] ) : 0,
                 'analysis_data'        => wp_json_encode( $analysis ),
                 'analyzed_at'          => current_time( 'mysql' ),
             ),
-            array( '%d', '%d', '%d', '%d', '%d', '%s', '%s' )
+            array( '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%s' )
         );
     }
 
@@ -143,6 +144,7 @@ class Rain_OS_Ajax {
                     ROUND(AVG(ai_readability)) as avg_ai_readability,
                     ROUND(AVG(digital_authority)) as avg_digital_authority,
                     ROUND(AVG(conversion_readiness)) as avg_conversion_readiness,
+                    ROUND(AVG(product_discoverability)) as avg_product_discoverability,
                     COUNT(*) as total_analyzed
                 FROM {$table_name} 
                 WHERE analyzed_at >= %s",
@@ -158,7 +160,8 @@ class Rain_OS_Ajax {
                     ROUND(AVG(overall_score)) as avg_score,
                     ROUND(AVG(ai_readability)) as avg_ai,
                     ROUND(AVG(digital_authority)) as avg_authority,
-                    ROUND(AVG(conversion_readiness)) as avg_conversion
+                    ROUND(AVG(conversion_readiness)) as avg_conversion,
+                    ROUND(AVG(product_discoverability)) as avg_discoverability
                 FROM {$table_name} 
                 WHERE analyzed_at >= %s 
                 GROUP BY DATE(analyzed_at) 

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: rain OS AI Readability Optimizer
  * Plugin URI: https://www.rainos.com
- * Description: AI-powered Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO) for WordPress. Analyze your content across three pillars: AI Readability, Digital Authority, and Conversion Readiness.
+ * Description: AI-powered Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO) for WordPress. Analyze your content across four pillars: AI Readability, Digital Authority, Conversion Readiness, and Product Discoverability.
  * Version: 1.0.0
  * Author: Rain OS
  * Author URI: https://www.rainos.com
@@ -77,6 +77,7 @@ final class Rain_OS_AEO_Analyzer {
         register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
         add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
+        add_action( 'plugins_loaded', array( $this, 'check_db_upgrade' ), 5 );
 
         add_action( 'save_post', array( $this, 'handle_post_save_normalize' ), 99, 3 );
     }
@@ -113,6 +114,7 @@ final class Rain_OS_AEO_Analyzer {
         }
 
         $this->create_tables();
+        $this->maybe_upgrade_db();
 
         flush_rewrite_rules();
     }
@@ -131,6 +133,7 @@ final class Rain_OS_AEO_Analyzer {
             ai_readability int(3) NOT NULL DEFAULT 0,
             digital_authority int(3) NOT NULL DEFAULT 0,
             conversion_readiness int(3) NOT NULL DEFAULT 0,
+            product_discoverability int(3) NOT NULL DEFAULT 0,
             analysis_data longtext,
             analyzed_at datetime DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
@@ -140,6 +143,23 @@ final class Rain_OS_AEO_Analyzer {
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta( $sql );
+    }
+
+    private function maybe_upgrade_db() {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'rain_os_analysis_history';
+        $column = $wpdb->get_results( "SHOW COLUMNS FROM {$table_name} LIKE 'product_discoverability'" );
+        if ( empty( $column ) ) {
+            $wpdb->query( "ALTER TABLE {$table_name} ADD product_discoverability int(3) NOT NULL DEFAULT 0 AFTER conversion_readiness" );
+        }
+    }
+
+    public function check_db_upgrade() {
+        $db_version = get_option( 'rain_os_db_version', '1.0' );
+        if ( version_compare( $db_version, '1.1', '<' ) ) {
+            $this->maybe_upgrade_db();
+            update_option( 'rain_os_db_version', '1.1' );
+        }
     }
 
     public function deactivate() {
