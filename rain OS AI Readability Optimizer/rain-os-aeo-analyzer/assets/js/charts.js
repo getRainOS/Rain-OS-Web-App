@@ -8,9 +8,9 @@
             purple: '#a855f7',
             yellow: '#f59e0b',
             red: '#ef4444',
-            bg: '#1f2937',
-            border: 'rgba(255, 255, 255, 0.1)',
-            text: '#94a3b8',
+            bg: '#111827',
+            border: 'rgba(255, 255, 255, 0.05)',
+            text: 'rgba(255, 255, 255, 0.5)',
             baseline: 'rgba(245, 158, 11, 0.5)'
         },
 
@@ -109,34 +109,63 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
                     plugins: {
                         legend: {
                             position: 'bottom',
                             labels: {
                                 color: self.colors.text,
                                 usePointStyle: true,
-                                padding: 20
+                                pointStyle: 'circle',
+                                padding: 20,
+                                font: { size: 12 }
                             }
+                        },
+                        tooltip: {
+                            backgroundColor: '#1e293b',
+                            titleColor: '#ffffff',
+                            bodyColor: 'rgba(255,255,255,0.7)',
+                            borderColor: 'rgba(255,255,255,0.08)',
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            padding: 12
                         }
                     },
                     scales: {
                         x: {
                             grid: {
-                                color: self.colors.border
+                                color: self.colors.border,
+                                drawBorder: false
                             },
                             ticks: {
-                                color: self.colors.text
+                                color: self.colors.text,
+                                font: { size: 11 }
                             }
                         },
                         y: {
                             min: 0,
                             max: 100,
                             grid: {
-                                color: self.colors.border
+                                color: self.colors.border,
+                                drawBorder: false
                             },
                             ticks: {
-                                color: self.colors.text
+                                color: self.colors.text,
+                                font: { size: 11 },
+                                stepSize: 10
                             }
+                        }
+                    },
+                    elements: {
+                        point: {
+                            radius: 4,
+                            hoverRadius: 6
+                        },
+                        line: {
+                            borderWidth: 2
                         }
                     }
                 }
@@ -146,6 +175,9 @@
         initScatterChart: function() {
             var canvas = document.getElementById('rain-os-scatter-chart');
             if (!canvas) return;
+
+            if (canvas.getAttribute('data-chart-initialized')) return;
+            canvas.setAttribute('data-chart-initialized', 'true');
 
             var ctx = canvas.getContext('2d');
             var self = this;
@@ -280,7 +312,7 @@
             bgCircle.setAttribute('cy', size / 2);
             bgCircle.setAttribute('r', radius);
             bgCircle.setAttribute('fill', 'none');
-            bgCircle.setAttribute('stroke', this.colors.bg);
+            bgCircle.setAttribute('stroke', 'rgba(255, 255, 255, 0.1)');
             bgCircle.setAttribute('stroke-width', strokeWidth);
             bgCircle.setAttribute('stroke-dasharray', (circumference * 0.75) + ' ' + (circumference * 0.25));
             svg.appendChild(bgCircle);

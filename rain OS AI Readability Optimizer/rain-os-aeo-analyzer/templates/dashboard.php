@@ -62,17 +62,6 @@ function rain_os_get_score_class( $score ) {
                 <span class="rain-os-badge"><?php esc_html_e( 'AI Readability', 'rain-os-aeo-analyzer' ); ?></span>
             </div>
             <div class="rain-os-header-actions">
-                <div class="rain-os-search-wrap">
-                    <input type="text" id="rain-os-search" class="rain-os-search" placeholder="<?php esc_attr_e( 'Search posts...', 'rain-os-aeo-analyzer' ); ?>" />
-                    <div id="rain-os-search-results" class="rain-os-search-results"></div>
-                </div>
-                <div class="rain-os-notifications-wrap">
-                    <button type="button" id="rain-os-notifications-btn" class="rain-os-btn rain-os-btn-icon">
-                        <span class="dashicons dashicons-bell"></span>
-                        <span id="rain-os-notification-badge" class="rain-os-notification-badge" style="display:none;">0</span>
-                    </button>
-                    <div id="rain-os-notifications-dropdown" class="rain-os-notifications-dropdown" style="display:none;"></div>
-                </div>
                 <div class="rain-os-period-select">
                     <select id="rain-os-period">
                         <option value="7" <?php selected( $period, 7 ); ?>><?php esc_html_e( 'Last 7 Days', 'rain-os-aeo-analyzer' ); ?></option>
@@ -80,79 +69,133 @@ function rain_os_get_score_class( $score ) {
                         <option value="90" <?php selected( $period, 90 ); ?>><?php esc_html_e( 'Last 90 Days', 'rain-os-aeo-analyzer' ); ?></option>
                     </select>
                 </div>
+                <div class="rain-os-search-bar" id="rain-os-search-bar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    <input type="text" id="rain-os-search" class="rain-os-search-input" placeholder="<?php esc_attr_e( 'Search content...', 'rain-os-aeo-analyzer' ); ?>" autocomplete="off" />
+                </div>
+                <div class="rain-os-notifications" id="rain-os-notifications">
+                    <button type="button" id="rain-os-notifications-btn" class="rain-os-notification-btn" title="<?php esc_attr_e( 'Notifications', 'rain-os-aeo-analyzer' ); ?>">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                        <span id="rain-os-notification-count" class="rain-os-notification-badge">2</span>
+                    </button>
+                    <div id="rain-os-notification-dropdown" class="rain-os-notification-dropdown">
+                        <div class="rain-os-notification-header">
+                            <h4><?php esc_html_e( 'Notifications', 'rain-os-aeo-analyzer' ); ?></h4>
+                            <button type="button" id="rain-os-mark-all-read"><?php esc_html_e( 'Mark all read', 'rain-os-aeo-analyzer' ); ?></button>
+                        </div>
+                        <div class="rain-os-notification-list" id="rain-os-notification-list"></div>
+                    </div>
+                </div>
+                <a href="<?php echo esc_url( admin_url( 'post-new.php' ) ); ?>" class="rain-os-btn-new-analysis">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                    <?php esc_html_e( 'New Analysis', 'rain-os-aeo-analyzer' ); ?>
+                </a>
             </div>
         </div>
     </div>
 
     <div class="rain-os-content">
-        <header class="rain-os-page-header">
-            <h1><?php esc_html_e( 'Dashboard', 'rain-os-aeo-analyzer' ); ?></h1>
-            <p><?php esc_html_e( 'Your AEO performance at a glance', 'rain-os-aeo-analyzer' ); ?></p>
+        <header class="rain-os-page-header rain-os-animate-in">
+            <div class="rain-os-page-header-row">
+                <div>
+                    <h1><?php esc_html_e( 'Dashboard', 'rain-os-aeo-analyzer' ); ?></h1>
+                    <p><?php esc_html_e( 'Monitor your content performance and AI Readability metrics', 'rain-os-aeo-analyzer' ); ?></p>
+                </div>
+            </div>
         </header>
 
         <div class="rain-os-kpi-grid">
-            <div class="rain-os-kpi-card">
+            <div class="rain-os-kpi-card rain-os-animate-delay-1">
                 <div class="rain-os-kpi-header">
                     <div class="rain-os-kpi-icon rain-os-kpi-icon-cyan">
-                        <span class="dashicons dashicons-chart-bar"></span>
+                        <span class="dashicons dashicons-media-document"></span>
+                    </div>
+                    <div class="rain-os-kpi-gauge" data-value="<?php echo esc_attr( min( 100, $total_analyzed ) ); ?>" data-color="#22d3ee"></div>
+                </div>
+                <div class="rain-os-kpi-value"><?php echo esc_html( $total_analyzed ); ?></div>
+                <div class="rain-os-kpi-label">
+                    <span class="rain-os-tooltip-wrap">
+                        <?php esc_html_e( 'Total Analyses', 'rain-os-aeo-analyzer' ); ?>
+                        <span class="rain-os-tooltip-trigger">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                        </span>
+                        <span class="rain-os-tooltip-content"><?php esc_html_e( 'Total number of content analyses performed in the selected time period. Each analysis evaluates your content across all four AEO pillars.', 'rain-os-aeo-analyzer' ); ?></span>
+                    </span>
+                </div>
+                <div class="rain-os-kpi-subtitle"><?php printf( esc_html__( 'Last %d Days', 'rain-os-aeo-analyzer' ), $period ); ?></div>
+            </div>
+
+            <div class="rain-os-kpi-card rain-os-animate-delay-2">
+                <div class="rain-os-kpi-header">
+                    <div class="rain-os-kpi-icon rain-os-kpi-icon-cyan">
+                        <span class="dashicons dashicons-chart-line"></span>
                     </div>
                     <div class="rain-os-kpi-gauge" data-value="<?php echo esc_attr( $overall_score ); ?>" data-color="#22d3ee"></div>
                 </div>
                 <div class="rain-os-kpi-value"><?php echo esc_html( $overall_score ); ?></div>
-                <div class="rain-os-kpi-label"><?php esc_html_e( 'Overall AEO Score', 'rain-os-aeo-analyzer' ); ?></div>
-                <div class="rain-os-kpi-subtitle"><?php esc_html_e( 'Combined performance', 'rain-os-aeo-analyzer' ); ?></div>
-            </div>
-
-            <div class="rain-os-kpi-card">
-                <div class="rain-os-kpi-header">
-                    <div class="rain-os-kpi-icon rain-os-kpi-icon-cyan">
-                        <span class="dashicons dashicons-visibility"></span>
-                    </div>
-                    <div class="rain-os-kpi-gauge" data-value="<?php echo esc_attr( $ai_readability ); ?>" data-color="#22d3ee"></div>
+                <div class="rain-os-kpi-label">
+                    <span class="rain-os-tooltip-wrap">
+                        <?php esc_html_e( 'Average Score', 'rain-os-aeo-analyzer' ); ?>
+                        <span class="rain-os-tooltip-trigger">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                        </span>
+                        <span class="rain-os-tooltip-content"><?php esc_html_e( 'The average AEO score across all analyzed content. This combines AI Readability, Digital Authority, Conversion Readiness, and Product Discoverability scores.', 'rain-os-aeo-analyzer' ); ?></span>
+                    </span>
                 </div>
-                <div class="rain-os-kpi-value"><?php echo esc_html( $ai_readability ); ?></div>
-                <div class="rain-os-kpi-label"><?php esc_html_e( 'AI Readability', 'rain-os-aeo-analyzer' ); ?></div>
-                <div class="rain-os-kpi-subtitle"><?php esc_html_e( 'Semantic clarity', 'rain-os-aeo-analyzer' ); ?></div>
+                <div class="rain-os-kpi-subtitle"><?php printf( esc_html__( 'Last %d Days', 'rain-os-aeo-analyzer' ), $period ); ?></div>
             </div>
 
-            <div class="rain-os-kpi-card">
-                <div class="rain-os-kpi-header">
-                    <div class="rain-os-kpi-icon rain-os-kpi-icon-green">
-                        <span class="dashicons dashicons-shield"></span>
-                    </div>
-                    <div class="rain-os-kpi-gauge" data-value="<?php echo esc_attr( $digital_authority ); ?>" data-color="#10b981"></div>
-                </div>
-                <div class="rain-os-kpi-value"><?php echo esc_html( $digital_authority ); ?></div>
-                <div class="rain-os-kpi-label"><?php esc_html_e( 'Digital Authority', 'rain-os-aeo-analyzer' ); ?></div>
-                <div class="rain-os-kpi-subtitle"><?php esc_html_e( 'Trust signals', 'rain-os-aeo-analyzer' ); ?></div>
-            </div>
-
-            <div class="rain-os-kpi-card">
+            <div class="rain-os-kpi-card rain-os-animate-delay-3">
                 <div class="rain-os-kpi-header">
                     <div class="rain-os-kpi-icon rain-os-kpi-icon-purple">
-                        <span class="dashicons dashicons-megaphone"></span>
+                        <span class="dashicons dashicons-heart"></span>
                     </div>
-                    <div class="rain-os-kpi-gauge" data-value="<?php echo esc_attr( $conversion_readiness ); ?>" data-color="#a855f7"></div>
+                    <?php 
+                    $content_health = $total_analyzed > 0 ? round( ( $ai_readability + $digital_authority + $conversion_readiness + $product_discoverability ) / 4 ) : 0;
+                    ?>
+                    <div class="rain-os-kpi-gauge" data-value="<?php echo esc_attr( $content_health ); ?>" data-color="#a855f7"></div>
                 </div>
-                <div class="rain-os-kpi-value"><?php echo esc_html( $conversion_readiness ); ?></div>
-                <div class="rain-os-kpi-label"><?php esc_html_e( 'Conversion Readiness', 'rain-os-aeo-analyzer' ); ?></div>
-                <div class="rain-os-kpi-subtitle"><?php esc_html_e( 'Action optimization', 'rain-os-aeo-analyzer' ); ?></div>
+                <div class="rain-os-kpi-value"><?php echo esc_html( $content_health ); ?>%</div>
+                <div class="rain-os-kpi-label">
+                    <span class="rain-os-tooltip-wrap">
+                        <?php esc_html_e( 'Content Health', 'rain-os-aeo-analyzer' ); ?>
+                        <span class="rain-os-tooltip-trigger">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                        </span>
+                        <span class="rain-os-tooltip-content"><?php esc_html_e( 'Overall health score of your content portfolio. Scores above 80% indicate strong AI readiness across all four pillars.', 'rain-os-aeo-analyzer' ); ?></span>
+                    </span>
+                </div>
+                <div class="rain-os-kpi-subtitle"><?php printf( esc_html__( 'Last %d Days', 'rain-os-aeo-analyzer' ), $period ); ?></div>
             </div>
 
-            <div class="rain-os-kpi-card">
+            <div class="rain-os-kpi-card rain-os-animate-delay-4">
                 <div class="rain-os-kpi-header">
                     <div class="rain-os-kpi-icon rain-os-kpi-icon-orange">
-                        <span class="dashicons dashicons-search"></span>
+                        <span class="dashicons dashicons-performance"></span>
                     </div>
-                    <div class="rain-os-kpi-gauge" data-value="<?php echo esc_attr( $product_discoverability ); ?>" data-color="#f59e0b"></div>
+                    <?php 
+                    $options = get_option( 'rain_os_settings', array() );
+                    $api_usage = isset( $options['api_usage'] ) ? intval( $options['api_usage'] ) : 0;
+                    $api_limit = isset( $options['api_limit'] ) ? intval( $options['api_limit'] ) : 100;
+                    $api_percent = $api_limit > 0 ? round( ( $api_usage / $api_limit ) * 100 ) : 0;
+                    ?>
+                    <div class="rain-os-kpi-gauge" data-value="<?php echo esc_attr( $api_percent ); ?>" data-color="#f59e0b"></div>
                 </div>
-                <div class="rain-os-kpi-value"><?php echo esc_html( $product_discoverability ); ?></div>
-                <div class="rain-os-kpi-label"><?php esc_html_e( 'Product Discoverability', 'rain-os-aeo-analyzer' ); ?></div>
-                <div class="rain-os-kpi-subtitle"><?php esc_html_e( 'Search visibility', 'rain-os-aeo-analyzer' ); ?></div>
+                <div class="rain-os-kpi-value"><?php echo esc_html( $api_percent ); ?>%</div>
+                <div class="rain-os-kpi-label">
+                    <span class="rain-os-tooltip-wrap">
+                        <?php esc_html_e( 'API Usage', 'rain-os-aeo-analyzer' ); ?>
+                        <span class="rain-os-tooltip-trigger">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                        </span>
+                        <span class="rain-os-tooltip-content"><?php printf( esc_html__( 'Current API usage: %1$d of %2$d requests this billing cycle. Upgrade your plan for more analyses.', 'rain-os-aeo-analyzer' ), $api_usage, $api_limit ); ?></span>
+                    </span>
+                </div>
+                <div class="rain-os-kpi-subtitle"><?php esc_html_e( 'This Billing Cycle', 'rain-os-aeo-analyzer' ); ?></div>
             </div>
         </div>
 
-        <div class="rain-os-charts-grid">
+        <div class="rain-os-charts-grid rain-os-animate-in">
             <div class="rain-os-chart-card">
                 <div class="rain-os-chart-header">
                     <h3><?php esc_html_e( 'Performance History', 'rain-os-aeo-analyzer' ); ?></h3>

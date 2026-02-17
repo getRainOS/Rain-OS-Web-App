@@ -2,6 +2,17 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
+
+global $wpdb;
+$table_name = $wpdb->prefix . 'rain_os_analysis_history';
+$analysis_data = $wpdb->get_results(
+    "SELECT h.*, p.post_title, p.post_name 
+    FROM {$table_name} h 
+    LEFT JOIN {$wpdb->posts} p ON h.post_id = p.ID 
+    ORDER BY h.analyzed_at DESC
+    LIMIT 50",
+    ARRAY_A
+);
 ?>
 
 <div class="rain-os-wrap">
@@ -24,20 +35,22 @@ if ( ! defined( 'ABSPATH' ) ) {
     </div>
 
     <div class="rain-os-content">
-        <header class="rain-os-page-header">
-            <h1><?php esc_html_e( 'Content Signals', 'rain-os-aeo-analyzer' ); ?></h1>
-            <p><?php esc_html_e( 'Analyze the relationship between content length and performance', 'rain-os-aeo-analyzer' ); ?></p>
-        </header>
-
-        <div class="rain-os-chart-card">
+        <div class="rain-os-chart-card rain-os-animate-in" style="margin-bottom: 32px;">
             <div class="rain-os-chart-header">
-                <h3><?php esc_html_e( 'Word Count vs Score Distribution', 'rain-os-aeo-analyzer' ); ?></h3>
-                <span class="rain-os-chart-period"><?php esc_html_e( 'Last 30 Days', 'rain-os-aeo-analyzer' ); ?></span>
+                <div>
+                    <h3><?php esc_html_e( 'Content Signals', 'rain-os-aeo-analyzer' ); ?></h3>
+                    <span style="font-size: 13px; color: rgba(255,255,255,0.5);"><?php esc_html_e( 'Word Count vs. AEO Score', 'rain-os-aeo-analyzer' ); ?></span>
+                </div>
             </div>
             <div class="rain-os-chart-body">
                 <canvas id="rain-os-scatter-chart" height="400"></canvas>
             </div>
         </div>
+
+        <header class="rain-os-page-header">
+            <h1><?php esc_html_e( 'Content Signals', 'rain-os-aeo-analyzer' ); ?></h1>
+            <p><?php esc_html_e( 'Analyze the relationship between content length and performance', 'rain-os-aeo-analyzer' ); ?></p>
+        </header>
 
         <div class="rain-os-signals-info">
             <div class="rain-os-card">
@@ -69,3 +82,104 @@ if ( ! defined( 'ABSPATH' ) ) {
         </div>
     </div>
 </div>
+
+<script>
+(function() {
+    var canvas = document.getElementById('rain-os-scatter-chart');
+    if (!canvas || typeof Chart === 'undefined') return;
+    if (canvas.getAttribute('data-chart-initialized')) return;
+    canvas.setAttribute('data-chart-initialized', 'true');
+
+    var analysisData = <?php echo wp_json_encode($analysis_data ? $analysis_data : array()); ?>;
+
+    var dataPoints = [];
+    var pointColors = [];
+    var titles = [];
+
+    analysisData.forEach(function(row) {
+        var wordCount = parseInt(row.word_count) || 0;
+        var score = parseFloat(row.overall_score) || 0;
+        var title = row.post_title || 'Untitled';
+
+        dataPoints.push({ x: wordCount, y: score });
+        titles.push(title);
+
+        if (score >= 80) {
+            pointColors.push('#10b981');
+        } else if (score >= 65) {
+            pointColors.push('#f59e0b');
+        } else {
+            pointColors.push('#ef4444');
+        }
+    });
+
+    new Chart(canvas, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: 'Posts',
+                data: dataPoints,
+                backgroundColor: pointColors,
+                borderColor: pointColors,
+                pointRadius: 8,
+                pointHoverRadius: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    titleColor: '#fff',
+                    bodyColor: 'rgba(255,255,255,0.7)',
+                    borderColor: 'rgba(255,255,255,0.1)',
+                    borderWidth: 1,
+                    callbacks: {
+                        title: function(context) {
+                            var idx = context[0].dataIndex;
+                            return titles[idx];
+                        },
+                        label: function(context) {
+                            return 'Word Count: ' + context.parsed.x + ' | Score: ' + context.parsed.y;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Word Count',
+                        color: 'rgba(255,255,255,0.5)'
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.05)'
+                    },
+                    ticks: {
+                        color: 'rgba(255,255,255,0.5)'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'AEO Score',
+                        color: 'rgba(255,255,255,0.5)'
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.05)'
+                    },
+                    ticks: {
+                        color: 'rgba(255,255,255,0.5)'
+                    },
+                    min: 0,
+                    max: 100
+                }
+            }
+        }
+    });
+})();
+</script>

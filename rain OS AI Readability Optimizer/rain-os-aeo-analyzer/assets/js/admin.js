@@ -265,122 +265,88 @@
         initSearch: function() {
             var self = this;
             var $search = $('#rain-os-search');
-            var $results = $('#rain-os-search-results');
+            var $table = $('.rain-os-table');
             var timeout;
 
             $search.on('input', function() {
-                var query = $(this).val();
+                var query = $(this).val().toLowerCase();
                 clearTimeout(timeout);
 
-                if (query.length < 2) {
-                    $results.hide().empty();
-                    return;
-                }
-
                 timeout = setTimeout(function() {
-                    self.performSearch(query);
-                }, 300);
-            });
-
-            $(document).on('click', function(e) {
-                if (!$(e.target).closest('.rain-os-search-wrap').length) {
-                    $results.hide();
-                }
-            });
-        },
-
-        performSearch: function(query) {
-            var $results = $('#rain-os-search-results');
-
-            $.ajax({
-                url: rainOsAeo.ajaxUrl,
-                type: 'POST',
-                data: {
-                    action: 'rain_os_search_posts',
-                    nonce: rainOsAeo.nonce,
-                    query: query
-                },
-                success: function(response) {
-                    if (response.success && response.data.posts.length) {
-                        var html = '';
-                        $.each(response.data.posts, function(i, post) {
-                            html += '<div class="rain-os-search-item" data-id="' + post.post_id + '">';
-                            html += '<div class="rain-os-search-title">' + post.post_title + '</div>';
-                            html += '<div class="rain-os-search-score">Score: ' + post.overall_score + '</div>';
-                            html += '</div>';
-                        });
-                        $results.html(html).show();
-                    } else {
-                        $results.html('<div class="rain-os-search-empty">No results found</div>').show();
+                    if (query.length < 2) {
+                        $table.find('tbody tr').show();
+                        return;
                     }
-                }
+                    $table.find('tbody tr').each(function() {
+                        var title = $(this).find('.rain-os-post-title').text().toLowerCase();
+                        var slug = $(this).find('.rain-os-post-slug').text().toLowerCase();
+                        if (title.indexOf(query) > -1 || slug.indexOf(query) > -1) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                }, 200);
             });
         },
 
         initNotifications: function() {
-            var self = this;
             var $btn = $('#rain-os-notifications-btn');
-            var $dropdown = $('#rain-os-notifications-dropdown');
-            var $badge = $('#rain-os-notification-badge');
+            var $dropdown = $('#rain-os-notification-dropdown');
+            var $badge = $('#rain-os-notification-count');
+            var $list = $('#rain-os-notification-list');
+            var $markAll = $('#rain-os-mark-all-read');
+
+            var notifications = [
+                { id: 1, type: 'success', icon: '\u2713', text: 'Content health improved by 5% this week', time: '2 hours ago', read: false },
+                { id: 2, type: 'warning', icon: '\u26A0', text: 'API usage at 47% of monthly quota', time: '1 day ago', read: false },
+                { id: 3, type: 'info', icon: '\u2139', text: '3 posts need re-analysis after updates', time: '3 days ago', read: true }
+            ];
+
+            function renderNotifications() {
+                var html = '';
+                var unread = 0;
+                $.each(notifications, function(i, n) {
+                    if (!n.read) unread++;
+                    html += '<div class="rain-os-notification-item' + (n.read ? '' : ' rain-os-unread') + '" data-id="' + n.id + '">';
+                    html += '<div class="rain-os-notification-icon rain-os-type-' + n.type + '">' + n.icon + '</div>';
+                    html += '<div class="rain-os-notification-body">';
+                    html += '<p>' + n.text + '</p>';
+                    html += '<span>' + n.time + '</span>';
+                    html += '</div></div>';
+                });
+                $list.html(html);
+                if (unread > 0) {
+                    $badge.text(unread).show();
+                } else {
+                    $badge.hide();
+                }
+            }
+
+            renderNotifications();
 
             $btn.on('click', function(e) {
                 e.stopPropagation();
-                if ($dropdown.is(':visible')) {
-                    $dropdown.hide();
-                } else {
-                    self.loadNotifications();
-                    $dropdown.show();
-                }
+                $dropdown.toggleClass('rain-os-open');
             });
 
             $(document).on('click', function(e) {
-                if (!$(e.target).closest('.rain-os-notifications-wrap').length) {
-                    $dropdown.hide();
+                if (!$(e.target).closest('.rain-os-notifications').length) {
+                    $dropdown.removeClass('rain-os-open');
                 }
             });
 
-            $(document).on('click', '.rain-os-notification-item', function() {
-                var id = $(this).data('id');
-                self.markNotificationRead(id);
+            $list.on('click', '.rain-os-notification-item', function() {
+                var id = parseInt($(this).data('id'));
+                $.each(notifications, function(i, n) {
+                    if (n.id === id) n.read = true;
+                });
+                renderNotifications();
             });
-        },
 
-        loadNotifications: function() {
-            var $dropdown = $('#rain-os-notifications-dropdown');
-            var $badge = $('#rain-os-notification-badge');
-
-            $.ajax({
-                url: rainOsAeo.ajaxUrl,
-                type: 'POST',
-                data: {
-                    action: 'rain_os_get_notifications',
-                    nonce: rainOsAeo.nonce
-                },
-                success: function(response) {
-                    if (response.success) {
-                        var notifications = response.data.notifications;
-                        var unread = notifications.filter(function(n) { return !n.read; }).length;
-                        
-                        if (unread > 0) {
-                            $badge.text(unread).show();
-                        } else {
-                            $badge.hide();
-                        }
-
-                        var html = '<div class="rain-os-notifications-header">Notifications</div>';
-                        if (notifications.length) {
-                            $.each(notifications, function(i, n) {
-                                html += '<div class="rain-os-notification-item' + (n.read ? '' : ' unread') + '" data-id="' + n.id + '">';
-                                html += '<div class="rain-os-notification-text">' + n.text + '</div>';
-                                html += '<div class="rain-os-notification-time">' + n.time + '</div>';
-                                html += '</div>';
-                            });
-                        } else {
-                            html += '<div class="rain-os-notifications-empty">No notifications</div>';
-                        }
-                        $dropdown.html(html);
-                    }
-                }
+            $markAll.on('click', function() {
+                $.each(notifications, function(i, n) { n.read = true; });
+                renderNotifications();
             });
         },
 
