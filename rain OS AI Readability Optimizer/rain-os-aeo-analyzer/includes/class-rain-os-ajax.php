@@ -49,13 +49,34 @@ class Rain_OS_Ajax {
         $title    = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '';
         $industry = isset( $_POST['industry'] ) ? sanitize_text_field( wp_unslash( $_POST['industry'] ) ) : '';
         $post_id  = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
+        $content_id = $post_id > 0 ? 'wp_post_' . $post_id : '';
+
+        if ( empty( $industry ) && $post_id > 0 ) {
+            $categories = get_the_category( $post_id );
+            if ( ! empty( $categories ) ) {
+                $industry = $categories[0]->name;
+            }
+        }
 
         if ( empty( $content ) ) {
             wp_send_json_error( array( 'message' => __( 'Content is required.', 'rain-os-aeo-analyzer' ) ) );
         }
 
         $full_content = $title ? $title . "\n\n" . $content : $content;
-        $result = $this->api_client->analyze_content( $full_content, $industry );
+
+        $word_count = str_word_count( wp_strip_all_tags( $full_content ) );
+        if ( $word_count < 100 ) {
+            wp_send_json_error( array(
+                'message' => sprintf(
+                    __( 'Content is too short to analyze accurately (%d words). Please add more content — a minimum of 100 words is recommended for meaningful scores.', 'rain-os-aeo-analyzer' ),
+                    $word_count
+                ),
+                'code' => 'content_too_short',
+                'word_count' => $word_count,
+            ) );
+        }
+
+        $result = $this->api_client->analyze_content( $full_content, $industry, $content_id );
 
         if ( is_wp_error( $result ) ) {
             wp_send_json_error( array( 
@@ -72,10 +93,7 @@ class Rain_OS_Ajax {
 
         $usage_info = $this->api_client->get_last_usage_info();
 
-        wp_send_json_success( array(
-            'analysis' => $parsed,
-            'usage'    => $usage_info,
-        ) );
+        wp_send_json_success( array_merge( $parsed, array( 'usage' => $usage_info ) ) );
     }
 
     private function save_analysis_to_history( $post_id, $analysis ) {

@@ -7,7 +7,7 @@ class Rain_OS_API_Client {
 
     private $api_url;
     private $api_key;
-    private $timeout = 30;
+    private $timeout = 60;
     private $last_usage_info = null;
 
     public function __construct() {
@@ -94,16 +94,16 @@ class Rain_OS_API_Client {
         return get_transient( 'rain_os_usage_info' );
     }
 
-    public function analyze_content( $content, $industry = '' ) {
-        return $this->make_request(
-            'analyze',
-            'POST',
-            array(
-                'action'   => 'full_analysis',
-                'content'  => $content,
-                'industry' => $industry,
-            )
+    public function analyze_content( $content, $industry = '', $content_id = '' ) {
+        $payload = array(
+            'action'   => 'full_analysis',
+            'content'  => $content,
+            'industry' => $industry,
         );
+        if ( ! empty( $content_id ) ) {
+            $payload['contentId'] = $content_id;
+        }
+        return $this->make_request( 'analyze', 'POST', $payload );
     }
 
     public function suggest_titles( $content ) {
@@ -226,21 +226,55 @@ class Rain_OS_API_Client {
             return $response;
         }
 
+        $overall  = isset( $response['overall_score'] ) ? intval( $response['overall_score'] ) : ( isset( $response['overallScore'] ) ? intval( $response['overallScore'] ) : 0 );
+        $ai_read  = isset( $response['ai_readability'] ) ? intval( $response['ai_readability'] ) : ( isset( $response['pillarScores']['aiReadability'] ) ? intval( $response['pillarScores']['aiReadability'] ) : 0 );
+        $dig_auth = isset( $response['digital_authority'] ) ? intval( $response['digital_authority'] ) : ( isset( $response['pillarScores']['digitalAuthority'] ) ? intval( $response['pillarScores']['digitalAuthority'] ) : 0 );
+        $conv_read = isset( $response['conversion_readiness'] ) ? intval( $response['conversion_readiness'] ) : ( isset( $response['pillarScores']['conversionReadiness'] ) ? intval( $response['pillarScores']['conversionReadiness'] ) : 0 );
+        $prod_disc = isset( $response['product_discoverability'] ) ? intval( $response['product_discoverability'] ) : ( isset( $response['pillarScores']['productDiscoverability'] ) ? intval( $response['pillarScores']['productDiscoverability'] ) : 0 );
+
         $parsed = array(
-            'overall_score'        => isset( $response['overallScore'] ) ? intval( $response['overallScore'] ) : 0,
-            'ai_readability'       => isset( $response['pillarScores']['aiReadability'] ) ? intval( $response['pillarScores']['aiReadability'] ) : 0,
-            'digital_authority'    => isset( $response['pillarScores']['digitalAuthority'] ) ? intval( $response['pillarScores']['digitalAuthority'] ) : 0,
-            'conversion_readiness' => isset( $response['pillarScores']['conversionReadiness'] ) ? intval( $response['pillarScores']['conversionReadiness'] ) : 0,
-            'sub_scores'           => array(),
-            'recommendations'      => isset( $response['recommendations'] ) ? $response['recommendations'] : array(),
-            'keywords'             => isset( $response['keywords'] ) ? $response['keywords'] : array(),
-            'authorship'           => isset( $response['authorship'] ) ? $response['authorship'] : null,
+            'overall_score'            => $overall,
+            'ai_readability'           => $ai_read,
+            'digital_authority'        => $dig_auth,
+            'conversion_readiness'     => $conv_read,
+            'product_discoverability'  => $prod_disc,
+
+            'pillars' => array(
+                'ai_readability'          => $ai_read,
+                'digital_authority'       => $dig_auth,
+                'conversion_readiness'    => $conv_read,
+                'product_discoverability' => $prod_disc,
+            ),
+
+            'ai_scores'                     => isset( $response['ai_scores'] ) ? $response['ai_scores'] : array(),
+            'sub_scores'                    => array(),
+            'phase2_sub_scores'             => isset( $response['phase2_sub_scores'] ) ? $response['phase2_sub_scores'] : array(),
+            'crawler_signals'               => isset( $response['crawler_signals'] ) ? $response['crawler_signals'] : array(),
+
+            'ai_readability_detail'         => isset( $response['ai_readability_detail'] ) ? $response['ai_readability_detail'] : array(),
+            'digital_authority_detail'      => isset( $response['digital_authority_detail'] ) ? $response['digital_authority_detail'] : array(),
+            'conversion_readiness_detail'   => isset( $response['conversion_readiness_detail'] ) ? $response['conversion_readiness_detail'] : array(),
+            'product_discoverability_detail' => isset( $response['product_discoverability_detail'] ) ? $response['product_discoverability_detail'] : array(),
+
+            'recommendations'               => isset( $response['recommendations'] ) ? $response['recommendations'] : array(),
+            'keywords'                      => isset( $response['keywords'] ) ? $response['keywords'] : array(),
+            'authorship'                    => isset( $response['authorship'] ) ? $response['authorship'] : null,
         );
 
-        if ( isset( $response['subScores'] ) && is_array( $response['subScores'] ) ) {
-            foreach ( $response['subScores'] as $sub_score ) {
-                if ( isset( $sub_score['category'] ) && isset( $sub_score['score'] ) ) {
-                    $parsed['sub_scores'][ $sub_score['category'] ] = intval( $sub_score['score'] );
+        if ( isset( $response['sub_scores'] ) ) {
+            if ( is_array( $response['sub_scores'] ) ) {
+                foreach ( $response['sub_scores'] as $key => $val ) {
+                    if ( is_array( $val ) && isset( $val['category'] ) ) {
+                        $parsed['sub_scores'][ $val['category'] ] = intval( $val['score'] );
+                    } else {
+                        $parsed['sub_scores'][ $key ] = intval( $val );
+                    }
+                }
+            }
+        } elseif ( isset( $response['subScores'] ) && is_array( $response['subScores'] ) ) {
+            foreach ( $response['subScores'] as $sub ) {
+                if ( isset( $sub['category'], $sub['score'] ) ) {
+                    $parsed['sub_scores'][ $sub['category'] ] = intval( $sub['score'] );
                 }
             }
         }

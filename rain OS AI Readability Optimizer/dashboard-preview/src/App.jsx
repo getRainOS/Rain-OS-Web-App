@@ -39,17 +39,19 @@ const pillarData = [
 
 const categoryData = [
   { name: 'Semantic Clarity', score: 92, pillar: 'aiReadability' },
+  { name: 'Readability Score', score: 87, pillar: 'aiReadability' },
   { name: 'Logical Structure', score: 85, pillar: 'aiReadability' },
-  { name: 'Readability', score: 87, pillar: 'aiReadability' },
+  { name: 'AEO Alignment', score: 80, pillar: 'aiReadability' },
   { name: 'Entity Recognition', score: 75, pillar: 'digitalAuthority' },
   { name: 'Citation Readiness', score: 77, pillar: 'digitalAuthority' },
-  { name: 'Metadata Audit', score: 78, pillar: 'digitalAuthority' },
-  { name: 'AI Alignment', score: 86, pillar: 'conversionReadiness' },
+  { name: 'Descriptive Metadata', score: 78, pillar: 'digitalAuthority' },
   { name: 'Schema Extraction', score: 80, pillar: 'conversionReadiness' },
   { name: 'QA-Format Detection', score: 86, pillar: 'conversionReadiness' },
-  { name: 'Search Presence', score: 74, pillar: 'productDiscoverability' },
-  { name: 'Brand Visibility', score: 70, pillar: 'productDiscoverability' },
-  { name: 'Market Positioning', score: 72, pillar: 'productDiscoverability' },
+  { name: 'Metadata Audit', score: 82, pillar: 'conversionReadiness' },
+  { name: 'Schema Completeness', score: 74, pillar: 'productDiscoverability' },
+  { name: 'Answer Layer Quality', score: 70, pillar: 'productDiscoverability' },
+  { name: 'Freshness Signals', score: 68, pillar: 'productDiscoverability' },
+  { name: 'Conversational Query Match', score: 72, pillar: 'productDiscoverability' },
 ]
 
 const getCategoryPillarColor = (pillar) => {
@@ -462,15 +464,17 @@ const mockAnalysis = {
     { name: "Semantic Clarity", score: 90, status: "good", pillar: "aiReadability" },
     { name: "Readability Score", score: 87, status: "good", pillar: "aiReadability" },
     { name: "Logical Structure", score: 85, status: "good", pillar: "aiReadability" },
+    { name: "AEO Alignment", score: 80, status: "good", pillar: "aiReadability" },
     { name: "Entity Recognition", score: 72, status: "warning", pillar: "digitalAuthority" },
     { name: "Citation Readiness", score: 65, status: "warning", pillar: "digitalAuthority" },
-    { name: "Metadata Audit", score: 78, status: "warning", pillar: "digitalAuthority" },
-    { name: "AI Alignment", score: 88, status: "good", pillar: "conversionReadiness" },
-    { name: "QA-format Detection", score: 95, status: "good", pillar: "conversionReadiness" },
+    { name: "Descriptive Metadata", score: 78, status: "warning", pillar: "digitalAuthority" },
     { name: "Schema Extraction", score: 40, status: "critical", pillar: "conversionReadiness" },
-    { name: "Search Presence", score: 74, status: "warning", pillar: "productDiscoverability" },
-    { name: "Brand Visibility", score: 68, status: "warning", pillar: "productDiscoverability" },
-    { name: "Market Positioning", score: 70, status: "warning", pillar: "productDiscoverability" }
+    { name: "QA-Format Detection", score: 95, status: "good", pillar: "conversionReadiness" },
+    { name: "Metadata Audit", score: 82, status: "good", pillar: "conversionReadiness" },
+    { name: "Schema Completeness", score: 74, status: "warning", pillar: "productDiscoverability" },
+    { name: "Answer Layer Quality", score: 68, status: "warning", pillar: "productDiscoverability" },
+    { name: "Freshness Signals", score: 66, status: "warning", pillar: "productDiscoverability" },
+    { name: "Conversational Query Match", score: 70, status: "warning", pillar: "productDiscoverability" }
   ],
   recommendations: [
     { text: "Add structured entity definitions in first paragraph.", type: "critical" },
@@ -1852,10 +1856,10 @@ function QuickToolsPage() {
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {[
-              { pillar: 'AI Readability', scores: ['Semantic Clarity', 'Logical Structure', 'Readability Index', 'Entity Recognition'] },
-              { pillar: 'Digital Authority', scores: ['Citation Readiness', 'E-E-A-T Signals', 'Source Quality', 'Fact Density'] },
-              { pillar: 'Conversion Readiness', scores: ['CTA Strength', 'Engagement Hooks', 'User Intent Match', 'Action Clarity'] },
-              { pillar: 'Product Discoverability', scores: ['Search Presence', 'Brand Visibility', 'Market Positioning', 'Competitive Edge'] },
+              { pillar: 'AI Readability', scores: ['Semantic Clarity', 'Readability Score', 'Logical Structure', 'AEO Alignment'] },
+              { pillar: 'Digital Authority', scores: ['Entity Recognition', 'Citation Readiness', 'Descriptive Metadata'] },
+              { pillar: 'Conversion Readiness', scores: ['Schema Extraction', 'QA-Format Detection', 'Metadata Audit'] },
+              { pillar: 'Product Discoverability', scores: ['Schema Completeness', 'Answer Layer Quality', 'Freshness Signals', 'Conversational Query Match'] },
             ].map((p, i) => (
               <div key={i} style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
                 <div style={{ fontWeight: 500, marginBottom: '8px' }}>{p.pillar}</div>
@@ -2917,12 +2921,12 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {filteredPillarData.map((pillar, i) => {
             const subcategories = pillar.name === 'AI Readability' 
-              ? [{ name: 'Semantic Clarity', value: 85 }, { name: 'Readability Score', value: 78 }, { name: 'Logical Structure', value: 82 }]
+              ? [{ name: 'Semantic Clarity', value: 85 }, { name: 'Readability Score', value: 78 }, { name: 'Logical Structure', value: 82 }, { name: 'AEO Alignment', value: 80 }]
               : pillar.name === 'Digital Authority'
-              ? [{ name: 'Entity Recognition', value: 75 }, { name: 'Citation Readiness', value: 88 }, { name: 'Schema Extraction', value: 72 }]
+              ? [{ name: 'Entity Recognition', value: 75 }, { name: 'Citation Readiness', value: 88 }, { name: 'Descriptive Metadata', value: 72 }]
               : pillar.name === 'Product Discoverability'
-              ? [{ name: 'Search Presence', value: 74 }, { name: 'Brand Visibility', value: 70 }, { name: 'Market Positioning', value: 72 }]
-              : [{ name: 'AI Alignment', value: 80 }, { name: 'QA-Format', value: 76 }, { name: 'Metadata Audit', value: 84 }]
+              ? [{ name: 'Schema Completeness', value: 74 }, { name: 'Answer Layer Quality', value: 70 }, { name: 'Freshness Signals', value: 68 }, { name: 'Conversational Query Match', value: 72 }]
+              : [{ name: 'Schema Extraction', value: 80 }, { name: 'QA-Format Detection', value: 76 }, { name: 'Metadata Audit', value: 84 }]
             
             return (
               <div key={i} className={`animate-in-delay-${i + 2}`} style={{

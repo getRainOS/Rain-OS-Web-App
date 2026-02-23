@@ -158,12 +158,27 @@
                         if (response.data.recommendations) {
                             self.displayRecommendations(response.data.recommendations);
                         }
+                        if (response.data.ai_scores) {
+                            self.displayAIScores(response.data.ai_scores);
+                        }
+                        if (response.data.crawler_signals) {
+                            self.displayCrawlerSignals(response.data.crawler_signals);
+                        }
                     } else {
                         $results.html('<div class="rain-os-error">' + (response.data.message || rainOsAeo.i18n.error) + '</div>');
                     }
                 },
-                error: function() {
-                    $results.html('<div class="rain-os-error">' + rainOsAeo.i18n.error + '</div>');
+                error: function(response) {
+                    var message = rainOsAeo.i18n.error;
+                    if (response && response.responseJSON && response.responseJSON.data) {
+                        var data = response.responseJSON.data;
+                        if (data.code === 'content_too_short') {
+                            message = data.message || 'Content is too short to analyze. Please add more content.';
+                        } else if (data.message) {
+                            message = data.message;
+                        }
+                    }
+                    $results.html('<div class="rain-os-error">' + message + '</div>');
                 },
                 complete: function() {
                     $btn.prop('disabled', false).html('<span class="dashicons dashicons-search"></span> Analyze Content');
@@ -185,6 +200,7 @@
                 html += this.renderPillarScore('AI Readability', data.pillars.ai_readability || 0, 'cyan');
                 html += this.renderPillarScore('Digital Authority', data.pillars.digital_authority || 0, 'green');
                 html += this.renderPillarScore('Conversion Readiness', data.pillars.conversion_readiness || 0, 'purple');
+                html += this.renderPillarScore('Product Discoverability', data.pillars.product_discoverability || 0, 'yellow');
             }
 
             html += '</div>';
@@ -194,7 +210,14 @@
                 html += '<h4>Recommendations</h4>';
                 html += '<ul>';
                 $.each(data.recommendations, function(i, rec) {
-                    html += '<li>' + rec + '</li>';
+                    if (typeof rec === 'string') {
+                        html += '<li>' + rec + '</li>';
+                    } else {
+                        html += '<li><strong>' + (rec.title || '') + '</strong>';
+                        if (rec.description) html += ' — ' + rec.description;
+                        if (rec.pillar) html += ' <span class="rain-os-rec-pillar">[' + rec.pillar.replace(/_/g, ' ') + ']</span>';
+                        html += '</li>';
+                    }
                 });
                 html += '</ul>';
                 html += '</div>';
@@ -542,6 +565,28 @@
             }
         },
 
+        displayCrawlerSignals: function(signals) {
+            if (!signals) return;
+            var $container = $('#rain-os-crawler-signals');
+            if (!$container.length) return;
+
+            var statusLabel = function(val) {
+                var map = { open: 'Open', restricted: 'Restricted', blocked: 'Blocked', unknown: 'Unknown',
+                        present: 'Present', missing: 'Missing', partial: 'Partial', blocking: 'Blocking',
+                        none: 'None', low: 'Low', medium: 'Medium', high: 'High' };
+                return map[val] || val;
+            };
+
+            var html = '<div class="rain-os-crawler-grid">';
+            html += '<div class="rain-os-crawler-item"><span>AI Crawler Access</span><strong>' + statusLabel(signals.ai_crawler_access) + ' (' + (signals.ai_crawler_access_score || 0) + ')</strong></div>';
+            html += '<div class="rain-os-crawler-item"><span>LLMs.txt Status</span><strong>' + statusLabel(signals.llms_txt_status) + ' (' + (signals.llms_txt_permissions || 0) + ')</strong></div>';
+            html += '<div class="rain-os-crawler-item"><span>Conversion Risk</span><strong>' + statusLabel(signals.crawler_conversion_risk) + ' (' + (signals.crawler_conversion_score || 0) + ')</strong></div>';
+            html += '<div class="rain-os-crawler-item"><span>Schema Maturity</span><strong>' + statusLabel(signals.schema_maturity_level) + ' (' + (signals.schema_completeness || 0) + ')</strong></div>';
+            html += '</div>';
+
+            $container.html(html).show();
+        },
+
         reanalyzeContent: function(e) {
             e.preventDefault();
             var self = this;
@@ -579,6 +624,9 @@
                         if (response.data.ai_scores) {
                             self.displayAIScores(response.data.ai_scores);
                         }
+                        if (response.data.crawler_signals) {
+                            self.displayCrawlerSignals(response.data.crawler_signals);
+                        }
                     } else {
                         $results.html('<div class="rain-os-error">' + (response.data.message || rainOsAeo.i18n.error) + '</div>');
                     }
@@ -601,42 +649,26 @@
                 return;
             }
 
-            var categoryLabels = {
-                'readability': 'Readability',
-                'structure': 'Structure',
-                'freshness': 'Freshness',
-                'citation': 'Citation Readiness',
-                'visibility': 'AI Visibility'
-            };
-
-            var grouped = {};
+            var html = '';
             for (var i = 0; i < recommendations.length; i++) {
                 var rec = recommendations[i];
-                var cat = rec.category || 'other';
-                if (!grouped[cat]) {
-                    grouped[cat] = [];
-                }
-                grouped[cat].push(rec);
-            }
-
-            var html = '';
-            for (var category in grouped) {
-                if (grouped.hasOwnProperty(category)) {
-                    var label = categoryLabels[category] || category;
-                    html += '<div class="rain-os-recommendation-group">';
-                    html += '<h4 class="rain-os-recommendation-category">[' + label + ']</h4>';
-                    html += '<ul class="rain-os-recommendation-list">';
-                    
-                    for (var j = 0; j < grouped[category].length; j++) {
-                        var item = grouped[category][j];
-                        html += '<li class="rain-os-recommendation-item">';
-                        html += '<span class="rain-os-recommendation-issue">' + item.issue + '</span>';
-                        html += ' <span class="rain-os-recommendation-arrow">&rarr;</span> ';
-                        html += '<span class="rain-os-recommendation-action">' + item.recommendation + '</span>';
-                        html += '</li>';
-                    }
-                    
-                    html += '</ul>';
+                if (typeof rec === 'string') {
+                    html += '<div class="rain-os-rec-item"><p>' + rec + '</p></div>';
+                } else if (rec.title) {
+                    var priorityClass = rec.priority === 1 ? 'critical' : rec.priority === 2 ? 'important' : 'enhancement';
+                    html += '<div class="rain-os-rec-item rain-os-rec-' + priorityClass + '">';
+                    html += '<div class="rain-os-rec-header">';
+                    html += '<span class="rain-os-rec-title">' + rec.title + '</span>';
+                    html += '<span class="rain-os-rec-pillar">' + (rec.pillar || '').replace(/_/g, ' ') + '</span>';
+                    html += '</div>';
+                    html += '<p class="rain-os-rec-description">' + (rec.description || '') + '</p>';
+                    html += '</div>';
+                } else if (rec.issue) {
+                    var cat = rec.category || 'other';
+                    html += '<div class="rain-os-rec-item">';
+                    html += '<span class="rain-os-recommendation-issue">' + rec.issue + '</span>';
+                    html += ' <span class="rain-os-recommendation-arrow">&rarr;</span> ';
+                    html += '<span class="rain-os-recommendation-action">' + rec.recommendation + '</span>';
                     html += '</div>';
                 }
             }
