@@ -44,9 +44,14 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'Logical Structure: Heading hierarchy analysis', 'rain-os-aeo-analyzer' ); ?></li>
                     <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'Entity Recognition: Knowledge graph linking', 'rain-os-aeo-analyzer' ); ?></li>
                     <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'Citation Readiness: Quotable snippet detection', 'rain-os-aeo-analyzer' ); ?></li>
-                    <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'AI Alignment: Direct answer scoring', 'rain-os-aeo-analyzer' ); ?></li>
+                    <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'AEO Alignment: Answer engine optimization scoring', 'rain-os-aeo-analyzer' ); ?></li>
+                    <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'Descriptive Metadata: Meta tags and content indexing', 'rain-os-aeo-analyzer' ); ?></li>
                     <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'Schema Extraction: Structured data opportunities', 'rain-os-aeo-analyzer' ); ?></li>
                     <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'QA-Format Detection: Question/Answer optimization', 'rain-os-aeo-analyzer' ); ?></li>
+                    <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'Schema Completeness: Structured data coverage', 'rain-os-aeo-analyzer' ); ?></li>
+                    <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'Answer Layer Quality: AI-extractable answers', 'rain-os-aeo-analyzer' ); ?></li>
+                    <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'Freshness Signals: Content currency indicators', 'rain-os-aeo-analyzer' ); ?></li>
+                    <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'Conversational Query Match: Voice search alignment', 'rain-os-aeo-analyzer' ); ?></li>
                 </ul>
 
                 <a href="https://app.getrainos.com/#/login" target="_blank" rel="noopener noreferrer" class="rain-os-btn rain-os-btn-primary rain-os-btn-full">

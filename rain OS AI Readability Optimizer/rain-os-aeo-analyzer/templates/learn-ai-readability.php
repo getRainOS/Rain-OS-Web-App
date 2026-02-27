@@ -54,6 +54,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                             <li><?php esc_html_e( 'Semantic Clarity', 'rain-os-aeo-analyzer' ); ?></li>
                             <li><?php esc_html_e( 'Readability Score', 'rain-os-aeo-analyzer' ); ?></li>
                             <li><?php esc_html_e( 'Logical Structure', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'AEO Alignment', 'rain-os-aeo-analyzer' ); ?></li>
                         </ul>
                     </div>
                     <div class="rain-os-pillar-card rain-os-pillar-green">
@@ -63,7 +64,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                         <ul>
                             <li><?php esc_html_e( 'Entity Recognition', 'rain-os-aeo-analyzer' ); ?></li>
                             <li><?php esc_html_e( 'Citation Readiness', 'rain-os-aeo-analyzer' ); ?></li>
-                            <li><?php esc_html_e( 'Schema Extraction', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Descriptive Metadata', 'rain-os-aeo-analyzer' ); ?></li>
                         </ul>
                     </div>
                     <div class="rain-os-pillar-card rain-os-pillar-purple">
@@ -71,8 +72,8 @@ if ( ! defined( 'ABSPATH' ) ) {
                         <h4><?php esc_html_e( 'Conversion Readiness', 'rain-os-aeo-analyzer' ); ?></h4>
                         <p><?php esc_html_e( 'Assesses engagement potential and action-driving effectiveness. Determines whether your content drives user action.', 'rain-os-aeo-analyzer' ); ?></p>
                         <ul>
-                            <li><?php esc_html_e( 'AI Alignment', 'rain-os-aeo-analyzer' ); ?></li>
-                            <li><?php esc_html_e( 'QA-Format', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Schema Extraction', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'QA-Format Detection', 'rain-os-aeo-analyzer' ); ?></li>
                             <li><?php esc_html_e( 'Metadata Audit', 'rain-os-aeo-analyzer' ); ?></li>
                         </ul>
                     </div>
@@ -81,9 +82,10 @@ if ( ! defined( 'ABSPATH' ) ) {
                         <h4><?php esc_html_e( 'Product Discoverability', 'rain-os-aeo-analyzer' ); ?></h4>
                         <p><?php esc_html_e( 'Measures how easily your product or service can be found through AI-powered search and recommendation systems.', 'rain-os-aeo-analyzer' ); ?></p>
                         <ul>
-                            <li><?php esc_html_e( 'Search Presence', 'rain-os-aeo-analyzer' ); ?></li>
-                            <li><?php esc_html_e( 'Brand Visibility', 'rain-os-aeo-analyzer' ); ?></li>
-                            <li><?php esc_html_e( 'Market Positioning', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Schema Completeness', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Answer Layer Quality', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Freshness Signals', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Conversational Query Match', 'rain-os-aeo-analyzer' ); ?></li>
                         </ul>
                     </div>
                 </div>

@@ -41,7 +41,9 @@ The plugin adheres to WordPress plugin standards with a modular, class-based des
 - **Gutenberg PHP (class-rain-os-gutenberg.php)**: handle_analyze parses flat backend response; save_analysis_history stores product_discoverability + analysis_data JSON + analyzed_at; handle_get_history returns productDiscoverability and uses analyzed_at; handle_quick_action remaps actions (generate_meta→generate_description, summarize→summarize_content, rewrite→rewrite_sentence) and normalizes response; mock_quick_action case labels match backend action names; calculate_local_scores includes 4th pillar and all 14 sub-scores
 - **admin.js**: Product Discoverability uses 'orange' CSS class (was 'yellow'); crawler signals display function; rich recommendation rendering
 - **admin.css**: --rain-pillar-orange: #f97316 custom property; .rain-os-pillar-fill-result.rain-os-pillar-orange; .rain-os-pillar-bar-fill.rain-os-pillar-orange; .rain-os-bar-orange-1/2/3/4 tokens updated to #f97316 scale; pillar section orange references use --rain-pillar-orange
-- **Package**: 152 KB, 43 files, webpack compiled successfully
+- **All PHP Templates Synced**: learn-ai-readability.php, documentation.php, upgrade.php now use all 14 backend-synced sub-category names with correct pillar groupings (AEO Alignment in P1, Descriptive Metadata in P2, Schema Extraction in P3, 4 new P4 sub-categories)
+- **HistoryTab.js**: Product Discoverability color fixed to #f97316
+- **Package**: 152.64 KB, 43 files, webpack compiled successfully
 
 ### 4-Pillar System Upgrade (February 2025)
 - **Product Discoverability Pillar**: Added 4th pillar with 4 subcategories

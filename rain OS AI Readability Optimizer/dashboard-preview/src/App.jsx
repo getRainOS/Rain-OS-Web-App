@@ -34,7 +34,7 @@ const pillarData = [
   { name: 'AI Readability', value: 88, color: '#22d3ee' },
   { name: 'Digital Authority', value: 78, color: '#10b981' },
   { name: 'Conversion Readiness', value: 84, color: '#a855f7' },
-  { name: 'Product Discoverability', value: 72, color: '#f59e0b' },
+  { name: 'Product Discoverability', value: 72, color: '#f97316' },
 ]
 
 const categoryData = [
@@ -59,7 +59,7 @@ const getCategoryPillarColor = (pillar) => {
     case 'aiReadability': return '#22d3ee'
     case 'digitalAuthority': return '#10b981'
     case 'conversionReadiness': return '#a855f7'
-    case 'productDiscoverability': return '#f59e0b'
+    case 'productDiscoverability': return '#f97316'
     default: return '#22d3ee'
   }
 }
@@ -516,7 +516,7 @@ function GutenbergSidebarPage() {
     if (!heatmapActive) return text
     let result = text
     Object.entries(heatmapKeywords).forEach(([pillar, keywords]) => {
-      const color = pillar === 'aiReadability' ? '#22d3ee' : pillar === 'digitalAuthority' ? '#10b981' : pillar === 'conversionReadiness' ? '#a855f7' : '#f59e0b'
+      const color = pillar === 'aiReadability' ? '#22d3ee' : pillar === 'digitalAuthority' ? '#10b981' : pillar === 'conversionReadiness' ? '#a855f7' : '#f97316'
       keywords.forEach(keyword => {
         const regex = new RegExp(`(${keyword})`, 'gi')
         result = result.replace(regex, `<span style="background-color: ${color}33; color: ${color}; padding: 1px 4px; border-radius: 3px; font-weight: 500;">$1</span>`)
@@ -557,23 +557,23 @@ function GutenbergSidebarPage() {
     if (getLevel(subScores.qaFormat) !== 'good') {
       recommendations.push({ icon: '❓', title: 'Add Q&A Format', description: 'Include question-and-answer sections to optimize for voice search and AI assistants.', color: '#a855f7', priority: 2 })
     }
-    if (getLevel(subScores.aiAlignment) !== 'good') {
+    if (getLevel(subScores.aeoAlignment) !== 'good') {
       recommendations.push({ icon: '🎯', title: 'Improve AI Alignment', description: 'Structure content to provide direct, concise answers that AI can easily extract.', color: '#a855f7', priority: 2 })
     }
     if (!audit.hasImages) {
-      recommendations.push({ icon: '🖼️', title: 'Add Visual Content', description: 'Include relevant images to enhance engagement and provide visual context.', color: '#f59e0b', priority: 2 })
+      recommendations.push({ icon: '🖼️', title: 'Add Visual Content', description: 'Include relevant images to enhance engagement and provide visual context.', color: '#f97316', priority: 2 })
     }
     if (!audit.hasAltTags && audit.hasImages) {
-      recommendations.push({ icon: '🏷️', title: 'Add Alt Text to Images', description: 'Describe your images with alt text for accessibility and AI understanding.', color: '#f59e0b', priority: 1 })
+      recommendations.push({ icon: '🏷️', title: 'Add Alt Text to Images', description: 'Describe your images with alt text for accessibility and AI understanding.', color: '#f97316', priority: 1 })
     }
     if (!audit.hasInternalLinks) {
-      recommendations.push({ icon: '🔀', title: 'Add Internal Links', description: 'Link to other relevant content on your site to improve navigation and authority.', color: '#f59e0b', priority: 2 })
+      recommendations.push({ icon: '🔀', title: 'Add Internal Links', description: 'Link to other relevant content on your site to improve navigation and authority.', color: '#f97316', priority: 2 })
     }
     if (getLevel(aiScores.citation_readiness) === 'critical') {
       recommendations.push({ icon: '⚠️', title: 'Critical: Citation Readiness Low', description: 'Your content is unlikely to be cited by AI. Add quotable statements and clear facts.', color: '#ef4444', priority: 0 })
     }
     if (getLevel(aiScores.structure) !== 'good') {
-      recommendations.push({ icon: '📋', title: 'Strengthen Document Structure', description: 'Use consistent heading hierarchy and clear section breaks for better AI parsing.', color: '#f59e0b', priority: 2 })
+      recommendations.push({ icon: '📋', title: 'Strengthen Document Structure', description: 'Use consistent heading hierarchy and clear section breaks for better AI parsing.', color: '#f97316', priority: 2 })
     }
     
     recommendations.sort((a, b) => a.priority - b.priority)
@@ -589,14 +589,14 @@ function GutenbergSidebarPage() {
     aiReadability: { score: 88, label: 'AI Readability', color: '#22d3ee', tooltip: 'Measures how easily AI systems can understand your content. Includes semantic clarity, readability, and logical structure.' },
     digitalAuthority: { score: 75, label: 'Digital Authority', color: '#10b981', tooltip: 'Assesses your content\'s credibility and trustworthiness. Includes entity recognition, citation readiness, and schema extraction.' },
     conversionReadiness: { score: 83, label: 'Conversion Readiness', color: '#a855f7', tooltip: 'Evaluates how well your content drives engagement. Includes AI alignment, Q&A format optimization, and metadata audit.' },
-    productDiscoverability: { score: 72, label: 'Product Discoverability', color: '#f59e0b', tooltip: 'Measures how easily your product or service can be found through AI-powered search and recommendation systems.' },
+    productDiscoverability: { score: 72, label: 'Product Discoverability', color: '#f97316', tooltip: 'Measures how easily your product or service can be found through AI-powered search and recommendation systems.' },
   }
 
   const mockSubScores = {
-    semanticClarity: 85, readabilityScore: 90, logicalStructure: 89,
-    entityRecognition: 72, citationReadiness: 78, schemaExtraction: 75,
-    aiAlignment: 84, qaFormat: 80, metadataAudit: 85,
-    searchPresence: 74, brandVisibility: 70, marketPositioning: 72,
+    semanticClarity: 85, readabilityScore: 90, logicalStructure: 89, aeoAlignment: 80,
+    entityRecognition: 72, citationReadiness: 78, descriptiveMetadata: 75,
+    schemaExtraction: 84, qaFormat: 80, metadataAudit: 85,
+    schemaCompleteness: 74, answerLayerQuality: 70, freshnessSignals: 68, conversationalQueryMatch: 72,
   }
 
   const generateMockAnalysisData = () => {
@@ -826,8 +826,8 @@ function GutenbergSidebarPage() {
                   <span style={{ fontSize: '12px', color: '#a855f7' }}>Conversion Readiness</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <div style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#f59e0b' }}></div>
-                  <span style={{ fontSize: '12px', color: '#f59e0b' }}>Product Discoverability</span>
+                  <div style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#f97316' }}></div>
+                  <span style={{ fontSize: '12px', color: '#f97316' }}>Product Discoverability</span>
                 </div>
               </div>
             </div>
@@ -972,10 +972,10 @@ function GutenbergSidebarPage() {
             <div>
               {analysisData ? (
                 <>
-                  {[{ pillar: 'aiReadability', label: 'AI Readability', color: '#22d3ee', scores: ['semanticClarity', 'readabilityScore', 'logicalStructure'] },
-                    { pillar: 'digitalAuthority', label: 'Digital Authority', color: '#10b981', scores: ['entityRecognition', 'citationReadiness', 'schemaExtraction'] },
-                    { pillar: 'conversionReadiness', label: 'Conversion Readiness', color: '#a855f7', scores: ['aiAlignment', 'qaFormat', 'metadataAudit'] },
-                    { pillar: 'productDiscoverability', label: 'Product Discoverability', color: '#f59e0b', scores: ['searchPresence', 'brandVisibility', 'marketPositioning'] }
+                  {[{ pillar: 'aiReadability', label: 'AI Readability', color: '#22d3ee', scores: ['semanticClarity', 'readabilityScore', 'logicalStructure', 'aeoAlignment'] },
+                    { pillar: 'digitalAuthority', label: 'Digital Authority', color: '#10b981', scores: ['entityRecognition', 'citationReadiness', 'descriptiveMetadata'] },
+                    { pillar: 'conversionReadiness', label: 'Conversion Readiness', color: '#a855f7', scores: ['schemaExtraction', 'qaFormat', 'metadataAudit'] },
+                    { pillar: 'productDiscoverability', label: 'Product Discoverability', color: '#f97316', scores: ['schemaCompleteness', 'answerLayerQuality', 'freshnessSignals', 'conversationalQueryMatch'] }
                   ].map(group => (
                     <div key={group.pillar} style={{ marginBottom: 16 }}>
                       <div style={{ fontSize: 11, fontWeight: 600, color: group.color, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>{group.label}</div>
@@ -1005,7 +1005,7 @@ function GutenbergSidebarPage() {
                       <span style={{ fontSize: 11, color: '#22d3ee' }}>AI: {entry.aiReadability}</span>
                       <span style={{ fontSize: 11, color: '#10b981' }}>DA: {entry.digitalAuthority}</span>
                       <span style={{ fontSize: 11, color: '#a855f7' }}>CR: {entry.conversionReadiness}</span>
-                      <span style={{ fontSize: 11, color: '#f59e0b' }}>PD: {entry.productDiscoverability}</span>
+                      <span style={{ fontSize: 11, color: '#f97316' }}>PD: {entry.productDiscoverability}</span>
                     </div>
                   </div>
                   <div style={{ fontSize: 18, fontWeight: 700, color: getScoreColor(entry.overallScore) }}>{entry.overallScore}</div>
@@ -3304,11 +3304,11 @@ function LearnAIReadabilityPage({ setCurrentPage }) {
 
             <div>
               <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#f59e0b' }}></span>
+                <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#f97316' }}></span>
                 Product Discoverability
               </h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.7, paddingLeft: '22px' }}>
-                Measures how easily your product or service can be found through AI-powered search and recommendation systems. This pillar evaluates search presence, brand visibility, and market positioning to ensure your offerings are discoverable when AI systems surface relevant results.
+                Measures how easily your product or service can be found through AI-powered search and recommendation systems. This pillar evaluates schema completeness, answer layer quality, freshness signals, and conversational query match to ensure your offerings are discoverable when AI systems surface relevant results.
               </p>
             </div>
           </div>

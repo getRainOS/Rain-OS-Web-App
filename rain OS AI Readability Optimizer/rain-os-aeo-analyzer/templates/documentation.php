@@ -84,6 +84,7 @@ $sections = array(
                         <li><strong><?php esc_html_e( 'Semantic Clarity', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Clear, unambiguous language that AI can interpret correctly', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'Readability Score', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'How easy it is for both humans and AI to process your content', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'Logical Structure', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Proper heading hierarchy and content organization', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'AEO Alignment', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Content structured for answer engine optimization', 'rain-os-aeo-analyzer' ); ?></li>
                     </ul>
                 </div>
 
@@ -93,7 +94,7 @@ $sections = array(
                     <ul>
                         <li><strong><?php esc_html_e( 'Entity Recognition', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Links to known entities in knowledge graphs', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'Citation Readiness', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Content that can be quoted and attributed', 'rain-os-aeo-analyzer' ); ?></li>
-                        <li><strong><?php esc_html_e( 'Schema Extraction', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Structured data opportunities for rich snippets', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Descriptive Metadata', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Meta tags and descriptive content for AI indexing', 'rain-os-aeo-analyzer' ); ?></li>
                     </ul>
                 </div>
 
@@ -101,8 +102,8 @@ $sections = array(
                     <h2><?php esc_html_e( 'Conversion Readiness', 'rain-os-aeo-analyzer' ); ?></h2>
                     <p><?php esc_html_e( 'Evaluates how well your content drives engagement and action. Includes:', 'rain-os-aeo-analyzer' ); ?></p>
                     <ul>
-                        <li><strong><?php esc_html_e( 'AI Alignment', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Content structured to provide direct answers', 'rain-os-aeo-analyzer' ); ?></li>
-                        <li><strong><?php esc_html_e( 'QA-Format', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Question and answer optimization', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Schema Extraction', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Structured data opportunities for rich snippets', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'QA-Format Detection', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Question and answer optimization', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'Metadata Audit', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Schema and HTML verification', 'rain-os-aeo-analyzer' ); ?></li>
                     </ul>
                 </div>
@@ -111,9 +112,10 @@ $sections = array(
                     <h2><?php esc_html_e( 'Product Discoverability', 'rain-os-aeo-analyzer' ); ?></h2>
                     <p><?php esc_html_e( 'Measures how easily your product or service can be found through AI-powered search and recommendation systems. Includes:', 'rain-os-aeo-analyzer' ); ?></p>
                     <ul>
-                        <li><strong><?php esc_html_e( 'Search Presence', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Visibility in AI-powered search results and answer engines', 'rain-os-aeo-analyzer' ); ?></li>
-                        <li><strong><?php esc_html_e( 'Brand Visibility', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'How prominently your brand appears in AI-generated recommendations', 'rain-os-aeo-analyzer' ); ?></li>
-                        <li><strong><?php esc_html_e( 'Market Positioning', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'How well AI understands your competitive positioning and unique value', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Schema Completeness', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'How thoroughly structured data markup covers your content and products', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Answer Layer Quality', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'How well your content provides direct, extractable answers for AI systems', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Freshness Signals', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Indicators that your content is current, updated, and time-relevant', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Conversational Query Match', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'How well your content aligns with natural language and voice search queries', 'rain-os-aeo-analyzer' ); ?></li>
                     </ul>
                 </div>
             </div>
@@ -253,15 +255,15 @@ $sections = array(
                     <ul>
                         <li><strong><?php esc_html_e( 'Entity Recognition:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Mention well-known entities (people, companies, concepts) by their full names. Link to authoritative sources like Wikipedia for key terms.', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'Citation Readiness:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Include quotable statements that stand alone. Write "soundbite" sentences that summarize key points. Use statistics and data points with sources.', 'rain-os-aeo-analyzer' ); ?></li>
-                        <li><strong><?php esc_html_e( 'Schema Extraction:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Add structured data markup (FAQ, HowTo, Article schemas). Use lists and tables for easily extractable information.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Descriptive Metadata:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Provide rich meta tags, descriptions, and structured content that helps AI systems understand and index your content.', 'rain-os-aeo-analyzer' ); ?></li>
                     </ul>
                 </div>
 
                 <div class="rain-os-tip-card">
                     <h3><?php esc_html_e( 'Conversion Readiness (Purple Pillar)', 'rain-os-aeo-analyzer' ); ?></h3>
                     <ul>
-                        <li><strong><?php esc_html_e( 'AI Alignment:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Structure content to directly answer common questions. Start paragraphs with the key information. Use "What is X?" and "How to Y" formats.', 'rain-os-aeo-analyzer' ); ?></li>
-                        <li><strong><?php esc_html_e( 'QA-Format:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Include FAQ sections with clear questions and concise answers. Format Q&A pairs so AI can easily extract them.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Schema Extraction:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Add structured data markup (FAQ, HowTo, Article schemas). Use lists and tables for easily extractable information.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'QA-Format Detection:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Include FAQ sections with clear questions and concise answers. Format Q&A pairs so AI can easily extract them.', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'Metadata Audit:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Ensure meta title and description are present and optimized. Validate HTML markup. Check that schema data is error-free.', 'rain-os-aeo-analyzer' ); ?></li>
                     </ul>
                 </div>
@@ -269,9 +271,10 @@ $sections = array(
                 <div class="rain-os-tip-card">
                     <h3><?php esc_html_e( 'Product Discoverability (Orange Pillar)', 'rain-os-aeo-analyzer' ); ?></h3>
                     <ul>
-                        <li><strong><?php esc_html_e( 'Search Presence:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Ensure your product pages use descriptive, searchable language. Include product category terms and common search phrases naturally in your content.', 'rain-os-aeo-analyzer' ); ?></li>
-                        <li><strong><?php esc_html_e( 'Brand Visibility:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Mention your brand name consistently alongside product descriptions. Create content that associates your brand with key industry terms and solutions.', 'rain-os-aeo-analyzer' ); ?></li>
-                        <li><strong><?php esc_html_e( 'Market Positioning:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Clearly articulate what makes your product unique. Use comparison language and highlight differentiators that AI can extract and present to users.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Schema Completeness:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Ensure your product pages use comprehensive structured data markup. Include product schema, FAQ schema, and breadcrumb schema where applicable.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Answer Layer Quality:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Structure content to provide clear, direct answers that AI systems can extract. Use concise definitions, summaries, and key takeaways.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Freshness Signals:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Keep content current with updated dates, recent references, and timely information. AI systems prioritize fresh, regularly maintained content.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Conversational Query Match:', 'rain-os-aeo-analyzer' ); ?></strong> <?php esc_html_e( 'Write content that naturally answers questions people ask in conversational search. Include question-format headings and direct response patterns.', 'rain-os-aeo-analyzer' ); ?></li>
                     </ul>
                 </div>
 
