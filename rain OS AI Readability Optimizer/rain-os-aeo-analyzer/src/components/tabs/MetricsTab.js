@@ -6,21 +6,23 @@ const MetricsTab = ({ analysisData }) => {
       { name: __('Semantic Clarity', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.semanticClarity || 0 },
       { name: __('Readability Score', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.readabilityScore || 0 },
       { name: __('Logical Structure', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.logicalStructure || 0 },
+      { name: __('AEO Alignment', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.aeoAlignment || 0 },
     ],
     digitalAuthority: [
       { name: __('Entity Recognition', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.entityRecognition || 0 },
       { name: __('Citation Readiness', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.citationReadiness || 0 },
-      { name: __('Schema Extraction', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.schemaExtraction || 0 },
+      { name: __('Descriptive Metadata', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.descriptiveMetadata || 0 },
     ],
     conversionReadiness: [
-      { name: __('AI Alignment', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.aeoAlignment || 0 },
-      { name: __('QA-Format', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.qaFormat || 0 },
+      { name: __('Schema Extraction', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.schemaExtraction || 0 },
+      { name: __('QA-Format Detection', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.qaFormat || 0 },
       { name: __('Metadata Audit', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.metadataAudit || 0 },
     ],
     productDiscoverability: [
-      { name: __('Search Presence', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.searchPresence || 0 },
-      { name: __('Brand Visibility', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.brandVisibility || 0 },
-      { name: __('Market Positioning', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.marketPositioning || 0 },
+      { name: __('Schema Completeness', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.schemaCompleteness || 0 },
+      { name: __('Answer Layer Quality', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.answerLayerQuality || 0 },
+      { name: __('Freshness Signals', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.freshnessSignals || 0 },
+      { name: __('Conversational Query Match', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.conversationalQueryMatch || 0 },
     ],
   };
 
@@ -28,7 +30,7 @@ const MetricsTab = ({ analysisData }) => {
     aiReadability: { label: __('AI Readability', 'rain-os-aeo-analyzer'), color: '#22d3ee' },
     digitalAuthority: { label: __('Digital Authority', 'rain-os-aeo-analyzer'), color: '#10b981' },
     conversionReadiness: { label: __('Conversion Readiness', 'rain-os-aeo-analyzer'), color: '#a855f7' },
-    productDiscoverability: { label: __('Product Discoverability', 'rain-os-aeo-analyzer'), color: '#f59e0b' },
+    productDiscoverability: { label: __('Product Discoverability', 'rain-os-aeo-analyzer'), color: '#f97316' },
   };
 
   const getScoreColor = (score) => {

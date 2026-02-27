@@ -4,7 +4,7 @@ const defaultPillars = {
   aiReadability: { score: 0, label: 'AI Readability', color: '#22d3ee' },
   digitalAuthority: { score: 0, label: 'Digital Authority', color: '#10b981' },
   conversionReadiness: { score: 0, label: 'Conversion Readiness', color: '#a855f7' },
-  productDiscoverability: { score: 0, label: 'Product Discoverability', color: '#f59e0b' },
+  productDiscoverability: { score: 0, label: 'Product Discoverability', color: '#f97316' },
 };
 
 const PillarCards = ({ pillars }) => {

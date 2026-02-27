@@ -1,0 +1,382 @@
+PROMPT 1 of 13
+File: rain-os-ai-readability-optimizer.php
+Fix: DB schema — add product_discoverability column + DB version bump for migration
+In `rain-os-ai-readability-optimizer.php`, make these two changes:
+
+1. In the `create_tables()` method, find the SQL string that creates `rairo_analysis_history`. Add a new column `product_discoverability int(3) NOT NULL DEFAULT 0` after the `conversion_readiness` column, and before `analysis_data`. The column order should be: id, post_id, overall_score, ai_readability, digital_authority, conversion_readiness, product_discoverability, analysis_data, analyzed_at.
+
+2. After `create_tables()`, add a new method `maybe_upgrade_tables()` that runs a DB migration to add the column to existing installs:
+```php
+private function maybe_upgrade_tables() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'rairo_analysis_history';
+    $col = $wpdb->get_results( "SHOW COLUMNS FROM {$table_name} LIKE 'product_discoverability'" );
+    if ( empty( $col ) ) {
+        $wpdb->query( "ALTER TABLE {$table_name} ADD COLUMN product_discoverability int(3) NOT NULL DEFAULT 0 AFTER conversion_readiness" );
+    }
+}
+```
+
+3. In the `activate()` method, after calling `$this->create_tables()`, also call `$this->maybe_upgrade_tables()`.
+
+4. Add a new action hook in `init_hooks()`:
+```php
+add_action( 'plugins_loaded', array( $this, 'maybe_upgrade_tables' ) );
+```
+This ensures the migration runs on every plugin load, not just activation, so existing installs get the column added automatically.
+
+PROMPT 2 of 13
+File: includes/api/class-rairo-api-client.php
+Fix: parse_analysis_response — add productDiscoverability + fix pillars shape + unwrap nesting
+In `includes/api/class-rairo-api-client.php`, update the `parse_analysis_response()` method:
+
+1. In the `$parsed` array, add this line after `'conversion_readiness'`:
+```php
+'product_discoverability' => isset( $response['pillarScores']['productDiscoverability'] ) ? intval( $response['pillarScores']['productDiscoverability'] ) : 0,
+```
+
+2. Add a `'pillars'` key to the `$parsed` array (the JS `displayResults()` function needs this shape):
+```php
+'pillars' => array(
+    'ai_readability'          => isset( $response['pillarScores']['aiReadability'] ) ? intval( $response['pillarScores']['aiReadability'] ) : 0,
+    'digital_authority'       => isset( $response['pillarScores']['digitalAuthority'] ) ? intval( $response['pillarScores']['digitalAuthority'] ) : 0,
+    'conversion_readiness'    => isset( $response['pillarScores']['conversionReadiness'] ) ? intval( $response['pillarScores']['conversionReadiness'] ) : 0,
+    'product_discoverability' => isset( $response['pillarScores']['productDiscoverability'] ) ? intval( $response['pillarScores']['productDiscoverability'] ) : 0,
+),
+```
+
+3. The `sub_scores` loop currently checks `$sub_score['category']` and `$sub_score['score']`. The backend now sends `sub_scores` as a flat key→value map (not an array of objects). Replace the entire sub_scores block with:
+```php
+if ( isset( $response['sub_scores'] ) && is_array( $response['sub_scores'] ) ) {
+    $parsed['sub_scores'] = $response['sub_scores'];
+}
+if ( isset( $response['phase2_sub_scores'] ) && is_array( $response['phase2_sub_scores'] ) ) {
+    $parsed['phase2_sub_scores'] = $response['phase2_sub_scores'];
+}
+```
+
+Make no other changes to this method.
+
+PROMPT 3 of 13
+File: includes/class-rairo-ajax.php
+Fix: analyze_content AJAX handler — save product_discoverability + send flat response
+In `includes/class-rairo-ajax.php`, make two changes:
+
+1. In `save_analysis_to_history()`, add `product_discoverability` to the DB insert. Find the `$wpdb->insert()` call and add this to the data array:
+```php
+'product_discoverability' => isset( $analysis['product_discoverability'] ) ? absint( $analysis['product_discoverability'] ) : 0,
+```
+And add `'%d'` to the format array in the matching position.
+
+2. In `analyze_content()`, find the `wp_send_json_success()` call at the end. Currently it wraps everything in `array( 'analysis' => $parsed, 'usage' => $usage_info )`. The JS `displayResults()` function expects the parsed data at the top level, not nested. Replace the entire `wp_send_json_success` call with:
+```php
+$parsed['usage'] = $usage_info;
+wp_send_json_success( $parsed );
+```
+
+This sends the parsed object flat (with `overall_score`, `pillars`, `recommendations`, `product_discoverability` etc. all at the top level), while still including usage info as one key inside it.
+
+PROMPT 4 of 13
+File: assets/js/admin.js
+Fix: displayResults — render 4th pillar + fix overall score formula
+In `assets/js/admin.js`, find the `displayResults` function.
+
+1. Find the block that checks `if (data.pillars)` and renders 3 pillar scores. Add a 4th line after `conversionReadiness`:
+```javascript
+html += this.renderPillarScore('Product Discoverability', data.pillars.product_discoverability || 0, 'orange');
+```
+
+2. Find this line in `get_dashboard_data` AJAX success handler (or wherever `avg_score` is computed from 3 pillars divided by 3):
+```javascript
+$avg_score = round( ( intval( $item['ai_readability'] ) + intval( $item['digital_authority'] ) + intval( $item['conversion_readiness'] ) ) / 3 );
+```
+This is actually in `dashboard.php` not admin.js — skip this step, it will be handled in a separate prompt.
+
+For admin.js only: search for any place that divides a sum of pillar scores by 3 and change the divisor to 4.
+
+Make no other changes.
+
+PROMPT 5 of 13
+File: includes/class-rairo-ajax.php
+Fix: get_dashboard_data — include product_discoverability in SQL AVG and overall score
+In `includes/class-rairo-ajax.php`, find the `get_dashboard_data()` method.
+
+1. In the SQL query inside `$wpdb->get_row()`, add `ROUND(AVG(product_discoverability)) as avg_product_discoverability,` to the SELECT list, after `avg_conversion_readiness`.
+
+2. In the `wp_send_json_success()` response array at the bottom of this method, add `'avg_product_discoverability'` to the `averages` data that gets passed back. Make sure the averages array includes this new field from the query result.
+
+3. Find where `$trend_data` is fetched. In that SQL query, add `ROUND(AVG(product_discoverability)) as avg_product` to the SELECT alongside the other avg columns.
+
+Make no other changes to this method.
+
+PROMPT 6 of 13
+File: includes/class-rairo-gutenberg.php
+Fix: quick action name remapping
+In `includes/class-rairo-gutenberg.php`, find the `handle_quick_action()` method.
+
+After the lines that sanitize `$action` and `$content`, add this remapping block before the API key check:
+```php
+// Remap Gutenberg sidebar action names to backend action names
+$action_map = array(
+    'generate_meta' => 'generate_description',
+    'summarize'     => 'summarize_content',
+    'rewrite'       => 'rewrite_sentence',
+);
+$backend_action = isset( $action_map[ $action ] ) ? $action_map[ $action ] : $action;
+```
+
+Then find the `wp_remote_post()` call and change the `'action'` key in the body from `$action` to `$backend_action`:
+```php
+'body' => wp_json_encode( array(
+    'action'  => $backend_action,
+    'content' => wp_strip_all_tags( $content ),
+    'title'   => $title,
+) ),
+```
+
+Also update the `mock_quick_action()` call at the end of the method to pass `$backend_action` instead of `$action`, so local fallbacks still work:
+```php
+return $this->mock_quick_action( $backend_action, $content, $title );
+```
+
+Make no other changes.
+
+PROMPT 7 of 13
+File: includes/class-rairo-gutenberg.php
+Fix: normalize quick action response into data wrapper
+In `includes/class-rairo-gutenberg.php`, find the `handle_quick_action()` method.
+
+Find the block that reads the API response:
+```php
+if ( ! empty( $body['data'] ) ) {
+    return new WP_REST_Response( array(
+        'success' => true,
+        'data'    => $body['data'],
+    ), 200 );
+}
+```
+
+Replace this entire block with:
+```php
+// Backend returns different top-level keys per action — normalize into a data wrapper
+$normalized = array();
+if ( isset( $body['titles'] ) )      $normalized['titles']           = $body['titles'];
+if ( isset( $body['description'] ) ) $normalized['meta_description'] = $body['description'];
+if ( isset( $body['summary'] ) )     $normalized['summary']          = $body['summary'];
+if ( isset( $body['rewritten'] ) )   $normalized['rewritten']        = $body['rewritten'];
+// Legacy: some responses already wrap in data
+if ( isset( $body['data'] ) && is_array( $body['data'] ) ) {
+    $normalized = array_merge( $normalized, $body['data'] );
+}
+
+if ( ! empty( $normalized ) ) {
+    return new WP_REST_Response( array(
+        'success' => true,
+        'data'    => $normalized,
+    ), 200 );
+}
+```
+
+Make no other changes.
+
+PROMPT 8 of 13
+File: includes/class-rairo-gutenberg.php
+Fix: save_analysis_history — add product_discoverability + fix created_at → analyzed_at
+In `includes/class-rairo-gutenberg.php`, find the `save_analysis_history()` private method.
+
+1. In the `$wpdb->insert()` data array, add:
+```php
+'product_discoverability' => isset( $data['product_discoverability'] ) ? absint( $data['product_discoverability'] ) : 0,
+```
+after the `conversion_readiness` line.
+
+2. Add `'%d'` to the format array in the matching position.
+
+3. Change `'created_at'` to `'analyzed_at'` in the data array. The column in the DB schema is `analyzed_at`, not `created_at`.
+
+4. Find `handle_get_history()`. In the SQL query, change `created_at as date` to `analyzed_at as date`, and change `ORDER BY created_at DESC` to `ORDER BY analyzed_at DESC`.
+
+Make no other changes.
+
+PROMPT 9 of 13
+File: includes/class-rairo-gutenberg.php
+Fix: handle_analyze — parse product_discoverability from backend response + 4-pillar overall score
+In `includes/class-rairo-gutenberg.php`, find the `handle_analyze()` method.
+
+Find the block that returns a successful response from the backend:
+```php
+if ( ! empty( $body['data'] ) ) {
+    $this->save_analysis_history( $post_id, $body['data'] );
+    return new WP_REST_Response( array(
+        'success' => true,
+        'data'    => $body['data'],
+    ), 200 );
+}
+```
+
+The backend now returns the response flat (not nested under `data`). Replace this block with:
+```php
+// Backend returns a flat WpAnalysisResponse, not nested under 'data'
+$response_data = ! empty( $body['data'] ) ? $body['data'] : $body;
+
+if ( ! empty( $response_data ) && isset( $response_data['overall_score'] ) ) {
+    $this->save_analysis_history( $post_id, $response_data );
+    return new WP_REST_Response( array(
+        'success' => true,
+        'data'    => $response_data,
+    ), 200 );
+}
+```
+
+Make no other changes to this method.
+
+PROMPT 10 of 13
+File: templates/dashboard.php
+Fix: wrong table name + add 4th pillar KPI card + fix overall score divisor
+In `templates/dashboard.php`, make these changes:
+
+1. On line 7 (or wherever `$table_name` is set), change:
+```php
+$table_name = $wpdb->prefix . 'ai_readability_analysis_history';
+```
+to:
+```php
+$table_name = $wpdb->prefix . 'rairo_analysis_history';
+```
+
+2. In the `$wpdb->get_row()` SQL query, add `ROUND(AVG(product_discoverability)) as avg_product_discoverability,` to the SELECT list.
+
+3. After the line `$conversion_readiness = isset( $averages['avg_conversion_readiness'] ) ? intval( $averages['avg_conversion_readiness'] ) : 0;`, add:
+```php
+$product_discoverability = isset( $averages['avg_product_discoverability'] ) ? intval( $averages['avg_product_discoverability'] ) : 0;
+```
+
+4. Find the KPI grid `<div class="rain-os-kpi-grid">` section. Copy the Conversion Readiness KPI card block and paste a 4th card after it with these values changed:
+- Icon class: `rain-os-kpi-icon-orange`
+- Gauge color: `#f97316`
+- Variable: `$product_discoverability`
+- Label: `Product Discoverability`
+- Subtitle: `AI shopping signals`
+- Dashicon: `dashicons-cart`
+
+5. In the table body `foreach` loop, find:
+```php
+$avg_score = round( ( intval( $item['ai_readability'] ) + intval( $item['digital_authority'] ) + intval( $item['conversion_readiness'] ) ) / 3 );
+```
+Change `/3` to `/4` and add `+ intval( $item['product_discoverability'] )` to the sum.
+
+6. In the Pillar Distribution bar chart section, add a 4th bar after Conversion Readiness:
+```php
+<div class="rain-os-pillar-bar">
+    <div class="rain-os-pillar-bar-label">
+        <span><?php esc_html_e( 'Product Discoverability', 'rain-os-ai-readability-optimizer' ); ?></span>
+        <span><?php echo esc_html( $product_discoverability ); ?>%</span>
+    </div>
+    <div class="rain-os-pillar-bar-track">
+        <div class="rain-os-pillar-bar-fill rain-os-pillar-orange" style="width: <?php echo esc_attr( $product_discoverability ); ?>%;"></div>
+    </div>
+</div>
+```
+
+Make no other changes.
+
+PROMPT 11 of 13
+File: templates/score-history.php
+Fix: wrong table name + add product_discoverability column + fix divisor
+In `templates/score-history.php`, make these changes:
+
+1. Change the table name on line 7:
+```php
+$table_name = $wpdb->prefix . 'ai_readability_analysis_history';
+```
+to:
+```php
+$table_name = $wpdb->prefix . 'rairo_analysis_history';
+```
+
+2. In the `<thead>` table row, add a new `<th>` after the Conversion `<th>`:
+```php
+<th><?php esc_html_e( 'Discoverability', 'rain-os-ai-readability-optimizer' ); ?></th>
+```
+
+3. In the `foreach` loop, find the line:
+```php
+$avg_score = round( ( intval( $item['ai_readability'] ) + intval( $item['digital_authority'] ) + intval( $item['conversion_readiness'] ) ) / 3 );
+```
+Change it to:
+```php
+$avg_score = round( ( intval( $item['ai_readability'] ) + intval( $item['digital_authority'] ) + intval( $item['conversion_readiness'] ) + intval( $item['product_discoverability'] ) ) / 4 );
+```
+
+4. In the `<tbody>` row, add a new `<td>` after the Conversion cell:
+```php
+<td class="rain-os-score-cell">
+    <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( ai_readability_score_class( intval( $item['product_discoverability'] ) ) ); ?>"></span>
+    <span class="rain-os-score-value"><?php echo esc_html( $item['product_discoverability'] ); ?></span>
+</td>
+```
+
+Make no other changes.
+
+PROMPT 12 of 13
+File: templates/pillar-breakdown.php
+Fix: wrong table name + add Product Discoverability pillar section + fix overall score
+In `templates/pillar-breakdown.php`, make these changes:
+
+1. Change the table name at the very top:
+```php
+$table_name = $wpdb->prefix . 'ai_readability_analysis_history';
+```
+to:
+```php
+$table_name = $wpdb->prefix . 'rairo_analysis_history';
+```
+
+2. In the `$wpdb->get_row()` SQL, add `ROUND(AVG(product_discoverability)) as avg_product_discoverability,` to the SELECT list.
+
+3. After the line that sets `$conversion_readiness`, add:
+```php
+$product_discoverability = isset( $averages['avg_product_discoverability'] ) ? intval( $averages['avg_product_discoverability'] ) : 0;
+```
+
+4. Fix the overall score calculation from dividing by 3 to dividing by 4:
+```php
+$overall_score = $ai_readability + $digital_authority + $conversion_readiness + $product_discoverability > 0 
+    ? round( ( $ai_readability + $digital_authority + $conversion_readiness + $product_discoverability ) / 4 ) 
+    : 0;
+```
+
+5. Add fake sub-scores for the new pillar (same offset pattern as the others):
+```php
+$pd_schema     = max( 0, min( 100, $product_discoverability + 2 ) );
+$pd_answer     = max( 0, min( 100, $product_discoverability - 3 ) );
+$pd_freshness  = max( 0, min( 100, $product_discoverability + 1 ) );
+```
+
+6. In the `.rain-os-pillars-grid` div, add a 4th pillar section after the Conversion Readiness section. Copy the structure of the Conversion Readiness block and replace:
+- Class: `rain-os-pillar-orange`
+- Title: `Product Discoverability`
+- Score var: `$product_discoverability`
+- 3 sub-categories: `Schema Completeness` (`$pd_schema`), `Answer Quality` (`$pd_answer`), `Freshness Signals` (`$pd_freshness`)
+- Bar fill classes: `rain-os-bar-orange-1`, `rain-os-bar-orange-2`, `rain-os-bar-orange-3`
+
+Make no other changes.
+
+PROMPT 13 of 13
+File: assets/css/admin.css
+Fix: add orange pillar colour tokens so the new 4th pillar renders correctly
+In `assets/css/admin.css`, find the existing pillar colour definitions. There will be rules for `.rain-os-pillar-cyan`, `.rain-os-pillar-green`, and `.rain-os-pillar-purple`. After the purple block, add:
+```css
+/* Product Discoverability — orange */
+.rain-os-pillar-orange           { background-color: #f97316; }
+.rain-os-kpi-icon-orange         { background-color: rgba(249, 115, 22, 0.15); color: #f97316; }
+.rain-os-bar-orange-1            { background-color: #f97316; }
+.rain-os-bar-orange-2            { background-color: #fb923c; }
+.rain-os-bar-orange-3            { background-color: #fdba74; }
+.rain-os-pillar-bar-fill.rain-os-pillar-orange { background-color: #f97316; }
+.rain-os-pillar-fill-result.rain-os-pillar-orange { background-color: #f97316; }
+```
+
+If there is an existing CSS custom property like `--rain-pillar-purple: #a855f7;`, add a matching one: `--rain-pillar-orange: #f97316;`.
+
+Make no other changes.

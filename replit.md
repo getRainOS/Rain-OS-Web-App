@@ -35,14 +35,19 @@ The plugin adheres to WordPress plugin standards with a modular, class-based des
 
 ## Recent Updates
 
+### Backend Sync & 4-Pillar Completion (February 2026)
+- **Gutenberg Sidebar React Rebuild**: useContentAnalysis.js includes productDiscoverability pillar (#f97316); MetricsTab.js updated with backend-matching sub-category names across all 4 pillars (14 total sub-scores); PillarCards.js color unified to #f97316
+- **Sub-Category Names (Backend-Synced)**: P1: Semantic Clarity, Readability Score, Logical Structure, AEO Alignment; P2: Entity Recognition, Citation Readiness, Descriptive Metadata; P3: Schema Extraction, QA-Format Detection, Metadata Audit; P4: Schema Completeness, Answer Layer Quality, Freshness Signals, Conversational Query Match
+- **Gutenberg PHP (class-rain-os-gutenberg.php)**: handle_analyze parses flat backend response; save_analysis_history stores product_discoverability + analysis_data JSON + analyzed_at; handle_get_history returns productDiscoverability and uses analyzed_at; handle_quick_action remaps actions (generate_meta→generate_description, summarize→summarize_content, rewrite→rewrite_sentence) and normalizes response; mock_quick_action case labels match backend action names; calculate_local_scores includes 4th pillar and all 14 sub-scores
+- **admin.js**: Product Discoverability uses 'orange' CSS class (was 'yellow'); crawler signals display function; rich recommendation rendering
+- **admin.css**: --rain-pillar-orange: #f97316 custom property; .rain-os-pillar-fill-result.rain-os-pillar-orange; .rain-os-pillar-bar-fill.rain-os-pillar-orange; .rain-os-bar-orange-1/2/3/4 tokens updated to #f97316 scale; pillar section orange references use --rain-pillar-orange
+- **Package**: 152 KB, 43 files, webpack compiled successfully
+
 ### 4-Pillar System Upgrade (February 2025)
-- **Product Discoverability Pillar**: Added 4th pillar (#f59e0b orange) with 3 subcategories: Search Presence, Brand Visibility, Market Positioning
+- **Product Discoverability Pillar**: Added 4th pillar with 4 subcategories
 - **Database Migration**: Added product_discoverability column with automatic migration (db version 1.1)
 - **Average Score**: Now divides by 4 instead of 3
 - **All Templates Updated**: Dashboard, pillar breakdown, score history, documentation, learn page
-- **CSS Classes**: Added rain-os-pillar-orange, rain-os-kpi-icon-orange, rain-os-bar-orange-* classes
-- **Gutenberg Sidebar**: React components rebuilt with 4th pillar support
-- **Dashboard Preview**: Updated with 4-pillar data, 12 categories, and orange color scheme
 - **Packaging Fix**: zip-wporg.js now cleanly excludes src/, scripts/, dist/, node_modules/, package.json
 
 ## External Dependencies

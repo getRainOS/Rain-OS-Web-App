@@ -55,6 +55,11 @@ export const useContentAnalysis = (postId, title, content) => {
               label: 'Conversion Readiness',
               color: '#a855f7',
             },
+            productDiscoverability: {
+              score: response.data.product_discoverability || 0,
+              label: 'Product Discoverability',
+              color: '#f97316',
+            },
           },
           subScores: response.data.sub_scores || {},
           recommendations: response.data.recommendations || [],

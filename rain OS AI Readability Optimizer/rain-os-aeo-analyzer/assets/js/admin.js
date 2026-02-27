@@ -200,7 +200,7 @@
                 html += this.renderPillarScore('AI Readability', data.pillars.ai_readability || 0, 'cyan');
                 html += this.renderPillarScore('Digital Authority', data.pillars.digital_authority || 0, 'green');
                 html += this.renderPillarScore('Conversion Readiness', data.pillars.conversion_readiness || 0, 'purple');
-                html += this.renderPillarScore('Product Discoverability', data.pillars.product_discoverability || 0, 'yellow');
+                html += this.renderPillarScore('Product Discoverability', data.pillars.product_discoverability || 0, 'orange');
             }
 
             html += '</div>';

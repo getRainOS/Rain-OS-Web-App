@@ -162,12 +162,13 @@ class Rain_OS_Gutenberg {
 
         $body = json_decode( wp_remote_retrieve_body( $response ), true );
 
-        if ( ! empty( $body['data'] ) ) {
-            $this->save_analysis_history( $post_id, $body['data'] );
+        $response_data = ! empty( $body['data'] ) ? $body['data'] : $body;
 
+        if ( ! empty( $response_data ) && isset( $response_data['overall_score'] ) ) {
+            $this->save_analysis_history( $post_id, $response_data );
             return new WP_REST_Response( array(
                 'success' => true,
-                'data'    => $body['data'],
+                'data'    => $response_data,
             ), 200 );
         }
 
@@ -213,23 +214,42 @@ class Rain_OS_Gutenberg {
         if ( $word_count >= 300 ) $conversion_readiness += 10;
         $conversion_readiness = min( 90, $conversion_readiness );
 
-        $overall = round( ( $ai_readability + $digital_authority + $conversion_readiness ) / 3 );
+        $product_discoverability = 45;
+        if ( $has_headings ) $product_discoverability += 10;
+        if ( $has_links ) $product_discoverability += 10;
+        if ( $word_count >= 500 ) $product_discoverability += 10;
+        if ( preg_match( '/\?/i', $content ) ) $product_discoverability += 5;
+        $product_discoverability = min( 85, $product_discoverability );
+
+        $overall = round( ( $ai_readability + $digital_authority + $conversion_readiness + $product_discoverability ) / 4 );
 
         return array(
-            'overall_score'        => $overall,
-            'ai_readability'       => $ai_readability,
-            'digital_authority'    => $digital_authority,
-            'conversion_readiness' => $conversion_readiness,
+            'overall_score'           => $overall,
+            'ai_readability'          => $ai_readability,
+            'digital_authority'       => $digital_authority,
+            'conversion_readiness'    => $conversion_readiness,
+            'product_discoverability' => $product_discoverability,
+            'pillars' => array(
+                'ai_readability'          => $ai_readability,
+                'digital_authority'       => $digital_authority,
+                'conversion_readiness'    => $conversion_readiness,
+                'product_discoverability' => $product_discoverability,
+            ),
             'sub_scores'           => array(
-                'semanticClarity'   => $ai_readability - 5,
-                'readabilityScore'  => min( 95, $ai_readability + 5 ),
-                'logicalStructure'  => $ai_readability,
-                'entityRecognition' => $digital_authority - 5,
-                'citationReadiness' => $digital_authority + 5,
-                'schemaExtraction'  => $digital_authority - 10,
-                'aeoAlignment'      => $conversion_readiness,
-                'qaFormat'          => $conversion_readiness - 5,
-                'metadataAudit'     => $conversion_readiness + 5,
+                'semanticClarity'          => max( 0, $ai_readability - 5 ),
+                'readabilityScore'         => min( 95, $ai_readability + 5 ),
+                'logicalStructure'         => $ai_readability,
+                'aeoAlignment'             => max( 0, $ai_readability - 8 ),
+                'entityRecognition'        => max( 0, $digital_authority - 5 ),
+                'citationReadiness'        => min( 95, $digital_authority + 5 ),
+                'descriptiveMetadata'      => max( 0, $digital_authority - 10 ),
+                'schemaExtraction'         => max( 0, $conversion_readiness - 5 ),
+                'qaFormat'                 => $conversion_readiness,
+                'metadataAudit'            => min( 95, $conversion_readiness + 5 ),
+                'schemaCompleteness'       => max( 0, $product_discoverability - 3 ),
+                'answerLayerQuality'       => max( 0, $product_discoverability + 2 ),
+                'freshnessSignals'         => max( 0, $product_discoverability - 5 ),
+                'conversationalQueryMatch' => max( 0, $product_discoverability + 1 ),
             ),
             'recommendations'      => $this->generate_recommendations( $title, $content ),
         );
@@ -295,14 +315,16 @@ class Rain_OS_Gutenberg {
         $wpdb->insert(
             $table_name,
             array(
-                'post_id'              => $post_id,
-                'overall_score'        => $data['overall_score'] ?? 0,
-                'ai_readability'       => $data['ai_readability'] ?? 0,
-                'digital_authority'    => $data['digital_authority'] ?? 0,
-                'conversion_readiness' => $data['conversion_readiness'] ?? 0,
-                'created_at'           => current_time( 'mysql' ),
+                'post_id'                 => $post_id,
+                'overall_score'           => $data['overall_score'] ?? 0,
+                'ai_readability'          => $data['ai_readability'] ?? 0,
+                'digital_authority'       => $data['digital_authority'] ?? 0,
+                'conversion_readiness'    => $data['conversion_readiness'] ?? 0,
+                'product_discoverability' => isset( $data['product_discoverability'] ) ? absint( $data['product_discoverability'] ) : 0,
+                'analysis_data'           => wp_json_encode( $data ),
+                'analyzed_at'             => current_time( 'mysql' ),
             ),
-            array( '%d', '%d', '%d', '%d', '%d', '%s' )
+            array( '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%s' )
         );
     }
 
@@ -380,10 +402,11 @@ class Rain_OS_Gutenberg {
         $results = $wpdb->get_results( $wpdb->prepare(
             "SELECT overall_score as overallScore, ai_readability as aiReadability, 
                     digital_authority as digitalAuthority, conversion_readiness as conversionReadiness,
-                    created_at as date
+                    product_discoverability as productDiscoverability,
+                    analyzed_at as date
              FROM $table_name 
              WHERE post_id = %d 
-             ORDER BY created_at DESC 
+             ORDER BY analyzed_at DESC 
              LIMIT 10",
             $post_id
         ), ARRAY_A );
@@ -396,10 +419,17 @@ class Rain_OS_Gutenberg {
         $content = wp_kses_post( $request->get_param( 'content' ) );
         $title   = sanitize_text_field( $request->get_param( 'title' ) );
 
+        $action_map = array(
+            'generate_meta' => 'generate_description',
+            'summarize'     => 'summarize_content',
+            'rewrite'       => 'rewrite_sentence',
+        );
+        $backend_action = isset( $action_map[ $action ] ) ? $action_map[ $action ] : $action;
+
         $api_key = get_option( 'rain_os_api_key', '' );
 
         if ( empty( $api_key ) ) {
-            return $this->mock_quick_action( $action, $content, $title );
+            return $this->mock_quick_action( $backend_action, $content, $title );
         }
 
         $response = wp_remote_post( RAIN_OS_AEO_API_URL . '/analyze', array(
@@ -408,7 +438,7 @@ class Rain_OS_Gutenberg {
                 'Content-Type'  => 'application/json',
             ),
             'body'    => wp_json_encode( array(
-                'action'  => $action,
+                'action'  => $backend_action,
                 'content' => wp_strip_all_tags( $content ),
                 'title'   => $title,
             ) ),
@@ -416,19 +446,28 @@ class Rain_OS_Gutenberg {
         ) );
 
         if ( is_wp_error( $response ) ) {
-            return $this->mock_quick_action( $action, $content, $title );
+            return $this->mock_quick_action( $backend_action, $content, $title );
         }
 
         $body = json_decode( wp_remote_retrieve_body( $response ), true );
 
-        if ( ! empty( $body['data'] ) ) {
+        $normalized = array();
+        if ( isset( $body['titles'] ) )      $normalized['titles']           = $body['titles'];
+        if ( isset( $body['description'] ) ) $normalized['meta_description'] = $body['description'];
+        if ( isset( $body['summary'] ) )     $normalized['summary']          = $body['summary'];
+        if ( isset( $body['rewritten'] ) )   $normalized['rewritten']        = $body['rewritten'];
+        if ( isset( $body['data'] ) && is_array( $body['data'] ) ) {
+            $normalized = array_merge( $normalized, $body['data'] );
+        }
+
+        if ( ! empty( $normalized ) ) {
             return new WP_REST_Response( array(
                 'success' => true,
-                'data'    => $body['data'],
+                'data'    => $normalized,
             ), 200 );
         }
 
-        return $this->mock_quick_action( $action, $content, $title );
+        return $this->mock_quick_action( $backend_action, $content, $title );
     }
 
     private function mock_quick_action( $action, $content, $title ) {
@@ -449,7 +488,7 @@ class Rain_OS_Gutenberg {
                     'mock' => true,
                 ), 200 );
 
-            case 'generate_meta':
+            case 'generate_description':
                 $excerpt = wp_trim_words( wp_strip_all_tags( $content ), 25 );
                 return new WP_REST_Response( array(
                     'success' => true,
@@ -459,7 +498,7 @@ class Rain_OS_Gutenberg {
                     'mock' => true,
                 ), 200 );
 
-            case 'summarize':
+            case 'summarize_content':
                 $excerpt = wp_trim_words( wp_strip_all_tags( $content ), 50 );
                 return new WP_REST_Response( array(
                     'success' => true,
@@ -469,7 +508,7 @@ class Rain_OS_Gutenberg {
                     'mock' => true,
                 ), 200 );
 
-            case 'rewrite':
+            case 'rewrite_sentence':
                 return new WP_REST_Response( array(
                     'success' => true,
                     'data'    => array(
