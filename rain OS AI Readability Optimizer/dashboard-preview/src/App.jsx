@@ -2649,7 +2649,25 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={pillarData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
-                <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={11} />
+                <XAxis
+                  dataKey="name"
+                  stroke="var(--text-muted)"
+                  fontSize={11}
+                  interval={0}
+                  height={50}
+                  tick={({ x, y, payload }) => {
+                    const words = payload.value.split(' ');
+                    const mid = Math.ceil(words.length / 2);
+                    const line1 = words.slice(0, mid).join(' ');
+                    const line2 = words.slice(mid).join(' ');
+                    return (
+                      <text x={x} y={y} textAnchor="middle" fill="var(--text-muted)" fontSize={11}>
+                        <tspan x={x} dy="0.5em">{line1}</tspan>
+                        {line2 && <tspan x={x} dy="1.2em">{line2}</tspan>}
+                      </text>
+                    );
+                  }}
+                />
                 <YAxis stroke="var(--text-muted)" fontSize={12} domain={[0, 100]} />
                 <Tooltip content={<CustomTooltip />} />
                 <Bar dataKey="value" radius={[4, 4, 0, 0]} name="Score">
