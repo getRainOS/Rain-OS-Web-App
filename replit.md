@@ -43,7 +43,17 @@ The plugin adheres to WordPress plugin standards with a modular, class-based des
 - **admin.css**: --rain-pillar-orange: #f97316 custom property; .rain-os-pillar-fill-result.rain-os-pillar-orange; .rain-os-pillar-bar-fill.rain-os-pillar-orange; .rain-os-bar-orange-1/2/3/4 tokens updated to #f97316 scale; pillar section orange references use --rain-pillar-orange
 - **All PHP Templates Synced**: learn-ai-readability.php, documentation.php, upgrade.php now use all 14 backend-synced sub-category names with correct pillar groupings (AEO Alignment in P1, Descriptive Metadata in P2, Schema Extraction in P3, 4 new P4 sub-categories)
 - **HistoryTab.js**: Product Discoverability color fixed to #f97316
-- **Package**: 152.64 KB, 43 files, webpack compiled successfully
+- **Package**: 153.59 KB, 43 files, webpack compiled successfully
+
+### Product Discoverability Mute Toggle (February 2026)
+- **Toggle Feature**: Users can mute/unmute the Product Discoverability pillar via a toggle switch
+- **WordPress Setting**: `rain_os_pd_enabled` option (default: 'yes') in class-rain-os-settings.php, registered with sanitize_checkbox
+- **Settings UI**: Toggle with orange glow animation in Analysis Preferences section of settings.php
+- **Score Calculations**: dashboard.php, pillar-breakdown.php, class-rain-os-gutenberg.php all conditionally divide by 3 or 4 based on `Rain_OS_Settings::is_pd_enabled()`
+- **Gutenberg Sidebar**: `pdEnabled` flag passed via wp_localize_script; useContentAnalysis.js, PillarCards.js, MetricsTab.js, HistoryTab.js conditionally include/exclude PD
+- **Dashboard Preview**: `pdMuted` state in App.jsx with PDMuteToggle component featuring throbbing orange glow; all pages (dashboard, pillar breakdown, score history, performance, Gutenberg sidebar preview) respect mute state
+- **CSS**: `@keyframes rainPdGlow` animation, `.rain-os-pd-toggle-wrap`, `.rain-os-pd-switch` toggle styles, `.rain-os-pd-hidden` for conditional visibility
+- **admin.css**: PD toggle with throbbing glow animation using #f97316 orange
 
 ### 4-Pillar System Upgrade (February 2025)
 - **Product Discoverability Pillar**: Added 4th pillar with 4 subcategories

@@ -26,8 +26,11 @@ $ai_readability = isset( $averages['avg_ai_readability'] ) ? intval( $averages['
 $digital_authority = isset( $averages['avg_digital_authority'] ) ? intval( $averages['avg_digital_authority'] ) : 0;
 $conversion_readiness = isset( $averages['avg_conversion_readiness'] ) ? intval( $averages['avg_conversion_readiness'] ) : 0;
 $product_discoverability = isset( $averages['avg_product_discoverability'] ) ? intval( $averages['avg_product_discoverability'] ) : 0;
-$overall_score = $ai_readability + $digital_authority + $conversion_readiness + $product_discoverability > 0 
-    ? round( ( $ai_readability + $digital_authority + $conversion_readiness + $product_discoverability ) / 4 ) 
+$pd_on = Rain_OS_Settings::is_pd_enabled();
+$overall_score = $ai_readability + $digital_authority + $conversion_readiness > 0 
+    ? ( $pd_on 
+        ? round( ( $ai_readability + $digital_authority + $conversion_readiness + $product_discoverability ) / 4 ) 
+        : round( ( $ai_readability + $digital_authority + $conversion_readiness ) / 3 ) )
     : 0;
 
 $latest = $wpdb->get_var( "SELECT analysis_data FROM {$table_name} ORDER BY analyzed_at DESC LIMIT 1" );
@@ -214,7 +217,7 @@ $pd_structured = rairo_sub( $p4, 'structured_content_quality', $product_discover
                 </div>
             </div>
 
-            <div class="rain-os-pillar-section rain-os-pillar-orange">
+            <div class="rain-os-pillar-section rain-os-pillar-orange<?php echo $pd_on ? '' : ' rain-os-pd-hidden'; ?>">
                 <h3 class="rain-os-pillar-title"><?php esc_html_e( 'Product Discoverability', 'rain-os-aeo-analyzer' ); ?></h3>
                 <div class="rain-os-pillar-score"><?php echo esc_html( $product_discoverability ); ?>%</div>
 

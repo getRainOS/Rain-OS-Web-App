@@ -151,7 +151,12 @@ function rain_os_get_score_class( $score ) {
                         <span class="dashicons dashicons-heart"></span>
                     </div>
                     <?php 
-                    $content_health = $total_analyzed > 0 ? round( ( $ai_readability + $digital_authority + $conversion_readiness + $product_discoverability ) / 4 ) : 0;
+                    $pd_on = Rain_OS_Settings::is_pd_enabled();
+                    $content_health = $total_analyzed > 0 
+                        ? ( $pd_on 
+                            ? round( ( $ai_readability + $digital_authority + $conversion_readiness + $product_discoverability ) / 4 ) 
+                            : round( ( $ai_readability + $digital_authority + $conversion_readiness ) / 3 ) ) 
+                        : 0;
                     ?>
                     <div class="rain-os-kpi-gauge" data-value="<?php echo esc_attr( $content_health ); ?>" data-color="#a855f7"></div>
                 </div>
@@ -284,7 +289,9 @@ function rain_os_get_score_class( $score ) {
                         foreach ( $analysis_data as $item ) : 
                             if ( $count >= 5 ) break;
                             $count++;
-                            $avg_score = round( ( intval( $item['ai_readability'] ) + intval( $item['digital_authority'] ) + intval( $item['conversion_readiness'] ) + intval( $item['product_discoverability'] ?? 0 ) ) / 4 );
+                            $avg_score = $pd_on 
+                                ? round( ( intval( $item['ai_readability'] ) + intval( $item['digital_authority'] ) + intval( $item['conversion_readiness'] ) + intval( $item['product_discoverability'] ?? 0 ) ) / 4 )
+                                : round( ( intval( $item['ai_readability'] ) + intval( $item['digital_authority'] ) + intval( $item['conversion_readiness'] ) ) / 3 );
                         ?>
                         <tr>
                             <td><?php echo esc_html( $count ); ?></td>
