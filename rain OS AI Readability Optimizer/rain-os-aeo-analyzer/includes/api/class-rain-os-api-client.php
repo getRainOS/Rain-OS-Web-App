@@ -106,6 +106,17 @@ class Rain_OS_API_Client {
         return $this->make_request( 'analyze', 'POST', $payload );
     }
 
+    public function scan_url( $url, $industry = '' ) {
+        return $this->make_request(
+            'url-scan',
+            'POST',
+            array(
+                'url'      => $url,
+                'industry' => $industry,
+            )
+        );
+    }
+
     public function suggest_titles( $content ) {
         return $this->make_request(
             'analyze',
@@ -172,7 +183,7 @@ class Rain_OS_API_Client {
                 'plan'               => 'free',
                 'is_pro'             => false,
                 'usage_count'        => 0,
-                'usage_limit'        => 10,
+                'usage_limit'        => 5,
                 'subscription_status' => 'inactive',
             );
         }
@@ -183,7 +194,7 @@ class Rain_OS_API_Client {
             'plan'               => isset( $user['stripePriceId'] ) ? $this->get_plan_name( $user['stripePriceId'] ) : 'free',
             'is_pro'             => isset( $user['subscriptionStatus'] ) && 'active' === $user['subscriptionStatus'],
             'usage_count'        => isset( $usage['count'] ) ? intval( $usage['count'] ) : 0,
-            'usage_limit'        => isset( $usage['limit'] ) ? intval( $usage['limit'] ) : 10,
+            'usage_limit'        => isset( $usage['limit'] ) ? intval( $usage['limit'] ) : 5,
             'subscription_status' => isset( $user['subscriptionStatus'] ) ? $user['subscriptionStatus'] : 'inactive',
             'email'              => isset( $user['email'] ) ? $user['email'] : '',
         );
@@ -191,15 +202,13 @@ class Rain_OS_API_Client {
 
     private function get_plan_name( $stripe_price_id ) {
         $plan_map = array(
-            'price_starter'  => 'Starter',
-            'price_business' => 'Business',
-            'price_agency'   => 'Agency',
+            'price_1SeCHg3NMjs4uYdguOgkr3SQ' => 'Free',
+            'price_1SeCJH3NMjs4uYdgpi0xB0XN' => 'Business',
+            'price_1SeCKM3NMjs4uYdgcBRhgIhD' => 'Pro',
         );
 
-        foreach ( $plan_map as $key => $name ) {
-            if ( strpos( $stripe_price_id, $key ) !== false ) {
-                return $name;
-            }
+        if ( isset( $plan_map[ $stripe_price_id ] ) ) {
+            return $plan_map[ $stripe_price_id ];
         }
 
         return 'Pro';
@@ -259,6 +268,9 @@ class Rain_OS_API_Client {
             'recommendations'               => isset( $response['recommendations'] ) ? $response['recommendations'] : array(),
             'keywords'                      => isset( $response['keywords'] ) ? $response['keywords'] : array(),
             'authorship'                    => isset( $response['authorship'] ) ? $response['authorship'] : null,
+            'technical_signals'             => isset( $response['technical_signals'] ) ? $response['technical_signals'] : null,
+            'technical_recommendations'     => isset( $response['technical_recommendations'] ) ? $response['technical_recommendations'] : array(),
+            'url_scanned'                   => isset( $response['url_scanned'] ) ? $response['url_scanned'] : null,
         );
 
         if ( isset( $response['sub_scores'] ) ) {

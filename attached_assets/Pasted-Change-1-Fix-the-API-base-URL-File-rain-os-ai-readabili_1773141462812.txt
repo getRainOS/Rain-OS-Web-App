@@ -1,0 +1,346 @@
+Change 1 — Fix the API base URL
+File: rain-os-ai-readability-optimizer.php
+Find this line:
+define( 'RAIRO_API_URL', 'https://api.getrainos.com/v1' );
+Replace with:
+define( 'RAIRO_API_URL', 'https://api.getrainos.com' );
+Why: The new /api/url-scan endpoint lives at the root, not under /v1. The API client already appends /api/ to all requests so this is the correct base.
+
+Change 2 — Update the plan name map with real Stripe price IDs
+File: includes/api/class-rairo-api-client.php
+Find the get_plan_name method and replace the entire method with this:
+phpprivate function get_plan_name( $stripe_price_id ) {
+    $plan_map = array(
+        'price_1SeCHg3NMjs4uYdguOgkr3SQ' => 'Free',
+        'price_1SeCJH3NMjs4uYdgpi0xB0XN' => 'Business',
+        'price_1SeCKM3NMjs4uYdgcBRhgIhD' => 'Pro',
+    );
+
+    if ( isset( $plan_map[ $stripe_price_id ] ) ) {
+        return $plan_map[ $stripe_price_id ];
+    }
+
+    // Fallback for any unrecognised price ID
+    return 'Pro';
+}
+Also update get_subscription_status — find these defaults:
+php'usage_limit' => 10,
+Replace with:
+php'usage_limit' => 5,
+
+Change 3 — Add URL scanning method to the API client
+File: includes/api/class-rairo-api-client.php
+Add this new public method directly after the analyze_content method:
+phppublic function scan_url( $url, $industry = '' ) {
+    return $this->make_request(
+        'url-scan',
+        'POST',
+        array(
+            'url'      => $url,
+            'industry' => $industry,
+        )
+    );
+}
+Also update parse_analysis_response to capture the new technical fields returned by URL scans. Find the $parsed array in that method and add these two keys after 'authorship':
+php'technical_signals'        => isset( $response['technical_signals'] ) ? $response['technical_signals'] : null,
+'technical_recommendations' => isset( $response['technical_recommendations'] ) ? $response['technical_recommendations'] : array(),
+'url_scanned'              => isset( $response['url_scanned'] ) ? $response['url_scanned'] : null,
+
+Change 4 — Add URL scan AJAX handler
+File: includes/class-rairo-ajax.php
+In register_ajax_handlers, add this line with the other add_action calls:
+phpadd_action( 'wp_ajax_rairo_scan_url', array( $this, 'scan_url' ) );
+Then add this new public method to the class (place it directly after the analyze_content method):
+phppublic function scan_url() {
+    $this->verify_nonce();
+    $this->check_capability();
+
+    $url      = isset( $_POST['url'] ) ? esc_url_raw( wp_unslash( $_POST['url'] ) ) : '';
+    $industry = isset( $_POST['industry'] ) ? sanitize_text_field( wp_unslash( $_POST['industry'] ) ) : '';
+    $post_id  = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
+
+    if ( empty( $url ) ) {
+        wp_send_json_error( array( 'message' => __( 'A URL is required.', 'rain-os-ai-readability-optimizer' ) ) );
+    }
+
+    if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+        wp_send_json_error( array( 'message' => __( 'Please enter a valid URL including http:// or https://', 'rain-os-ai-readability-optimizer' ) ) );
+    }
+
+    $result = $this->api_client->scan_url( $url, $industry );
+
+    if ( is_wp_error( $result ) ) {
+        wp_send_json_error( array(
+            'message' => $result->get_error_message(),
+            'code'    => $result->get_error_code(),
+        ) );
+    }
+
+    $parsed = $this->api_client->parse_analysis_response( $result );
+
+    if ( $post_id > 0 ) {
+        $this->save_analysis_to_history( $post_id, $parsed );
+    }
+
+    $usage_info = $this->api_client->get_last_usage_info();
+
+    wp_send_json_success( array(
+        'analysis'     => $parsed,
+        'usage'        => $usage_info,
+        'url_scanned'  => $url,
+        'technical'    => isset( $parsed['technical_signals'] ) ? $parsed['technical_signals'] : null,
+        'tech_recs'    => isset( $parsed['technical_recommendations'] ) ? $parsed['technical_recommendations'] : array(),
+    ) );
+}
+
+Change 5 — Add URL scan tab to the content analyzer template
+File: templates/content-analyzer.php
+Find the textarea or content input area where the user pastes content to analyse. Above it, add a tab toggle so users can switch between Paste Content and Scan URL mode:
+html<div class="rain-os-scan-mode-toggle">
+    <button type="button" class="rain-os-mode-btn active" data-mode="paste" id="mode-paste">
+        <span class="dashicons dashicons-edit"></span>
+        <?php esc_html_e( 'Paste Content', 'rain-os-ai-readability-optimizer' ); ?>
+    </button>
+    <button type="button" class="rain-os-mode-btn" data-mode="url" id="mode-url">
+        <span class="dashicons dashicons-admin-links"></span>
+        <?php esc_html_e( 'Scan URL', 'rain-os-ai-readability-optimizer' ); ?>
+    </button>
+</div>
+
+<!-- URL input — hidden by default, shown when URL mode is active -->
+<div id="rain-os-url-input-area" style="display:none;">
+    <input type="url"
+           id="rain-os-scan-url"
+           class="rain-os-input"
+           placeholder="<?php esc_attr_e( 'https://yoursite.com/page-to-scan', 'rain-os-ai-readability-optimizer' ); ?>"
+           autocomplete="off" />
+    <p class="rain-os-form-help">
+        <?php esc_html_e( 'Enter a publicly accessible URL. The backend will fetch the page and analyse both its content and technical HTML structure.', 'rain-os-ai-readability-optimizer' ); ?>
+    </p>
+</div>
+
+Change 6 — Wire up the URL scan in JavaScript
+File: assets/js/admin.js
+Add the following JavaScript. If there is already an analyse button click handler, add the URL scan logic alongside it — do not replace it.
+javascript// ── Scan mode toggle ──────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function () {
+
+    const modeBtns   = document.querySelectorAll('.rain-os-mode-btn');
+    const urlArea    = document.getElementById('rain-os-url-input-area');
+    const pasteArea  = document.getElementById('rain-os-content-input'); // adjust selector if needed
+
+    modeBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            modeBtns.forEach(function (b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+
+            const mode = btn.dataset.mode;
+            if (mode === 'url') {
+                if (urlArea)   urlArea.style.display   = 'block';
+                if (pasteArea) pasteArea.style.display = 'none';
+            } else {
+                if (urlArea)   urlArea.style.display   = 'none';
+                if (pasteArea) pasteArea.style.display = 'block';
+            }
+        });
+    });
+
+    // ── URL scan submit ───────────────────────────────────────────────────────
+    const analyseBtn = document.getElementById('rain-os-analyse-btn'); // adjust if needed
+    if (analyseBtn) {
+        analyseBtn.addEventListener('click', function (e) {
+            const activeMode = document.querySelector('.rain-os-mode-btn.active');
+            if (!activeMode || activeMode.dataset.mode !== 'url') return; // let existing paste handler run
+
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            const urlInput = document.getElementById('rain-os-scan-url');
+            if (!urlInput || !urlInput.value.trim()) {
+                alert(rairoData.i18n.url_required || 'Please enter a URL to scan.');
+                return;
+            }
+
+            const url      = urlInput.value.trim();
+            const industry = document.getElementById('rairo_industry') ? document.getElementById('rairo_industry').value : '';
+            const postId   = rairoData.post_id || 0;
+
+            // Show loading state
+            analyseBtn.disabled = true;
+            analyseBtn.textContent = rairoData.i18n.scanning || 'Scanning URL…';
+
+            jQuery.ajax({
+                url:    rairoData.ajax_url,
+                type:   'POST',
+                data: {
+                    action:   'rairo_scan_url',
+                    nonce:    rairoData.nonce,
+                    url:      url,
+                    industry: industry,
+                    post_id:  postId,
+                },
+                success: function (response) {
+                    analyseBtn.disabled = false;
+                    analyseBtn.textContent = rairoData.i18n.analyse || 'Analyse';
+
+                    if (response.success && response.data) {
+                        // Dispatch same event the paste analysis uses so results display works unchanged
+                        const event = new CustomEvent('rairo:analysisComplete', { detail: response.data });
+                        document.dispatchEvent(event);
+
+                        // Show technical signals if the results panel supports it
+                        if (response.data.technical && window.rairoDisplayTechnicalSignals) {
+                            window.rairoDisplayTechnicalSignals(response.data.technical, response.data.tech_recs);
+                        }
+                    } else {
+                        const msg = (response.data && response.data.message) ? response.data.message : 'URL scan failed.';
+                        alert(msg);
+                    }
+                },
+                error: function () {
+                    analyseBtn.disabled = false;
+                    analyseBtn.textContent = rairoData.i18n.analyse || 'Analyse';
+                    alert('Network error during URL scan. Please try again.');
+                }
+            });
+        });
+    }
+});
+
+Change 7 — Display technical signals in results
+File: templates/content-signals.php (or wherever pillar scores and recommendations are currently rendered)
+After the existing recommendations list, add a new section that renders technical signals when they are present. This section only appears for URL scans — it will be empty for paste analyses.
+html<?php if ( ! empty( $analysis['technical_signals'] ) ) : ?>
+<div class="rain-os-card rain-os-technical-signals">
+    <div class="rain-os-card-header">
+        <h3><?php esc_html_e( 'Technical HTML Signals', 'rain-os-ai-readability-optimizer' ); ?></h3>
+        <span class="rain-os-badge rain-os-badge-info">
+            <?php esc_html_e( 'URL Scan Only', 'rain-os-ai-readability-optimizer' ); ?>
+        </span>
+    </div>
+    <div class="rain-os-card-body">
+
+        <?php
+        $signals = $analysis['technical_signals'];
+        $signal_labels = array(
+            'hasSchemaMarkup'           => array( __( 'Schema Markup', 'rain-os-ai-readability-optimizer' ), 'positive' ),
+            'hasFaqSchema'              => array( __( 'FAQ Schema', 'rain-os-ai-readability-optimizer' ), 'positive' ),
+            'hasSemanticHtml'           => array( __( 'Semantic HTML', 'rain-os-ai-readability-optimizer' ), 'positive' ),
+            'hasProperHeadingHierarchy' => array( __( 'Heading Hierarchy', 'rain-os-ai-readability-optimizer' ), 'positive' ),
+            'hasMetaDescription'        => array( __( 'Meta Description', 'rain-os-ai-readability-optimizer' ), 'positive' ),
+            'hasCanonicalTag'           => array( __( 'Canonical Tag', 'rain-os-ai-readability-optimizer' ), 'positive' ),
+            'hasOpenGraphTags'          => array( __( 'Open Graph Tags', 'rain-os-ai-readability-optimizer' ), 'positive' ),
+            'hasLlmsTxt'               => array( __( 'llms.txt Present', 'rain-os-ai-readability-optimizer' ), 'positive' ),
+            'isJsRendered'              => array( __( 'JS Rendering (AI Risk)', 'rain-os-ai-readability-optimizer' ), 'negative' ),
+        );
+        ?>
+
+        <div class="rain-os-signals-grid">
+        <?php foreach ( $signal_labels as $key => $data ) :
+            if ( ! array_key_exists( $key, $signals ) ) continue;
+            $value     = $signals[ $key ];
+            $label     = $data[0];
+            $type      = $data[1];
+            $is_good   = ( 'positive' === $type ) ? (bool) $value : ! (bool) $value;
+            $icon      = $is_good ? '✓' : '✗';
+            $css_class = $is_good ? 'rain-os-signal-pass' : 'rain-os-signal-fail';
+        ?>
+            <div class="rain-os-signal-item <?php echo esc_attr( $css_class ); ?>">
+                <span class="rain-os-signal-icon"><?php echo esc_html( $icon ); ?></span>
+                <span class="rain-os-signal-label"><?php echo esc_html( $label ); ?></span>
+            </div>
+        <?php endforeach; ?>
+        </div>
+
+        <?php if ( ! empty( $signals['jsRenderingWarning'] ) ) : ?>
+        <div class="rain-os-alert rain-os-alert-warning">
+            <?php echo esc_html( $signals['jsRenderingWarning'] ); ?>
+        </div>
+        <?php endif; ?>
+
+        <?php if ( ! empty( $analysis['technical_recommendations'] ) ) : ?>
+        <div class="rain-os-tech-recommendations">
+            <h4><?php esc_html_e( 'Technical Fixes', 'rain-os-ai-readability-optimizer' ); ?></h4>
+            <ul class="rain-os-recommendations-list">
+            <?php foreach ( $analysis['technical_recommendations'] as $rec ) : ?>
+                <li class="rain-os-recommendation-item">
+                    <span class="rain-os-rec-icon dashicons dashicons-editor-help"></span>
+                    <?php echo esc_html( $rec ); ?>
+                </li>
+            <?php endforeach; ?>
+            </ul>
+        </div>
+        <?php endif; ?>
+
+    </div>
+</div>
+<?php endif; ?>
+
+Change 8 — Update the settings page to support OAuth key connection
+File: templates/settings.php
+Find the API key input field section. Add a "Connect with Rain OS" button above the manual key input field so users can connect via OAuth instead of pasting a key. Keep the manual input field for users who prefer it.
+html<div class="rain-os-connect-section">
+    <a href="https://api.getrainos.com/api/auth/google"
+       class="rain-os-btn rain-os-btn-primary rain-os-google-connect-btn">
+        <span class="dashicons dashicons-google"></span>
+        <?php esc_html_e( 'Connect with Google', 'rain-os-ai-readability-optimizer' ); ?>
+    </a>
+    <p class="rain-os-form-help">
+        <?php esc_html_e( 'Sign in with your Rain OS account to connect automatically. Your API key will be saved for you.', 'rain-os-ai-readability-optimizer' ); ?>
+    </p>
+    <div class="rain-os-divider">
+        <span><?php esc_html_e( 'or enter your API key manually', 'rain-os-ai-readability-optimizer' ); ?></span>
+    </div>
+</div>
+
+Change 9 — Handle OAuth callback in the plugin
+File: rain-os-ai-readability-optimizer.php (in the main plugin class or the loader)
+Add a WordPress admin_init hook that checks if the user has just returned from OAuth (the URL will contain ?rairo_auth=1&apiKey=...) and saves the key automatically:
+phpadd_action( 'admin_init', function () {
+    if ( isset( $_GET['rairo_auth'] ) && '1' === $_GET['rairo_auth'] && isset( $_GET['apiKey'] ) ) {
+        if ( current_user_can( 'manage_options' ) ) {
+            $api_key = sanitize_text_field( wp_unslash( $_GET['apiKey'] ) );
+            if ( ! empty( $api_key ) ) {
+                update_option( 'rairo_api_key', $api_key );
+                wp_redirect( admin_url( 'admin.php?page=ai-readability-settings&connected=1' ) );
+                exit;
+            }
+        }
+    }
+
+    // Show success notice after OAuth redirect
+    if ( isset( $_GET['connected'] ) && '1' === $_GET['connected'] ) {
+        add_action( 'admin_notices', function () {
+            echo '<div class="notice notice-success is-dismissible"><p>';
+            esc_html_e( 'Rain OS connected successfully. You are ready to analyse content.', 'rain-os-ai-readability-optimizer' );
+            echo '</p></div>';
+        } );
+    }
+} );
+Note for the backend developer: The Google OAuth callback in api/auth/google-callback.ts currently redirects to https://app.getrainos.com/#/auth/callback. For the WordPress plugin OAuth flow to work, the backend also needs to support a redirect to https://WORDPRESS_ADMIN_URL/wp-admin/admin.php?page=ai-readability-settings&rairo_auth=1&apiKey=KEY. This can be a separate OAuth client or a redirect parameter. This is a backend task, not a plugin task — log it as a follow-up ticket.
+
+Change 10 — Bump the plugin version
+File: rain-os-ai-readability-optimizer.php
+Find:
+define( 'RAIRO_VERSION', '1.0.0' );
+Replace with:
+define( 'RAIRO_VERSION', '1.1.0' );
+Also update the Version: line in the plugin header comment to match.
+
+What NOT to change
+
+Do not touch class-rairo-ai-backend.php
+Do not touch the database schema or any $wpdb table creation code
+Do not remove or modify the existing paste-content analysis flow — the URL scan is additive only
+Do not change the Gutenberg sidebar files in /build/ — those require a separate compile step
+Do not change any endpoint paths other than the base URL fix in Change 1
+
+
+After making all changes
+
+Verify the plugin activates without PHP errors
+Check that the Settings page loads and shows the Connect with Google button
+Check that the content analyser shows the Paste / Scan URL toggle
+Test a URL scan against https://api.getrainos.com/api/url-scan (backend must be live on Railway first)
+Confirm technical signals section renders in the results when a URL scan completes
+Confirm a paste analysis still works exactly as before (no regression)

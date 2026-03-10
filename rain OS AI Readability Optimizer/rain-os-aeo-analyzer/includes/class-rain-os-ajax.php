@@ -14,6 +14,7 @@ class Rain_OS_Ajax {
 
     private function register_ajax_handlers() {
         add_action( 'wp_ajax_rain_os_analyze_content', array( $this, 'analyze_content' ) );
+        add_action( 'wp_ajax_rain_os_scan_url', array( $this, 'scan_url' ) );
         add_action( 'wp_ajax_rain_os_get_analysis', array( $this, 'get_analysis' ) );
         add_action( 'wp_ajax_rain_os_get_dashboard_data', array( $this, 'get_dashboard_data' ) );
         add_action( 'wp_ajax_rain_os_get_score_history', array( $this, 'get_score_history' ) );
@@ -94,6 +95,48 @@ class Rain_OS_Ajax {
         $usage_info = $this->api_client->get_last_usage_info();
 
         wp_send_json_success( array_merge( $parsed, array( 'usage' => $usage_info ) ) );
+    }
+
+    public function scan_url() {
+        $this->verify_nonce();
+        $this->check_capability();
+
+        $url      = isset( $_POST['url'] ) ? esc_url_raw( wp_unslash( $_POST['url'] ) ) : '';
+        $industry = isset( $_POST['industry'] ) ? sanitize_text_field( wp_unslash( $_POST['industry'] ) ) : '';
+        $post_id  = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
+
+        if ( empty( $url ) ) {
+            wp_send_json_error( array( 'message' => __( 'A URL is required.', 'rain-os-aeo-analyzer' ) ) );
+        }
+
+        if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+            wp_send_json_error( array( 'message' => __( 'Please enter a valid URL including http:// or https://', 'rain-os-aeo-analyzer' ) ) );
+        }
+
+        $result = $this->api_client->scan_url( $url, $industry );
+
+        if ( is_wp_error( $result ) ) {
+            wp_send_json_error( array(
+                'message' => $result->get_error_message(),
+                'code'    => $result->get_error_code(),
+            ) );
+        }
+
+        $parsed = $this->api_client->parse_analysis_response( $result );
+
+        if ( $post_id > 0 ) {
+            $this->save_analysis_to_history( $post_id, $parsed );
+        }
+
+        $usage_info = $this->api_client->get_last_usage_info();
+
+        wp_send_json_success( array(
+            'analysis'     => $parsed,
+            'usage'        => $usage_info,
+            'url_scanned'  => $url,
+            'technical'    => isset( $parsed['technical_signals'] ) ? $parsed['technical_signals'] : null,
+            'tech_recs'    => isset( $parsed['technical_recommendations'] ) ? $parsed['technical_recommendations'] : array(),
+        ) );
     }
 
     private function save_analysis_to_history( $post_id, $analysis ) {

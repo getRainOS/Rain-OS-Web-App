@@ -11,6 +11,29 @@
             this.initNotifications();
             this.initLocalAudit();
             this.initAIBackend();
+            this.initModeToggle();
+        },
+
+        initModeToggle: function() {
+            var modeBtns = document.querySelectorAll('.rain-os-mode-btn');
+            var urlArea = document.getElementById('rain-os-url-input-area');
+            var pasteArea = document.getElementById('rain-os-content-editor');
+
+            modeBtns.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    modeBtns.forEach(function(b) { b.classList.remove('active'); });
+                    btn.classList.add('active');
+
+                    var mode = btn.dataset.mode;
+                    if (mode === 'url') {
+                        if (urlArea) urlArea.style.display = 'block';
+                        if (pasteArea) pasteArea.style.display = 'none';
+                    } else {
+                        if (urlArea) urlArea.style.display = 'none';
+                        if (pasteArea) pasteArea.style.display = 'block';
+                    }
+                });
+            });
         },
 
         bindEvents: function() {
@@ -129,6 +152,15 @@
             e.preventDefault();
             var self = this;
             var $btn = $(e.currentTarget);
+            var activeMode = document.querySelector('.rain-os-mode-btn.active');
+            
+            // Handle URL scan mode
+            if (activeMode && activeMode.dataset.mode === 'url') {
+                this.scanUrl($btn);
+                return;
+            }
+
+            // Handle paste content mode
             var $editor = $('#rain-os-content-editor');
             var $title = $('#rain-os-content-title');
             var $results = $('#rain-os-analysis-results');
@@ -236,6 +268,47 @@
             html += '<div class="rain-os-pillar-score-result">' + score + '</div>';
             html += '</div>';
             return html;
+        },
+
+        scanUrl: function($btn) {
+            var self = this;
+            var urlInput = document.getElementById('rain-os-scan-url');
+            if (!urlInput || !urlInput.value.trim()) {
+                alert(rainOsAeo.i18n.urlRequired || 'Please enter a URL to scan.');
+                return;
+            }
+
+            var url = urlInput.value.trim();
+            var industry = $('#rairo_industry').length ? $('#rairo_industry').val() : '';
+            var postId = rainOsAeo.postId || 0;
+
+            $btn.prop('disabled', true).html('<span class="dashicons dashicons-update spin"></span> ' + (rainOsAeo.i18n.scanning || 'Scanning URL…'));
+
+            $.ajax({
+                url: rainOsAeo.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'rain_os_scan_url',
+                    nonce: rainOsAeo.nonce,
+                    url: url,
+                    industry: industry,
+                    post_id: postId,
+                },
+                success: function(response) {
+                    $btn.prop('disabled', false).html('<span class="dashicons dashicons-search"></span> ' + (rainOsAeo.i18n.analyze || 'Analyze Content'));
+                    if (response.success && response.data) {
+                        var event = new CustomEvent('rain_os:analysisComplete', { detail: response.data });
+                        document.dispatchEvent(event);
+                    } else {
+                        var msg = (response.data && response.data.message) ? response.data.message : 'URL scan failed.';
+                        alert(msg);
+                    }
+                },
+                error: function() {
+                    $btn.prop('disabled', false).html('<span class="dashicons dashicons-search"></span> ' + (rainOsAeo.i18n.analyze || 'Analyze Content'));
+                    alert('Network error during URL scan. Please try again.');
+                }
+            });
         },
 
         clearEditor: function(e) {

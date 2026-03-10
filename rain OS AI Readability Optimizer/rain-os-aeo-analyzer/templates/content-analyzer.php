@@ -28,6 +28,28 @@ if ( ! defined( 'ABSPATH' ) ) {
             </header>
 
             <div class="rain-os-editor-card">
+                <div class="rain-os-scan-mode-toggle">
+                    <button type="button" class="rain-os-mode-btn active" data-mode="paste" id="mode-paste">
+                        <span class="dashicons dashicons-edit"></span>
+                        <?php esc_html_e( 'Paste Content', 'rain-os-aeo-analyzer' ); ?>
+                    </button>
+                    <button type="button" class="rain-os-mode-btn" data-mode="url" id="mode-url">
+                        <span class="dashicons dashicons-admin-links"></span>
+                        <?php esc_html_e( 'Scan URL', 'rain-os-aeo-analyzer' ); ?>
+                    </button>
+                </div>
+
+                <div id="rain-os-url-input-area" style="display:none;">
+                    <input type="url"
+                           id="rain-os-scan-url"
+                           class="rain-os-input"
+                           placeholder="<?php esc_attr_e( 'https://yoursite.com/page-to-scan', 'rain-os-aeo-analyzer' ); ?>"
+                           autocomplete="off" />
+                    <p class="rain-os-form-help">
+                        <?php esc_html_e( 'Enter a publicly accessible URL. The backend will fetch the page and analyse both its content and technical HTML structure.', 'rain-os-aeo-analyzer' ); ?>
+                    </p>
+                </div>
+
                 <div class="rain-os-editor-toolbar">
                     <button type="button" class="rain-os-toolbar-btn" data-command="bold" title="<?php esc_attr_e( 'Bold', 'rain-os-aeo-analyzer' ); ?>"><strong>B</strong></button>
                     <button type="button" class="rain-os-toolbar-btn" data-command="italic" title="<?php esc_attr_e( 'Italic', 'rain-os-aeo-analyzer' ); ?>"><em>I</em></button>

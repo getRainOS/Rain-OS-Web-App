@@ -22,7 +22,7 @@ define( 'RAIN_OS_AEO_VERSION', '1.0.0' );
 define( 'RAIN_OS_AEO_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'RAIN_OS_AEO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'RAIN_OS_AEO_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-define( 'RAIN_OS_AEO_API_URL', 'https://api.getrainos.com/v1' );
+define( 'RAIN_OS_AEO_API_URL', 'https://api.getrainos.com' );
 
 require_once RAIN_OS_AEO_PLUGIN_DIR . 'includes/class-rain-os-loader.php';
 require_once RAIN_OS_AEO_PLUGIN_DIR . 'includes/class-rain-os-admin.php';
