@@ -53,6 +53,20 @@ const MetricsTab = ({ analysisData }) => {
     );
   }
 
+  const authorship = analysisData?.authorship || null;
+
+  const AuthorshipBadge = ({ ok, label }) => (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: '4px',
+      padding: '2px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: 600,
+      background: ok ? 'rgba(16,185,129,0.15)' : 'rgba(100,116,139,0.15)',
+      color: ok ? '#10b981' : '#64748b',
+      border: `1px solid ${ok ? 'rgba(16,185,129,0.3)' : 'rgba(100,116,139,0.3)'}`,
+    }}>
+      {ok ? '✓' : '–'} {label}
+    </span>
+  );
+
   return (
     <div className="rain-os-metrics-tab">
       {Object.entries(subcategories).map(([pillar, scores]) => (
@@ -109,6 +123,27 @@ const MetricsTab = ({ analysisData }) => {
           ))}
         </div>
       ))}
+
+      {authorship && (
+        <div style={{ marginTop: '8px', paddingTop: '12px', borderTop: '1px solid #1e293b' }}>
+          <div className="rain-os-section-header" style={{ color: '#94a3b8', marginBottom: '10px' }}>
+            {__('Authorship & Provenance', 'rain-os-aeo-analyzer')}
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '10px' }}>
+            <AuthorshipBadge ok={authorship.hasAuthorByline}  label={__('Author Byline',   'rain-os-aeo-analyzer')} />
+            <AuthorshipBadge ok={authorship.hasPublishDate}   label={__('Publish Date',    'rain-os-aeo-analyzer')} />
+            <AuthorshipBadge ok={authorship.hasOrganization}  label={__('Organization',    'rain-os-aeo-analyzer')} />
+          </div>
+          {typeof authorship.authorityScore === 'number' && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', backgroundColor: '#252b3b', borderRadius: '6px' }}>
+              <span style={{ fontSize: '13px', color: '#e2e8f0' }}>{__('Authority Score', 'rain-os-aeo-analyzer')}</span>
+              <span style={{ fontSize: '13px', fontWeight: 600, color: getScoreColor(authorship.authorityScore) }}>
+                {authorship.authorityScore}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

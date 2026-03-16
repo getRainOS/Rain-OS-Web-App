@@ -347,6 +347,62 @@
 
 .rain-os-scan-recs .rain-os-card-body { padding: 20px; }
 
+/* ── Numeric counter grid ────────────────────────────────── */
+.rain-os-signals-counters {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.rain-os-signal-counter {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-color, rgba(255,255,255,0.1));
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+}
+
+.rain-os-counter-value {
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.rain-os-counter-label {
+    font-size: 11px;
+    color: var(--text-muted, #64748b);
+    line-height: 1.3;
+}
+
+/* ── Schema type badge chips ─────────────────────────────── */
+.rain-os-signal-badges-wrap {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.rain-os-signal-badge-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted, #64748b);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rain-os-signal-badge {
+    background: rgba(168,85,247,0.15);
+    color: #a855f7;
+    border: 1px solid rgba(168,85,247,0.3);
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+}
+
 /* ── Spin animation for loader ───────────────────────────── */
 .dashicons.spin {
     animation: rain-os-spin 1s linear infinite;

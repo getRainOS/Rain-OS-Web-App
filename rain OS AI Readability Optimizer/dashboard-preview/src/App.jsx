@@ -12,7 +12,7 @@ import {
   ChevronRight, BookOpen, Mail, Key, Sliders, Shield, ExternalLink,
   Microscope, ShieldCheck, RefreshCw, Wand2, Fingerprint, History,
   PanelRightClose, PanelRightOpen, Eye, EyeOff, Save, Send, Cloud, CheckSquare, Sparkles,
-  Globe, AlertCircle, CheckCircle2, XCircle, Info, Link2
+  Globe, AlertCircle, CheckCircle2, XCircle, Info, Link2, AlertTriangle
 } from 'lucide-react'
 import './index.css'
 
@@ -625,6 +625,12 @@ function GutenbergSidebarPage({ pdMuted, setPdMuted }) {
       overallScore: computedScore,
       pillars: activePillars,
       subScores: mockSubScores,
+      authorship: {
+        hasAuthorByline: true,
+        hasPublishDate: true,
+        hasOrganization: false,
+        authorityScore: 72,
+      },
       recommendations
     }
   }
@@ -1014,6 +1020,37 @@ function GutenbergSidebarPage({ pdMuted, setPdMuted }) {
                       ))}
                     </div>
                   ))}
+
+                  {analysisData.authorship && (
+                    <div style={{ marginTop: 8, paddingTop: 12, borderTop: '1px solid #1e293b' }}>
+                      <div style={{ fontSize: 11, fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 10 }}>Authorship & Provenance</div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 10 }}>
+                        {[
+                          { ok: analysisData.authorship.hasAuthorByline,  label: 'Author Byline'  },
+                          { ok: analysisData.authorship.hasPublishDate,   label: 'Publish Date'   },
+                          { ok: analysisData.authorship.hasOrganization,  label: 'Organization'   },
+                        ].map(({ ok, label }) => (
+                          <span key={label} style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 4,
+                            padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 600,
+                            background: ok ? 'rgba(16,185,129,0.15)' : 'rgba(100,116,139,0.15)',
+                            color: ok ? '#10b981' : '#64748b',
+                            border: `1px solid ${ok ? 'rgba(16,185,129,0.3)' : 'rgba(100,116,139,0.3)'}`,
+                          }}>
+                            {ok ? '✓' : '–'} {label}
+                          </span>
+                        ))}
+                      </div>
+                      {typeof analysisData.authorship.authorityScore === 'number' && (
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', backgroundColor: '#252b3b', borderRadius: 6 }}>
+                          <span style={{ fontSize: 13, color: '#e2e8f0' }}>Authority Score</span>
+                          <span style={{ fontSize: 13, fontWeight: 600, color: getScoreColor(analysisData.authorship.authorityScore) }}>
+                            {analysisData.authorship.authorityScore}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </>
               ) : (
                 <div style={{ textAlign: 'center', padding: 20, color: '#64748b', fontSize: 13 }}>Run an analysis to see detailed metrics.</div>
@@ -3833,12 +3870,27 @@ const MOCK_URL_SCAN = {
     hasMetaDescription: true,
     hasCanonicalTag: true,
     hasOpenGraphTags: true,
+    hasTwitterCardTags: true,
     hasLlmsTxt: false,
+    hasRobotsMeta: true,
+    hasViewportMeta: true,
     isJsRendered: false,
+    wordCount: 1240,
+    headingCount: 8,
+    internalLinkCount: 5,
+    externalLinkCount: 3,
+    imageCount: 4,
+    imageAltTextCount: 3,
+    titleLength: 58,
+    metaDescriptionLength: 142,
+    textToHtmlRatio: 34,
+    schemaTypes: ['Article', 'BreadcrumbList', 'Organization'],
+    missingAltImages: ['hero-banner.jpg'],
   },
   techRecs: [
     'Add FAQ schema markup to help AI engines extract structured Q&A from this page.',
     'Create an llms.txt file in the root of your domain to signal AI-agent accessibility.',
+    'Add alt text to 1 image (hero-banner.jpg) to improve accessibility and AI image understanding.',
   ],
   recommendations: [
     'Improve conversational query coverage — add natural-language FAQ sections.',
@@ -3856,15 +3908,30 @@ const PILLAR_CONFIG = [
 ]
 
 const SIGNAL_DEFS = [
-  { key: 'hasSchemaMarkup',          label: 'Schema Markup',          type: 'positive' },
-  { key: 'hasFaqSchema',             label: 'FAQ Schema',             type: 'positive' },
-  { key: 'hasSemanticHtml',          label: 'Semantic HTML',          type: 'positive' },
-  { key: 'hasProperHeadingHierarchy',label: 'Heading Hierarchy',      type: 'positive' },
-  { key: 'hasMetaDescription',       label: 'Meta Description',       type: 'positive' },
-  { key: 'hasCanonicalTag',          label: 'Canonical Tag',          type: 'positive' },
-  { key: 'hasOpenGraphTags',         label: 'Open Graph Tags',        type: 'positive' },
-  { key: 'hasLlmsTxt',              label: 'llms.txt Present',       type: 'positive' },
-  { key: 'isJsRendered',             label: 'JS Rendering (AI Risk)', type: 'negative' },
+  { key: 'hasSchemaMarkup',           label: 'Schema Markup',          type: 'positive' },
+  { key: 'hasFaqSchema',              label: 'FAQ Schema',             type: 'positive' },
+  { key: 'hasSemanticHtml',           label: 'Semantic HTML',          type: 'positive' },
+  { key: 'hasProperHeadingHierarchy', label: 'Heading Hierarchy',      type: 'positive' },
+  { key: 'hasMetaDescription',        label: 'Meta Description',       type: 'positive' },
+  { key: 'hasCanonicalTag',           label: 'Canonical Tag',          type: 'positive' },
+  { key: 'hasOpenGraphTags',          label: 'Open Graph Tags',        type: 'positive' },
+  { key: 'hasTwitterCardTags',        label: 'Twitter Card Tags',      type: 'positive' },
+  { key: 'hasLlmsTxt',               label: 'llms.txt Present',       type: 'positive' },
+  { key: 'hasRobotsMeta',             label: 'Robots Meta Tag',        type: 'positive' },
+  { key: 'hasViewportMeta',           label: 'Viewport Meta Tag',      type: 'positive' },
+  { key: 'isJsRendered',              label: 'JS Rendering (AI Risk)', type: 'negative' },
+]
+
+const NUMERIC_SIGNAL_DEFS = [
+  { key: 'wordCount',             label: 'Word Count',           unit: ' words', good: 300  },
+  { key: 'headingCount',          label: 'Headings',             unit: '',        good: 2    },
+  { key: 'internalLinkCount',     label: 'Internal Links',       unit: '',        good: 1    },
+  { key: 'externalLinkCount',     label: 'External Links',       unit: '',        good: 1    },
+  { key: 'imageCount',            label: 'Images',               unit: '',        good: 1    },
+  { key: 'imageAltTextCount',     label: 'Images w/ Alt Text',   unit: '',        good: 1    },
+  { key: 'titleLength',           label: 'Title Length',         unit: ' chars',  good: 30   },
+  { key: 'metaDescriptionLength', label: 'Meta Desc. Length',    unit: ' chars',  good: 50   },
+  { key: 'textToHtmlRatio',       label: 'Text/HTML Ratio',      unit: '%',       good: 15   },
 ]
 
 function UrlScannerPage() {
@@ -4010,8 +4077,9 @@ function UrlScannerPage() {
               <span style={{ background: 'rgba(34,211,238,0.12)', color: '#22d3ee', border: '1px solid rgba(34,211,238,0.25)', borderRadius: '4px', fontSize: '11px', fontWeight: 600, padding: '3px 8px' }}>URL Scan Only</span>
             </div>
             <div style={{ padding: '20px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '10px', marginBottom: '20px' }}>
-                {SIGNAL_DEFS.map(def => {
+              {/* Boolean signal grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))', gap: '10px', marginBottom: '20px' }}>
+                {SIGNAL_DEFS.filter(def => def.key in result.technical && typeof result.technical[def.key] === 'boolean').map(def => {
                   const val = result.technical[def.key]
                   const isGood = def.type === 'positive' ? !!val : !val
                   return (
@@ -4020,15 +4088,59 @@ function UrlScannerPage() {
                       background: isGood ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
                       border: `1px solid ${isGood ? 'rgba(16,185,129,0.25)' : 'rgba(239,68,68,0.25)'}`,
                     }}>
-                      {isGood
-                        ? <CheckCircle2 size={15} color="#10b981" />
-                        : <XCircle size={15} color="#ef4444" />
-                      }
+                      {isGood ? <CheckCircle2 size={15} color="#10b981" /> : <XCircle size={15} color="#ef4444" />}
                       <span style={{ fontSize: '13px', color: isGood ? '#10b981' : '#ef4444' }}>{def.label}</span>
                     </div>
                   )
                 })}
               </div>
+
+              {/* Numeric counters */}
+              {NUMERIC_SIGNAL_DEFS.some(d => d.key in result.technical) && (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '10px', marginBottom: '20px' }}>
+                  {NUMERIC_SIGNAL_DEFS.filter(d => d.key in result.technical).map(def => {
+                    const val = result.technical[def.key]
+                    const isGood = val >= def.good
+                    const color = isGood ? '#10b981' : '#f59e0b'
+                    return (
+                      <div key={def.key} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '12px', textAlign: 'center' }}>
+                        <div style={{ fontSize: '22px', fontWeight: 800, color, lineHeight: 1, marginBottom: '4px' }}>{val}{def.unit}</div>
+                        <div style={{ fontSize: '11px', color: 'var(--text-muted)', lineHeight: 1.3 }}>{def.label}</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+
+              {/* Schema type badges */}
+              {Array.isArray(result.technical.schemaTypes) && result.technical.schemaTypes.length > 0 && (
+                <div style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Schema Types:</span>
+                  {result.technical.schemaTypes.map(t => (
+                    <span key={t} style={{ background: 'rgba(168,85,247,0.15)', color: '#a855f7', border: '1px solid rgba(168,85,247,0.3)', borderRadius: '12px', fontSize: '12px', fontWeight: 600, padding: '3px 10px' }}>{t}</span>
+                  ))}
+                </div>
+              )}
+
+              {/* Missing alt images warning */}
+              {Array.isArray(result.technical.missingAltImages) && result.technical.missingAltImages.length > 0 && (
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '8px', padding: '10px 14px', marginBottom: '12px' }}>
+                  <AlertTriangle size={14} color="#f59e0b" style={{ flexShrink: 0, marginTop: '1px' }} />
+                  <span style={{ fontSize: '13px', color: '#f59e0b' }}>
+                    {result.technical.missingAltImages.length} image{result.technical.missingAltImages.length > 1 ? 's' : ''} missing alt text:{' '}
+                    {result.technical.missingAltImages.join(', ')}
+                  </span>
+                </div>
+              )}
+
+              {/* JS rendering warning */}
+              {result.technical.isJsRendered && (
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '8px', padding: '10px 14px', marginBottom: '12px' }}>
+                  <XCircle size={14} color="#ef4444" style={{ flexShrink: 0, marginTop: '1px' }} />
+                  <span style={{ fontSize: '13px', color: '#ef4444' }}>This page appears to be JavaScript-rendered. AI crawlers may not see its full content — consider server-side rendering.</span>
+                </div>
+              )}
+
               {result.techRecs.length > 0 && (
                 <div style={{ paddingTop: '16px', borderTop: '1px solid var(--border-color)' }}>
                   <h4 style={{ margin: '0 0 10px', fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Technical Recommendations</h4>
