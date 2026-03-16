@@ -107,34 +107,53 @@ const TIME_PERIODS = [
   { value: 60, label: 'Last 60 Days' },
 ]
 
-const navItems = [
-  { icon: BookOpen, label: 'Learn About AI Readability', page: 'learn-ai-readability' },
-  { 
-    icon: LayoutDashboard, 
-    label: 'AI Readability Dashboard', 
-    page: 'dashboard', 
-    isSub: true,
-    subItems: [
-      { label: 'Performance', page: 'performance' },
-      { label: 'Pillar Breakdown', page: 'pillars' },
-      { label: 'Score History', page: 'categories' },
-      { label: 'Content Signals', page: 'signals' },
+const navSections = [
+  {
+    label: 'Analyze',
+    items: [
+      { icon: PanelRightOpen, label: 'Content Analyzer', page: 'gutenberg-sidebar' },
+      { icon: Globe, label: 'URL Scanner', page: 'url-scanner' },
     ]
   },
-  { icon: PanelRightOpen, label: 'Content Analyzer', page: 'gutenberg-sidebar' },
-  { icon: Globe, label: 'URL Scanner', page: 'url-scanner' },
-  { 
-    icon: HelpCircle, 
-    label: 'Documentation', 
-    page: 'docs', 
-    isSub: true,
-    subItems: [
-      { label: 'Getting Started', page: 'docs-getting-started' },
-      { label: 'Troubleshooting', page: 'docs-troubleshooting' },
-      { label: 'Improve Your Score', page: 'improve-score' },
+  {
+    label: 'Reports',
+    items: [
+      {
+        icon: LayoutDashboard,
+        label: 'Dashboard',
+        page: 'dashboard',
+        subItems: [
+          { label: 'Performance', page: 'performance' },
+          { label: 'Pillar Breakdown', page: 'pillars' },
+          { label: 'Score History', page: 'categories' },
+          { label: 'Content Signals', page: 'signals' },
+        ]
+      },
     ]
   },
-  { icon: Settings, label: 'Settings', page: 'settings', isSub: true },
+  {
+    label: 'Learn',
+    items: [
+      { icon: BookOpen, label: 'Learn AI Readability', page: 'learn-ai-readability' },
+      {
+        icon: HelpCircle,
+        label: 'Documentation',
+        page: 'docs',
+        subItems: [
+          { label: 'Getting Started', page: 'docs-getting-started' },
+          { label: 'Troubleshooting', page: 'docs-troubleshooting' },
+          { label: 'Improve Your Score', page: 'improve-score' },
+        ]
+      },
+    ]
+  },
+  {
+    label: 'Account',
+    items: [
+      { icon: Cloud, label: 'Upgrade', page: 'upgrade', isUpgrade: true },
+      { icon: Settings, label: 'Settings', page: 'settings' },
+    ]
+  },
 ]
 
 function Sidebar({ currentPage, setCurrentPage }) {
@@ -188,82 +207,76 @@ function Sidebar({ currentPage, setCurrentPage }) {
           }}>BETA</span>
         </a>
         
-        {navItems.map((item, index) => (
-          <div key={index}>
-            <a
-              href={`#${item.page}`}
-              onClick={(e) => { e.preventDefault(); setCurrentPage(item.page); }}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                padding: '8px 12px',
-                paddingLeft: item.isSub ? '20px' : '12px',
-                borderRadius: '6px',
-                color: currentPage === item.page ? 'var(--accent)' : 'var(--text-secondary)',
-                backgroundColor: currentPage === item.page ? 'rgba(34, 211, 238, 0.08)' : 'transparent',
-                textDecoration: 'none',
-                marginBottom: '2px',
-                transition: 'all 0.2s ease',
-                fontSize: '13px',
-                fontWeight: currentPage === item.page ? 500 : 400,
-                cursor: 'pointer',
-              }}
-            >
-              {!item.isSub && <item.icon size={16} />}
-              {item.label}
-            </a>
-            {item.subItems && (
-              <div style={{ marginLeft: '0', marginBottom: '4px' }}>
-                {item.subItems.map((subItem, subIndex) => (
-                  <a
-                    key={subIndex}
-                    href={`#${subItem.page}`}
-                    onClick={(e) => { e.preventDefault(); setCurrentPage(subItem.page); }}
-                    style={{
-                      display: 'block',
-                      padding: '6px 12px',
-                      paddingLeft: '36px',
-                      color: currentPage === subItem.page ? 'var(--accent)' : 'var(--text-muted)',
-                      textDecoration: 'none',
-                      fontSize: '12px',
-                      transition: 'color 0.2s ease',
-                      cursor: 'pointer',
-                    }}
-                    onMouseEnter={(e) => { if (currentPage !== subItem.page) e.currentTarget.style.color = 'var(--text-secondary)' }}
-                    onMouseLeave={(e) => { if (currentPage !== subItem.page) e.currentTarget.style.color = 'var(--text-muted)' }}
-                  >
-                    {subItem.label}
-                  </a>
-                ))}
+        {navSections.map((section, sectionIndex) => (
+          <div key={sectionIndex} style={{ marginBottom: '8px' }}>
+            <div style={{
+              padding: '6px 12px 3px',
+              fontSize: '10px',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.8px',
+              color: 'var(--text-muted)',
+              opacity: 0.55,
+            }}>
+              {section.label}
+            </div>
+            {section.items.map((item, index) => (
+              <div key={index}>
+                <a
+                  href={`#${item.page}`}
+                  onClick={(e) => { e.preventDefault(); setCurrentPage(item.page); }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    padding: '8px 12px',
+                    borderRadius: '6px',
+                    color: item.isUpgrade
+                      ? 'var(--accent)'
+                      : currentPage === item.page ? 'var(--accent)' : 'var(--text-secondary)',
+                    backgroundColor: item.isUpgrade
+                      ? 'rgba(34, 211, 238, 0.06)'
+                      : currentPage === item.page ? 'rgba(34, 211, 238, 0.08)' : 'transparent',
+                    textDecoration: 'none',
+                    marginBottom: '2px',
+                    transition: 'all 0.2s ease',
+                    fontSize: '13px',
+                    fontWeight: currentPage === item.page ? 500 : 400,
+                    cursor: 'pointer',
+                  }}
+                >
+                  {item.icon && <item.icon size={16} />}
+                  {item.label}
+                </a>
+                {item.subItems && (
+                  <div style={{ marginLeft: '0', marginBottom: '4px' }}>
+                    {item.subItems.map((subItem, subIndex) => (
+                      <a
+                        key={subIndex}
+                        href={`#${subItem.page}`}
+                        onClick={(e) => { e.preventDefault(); setCurrentPage(subItem.page); }}
+                        style={{
+                          display: 'block',
+                          padding: '6px 12px',
+                          paddingLeft: '36px',
+                          color: currentPage === subItem.page ? 'var(--accent)' : 'var(--text-muted)',
+                          textDecoration: 'none',
+                          fontSize: '12px',
+                          transition: 'color 0.2s ease',
+                          cursor: 'pointer',
+                        }}
+                        onMouseEnter={(e) => { if (currentPage !== subItem.page) e.currentTarget.style.color = 'var(--text-secondary)' }}
+                        onMouseLeave={(e) => { if (currentPage !== subItem.page) e.currentTarget.style.color = 'var(--text-muted)' }}
+                      >
+                        {subItem.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
+            ))}
           </div>
         ))}
-        
-        <div style={{ height: '1px', backgroundColor: 'var(--border-color)', margin: '12px 8px' }} />
-        
-        <a
-          href="#upgrade"
-          onClick={(e) => { e.preventDefault(); setCurrentPage('upgrade'); }}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            padding: '10px 12px',
-            borderRadius: '6px',
-            background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(168, 85, 247, 0.15))',
-            color: 'var(--accent)',
-            textDecoration: 'none',
-            fontSize: '13px',
-            fontWeight: 500,
-            cursor: 'pointer',
-          }}
-        >
-          <Cloud size={14} />
-          Upgrade Now
-        </a>
       </nav>
       
       <div style={{ padding: '12px', borderTop: '1px solid var(--border-color)' }}>

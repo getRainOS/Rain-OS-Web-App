@@ -35,6 +35,15 @@ The plugin adheres to WordPress plugin standards with a modular, class-based des
 
 ## Recent Updates
 
+### Nav Layout & Docs Overhaul (March 2026)
+- **Admin Menu Restructure**: Dashboard is now the top-level landing page (slug `rain-os-aeo`); menu order: Dashboard, Content Analyzer, URL Scanner, Score History, Pillar Breakdown, Content Signals, Learn AI Readability, Documentation, Upgrade, Settings
+- **Dashboard Slug Fix**: All template "Back to Dashboard" links updated from `page=rain-os-aeo-dashboard` to `page=rain-os-aeo` across 7 templates
+- **readme.txt v2.3.0**: Stable tag bumped to 2.3.0; four pillars listed with all 14 sub-scores; URL Scanner, Gutenberg Sidebar, PD Mute Toggle added as features; `== External Services ==` section (WP.org compliant); full 2.3.0 changelog and upgrade notice
+- **documentation.php**: Added `url-scanner` section with: what it does, 5-step how-to, all 9 technical signal definitions, results sections explained, URL Scanner vs Content Analyzer comparison
+- **learn-ai-readability.php**: Added URL Scanner card (use cases, what it returns, link) and Product Discoverability Mute Toggle card (what it is, when to mute vs keep active, link to settings)
+- **App.jsx Sidebar Restructure**: Replaced flat `navItems` array with `navSections` grouped structure; Sidebar renders uppercase section label dividers: ANALYZE (Content Analyzer, URL Scanner), REPORTS (Dashboard + sub-pages), LEARN (Learn AI Readability, Documentation + sub-pages), ACCOUNT (Upgrade, Settings)
+- **Package**: 166.50 KB, repackaged with all updated templates
+
 ### URL Scanner + v2.3.0 (March 2026)
 - **Version Bump**: Plugin version updated to 2.3.0 in rain-os-aeo-analyzer.php
 - **URL Scanner Admin Page**: `templates/url-scanner.php` — URL input with industry dropdown, results area with overall score, 4-pillar bars, technical HTML signals grid, and recommendations

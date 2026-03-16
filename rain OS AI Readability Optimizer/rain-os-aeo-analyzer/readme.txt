@@ -51,7 +51,7 @@ The URL Scanner lets you analyze any public URL without creating a WordPress pos
 * PHP 7.4 or higher
 * Rain OS API key (get yours at https://app.getrainos.com/#/login)
 
-= External Service =
+== External Services ==
 
 This plugin connects to the Rain OS API service (https://api.getrainos.com) to perform AI-powered content analysis. The service provides:
 

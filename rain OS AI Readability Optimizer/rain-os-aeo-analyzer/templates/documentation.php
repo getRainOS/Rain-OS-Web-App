@@ -8,6 +8,7 @@ $current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( 
 $sections = array(
     'getting-started'   => __( 'Getting Started', 'rain-os-aeo-analyzer' ),
     'three-pillars'     => __( 'The Four Pillars', 'rain-os-aeo-analyzer' ),
+    'url-scanner'       => __( 'URL Scanner', 'rain-os-aeo-analyzer' ),
     'content-analyzer'  => __( 'Gutenberg Sidebar', 'rain-os-aeo-analyzer' ),
     'quick-tools'       => __( 'Quick Tools', 'rain-os-aeo-analyzer' ),
     'troubleshooting'   => __( 'Troubleshooting', 'rain-os-aeo-analyzer' ),
@@ -24,7 +25,7 @@ $sections = array(
                 <span class="rain-os-badge"><?php esc_html_e( 'Documentation', 'rain-os-aeo-analyzer' ); ?></span>
             </div>
             <div class="rain-os-header-actions">
-                <a href="<?php echo esc_url( admin_url( 'admin.php?page=rain-os-aeo-dashboard' ) ); ?>" class="rain-os-btn rain-os-btn-secondary">
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=rain-os-aeo' ) ); ?>" class="rain-os-btn rain-os-btn-secondary">
                     <span class="dashicons dashicons-arrow-left-alt"></span>
                     <?php esc_html_e( 'Back to Dashboard', 'rain-os-aeo-analyzer' ); ?>
                 </a>
@@ -116,6 +117,110 @@ $sections = array(
                         <li><strong><?php esc_html_e( 'Answer Layer Quality', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'How well your content provides direct, extractable answers for AI systems', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'Freshness Signals', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Indicators that your content is current, updated, and time-relevant', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'Conversational Query Match', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'How well your content aligns with natural language and voice search queries', 'rain-os-aeo-analyzer' ); ?></li>
+                    </ul>
+                </div>
+            </div>
+
+            <?php elseif ( 'url-scanner' === $current_section ) : ?>
+            <div class="rain-os-docs-section">
+                <h1><?php esc_html_e( 'URL Scanner', 'rain-os-aeo-analyzer' ); ?></h1>
+                <p class="rain-os-docs-intro"><?php esc_html_e( 'The URL Scanner lets you analyze any publicly accessible web page for AEO readiness — without creating or editing a WordPress post. Enter a URL, run the scan, and receive a full four-pillar score plus a technical HTML signal audit.', 'rain-os-aeo-analyzer' ); ?></p>
+
+                <div class="rain-os-docs-card">
+                    <h2><?php esc_html_e( 'What the URL Scanner Does', 'rain-os-aeo-analyzer' ); ?></h2>
+                    <p><?php esc_html_e( 'The scanner fetches the target URL and evaluates it across two dimensions:', 'rain-os-aeo-analyzer' ); ?></p>
+                    <ul>
+                        <li><strong><?php esc_html_e( 'AEO Pillar Scores', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'The same four-pillar analysis (AI Readability, Digital Authority, Conversion Readiness, Product Discoverability) that you use for your own posts — applied to any public URL.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Technical HTML Signals', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'A set of 9 pass/fail checks that identify the presence or absence of critical technical elements affecting AI discoverability.', 'rain-os-aeo-analyzer' ); ?></li>
+                    </ul>
+                    <p><?php esc_html_e( 'Common use cases include auditing competitor pages, checking a landing page before publishing, or scanning any page on your own site that lives outside of WordPress.', 'rain-os-aeo-analyzer' ); ?></p>
+                </div>
+
+                <div class="rain-os-docs-card">
+                    <h2><?php esc_html_e( 'How to Use the URL Scanner', 'rain-os-aeo-analyzer' ); ?></h2>
+                    <ol class="rain-os-docs-steps">
+                        <li>
+                            <strong><?php esc_html_e( 'Go to Rain OS > URL Scanner', 'rain-os-aeo-analyzer' ); ?></strong>
+                            <p><?php printf( wp_kses( __( 'Navigate to <a href="%s">Rain OS &rsaquo; URL Scanner</a> in your WordPress admin sidebar.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array() ) ) ), esc_url( admin_url( 'admin.php?page=rain-os-aeo-url-scanner' ) ) ); ?></p>
+                        </li>
+                        <li>
+                            <strong><?php esc_html_e( 'Enter the URL', 'rain-os-aeo-analyzer' ); ?></strong>
+                            <p><?php esc_html_e( 'Paste the full URL you want to analyze (must start with http:// or https://). The target page must be publicly accessible — pages behind login screens or firewalls cannot be scanned.', 'rain-os-aeo-analyzer' ); ?></p>
+                        </li>
+                        <li>
+                            <strong><?php esc_html_e( 'Select an Industry (optional)', 'rain-os-aeo-analyzer' ); ?></strong>
+                            <p><?php esc_html_e( 'Choosing an industry helps the scoring engine weight the analysis for your specific context (e.g. e-commerce, SaaS, news, healthcare).', 'rain-os-aeo-analyzer' ); ?></p>
+                        </li>
+                        <li>
+                            <strong><?php esc_html_e( 'Click Scan URL', 'rain-os-aeo-analyzer' ); ?></strong>
+                            <p><?php esc_html_e( 'The scanner sends the URL to the Rain OS API, fetches and parses the page, then returns scores and signals within a few seconds.', 'rain-os-aeo-analyzer' ); ?></p>
+                        </li>
+                        <li>
+                            <strong><?php esc_html_e( 'Review Results', 'rain-os-aeo-analyzer' ); ?></strong>
+                            <p><?php esc_html_e( 'The results area shows your overall AEO score, four pillar scores with color-coded bars, the 9-signal technical audit, and a list of improvement recommendations.', 'rain-os-aeo-analyzer' ); ?></p>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="rain-os-docs-card">
+                    <h2><?php esc_html_e( 'Understanding the 9 Technical HTML Signals', 'rain-os-aeo-analyzer' ); ?></h2>
+                    <p><?php esc_html_e( 'Technical signals are binary pass/fail checks. Each one indicates whether a key structural element is present on the page.', 'rain-os-aeo-analyzer' ); ?></p>
+                    <ul>
+                        <li>
+                            <strong><?php esc_html_e( 'Schema Markup', 'rain-os-aeo-analyzer' ); ?></strong>
+                            <p><?php esc_html_e( 'Checks whether the page includes any structured data in JSON-LD, Microdata, or RDFa format. Schema markup helps AI and search engines understand what your content is about and can unlock rich results.', 'rain-os-aeo-analyzer' ); ?></p>
+                        </li>
+                        <li>
+                            <strong><?php esc_html_e( 'FAQ Schema', 'rain-os-aeo-analyzer' ); ?></strong>
+                            <p><?php esc_html_e( 'Checks for the presence of FAQPage or Question/Answer structured data. FAQ schema makes individual Q&A pairs directly extractable by AI answer engines.', 'rain-os-aeo-analyzer' ); ?></p>
+                        </li>
+                        <li>
+                            <strong><?php esc_html_e( 'Semantic HTML', 'rain-os-aeo-analyzer' ); ?></strong>
+                            <p><?php esc_html_e( 'Checks whether the page uses semantic HTML5 elements such as &lt;article&gt;, &lt;section&gt;, &lt;main&gt;, &lt;nav&gt;, and &lt;aside&gt;. These elements give AI systems strong contextual signals about content roles and structure.', 'rain-os-aeo-analyzer' ); ?></p>
+                        </li>
+                        <li>
+                            <strong><?php esc_html_e( 'Proper Heading Hierarchy', 'rain-os-aeo-analyzer' ); ?></strong>
+                            <p><?php esc_html_e( 'Verifies that the page contains at least one H1 tag and that headings follow a logical descending order (H1 → H2 → H3). Correct heading structure is one of the strongest signals for AI content parsing.', 'rain-os-aeo-analyzer' ); ?></p>
+                        </li>
+                        <li>
+                            <strong><?php esc_html_e( 'Meta Description', 'rain-os-aeo-analyzer' ); ?></strong>
+                            <p><?php esc_html_e( 'Checks for a &lt;meta name="description"&gt; tag. A descriptive meta description signals to AI systems what the page is about and is often used in snippet generation.', 'rain-os-aeo-analyzer' ); ?></p>
+                        </li>
+                        <li>
+                            <strong><?php esc_html_e( 'Canonical Tag', 'rain-os-aeo-analyzer' ); ?></strong>
+                            <p><?php esc_html_e( 'Checks for a &lt;link rel="canonical"&gt; tag. Canonical tags prevent duplicate content issues and ensure AI systems attribute authority to the correct URL.', 'rain-os-aeo-analyzer' ); ?></p>
+                        </li>
+                        <li>
+                            <strong><?php esc_html_e( 'Open Graph Tags', 'rain-os-aeo-analyzer' ); ?></strong>
+                            <p><?php esc_html_e( 'Checks for Open Graph meta tags (og:title, og:description, og:image). These tags improve how your content is represented when shared or cited by AI systems and social platforms.', 'rain-os-aeo-analyzer' ); ?></p>
+                        </li>
+                        <li>
+                            <strong><?php esc_html_e( 'llms.txt', 'rain-os-aeo-analyzer' ); ?></strong>
+                            <p><?php esc_html_e( 'Checks whether the site has a /llms.txt file at its root. This emerging standard allows site owners to provide AI crawlers with a structured, plain-language summary of site content and permissions — similar to robots.txt but designed for large language models.', 'rain-os-aeo-analyzer' ); ?></p>
+                        </li>
+                        <li>
+                            <strong><?php esc_html_e( 'JS Rendering Risk', 'rain-os-aeo-analyzer' ); ?></strong>
+                            <p><?php esc_html_e( 'Flags pages that appear to require JavaScript execution to render meaningful content. Heavily JS-dependent pages (e.g. single-page apps with client-side rendering) may not be fully parsed by AI crawlers that do not execute JavaScript. A pass here means the page delivers meaningful HTML without JS; a fail indicates a rendering risk.', 'rain-os-aeo-analyzer' ); ?></p>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="rain-os-docs-card">
+                    <h2><?php esc_html_e( 'Understanding the Results Sections', 'rain-os-aeo-analyzer' ); ?></h2>
+                    <ul>
+                        <li><strong><?php esc_html_e( 'Overall AEO Score', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'A composite score (0–100) averaging the four pillar scores. Higher is better. Scores above 70 indicate strong AI readiness; below 40 indicates significant improvement opportunities.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Four Pillar Bars', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Color-coded bars showing the individual score for each pillar. Cyan = AI Readability, Green = Digital Authority, Purple = Conversion Readiness, Orange = Product Discoverability.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Technical Signals Grid', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'A 9-item grid showing pass (green check) or fail (red X) for each technical signal. Failures are the quickest wins — they can usually be fixed with a small technical change.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Recommendations', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'A prioritized list of improvement actions generated by the Rain OS API, ordered from highest to lowest expected score impact.', 'rain-os-aeo-analyzer' ); ?></li>
+                    </ul>
+                </div>
+
+                <div class="rain-os-docs-card">
+                    <h2><?php esc_html_e( 'URL Scanner vs Content Analyzer', 'rain-os-aeo-analyzer' ); ?></h2>
+                    <p><?php esc_html_e( 'Both tools provide AEO scoring, but they serve different workflows:', 'rain-os-aeo-analyzer' ); ?></p>
+                    <ul>
+                        <li><strong><?php esc_html_e( 'Content Analyzer / Gutenberg Sidebar', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Best for analyzing and improving your own WordPress posts and pages during editing. Results are saved to Score History.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'URL Scanner', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Best for auditing competitor pages, external landing pages, or any public URL outside of WordPress. Results are not saved to Score History.', 'rain-os-aeo-analyzer' ); ?></li>
                     </ul>
                 </div>
             </div>

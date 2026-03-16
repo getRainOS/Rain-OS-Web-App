@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <span class="rain-os-badge"><?php esc_html_e( 'URL Scanner', 'rain-os-aeo-analyzer' ); ?></span>
             </div>
             <div class="rain-os-header-actions">
-                <a href="<?php echo esc_url( admin_url( 'admin.php?page=rain-os-aeo-dashboard' ) ); ?>" class="rain-os-btn rain-os-btn-secondary">
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=rain-os-aeo' ) ); ?>" class="rain-os-btn rain-os-btn-secondary">
                     <span class="dashicons dashicons-arrow-left-alt"></span>
                     <?php esc_html_e( 'Back to Dashboard', 'rain-os-aeo-analyzer' ); ?>
                 </a>

@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <span class="rain-os-badge"><?php esc_html_e( 'AI Readability', 'rain-os-aeo-analyzer' ); ?></span>
             </div>
             <div class="rain-os-header-actions">
-                <a href="<?php echo esc_url( admin_url( 'admin.php?page=rain-os-aeo-dashboard' ) ); ?>" class="rain-os-btn rain-os-btn-secondary">
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=rain-os-aeo' ) ); ?>" class="rain-os-btn rain-os-btn-secondary">
                     <span class="dashicons dashicons-arrow-left-alt"></span>
                     <?php esc_html_e( 'Go to Dashboard', 'rain-os-aeo-analyzer' ); ?>
                 </a>
@@ -123,6 +123,38 @@ if ( ! defined( 'ABSPATH' ) ) {
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="rain-os-learn-card rain-os-learn-card-full">
+                <h3><?php esc_html_e( 'URL Scanner: Analyze Any Public Page', 'rain-os-aeo-analyzer' ); ?></h3>
+                <p><?php esc_html_e( 'The URL Scanner lets you run a full AEO analysis on any publicly accessible web page — no WordPress post required. This is useful for:', 'rain-os-aeo-analyzer' ); ?></p>
+                <ul>
+                    <li><?php esc_html_e( 'Auditing competitor pages to see where they score across the four pillars', 'rain-os-aeo-analyzer' ); ?></li>
+                    <li><?php esc_html_e( 'Checking a landing page or microsite that lives outside of WordPress', 'rain-os-aeo-analyzer' ); ?></li>
+                    <li><?php esc_html_e( 'Getting a quick snapshot of a page before writing a competing article', 'rain-os-aeo-analyzer' ); ?></li>
+                </ul>
+                <p><?php esc_html_e( 'The scanner returns four pillar scores, 9 technical HTML signal checks (Schema Markup, FAQ Schema, Semantic HTML, Heading Hierarchy, Meta Description, Canonical Tag, Open Graph Tags, llms.txt, JS Rendering risk), and a prioritized list of recommendations.', 'rain-os-aeo-analyzer' ); ?></p>
+                <p><?php printf( wp_kses( __( 'Find it at <a href="%s">Rain OS &rsaquo; URL Scanner</a>.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array() ) ) ), esc_url( admin_url( 'admin.php?page=rain-os-aeo-url-scanner' ) ) ); ?></p>
+            </div>
+
+            <div class="rain-os-learn-card rain-os-learn-card-full">
+                <h3><?php esc_html_e( 'Product Discoverability Mute Toggle', 'rain-os-aeo-analyzer' ); ?></h3>
+                <p><?php esc_html_e( 'Product Discoverability is the fourth analysis pillar, measuring how easily AI search and recommendation systems can surface your product or service. It focuses on Schema Completeness, Answer Layer Quality, Freshness Signals, and Conversational Query Match.', 'rain-os-aeo-analyzer' ); ?></p>
+                <p><?php esc_html_e( 'For some content types — such as editorial articles, news posts, or informational guides — product-focused signals are not relevant. The Mute Toggle lets you exclude this pillar from your overall score so it does not drag down the average for non-product content.', 'rain-os-aeo-analyzer' ); ?></p>
+                <div class="rain-os-concept-callout" style="margin: 12px 0;">
+                    <p class="rain-os-callout-quote"><?php esc_html_e( 'When muted, your overall score is calculated as an average of three pillars instead of four. The pillar itself is visually dimmed across all dashboards and score displays.', 'rain-os-aeo-analyzer' ); ?></p>
+                </div>
+                <p><?php esc_html_e( 'When to mute it:', 'rain-os-aeo-analyzer' ); ?></p>
+                <ul>
+                    <li><?php esc_html_e( 'You run a blog, magazine, or news site with no products or services', 'rain-os-aeo-analyzer' ); ?></li>
+                    <li><?php esc_html_e( 'Your content is purely informational and you want scoring focused on clarity and authority', 'rain-os-aeo-analyzer' ); ?></li>
+                </ul>
+                <p><?php esc_html_e( 'When to keep it active:', 'rain-os-aeo-analyzer' ); ?></p>
+                <ul>
+                    <li><?php esc_html_e( 'You sell products or services and want full visibility into how well AI systems can surface them', 'rain-os-aeo-analyzer' ); ?></li>
+                    <li><?php esc_html_e( 'You run an e-commerce site, SaaS landing page, or any content where product discoverability matters', 'rain-os-aeo-analyzer' ); ?></li>
+                </ul>
+                <p><?php printf( wp_kses( __( 'The toggle can be found in <a href="%s">Rain OS &rsaquo; Settings</a> under Analysis Preferences.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array() ) ) ), esc_url( admin_url( 'admin.php?page=rain-os-aeo-settings' ) ) ); ?></p>
             </div>
 
             <div class="rain-os-learn-card rain-os-learn-card-full rain-os-learn-card-highlight">
