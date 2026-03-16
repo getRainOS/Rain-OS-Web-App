@@ -163,7 +163,7 @@
             html += '</div>';
             html += '<div class="rain-os-card-body">';
 
-            var signalDefs = [
+            var boolSignalDefs = [
                 { key: 'hasSchemaMarkup',           label: 'Schema Markup',          type: 'positive' },
                 { key: 'hasFaqSchema',               label: 'FAQ Schema',             type: 'positive' },
                 { key: 'hasSemanticHtml',            label: 'Semantic HTML',          type: 'positive' },
@@ -171,13 +171,16 @@
                 { key: 'hasMetaDescription',         label: 'Meta Description',       type: 'positive' },
                 { key: 'hasCanonicalTag',            label: 'Canonical Tag',          type: 'positive' },
                 { key: 'hasOpenGraphTags',           label: 'Open Graph Tags',        type: 'positive' },
+                { key: 'hasTwitterCardTags',         label: 'Twitter Card Tags',      type: 'positive' },
                 { key: 'hasLlmsTxt',                label: 'llms.txt Present',       type: 'positive' },
+                { key: 'hasRobotsMeta',              label: 'Robots Meta Tag',        type: 'positive' },
+                { key: 'hasViewportMeta',            label: 'Viewport Meta Tag',      type: 'positive' },
                 { key: 'isJsRendered',               label: 'JS Rendering (AI Risk)', type: 'negative' },
             ];
 
             html += '<div class="rain-os-signals-grid">';
-            signalDefs.forEach(function(def) {
-                if (!(def.key in signals)) return;
+            boolSignalDefs.forEach(function(def) {
+                if (!(def.key in signals) || typeof signals[def.key] !== 'boolean') return;
                 var val = signals[def.key];
                 var isGood = def.type === 'positive' ? !!val : !val;
                 var icon = isGood ? '✓' : '✗';
@@ -189,9 +192,53 @@
             });
             html += '</div>';
 
-            if (signals.jsRenderingWarning) {
-                html += '<div class="rain-os-alert rain-os-alert-warning">' + RainOSUrlScanner.escHtml(signals.jsRenderingWarning) + '</div>';
+            var numericDefs = [
+                { key: 'wordCount',            label: 'Word Count',               unit: ' words',  good: 300  },
+                { key: 'headingCount',          label: 'Headings',                 unit: '',        good: 2    },
+                { key: 'internalLinkCount',     label: 'Internal Links',           unit: '',        good: 1    },
+                { key: 'externalLinkCount',     label: 'External Links',           unit: '',        good: 1    },
+                { key: 'imageCount',            label: 'Images',                   unit: '',        good: 1    },
+                { key: 'imageAltTextCount',     label: 'Images with Alt Text',     unit: '',        good: 1    },
+                { key: 'titleLength',           label: 'Title Length',             unit: ' chars',  good: 30   },
+                { key: 'metaDescriptionLength', label: 'Meta Desc Length',         unit: ' chars',  good: 50   },
+                { key: 'textToHtmlRatio',       label: 'Text-to-HTML Ratio',       unit: '%',       good: 15   },
+            ];
+
+            var hasNumeric = numericDefs.some(function(d) { return d.key in signals && typeof signals[d.key] === 'number'; });
+            if (hasNumeric) {
+                html += '<div class="rain-os-signals-counters">';
+                numericDefs.forEach(function(def) {
+                    if (!(def.key in signals) || typeof signals[def.key] !== 'number') return;
+                    var val   = signals[def.key];
+                    var isGood = val >= def.good;
+                    var color  = isGood ? '#10b981' : '#f59e0b';
+                    html += '<div class="rain-os-signal-counter">';
+                    html += '<div class="rain-os-counter-value" style="color:' + color + '">' + val + def.unit + '</div>';
+                    html += '<div class="rain-os-counter-label">' + RainOSUrlScanner.escHtml(def.label) + '</div>';
+                    html += '</div>';
+                });
+                html += '</div>';
             }
+
+            if (Array.isArray(signals.schemaTypes) && signals.schemaTypes.length > 0) {
+                html += '<div class="rain-os-signal-badges-wrap">';
+                html += '<span class="rain-os-signal-badge-label">Schema Types:</span>';
+                signals.schemaTypes.forEach(function(t) {
+                    html += '<span class="rain-os-signal-badge">' + RainOSUrlScanner.escHtml(t) + '</span>';
+                });
+                html += '</div>';
+            }
+
+            if (Array.isArray(signals.missingAltImages) && signals.missingAltImages.length > 0) {
+                html += '<div class="rain-os-alert rain-os-alert-warning">';
+                html += signals.missingAltImages.length + ' image(s) missing alt text.';
+                html += '</div>';
+            }
+
+            var warnings = [signals.jsRenderingWarning, signals.pageLoadWarning].filter(Boolean);
+            warnings.forEach(function(w) {
+                html += '<div class="rain-os-alert rain-os-alert-warning">' + RainOSUrlScanner.escHtml(w) + '</div>';
+            });
 
             if (techRecs && techRecs.length > 0) {
                 html += '<div class="rain-os-tech-recs">';

@@ -65,6 +65,33 @@ class Rain_OS_Assets {
             )
         );
 
+        // Upgrade & Settings — Stripe checkout / portal / key regen
+        if ( strpos( $hook, 'rain-os-aeo-upgrade' ) !== false || strpos( $hook, 'rain-os-aeo-settings' ) !== false ) {
+            wp_enqueue_script(
+                'rain-os-upgrade',
+                RAIN_OS_AEO_PLUGIN_URL . 'assets/js/upgrade.js',
+                array( 'jquery' ),
+                RAIN_OS_AEO_VERSION,
+                true
+            );
+
+            wp_localize_script(
+                'rain-os-upgrade',
+                'rainOsUpgrade',
+                array(
+                    'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+                    'nonce'   => wp_create_nonce( 'rain_os_aeo_nonce' ),
+                    'i18n'    => array(
+                        'redirecting'  => __( 'Redirecting to checkout…', 'rain-os-aeo-analyzer' ),
+                        'opening'      => __( 'Opening billing portal…', 'rain-os-aeo-analyzer' ),
+                        'regenerating' => __( 'Regenerating key…', 'rain-os-aeo-analyzer' ),
+                        'regenConfirm' => __( 'Regenerate your API key? Your current key will stop working immediately.', 'rain-os-aeo-analyzer' ),
+                        'error'        => __( 'An error occurred. Please try again.', 'rain-os-aeo-analyzer' ),
+                    ),
+                )
+            );
+        }
+
         // URL Scanner assets — only on the URL scanner page
         if ( strpos( $hook, 'rain-os-aeo-url-scanner' ) !== false ) {
             wp_enqueue_style(

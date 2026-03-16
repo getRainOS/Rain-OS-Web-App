@@ -54,10 +54,12 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'Conversational Query Match: Voice search alignment', 'rain-os-aeo-analyzer' ); ?></li>
                 </ul>
 
-                <a href="https://app.getrainos.com/#/login" target="_blank" rel="noopener noreferrer" class="rain-os-btn rain-os-btn-primary rain-os-btn-full">
+                <button type="button"
+                        class="rain-os-btn rain-os-btn-primary rain-os-btn-full rain-os-checkout-btn"
+                        data-price-id="price_1SeCJH3NMjs4uYdgpi0xB0XN">
                     <span class="dashicons dashicons-cloud"></span>
                     <?php esc_html_e( 'Upgrade to Business', 'rain-os-aeo-analyzer' ); ?>
-                </a>
+                </button>
             </div>
 
             <div class="rain-os-pricing-card">
@@ -74,11 +76,15 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <li><span class="rain-os-check">✓</span> <?php esc_html_e( 'Priority e-mail Support', 'rain-os-aeo-analyzer' ); ?></li>
                 </ul>
 
-                <a href="https://app.getrainos.com/#/login" target="_blank" rel="noopener noreferrer" class="rain-os-btn rain-os-btn-primary rain-os-btn-full">
+                <button type="button"
+                        class="rain-os-btn rain-os-btn-primary rain-os-btn-full rain-os-checkout-btn"
+                        data-price-id="price_1SeCKM3NMjs4uYdgcBRhgIhD">
                     <span class="dashicons dashicons-star-filled"></span>
                     <?php esc_html_e( 'Upgrade to Pro', 'rain-os-aeo-analyzer' ); ?>
-                </a>
+                </button>
             </div>
         </div>
+
+        <div id="rain-os-checkout-message" class="rain-os-connection-status" style="display:none; text-align:center; margin-top:16px;"></div>
     </div>
 </div>

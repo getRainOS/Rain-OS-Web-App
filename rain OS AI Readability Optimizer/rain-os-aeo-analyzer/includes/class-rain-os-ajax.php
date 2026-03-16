@@ -28,6 +28,9 @@ class Rain_OS_Ajax {
         add_action( 'wp_ajax_rain_os_check_ai_backend', array( $this, 'check_ai_backend' ) );
         add_action( 'wp_ajax_rain_os_get_ai_readiness_scores', array( $this, 'get_ai_readiness_scores' ) );
         add_action( 'wp_ajax_rain_os_normalize_content', array( $this, 'normalize_content' ) );
+        add_action( 'wp_ajax_rain_os_create_checkout_session', array( $this, 'create_checkout_session' ) );
+        add_action( 'wp_ajax_rain_os_create_portal_session', array( $this, 'create_portal_session' ) );
+        add_action( 'wp_ajax_rain_os_regenerate_api_key', array( $this, 'regenerate_api_key' ) );
     }
 
     private function verify_nonce() {
@@ -434,9 +437,142 @@ class Rain_OS_Ajax {
 
         $usage_info = $this->api_client->get_last_usage_info();
 
+        $text_result = $this->extract_quick_tool_result( $tool, $result );
+
         wp_send_json_success( array(
-            'result' => $result,
+            'result' => $text_result,
+            'raw'    => $result,
             'usage'  => $usage_info,
+        ) );
+    }
+
+    private function extract_quick_tool_result( $tool, $data ) {
+        if ( ! is_array( $data ) ) {
+            return (string) $data;
+        }
+
+        switch ( $tool ) {
+            case 'title_suggestion':
+                if ( ! empty( $data['titles'] ) && is_array( $data['titles'] ) ) {
+                    $lines = array();
+                    foreach ( $data['titles'] as $i => $t ) {
+                        $text  = is_array( $t ) ? ( $t['text'] ?? '' ) : (string) $t;
+                        $score = is_array( $t ) ? ( ' [score: ' . ( $t['score'] ?? '' ) . ']' ) : '';
+                        $lines[] = ( $i + 1 ) . '. ' . $text . $score;
+                    }
+                    return implode( "\n", $lines );
+                }
+                if ( ! empty( $data['recommendations'] ) && is_array( $data['recommendations'] ) ) {
+                    $titles = array_filter( $data['recommendations'], function( $r ) {
+                        return isset( $r['pillar'] ) && $r['pillar'] === 'ai_readability';
+                    } );
+                    if ( ! empty( $titles ) ) {
+                        return implode( "\n", array_column( $titles, 'description' ) );
+                    }
+                    return implode( "\n", array_column( array_slice( $data['recommendations'], 0, 5 ), 'description' ) );
+                }
+                break;
+
+            case 'meta_description':
+                if ( ! empty( $data['description'] ) )      return (string) $data['description'];
+                if ( ! empty( $data['meta_description'] ) ) return (string) $data['meta_description'];
+                if ( ! empty( $data['recommendations'] ) ) {
+                    $first = reset( $data['recommendations'] );
+                    return is_array( $first ) ? ( $first['description'] ?? '' ) : (string) $first;
+                }
+                break;
+
+            case 'summarize':
+                if ( ! empty( $data['summary'] ) )  return (string) $data['summary'];
+                if ( ! empty( $data['summaries'] ) ) return implode( ' ', (array) $data['summaries'] );
+                break;
+
+            case 'rewrite':
+                if ( ! empty( $data['rewritten'] ) )  return (string) $data['rewritten'];
+                if ( ! empty( $data['rewrite'] ) )     return (string) $data['rewrite'];
+                if ( ! empty( $data['ai_readability_detail']['answerFirstFormatting'] ) ) {
+                    return 'Tip: Answer-first formatting score is ' . $data['ai_readability_detail']['answerFirstFormatting'] . '/100. Lead with the direct answer before supporting details.';
+                }
+                break;
+        }
+
+        foreach ( array( 'text', 'result', 'content', 'output' ) as $k ) {
+            if ( ! empty( $data[ $k ] ) && is_string( $data[ $k ] ) ) {
+                return $data[ $k ];
+            }
+        }
+
+        return __( 'Action completed. Check your recommendations for detailed suggestions.', 'rain-os-aeo-analyzer' );
+    }
+
+    public function create_checkout_session() {
+        $this->verify_nonce();
+        $this->check_capability( 'manage_options' );
+
+        $price_id   = isset( $_POST['price_id'] ) ? sanitize_text_field( wp_unslash( $_POST['price_id'] ) ) : '';
+        $cancel_url = admin_url( 'admin.php?page=rain-os-aeo-upgrade' );
+        $success_url = admin_url( 'admin.php?page=rain-os-aeo-upgrade&checkout=success' );
+
+        if ( empty( $price_id ) ) {
+            wp_send_json_error( array( 'message' => __( 'Price ID is required.', 'rain-os-aeo-analyzer' ) ) );
+        }
+
+        $result = $this->api_client->create_checkout_session( $price_id, $success_url, $cancel_url );
+
+        if ( is_wp_error( $result ) ) {
+            wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+        }
+
+        $url = isset( $result['url'] ) ? $result['url'] : ( isset( $result['checkoutUrl'] ) ? $result['checkoutUrl'] : '' );
+
+        if ( empty( $url ) ) {
+            wp_send_json_error( array( 'message' => __( 'No checkout URL returned. Please try again.', 'rain-os-aeo-analyzer' ) ) );
+        }
+
+        wp_send_json_success( array( 'url' => esc_url_raw( $url ) ) );
+    }
+
+    public function create_portal_session() {
+        $this->verify_nonce();
+        $this->check_capability( 'manage_options' );
+
+        $return_url = admin_url( 'admin.php?page=rain-os-aeo-settings' );
+        $result     = $this->api_client->create_portal_session( $return_url );
+
+        if ( is_wp_error( $result ) ) {
+            wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+        }
+
+        $url = isset( $result['url'] ) ? $result['url'] : ( isset( $result['portalUrl'] ) ? $result['portalUrl'] : '' );
+
+        if ( empty( $url ) ) {
+            wp_send_json_error( array( 'message' => __( 'No billing portal URL returned. Please try again.', 'rain-os-aeo-analyzer' ) ) );
+        }
+
+        wp_send_json_success( array( 'url' => esc_url_raw( $url ) ) );
+    }
+
+    public function regenerate_api_key() {
+        $this->verify_nonce();
+        $this->check_capability( 'manage_options' );
+
+        $result = $this->api_client->regenerate_api_key();
+
+        if ( is_wp_error( $result ) ) {
+            wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+        }
+
+        $new_key = isset( $result['apiKey'] ) ? $result['apiKey'] : ( isset( $result['api_key'] ) ? $result['api_key'] : '' );
+
+        if ( empty( $new_key ) ) {
+            wp_send_json_error( array( 'message' => __( 'No new API key returned. Please try again.', 'rain-os-aeo-analyzer' ) ) );
+        }
+
+        update_option( 'rain_os_api_key', sanitize_text_field( $new_key ) );
+
+        wp_send_json_success( array(
+            'api_key' => $new_key,
+            'message' => __( 'API key regenerated successfully.', 'rain-os-aeo-analyzer' ),
         ) );
     }
 

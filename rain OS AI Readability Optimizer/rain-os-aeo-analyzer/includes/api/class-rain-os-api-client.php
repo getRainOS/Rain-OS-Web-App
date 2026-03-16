@@ -214,6 +214,34 @@ class Rain_OS_API_Client {
         return 'Pro';
     }
 
+    public function create_checkout_session( $price_id, $success_url, $cancel_url ) {
+        return $this->make_request(
+            'stripe/create-checkout-session',
+            'POST',
+            array(
+                'priceId'    => $price_id,
+                'successUrl' => $success_url,
+                'cancelUrl'  => $cancel_url,
+            )
+        );
+    }
+
+    public function create_portal_session( $return_url ) {
+        return $this->make_request(
+            'stripe/create-portal-session',
+            'POST',
+            array( 'returnUrl' => $return_url )
+        );
+    }
+
+    public function regenerate_api_key() {
+        return $this->make_request( 'users/me/regenerate-key', 'POST' );
+    }
+
+    public function check_capabilities() {
+        return $this->make_request( 'capabilities', 'GET' );
+    }
+
     public function quick_tool( $tool, $content, $options = array() ) {
         switch ( $tool ) {
             case 'title_suggestion':

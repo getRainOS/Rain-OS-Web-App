@@ -63,6 +63,10 @@ $pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
                                         <span class="dashicons dashicons-update"></span>
                                         <?php esc_html_e( 'Test Connection', 'rain-os-aeo-analyzer' ); ?>
                                     </button>
+                                    <button type="button" class="rain-os-btn rain-os-btn-secondary" id="rain-os-regen-key">
+                                        <span class="dashicons dashicons-randomize"></span>
+                                        <?php esc_html_e( 'Regenerate Key', 'rain-os-aeo-analyzer' ); ?>
+                                    </button>
                                 </div>
                                 <p class="rain-os-form-help">
                                     <?php 
@@ -323,8 +327,13 @@ $pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
                             <div class="rain-os-usage-bar">
                                 <div class="rain-os-usage-fill" style="width: <?php echo esc_attr( min( 100, ( $subscription['usage_count'] / max( 1, $subscription['usage_limit'] ) ) * 100 ) ); ?>%;"></div>
                             </div>
-                            <?php if ( ! $subscription['is_pro'] ) : ?>
-                            <a href="https://app.getrainos.com/#/login" target="_blank" class="rain-os-btn rain-os-btn-primary rain-os-btn-full">
+                            <?php if ( $subscription['is_pro'] ) : ?>
+                            <button type="button" id="rain-os-portal-btn" class="rain-os-btn rain-os-btn-secondary rain-os-btn-full">
+                                <span class="dashicons dashicons-admin-users"></span>
+                                <?php esc_html_e( 'Manage Billing', 'rain-os-aeo-analyzer' ); ?>
+                            </button>
+                            <?php else : ?>
+                            <a href="<?php echo esc_url( admin_url( 'admin.php?page=rain-os-aeo-upgrade' ) ); ?>" class="rain-os-btn rain-os-btn-primary rain-os-btn-full">
                                 <?php esc_html_e( 'Upgrade Plan', 'rain-os-aeo-analyzer' ); ?>
                             </a>
                             <?php endif; ?>

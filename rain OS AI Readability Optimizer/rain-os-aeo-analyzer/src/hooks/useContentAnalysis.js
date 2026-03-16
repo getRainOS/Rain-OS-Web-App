@@ -65,7 +65,16 @@ export const useContentAnalysis = (postId, title, content) => {
               },
             } : {}),
           },
-          subScores: response.data.sub_scores || {},
+          subScores: {
+            ...(response.data.sub_scores || {}),
+            ...(response.data.phase2_sub_scores || {}),
+          },
+          aiReadabilityDetail:          response.data.ai_readability_detail || null,
+          digitalAuthorityDetail:       response.data.digital_authority_detail || null,
+          conversionReadinessDetail:    response.data.conversion_readiness_detail || null,
+          productDiscoverabilityDetail: response.data.product_discoverability_detail || null,
+          authorship:      response.data.authorship || null,
+          keywords:        response.data.keywords || [],
           recommendations: response.data.recommendations || [],
         });
 
