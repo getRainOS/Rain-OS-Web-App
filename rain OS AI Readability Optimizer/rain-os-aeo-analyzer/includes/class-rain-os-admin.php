@@ -24,26 +24,17 @@ class Rain_OS_Admin {
             __( 'Rain OS', 'rain-os-aeo-analyzer' ),
             'edit_posts',
             'rain-os-aeo',
-            array( $this, 'render_learn_page' ),
+            array( $this, 'render_admin_page' ),
             'data:image/svg+xml;base64,' . base64_encode( $this->get_menu_icon() ),
             30
         );
 
         add_submenu_page(
             'rain-os-aeo',
-            __( 'Learn About AI Readability', 'rain-os-aeo-analyzer' ),
-            __( 'Learn AI Readability', 'rain-os-aeo-analyzer' ),
+            __( 'Dashboard', 'rain-os-aeo-analyzer' ),
+            __( 'Dashboard', 'rain-os-aeo-analyzer' ),
             'edit_posts',
-            'rain-os-aeo-learn',
-            array( $this, 'render_learn_page' )
-        );
-
-        add_submenu_page(
             'rain-os-aeo',
-            __( 'Dashboard', 'rain-os-aeo-analyzer' ),
-            __( 'Dashboard', 'rain-os-aeo-analyzer' ),
-            'edit_posts',
-            'rain-os-aeo-dashboard',
             array( $this, 'render_admin_page' )
         );
 
@@ -90,6 +81,15 @@ class Rain_OS_Admin {
             'edit_posts',
             'rain-os-aeo-signals',
             array( $this, 'render_signals_page' )
+        );
+
+        add_submenu_page(
+            'rain-os-aeo',
+            __( 'Learn AI Readability', 'rain-os-aeo-analyzer' ),
+            __( 'Learn AI Readability', 'rain-os-aeo-analyzer' ),
+            'edit_posts',
+            'rain-os-aeo-learn',
+            array( $this, 'render_learn_page' )
         );
 
         add_submenu_page(
