@@ -35,6 +35,17 @@ The plugin adheres to WordPress plugin standards with a modular, class-based des
 
 ## Recent Updates
 
+### URL Scanner + v2.3.0 (March 2026)
+- **Version Bump**: Plugin version updated to 2.3.0 in rain-os-aeo-analyzer.php
+- **URL Scanner Admin Page**: `templates/url-scanner.php` — URL input with industry dropdown, results area with overall score, 4-pillar bars, technical HTML signals grid, and recommendations
+- **URL Scanner JS**: `assets/js/url-scanner.js` — AJAX handler using `rainOsScanner` localized object, form validation, loading states, HTML escaping; displays technical signals (hasSchemaMarkup, hasFaqSchema, hasSemanticHtml, hasProperHeadingHierarchy, hasMetaDescription, hasCanonicalTag, hasOpenGraphTags, hasLlmsTxt, isJsRendered)
+- **URL Scanner CSS**: `assets/css/url-scanner.css` — glassmorphism dark theme, 4-pillar colored bars, pass/fail signal grid, responsive layout
+- **Admin Menu**: `URL Scanner` submenu added in class-rain-os-admin.php between Content Analyzer and Score History; `render_url_scanner_page()` method added
+- **Asset Enqueueing**: class-rain-os-assets.php enqueues url-scanner.js + url-scanner.css only on the URL scanner page; localizes `rainOsScanner` object with ajaxUrl, nonce, i18n strings
+- **avg_product_discoverability**: `get_average_scores()` in class-rain-os-admin.php now includes AVG(product_discoverability) in SQL query
+- **Dashboard Preview**: `UrlScannerPage` React component added to App.jsx with interactive mock scan (1.8s loading simulation), 4-pillar score display, 9-signal technical grid with pass/fail icons, tech recommendations, and recommendations list; `Globe` nav item added to sidebar; `url-scanner` case added to renderPage router
+- **Package**: 162.17 KB, 46 files, webpack compiled successfully (0 errors)
+
 ### Backend Sync & 4-Pillar Completion (February 2026)
 - **Gutenberg Sidebar React Rebuild**: useContentAnalysis.js includes productDiscoverability pillar (#f97316); MetricsTab.js updated with backend-matching sub-category names across all 4 pillars (14 total sub-scores); PillarCards.js color unified to #f97316
 - **Sub-Category Names (Backend-Synced)**: P1: Semantic Clarity, Readability Score, Logical Structure, AEO Alignment; P2: Entity Recognition, Citation Readiness, Descriptive Metadata; P3: Schema Extraction, QA-Format Detection, Metadata Audit; P4: Schema Completeness, Answer Layer Quality, Freshness Signals, Conversational Query Match

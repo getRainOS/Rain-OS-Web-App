@@ -11,7 +11,8 @@ import {
   Search, Bell, Plus, TrendingUp, Target, Zap,
   ChevronRight, BookOpen, Mail, Key, Sliders, Shield, ExternalLink,
   Microscope, ShieldCheck, RefreshCw, Wand2, Fingerprint, History,
-  PanelRightClose, PanelRightOpen, Eye, EyeOff, Save, Send, Cloud, CheckSquare, Sparkles
+  PanelRightClose, PanelRightOpen, Eye, EyeOff, Save, Send, Cloud, CheckSquare, Sparkles,
+  Globe, AlertCircle, CheckCircle2, XCircle, Info, Link2
 } from 'lucide-react'
 import './index.css'
 
@@ -121,6 +122,7 @@ const navItems = [
     ]
   },
   { icon: PanelRightOpen, label: 'Content Analyzer', page: 'gutenberg-sidebar' },
+  { icon: Globe, label: 'URL Scanner', page: 'url-scanner' },
   { 
     icon: HelpCircle, 
     label: 'Documentation', 
@@ -3806,6 +3808,250 @@ function PDMuteToggle({ pdMuted, setPdMuted }) {
   )
 }
 
+const MOCK_URL_SCAN = {
+  scannedUrl: 'https://example.com/product-overview',
+  overall: 76,
+  pillars: { ai_readability: 82, digital_authority: 74, conversion_readiness: 79, product_discoverability: 68 },
+  technical: {
+    hasSchemaMarkup: true,
+    hasFaqSchema: false,
+    hasSemanticHtml: true,
+    hasProperHeadingHierarchy: true,
+    hasMetaDescription: true,
+    hasCanonicalTag: true,
+    hasOpenGraphTags: true,
+    hasLlmsTxt: false,
+    isJsRendered: false,
+  },
+  techRecs: [
+    'Add FAQ schema markup to help AI engines extract structured Q&A from this page.',
+    'Create an llms.txt file in the root of your domain to signal AI-agent accessibility.',
+  ],
+  recommendations: [
+    'Improve conversational query coverage — add natural-language FAQ sections.',
+    'Strengthen entity citations with external authority links.',
+    'Increase freshness signals: add a visible "Last Updated" date.',
+  ],
+  usage: { count: 3, limit: 5 },
+}
+
+const PILLAR_CONFIG = [
+  { key: 'ai_readability',         label: 'AI Readability',         color: '#22d3ee' },
+  { key: 'digital_authority',      label: 'Digital Authority',      color: '#10b981' },
+  { key: 'conversion_readiness',   label: 'Conversion Readiness',   color: '#a855f7' },
+  { key: 'product_discoverability',label: 'Product Discoverability',color: '#f97316' },
+]
+
+const SIGNAL_DEFS = [
+  { key: 'hasSchemaMarkup',          label: 'Schema Markup',          type: 'positive' },
+  { key: 'hasFaqSchema',             label: 'FAQ Schema',             type: 'positive' },
+  { key: 'hasSemanticHtml',          label: 'Semantic HTML',          type: 'positive' },
+  { key: 'hasProperHeadingHierarchy',label: 'Heading Hierarchy',      type: 'positive' },
+  { key: 'hasMetaDescription',       label: 'Meta Description',       type: 'positive' },
+  { key: 'hasCanonicalTag',          label: 'Canonical Tag',          type: 'positive' },
+  { key: 'hasOpenGraphTags',         label: 'Open Graph Tags',        type: 'positive' },
+  { key: 'hasLlmsTxt',              label: 'llms.txt Present',       type: 'positive' },
+  { key: 'isJsRendered',             label: 'JS Rendering (AI Risk)', type: 'negative' },
+]
+
+function UrlScannerPage() {
+  const [url, setUrl] = useState('')
+  const [industry, setIndustry] = useState('')
+  const [scanning, setScanning] = useState(false)
+  const [result, setResult] = useState(null)
+  const [error, setError] = useState('')
+
+  const handleScan = () => {
+    setError('')
+    setResult(null)
+    if (!url.trim()) { setError('Please enter a URL to scan.'); return }
+    if (!/^https?:\/\/.+/.test(url.trim())) { setError('Please enter a valid URL including http:// or https://'); return }
+    setScanning(true)
+    setTimeout(() => {
+      setScanning(false)
+      setResult({ ...MOCK_URL_SCAN, scannedUrl: url.trim() })
+    }, 1800)
+  }
+
+  const overallColor = result
+    ? result.overall >= 80 ? '#10b981' : result.overall >= 60 ? '#f59e0b' : '#ef4444'
+    : '#22d3ee'
+
+  return (
+    <div className="animate-in">
+      <div style={{ marginBottom: '28px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '8px' }}>URL Scanner</h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '15px' }}>
+          Enter any public URL to analyze its content and technical HTML structure for AEO readiness.
+        </p>
+      </div>
+
+      {/* Input card */}
+      <div style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px', marginBottom: '24px' }}>
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
+          <div style={{ flex: 1, minWidth: '280px', position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <Link2 size={16} style={{ position: 'absolute', left: '12px', color: 'var(--text-muted)', pointerEvents: 'none' }} />
+            <input
+              type="url"
+              value={url}
+              onChange={e => setUrl(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleScan()}
+              placeholder="https://yoursite.com/page-to-scan"
+              style={{
+                width: '100%', background: 'rgba(255,255,255,0.06)', border: '1px solid var(--border-color)',
+                borderRadius: '8px', color: 'var(--text-primary)', fontSize: '14px', height: '42px',
+                padding: '0 16px 0 40px', boxSizing: 'border-box', outline: 'none', transition: 'border-color 0.2s',
+              }}
+              onFocus={e => { e.target.style.borderColor = '#22d3ee'; e.target.style.boxShadow = '0 0 0 3px rgba(34,211,238,0.15)' }}
+              onBlur={e => { e.target.style.borderColor = 'var(--border-color)'; e.target.style.boxShadow = 'none' }}
+            />
+          </div>
+          <select
+            value={industry}
+            onChange={e => setIndustry(e.target.value)}
+            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid var(--border-color)', borderRadius: '8px', color: 'var(--text-primary)', fontSize: '13px', height: '42px', padding: '0 12px', cursor: 'pointer', outline: 'none' }}
+          >
+            <option value="">Any Industry</option>
+            <option value="technology">Technology</option>
+            <option value="healthcare">Healthcare</option>
+            <option value="finance">Finance</option>
+            <option value="education">Education</option>
+            <option value="ecommerce">E-Commerce</option>
+            <option value="marketing">Marketing</option>
+            <option value="legal">Legal</option>
+            <option value="real_estate">Real Estate</option>
+            <option value="travel">Travel</option>
+          </select>
+          <button
+            onClick={handleScan}
+            disabled={scanning}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '8px', padding: '0 20px', height: '42px',
+              background: scanning ? 'rgba(34,211,238,0.2)' : 'var(--accent)', color: scanning ? '#22d3ee' : '#000',
+              border: 'none', borderRadius: '8px', fontWeight: 600, fontSize: '14px', cursor: scanning ? 'not-allowed' : 'pointer',
+              transition: 'all 0.2s',
+            }}
+          >
+            {scanning
+              ? <><RefreshCw size={15} style={{ animation: 'spin 1s linear infinite' }} /> Scanning…</>
+              : <><Search size={15} /> Scan URL</>
+            }
+          </button>
+        </div>
+        <p style={{ marginTop: '10px', fontSize: '12px', color: 'var(--text-muted)' }}>
+          The URL must be publicly accessible. The backend fetches the page and scores content and technical HTML signals.
+        </p>
+        {error && (
+          <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '8px', padding: '10px 14px', color: '#ef4444', fontSize: '13px' }}>
+            <XCircle size={14} /> {error}
+          </div>
+        )}
+      </div>
+
+      {/* Results */}
+      {result && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* Scanned URL banner */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(34,211,238,0.07)', border: '1px solid rgba(34,211,238,0.2)', borderRadius: '8px', padding: '10px 16px', fontSize: '13px', color: '#22d3ee', wordBreak: 'break-all' }}>
+            <Globe size={14} />
+            <a href={result.scannedUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#22d3ee', textDecoration: 'none' }}>{result.scannedUrl}</a>
+          </div>
+
+          {/* Overall + Pillars */}
+          <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr', gap: '20px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', borderRight: '1px solid var(--border-color)', paddingRight: '20px', textAlign: 'center' }}>
+              <div style={{ fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--text-muted)', marginBottom: '8px' }}>Overall Score</div>
+              <div style={{ fontSize: '56px', fontWeight: 800, lineHeight: 1, color: overallColor, marginBottom: '4px' }}>{result.overall}</div>
+              <div style={{ fontSize: '14px', color: 'var(--text-muted)' }}>/ 100</div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', justifyContent: 'center' }}>
+              {PILLAR_CONFIG.map(p => {
+                const score = result.pillars[p.key] || 0
+                return (
+                  <div key={p.key}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                      <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: p.color, flexShrink: 0 }} />
+                      <span style={{ flex: 1, fontSize: '13px', color: 'var(--text-secondary)' }}>{p.label}</span>
+                      <span style={{ fontSize: '15px', fontWeight: 700, color: p.color, minWidth: '30px', textAlign: 'right' }}>{score}</span>
+                    </div>
+                    <div style={{ height: '5px', background: 'rgba(255,255,255,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: `${score}%`, background: p.color, borderRadius: '3px', transition: 'width 0.6s ease' }} />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Usage bar */}
+          {result.usage && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--text-muted)' }}>
+              <Info size={13} /> API Usage: {result.usage.count} / {result.usage.limit} scans used this period
+            </div>
+          )}
+
+          {/* Technical Signals */}
+          <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', overflow: 'hidden' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid var(--border-color)' }}>
+              <h3 style={{ margin: 0, fontSize: '15px', color: 'var(--text-primary)' }}>Technical HTML Signals</h3>
+              <span style={{ background: 'rgba(34,211,238,0.12)', color: '#22d3ee', border: '1px solid rgba(34,211,238,0.25)', borderRadius: '4px', fontSize: '11px', fontWeight: 600, padding: '3px 8px' }}>URL Scan Only</span>
+            </div>
+            <div style={{ padding: '20px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '10px', marginBottom: '20px' }}>
+                {SIGNAL_DEFS.map(def => {
+                  const val = result.technical[def.key]
+                  const isGood = def.type === 'positive' ? !!val : !val
+                  return (
+                    <div key={def.key} style={{
+                      display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '8px',
+                      background: isGood ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
+                      border: `1px solid ${isGood ? 'rgba(16,185,129,0.25)' : 'rgba(239,68,68,0.25)'}`,
+                    }}>
+                      {isGood
+                        ? <CheckCircle2 size={15} color="#10b981" />
+                        : <XCircle size={15} color="#ef4444" />
+                      }
+                      <span style={{ fontSize: '13px', color: isGood ? '#10b981' : '#ef4444' }}>{def.label}</span>
+                    </div>
+                  )
+                })}
+              </div>
+              {result.techRecs.length > 0 && (
+                <div style={{ paddingTop: '16px', borderTop: '1px solid var(--border-color)' }}>
+                  <h4 style={{ margin: '0 0 10px', fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Technical Recommendations</h4>
+                  <ul style={{ margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    {result.techRecs.map((r, i) => <li key={i} style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{r}</li>)}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Recommendations */}
+          {result.recommendations.length > 0 && (
+            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', overflow: 'hidden' }}>
+              <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-color)' }}>
+                <h3 style={{ margin: 0, fontSize: '15px', color: 'var(--text-primary)' }}>Recommendations</h3>
+              </div>
+              <div style={{ padding: '20px' }}>
+                <ul style={{ margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {result.recommendations.map((r, i) => (
+                    <li key={i} style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                      <span style={{ color: '#22d3ee', marginRight: '4px' }}>→</span> {r}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
+    </div>
+  )
+}
+
 function App() {
   const getPageFromHash = () => {
     const hash = window.location.hash.slice(1)
@@ -3834,6 +4080,8 @@ function App() {
     switch (currentPage) {
       case 'gutenberg-sidebar':
         return <GutenbergSidebarPage pdMuted={pdMuted} setPdMuted={setPdMuted} />
+      case 'url-scanner':
+        return <UrlScannerPage />
       case 'settings':
         return <SettingsPage setCurrentPage={setCurrentPage} />
       case 'docs':

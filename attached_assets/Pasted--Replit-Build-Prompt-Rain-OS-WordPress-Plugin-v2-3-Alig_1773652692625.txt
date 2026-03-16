@@ -1,0 +1,286 @@
+# Replit Build Prompt: Rain OS WordPress Plugin v2.3 Alignment
+
+## Context
+
+The Rain OS backend has been upgraded to v2.3 with:
+- **4 pillars** instead of 3 (added: Product Discoverability)
+- **14 new Phase 2 sub-scores** (semantic, authority, discoverability metrics)
+- **New `/api/url-scan` endpoint** for scoring URLs directly
+- **GET `/api/capabilities`** endpoint to discover API features
+
+The WordPress plugin is still hardcoded for **3 pillars** and has **no URL scanning support**. This breaks compatibility and hides the new 4th pillar from users.
+
+---
+
+## Acceptance Criteria
+
+### Phase 1: Core Plugin Update (Must Complete Before v2.3 Launch)
+
+**A1. API Response Parser Fixes**
+- [ ] `parse_analysis_response()` in `includes/api/class-rairo-api-client.php`:
+  - **MUST** extract `productDiscoverability` from `pillarScores`
+  - **MUST** extract and store all 14 `phase2_sub_scores` fields
+  - **MUST** extract all 4 pillar detail breakdowns (`*_detail` objects)
+  - **MUST** handle missing legacy `action` field gracefully
+  - Return structure: `[ 'pillar_4' => int, 'phase2_sub_scores' => array, 'pillar_details' => array, ... ]`
+
+**A2. UI Renders 4 Pillars Everywhere**
+- [ ] `admin.js`: Update `renderPillarScore()` loop to accept dynamic pillar count
+  - Before: hardcoded for 3 (`ai_readability`, `digital_authority`, `conversion_readiness`)
+  - After: loop over `data.pillars` object with all keys
+  - Add conditional color assignment (use `data.pillar_colors` if provided, else default)
+
+- [ ] `ai-score-panel.js`: Update `scoreMap` to accept 4+ scores
+  - Before: hardcoded map with 5 fixed keys
+  - After: dynamically build map from response
+
+- [ ] `pillar-breakdown.php` template: Add 4th pillar section
+  - Copy structure of existing 3 pillar sections
+  - Add new section with class `rain-os-pillar-section rain-os-pillar-<color>`
+  - Display `product_discoverability` score from parsed data
+
+- [ ] `dashboard.php` template: Update averages query and display to include `avg_product_discoverability`
+  - Add pillar 4 to trending charts
+
+**A3. Database Schema Update**
+- [ ] `includes/class-rairo-ajax.php`, line 81-98 (`save_analysis_to_history`):
+  - Add column to `rairo_analysis_history` table: `product_discoverability INT(3) DEFAULT 0`
+  - Update INSERT to include new column:
+    ```php
+    'product_discoverability' => isset($analysis['product_discoverability']) ? absint($analysis['product_discoverability']) : 0,
+    ```
+
+- [ ] `includes/class-rairo-ajax.php`, line 139-169 (`get_dashboard_data`):
+  - Update SQL SELECT to include: `ROUND(AVG(product_discoverability)) as avg_product_discoverability`
+  - Update trend data query to include pillar 4 in GROUP BY
+
+**A4. Dashboard Queries**
+- [ ] `class-rairo-ajax.php`, line 81-98:
+  - Update `save_analysis_to_history()` to store all 14 `phase2_sub_scores` in a JSON field (new or expanded `analysis_data`)
+  - Example: `'phase2_sub_scores' => json_encode( $analysis['phase2_sub_scores'] )`
+
+**A5. Gutenberg Sidebar Block**
+- [ ] `build/gutenberg-sidebar.js` (or source TypeScript/JSX if available):
+  - Update `pillarScores` map to include 4th pillar
+  - Add color for `productDiscoverability` (suggest gold/yellow `#fbbf24`)
+  - Ensure pillar count is dynamic, not hardcoded
+  - Test with mock v2.3 response that includes all 4 pillars
+
+---
+
+### Phase 2: URL Scanning Feature (High Priority, Ship Shortly After Phase 1)
+
+**B1. API Client Enhancement**
+- [ ] `includes/api/class-rairo-api-client.php`:
+  - Add new method `scan_url( $url, $industry = '' )`:
+    ```php
+    public function scan_url( $url, $industry = '' ) {
+        return $this->make_request(
+            'url-scan',  // endpoint: /api/url-scan
+            'POST',
+            array(
+                'url'      => $url,
+                'industry' => $industry,
+            )
+        );
+    }
+    ```
+  - Create new response parser `parse_url_scan_response()`:
+    ```php
+    public function parse_url_scan_response( $response ) {
+        // Extract: overall_score, pillar scores, technical_signals, technical_recommendations
+        // Return: [ 'analysis' => parsed, 'signals' => array, 'recommendations' => array ]
+    }
+    ```
+
+**B2. AJAX Handler**
+- [ ] `includes/class-rairo-ajax.php`:
+  - Add new handler `rairo_scan_url()`:
+    - Verify nonce (use `rairo_aeo_nonce`)
+    - Validate URL format with `wp_http_validate_url()`
+    - Call `$this->api_client->scan_url()`
+    - Return parsed response + technical signals
+    - Catch errors: 422 = fetch failed, 429 = rate limit, 402 = not active
+
+**B3. Admin Page / Form**
+- [ ] Create `templates/url-scanner.php`:
+  - URL input field with placeholder `https://example.com`
+  - Industry dropdown (same list as content analyzer)
+  - "Scan URL" button
+  - Results area with: overall score, 4 pillars, technical signals, technical recommendations
+
+**B4. JavaScript Handler**
+- [ ] Create `assets/js/url-scanner.js`:
+  - Form submission handler
+  - AJAX call to `wp_ajax_rairo_scan_url`
+  - Display results in modal or inline
+  - Show loading state
+  - Error handling for fetch failures
+
+**B5. Styling**
+- [ ] Create `assets/css/url-scanner.css`:
+  - Input field styling
+  - Results card styling
+  - Technical signals table/list styling
+  - Technical recommendations list styling
+  - Responsive design
+
+**B6. Admin Menu Integration**
+- [ ] Add URL Scanner to `class-rairo-admin.php`:
+  - Register submenu item under Rain OS menu
+  - Include `templates/url-scanner.php`
+  - Enqueue `url-scanner.js` and `url-scanner.css`
+
+---
+
+### Phase 3: Dynamic Capabilities (Medium Priority, Polish)
+
+**C1. Capabilities Cache**
+- [ ] Create `includes/class-rairo-capabilities.php`:
+  - Call `GET /api/capabilities` on initialization or admin_init
+  - Cache response for 6 hours (RAIRO_CAPABILITY_CACHE_TTL)
+  - Expose method `get_available_pillars()` → returns array of pillar names
+  - Expose method `get_phase2_sub_scores()` → returns list of score field names
+  - Expose method `get_api_version()` → returns version string
+
+**C2. Dynamic Pillar Rendering**
+- [ ] Update `admin.js` and templates to:
+  - Call `rairo_get_capabilities` AJAX endpoint
+  - Dynamically build pillar list from response
+  - Fallback to hardcoded 4 pillars if capabilities call fails
+  - Use pillar names from API instead of assuming fixed names
+
+**C3. Phase 2 Sub-Scores Display**
+- [ ] Add expandable "Phase 2 Details" section in analysis:
+  - Show all 14 sub-scores in a breakdown table
+  - Include tooltips explaining what each score means
+  - Highlight low scores (< 50) for user focus
+  - Example fields: `sectionConceptIsolation`, `semanticRedundancyScore`, `productVariantCoverage`, etc.
+
+---
+
+## Implementation Notes
+
+### 1. Backward Compatibility
+- ✅ Plugin MUST work with both v2.1 (3 pillar) and v2.3 (4 pillar) APIs during transition
+- If response includes `productDiscoverability`, display 4 pillars; otherwise display 3
+- Handle missing `phase2_sub_scores` gracefully (don't throw errors)
+
+### 2. Data Migration
+- Old analysis history will have `product_discoverability = NULL` → display as 0 or "N/A"
+- New analyses will populate all 4 pillars
+- No need to backfill old data
+
+### 3. Testing Checklist
+- [ ] Mock response with all 4 pillars + phase2_sub_scores → UI displays correctly
+- [ ] Mock response with 3 pillars only (v2.1 compat) → UI displays 3 pillars
+- [ ] URL scan response → technical signals display correctly
+- [ ] Dashboard averages → correctly sum/avg all 4 pillars
+- [ ] Historical data → renders without errors even if `product_discoverability` is NULL
+- [ ] Multiple tabs (Gutenberg sidebar, Admin dashboard) → all show consistent data
+
+### 4. Constants to Define
+```php
+// In main plugin file or constants file
+define( 'RAIRO_API_VERSION', '2.3' );  // Update from 2.1/2.2
+define( 'RAIRO_PILLARS_COUNT', 4 );     // Dynamic, but hardcoded fallback
+define( 'RAIRO_CAPABILITY_CACHE_TTL', 6 * HOUR_IN_SECONDS );
+```
+
+### 5. Database Migration
+If using automated database creation:
+```php
+// In activation hook or dbDelta
+$sql = "ALTER TABLE {$wpdb->prefix}rairo_analysis_history 
+        ADD COLUMN product_discoverability INT(3) DEFAULT 0 AFTER conversion_readiness";
+dbDelta( $sql );
+```
+
+---
+
+## File-by-File Change Summary
+
+| File | Change | Priority | Lines Affected |
+|------|--------|----------|-----------------|
+| `includes/api/class-rairo-api-client.php` | Parse 4 pillars + phase2_sub_scores | PHASE 1 | 224-250 |
+| `includes/api/class-rairo-api-client.php` | Add `scan_url()` & `parse_url_scan_response()` | PHASE 2 | +50 lines |
+| `includes/class-rairo-ajax.php` | Save product_discoverability to DB | PHASE 1 | 81-98 |
+| `includes/class-rairo-ajax.php` | Add `rairo_scan_url` handler | PHASE 2 | +80 lines |
+| `assets/js/admin.js` | Dynamic pillar rendering | PHASE 1 | Pillar loop |
+| `assets/js/ai-score-panel.js` | Expand scoreMap to 4+ items | PHASE 1 | 52-80 |
+| `templates/pillar-breakdown.php` | Add 4th pillar section | PHASE 1 | +30 lines |
+| `templates/dashboard.php` | Add product_discoverability to queries | PHASE 1 | 140-180 |
+| `templates/url-scanner.php` | NEW | PHASE 2 | 100 lines |
+| `assets/js/url-scanner.js` | NEW | PHASE 2 | 150 lines |
+| `assets/css/url-scanner.css` | NEW | PHASE 2 | 100 lines |
+| `build/gutenberg-sidebar.js` | Add 4th pillar to block | PHASE 1 | Pillar map |
+
+---
+
+## Testing Commands
+
+After implementation:
+
+```bash
+# 1. Test API parsing
+curl -X POST http://localhost/wp-admin/admin-ajax.php \
+  -d "action=rairo_analyze_content&nonce=NONCE&content=test&post_id=1" \
+  -H "Cookie: wordpress_logged_in=..."
+
+# 2. Test URL scan
+curl -X POST http://localhost/wp-admin/admin-ajax.php \
+  -d "action=rairo_scan_url&nonce=NONCE&url=https://example.com" \
+  -H "Cookie: wordpress_logged_in=..."
+
+# 3. Test dashboard averages
+curl -X POST http://localhost/wp-admin/admin-ajax.php \
+  -d "action=rairo_get_dashboard_data&nonce=NONCE&period=30" \
+  -H "Cookie: wordpress_logged_in=..."
+```
+
+---
+
+## Success Criteria
+
+✅ **Phase 1 Complete When**:
+- Plugin displays 4 pillars in all UI locations (admin, Gutenberg, dashboard)
+- Database stores `product_discoverability` for all new analyses
+- Dashboard correctly averages all 4 pillars across date range
+- No errors in browser console when response includes `productDiscoverability`
+- Backward compat: old 3-pillar responses still render (fallback display)
+
+✅ **Phase 2 Complete When**:
+- URL scanner form accepts valid URLs
+- `/api/url-scan` endpoint is called with auth
+- Technical signals display in readable format
+- Technical recommendations render as actionable list
+- Rate limit (429) and payment (402) errors are caught and shown to user
+
+✅ **Phase 3 Complete When**:
+- Plugin calls `GET /api/capabilities` on admin_init
+- Capabilities cached for 6 hours
+- Pillar list is dynamic (not hardcoded)
+- Phase 2 sub-scores have dedicated expandable section
+- API version mismatch doesn't break plugin (graceful degradation)
+
+---
+
+## Deliverables
+
+When complete, Replit should produce:
+1. **Updated plugin ZIP file** with all Phase 1 + Phase 2 changes
+2. **Database migration script** (if needed) for `product_discoverability` column
+3. **Test plan document** with mock responses and expected outputs
+4. **Version bump** in main plugin file: `Version: 2.3.0`
+5. **Changelog entry** documenting 4-pillar support + URL scanning
+
+---
+
+## Notes for Replit Dev
+
+- The backend v2.3 spec is in the uploaded `RainOS_v2_3_SHIP_TODAY.docx` — reference the response schema and scoring rules sections
+- The plugin source is in the uploaded `rain-os-ai-readability-optimizer.zip`
+- Priority order: Pillar 4 display → URL scanning → Dynamic capabilities
+- Test with both old (3-pillar) and new (4-pillar) API responses
+- Ensure all error handling matches HTTP status codes from backend (401, 402, 429, 422, etc.)
+- Keep WP security best practices: nonce verification, sanitization, escaping

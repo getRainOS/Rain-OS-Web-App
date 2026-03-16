@@ -58,6 +58,15 @@ class Rain_OS_Admin {
 
         add_submenu_page(
             'rain-os-aeo',
+            __( 'URL Scanner', 'rain-os-aeo-analyzer' ),
+            __( 'URL Scanner', 'rain-os-aeo-analyzer' ),
+            'edit_posts',
+            'rain-os-aeo-url-scanner',
+            array( $this, 'render_url_scanner_page' )
+        );
+
+        add_submenu_page(
+            'rain-os-aeo',
             __( 'Score History', 'rain-os-aeo-analyzer' ),
             __( 'Score History', 'rain-os-aeo-analyzer' ),
             'edit_posts',
@@ -142,6 +151,13 @@ class Rain_OS_Admin {
         include RAIN_OS_AEO_PLUGIN_DIR . 'templates/content-analyzer.php';
     }
 
+    public function render_url_scanner_page() {
+        if ( ! current_user_can( 'edit_posts' ) ) {
+            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-aeo-analyzer' ) );
+        }
+        include RAIN_OS_AEO_PLUGIN_DIR . 'templates/url-scanner.php';
+    }
+
     public function render_history_page() {
         if ( ! current_user_can( 'edit_posts' ) ) {
             wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'rain-os-aeo-analyzer' ) );
@@ -218,6 +234,7 @@ class Rain_OS_Admin {
                     AVG(ai_readability) as avg_ai_readability,
                     AVG(digital_authority) as avg_digital_authority,
                     AVG(conversion_readiness) as avg_conversion_readiness,
+                    AVG(product_discoverability) as avg_product_discoverability,
                     COUNT(*) as total_analyzed
                 FROM {$table_name} 
                 WHERE analyzed_at >= %s",
