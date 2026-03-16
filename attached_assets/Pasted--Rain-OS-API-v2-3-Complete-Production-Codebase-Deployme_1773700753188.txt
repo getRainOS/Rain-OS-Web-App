@@ -1,0 +1,1481 @@
+# Rain OS API v2.3 — Complete Production Codebase + Deployment Diff
+
+**Status**: All blockers fixed. Production-ready. Ready to ship.
+**Date**: March 2025
+**API Version**: 2.3.0
+**Models**: TypeScript + Express + Gemini 2.5 Flash + Cheerio
+
+---
+
+## 🚀 Quick Start: Deployment Steps
+
+### Step 1: Add Railway Environment Variables
+
+In Railway → your backend project → Variables, add these four:
+
+```env
+GOOGLE_CLIENT_ID=from_console.cloud.google.com
+GOOGLE_CLIENT_SECRET=from_console.cloud.google.com
+GOOGLE_CALLBACK_URL=https://api.getrainos.com/api/auth/google/callback
+APP_URL=https://app.getrainos.com
+```
+
+### Step 2: Replace Files in Code Editor
+
+Copy each file from Section 3 exactly as written.
+
+### Step 3: Swap SDK, Commit, Push
+
+```bash
+cd your-rain-os-backend-folder
+
+# Swap the Google AI SDK (required)
+npm uninstall @google/genai
+npm install @google/generative-ai@^0.21.0
+npm install cheerio@^1.0.0
+
+# Stage and commit
+git add types.ts package.json package-lock.json api/index.ts api/url-scan.ts \
+      services/geminiService.ts services/readability.ts \
+      services/analyzeController.ts services/urlScanService.ts
+git commit -m "feat: v2.3 — 4-pillar scoring, url-scan, oauth, cheerio"
+git push origin main
+```
+
+### Step 4: Verify Deployment
+
+After Railway shows "Deploy succeeded" (2–3 minutes):
+
+```bash
+# Health check
+curl https://api.getrainos.com/api/health
+# Expected: {"status":"ok","timestamp":"..."}
+
+# Capabilities — confirms v2.3 is live
+curl https://api.getrainos.com/api/capabilities
+# Expected: {"api_version":"2.3","pillars":[...],...}
+```
+
+---
+
+## 📋 Blockers Fixed
+
+| # | Blocker | Status | Fix |
+|---|---------|--------|-----|
+| #1 | Wrong file names (app.ts / dbService.aiContent.ts) | ✅ FIXED | All wiring goes into api/index.ts + new services/ files |
+| #2 | CORS change broke WP plugin (origin locked to allowlist) | ✅ FIXED | origin: '*' preserved in corsOptions |
+| #3 | AuthorshipSignals broke WP plugin (field shape changed) | ✅ FIXED | Legacy hash/timestamp/status fields kept |
+| #4 | SDK swap needed clean uninstall | ✅ FIXED | package.json corrected, postinstall script builds automatically |
+| #5 | User type stripped fields dbService returns | ✅ FIXED | Full User interface restored |
+
+### Minor Items Also Fixed
+
+| Item | Resolution |
+|------|-----------|
+| api_version hardcoded string | Exported API_VERSION constant, single source of truth |
+| semanticRedundancyScore no clamp before invert | clamp(0-100) applied before 100-x inversion |
+| Old analyzeHandler import left in index.ts | Fully removed, replaced with analyzeController |
+| /v1/v1/* duplicate routes | Removed copy-paste duplicates |
+| Missing AnalysisResult type alias | Added for backward compatibility |
+
+---
+
+## ✨ What v2.3 Delivers
+
+| Feature | What It Does | API Cost |
+|---------|-------------|----------|
+| **4-Pillar Scoring** | AI Readability, Digital Authority, Conversion Readiness, Product Discoverability | 1 credit per analysis |
+| **URL Scanning** | Fetch page, extract text with Cheerio, score with Gemini, apply tech signals | 1 credit per scan |
+| **Cheerio HTML Analysis** | Schema markup, semantic HTML, meta tags, JS detection, llms.txt, alt text, link quality | Free (0 API cost) |
+| **Google OAuth** | Backend already built — env vars and CORS config wired in | Auth only |
+| **Usage Metering** | URL scans = 1 credit. Stripe tier limits (5 / 100 / 500) apply automatically | Automatic |
+
+---
+
+## 🔄 New Endpoints (v2.3)
+
+### POST /api/url-scan
+Fetch and score a URL with combined Gemini + Cheerio analysis.
+
+**Request:**
+```json
+{
+  "url": "https://example.com/article",
+  "industry": "Technology"
+}
+```
+
+**Headers:**
+```
+Authorization: Bearer your-api-key
+Content-Type: application/json
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "overallScore": 67,
+  "pillarScores": {
+    "aiReadability": 71,
+    "digitalAuthority": 58,
+    "conversionReadiness": 64,
+    "productDiscoverability": 52
+  },
+  "phase2_sub_scores": { ... },
+  "technical_signals": {
+    "hasSchemaMarkup": true,
+    "schemaTypes": ["Article"],
+    "hasFaqSchema": false,
+    "hasProductSchema": false,
+    "hasArticleSchema": true,
+    "hasSemanticHtml": true,
+    "semanticTagsFound": ["article", "main"],
+    "hasProperHeadingHierarchy": true,
+    "headingCount": 8,
+    "hasMetaDescription": true,
+    "metaDescriptionLength": 156,
+    "hasCanonicalTag": true,
+    "hasOpenGraphTags": true,
+    "titleLength": 48,
+    "isJsRendered": false,
+    "jsRenderingWarning": null,
+    "hasLlmsTxt": false,
+    "totalImages": 5,
+    "imagesWithAltText": 4,
+    "missingAltTextRatio": 0.2,
+    "internalLinkCount": 12,
+    "externalLinkCount": 3,
+    "hasDescriptiveAnchors": true,
+    "wordCount": 2847
+  },
+  "technical_recommendations": [
+    "Create /llms.txt at your domain root to guide AI crawlers.",
+    "Add Open Graph meta tags (og:title, og:description, og:image)."
+  ],
+  "url_scanned": "https://example.com/article",
+  "scan_timestamp": "2025-03-16T...",
+  "api_version": "2.3"
+}
+```
+
+### GET /api/capabilities
+Returns API version, pillars, phase2 sub-scores, and model info. No auth required.
+
+**Response:**
+```json
+{
+  "api_version": "2.3",
+  "pillars": [
+    "aiReadability",
+    "digitalAuthority",
+    "conversionReadiness",
+    "productDiscoverability"
+  ],
+  "phase2_sub_scores": [
+    "sectionConceptIsolation",
+    "instructionDeterminism",
+    "retrievalAnswerability",
+    "semanticRedundancyScore",
+    "socialProofMarkup",
+    "contentChunkingQuality",
+    "informationGainScore",
+    "citationReadiness",
+    "entityLinkability",
+    "topicalDepthScore",
+    "queryAlignmentScore",
+    "multimodalReadiness",
+    "productVariantCoverage",
+    "merchantIdentityClarity"
+  ],
+  "scoring_model": "gemini-2.5-flash"
+}
+```
+
+---
+
+## 📝 Complete File Changes
+
+### types.ts (REPLACE)
+
+```typescript
+// types.ts — Rain OS API v2.3
+// 4-pillar scoring: AI Readability, Digital Authority, Conversion Readiness, Product Discoverability
+// ─── Auth / User types ───────────────────────────────────────────────────────
+// NOTE: Keep ALL fields here — dbService.mapRowToUser returns this full shape.
+// analyzeController, url-scan, etc. only use the subset they need.
+export type SubscriptionStatus = 'pending' | 'active' | 'cancelled' | 'inactive';
+
+export interface User {
+  id:                 string;
+  email:              string;
+  googleId?:          string;
+  hashedPassword?:    string;
+  passwordResetToken?: string;
+  passwordResetExpires?: Date;
+  apiKey:             string;
+  hashedApiKey?:      string;
+  stripeCustomerId?:  string;
+  stripePriceId?:     string;
+  subscriptionStatus: SubscriptionStatus;
+  usage: {
+    count:      number;
+    limit:      number;
+    resetDate?: string;
+  };
+  createdAt: Date;
+}
+
+export interface ApiError {
+  error:   string;
+  message: string;
+  status?: number;
+}
+
+// ─── Core pillar scores ───────────────────────────────────────────────────────
+export interface PillarScores {
+  aiReadability:          number;  // 0-100
+  digitalAuthority:       number;  // 0-100
+  conversionReadiness:    number;  // 0-100
+  productDiscoverability: number;  // 0-100 — NEW in v2.3
+}
+
+// ─── Sub-scores ───────────────────────────────────────────────────────────────
+export interface SubScore {
+  category: string;
+  score:    number;
+  label:    string;
+  insight?: string;
+}
+
+// ─── Phase 2 sub-scores (returned as flat object) ────────────────────────────
+export interface Phase2SubScores {
+  // Pillar 1 — AI Readability
+  sectionConceptIsolation:   number;  // Each section covers exactly one idea
+  // Cross-pillar documentation quality
+  instructionDeterminism:    number;  // How unambiguous instructions/steps are
+  retrievalAnswerability:    number;  // How easily AI extracts a direct answer
+  semanticRedundancyScore:   number;  // Penalises repetitive content (inverted — lower is better, normalised)
+  // Pillar 2 — Digital Authority
+  socialProofMarkup:         number;  // Structured reviews, ratings, testimonials
+  // Pillar 4 — Product Discoverability
+  productVariantCoverage:    number;  // All product variants described
+  merchantIdentityClarity:   number;  // Brand/seller unambiguous to AI
+  // Existing phase2 signals carried forward
+  contentChunkingQuality:    number;
+  informationGainScore:      number;
+  citationReadiness:         number;
+  entityLinkability:         number;
+  topicalDepthScore:         number;
+  queryAlignmentScore:       number;
+  multimodalReadiness:       number;
+}
+
+// ─── Pillar detail breakdowns ─────────────────────────────────────────────────
+export interface AiReadabilityDetail {
+  structuralClarity:       number;
+  answerFirstFormatting:   number;
+  semanticPrecision:       number;
+  contextSufficiency:      number;
+  sectionConceptIsolation: number;
+}
+
+export interface DigitalAuthorityDetail {
+  citationSignals:    number;
+  entityClarity:      number;
+  topicalAuthority:   number;
+  freshnessSignals:   number;
+  socialProofMarkup:  number;
+}
+
+export interface ConversionReadinessDetail {
+  callToActionClarity:  number;
+  trustSignals:         number;
+  valueProposition:     number;
+  frictionReduction:    number;
+}
+
+export interface ProductDiscoverabilityDetail {
+  productVariantCoverage:  number;
+  merchantIdentityClarity: number;
+  pricingTransparency:     number;
+  availabilitySignals:     number;
+  comparativeContext:      number;
+}
+
+// ─── Authorship signals (v2.3) ────────────────────────────────────────────────
+export interface AuthorshipSignals {
+  hasAuthorByline:  boolean;
+  hasPublishDate:   boolean;
+  hasOrganization:  boolean;
+  authorityScore:   number;
+  // Legacy fields preserved for backward compatibility with WP plugin
+  hash?:            string;
+  timestamp?:       string;
+  status?:          string;
+}
+
+// ─── Main analysis response (v2.3) ────────────────────────────────────────────
+export interface AnalysisResponse {
+  overallScore:                   number;
+  pillarScores:                   PillarScores;
+  subScores:                      SubScore[];
+  phase2_sub_scores:              Phase2SubScores;
+  ai_readability_detail:          AiReadabilityDetail;
+  digital_authority_detail:       DigitalAuthorityDetail;
+  conversion_readiness_detail:    ConversionReadinessDetail;
+  product_discoverability_detail: ProductDiscoverabilityDetail;
+  recommendations:                string[];
+  keywords:                       string[];
+  authorship:                     AuthorshipSignals;
+  api_version:                    string;
+}
+
+// ─── Legacy alias — keeps geminiService/analyzeHandler callers compiling ──────
+// Remove once all consumers are updated to AnalysisResponse.
+export type AnalysisResult = AnalysisResponse;
+
+// ─── Capabilities response ────────────────────────────────────────────────────
+export interface CapabilitiesResponse {
+  api_version:       string;
+  pillars:           string[];
+  phase2_sub_scores: string[];
+  scoring_model:     string;
+}
+
+// ─── Request types ────────────────────────────────────────────────────────────
+export interface AnalyzeRequest {
+  content:   string;
+  industry?: string;
+  action?:   string;
+}
+
+export interface UrlScanRequest {
+  url:       string;
+  industry?: string;
+}
+
+// ─── AI Readiness / plugin-facing types (unchanged) ──────────────────────────
+export interface NormalizedChunk {
+  chunkId:      string;
+  type:         'heading' | 'paragraph' | 'list' | 'table';
+  text:         string;
+  wordCount:    number;
+  headingLevel?: number;
+  index:        number;
+}
+
+export interface AIRecommendation {
+  scope:           'chunk' | 'section' | 'document';
+  chunkId?:        string;
+  sectionId?:      string;
+  category:        'readability' | 'structure' | 'freshness' | 'citation' | 'visibility';
+  severity:        'low' | 'medium' | 'high';
+  issue:           string;
+  recommendation:  string;
+  expectedImpact:  number;
+}
+
+export interface NormalizationFingerprint {
+  structureHash:     string;
+  outboundLinksHash: string;
+  freshnessHash:     string;
+}
+
+export interface AIReadinessScores {
+  readability: number;
+  structure:   number;
+  freshness:   number;
+  citation:    number;
+  visibility:  number;
+}
+```
+
+### package.json (REPLACE)
+
+```json
+{
+  "name": "rain-os-backend",
+  "version": "2.3.0",
+  "description": "Rain OS AEO Analysis Engine — 4-pillar scoring, URL scanning, Cheerio HTML analysis.",
+  "main": "dist/api/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/api/index.js",
+    "postinstall": "npm run build"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "@supabase/supabase-js": "^2.89.0",
+    "cheerio": "^1.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "pg": "^8.11.5",
+    "stripe": "^16.2.0"
+  },
+  "devDependencies": {
+    "@types/cheerio": "^0.22.35",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.12",
+    "@types/pg": "^8.11.6",
+    "typescript": "^5.4.5"
+  }
+}
+```
+
+### api/index.ts (REPLACE)
+
+```typescript
+// api/index.ts
+import express from 'express';
+import cors from 'cors';
+import { setupDatabase } from '../services/dbSetup';
+import process from 'process';
+
+// ─── Route handlers ───────────────────────────────────────────────────────────
+// Phase 2: new analyze controller (replaces inline analyzeHandler)
+import { handleAnalyze, handleCapabilities } from '../services/analyzeController';
+import urlScanHandler from './url-scan';
+
+// Auth
+import googleAuthHandler      from './auth/google';
+import googleRedirectHandler  from './auth/google-redirect';
+import googleCallbackHandler  from './auth/google-callback';
+import loginHandler           from './auth/login';
+import passwordResetRequestHandler from './auth/password-reset/request';
+import passwordResetSubmitHandler  from './auth/password-reset/submit';
+import signupHandler          from './auth/signup';
+import syncHandler            from './auth/sync';
+
+// Users
+import usersMeHandler      from './users/me';
+import regenerateKeyHandler from './users/me/regenerate-key';
+
+// Stripe
+import createCheckoutSessionHandler from './stripe/create-checkout-session';
+import createPortalSessionHandler   from './stripe/create-portal-session';
+import stripeWebhookHandler         from './stripe/webhook';
+
+// Cron
+import cronResetUsageHandler from './cron/reset-usage';
+
+// Plugin / AI readiness
+import pluginHealthHandler          from './plugin/health';
+import pluginContentAnalysisHandler from './plugin/content-analysis';
+import aiSiteLlmsHandler   from './ai/site-llms';
+import aiNormalizeHandler  from './ai/normalize';
+import aiContentHandler    from './ai/content';
+import aiDiagnosticsHandler from './ai/diagnostics';
+
+// ─── CORS configuration ───────────────────────────────────────────────────────
+// IMPORTANT: Keep origin: '*' so the WordPress plugin works from any site.
+// Restricting origin here would 403 every WP install that has the plugin.
+// The web app (app.getrainos.com) works fine with wildcard origin.
+// If you need credentials: true for a specific frontend route in the future,
+// add a separate router with a scoped CORS config — do not change this global one.
+const corsOptions: cors.CorsOptions = {
+  origin: '*',
+  methods:      ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['X-Usage-Info'],
+};
+
+const startServer = async () => {
+  await setupDatabase();
+  const app = express();
+  const port = process.env.PORT || 3001;
+
+  app.set('trust proxy', 1);
+
+  // Stripe webhook needs raw body — register before the JSON parser
+  app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), stripeWebhookHandler);
+
+  app.use(cors(corsOptions));
+  app.use(express.json());
+
+  // ─── Health ────────────────────────────────────────────────────────────────
+  app.get('/api/health',    (_req, res) => res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() }));
+  app.get('/v1/api/health', (_req, res) => res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() }));
+
+  // ─── Capabilities (new in v2.3) ────────────────────────────────────────────
+  app.get('/api/capabilities',    handleCapabilities);
+  app.get('/v1/api/capabilities', handleCapabilities);
+
+  // ─── Analyze (Phase 2 controller — replaces old analyzeHandler) ───────────
+  app.post('/api/analyze',    handleAnalyze);
+  app.post('/v1/api/analyze', handleAnalyze);
+  app.post('/v1/analyze',     handleAnalyze);
+  app.post('/analyze',        handleAnalyze);
+
+  // ─── URL Scan (new in v2.3) ────────────────────────────────────────────────
+  app.post('/api/url-scan',    urlScanHandler);
+  app.post('/v1/api/url-scan', urlScanHandler);
+
+  // ─── Auth ──────────────────────────────────────────────────────────────────
+  app.post('/api/auth/google',                     googleAuthHandler);
+  app.get( '/api/auth/google',                     googleRedirectHandler);
+  app.get( '/api/auth/google/callback',            googleCallbackHandler);
+  app.post('/api/auth/login',                      loginHandler);
+  app.post('/api/auth/password-reset/request',     passwordResetRequestHandler);
+  app.post('/api/auth/password-reset/submit',      passwordResetSubmitHandler);
+  app.post('/api/auth/signup',                     signupHandler);
+  app.post('/api/auth/sync',                       syncHandler);
+
+  // ─── Users ─────────────────────────────────────────────────────────────────
+  app.get( '/api/users/me',                  usersMeHandler);
+  app.post('/api/users/me/regenerate-key',   regenerateKeyHandler);
+
+  // ─── Stripe ────────────────────────────────────────────────────────────────
+  app.post('/api/stripe/create-checkout-session', createCheckoutSessionHandler);
+  app.post('/api/stripe/create-portal-session',   createPortalSessionHandler);
+
+  // ─── Cron ──────────────────────────────────────────────────────────────────
+  app.post('/api/cron/reset-usage', cronResetUsageHandler);
+
+  // ─── Plugin-facing endpoints ───────────────────────────────────────────────
+  app.get('/api/plugin/health',                          pluginHealthHandler);
+  app.get('/api/plugin/content/:contentId/analysis',     pluginContentAnalysisHandler);
+  app.get('/v1/api/plugin/health',                       pluginHealthHandler);
+  app.get('/v1/api/plugin/content/:contentId/analysis',  pluginContentAnalysisHandler);
+
+  // ─── AI Readiness endpoints ────────────────────────────────────────────────
+  app.get( '/ai/site/llms',              aiSiteLlmsHandler);
+  app.post('/ai/normalize',              aiNormalizeHandler);
+  app.get( '/ai/content/:contentId',     aiContentHandler);
+  app.get( '/ai/diagnostics/:contentId', aiDiagnosticsHandler);
+  app.get( '/v1/ai/site/llms',              aiSiteLlmsHandler);
+  app.post('/v1/ai/normalize',              aiNormalizeHandler);
+  app.get( '/v1/ai/content/:contentId',     aiContentHandler);
+  app.get( '/v1/ai/diagnostics/:contentId', aiDiagnosticsHandler);
+
+  // Note: /v1/v1/* paths removed — they were duplicates from a copy-paste error
+  // in the original index.ts and had no legitimate callers.
+
+  app.listen(port, () => {
+    console.log(`Rain OS backend listening on port ${port}`);
+  });
+};
+
+startServer().catch((err) => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
+});
+```
+
+### api/url-scan.ts (CREATE NEW)
+
+```typescript
+// api/url-scan.ts — Fetch a URL, score with Gemini + Cheerio HTML analysis.
+// URL scans count as one usage credit (same as a content analysis).
+import express from 'express';
+import { findUserByApiKey, incrementUserUsage } from '../services/dbService';
+import { analyzeContent } from '../services/geminiService';
+import { scanUrlForTechnicalSignals } from '../services/urlScanService';
+import type { ApiError } from '../types';
+
+function getApiKey(req: express.Request): string | null {
+  const h = req.headers.authorization;
+  if (!h) return null;
+  return (Array.isArray(h) ? h[0] : h)?.split(' ')[1] || null;
+}
+
+function applyTechnicalAdjustments(base: number, signals: Record<string, any>): number {
+  let adj = 0;
+  if (signals.hasSchemaMarkup)           adj += 4;
+  if (signals.hasFaqSchema)              adj += 3;
+  if (signals.hasSemanticHtml)           adj += 2;
+  if (signals.hasMetaDescription)        adj += 2;
+  if (signals.hasCanonicalTag)           adj += 1;
+  if (signals.hasOpenGraphTags)          adj += 1;
+  if (signals.hasLlmsTxt)               adj += 3;
+  if (signals.hasProperHeadingHierarchy) adj += 2;
+  if (signals.isJsRendered)             adj -= 8;
+  if (!signals.hasMetaDescription)      adj -= 3;
+  if (!signals.hasSemanticHtml)         adj -= 2;
+  if (signals.missingAltTextRatio > 0.5) adj -= 3;
+  if (!signals.hasDescriptiveAnchors)   adj -= 1;
+  return Math.max(0, Math.min(100, Math.round(base + adj)));
+}
+
+export default async function handler(req: express.Request, res: express.Response) {
+  // ─── Auth & usage checks ──────────────────────────────────────────────────
+  const apiKey = getApiKey(req);
+  if (!apiKey) {
+    return res.status(401).json({ error: 'unauthorized', message: 'API key missing' } as ApiError);
+  }
+
+  const user = await findUserByApiKey(apiKey);
+  if (!user) {
+    return res.status(401).json({ error: 'unauthorized', message: 'Invalid API key' } as ApiError);
+  }
+
+  if (user.subscriptionStatus !== 'active') {
+    return res.status(402).json({ error: 'payment_required', message: 'Active subscription required' } as ApiError);
+  }
+
+  if (user.usage.count >= user.usage.limit) {
+    return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Monthly limit reached. Upgrade to continue.' } as ApiError);
+  }
+
+  // ─── Input validation ─────────────────────────────────────────────────────
+  const { url, industry } = req.body as { url?: string; industry?: string };
+  if (!url) {
+    return res.status(400).json({ error: 'bad_request', message: 'url is required' } as ApiError);
+  }
+
+  try {
+    new URL(url); // throws if malformed
+  } catch {
+    return res.status(400).json({
+      error: 'bad_request',
+      message: 'Invalid URL — must start with http:// or https://',
+    } as ApiError);
+  }
+
+  try {
+    // ─── Fetch the target URL with 15s timeout ──────────────────────────────
+    const ctrl = new AbortController();
+    const timeout = setTimeout(() => ctrl.abort(), 15000);
+    let rawHtml: string;
+
+    try {
+      const r = await fetch(url, {
+        signal: ctrl.signal,
+        headers: { 'User-Agent': 'RainOS-Scanner/1.0 (+https://getrainos.com)' },
+      });
+      clearTimeout(timeout);
+
+      if (!r.ok) {
+        return res.status(422).json({
+          error: 'fetch_failed',
+          message: `Server returned HTTP ${r.status}`,
+        } as ApiError);
+      }
+
+      rawHtml = await r.text();
+    } catch (e: any) {
+      clearTimeout(timeout);
+      const msg =
+        e?.name === 'AbortError'
+          ? 'URL timed out (15s limit).'
+          : `Could not reach URL: ${e?.message}`;
+      return res.status(422).json({ error: 'fetch_failed', message: msg } as ApiError);
+    }
+
+    // ─── Cheerio technical analysis (zero API cost) ─────────────────────────
+    const scan = await scanUrlForTechnicalSignals(rawHtml, url);
+    if (!scan.extractedText || scan.extractedText.trim().length < 50) {
+      return res.status(422).json({
+        error: 'insufficient_content',
+        message: 'Not enough readable text. Page may require JavaScript to render.',
+      } as ApiError);
+    }
+
+    // ─── Gemini scoring on extracted text ────────────────────────────────────
+    const gemini = await analyzeContent(scan.extractedText, industry || 'General / Other');
+
+    // ─── Adjust score with technical signals ─────────────────────────────────
+    const adjustedScore = applyTechnicalAdjustments(gemini.overallScore, scan.signals);
+
+    const result = {
+      ...gemini,
+      overallScore:               adjustedScore,
+      technical_signals:          scan.signals,
+      technical_recommendations:  scan.recommendations,
+      url_scanned:                url,
+      scan_timestamp:             new Date().toISOString(),
+    };
+
+    // ─── Increment usage (URL scan = 1 credit) ────────────────────────────────
+    const updated = await incrementUserUsage(user.id);
+    if (updated) res.setHeader('X-Usage-Info', JSON.stringify(updated.usage));
+
+    return res.status(200).json({ success: true, data: result, ...result, raw: gemini });
+  } catch (error) {
+    console.error('URL scan error:', error);
+    const msg = error instanceof Error ? error.message : 'Internal error';
+    return res.status(500).json({ error: 'internal_server_error', message: msg } as ApiError);
+  }
+}
+```
+
+### services/geminiService.ts (REPLACE)
+
+```typescript
+// services/geminiService.ts — Rain OS AEO Scoring Engine v2.3
+// 4-pillar scoring with algorithmic readability pre-analysis grounding.
+// SDK: @google/generative-ai
+import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
+import { computeReadabilityMetrics, formatMetricsAsGroundingBlock } from './readability';
+import { createHash } from 'crypto';
+import type {
+  AnalysisResponse,
+  Phase2SubScores,
+  SubScore,
+  AiReadabilityDetail,
+  DigitalAuthorityDetail,
+  ConversionReadinessDetail,
+  ProductDiscoverabilityDetail,
+  AuthorshipSignals,
+} from '../types';
+
+// ─── Config ───────────────────────────────────────────────────────────────────
+// api_version is a single source of truth — never hardcoded in return statements
+export const API_VERSION = '2.3';
+const API_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
+const MODEL   = process.env.GEMINI_MODEL   || 'gemini-2.5-flash';
+
+let _client: GoogleGenerativeAI | null = null;
+let _model:  GenerativeModel | null = null;
+
+function getModel(): GenerativeModel {
+  if (!_model) {
+    _client = new GoogleGenerativeAI(API_KEY);
+    _model  = _client.getGenerativeModel({ model: MODEL });
+  }
+  return _model;
+}
+
+// ─── System instruction ───────────────────────────────────────────────────────
+const SYSTEM_INSTRUCTION = `You are an AEO (Answer Engine Optimization) and GEO (Generative Engine Optimization) scoring engine.
+You score content for how well it will be cited, quoted, and surfaced by AI systems: ChatGPT, Perplexity, Google AI Overviews, Claude.
+
+You will receive:
+1. ALGORITHMIC PRE-ANALYSIS — hard metrics computed before you see the content. Use these as scoring anchors. Do not contradict them.
+2. The content itself.
+3. The industry context.
+
+Score across 4 pillars (0-100 each):
+
+PILLAR 1 — AI READABILITY (weight: 30%)
+How well can AI systems parse, chunk, and extract answers from this content?
+Sub-scores: structuralClarity, answerFirstFormatting, semanticPrecision, contextSufficiency, sectionConceptIsolation
+Anchors: use avgSentenceLength, longSentenceRatio, passiveVoiceRatio, nestedClauseDepth, headingDensity, answerFirstRatio from pre-analysis.
+
+PILLAR 2 — DIGITAL AUTHORITY (weight: 25%)
+Does the content signal expertise, trustworthiness, and citability to AI?
+Sub-scores: citationSignals, entityClarity, topicalAuthority, freshnessSignals, socialProofMarkup
+Anchors: use entityDensity, definitionDensity from pre-analysis.
+
+PILLAR 3 — CONVERSION READINESS (weight: 25%)
+Does the content guide the reader toward a clear next action?
+Sub-scores: callToActionClarity, trustSignals, valueProposition, frictionReduction
+Anchors: use qaDensity, answerFirstRatio from pre-analysis.
+
+PILLAR 4 — PRODUCT DISCOVERABILITY (weight: 20%)
+For product/service content: how well will AI surface this in shopping or discovery contexts?
+Sub-scores: productVariantCoverage, merchantIdentityClarity, pricingTransparency, availabilitySignals, comparativeContext
+If content is not product-focused, score conservatively (40-60 range) based on general discoverability signals.
+
+PHASE 2 ADDITIONAL SIGNALS (score each 0-100):
+- sectionConceptIsolation: Does each section cover exactly one concept? AI chunking quality.
+- instructionDeterminism: How unambiguous are any instructions or steps? (0 if no instructions present = 50 neutral)
+- retrievalAnswerability: How easily can an AI extract a specific answer? Use qaDensity and answerFirstRatio as anchors.
+- semanticRedundancyScore: How much redundant/repetitive content? LOWER is better. Return the raw redundancy level 0-100 (0=no redundancy, 100=highly repetitive). The API will invert this.
+- socialProofMarkup: Evidence of reviews, ratings, testimonials, case studies.
+- contentChunkingQuality: How well does the content divide into discrete, self-contained chunks for RAG retrieval?
+- informationGainScore: Does this content add new information vs what AI already knows?
+- citationReadiness: How quotable/citable are individual sentences?
+- entityLinkability: Are entities (people, places, products) clearly identified and linkable?
+- topicalDepthScore: Depth of coverage within the topic — breadth vs depth balance.
+- queryAlignmentScore: How well does this match likely user queries AI would receive?
+- multimodalReadiness: Are images, tables, structured elements described in text for AI that cannot see them?
+- productVariantCoverage: Coverage of product options, sizes, configurations.
+- merchantIdentityClarity: How clearly is the brand/seller identified?
+
+SCORING RULES:
+- Use the algorithmic pre-analysis as hard constraints. If passiveVoiceRatio > 0.3, AI Readability cannot exceed 75.
+- If longSentenceRatio > 0.2, structural clarity sub-score is penalised proportionally.
+- If answerFirstRatio > 0.5, reward answerFirstFormatting generously.
+- If coreferenceLeakCount > 10, penalise semanticPrecision.
+- Overall score = weighted average of 4 pillars (30/25/25/20).
+- Be calibrated: most real-world content scores 45-72. Reserve 85+ for exceptional content.
+- Do not give round numbers (avoid 50, 60, 70 exactly) — scores should reflect genuine measurement.
+
+OUTPUT FORMAT: Respond with valid JSON only. No markdown fences, no preamble, no explanation.
+`;
+
+// ─── Response schema template (shape hint for Gemini) ────────────────────────
+const RESPONSE_SCHEMA = {
+  overallScore: 0,
+  pillarScores: { aiReadability: 0, digitalAuthority: 0, conversionReadiness: 0, productDiscoverability: 0 },
+  ai_readability_detail: { structuralClarity: 0, answerFirstFormatting: 0, semanticPrecision: 0, contextSufficiency: 0, sectionConceptIsolation: 0 },
+  digital_authority_detail: { citationSignals: 0, entityClarity: 0, topicalAuthority: 0, freshnessSignals: 0, socialProofMarkup: 0 },
+  conversion_readiness_detail: { callToActionClarity: 0, trustSignals: 0, valueProposition: 0, frictionReduction: 0 },
+  product_discoverability_detail: { productVariantCoverage: 0, merchantIdentityClarity: 0, pricingTransparency: 0, availabilitySignals: 0, comparativeContext: 0 },
+  phase2_sub_scores: {
+    sectionConceptIsolation: 0, instructionDeterminism: 0, retrievalAnswerability: 0,
+    semanticRedundancyScore: 0, socialProofMarkup: 0, contentChunkingQuality: 0,
+    informationGainScore: 0, citationReadiness: 0, entityLinkability: 0,
+    topicalDepthScore: 0, queryAlignmentScore: 0, multimodalReadiness: 0,
+    productVariantCoverage: 0, merchantIdentityClarity: 0,
+  },
+  subScores: [],
+  recommendations: [],
+  keywords: [],
+  authorship: { hasAuthorByline: false, hasPublishDate: false, hasOrganization: false, authorityScore: 0 },
+};
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+const clamp = (n: number): number => Math.max(0, Math.min(100, Math.round(n)));
+
+// ─── Main export ──────────────────────────────────────────────────────────────
+export async function analyzeContent(
+  content: string,
+  industry: string = 'General / Other'
+): Promise<AnalysisResponse> {
+  if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
+
+  // Step 1: Algorithmic pre-analysis — hard metrics, no API cost
+  const metrics      = computeReadabilityMetrics(content);
+  const groundingBlock = formatMetricsAsGroundingBlock(metrics);
+
+  // Step 2: Build the prompt with grounding anchors injected
+  const prompt = [
+    groundingBlock,
+    `INDUSTRY: ${industry}`,
+    '',
+    '=== CONTENT TO SCORE ===',
+    content.slice(0, 12000), // cap at ~12k chars to manage token cost
+    '=== END CONTENT ===',
+    '',
+    'Return your scores as a single JSON object matching this exact shape (all fields required):',
+    JSON.stringify(RESPONSE_SCHEMA, null, 2),
+  ].join('\n');
+
+  const model = getModel();
+
+  // Step 3: Call Gemini with system instruction
+  const result = await model.generateContent({
+    systemInstruction: SYSTEM_INSTRUCTION,
+    contents: [{ role: 'user', parts: [{ text: prompt }] }],
+    generationConfig: {
+      temperature:      0.1,   // low temp for consistent scoring
+      maxOutputTokens:  2048,
+      responseMimeType: 'application/json',
+    },
+  });
+
+  const raw = result.response.text();
+
+  // Step 4: Parse and validate
+  let parsed: any;
+  try {
+    const clean = raw.replace(/```json|```/g, '').trim();
+    parsed = JSON.parse(clean);
+  } catch (e) {
+    console.error('Gemini response parse error:', raw.slice(0, 500));
+    throw new Error('Failed to parse Gemini scoring response as JSON');
+  }
+
+  // Step 5: Invert semanticRedundancyScore with bounds clamp
+  // Gemini returns raw redundancy level (0=clean, 100=highly repetitive).
+  // We expose an improvement score (100=clean, 0=highly repetitive).
+  if (parsed.phase2_sub_scores?.semanticRedundancyScore !== undefined) {
+    const raw_redundancy = clamp(parsed.phase2_sub_scores.semanticRedundancyScore);
+    parsed.phase2_sub_scores.semanticRedundancyScore = 100 - raw_redundancy;
+  }
+
+  // Step 6: Compute overall score from pillar weights
+  // Recompute and correct if Gemini's value is more than 10 points off
+  const p = parsed.pillarScores || {};
+  const computedOverall = Math.round(
+    (p.aiReadability        || 0) * 0.30 +
+    (p.digitalAuthority     || 0) * 0.25 +
+    (p.conversionReadiness  || 0) * 0.25 +
+    (p.productDiscoverability || 0) * 0.20
+  );
+
+  if (Math.abs((parsed.overallScore || 0) - computedOverall) > 10) {
+    parsed.overallScore = computedOverall;
+  }
+
+  // Step 7: Build normalised subScores array for backward compatibility
+  const subScores: SubScore[] = [
+    { category: 'structuralClarity',      score: clamp(parsed.ai_readability_detail?.structuralClarity      || 0), label: 'Structural Clarity' },
+    { category: 'answerFirstFormatting',  score: clamp(parsed.ai_readability_detail?.answerFirstFormatting  || 0), label: 'Answer-First Formatting' },
+    { category: 'semanticPrecision',      score: clamp(parsed.ai_readability_detail?.semanticPrecision      || 0), label: 'Semantic Precision' },
+    { category: 'contextSufficiency',     score: clamp(parsed.ai_readability_detail?.contextSufficiency     || 0), label: 'Context Sufficiency' },
+    { category: 'citationSignals',        score: clamp(parsed.digital_authority_detail?.citationSignals     || 0), label: 'Citation Signals' },
+    { category: 'entityClarity',          score: clamp(parsed.digital_authority_detail?.entityClarity       || 0), label: 'Entity Clarity' },
+    { category: 'topicalAuthority',       score: clamp(parsed.digital_authority_detail?.topicalAuthority    || 0), label: 'Topical Authority' },
+    { category: 'callToActionClarity',    score: clamp(parsed.conversion_readiness_detail?.callToActionClarity || 0), label: 'CTA Clarity' },
+    { category: 'valueProposition',       score: clamp(parsed.conversion_readiness_detail?.valueProposition || 0), label: 'Value Proposition' },
+    { category: 'productDiscoverability', score: clamp(parsed.pillarScores?.productDiscoverability          || 0), label: 'Product Discoverability' },
+  ];
+
+  // Step 8: Build authorship — include legacy fields for WP plugin backward compat
+  const authorshipRaw = parsed.authorship || {};
+  const authorshipSignals: AuthorshipSignals = {
+    hasAuthorByline:  Boolean(authorshipRaw.hasAuthorByline),
+    hasPublishDate:   Boolean(authorshipRaw.hasPublishDate),
+    hasOrganization:  Boolean(authorshipRaw.hasOrganization),
+    authorityScore:   clamp(authorshipRaw.authorityScore || 0),
+    // Legacy fields — WP plugin reads these; keep until plugin is updated
+    hash:      createHash('sha256').update(content.slice(0, 5000)).digest('hex'),
+    timestamp: new Date().toISOString(),
+    status:    'Analyzed',
+  };
+
+  return {
+    overallScore:                   clamp(parsed.overallScore || computedOverall),
+    pillarScores:                   parsed.pillarScores                   || { aiReadability: 0, digitalAuthority: 0, conversionReadiness: 0, productDiscoverability: 0 },
+    subScores,
+    phase2_sub_scores:              parsed.phase2_sub_scores              || ({} as Phase2SubScores),
+    ai_readability_detail:          parsed.ai_readability_detail          || ({} as AiReadabilityDetail),
+    digital_authority_detail:       parsed.digital_authority_detail       || ({} as DigitalAuthorityDetail),
+    conversion_readiness_detail:    parsed.conversion_readiness_detail    || ({} as ConversionReadinessDetail),
+    product_discoverability_detail: parsed.product_discoverability_detail || ({} as ProductDiscoverabilityDetail),
+    recommendations:                Array.isArray(parsed.recommendations) ? parsed.recommendations : [],
+    keywords:                       Array.isArray(parsed.keywords) ? parsed.keywords : [],
+    authorship:                     authorshipSignals,
+    api_version:                    API_VERSION,  // single source of truth — never hardcoded
+  };
+}
+
+// ─── Legacy action helpers (still called by api/analyze.ts) ──────────────────
+// These remain so the existing WP plugin quick-actions keep working.
+import { GoogleGenerativeAI as GGA } from '@google/generative-ai';
+
+async function callGeminiSimple(prompt: string, systemInstruction: string): Promise<string> {
+  if (!API_KEY) throw new Error('GEMINI_API_KEY not set');
+  const client = new GGA(API_KEY);
+  const model  = client.getGenerativeModel({ model: MODEL });
+  const result = await model.generateContent({
+    systemInstruction,
+    contents: [{ role: 'user', parts: [{ text: prompt }] }],
+    generationConfig: { temperature: 0.5, maxOutputTokens: 512, responseMimeType: 'application/json' },
+  });
+  return result.response.text();
+}
+
+export const generateTitles = async (content: string): Promise<{ titles: string[] }> => {
+  const raw = await callGeminiSimple(
+    content,
+    'You are a creative copywriter. Based on the provided content, generate 3-5 compelling and SEO-friendly titles. Respond ONLY with valid JSON: { "titles": ["string", ...] }'
+  );
+  try { return JSON.parse(raw.replace(/```json|```/g, '').trim()); } catch { return { titles: [] }; }
+};
+
+export const generateDescription = async (content: string): Promise<{ description: string }> => {
+  const raw = await callGeminiSimple(
+    content,
+    'You are an expert SEO copywriter. Write a concise meta description of no more than 160 characters. Respond ONLY with valid JSON: { "description": "string" }'
+  );
+  try { return JSON.parse(raw.replace(/```json|```/g, '').trim()); } catch { return { description: '' }; }
+};
+
+export const summarizeContent = async (content: string): Promise<{ summary: string }> => {
+  const raw = await callGeminiSimple(
+    content,
+    'You are an expert summarizer. Generate a concise summary that captures key points. Respond ONLY with valid JSON: { "summary": "string" }'
+  );
+  try { return JSON.parse(raw.replace(/```json|```/g, '').trim()); } catch { return { summary: '' }; }
+};
+
+export const rewriteSentence = async (sentence: string): Promise<{ rewritten: string }> => {
+  const raw = await callGeminiSimple(
+    sentence,
+    'You are an expert editor. Rewrite the sentence for clarity and conciseness while preserving its meaning. Respond ONLY with valid JSON: { "rewritten": "string" }'
+  );
+  try { return JSON.parse(raw.replace(/```json|```/g, '').trim()); } catch { return { rewritten: sentence }; }
+};
+```
+
+### services/readability.ts (CREATE NEW)
+
+```typescript
+// services/readability.ts
+// Algorithmic pre-analysis — hard metrics fed into Gemini as scoring anchors.
+// Zero API cost. Runs before every Gemini call.
+
+export interface ReadabilityMetrics {
+  avgSentenceLength:      number;
+  sentenceLengthVariance: number;
+  longSentenceRatio:      number;
+  passiveVoiceRatio:      number;
+  coreferenceLeakCount:   number;
+  abstractionRatio:       number;
+  nestedClauseDepth:      number;
+  headingDensity:         number;
+  answerFirstRatio:       number;
+  qaDensity:              number;
+  definitionDensity:      number;
+  entityDensity:          number;
+  listItemRatio:          number;
+  wordCount:              number;
+}
+
+const stripHtml = (t: string): string =>
+  t.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+
+const getSentences = (t: string): string[] =>
+  t.split(/(?<=[.!?])\s+/).filter((s) => s.trim().length > 10);
+
+const getWords = (t: string): string[] =>
+  t.split(/\s+/).filter(Boolean);
+
+// Vague/abstract words that reduce semantic precision
+const ABSTRACT_WORDS = new Set([
+  'thing', 'stuff', 'various', 'several', 'many', 'some', 'certain',
+  'aspect', 'factor', 'issue', 'situation', 'manner', 'way', 'kind',
+  'type', 'form', 'nature', 'level', 'area', 'field', 'case',
+]);
+
+export function computeReadabilityMetrics(raw: string): ReadabilityMetrics {
+  const text = stripHtml(raw);
+  const words = getWords(text);
+  const sentences = getSentences(text);
+  const wordCount = words.length;
+
+  // ─── Sentence length metrics ─────────────────────────────────────────────
+  const sentenceLengths = sentences.map((s) => getWords(s).length);
+  const avg = sentenceLengths.length
+    ? sentenceLengths.reduce((a, b) => a + b, 0) / sentenceLengths.length
+    : 0;
+  const variance = sentenceLengths.length
+    ? Math.sqrt(
+        sentenceLengths.reduce((a, b) => a + Math.pow(b - avg, 2), 0) /
+          sentenceLengths.length
+      )
+    : 0;
+  const longRatio = sentenceLengths.length
+    ? sentenceLengths.filter((l) => l > 30).length / sentenceLengths.length
+    : 0;
+
+  // ─── Passive voice ────────────────────────────────────────────────────────
+  const passive = (text.match(/\b(was|were|been|is|are|be)\s+\w+ed\b/gi) || []).length;
+  const passiveRatio = sentences.length ? passive / sentences.length : 0;
+
+  // ─── Coreference leaks (ambiguous pronouns without clear antecedent) ──────
+  const corefLeaks = (text.match(/\b(it|this|that|they|them|these|those|he|she)\b/gi) || []).length;
+
+  // ─── Abstraction ratio ────────────────────────────────────────────────────
+  const abstractCount = words.filter((w) => ABSTRACT_WORDS.has(w.toLowerCase())).length;
+  const abstractRatio = wordCount ? abstractCount / wordCount : 0;
+
+  // ─── Nested clause depth (commas per sentence as proxy) ──────────────────
+  const totalCommas = (text.match(/,/g) || []).length;
+  const nestedDepth = sentences.length ? totalCommas / sentences.length : 0;
+
+  // ─── Heading density (headings per 100 words) ────────────────────────────
+  const headingMatches = (raw.match(/<h[1-6][^>]*>/gi) || []).length;
+  const headingDensity = wordCount ? (headingMatches / wordCount) * 100 : 0;
+
+  // ─── Answer-first ratio (sentences that lead with a direct answer) ────────
+  // Heuristic: short sentences (<= 20 words) that start with a noun or number
+  const answerFirstCount = sentences.filter((s) => {
+    const ws = getWords(s);
+    return ws.length <= 20 && /^[A-Z0-9]/.test(s.trim()) && !s.trim().endsWith('?');
+  }).length;
+  const answerFirstRatio = sentences.length ? answerFirstCount / sentences.length : 0;
+
+  // ─── QA density (question sentences) ─────────────────────────────────────
+  const questionCount = sentences.filter((s) => s.trim().endsWith('?')).length;
+  const qaDensity = sentences.length ? questionCount / sentences.length : 0;
+
+  // ─── Definition density (per 100 words) ──────────────────────────────────
+  const defMatches = (text.match(/\b(is defined as|refers to|means|is a|are a)\b/gi) || []).length;
+  const defDensity = wordCount ? (defMatches / wordCount) * 100 : 0;
+
+  // ─── Entity density (proper nouns per 100 words) ─────────────────────────
+  // Heuristic: capitalised words not at sentence start
+  const entityMatches = (text.match(/(?<!\.\s)(?<![A-Z])\b[A-Z][a-z]+\b/g) || []).length;
+  const entityDensity = wordCount ? (entityMatches / wordCount) * 100 : 0;
+
+  // ─── List item ratio (list items per 100 words) ──────────────────────────
+  const listItems = (raw.match(/<li[^>]*>/gi) || []).length;
+  const listRatio = wordCount ? (listItems / wordCount) * 100 : 0;
+
+  return {
+    avgSentenceLength:      Math.round(avg * 10) / 10,
+    sentenceLengthVariance: Math.round(variance * 10) / 10,
+    longSentenceRatio:      Math.round(longRatio * 100) / 100,
+    passiveVoiceRatio:      Math.round(passiveRatio * 100) / 100,
+    coreferenceLeakCount:   corefLeaks,
+    abstractionRatio:       Math.round(abstractRatio * 100) / 100,
+    nestedClauseDepth:      Math.round(nestedDepth * 10) / 10,
+    headingDensity:         Math.round(headingDensity * 100) / 100,
+    answerFirstRatio:       Math.round(answerFirstRatio * 100) / 100,
+    qaDensity:              Math.round(qaDensity * 100) / 100,
+    definitionDensity:      Math.round(defDensity * 100) / 100,
+    entityDensity:          Math.round(entityDensity * 100) / 100,
+    listItemRatio:          Math.round(listRatio * 100) / 100,
+    wordCount,
+  };
+}
+
+export function formatMetricsAsGroundingBlock(m: ReadabilityMetrics): string {
+  return [
+    '=== ALGORITHMIC PRE-ANALYSIS (use as scoring anchors — do not contradict) ===',
+    `Word count: ${m.wordCount}`,
+    `Avg sentence length: ${m.avgSentenceLength} words (optimal: 15-20; penalise AI Readability if >25)`,
+    `Sentence length variance: ${m.sentenceLengthVariance} stddev (optimal: 4-12)`,
+    `Long sentence ratio: ${(m.longSentenceRatio * 100).toFixed(1)}% sentences >30 words (penalise structuralClarity if >20%)`,
+    `Passive voice ratio: ${(m.passiveVoiceRatio * 100).toFixed(1)}% (penalise semanticPrecision if >30%)`,
+    `Coreference leaks: ${m.coreferenceLeakCount} ambiguous pronouns (penalise semanticPrecision: -3pts each, max -20)`,
+    `Abstraction ratio: ${(m.abstractionRatio * 100).toFixed(1)}% vague words (penalise: -20 x ratio)`,
+    `Nested clause depth: ${m.nestedClauseDepth.toFixed(1)} commas/sentence (penalise structuralClarity if >3)`,
+    `Heading density: ${m.headingDensity.toFixed(2)} per 100 words (optimal: 0.5-2.0)`,
+    `Answer-first ratio: ${(m.answerFirstRatio * 100).toFixed(1)}% (reward answerFirstFormatting generously if >40%)`,
+    `QA density: ${(m.qaDensity * 100).toFixed(1)}% question sentences`,
+    `Definition density: ${m.definitionDensity.toFixed(2)} per 100 words`,
+    `Entity density: ${m.entityDensity.toFixed(2)} proper nouns per 100 words`,
+    `List item ratio: ${m.listItemRatio.toFixed(2)} list items per 100 words`,
+    '=== END PRE-ANALYSIS ===',
+  ].join('\n');
+}
+```
+
+### services/analyzeController.ts (CREATE NEW)
+
+```typescript
+// services/analyzeController.ts
+// Route handlers for POST /api/analyze and GET /api/capabilities.
+// Auth, usage-check, and incrementing all live here — keeping api/index.ts thin.
+import express from 'express';
+import { analyzeContent, API_VERSION } from './geminiService';
+import { findUserByApiKey, incrementUserUsage } from './dbService';
+import type { ApiError, CapabilitiesResponse } from '../types';
+
+const PHASE2_SUB_SCORES = [
+  'sectionConceptIsolation',
+  'instructionDeterminism',
+  'retrievalAnswerability',
+  'semanticRedundancyScore',
+  'socialProofMarkup',
+  'contentChunkingQuality',
+  'informationGainScore',
+  'citationReadiness',
+  'entityLinkability',
+  'topicalDepthScore',
+  'queryAlignmentScore',
+  'multimodalReadiness',
+  'productVariantCoverage',
+  'merchantIdentityClarity',
+];
+
+function getApiKey(req: express.Request): string | null {
+  const header = req.headers.authorization;
+  if (!header) return null;
+  return (Array.isArray(header) ? header[0] : header)?.split(' ')[1] || null;
+}
+
+export async function handleAnalyze(req: express.Request, res: express.Response) {
+  const apiKey = getApiKey(req);
+  if (!apiKey) {
+    return res.status(401).json({ error: 'unauthorized', message: 'API key missing' } as ApiError);
+  }
+
+  const user = await findUserByApiKey(apiKey);
+  if (!user) {
+    return res.status(401).json({ error: 'unauthorized', message: 'Invalid API key' } as ApiError);
+  }
+
+  if (user.subscriptionStatus !== 'active') {
+    return res.status(402).json({ error: 'payment_required', message: 'Active subscription required' } as ApiError);
+  }
+
+  if (user.usage.count >= user.usage.limit) {
+    return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Monthly limit reached. Upgrade to continue.' } as ApiError);
+  }
+
+  const { content, industry } = req.body as { content?: string; industry?: string };
+  if (!content || typeof content !== 'string' || content.trim().length < 10) {
+    return res.status(400).json({ error: 'bad_request', message: 'content is required (minimum 10 characters)' } as ApiError);
+  }
+
+  try {
+    const result = await analyzeContent(content, industry || 'General / Other');
+    const updatedUser = await incrementUserUsage(user.id);
+    if (updatedUser) res.setHeader('X-Usage-Info', JSON.stringify(updatedUser.usage));
+    return res.status(200).json({ success: true, data: result, ...result });
+  } catch (error) {
+    console.error('Analysis error:', error);
+    const msg = error instanceof Error ? error.message : 'Analysis failed';
+    return res.status(500).json({ error: 'internal_server_error', message: msg } as ApiError);
+  }
+}
+
+export function handleCapabilities(_req: express.Request, res: express.Response) {
+  const capabilities: CapabilitiesResponse = {
+    api_version:       API_VERSION,
+    pillars:           ['aiReadability', 'digitalAuthority', 'conversionReadiness', 'productDiscoverability'],
+    phase2_sub_scores: PHASE2_SUB_SCORES,
+    scoring_model:     process.env.GEMINI_MODEL || 'gemini-2.5-flash',
+  };
+  return res.status(200).json(capabilities);
+}
+```
+
+### services/urlScanService.ts (CREATE NEW)
+
+```typescript
+// services/urlScanService.ts — Cheerio HTML analysis. Zero API cost.
+// Extracts technical signals from raw HTML for use in URL scan scoring.
+import * as cheerio from 'cheerio';
+
+export interface TechnicalSignals {
+  // Schema
+  hasSchemaMarkup:        boolean;
+  schemaTypes:            string[];
+  hasFaqSchema:           boolean;
+  hasProductSchema:       boolean;
+  hasArticleSchema:       boolean;
+  // Semantic structure
+  hasSemanticHtml:        boolean;
+  semanticTagsFound:      string[];
+  hasProperHeadingHierarchy: boolean;
+  headingCount:           number;
+  // Meta
+  hasMetaDescription:     boolean;
+  metaDescriptionLength:  number;
+  hasCanonicalTag:        boolean;
+  hasOpenGraphTags:       boolean;
+  titleLength:            number;
+  // JS rendering
+  isJsRendered:           boolean;
+  jsRenderingWarning:     string | null;
+  // llms.txt
+  hasLlmsTxt:             boolean;
+  // Images
+  totalImages:            number;
+  imagesWithAltText:      number;
+  missingAltTextRatio:    number;
+  // Links
+  internalLinkCount:      number;
+  externalLinkCount:      number;
+  hasDescriptiveAnchors:  boolean;
+  // Content
+  wordCount:              number;
+  extractedText:          string;
+}
+
+export interface UrlScanResult {
+  signals:          TechnicalSignals;
+  extractedText:    string;
+  recommendations:  string[];
+}
+
+export async function scanUrlForTechnicalSignals(
+  html: string,
+  pageUrl: string
+): Promise<UrlScanResult> {
+  const $ = cheerio.load(html);
+  const parsedUrl = new URL(pageUrl);
+  const signals = {} as TechnicalSignals;
+
+  // ─── Schema markup ──────────────────────────────────────────────────────────
+  const schemaTypes: string[] = [];
+  let hasFaqSchema = false;
+  let hasProductSchema = false;
+  let hasArticleSchema = false;
+
+  $('script[type="application/ld+json"]').each((_, el) => {
+    try {
+      const j = JSON.parse($(el).html() || '');
+      const raw = j['@type'];
+      const types: string[] = Array.isArray(raw) ? raw : raw ? [raw] : [];
+      schemaTypes.push(...types);
+      if (types.includes('FAQPage'))    hasFaqSchema = true;
+      if (types.includes('Product'))    hasProductSchema = true;
+      if (['Article', 'BlogPosting', 'NewsArticle'].some((t) => types.includes(t))) hasArticleSchema = true;
+    } catch { /* malformed JSON-LD — skip */ }
+  });
+
+  signals.hasSchemaMarkup   = schemaTypes.length > 0;
+  signals.schemaTypes       = schemaTypes;
+  signals.hasFaqSchema      = hasFaqSchema;
+  signals.hasProductSchema  = hasProductSchema;
+  signals.hasArticleSchema  = hasArticleSchema;
+
+  // ─── Semantic HTML ──────────────────────────────────────────────────────────
+  const semTags = ['article', 'section', 'main', 'nav', 'aside', 'header', 'footer'];
+  const found   = semTags.filter((t) => $(t).length > 0);
+  signals.hasSemanticHtml           = found.length >= 2;
+  signals.semanticTagsFound         = found;
+  signals.hasProperHeadingHierarchy = $('h1').length === 1 && $('h2').length > 0;
+  signals.headingCount              = $('h1,h2,h3,h4,h5,h6').length;
+
+  // ─── Meta tags ──────────────────────────────────────────────────────────────
+  const md = $('meta[name="description"]').attr('content') || '';
+  signals.hasMetaDescription      = md.length > 0;
+  signals.metaDescriptionLength   = md.length;
+  signals.hasCanonicalTag         = $('link[rel="canonical"]').length > 0;
+  signals.hasOpenGraphTags        = $('meta[property^="og:"]').length > 0;
+  signals.titleLength             = ($('title').text() || '').length;
+
+  // ─── JS rendering detection ─────────────────────────────────────────────────
+  const bodyText = $('body').text().replace(/\s+/g, ' ').trim();
+  const jsRendered = bodyText.length < 200 && $('script').length > 5;
+  signals.isJsRendered      = jsRendered;
+  signals.jsRenderingWarning = jsRendered
+    ? 'Page requires JavaScript. AI crawlers see an empty page.'
+    : null;
+
+  // ─── llms.txt check ─────────────────────────────────────────────────────────
+  let hasLlmsTxt = false;
+  try {
+    const r = await fetch(`${parsedUrl.protocol}//${parsedUrl.host}/llms.txt`, {
+      method: 'HEAD',
+      signal: AbortSignal.timeout(3000),
+    });
+    hasLlmsTxt = r.ok;
+  } catch { /* unreachable or timeout — not present */ }
+  signals.hasLlmsTxt = hasLlmsTxt;
+
+  // ─── Images ─────────────────────────────────────────────────────────────────
+  const allImgs   = $('img');
+  const altImgs   = $('img[alt]:not([alt=""])');
+  signals.totalImages           = allImgs.length;
+  signals.imagesWithAltText     = altImgs.length;
+  signals.missingAltTextRatio   = allImgs.length > 0
+    ? (allImgs.length - altImgs.length) / allImgs.length
+    : 0;
+
+  // ─── Links ──────────────────────────────────────────────────────────────────
+  let internalLinks = 0;
+  let externalLinks = 0;
+  let genericAnchors = 0;
+  const genericTerms = ['click here', 'read more', 'learn more', 'here', 'this link', 'more'];
+
+  $('a[href]').each((_, el) => {
+    const href = $(el).attr('href') || '';
+    const text = $(el).text().trim().toLowerCase();
+    if (href.startsWith('/') || href.includes(parsedUrl.host)) internalLinks++;
+    else if (href.startsWith('http')) externalLinks++;
+    if (genericTerms.includes(text)) genericAnchors++;
+  });
+
+  signals.internalLinkCount      = internalLinks;
+  signals.externalLinkCount      = externalLinks;
+  signals.hasDescriptiveAnchors  = genericAnchors === 0;
+
+  // ─── Text extraction ─────────────────────────────────────────────────────────
+  // Remove non-content elements before extraction
+  $('nav,footer,script,style,noscript,iframe,[role="navigation"],[role="banner"]').remove();
+  $('.nav,.footer,.menu,.sidebar,.ad,.advertisement,.cookie-banner').remove();
+
+  // Prefer main content container if present
+  const contentEl = $('article,main,[role="main"],.content,.post,.entry,.article-body').first();
+  let extractedText = contentEl.length > 0
+    ? contentEl.text().replace(/\s+/g, ' ').trim()
+    : $('body').text().replace(/\s+/g, ' ').trim();
+
+  // Cap at 8,000 words to stay within Gemini token budget
+  const wordsSplit = extractedText.split(/\s+/);
+  if (wordsSplit.length > 8000) {
+    extractedText = wordsSplit.slice(0, 8000).join(' ') + ' ... [truncated]';
+  }
+
+  signals.wordCount      = Math.min(wordsSplit.length, 8000);
+  signals.extractedText  = extractedText;
+
+  // ─── Recommendations ─────────────────────────────────────────────────────────
+  const recs: string[] = [];
+  if (!signals.hasSchemaMarkup)
+    recs.push('Add JSON-LD structured data. Start with Article or FAQPage schema.');
+  if (!signals.hasSemanticHtml)
+    recs.push('Replace div wrappers with semantic HTML5: article, main, section.');
+  if (!signals.hasProperHeadingHierarchy)
+    recs.push('Use exactly one h1 per page, then logical h2/h3 subheadings.');
+  if (!signals.hasMetaDescription)
+    recs.push('Add a meta description (150-160 chars).');
+  if (!signals.hasCanonicalTag)
+    recs.push('Add a canonical tag to establish the authoritative URL.');
+  if (signals.isJsRendered)
+    recs.push('CRITICAL: Page requires JavaScript. AI crawlers see an empty page. Implement SSR immediately.');
+  if (!signals.hasLlmsTxt)
+    recs.push('Create /llms.txt at your domain root to guide AI crawlers.');
+  if (signals.missingAltTextRatio > 0.3)
+    recs.push(`${Math.round(signals.missingAltTextRatio * 100)}% of images have no alt text. Add descriptive alt attributes.`);
+  if (!signals.hasDescriptiveAnchors)
+    recs.push('Replace generic anchor text ("click here", "read more") with descriptive text.');
+  if (!signals.hasOpenGraphTags)
+    recs.push('Add Open Graph meta tags (og:title, og:description, og:image).');
+
+  return { signals, extractedText, recommendations: recs };
+}
+```
+
+---
+
+## ⚠️ Troubleshooting
+
+### Railway build fails with "Cannot find module @google/genai"
+
+The old SDK is still cached in node_modules. In Railway → your project → Settings, trigger a full redeploy with cleared cache. Or add a deploy command override:
+
+```bash
+npm ci && npm run build
+```
+
+### TypeScript error: Property X does not exist on type User
+
+The old types.ts is still in place. Check your project root — types.ts at `/project/types.ts` must be replaced, not the one in `dist/`.
+
+### WordPress plugin getting 403 errors after deploy
+
+The CORS origin has reverted to an allowlist. Check `api/index.ts` — `corsOptions.origin` must be `'*'`. Do not change this to a domain list.
+
+### URL scan returns "insufficient_content"
+
+The scanned page requires JavaScript to render (React, Next.js SPA, etc.). The Cheerio extractor sees an empty body. Implement SSR or provide a static version of the page. This is expected behaviour, not a bug.
+
+### /api/capabilities returns 404
+
+The capabilities route is registered in api/index.ts. If you see 404, the file was not replaced correctly — the old index.ts does not have this route.
+
+### Git says "nothing to commit"
+
+You may have saved changes but not in the right location. Confirm the files are inside your cloned repository folder, not in Downloads or another location. Run: `git status` — it will list which files are modified.
+
+---
+
+## ✅ Pre-Deployment Checklist
+
+- [ ] Node.js v18+ installed locally
+- [ ] .env file has GEMINI_API_KEY set
+- [ ] All 8 files replaced/created (types.ts, package.json, api/index.ts, api/url-scan.ts, 4 services files)
+- [ ] `npm install` ran without errors
+- [ ] `npm run build` compiles TypeScript to dist/ without errors
+- [ ] Git shows 8 modified/new files: `git status`
+- [ ] Commit message is clear: `git commit -m "feat: v2.3 — 4-pillar scoring, url-scan, oauth, cheerio"`
+- [ ] Push to main: `git push origin main`
+- [ ] Railway auto-redeploys (check dashboard for "Deploy succeeded")
+- [ ] Health check passes: `curl https://api.getrainos.com/api/health`
+- [ ] Capabilities endpoint works: `curl https://api.getrainos.com/api/capabilities`
+
+---
+
+## 🎯 Success Criteria (v2.3 Live)
+
+✅ **Scoring Engine**: 4 pillars, 14 sub-scores, algorithmic pre-analysis grounding  
+✅ **URL Scanning**: Fetch + Cheerio + Gemini combined scoring  
+✅ **Technical Signals**: 20+ HTML metrics extracted at zero API cost  
+✅ **Google OAuth**: Backend routes configured, env vars set  
+✅ **Backward Compatibility**: WP plugin still works, legacy fields kept  
+✅ **Usage Metering**: 1 credit per URL scan, Stripe tiers apply  
+✅ **API Versioning**: /api/capabilities returns v2.3  
+
+---
+
+## 📞 Support
+
+If you hit issues during deployment:
+
+1. Check the troubleshooting section above
+2. Verify every file was replaced exactly (no partial edits)
+3. Ensure npm dependencies installed correctly: `npm ls @google/generative-ai@^0.21.0 cheerio@^1.0.0`
+4. Check Railway logs for TypeScript compilation errors
+5. Confirm environment variables are set: `env | grep -E "GOOGLE|GEMINI|API_KEY"`
+
+---
+
+**Status**: All blockers fixed. All code production-ready. Ready to ship.
+
+**Version**: 2.3.0  
+**Last Updated**: March 2025  
+**Git Tag**: Ready for v2.3.0 release
