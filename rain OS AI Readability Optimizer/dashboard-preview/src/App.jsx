@@ -1911,7 +1911,7 @@ function QuickToolsPage() {
   )
 }
 
-function ThreePillarsPage() {
+function FourPillarsPage() {
   return (
     <>
       <div className="animate-in" style={{ marginBottom: '32px' }}>
@@ -4119,8 +4119,8 @@ function App() {
         return <APIReferencePage />
       case 'docs-pro-features':
         return <QuickToolsPage />
-      case 'docs-three-pillars':
-        return <ThreePillarsPage />
+      case 'docs-four-pillars':
+        return <FourPillarsPage />
       case 'docs-troubleshooting':
         return <TroubleshootingPage />
       default:

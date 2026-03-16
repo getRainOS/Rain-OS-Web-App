@@ -7,7 +7,7 @@ $current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( 
 
 $sections = array(
     'getting-started'   => __( 'Getting Started', 'rain-os-aeo-analyzer' ),
-    'three-pillars'     => __( 'The Four Pillars', 'rain-os-aeo-analyzer' ),
+    'four-pillars'      => __( 'The Four Pillars', 'rain-os-aeo-analyzer' ),
     'url-scanner'       => __( 'URL Scanner', 'rain-os-aeo-analyzer' ),
     'content-analyzer'  => __( 'Gutenberg Sidebar', 'rain-os-aeo-analyzer' ),
     'quick-tools'       => __( 'Quick Tools', 'rain-os-aeo-analyzer' ),
@@ -73,7 +73,7 @@ $sections = array(
                 </div>
             </div>
 
-            <?php elseif ( 'three-pillars' === $current_section ) : ?>
+            <?php elseif ( 'four-pillars' === $current_section ) : ?>
             <div class="rain-os-docs-section">
                 <h1><?php esc_html_e( 'Understanding the Four Pillars', 'rain-os-aeo-analyzer' ); ?></h1>
                 <p class="rain-os-docs-intro"><?php esc_html_e( 'Rain OS analyzes your content based on four key pillars that determine how well AI systems can understand, trust, extract information from, and discover your content.', 'rain-os-aeo-analyzer' ); ?></p>
