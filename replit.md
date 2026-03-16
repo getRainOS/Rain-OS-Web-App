@@ -36,7 +36,7 @@ The plugin adheres to WordPress plugin standards with a modular, class-based des
 ## Recent Updates
 
 ### Nav Layout & Docs Overhaul (March 2026)
-- **Admin Menu Restructure**: Dashboard is now the top-level landing page (slug `rain-os-aeo`); menu order: Dashboard, Content Analyzer, URL Scanner, Score History, Pillar Breakdown, Content Signals, Learn AI Readability, Documentation, Upgrade, Settings
+- **Admin Menu Restructure**: Dashboard is now the top-level landing page (slug `rain-os-aeo`); 4 non-clickable separator items registered (ANALYZE, REPORTS, LEARN, ACCOUNT) using `__return_null` callback; `render_menu_separator_styles()` injects CSS via `admin_head` to make them non-clickable (pointer-events:none) and styled as uppercase section labels; menu order: Dashboard | ANALYZE | Content Analyzer | URL Scanner | REPORTS | Score History | Pillar Breakdown | Content Signals | LEARN | Learn AI Readability | Documentation | ACCOUNT | Upgrade | Settings
 - **Dashboard Slug Fix**: All template "Back to Dashboard" links updated from `page=rain-os-aeo-dashboard` to `page=rain-os-aeo` across 7 templates
 - **readme.txt v2.3.0**: Stable tag bumped to 2.3.0; four pillars listed with all 14 sub-scores; URL Scanner, Gutenberg Sidebar, PD Mute Toggle added as features; `== External Services ==` section (WP.org compliant); full 2.3.0 changelog and upgrade notice
 - **documentation.php**: Added `url-scanner` section with: what it does, 5-step how-to, all 9 technical signal definitions, results sections explained, URL Scanner vs Content Analyzer comparison

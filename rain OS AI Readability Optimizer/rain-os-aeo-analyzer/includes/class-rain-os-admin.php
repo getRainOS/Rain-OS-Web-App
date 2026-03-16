@@ -16,6 +16,7 @@ class Rain_OS_Admin {
     private function init_hooks() {
         add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
         add_action( 'admin_init', array( $this, 'handle_page_routing' ) );
+        add_action( 'admin_head', array( $this, 'render_menu_separator_styles' ) );
     }
 
     public function add_admin_menu() {
@@ -40,6 +41,15 @@ class Rain_OS_Admin {
 
         add_submenu_page(
             'rain-os-aeo',
+            '',
+            __( 'ANALYZE', 'rain-os-aeo-analyzer' ),
+            'edit_posts',
+            'rain-os-aeo-sep-analyze',
+            '__return_null'
+        );
+
+        add_submenu_page(
+            'rain-os-aeo',
             __( 'Content Analyzer', 'rain-os-aeo-analyzer' ),
             __( 'Content Analyzer', 'rain-os-aeo-analyzer' ),
             'edit_posts',
@@ -54,6 +64,15 @@ class Rain_OS_Admin {
             'edit_posts',
             'rain-os-aeo-url-scanner',
             array( $this, 'render_url_scanner_page' )
+        );
+
+        add_submenu_page(
+            'rain-os-aeo',
+            '',
+            __( 'REPORTS', 'rain-os-aeo-analyzer' ),
+            'edit_posts',
+            'rain-os-aeo-sep-reports',
+            '__return_null'
         );
 
         add_submenu_page(
@@ -85,6 +104,15 @@ class Rain_OS_Admin {
 
         add_submenu_page(
             'rain-os-aeo',
+            '',
+            __( 'LEARN', 'rain-os-aeo-analyzer' ),
+            'edit_posts',
+            'rain-os-aeo-sep-learn',
+            '__return_null'
+        );
+
+        add_submenu_page(
+            'rain-os-aeo',
             __( 'Learn AI Readability', 'rain-os-aeo-analyzer' ),
             __( 'Learn AI Readability', 'rain-os-aeo-analyzer' ),
             'edit_posts',
@@ -99,6 +127,15 @@ class Rain_OS_Admin {
             'edit_posts',
             'rain-os-aeo-docs',
             array( $this, 'render_docs_page' )
+        );
+
+        add_submenu_page(
+            'rain-os-aeo',
+            '',
+            __( 'ACCOUNT', 'rain-os-aeo-analyzer' ),
+            'manage_options',
+            'rain-os-aeo-sep-account',
+            '__return_null'
         );
 
         add_submenu_page(
@@ -118,6 +155,39 @@ class Rain_OS_Admin {
             'rain-os-aeo-settings',
             array( $this, 'render_settings_page' )
         );
+    }
+
+    public function render_menu_separator_styles() {
+        $screen = get_current_screen();
+        if ( ! $screen || strpos( $screen->id, 'rain-os-aeo' ) === false ) {
+            return;
+        }
+        ?>
+        <style>
+        #adminmenu li a[href$="page=rain-os-aeo-sep-analyze"],
+        #adminmenu li a[href$="page=rain-os-aeo-sep-reports"],
+        #adminmenu li a[href$="page=rain-os-aeo-sep-learn"],
+        #adminmenu li a[href$="page=rain-os-aeo-sep-account"] {
+            pointer-events: none;
+            cursor: default;
+            font-size: 10px !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.8px !important;
+            color: rgba(255,255,255,0.3) !important;
+            padding-top: 14px !important;
+            padding-bottom: 2px !important;
+            margin-top: 4px;
+        }
+        #adminmenu li a[href$="page=rain-os-aeo-sep-analyze"]:hover,
+        #adminmenu li a[href$="page=rain-os-aeo-sep-reports"]:hover,
+        #adminmenu li a[href$="page=rain-os-aeo-sep-learn"]:hover,
+        #adminmenu li a[href$="page=rain-os-aeo-sep-account"]:hover {
+            background: transparent !important;
+            color: rgba(255,255,255,0.3) !important;
+        }
+        </style>
+        <?php
     }
 
     public function handle_page_routing() {
