@@ -273,12 +273,11 @@
         scanUrl: function($btn) {
             var self = this;
             var urlInput = document.getElementById('rain-os-scan-url');
-            if (!urlInput || !urlInput.value.trim()) {
+            var url = urlInput ? urlInput.value.trim() : '';
+            if (!url || url === 'http://' || url === 'https://') {
                 alert(rainOsAeo.i18n.urlRequired || 'Please enter a URL to scan.');
                 return;
             }
-
-            var url = urlInput.value.trim();
             var industry = $('#rairo_industry').length ? $('#rairo_industry').val() : '';
             var postId = rainOsAeo.postId || 0;
 

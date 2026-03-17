@@ -40,10 +40,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                 </div>
 
                 <div id="rain-os-url-input-area" style="display:none;">
-                    <input type="url"
+                    <input type="text"
                            id="rain-os-scan-url"
                            class="rain-os-input"
-                           placeholder="<?php esc_attr_e( 'https://yoursite.com/page-to-scan', 'rain-os-aeo-analyzer' ); ?>"
+                           value="http://"
+                           placeholder="<?php esc_attr_e( 'http://yoursite.com/page-to-scan', 'rain-os-aeo-analyzer' ); ?>"
                            autocomplete="off" />
                     <p class="rain-os-form-help">
                         <?php esc_html_e( 'Enter a publicly accessible URL. The backend will fetch the page and analyse both its content and technical HTML structure.', 'rain-os-aeo-analyzer' ); ?>
