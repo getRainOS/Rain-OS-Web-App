@@ -228,26 +228,34 @@
 
             html += '<div class="rain-os-result-pillars">';
             
+            var pdEnabled = (rainOsAeo.pdEnabled !== false && rainOsAeo.pdEnabled !== 'false');
             if (data.pillars) {
                 html += this.renderPillarScore('AI Readability', data.pillars.ai_readability || 0, 'cyan');
                 html += this.renderPillarScore('Digital Authority', data.pillars.digital_authority || 0, 'green');
                 html += this.renderPillarScore('Conversion Readiness', data.pillars.conversion_readiness || 0, 'purple');
-                html += this.renderPillarScore('Product Discoverability', data.pillars.product_discoverability || 0, 'orange');
+                if (pdEnabled) {
+                    html += this.renderPillarScore('Product Discoverability', data.pillars.product_discoverability || 0, 'orange');
+                }
             }
 
             html += '</div>';
 
-            if (data.recommendations && data.recommendations.length) {
+            var visibleRecs = (data.recommendations || []).filter(function(rec) {
+                if (pdEnabled) return true;
+                var p = typeof rec === 'object' ? (rec.pillar || '') : '';
+                return p !== 'product_discoverability';
+            });
+            if (visibleRecs.length) {
                 html += '<div class="rain-os-recommendations">';
                 html += '<h4>Recommendations</h4>';
                 html += '<ul>';
-                $.each(data.recommendations, function(i, rec) {
+                $.each(visibleRecs, function(i, rec) {
                     if (typeof rec === 'string') {
                         html += '<li>' + rec + '</li>';
                     } else {
                         html += '<li><strong>' + (rec.title || '') + '</strong>';
                         if (rec.description) html += ' — ' + rec.description;
-                        if (rec.pillar) html += ' <span class="rain-os-rec-pillar">[' + rec.pillar.replace(/_/g, ' ') + ']</span>';
+                        if (rec.pillar && pdEnabled) html += ' <span class="rain-os-rec-pillar">[' + rec.pillar.replace(/_/g, ' ') + ']</span>';
                         html += '</li>';
                     }
                 });
@@ -715,15 +723,23 @@
 
         displayRecommendations: function(recommendations) {
             var $container = $('#rain-os-recommendations');
-            
-            if (!recommendations || recommendations.length === 0) {
+            var pdEnabled = (rainOsAeo.pdEnabled !== false && rainOsAeo.pdEnabled !== 'false');
+
+            // Filter out PD recommendations when PD is muted
+            var filtered = (recommendations || []).filter(function(rec) {
+                if (pdEnabled) return true;
+                var pillar = typeof rec === 'object' ? (rec.pillar || rec.category || '') : '';
+                return pillar !== 'product_discoverability';
+            });
+
+            if (!filtered.length) {
                 $container.html('<p class="rain-os-no-recommendations">' + (rainOsAeo.i18n.noRecommendations || 'No recommendations at this time.') + '</p>');
                 return;
             }
 
             var html = '';
-            for (var i = 0; i < recommendations.length; i++) {
-                var rec = recommendations[i];
+            for (var i = 0; i < filtered.length; i++) {
+                var rec = filtered[i];
                 if (typeof rec === 'string') {
                     html += '<div class="rain-os-rec-item"><p>' + rec + '</p></div>';
                 } else if (rec.title) {

@@ -196,15 +196,6 @@ function Sidebar({ currentPage, setCurrentPage }) {
             <span style={{ color: '#22d3ee' }}>ai</span>
             <span style={{ color: '#ffffff' }}>n</span>
           </span>
-          <span style={{
-            padding: '4px 10px',
-            borderRadius: '4px',
-            backgroundColor: '#22d3ee',
-            color: '#000000',
-            fontSize: '11px',
-            fontWeight: 700,
-            letterSpacing: '0.5px',
-          }}>BETA</span>
         </a>
         
         {navSections.map((section, sectionIndex) => (
@@ -3893,9 +3884,9 @@ const MOCK_URL_SCAN = {
     'Add alt text to 1 image (hero-banner.jpg) to improve accessibility and AI image understanding.',
   ],
   recommendations: [
-    'Improve conversational query coverage — add natural-language FAQ sections.',
-    'Strengthen entity citations with external authority links.',
-    'Increase freshness signals: add a visible "Last Updated" date.',
+    { text: 'Improve conversational query coverage — add natural-language FAQ sections.', pillar: 'product_discoverability' },
+    { text: 'Strengthen entity citations with external authority links.', pillar: 'digital_authority' },
+    { text: 'Increase freshness signals: add a visible "Last Updated" date.', pillar: 'product_discoverability' },
   ],
   usage: { count: 3, limit: 5 },
 }
@@ -3934,7 +3925,7 @@ const NUMERIC_SIGNAL_DEFS = [
   { key: 'textToHtmlRatio',       label: 'Text/HTML Ratio',      unit: '%',       good: 15   },
 ]
 
-function UrlScannerPage() {
+function UrlScannerPage({ pdMuted }) {
   const [url, setUrl] = useState('http://')
   const [industry, setIndustry] = useState('')
   const [scanning, setScanning] = useState(false)
@@ -3954,9 +3945,18 @@ function UrlScannerPage() {
     }, 1800)
   }
 
+  const activePillarConfig = pdMuted ? PILLAR_CONFIG.filter(p => p.key !== 'product_discoverability') : PILLAR_CONFIG
+  const displayOverall = result
+    ? (pdMuted
+        ? Math.round((result.pillars.ai_readability + result.pillars.digital_authority + result.pillars.conversion_readiness) / 3)
+        : result.overall)
+    : 0
   const overallColor = result
-    ? result.overall >= 80 ? '#10b981' : result.overall >= 60 ? '#f59e0b' : '#ef4444'
+    ? displayOverall >= 80 ? '#10b981' : displayOverall >= 60 ? '#f59e0b' : '#ef4444'
     : '#22d3ee'
+  const activeRecommendations = result
+    ? result.recommendations.filter(r => !(pdMuted && r.pillar === 'product_discoverability'))
+    : []
 
   return (
     <div className="animate-in">
@@ -4035,11 +4035,11 @@ function UrlScannerPage() {
           <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr', gap: '20px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', borderRight: '1px solid var(--border-color)', paddingRight: '20px', textAlign: 'center' }}>
               <div style={{ fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--text-muted)', marginBottom: '8px' }}>Overall Score</div>
-              <div style={{ fontSize: '56px', fontWeight: 800, lineHeight: 1, color: overallColor, marginBottom: '4px' }}>{result.overall}</div>
+              <div style={{ fontSize: '56px', fontWeight: 800, lineHeight: 1, color: overallColor, marginBottom: '4px' }}>{displayOverall}</div>
               <div style={{ fontSize: '14px', color: 'var(--text-muted)' }}>/ 100</div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', justifyContent: 'center' }}>
-              {PILLAR_CONFIG.map(p => {
+              {activePillarConfig.map(p => {
                 const score = result.pillars[p.key] || 0
                 return (
                   <div key={p.key}>
@@ -4147,16 +4147,16 @@ function UrlScannerPage() {
           </div>
 
           {/* Recommendations */}
-          {result.recommendations.length > 0 && (
+          {activeRecommendations.length > 0 && (
             <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', overflow: 'hidden' }}>
               <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-color)' }}>
                 <h3 style={{ margin: 0, fontSize: '15px', color: 'var(--text-primary)' }}>Recommendations</h3>
               </div>
               <div style={{ padding: '20px' }}>
                 <ul style={{ margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  {result.recommendations.map((r, i) => (
+                  {activeRecommendations.map((r, i) => (
                     <li key={i} style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                      <span style={{ color: '#22d3ee', marginRight: '4px' }}>→</span> {r}
+                      <span style={{ color: '#22d3ee', marginRight: '4px' }}>→</span> {typeof r === 'string' ? r : r.text}
                     </li>
                   ))}
                 </ul>
@@ -4200,7 +4200,7 @@ function App() {
       case 'gutenberg-sidebar':
         return <GutenbergSidebarPage pdMuted={pdMuted} setPdMuted={setPdMuted} />
       case 'url-scanner':
-        return <UrlScannerPage />
+        return <UrlScannerPage pdMuted={pdMuted} />
       case 'settings':
         return <SettingsPage setCurrentPage={setCurrentPage} />
       case 'docs':

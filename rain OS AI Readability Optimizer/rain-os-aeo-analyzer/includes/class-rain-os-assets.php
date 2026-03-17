@@ -52,6 +52,7 @@ class Rain_OS_Assets {
                 'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
                 'nonce'     => wp_create_nonce( 'rain_os_aeo_nonce' ),
                 'pluginUrl' => RAIN_OS_AEO_PLUGIN_URL,
+                'pdEnabled' => Rain_OS_Settings::is_pd_enabled(),
                 'i18n'      => array(
                     'analyzing'    => __( 'Analyzing...', 'rain-os-aeo-analyzer' ),
                     'scanning'     => __( 'Scanning URL…', 'rain-os-aeo-analyzer' ),
@@ -113,8 +114,9 @@ class Rain_OS_Assets {
                 'rain-os-url-scanner',
                 'rainOsScanner',
                 array(
-                    'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-                    'nonce'   => wp_create_nonce( 'rain_os_aeo_nonce' ),
+                    'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
+                    'nonce'     => wp_create_nonce( 'rain_os_aeo_nonce' ),
+                    'pdEnabled' => Rain_OS_Settings::is_pd_enabled(),
                     'i18n'    => array(
                         'urlRequired'              => __( 'Please enter a URL to scan.', 'rain-os-aeo-analyzer' ),
                         'urlInvalid'               => __( 'Please enter a valid URL including http:// or https://', 'rain-os-aeo-analyzer' ),

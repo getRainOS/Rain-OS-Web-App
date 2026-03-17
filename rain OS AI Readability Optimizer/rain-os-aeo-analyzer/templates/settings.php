@@ -222,7 +222,6 @@ $pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
                     <div class="rain-os-card">
                         <div class="rain-os-card-header">
                             <h3><?php esc_html_e( 'AI Readiness Backend', 'rain-os-aeo-analyzer' ); ?></h3>
-                            <span class="rain-os-card-badge rain-os-card-badge-beta"><?php esc_html_e( 'Beta', 'rain-os-aeo-analyzer' ); ?></span>
                         </div>
                         <div class="rain-os-card-body">
                             <p class="rain-os-card-description"><?php esc_html_e( 'Enable new AI readiness features. These features require the new backend API and are optional.', 'rain-os-aeo-analyzer' ); ?></p>

@@ -80,14 +80,34 @@
         displayResults: function(data, scannedUrl) {
             var $results = $('#rain-os-scan-results');
             var analysis = data.analysis || data;
-            var overall = analysis.overall_score || 0;
             var pillars = analysis.pillars || {};
             var recommendations = analysis.recommendations || [];
             var technical = data.technical || analysis.technical_signals || null;
             var techRecs = data.tech_recs || analysis.technical_recommendations || [];
             var usage = data.usage || null;
 
+            // Determine PD enabled state
+            var pdEnabled = (rainOsScanner.pdEnabled !== false && rainOsScanner.pdEnabled !== 'false');
+
+            // Build pillar config
+            var pillarConfig = [
+                { key: 'ai_readability',         label: 'AI Readability',         color: '#22d3ee', cssClass: 'cyan'   },
+                { key: 'digital_authority',       label: 'Digital Authority',       color: '#10b981', cssClass: 'green'  },
+                { key: 'conversion_readiness',    label: 'Conversion Readiness',    color: '#a855f7', cssClass: 'purple' },
+            ];
+            if (pdEnabled) {
+                pillarConfig.push({ key: 'product_discoverability', label: 'Product Discoverability', color: '#f97316', cssClass: 'orange' });
+            }
+
+            // Compute overall score (recalculate from active pillars if PD is muted)
+            var overall;
+            if (!pdEnabled) {
+                overall = Math.round(((pillars.ai_readability || 0) + (pillars.digital_authority || 0) + (pillars.conversion_readiness || 0)) / 3);
+            } else {
+                overall = analysis.overall_score || 0;
+            }
             var overallColor = overall >= 80 ? '#10b981' : (overall >= 60 ? '#f59e0b' : '#ef4444');
+
             var html = '';
 
             // Scanned URL banner
@@ -106,12 +126,6 @@
             html += '</div>';
 
             html += '<div class="rain-os-scan-pillars">';
-            var pillarConfig = [
-                { key: 'ai_readability',          label: 'AI Readability',          color: '#22d3ee', cssClass: 'cyan'   },
-                { key: 'digital_authority',        label: 'Digital Authority',        color: '#10b981', cssClass: 'green'  },
-                { key: 'conversion_readiness',     label: 'Conversion Readiness',     color: '#a855f7', cssClass: 'purple' },
-                { key: 'product_discoverability',  label: 'Product Discoverability',  color: '#f97316', cssClass: 'orange' },
-            ];
             pillarConfig.forEach(function(p) {
                 var score = pillars[p.key] || 0;
                 html += '<div class="rain-os-scan-pillar-item">';
@@ -140,12 +154,17 @@
                 html += this.renderTechnicalSignals(technical, techRecs);
             }
 
-            // Recommendations
-            if (recommendations.length > 0) {
+            // Recommendations (filter PD recs when PD is muted)
+            var activeRecs = recommendations.filter(function(rec) {
+                if (pdEnabled) return true;
+                var pillar = typeof rec === 'object' ? (rec.pillar || '') : '';
+                return pillar !== 'product_discoverability';
+            });
+            if (activeRecs.length > 0) {
                 html += '<div class="rain-os-card rain-os-scan-recs">';
                 html += '<div class="rain-os-card-header"><h3>' + (rainOsScanner.i18n.recommendations || 'Recommendations') + '</h3></div>';
                 html += '<div class="rain-os-card-body"><ul class="rain-os-recs-list">';
-                recommendations.forEach(function(rec) {
+                activeRecs.forEach(function(rec) {
                     var text = typeof rec === 'string' ? rec : (rec.text || rec.message || JSON.stringify(rec));
                     html += '<li>' + RainOSUrlScanner.escHtml(text) + '</li>';
                 });
