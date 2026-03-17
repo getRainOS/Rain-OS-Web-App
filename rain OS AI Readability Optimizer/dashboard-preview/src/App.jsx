@@ -3990,18 +3990,11 @@ function UrlScannerPage() {
           <select
             value={industry}
             onChange={e => setIndustry(e.target.value)}
-            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid var(--border-color)', borderRadius: '8px', color: 'var(--text-primary)', fontSize: '13px', height: '42px', padding: '0 12px', cursor: 'pointer', outline: 'none' }}
+            style={{ background: '#1e2d3d', border: '1px solid var(--border-color)', borderRadius: '8px', color: 'var(--text-primary)', fontSize: '13px', height: '42px', padding: '0 12px', cursor: 'pointer', outline: 'none' }}
           >
-            <option value="">Any Industry</option>
-            <option value="technology">Technology</option>
-            <option value="healthcare">Healthcare</option>
-            <option value="finance">Finance</option>
-            <option value="education">Education</option>
-            <option value="ecommerce">E-Commerce</option>
-            <option value="marketing">Marketing</option>
-            <option value="legal">Legal</option>
-            <option value="real_estate">Real Estate</option>
-            <option value="travel">Travel</option>
+            {[['', 'Any Industry'], ['technology', 'Technology'], ['healthcare', 'Healthcare'], ['finance', 'Finance'], ['education', 'Education'], ['ecommerce', 'E-Commerce'], ['marketing', 'Marketing'], ['legal', 'Legal'], ['real_estate', 'Real Estate'], ['travel', 'Travel']].map(([val, label]) => (
+              <option key={val} value={val} style={{ backgroundColor: '#1e2d3d', color: '#e2e8f0' }}>{label}</option>
+            ))}
           </select>
           <button
             onClick={handleScan}

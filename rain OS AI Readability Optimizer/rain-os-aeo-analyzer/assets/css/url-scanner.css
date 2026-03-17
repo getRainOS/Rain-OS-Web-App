@@ -64,7 +64,7 @@
 .rain-os-scanner-url-input::placeholder { color: var(--text-muted, #64748b); }
 
 .rain-os-select {
-    background: var(--bg-input, rgba(255,255,255,0.07));
+    background: #1e2d3d;
     border: 1px solid var(--border-color, rgba(255,255,255,0.15));
     border-radius: 8px;
     color: var(--text-primary, #e2e8f0);
@@ -74,8 +74,13 @@
     cursor: pointer;
     outline: none;
     transition: border-color 0.2s;
+    appearance: auto;
 }
 .rain-os-select:focus { border-color: var(--accent, #22d3ee); }
+.rain-os-select option {
+    background-color: #1e2d3d;
+    color: #e2e8f0;
+}
 
 /* ── Result banner ───────────────────────────────────────── */
 .rain-os-scan-result-banner {
