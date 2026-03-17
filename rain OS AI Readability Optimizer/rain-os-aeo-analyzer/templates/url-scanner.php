@@ -56,7 +56,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                     </button>
                 </div>
                 <p class="rain-os-form-help">
-                    <?php esc_html_e( 'The URL must be publicly accessible. The backend fetches the page and scores both its content and technical HTML structure.', 'rain-os-aeo-analyzer' ); ?>
+                    <?php esc_html_e( 'The URL must be publicly accessible. The URL scanner fetches the page and scores both its content and technical HTML structure.', 'rain-os-aeo-analyzer' ); ?>
                 </p>
             </div>
         </div>

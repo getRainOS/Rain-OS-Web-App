@@ -4013,7 +4013,7 @@ function UrlScannerPage({ pdMuted }) {
           </button>
         </div>
         <p style={{ marginTop: '10px', fontSize: '12px', color: 'var(--text-muted)' }}>
-          The URL must be publicly accessible. The backend fetches the page and scores content and technical HTML signals.
+          The URL must be publicly accessible. The URL scanner fetches the page and scores content and technical HTML signals.
         </p>
         {error && (
           <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '8px', padding: '10px 14px', color: '#ef4444', fontSize: '13px' }}>
