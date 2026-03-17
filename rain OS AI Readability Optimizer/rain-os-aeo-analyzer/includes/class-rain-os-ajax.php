@@ -491,7 +491,11 @@ class Rain_OS_Ajax {
                 if ( ! empty( $data['rewritten'] ) )  return (string) $data['rewritten'];
                 if ( ! empty( $data['rewrite'] ) )     return (string) $data['rewrite'];
                 if ( ! empty( $data['ai_readability_detail']['answerFirstFormatting'] ) ) {
-                    return 'Tip: Answer-first formatting score is ' . $data['ai_readability_detail']['answerFirstFormatting'] . '/100. Lead with the direct answer before supporting details.';
+                    return sprintf(
+                        /* translators: %d: Answer-first formatting score out of 100 */
+                        __( 'Tip: Answer-first formatting score is %d/100. Lead with the direct answer before supporting details.', 'rain-os-aeo-analyzer' ),
+                        (int) $data['ai_readability_detail']['answerFirstFormatting']
+                    );
                 }
                 break;
         }

@@ -1,6 +1,6 @@
 === rain OS AI Readability Optimizer ===
 Contributors: rainos
-Tags: aeo, ai, content optimization, answer engine, seo, ai readability
+Tags: aeo, ai, content optimization, answer engine, seo
 Requires at least: 5.8
 Tested up to: 6.7
 Requires PHP: 7.4
@@ -53,16 +53,29 @@ The URL Scanner lets you analyze any public URL without creating a WordPress pos
 
 == External Services ==
 
-This plugin connects to the Rain OS API service (https://api.getrainos.com) to perform AI-powered content analysis. The service provides:
+This plugin connects to two external services to provide its features. By activating and using this plugin, you agree to the terms and privacy policies of those services.
 
-* Content scoring across four pillars (AI Readability, Digital Authority, Conversion Readiness, Product Discoverability) with 14 sub-scores
-* URL scanning with technical HTML signal detection
-* Quick Tools including title suggestions, meta descriptions, summarization, and sentence rewriting
-* Usage tracking and subscription management
+= Rain OS API (https://api.getrainos.com) =
 
-By using this plugin, you agree to the Rain OS Terms of Service. For privacy information, please visit https://getrainos.com/privacy.
+All AI-powered analysis is performed by the Rain OS API. The following data is sent to this service when you trigger an analysis:
 
-Note: Quick Tools and URL scanning features are provided by the external Rain OS service and require an active subscription. All plugin code is fully available - these features are processed server-side by the Rain OS API.
+* Your content (title and body text) for pillar scoring and Quick Tools
+* A URL you provide when using the URL Scanner
+* Your Rain OS API key (sent as a bearer token in the request header)
+
+This service is used for: content scoring across four pillars (AI Readability, Digital Authority, Conversion Readiness, Product Discoverability), URL scanning, Quick Tools (title suggestions, meta descriptions, summarization, rewriting), and subscription/usage tracking.
+
+* Terms of Service: https://getrainos.com/terms
+* Privacy Policy: https://getrainos.com/privacy
+
+No data is sent to the Rain OS API automatically. Requests are only made when you click Analyze, Scan URL, or use a Quick Tool.
+
+= Stripe (via Rain OS API) =
+
+Subscription billing and payment processing is handled by Stripe through the Rain OS API. When you initiate an upgrade or manage your billing, you are redirected to a Stripe-hosted checkout or billing portal page. No payment card data is transmitted through or stored by this plugin.
+
+* Stripe Terms of Service: https://stripe.com/legal
+* Stripe Privacy Policy: https://stripe.com/privacy
 
 == Installation ==
 
