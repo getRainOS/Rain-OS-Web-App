@@ -27,7 +27,7 @@
             $error.hide();
             $results.hide();
 
-            if (!url) {
+            if (!url || url === 'http://' || url === 'https://') {
                 this.showError(rainOsScanner.i18n.urlRequired || 'Please enter a URL to scan.');
                 return;
             }

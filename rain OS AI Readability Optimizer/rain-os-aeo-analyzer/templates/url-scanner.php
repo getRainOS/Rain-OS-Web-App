@@ -31,10 +31,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <div class="rain-os-scanner-input-row">
                     <div class="rain-os-scanner-url-wrap">
                         <span class="dashicons dashicons-admin-links rain-os-scanner-icon"></span>
-                        <input type="url"
+                        <input type="text"
                                id="rain-os-scanner-url"
                                class="rain-os-scanner-url-input"
-                               placeholder="<?php esc_attr_e( 'https://yoursite.com/page-to-scan', 'rain-os-aeo-analyzer' ); ?>"
+                               value="http://"
+                               placeholder="<?php esc_attr_e( 'http://yoursite.com/page-to-scan', 'rain-os-aeo-analyzer' ); ?>"
                                autocomplete="off" />
                     </div>
                     <select id="rain-os-scanner-industry" class="rain-os-select">

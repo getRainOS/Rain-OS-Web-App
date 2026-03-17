@@ -3935,7 +3935,7 @@ const NUMERIC_SIGNAL_DEFS = [
 ]
 
 function UrlScannerPage() {
-  const [url, setUrl] = useState('')
+  const [url, setUrl] = useState('http://')
   const [industry, setIndustry] = useState('')
   const [scanning, setScanning] = useState(false)
   const [result, setResult] = useState(null)
@@ -3944,12 +3944,13 @@ function UrlScannerPage() {
   const handleScan = () => {
     setError('')
     setResult(null)
-    if (!url.trim()) { setError('Please enter a URL to scan.'); return }
-    if (!/^https?:\/\/.+/.test(url.trim())) { setError('Please enter a valid URL including http:// or https://'); return }
+    const trimmed = url.trim()
+    if (!trimmed || trimmed === 'http://' || trimmed === 'https://') { setError('Please enter a URL to scan.'); return }
+    if (!/^https?:\/\/.+/.test(trimmed)) { setError('Please enter a valid URL including http:// or https://'); return }
     setScanning(true)
     setTimeout(() => {
       setScanning(false)
-      setResult({ ...MOCK_URL_SCAN, scannedUrl: url.trim() })
+      setResult({ ...MOCK_URL_SCAN, scannedUrl: trimmed })
     }, 1800)
   }
 
