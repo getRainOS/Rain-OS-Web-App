@@ -8,7 +8,7 @@ $rain_os_table_name = $wpdb->prefix . 'rain_os_analysis_history';
 $rain_os_period     = isset( $_GET['period'] ) ? absint( $_GET['period'] ) : 30; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Admin-only read-only period filter; no data is modified.
 $rain_os_date_limit = gmdate( 'Y-m-d H:i:s', strtotime( '-' . $rain_os_period . ' days' ) );
 
-// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Analytics query on plugin-managed table; caching not appropriate for live score history.
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is derived from $wpdb->prefix (trusted); live score history makes caching inappropriate.
 $rain_os_analysis_data = $wpdb->get_results(
     $wpdb->prepare(
         'SELECT h.*, p.post_title, p.post_name 

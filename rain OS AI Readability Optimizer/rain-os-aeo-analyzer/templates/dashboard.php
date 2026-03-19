@@ -8,7 +8,7 @@ $rain_os_table_name = $wpdb->prefix . 'rain_os_analysis_history';
 $rain_os_period     = isset( $_GET['period'] ) ? absint( $_GET['period'] ) : 30; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Admin-only read-only period filter; no data is modified.
 $rain_os_date_limit = gmdate( 'Y-m-d H:i:s', strtotime( '-' . $rain_os_period . ' days' ) );
 
-// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Analytics query on plugin-managed table; caching not appropriate for live dashboard metrics.
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is derived from $wpdb->prefix (trusted); live dashboard metrics make caching inappropriate.
 $rain_os_averages = $wpdb->get_row(
     $wpdb->prepare(
         'SELECT 
@@ -25,7 +25,7 @@ $rain_os_averages = $wpdb->get_row(
     ARRAY_A
 );
 
-// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Analytics query on plugin-managed table; caching not appropriate for live dashboard metrics.
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is derived from $wpdb->prefix (trusted); live dashboard metrics make caching inappropriate.
 $rain_os_analysis_data = $wpdb->get_results(
     $wpdb->prepare(
         'SELECT h.*, p.post_title, p.post_name 
@@ -124,7 +124,10 @@ function rain_os_get_score_class( $score ) {
                         <span class="rain-os-tooltip-content"><?php esc_html_e( 'Total number of content analyses performed in the selected time period. Each analysis evaluates your content across all four AEO pillars.', 'rain-os-aeo-analyzer' ); ?></span>
                     </span>
                 </div>
-                <div class="rain-os-kpi-subtitle"><?php /* translators: %d: number of days */ printf( esc_html__( 'Last %d Days', 'rain-os-aeo-analyzer' ), $rain_os_period ); ?></div>
+                <div class="rain-os-kpi-subtitle"><?php
+                /* translators: %d: number of days */
+                printf( esc_html__( 'Last %d Days', 'rain-os-aeo-analyzer' ), $rain_os_period );
+                ?></div>
             </div>
 
             <div class="rain-os-kpi-card rain-os-animate-delay-2">
@@ -144,7 +147,10 @@ function rain_os_get_score_class( $score ) {
                         <span class="rain-os-tooltip-content"><?php esc_html_e( 'The average AEO score across all analyzed content. This combines AI Readability, Digital Authority, Conversion Readiness, and Product Discoverability scores.', 'rain-os-aeo-analyzer' ); ?></span>
                     </span>
                 </div>
-                <div class="rain-os-kpi-subtitle"><?php /* translators: %d: number of days */ printf( esc_html__( 'Last %d Days', 'rain-os-aeo-analyzer' ), $rain_os_period ); ?></div>
+                <div class="rain-os-kpi-subtitle"><?php
+                /* translators: %d: number of days */
+                printf( esc_html__( 'Last %d Days', 'rain-os-aeo-analyzer' ), $rain_os_period );
+                ?></div>
             </div>
 
             <div class="rain-os-kpi-card rain-os-animate-delay-3">
@@ -172,7 +178,10 @@ function rain_os_get_score_class( $score ) {
                         <span class="rain-os-tooltip-content"><?php esc_html_e( 'Overall health score of your content portfolio. Scores above 80% indicate strong AI readiness across all four pillars.', 'rain-os-aeo-analyzer' ); ?></span>
                     </span>
                 </div>
-                <div class="rain-os-kpi-subtitle"><?php /* translators: %d: number of days */ printf( esc_html__( 'Last %d Days', 'rain-os-aeo-analyzer' ), $rain_os_period ); ?></div>
+                <div class="rain-os-kpi-subtitle"><?php
+                /* translators: %d: number of days */
+                printf( esc_html__( 'Last %d Days', 'rain-os-aeo-analyzer' ), $rain_os_period );
+                ?></div>
             </div>
 
             <div class="rain-os-kpi-card rain-os-animate-delay-4">
@@ -195,7 +204,10 @@ function rain_os_get_score_class( $score ) {
                         <span class="rain-os-tooltip-trigger">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
                         </span>
-                        <span class="rain-os-tooltip-content"><?php /* translators: %1$d: current API request count, %2$d: API request limit */ printf( esc_html__( 'Current API usage: %1$d of %2$d requests this billing cycle. Upgrade your plan for more analyses.', 'rain-os-aeo-analyzer' ), $rain_os_api_usage, $rain_os_api_limit ); ?></span>
+                        <span class="rain-os-tooltip-content"><?php
+                        /* translators: %1$d: current API request count, %2$d: API request limit */
+                        printf( esc_html__( 'Current API usage: %1$d of %2$d requests this billing cycle. Upgrade your plan for more analyses.', 'rain-os-aeo-analyzer' ), $rain_os_api_usage, $rain_os_api_limit );
+                        ?></span>
                     </span>
                 </div>
                 <div class="rain-os-kpi-subtitle"><?php esc_html_e( 'This Billing Cycle', 'rain-os-aeo-analyzer' ); ?></div>

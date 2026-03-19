@@ -69,7 +69,8 @@ $rain_os_pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
                                     </button>
                                 </div>
                                 <p class="rain-os-form-help">
-                                    <?php 
+                                    <?php
+                                    /* translators: %s: URL to the Rain OS login page */
                                     printf(
                                         wp_kses(
                                             __( 'Get your API key from <a href="%s" target="_blank">app.getrainos.com</a>', 'rain-os-aeo-analyzer' ),
@@ -215,9 +216,9 @@ $rain_os_pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
                     </div>
 
                     <?php
-                    $ai_backend_enabled = get_option( 'rain_os_ai_backend_enabled', 'no' );
-                    $ai_score_panel = get_option( 'rain_os_ai_score_panel', 'no' );
-                    $ai_normalize = get_option( 'rain_os_ai_normalize', 'no' );
+                    $rain_os_ai_backend_enabled = get_option( 'rain_os_ai_backend_enabled', 'no' );
+                    $rain_os_ai_score_panel = get_option( 'rain_os_ai_score_panel', 'no' );
+                    $rain_os_ai_normalize = get_option( 'rain_os_ai_normalize', 'no' );
                     ?>
                     <div class="rain-os-card">
                         <div class="rain-os-card-header">
@@ -232,7 +233,7 @@ $rain_os_pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
                                         <input type="checkbox" 
                                                name="rain_os_ai_backend_enabled" 
                                                value="yes" 
-                                               <?php checked( $ai_backend_enabled, 'yes' ); ?> 
+                                               <?php checked( $rain_os_ai_backend_enabled, 'yes' ); ?> 
                                                class="rain-os-checkbox"
                                                id="rain_os_ai_backend_enabled" />
                                         <span class="rain-os-toggle-switch"></span>
@@ -247,14 +248,14 @@ $rain_os_pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
                                 <p class="rain-os-form-help"><?php esc_html_e( 'Enable new AI readiness analysis backend integration.', 'rain-os-aeo-analyzer' ); ?></p>
                             </div>
 
-                            <div class="rain-os-ai-backend-options" id="ai-backend-options" style="<?php echo esc_attr( $ai_backend_enabled !== 'yes' ? 'display:none;' : '' ); ?>">
+                            <div class="rain-os-ai-backend-options" id="ai-backend-options" style="<?php echo esc_attr( $rain_os_ai_backend_enabled !== 'yes' ? 'display:none;' : '' ); ?>">
                                 <div class="rain-os-form-group rain-os-toggle-group">
                                     <div class="rain-os-toggle-row">
                                         <label class="rain-os-toggle-label">
                                             <input type="checkbox" 
                                                    name="rain_os_ai_score_panel" 
                                                    value="yes" 
-                                                   <?php checked( $ai_score_panel, 'yes' ); ?> 
+                                                   <?php checked( $rain_os_ai_score_panel, 'yes' ); ?> 
                                                    class="rain-os-checkbox" />
                                             <span class="rain-os-toggle-switch"></span>
                                             <span class="rain-os-toggle-title">
@@ -274,7 +275,7 @@ $rain_os_pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
                                             <input type="checkbox" 
                                                    name="rain_os_ai_normalize" 
                                                    value="yes" 
-                                                   <?php checked( $ai_normalize, 'yes' ); ?> 
+                                                   <?php checked( $rain_os_ai_normalize, 'yes' ); ?> 
                                                    class="rain-os-checkbox" />
                                             <span class="rain-os-toggle-switch"></span>
                                             <span class="rain-os-toggle-title">
@@ -305,28 +306,28 @@ $rain_os_pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
                     <div class="rain-os-card-body" id="account-status-container">
                         <?php 
                         if ( ! empty( $rain_os_api_key ) ) :
-                            $api_client = rain_os_aeo()->get_api_client();
-                            $subscription = $api_client->get_subscription_status();
+                            $rain_os_api_client = rain_os_aeo()->get_api_client();
+                            $rain_os_subscription = $rain_os_api_client->get_subscription_status();
                         ?>
                         <div class="rain-os-account-status">
                             <div class="rain-os-status-item">
                                 <span class="rain-os-status-label"><?php esc_html_e( 'Status', 'rain-os-aeo-analyzer' ); ?></span>
-                                <span class="rain-os-status-value rain-os-status-badge rain-os-status-<?php echo esc_attr( $subscription['subscription_status'] === 'active' ? 'active' : 'inactive' ); ?>">
-                                    <?php echo esc_html( ucfirst( $subscription['subscription_status'] ) ); ?>
+                                <span class="rain-os-status-value rain-os-status-badge rain-os-status-<?php echo esc_attr( $rain_os_subscription['subscription_status'] === 'active' ? 'active' : 'inactive' ); ?>">
+                                    <?php echo esc_html( ucfirst( $rain_os_subscription['subscription_status'] ) ); ?>
                                 </span>
                             </div>
                             <div class="rain-os-status-item">
                                 <span class="rain-os-status-label"><?php esc_html_e( 'Plan', 'rain-os-aeo-analyzer' ); ?></span>
-                                <span class="rain-os-status-value rain-os-plan-badge"><?php echo esc_html( ucfirst( $subscription['plan'] ) ); ?></span>
+                                <span class="rain-os-status-value rain-os-plan-badge"><?php echo esc_html( ucfirst( $rain_os_subscription['plan'] ) ); ?></span>
                             </div>
                             <div class="rain-os-status-item">
                                 <span class="rain-os-status-label"><?php esc_html_e( 'Usage', 'rain-os-aeo-analyzer' ); ?></span>
-                                <span class="rain-os-status-value"><?php echo esc_html( $subscription['usage_count'] . ' / ' . $subscription['usage_limit'] ); ?></span>
+                                <span class="rain-os-status-value"><?php echo esc_html( $rain_os_subscription['usage_count'] . ' / ' . $rain_os_subscription['usage_limit'] ); ?></span>
                             </div>
                             <div class="rain-os-usage-bar">
-                                <div class="rain-os-usage-fill" style="width: <?php echo esc_attr( min( 100, ( $subscription['usage_count'] / max( 1, $subscription['usage_limit'] ) ) * 100 ) ); ?>%;"></div>
+                                <div class="rain-os-usage-fill" style="width: <?php echo esc_attr( min( 100, ( $rain_os_subscription['usage_count'] / max( 1, $rain_os_subscription['usage_limit'] ) ) * 100 ) ); ?>%;"></div>
                             </div>
-                            <?php if ( $subscription['is_pro'] ) : ?>
+                            <?php if ( $rain_os_subscription['is_pro'] ) : ?>
                             <button type="button" id="rain-os-portal-btn" class="rain-os-btn rain-os-btn-secondary rain-os-btn-full">
                                 <span class="dashicons dashicons-admin-users"></span>
                                 <?php esc_html_e( 'Manage Billing', 'rain-os-aeo-analyzer' ); ?>

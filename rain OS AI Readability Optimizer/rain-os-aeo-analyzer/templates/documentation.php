@@ -54,7 +54,10 @@ $rain_os_sections = array(
                     <ol class="rain-os-docs-steps">
                         <li>
                             <strong><?php esc_html_e( 'Sign Up or Log In', 'rain-os-aeo-analyzer' ); ?></strong>
-                            <p><?php /* translators: %s: URL to the Rain OS login page */ printf( wp_kses( __( 'Visit <a href="%s" target="_blank">app.getrainos.com</a> to create your account or log in.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array(), 'target' => array() ) ) ), 'https://app.getrainos.com/#/login' ); ?></p>
+                            <p><?php
+                            /* translators: %s: URL to the Rain OS login page */
+                            printf( wp_kses( __( 'Visit <a href="%s" target="_blank">app.getrainos.com</a> to create your account or log in.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array(), 'target' => array() ) ) ), 'https://app.getrainos.com/#/login' );
+                            ?></p>
                         </li>
                         <li>
                             <strong><?php esc_html_e( 'Copy Your API Key', 'rain-os-aeo-analyzer' ); ?></strong>
@@ -62,7 +65,10 @@ $rain_os_sections = array(
                         </li>
                         <li>
                             <strong><?php esc_html_e( 'Configure Plugin Settings', 'rain-os-aeo-analyzer' ); ?></strong>
-                            <p><?php /* translators: %s: URL to the Rain OS settings page */ printf( wp_kses( __( 'Go to <a href="%s">Rain OS > Settings</a> and paste your API key.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array() ) ) ), esc_url( admin_url( 'admin.php?page=rain-os-aeo-settings' ) ) ); ?></p>
+                            <p><?php
+                            /* translators: %s: URL to the Rain OS settings page */
+                            printf( wp_kses( __( 'Go to <a href="%s">Rain OS > Settings</a> and paste your API key.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array() ) ) ), esc_url( admin_url( 'admin.php?page=rain-os-aeo-settings' ) ) );
+                            ?></p>
                         </li>
                     </ol>
                 </div>
@@ -141,7 +147,10 @@ $rain_os_sections = array(
                     <ol class="rain-os-docs-steps">
                         <li>
                             <strong><?php esc_html_e( 'Go to Rain OS > URL Scanner', 'rain-os-aeo-analyzer' ); ?></strong>
-                            <p><?php /* translators: %s: URL to the Rain OS URL Scanner page */ printf( wp_kses( __( 'Navigate to <a href="%s">Rain OS &rsaquo; URL Scanner</a> in your WordPress admin sidebar.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array() ) ) ), esc_url( admin_url( 'admin.php?page=rain-os-aeo-url-scanner' ) ) ); ?></p>
+                            <p><?php
+                            /* translators: %s: URL to the Rain OS URL Scanner page */
+                            printf( wp_kses( __( 'Navigate to <a href="%s">Rain OS &rsaquo; URL Scanner</a> in your WordPress admin sidebar.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array() ) ) ), esc_url( admin_url( 'admin.php?page=rain-os-aeo-url-scanner' ) ) );
+                            ?></p>
                         </li>
                         <li>
                             <strong><?php esc_html_e( 'Enter the URL', 'rain-os-aeo-analyzer' ); ?></strong>
