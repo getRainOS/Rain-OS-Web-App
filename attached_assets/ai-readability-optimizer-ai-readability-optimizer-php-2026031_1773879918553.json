@@ -1,0 +1,1830 @@
+{
+    "generated_at": "2026-03-19 00:15:23",
+    "plugin": "AI Readability Optimizer",
+    "results": {
+        "includes/class-ai-readability-settings.php": [
+            {
+                "message": "A function call to __() with texts containing placeholders was found, but was not accompanied by a \"translators:\" comment on the line above to clarify the meaning of the placeholders.",
+                "code": "WordPress.WP.I18n.MissingTranslatorsComment",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-settings.php&line=225",
+                "docs": "https://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/#descriptions",
+                "severity": 5,
+                "type": "ERROR",
+                "line": 225,
+                "column": 29
+            }
+        ],
+        "includes/class-ai-readability-gutenberg.php": [
+            {
+                "message": "A function call to __() with texts containing placeholders was found, but was not accompanied by a \"translators:\" comment on the line above to clarify the meaning of the placeholders.",
+                "code": "WordPress.WP.I18n.MissingTranslatorsComment",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-gutenberg.php&line=255",
+                "docs": "https://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/#descriptions",
+                "severity": 5,
+                "type": "ERROR",
+                "line": 255,
+                "column": 43
+            },
+            {
+                "message": "Use of a direct database call is discouraged.",
+                "code": "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-gutenberg.php&line=295",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 295,
+                "column": 9
+            },
+            {
+                "message": "Use of a direct database call is discouraged.",
+                "code": "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-gutenberg.php&line=380",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 380,
+                "column": 20
+            },
+            {
+                "message": "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete().",
+                "code": "WordPress.DB.DirectDatabaseQuery.NoCaching",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-gutenberg.php&line=380",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 380,
+                "column": 20
+            },
+            {
+                "message": "Unescaped parameter $table_name used in $wpdb-&gt;get_results()\\n$table_name assigned unsafely at line 378.",
+                "code": "PluginCheck.Security.DirectDB.UnescapedDBParameter",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-gutenberg.php&line=380",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 380,
+                "column": 27
+            },
+            {
+                "message": "Use placeholders and $wpdb-&gt;prepare(); found interpolated variable $table_name at              FROM $table_name \\n",
+                "code": "WordPress.DB.PreparedSQL.InterpolatedNotPrepared",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-gutenberg.php&line=384",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 384,
+                "column": 1
+            }
+        ],
+        "templates/dashboard.php": [
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$table_name&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=7",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 7,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$period&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=8",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 8,
+                "column": 1
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Recommended",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=8",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 8,
+                "column": 18
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Recommended",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=8",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 8,
+                "column": 46
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$date_limit&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=9",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 9,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$averages&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=11",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 11,
+                "column": 1
+            },
+            {
+                "message": "Use of a direct database call is discouraged.",
+                "code": "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=11",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 11,
+                "column": 13
+            },
+            {
+                "message": "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete().",
+                "code": "WordPress.DB.DirectDatabaseQuery.NoCaching",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=11",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 11,
+                "column": 13
+            },
+            {
+                "message": "Use placeholders and $wpdb-&gt;prepare(); found interpolated variable {$table_name} at         FROM {$table_name} \\n",
+                "code": "WordPress.DB.PreparedSQL.InterpolatedNotPrepared",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=19",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 19,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$analysis_data&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=26",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 26,
+                "column": 1
+            },
+            {
+                "message": "Use of a direct database call is discouraged.",
+                "code": "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=26",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 26,
+                "column": 18
+            },
+            {
+                "message": "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete().",
+                "code": "WordPress.DB.DirectDatabaseQuery.NoCaching",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=26",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 26,
+                "column": 18
+            },
+            {
+                "message": "Use placeholders and $wpdb-&gt;prepare(); found interpolated variable {$table_name} at         FROM {$table_name} h \\n",
+                "code": "WordPress.DB.PreparedSQL.InterpolatedNotPrepared",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=29",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 29,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$overall_score&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=39",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 39,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$digital_authority&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=41",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 41,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$conversion_readiness&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=42",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 42,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$total_analyzed&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=43",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 43,
+                "column": 1
+            },
+            {
+                "message": "A function call to esc_html__() with texts containing placeholders was found, but was not accompanied by a \"translators:\" comment on the line above to clarify the meaning of the placeholders.",
+                "code": "WordPress.WP.I18n.MissingTranslatorsComment",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=147",
+                "docs": "https://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/#descriptions",
+                "severity": 5,
+                "type": "ERROR",
+                "line": 147,
+                "column": 29
+            },
+            {
+                "message": "All output should be run through an escaping function (see the Security sections in the WordPress Developer Handbooks), found '$period'.",
+                "code": "WordPress.Security.EscapeOutput.OutputNotEscaped",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=148",
+                "docs": "https://developer.wordpress.org/apis/security/escaping/#escaping-functions",
+                "severity": 5,
+                "type": "ERROR",
+                "line": 148,
+                "column": 29
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$count&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=216",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 216,
+                "column": 25
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$item&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=217",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 217,
+                "column": 53
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$avg_score&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdashboard.php&line=220",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 220,
+                "column": 29
+            }
+        ],
+        "templates/documentation.php": [
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$current_section&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdocumentation.php&line=6",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 6,
+                "column": 1
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Recommended",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdocumentation.php&line=6",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 6,
+                "column": 27
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Recommended",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdocumentation.php&line=6",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 6,
+                "column": 81
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$sections&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdocumentation.php&line=8",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 8,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$key&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdocumentation.php&line=37",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 37,
+                "column": 42
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$label&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdocumentation.php&line=37",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 37,
+                "column": 50
+            },
+            {
+                "message": "A function call to __() with texts containing placeholders was found, but was not accompanied by a \"translators:\" comment on the line above to clarify the meaning of the placeholders.",
+                "code": "WordPress.WP.I18n.MissingTranslatorsComment",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdocumentation.php&line=56",
+                "docs": "https://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/#descriptions",
+                "severity": 5,
+                "type": "ERROR",
+                "line": 56,
+                "column": 55
+            },
+            {
+                "message": "A function call to __() with texts containing placeholders was found, but was not accompanied by a \"translators:\" comment on the line above to clarify the meaning of the placeholders.",
+                "code": "WordPress.WP.I18n.MissingTranslatorsComment",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fdocumentation.php&line=64",
+                "docs": "https://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/#descriptions",
+                "severity": 5,
+                "type": "ERROR",
+                "line": 64,
+                "column": 55
+            }
+        ],
+        "templates/score-history.php": [
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$table_name&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fscore-history.php&line=7",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 7,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$period&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fscore-history.php&line=8",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 8,
+                "column": 1
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Recommended",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fscore-history.php&line=8",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 8,
+                "column": 18
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Recommended",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fscore-history.php&line=8",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 8,
+                "column": 46
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$date_limit&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fscore-history.php&line=9",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 9,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$analysis_data&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fscore-history.php&line=11",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 11,
+                "column": 1
+            },
+            {
+                "message": "Use of a direct database call is discouraged.",
+                "code": "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fscore-history.php&line=11",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 11,
+                "column": 18
+            },
+            {
+                "message": "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete().",
+                "code": "WordPress.DB.DirectDatabaseQuery.NoCaching",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fscore-history.php&line=11",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 11,
+                "column": 18
+            },
+            {
+                "message": "Use placeholders and $wpdb-&gt;prepare(); found interpolated variable {$table_name} at         FROM {$table_name} h \\n",
+                "code": "WordPress.DB.PreparedSQL.InterpolatedNotPrepared",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fscore-history.php&line=14",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 14,
+                "column": 1
+            },
+            {
+                "message": "A function call to esc_html__() with texts containing placeholders was found, but was not accompanied by a \"translators:\" comment on the line above to clarify the meaning of the placeholders.",
+                "code": "WordPress.WP.I18n.MissingTranslatorsComment",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fscore-history.php&line=63",
+                "docs": "https://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/#descriptions",
+                "severity": 5,
+                "type": "ERROR",
+                "line": 63,
+                "column": 25
+            },
+            {
+                "message": "All output should be run through an escaping function (see the Security sections in the WordPress Developer Handbooks), found '$period'.",
+                "code": "WordPress.Security.EscapeOutput.OutputNotEscaped",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fscore-history.php&line=64",
+                "docs": "https://developer.wordpress.org/apis/security/escaping/#escaping-functions",
+                "severity": 5,
+                "type": "ERROR",
+                "line": 64,
+                "column": 25
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$count&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fscore-history.php&line=83",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 83,
+                "column": 25
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$item&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fscore-history.php&line=84",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 84,
+                "column": 53
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$avg_score&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fscore-history.php&line=86",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 86,
+                "column": 29
+            }
+        ],
+        "templates/settings.php": [
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$api_key&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fsettings.php&line=6",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 6,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$industry&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fsettings.php&line=7",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 7,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$cache_time&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fsettings.php&line=8",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 8,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$auto_analyze&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fsettings.php&line=9",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 9,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$provenance_tracking&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fsettings.php&line=10",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 10,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$score_alerts&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fsettings.php&line=11",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 11,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$score_threshold&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fsettings.php&line=12",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 12,
+                "column": 1
+            },
+            {
+                "message": "A function call to __() with texts containing placeholders was found, but was not accompanied by a \"translators:\" comment on the line above to clarify the meaning of the placeholders.",
+                "code": "WordPress.WP.I18n.MissingTranslatorsComment",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fsettings.php&line=70",
+                "docs": "https://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/#descriptions",
+                "severity": 5,
+                "type": "ERROR",
+                "line": 70,
+                "column": 45
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$ai_backend_enabled&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fsettings.php&line=193",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 193,
+                "column": 21
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$ai_score_panel&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fsettings.php&line=194",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 194,
+                "column": 21
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$ai_normalize&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fsettings.php&line=195",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 195,
+                "column": 21
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$api_client&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fsettings.php&line=284",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 284,
+                "column": 29
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$subscription&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fsettings.php&line=285",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 285,
+                "column": 29
+            }
+        ],
+        "includes/class-ai-readability-admin.php": [
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Recommended",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-admin.php&line=115",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 115,
+                "column": 21
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Recommended",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-admin.php&line=115",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 115,
+                "column": 81
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Recommended",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-admin.php&line=116",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 116,
+                "column": 42
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Recommended",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-admin.php&line=116",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 116,
+                "column": 92
+            },
+            {
+                "message": "Use of a direct database call is discouraged.",
+                "code": "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-admin.php&line=193",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 193,
+                "column": 20
+            },
+            {
+                "message": "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete().",
+                "code": "WordPress.DB.DirectDatabaseQuery.NoCaching",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-admin.php&line=193",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 193,
+                "column": 20
+            },
+            {
+                "message": "Unescaped parameter $table_name used in $wpdb-&gt;get_results()",
+                "code": "PluginCheck.Security.DirectDB.UnescapedDBParameter",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-admin.php&line=193",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 193,
+                "column": 27
+            },
+            {
+                "message": "Use placeholders and $wpdb-&gt;prepare(); found interpolated variable {$table_name} at                 FROM {$table_name} h \\n",
+                "code": "WordPress.DB.PreparedSQL.InterpolatedNotPrepared",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-admin.php&line=196",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 196,
+                "column": 1
+            },
+            {
+                "message": "Use of a direct database call is discouraged.",
+                "code": "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-admin.php&line=214",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 214,
+                "column": 19
+            },
+            {
+                "message": "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete().",
+                "code": "WordPress.DB.DirectDatabaseQuery.NoCaching",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-admin.php&line=214",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 214,
+                "column": 19
+            },
+            {
+                "message": "Unescaped parameter $table_name used in $wpdb-&gt;get_row()",
+                "code": "PluginCheck.Security.DirectDB.UnescapedDBParameter",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-admin.php&line=214",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 214,
+                "column": 26
+            },
+            {
+                "message": "Use placeholders and $wpdb-&gt;prepare(); found interpolated variable {$table_name} at                 FROM {$table_name} \\n",
+                "code": "WordPress.DB.PreparedSQL.InterpolatedNotPrepared",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-admin.php&line=222",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 222,
+                "column": 1
+            }
+        ],
+        "includes/class-ai-readability-ajax.php": [
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=48",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 48,
+                "column": 28
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=48",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 48,
+                "column": 76
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=49",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 49,
+                "column": 28
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=49",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 49,
+                "column": 81
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=50",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 50,
+                "column": 28
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=50",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 50,
+                "column": 84
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=51",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 51,
+                "column": 28
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=51",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 51,
+                "column": 58
+            },
+            {
+                "message": "Use of a direct database call is discouraged.",
+                "code": "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=85",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 85,
+                "column": 9
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=104",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 104,
+                "column": 27
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=104",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 104,
+                "column": 57
+            },
+            {
+                "message": "Use of a direct database call is discouraged.",
+                "code": "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=113",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 113,
+                "column": 19
+            },
+            {
+                "message": "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete().",
+                "code": "WordPress.DB.DirectDatabaseQuery.NoCaching",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=113",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 113,
+                "column": 19
+            },
+            {
+                "message": "Unescaped parameter $table_name used in $wpdb-&gt;get_row()\\n$table_name assigned unsafely at line 111.",
+                "code": "PluginCheck.Security.DirectDB.UnescapedDBParameter",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=113",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 113,
+                "column": 26
+            },
+            {
+                "message": "Use placeholders and $wpdb-&gt;prepare(); found interpolated variable {$table_name} at &quot;SELECT * FROM {$table_name} WHERE post_id = %d ORDER BY analyzed_at DESC LIMIT 1&quot;",
+                "code": "WordPress.DB.PreparedSQL.InterpolatedNotPrepared",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=115",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 115,
+                "column": 17
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=133",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 133,
+                "column": 26
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=133",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 133,
+                "column": 55
+            },
+            {
+                "message": "Use of a direct database call is discouraged.",
+                "code": "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=139",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 139,
+                "column": 21
+            },
+            {
+                "message": "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete().",
+                "code": "WordPress.DB.DirectDatabaseQuery.NoCaching",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=139",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 139,
+                "column": 21
+            },
+            {
+                "message": "Unescaped parameter $table_name used in $wpdb-&gt;get_row()",
+                "code": "PluginCheck.Security.DirectDB.UnescapedDBParameter",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=139",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 139,
+                "column": 28
+            },
+            {
+                "message": "Use placeholders and $wpdb-&gt;prepare(); found interpolated variable {$table_name} at                 FROM {$table_name} \\n",
+                "code": "WordPress.DB.PreparedSQL.InterpolatedNotPrepared",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=147",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 147,
+                "column": 1
+            },
+            {
+                "message": "Use of a direct database call is discouraged.",
+                "code": "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=154",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 154,
+                "column": 23
+            },
+            {
+                "message": "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete().",
+                "code": "WordPress.DB.DirectDatabaseQuery.NoCaching",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=154",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 154,
+                "column": 23
+            },
+            {
+                "message": "Unescaped parameter $table_name used in $wpdb-&gt;get_results()",
+                "code": "PluginCheck.Security.DirectDB.UnescapedDBParameter",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=154",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 154,
+                "column": 30
+            },
+            {
+                "message": "Use placeholders and $wpdb-&gt;prepare(); found interpolated variable {$table_name} at                 FROM {$table_name} \\n",
+                "code": "WordPress.DB.PreparedSQL.InterpolatedNotPrepared",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=162",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 162,
+                "column": 1
+            },
+            {
+                "message": "Use of a direct database call is discouraged.",
+                "code": "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=171",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 171,
+                "column": 25
+            },
+            {
+                "message": "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete().",
+                "code": "WordPress.DB.DirectDatabaseQuery.NoCaching",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=171",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 171,
+                "column": 25
+            },
+            {
+                "message": "Unescaped parameter $table_name used in $wpdb-&gt;get_results()",
+                "code": "PluginCheck.Security.DirectDB.UnescapedDBParameter",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=171",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 171,
+                "column": 32
+            },
+            {
+                "message": "Use placeholders and $wpdb-&gt;prepare(); found interpolated variable {$table_name} at                 FROM {$table_name} h \\n",
+                "code": "WordPress.DB.PreparedSQL.InterpolatedNotPrepared",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=174",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 174,
+                "column": 1
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=197",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 197,
+                "column": 26
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=197",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 197,
+                "column": 55
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=198",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 198,
+                "column": 26
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=198",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 198,
+                "column": 53
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=199",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 199,
+                "column": 26
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=199",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 199,
+                "column": 54
+            },
+            {
+                "message": "Use of a direct database call is discouraged.",
+                "code": "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=206",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 206,
+                "column": 18
+            },
+            {
+                "message": "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete().",
+                "code": "WordPress.DB.DirectDatabaseQuery.NoCaching",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=206",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 206,
+                "column": 18
+            },
+            {
+                "message": "Unescaped parameter $table_name used in $wpdb-&gt;get_var()",
+                "code": "PluginCheck.Security.DirectDB.UnescapedDBParameter",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=206",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 206,
+                "column": 25
+            },
+            {
+                "message": "Use placeholders and $wpdb-&gt;prepare(); found interpolated variable {$table_name} at &quot;SELECT COUNT(*) FROM {$table_name} WHERE analyzed_at &gt;= %s&quot;",
+                "code": "WordPress.DB.PreparedSQL.InterpolatedNotPrepared",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=208",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 208,
+                "column": 17
+            },
+            {
+                "message": "Use of a direct database call is discouraged.",
+                "code": "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=213",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 213,
+                "column": 20
+            },
+            {
+                "message": "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete().",
+                "code": "WordPress.DB.DirectDatabaseQuery.NoCaching",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=213",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 213,
+                "column": 20
+            },
+            {
+                "message": "Unescaped parameter $table_name used in $wpdb-&gt;get_results()",
+                "code": "PluginCheck.Security.DirectDB.UnescapedDBParameter",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=213",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 213,
+                "column": 27
+            },
+            {
+                "message": "Use placeholders and $wpdb-&gt;prepare(); found interpolated variable {$table_name} at                 FROM {$table_name} h \\n",
+                "code": "WordPress.DB.PreparedSQL.InterpolatedNotPrepared",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=216",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 216,
+                "column": 1
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=248",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 248,
+                "column": 25
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=248",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 248,
+                "column": 78
+            },
+            {
+                "message": "Use of a direct database call is discouraged.",
+                "code": "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=257",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 257,
+                "column": 20
+            },
+            {
+                "message": "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete().",
+                "code": "WordPress.DB.DirectDatabaseQuery.NoCaching",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=257",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 257,
+                "column": 20
+            },
+            {
+                "message": "Unescaped parameter $table_name used in $wpdb-&gt;get_results()\\n$table_name assigned unsafely at line 255.",
+                "code": "PluginCheck.Security.DirectDB.UnescapedDBParameter",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=257",
+                "docs": "",
+                "severity": 10,
+                "type": "WARNING",
+                "line": 257,
+                "column": 27
+            },
+            {
+                "message": "Use placeholders and $wpdb-&gt;prepare(); found interpolated variable {$table_name} at                 FROM {$table_name} h \\n",
+                "code": "WordPress.DB.PreparedSQL.InterpolatedNotPrepared",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=260",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 260,
+                "column": 1
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=293",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 293,
+                "column": 35
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=293",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 293,
+                "column": 98
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=315",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 315,
+                "column": 27
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=315",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 315,
+                "column": 57
+            },
+            {
+                "message": "Use of a direct database call is discouraged.",
+                "code": "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=324",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 324,
+                "column": 19
+            },
+            {
+                "message": "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete().",
+                "code": "WordPress.DB.DirectDatabaseQuery.NoCaching",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=324",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 324,
+                "column": 19
+            },
+            {
+                "message": "Unescaped parameter $table_name used in $wpdb-&gt;get_row()\\n$table_name assigned unsafely at line 322.",
+                "code": "PluginCheck.Security.DirectDB.UnescapedDBParameter",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=324",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 324,
+                "column": 26
+            },
+            {
+                "message": "Use placeholders and $wpdb-&gt;prepare(); found interpolated variable {$table_name} at &quot;SELECT analysis_data FROM {$table_name} WHERE post_id = %d ORDER BY analyzed_at DESC LIMIT 1&quot;",
+                "code": "WordPress.DB.PreparedSQL.InterpolatedNotPrepared",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=326",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 326,
+                "column": 17
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=344",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 344,
+                "column": 27
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=344",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 344,
+                "column": 79
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=345",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 345,
+                "column": 27
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=345",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 345,
+                "column": 75
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=358",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 358,
+                "column": 44
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=359",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 359,
+                "column": 69
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=428",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 428,
+                "column": 30
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=428",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 428,
+                "column": 88
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=448",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 448,
+                "column": 30
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=448",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 448,
+                "column": 88
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=449",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 449,
+                "column": 30
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=449",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 449,
+                "column": 75
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=450",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 450,
+                "column": 30
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Missing",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fclass-ai-readability-ajax.php&line=450",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 450,
+                "column": 86
+            }
+        ],
+        "templates/pillar-breakdown.php": [
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$table_name&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=7",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 7,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$period&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=8",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 8,
+                "column": 1
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Recommended",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=8",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 8,
+                "column": 18
+            },
+            {
+                "message": "Processing form data without nonce verification.",
+                "code": "WordPress.Security.NonceVerification.Recommended",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=8",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 8,
+                "column": 46
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$date_limit&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=9",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 9,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$averages&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=11",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 11,
+                "column": 1
+            },
+            {
+                "message": "Use of a direct database call is discouraged.",
+                "code": "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=11",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 11,
+                "column": 13
+            },
+            {
+                "message": "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete().",
+                "code": "WordPress.DB.DirectDatabaseQuery.NoCaching",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=11",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 11,
+                "column": 13
+            },
+            {
+                "message": "Use placeholders and $wpdb-&gt;prepare(); found interpolated variable {$table_name} at         FROM {$table_name} \\n",
+                "code": "WordPress.DB.PreparedSQL.InterpolatedNotPrepared",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=17",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 17,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$digital_authority&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=25",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 25,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$conversion_readiness&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=26",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 26,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$overall_score&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=27",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 27,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$ai_semantic&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=31",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 31,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$ai_read_score&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=32",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 32,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$ai_structure&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=33",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 33,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$da_entity&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=35",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 35,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$da_citation&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=36",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 36,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$da_schema&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=37",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 37,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$cr_alignment&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=39",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 39,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$cr_qa&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=40",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 40,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$cr_metadata&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fpillar-breakdown.php&line=41",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 41,
+                "column": 1
+            }
+        ],
+        "uninstall.php": [
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$table_name&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Funinstall.php&line=21",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 21,
+                "column": 1
+            },
+            {
+                "message": "Use of a direct database call is discouraged.",
+                "code": "WordPress.DB.DirectDatabaseQuery.DirectQuery",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Funinstall.php&line=22",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 22,
+                "column": 1
+            },
+            {
+                "message": "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete().",
+                "code": "WordPress.DB.DirectDatabaseQuery.NoCaching",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Funinstall.php&line=22",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 22,
+                "column": 1
+            },
+            {
+                "message": "Unescaped parameter $table_name used in $wpdb-&gt;query()\\n$table_name assigned unsafely at line 21.",
+                "code": "PluginCheck.Security.DirectDB.UnescapedDBParameter",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Funinstall.php&line=22",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 22,
+                "column": 8
+            },
+            {
+                "message": "Use placeholders and $wpdb-&gt;prepare(); found interpolated variable {$table_name} at &quot;DROP TABLE IF EXISTS {$table_name}&quot;",
+                "code": "WordPress.DB.PreparedSQL.InterpolatedNotPrepared",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Funinstall.php&line=22",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 22,
+                "column": 15
+            },
+            {
+                "message": "Attempting a database schema change is discouraged.",
+                "code": "WordPress.DB.DirectDatabaseQuery.SchemaChange",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Funinstall.php&line=22",
+                "docs": "",
+                "severity": 5,
+                "type": "WARNING",
+                "line": 22,
+                "column": 15
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$users&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Funinstall.php&line=24",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 24,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$user_id&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Funinstall.php&line=25",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 25,
+                "column": 21
+            }
+        ],
+        "includes/api/class-ai-readability-ai-backend.php": [
+            {
+                "message": "Hook names invoked by a theme/plugin should start with the theme/plugin prefix. Found: &quot;the_content&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Fincludes%2Fapi%2Fclass-ai-readability-ai-backend.php&line=178",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 178,
+                "column": 46
+            }
+        ],
+        "templates/help.php": [
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$troubleshooting_items&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fhelp.php&line=6",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 6,
+                "column": 1
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$item&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fhelp.php&line=73",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 73,
+                "column": 55
+            },
+            {
+                "message": "Global variables defined by a theme/plugin should start with the theme/plugin prefix. Found: &quot;$step&quot;.",
+                "code": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+                "link": "https://playground.wordpress.net/scope:confident-vintage-city/wp-admin/plugin-editor.php?plugin=ai-readability-optimizer%2Fai-readability-optimizer.php&file=ai-readability-optimizer%2Ftemplates%2Fhelp.php&line=80",
+                "docs": "",
+                "severity": 6,
+                "type": "WARNING",
+                "line": 80,
+                "column": 59
+            }
+        ]
+    }
+}
