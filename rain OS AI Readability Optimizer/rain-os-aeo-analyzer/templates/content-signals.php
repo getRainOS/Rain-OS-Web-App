@@ -39,7 +39,7 @@ $analysis_data = $wpdb->get_results(
             <div class="rain-os-chart-header">
                 <div>
                     <h3><?php esc_html_e( 'Content Signals', 'rain-os-aeo-analyzer' ); ?></h3>
-                    <span style="font-size: 13px; color: rgba(255,255,255,0.72);"><?php esc_html_e( 'Word Count vs. AEO Score', 'rain-os-aeo-analyzer' ); ?></span>
+                    <span style="font-size: 13px; color: rgba(255,255,255,0.75);"><?php esc_html_e( 'Word Count vs. AEO Score', 'rain-os-aeo-analyzer' ); ?></span>
                 </div>
             </div>
             <div class="rain-os-chart-body">
@@ -135,7 +135,7 @@ $analysis_data = $wpdb->get_results(
                 tooltip: {
                     backgroundColor: 'rgba(0,0,0,0.8)',
                     titleColor: '#fff',
-                    bodyColor: 'rgba(255,255,255,0.7)',
+                    bodyColor: 'rgba(255,255,255,0.75)',
                     borderColor: 'rgba(255,255,255,0.1)',
                     borderWidth: 1,
                     callbacks: {
@@ -154,26 +154,26 @@ $analysis_data = $wpdb->get_results(
                     title: {
                         display: true,
                         text: 'Word Count',
-                        color: 'rgba(255,255,255,0.72)'
+                        color: 'rgba(255,255,255,0.75)'
                     },
                     grid: {
                         color: 'rgba(255,255,255,0.05)'
                     },
                     ticks: {
-                        color: 'rgba(255,255,255,0.72)'
+                        color: 'rgba(255,255,255,0.75)'
                     }
                 },
                 y: {
                     title: {
                         display: true,
                         text: 'AEO Score',
-                        color: 'rgba(255,255,255,0.72)'
+                        color: 'rgba(255,255,255,0.75)'
                     },
                     grid: {
                         color: 'rgba(255,255,255,0.05)'
                     },
                     ticks: {
-                        color: 'rgba(255,255,255,0.72)'
+                        color: 'rgba(255,255,255,0.75)'
                     },
                     min: 0,
                     max: 100

@@ -3853,12 +3853,13 @@ function ToggleSwitch({ checked, onChange }) {
         width: '36px',
         height: '20px',
         borderRadius: '10px',
-        backgroundColor: checked ? 'var(--accent)' : 'rgba(255,255,255,0.15)',
+        backgroundColor: checked ? '#f97316' : 'rgba(255,255,255,0.15)',
         cursor: 'pointer',
         position: 'relative',
         flexShrink: 0,
         transition: 'background-color 0.2s ease',
-        boxShadow: checked ? '0 0 8px rgba(34,211,238,0.4)' : 'none',
+        boxShadow: checked ? '0 0 8px rgba(249,115,22,0.5), 0 0 16px rgba(249,115,22,0.3)' : 'none',
+        animation: checked ? 'rainOsPdGlow 2s ease-in-out infinite' : 'none',
       }}
     >
       <div style={{
