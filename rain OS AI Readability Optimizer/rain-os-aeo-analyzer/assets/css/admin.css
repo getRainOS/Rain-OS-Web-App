@@ -8,7 +8,7 @@
     --rain-border-hover: rgba(34, 211, 238, 0.3);
     --rain-text-primary: #ffffff;
     --rain-text-secondary: rgba(255, 255, 255, 0.85);
-    --rain-text-muted: rgba(255, 255, 255, 0.72);
+    --rain-text-muted: rgba(255, 255, 255, 0.75);
     --rain-accent: #22d3ee;
     --rain-accent-glow: rgba(34, 211, 238, 0.5);
     --rain-green: #10b981;
@@ -923,6 +923,7 @@
     border: 1px solid var(--rain-border-color);
     border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
 }
 
 .rain-os-card-header {

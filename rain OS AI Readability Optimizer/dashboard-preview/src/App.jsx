@@ -4104,7 +4104,7 @@ function UrlScannerPage({ pdMuted }) {
           </div>
 
           {/* Overall + Pillars */}
-          <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr', gap: '20px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr', gap: '20px', background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', boxShadow: '0 4px 24px rgba(0,0,0,0.3)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', borderRight: '1px solid var(--border-color)', paddingRight: '20px', textAlign: 'center' }}>
               <div style={{ fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--text-muted)', marginBottom: '8px' }}>Overall Score</div>
               <div style={{ fontSize: '56px', fontWeight: 800, lineHeight: 1, color: overallColor, marginBottom: '4px' }}>{displayOverall}</div>
@@ -4137,7 +4137,7 @@ function UrlScannerPage({ pdMuted }) {
           )}
 
           {/* Technical Signals */}
-          <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', overflow: 'hidden' }}>
+          <div style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', boxShadow: '0 4px 24px rgba(0,0,0,0.3)', border: '1px solid var(--border-color)', borderRadius: '12px', overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid var(--border-color)' }}>
               <h3 style={{ margin: 0, fontSize: '15px', color: 'var(--text-primary)' }}>Technical HTML Signals</h3>
               <span style={{ background: 'rgba(34,211,238,0.12)', color: '#22d3ee', border: '1px solid rgba(34,211,238,0.25)', borderRadius: '4px', fontSize: '11px', fontWeight: 600, padding: '3px 8px' }}>URL Scan Only</span>
@@ -4220,7 +4220,7 @@ function UrlScannerPage({ pdMuted }) {
 
           {/* Recommendations */}
           {activeRecommendations.length > 0 && (
-            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', overflow: 'hidden' }}>
+            <div style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', boxShadow: '0 4px 24px rgba(0,0,0,0.3)', border: '1px solid var(--border-color)', borderRadius: '12px', overflow: 'hidden' }}>
               <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-color)' }}>
                 <h3 style={{ margin: 0, fontSize: '15px', color: 'var(--text-primary)' }}>Recommendations</h3>
               </div>
