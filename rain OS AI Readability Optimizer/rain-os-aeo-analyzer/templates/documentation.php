@@ -75,7 +75,7 @@ $rain_os_sections = array(
 
                 <div class="rain-os-docs-card">
                     <h2><?php esc_html_e( 'Step 2: Analyze Your First Content', 'rain-os-aeo-analyzer' ); ?></h2>
-                    <p><?php printf( wp_kses( __( 'Open any post in the block editor and look for the Rain OS AI Readability panel in the sidebar to receive your first AI Readability analysis.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array() ) ) ), esc_url( admin_url( 'edit.php' ) ) ); ?></p>
+                    <p><?php esc_html_e( 'Open any post in the block editor and look for the Rain OS AI Readability panel in the sidebar to receive your first AI Readability analysis.', 'rain-os-aeo-analyzer' ); ?></p>
                 </div>
             </div>
 
