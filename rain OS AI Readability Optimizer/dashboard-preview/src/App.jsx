@@ -354,10 +354,22 @@ function KPICard({ icon: Icon, title, value, subtitle, color, delay, gaugeValue,
     <div
       className={`animate-in-delay-${delay}`}
       style={{
-        backgroundColor: 'var(--bg-secondary)',
+        background: 'linear-gradient(135deg, rgba(22,36,55,0.82) 0%, rgba(15,23,42,0.64) 100%)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
         border: '1px solid var(--border-color)',
+        borderTop: `3px solid ${color}`,
         borderRadius: '12px',
         padding: '24px',
+        transition: 'transform 0.25s ease, box-shadow 0.25s ease',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'translateY(-2px)'
+        e.currentTarget.style.boxShadow = `0 12px 32px rgba(0,0,0,0.3)`
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = ''
+        e.currentTarget.style.boxShadow = ''
       }}
     >
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
@@ -408,7 +420,9 @@ function ChartCard({ title, period, children, className, style }) {
     <div
       className={className}
       style={{
-        backgroundColor: 'var(--bg-secondary)',
+        background: 'linear-gradient(135deg, rgba(22,36,55,0.82) 0%, rgba(15,23,42,0.64) 100%)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
         border: '1px solid var(--border-color)',
         borderRadius: '12px',
         padding: '24px',
@@ -1688,7 +1702,7 @@ function GettingStartedPage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-1" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Installation</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {[
@@ -1708,7 +1722,7 @@ function GettingStartedPage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-2" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Running Your First Diagnostic</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
             Rain OS analyzes your content and provides a comprehensive diagnostic report. The plugin does not make changes to your content — it identifies issues and provides recommendations that you can implement. Here's how to run your first diagnostic:
@@ -1723,7 +1737,7 @@ function GettingStartedPage() {
           </ol>
         </div>
 
-        <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-3" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Understanding Your Dashboard</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {[
@@ -1742,7 +1756,7 @@ function GettingStartedPage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-3" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Built-in Optimization Tools</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
             In addition to AI-powered analysis, Rain OS includes helpful tools that work locally to improve your content:
@@ -1764,7 +1778,7 @@ function GettingStartedPage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-4" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-4" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>System Requirements</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
             {[
@@ -1794,7 +1808,7 @@ function APIReferencePage() {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-1" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Authentication</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
             All API requests require authentication using a Bearer token. Include your API key in the Authorization header:
@@ -1804,7 +1818,7 @@ function APIReferencePage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-2" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Endpoints</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {[
@@ -1826,7 +1840,7 @@ function APIReferencePage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-3" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Response Headers</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
             The API returns usage information in response headers:
@@ -1837,7 +1851,7 @@ function APIReferencePage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-4" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-4" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Example Request</h2>
           <div style={{ backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px', padding: '16px', fontFamily: 'monospace', fontSize: '12px', lineHeight: 1.6, overflowX: 'auto' }}>
             <div style={{ color: 'var(--text-muted)' }}>// Full analysis request</div>
@@ -1864,7 +1878,7 @@ function QuickToolsPage() {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-1" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Quick Tools (Micro-Actions)</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
             Access powerful AI-powered quick tools that help optimize content in seconds:
@@ -1884,7 +1898,7 @@ function QuickToolsPage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-2" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Authorship & Provenance</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
             Track and verify content authenticity with our provenance system. Each analysis generates a unique hash that proves when and how your content was analyzed.
@@ -1903,7 +1917,7 @@ function QuickToolsPage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-3" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Detailed Sub-Scores</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
             See granular breakdowns within each pillar. Click any sub-score to see detailed explanations and specific recommendations.
@@ -1927,7 +1941,7 @@ function QuickToolsPage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-4" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-4" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Usage Tracking</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7 }}>
             All accounts include real-time usage tracking. See how many analyses you have used and remaining, with automatic notifications when approaching limits. Usage resets monthly based on your billing cycle.
@@ -2092,7 +2106,7 @@ function FourPillarsPage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-4" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-4" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>How Scores Are Calculated</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
             Each pillar is scored from 0-100 based on multiple sub-factors. The overall score is a weighted average of all four pillars. Scores are calculated using advanced AI models that simulate how modern search engines and AI systems evaluate content.
@@ -2153,7 +2167,7 @@ function TroubleshootingPage() {
             steps: ['Refresh the page', 'Check account dashboard', 'Wait a few minutes for sync', 'Contact support if discrepancy persists']
           },
         ].map((item, i) => (
-          <div key={i} className={`animate-in-delay-${Math.min(i + 1, 5)}`} style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
+          <div key={i} className={`animate-in-delay-${Math.min(i + 1, 5)}`} style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
             <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '12px', color: 'var(--accent)' }}>{item.q}</h3>
             <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.7, marginBottom: '16px' }}>{item.a}</p>
             <div style={{ backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px', padding: '16px' }}>
@@ -3057,8 +3071,10 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod, pdMuted, setPd
             return (
               <div key={i} className={`animate-in-delay-${i + 1}`} style={{
                 background: `linear-gradient(145deg, rgba(${colorRgb},0.10) 0%, rgba(${colorRgb},0.02) 100%)`,
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
                 border: `1px solid var(--border-color)`,
-                borderTop: `3px solid ${pillar.color}`,
+                borderLeft: `4px solid ${pillar.color}`,
                 borderRadius: '12px',
                 padding: '24px',
                 transition: 'transform 0.25s ease, box-shadow 0.25s ease',
@@ -3319,7 +3335,7 @@ function ContentSignalsPage({ selectedPeriod, setSelectedPeriod }) {
 
       {filteredData.length > 0 && (
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px', marginTop: '24px' }}>
-        <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
+        <div className="animate-in-delay-2" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
           <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>Content Analysis</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {filteredData.slice(0, 6).map((item, i) => (
@@ -3333,7 +3349,7 @@ function ContentSignalsPage({ selectedPeriod, setSelectedPeriod }) {
             ))}
           </div>
         </div>
-        <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
+        <div className="animate-in-delay-3" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
           <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>Insights</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ padding: '16px', backgroundColor: 'rgba(34, 211, 238, 0.1)', borderRadius: '8px', borderLeft: '3px solid var(--accent)' }}>
@@ -3366,7 +3382,7 @@ function LearnAIReadabilityPage({ setCurrentPage }) {
 
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <div className="animate-in-delay-1" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
             <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>What is AI Readability?</h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
               AI Readability is the degree to which artificial intelligence systems can accurately parse, comprehend, and structure your content. This is not about keywords, prompts, or rankings—it is about whether meaning survives machine interpretation.
@@ -3376,7 +3392,7 @@ function LearnAIReadabilityPage({ setCurrentPage }) {
             </p>
           </div>
 
-          <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <div className="animate-in-delay-2" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
             <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>Why Does It Matter?</h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
               The way people search for information is changing. Instead of typing keywords and clicking through links, users are increasingly asking AI assistants direct questions and expecting comprehensive answers. This shift requires optimizing your content for AI Readability - ensuring AI systems can understand, process, and cite your content effectively.
@@ -3396,7 +3412,7 @@ function LearnAIReadabilityPage({ setCurrentPage }) {
             </div>
           </div>
 
-          <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <div className="animate-in-delay-3" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
             <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>The Four Pillars Explained</h2>
             
             <div style={{ marginBottom: '24px' }}>
@@ -3440,7 +3456,7 @@ function LearnAIReadabilityPage({ setCurrentPage }) {
             </div>
           </div>
 
-          <div className="animate-in-delay-4" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+          <div className="animate-in-delay-4" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
             <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>How AI Reads Your Content</h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '20px' }}>
               Rain OS leverages AI to simulate how search engines and answer engines process your content. Here's what our AI analysis examines:
@@ -3537,7 +3553,7 @@ function LearnAIReadabilityPage({ setCurrentPage }) {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
+          <div className="animate-in-delay-1" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
             <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>Quick Facts</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {[
@@ -3553,7 +3569,7 @@ function LearnAIReadabilityPage({ setCurrentPage }) {
             </div>
           </div>
 
-          <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
+          <div className="animate-in-delay-2" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
             <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>Key Terms</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {[
@@ -3606,7 +3622,7 @@ function ImproveScorePage() {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-1" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
             <div style={{ width: '40px', height: '40px', borderRadius: '10px', backgroundColor: 'rgba(34, 211, 238, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ fontSize: '20px' }}>1</span>
@@ -3632,7 +3648,7 @@ function ImproveScorePage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-2" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
             <div style={{ width: '40px', height: '40px', borderRadius: '10px', backgroundColor: 'rgba(34, 211, 238, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ fontSize: '20px' }}>2</span>
@@ -3656,7 +3672,7 @@ function ImproveScorePage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-3" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
             <div style={{ width: '40px', height: '40px', borderRadius: '10px', backgroundColor: 'rgba(34, 211, 238, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ fontSize: '20px' }}>3</span>
@@ -3675,7 +3691,7 @@ function ImproveScorePage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-4" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-4" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
             <div style={{ width: '40px', height: '40px', borderRadius: '10px', backgroundColor: 'rgba(34, 211, 238, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ fontSize: '20px' }}>4</span>
@@ -3697,7 +3713,7 @@ function ImproveScorePage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-5" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-5" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
             <div style={{ width: '40px', height: '40px', borderRadius: '10px', backgroundColor: 'rgba(34, 211, 238, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ fontSize: '20px' }}>5</span>
@@ -3729,7 +3745,7 @@ function ImproveScorePage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-5" style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-5" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
             <div style={{ width: '40px', height: '40px', borderRadius: '10px', backgroundColor: 'rgba(34, 211, 238, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ fontSize: '20px' }}>6</span>
@@ -3988,7 +4004,7 @@ function UrlScannerPage({ pdMuted }) {
       </div>
 
       {/* Input card */}
-      <div style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px', marginBottom: '24px' }}>
+      <div style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px', marginBottom: '24px' }}>
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
           <div style={{ flex: 1, minWidth: '280px', position: 'relative', display: 'flex', alignItems: 'center' }}>
             <Link2 size={16} style={{ position: 'absolute', left: '12px', color: 'var(--text-muted)', pointerEvents: 'none' }} />

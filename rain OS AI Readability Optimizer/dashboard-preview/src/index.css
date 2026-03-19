@@ -2,6 +2,7 @@
   --bg-primary: #070b14;
   --bg-secondary: #0c1222;
   --bg-tertiary: #111827;
+  --glass-bg: linear-gradient(135deg, rgba(22,36,55,0.82) 0%, rgba(15,23,42,0.64) 100%);
   --border-color: rgba(255, 255, 255, 0.08);
   --border-hover: rgba(34, 211, 238, 0.3);
   --text-primary: #ffffff;

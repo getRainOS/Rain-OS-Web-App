@@ -10,11 +10,19 @@
 
 /* ── Input card ──────────────────────────────────────────── */
 .rain-os-scanner-card {
-    background: var(--card-bg, rgba(255,255,255,0.05));
+    background: linear-gradient(135deg, rgba(22,36,55,0.82) 0%, rgba(15,23,42,0.64) 100%);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--border-color, rgba(255,255,255,0.1));
     border-radius: 12px;
     padding: 24px;
     margin-bottom: 24px;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.rain-os-scanner-card:hover {
+    border-color: rgba(34, 211, 238, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
 .rain-os-scanner-form { display: flex; flex-direction: column; gap: 12px; }

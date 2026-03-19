@@ -107,7 +107,7 @@ function rain_os_get_score_class( $score ) {
         </header>
 
         <div class="rain-os-kpi-grid">
-            <div class="rain-os-kpi-card rain-os-animate-delay-1">
+            <div class="rain-os-kpi-card rain-os-kpi-card-cyan rain-os-animate-delay-1">
                 <div class="rain-os-kpi-header">
                     <div class="rain-os-kpi-icon rain-os-kpi-icon-cyan">
                         <span class="dashicons dashicons-media-document"></span>
@@ -130,9 +130,9 @@ function rain_os_get_score_class( $score ) {
                 ?></div>
             </div>
 
-            <div class="rain-os-kpi-card rain-os-animate-delay-2">
+            <div class="rain-os-kpi-card rain-os-kpi-card-green rain-os-animate-delay-2">
                 <div class="rain-os-kpi-header">
-                    <div class="rain-os-kpi-icon rain-os-kpi-icon-cyan">
+                    <div class="rain-os-kpi-icon rain-os-kpi-icon-green">
                         <span class="dashicons dashicons-chart-line"></span>
                     </div>
                     <div class="rain-os-kpi-gauge" data-value="<?php echo esc_attr( $rain_os_overall_score ); ?>" data-color="#22d3ee"></div>
@@ -153,7 +153,7 @@ function rain_os_get_score_class( $score ) {
                 ?></div>
             </div>
 
-            <div class="rain-os-kpi-card rain-os-animate-delay-3">
+            <div class="rain-os-kpi-card rain-os-kpi-card-purple rain-os-animate-delay-3">
                 <div class="rain-os-kpi-header">
                     <div class="rain-os-kpi-icon rain-os-kpi-icon-purple">
                         <span class="dashicons dashicons-heart"></span>
@@ -184,7 +184,7 @@ function rain_os_get_score_class( $score ) {
                 ?></div>
             </div>
 
-            <div class="rain-os-kpi-card rain-os-animate-delay-4">
+            <div class="rain-os-kpi-card rain-os-kpi-card-orange rain-os-animate-delay-4">
                 <div class="rain-os-kpi-header">
                     <div class="rain-os-kpi-icon rain-os-kpi-icon-orange">
                         <span class="dashicons dashicons-performance"></span>
