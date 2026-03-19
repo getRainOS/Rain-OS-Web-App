@@ -2180,7 +2180,7 @@ function TroubleshootingPage() {
           </div>
         ))}
 
-        <div className="animate-in-delay-5" style={{ backgroundColor: 'linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(168, 85, 247, 0.1))', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px', textAlign: 'center' }}>
+        <div className="animate-in-delay-5" style={{ background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(168, 85, 247, 0.1))', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px', textAlign: 'center' }}>
           <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '8px' }}>Still need help?</h3>
           <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '16px' }}>
             Contact our support team at support@getrainos.com
@@ -3097,7 +3097,7 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod, pdMuted, setPd
                         <span style={{ color: 'var(--text-muted)' }}>{sub.name}</span>
                         <span style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>{sub.value}%</span>
                       </div>
-                      <div style={{ height: '5px', backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ height: '6px', background: 'rgba(255,255,255,0.06)', borderRadius: '3px', overflow: 'hidden' }}>
                         <div style={{ height: '100%', width: `${sub.value}%`, background: `linear-gradient(90deg, ${pillar.color}, ${pillar.color}99)`, borderRadius: '3px', transition: 'width 0.6s ease' }} />
                       </div>
                     </div>
@@ -3592,7 +3592,7 @@ function LearnAIReadabilityPage({ setCurrentPage }) {
             </div>
           </div>
 
-          <div className="animate-in-delay-3" style={{ backgroundColor: 'linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(168, 85, 247, 0.15))', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px', background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(168, 85, 247, 0.1))' }}>
+          <div className="animate-in-delay-3" style={{ background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(168, 85, 247, 0.1))', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px' }}>
             <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '12px' }}>Ready to Improve?</h3>
             <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '16px' }}>
               Now that you understand AI Readability, learn practical strategies to boost your score.
@@ -3775,7 +3775,7 @@ function ImproveScorePage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-5" style={{ backgroundColor: 'linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(168, 85, 247, 0.15))', border: '1px solid var(--accent)', borderRadius: '12px', padding: '32px', background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(168, 85, 247, 0.1))' }}>
+        <div className="animate-in-delay-5" style={{ background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(168, 85, 247, 0.1))', border: '1px solid var(--accent)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px' }}>Quick Checklist</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
             {[
@@ -4121,7 +4121,7 @@ function UrlScannerPage({ pdMuted }) {
                       <span style={{ flex: 1, fontSize: '13px', color: 'var(--text-secondary)' }}>{p.label}</span>
                       <span style={{ fontSize: '15px', fontWeight: 700, color: p.color, minWidth: '30px', textAlign: 'right' }}>{score}</span>
                     </div>
-                    <div style={{ height: '5px', background: 'rgba(255,255,255,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
+                    <div style={{ height: '6px', background: 'rgba(255,255,255,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
                       <div style={{ height: '100%', width: `${score}%`, background: p.color, borderRadius: '3px', transition: 'width 0.6s ease' }} />
                     </div>
                   </div>

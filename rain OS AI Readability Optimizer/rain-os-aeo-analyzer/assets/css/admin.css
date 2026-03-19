@@ -1280,7 +1280,7 @@
 }
 
 .rain-os-bar-track {
-    height: 5px;
+    height: 6px;
     background-color: rgba(255,255,255,0.06);
     border-radius: 3px;
     overflow: hidden;
