@@ -1,0 +1,56 @@
+#6 - Full Plugin Polish & Prototype Sync
+What & Why
+The live plugin looks flat and unsophisticated compared to the prototype (App.jsx). Cards are plain solid-color rectangles with no depth. Text using rgba(255,255,255,0.5) is illegible. Toggle switches show both a raw HTML checkbox and an unstyled circle simultaneously. The Pillar Breakdown score display is a filled blob. The Plugin URI links to the wrong domain. The prototype itself also needs to reflect the same polished look.
+
+All 12 plugin templates share the same CSS (admin.css) and card/component classes, so upgrading the shared CSS components cascades polish to every page. Targeted structural changes are needed only for the Pillar Breakdown score circle. The URL Scanner has its own url-scanner.css that also needs a pass.
+
+Done looks like
+Plugin — all pages:
+
+Every .rain-os-card has a glassmorphism treatment: translucent gradient background (rgba(255,255,255,0.03) base with subtle color tint), backdrop-filter: blur(8px), a soft box-shadow, and rounded corners — consistent across Dashboard, Settings, Content Analyzer, Score History, Documentation, Help, Upgrade, Learn AI Readability, Content Signals, Technical Signals
+All muted/secondary body text is clearly legible (minimum rgba(255,255,255,0.75) on dark backgrounds)
+KPI cards on the Dashboard have a hover lift effect and a subtle colored top-border accent in their pillar color
+The Score History table rows have alternating subtle background tints and hover states
+Content Signals and Technical Signals sections use the same glassmorphism card treatment
+Plugin — specific pages:
+
+Settings: toggle switches are smooth pill sliders (square checkbox hidden, styled thumb slides, checked = orange glow)
+Pillar Breakdown: overall score is a ring/arc (conic-gradient or SVG stroke) not a filled circle; pillar cards have per-color gradient glass backgrounds; pillar score numbers render in their pillar color; progress bars are thinner (6px) with gradient fills
+URL Scanner: cards in url-scanner.css updated to match the glassmorphism treatment of the main CSS
+Plugin — metadata:
+
+"Visit plugin site" link in the WordPress plugins list opens https://www.getrainos.com (Plugin URI and Author URI both corrected)
+Prototype (App.jsx):
+
+All pages (Dashboard, Performance, Pillar Breakdown, Category Scores, Content Signals, Learn AI Readability, Improve Score, URL Scanner, Settings, Docs, Upgrade, Gutenberg Sidebar) use the same glassmorphism card style, refined text contrast, and polished component look as the updated plugin
+The overall visual language matches: same colors, same card depth, same typography weight
+Deliverable:
+
+Plugin is rebuilt (webpack) and repackaged (zip:wporg) with zero errors
+Out of scope
+Auto-updates support (requires WordPress.org approval)
+Any AJAX, scoring, or API logic changes
+New features or new pages
+Mobile/responsive layout changes beyond what existing breakpoints handle
+Tasks
+Fix Plugin URI and Author URI — Change both header fields in rain-os-aeo-analyzer.php from https://www.rainos.com to https://www.getrainos.com.
+
+Global CSS: text contrast and card glassmorphism — In admin.css, raise --rain-text-muted and --rain-text-secondary CSS variables to legible opacity levels. Rewrite .rain-os-card to use a translucent gradient background with backdrop-filter: blur(8px) and a box-shadow. Add hover lift to .rain-os-kpi-card. Upgrade .rain-os-table rows with hover states and alternating tints. These changes cascade automatically to all 12 plugin templates.
+
+Settings page: toggle switch CSS — Add a full CSS block to admin.css for the settings toggle components (.rain-os-toggle-group, .rain-os-toggle-row, .rain-os-toggle-label, .rain-os-checkbox hidden, .rain-os-toggle-switch styled as a 36×20px pill slider, .rain-os-toggle-title). Checked state uses the orange glow animation matching the PD mute toggle for visual consistency.
+
+Pillar Breakdown: score ring and glassmorphism pillar cards — Replace the filled score circle with a ring-style display using SVG or conic-gradient. Update .rain-os-pillar-section cards to use per-pillar color glassmorphism backgrounds (translucent linear-gradient) and a left border accent in the pillar color. Make the pillar score number render in the pillar's own color. Slim progress bars to 6px with gradient fills. HTML changes are minimal (score circle only); rest is CSS.
+
+URL Scanner CSS polish — Review and update url-scanner.css to apply the same glassmorphism card treatment, improved text contrast, and refined borders as the main admin.css, so the URL Scanner page matches the rest of the plugin.
+
+Prototype (App.jsx) visual sync — Update all page components in App.jsx to apply the same glassmorphism card style (translucent gradient background, backdrop-filter, box-shadow), raised text contrast, polished pill toggles, and ring-style score displays. Every page in the prototype — Dashboard, Performance, Pillar Breakdown, Category Scores, Content Signals, Learn AI Readability, Improve Score, URL Scanner, Settings, Docs, Upgrade, Gutenberg Sidebar — must reflect the same premium dark design language as the updated plugin.
+
+Build and repackage — Run the webpack build and zip:wporg packaging; confirm zero errors and all modified files have current timestamps.
+
+Relevant files
+rain OS AI Readability Optimizer/rain-os-aeo-analyzer/rain-os-aeo-analyzer.php:1-15
+rain OS AI Readability Optimizer/rain-os-aeo-analyzer/assets/css/admin.css
+rain OS AI Readability Optimizer/rain-os-aeo-analyzer/assets/css/url-scanner.css
+rain OS AI Readability Optimizer/rain-os-aeo-analyzer/templates/pillar-breakdown.php:72-285
+rain OS AI Readability Optimizer/rain-os-aeo-analyzer/templates/settings.php:124-200
+rain OS AI Readability Optimizer/dashboard-preview/src/App.jsx
