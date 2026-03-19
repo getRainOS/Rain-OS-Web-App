@@ -95,10 +95,26 @@ $pd_structured = rairo_sub( $p4, 'structured_content_quality', $product_discover
         </header>
 
         <div class="rain-os-overall-score-display">
-            <div class="rain-os-score-circle">
-                <span class="rain-os-score-number"><?php echo esc_html( $overall_score ); ?>%</span>
+            <div class="rain-os-score-ring-wrap">
+                <svg class="rain-os-score-ring-svg" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="rainRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#22d3ee"/>
+                            <stop offset="100%" style="stop-color:#a855f7"/>
+                        </linearGradient>
+                    </defs>
+                    <circle cx="75" cy="75" r="60" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="12"/>
+                    <circle cx="75" cy="75" r="60" fill="none" stroke="url(#rainRingGrad)" stroke-width="12"
+                            stroke-linecap="round"
+                            stroke-dasharray="<?php echo esc_attr( round( 376.99 * $overall_score / 100 ) ); ?> 376.99"
+                            transform="rotate(-90 75 75)"/>
+                </svg>
+                <div class="rain-os-score-ring-center">
+                    <span class="rain-os-score-number"><?php echo esc_html( $overall_score ); ?></span>
+                    <span class="rain-os-score-ring-label"><?php esc_html_e( 'Score', 'rain-os-aeo-analyzer' ); ?></span>
+                </div>
             </div>
-            <div class="rain-os-score-label"><?php esc_html_e( 'Overall Score', 'rain-os-aeo-analyzer' ); ?></div>
+            <div class="rain-os-score-label"><?php esc_html_e( 'Overall AEO Score', 'rain-os-aeo-analyzer' ); ?></div>
         </div>
 
         <div class="rain-os-pillars-grid">

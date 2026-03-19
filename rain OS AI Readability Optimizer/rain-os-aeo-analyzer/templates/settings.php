@@ -130,7 +130,7 @@ $rain_os_pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
                                                value="yes" 
                                                <?php checked( $rain_os_pd_enabled, 'yes' ); ?> 
                                                class="rain-os-checkbox" />
-                                        <span class="rain-os-toggle-switch" style="<?php echo 'yes' === $rain_os_pd_enabled ? 'background-color: var(--rain-pillar-orange); animation: rainPdGlow 2s ease-in-out infinite;' : ''; ?>"></span>
+                                        <span class="rain-os-toggle-switch"></span>
                                         <span class="rain-os-toggle-title">
                                             <?php esc_html_e( 'Product Discoverability Pillar', 'rain-os-aeo-analyzer' ); ?>
                                             <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'Enable or disable the Product Discoverability pillar. When disabled, your overall AEO score will be calculated from the three core content pillars only (AI Readability, Digital Authority, Conversion Readiness). Enable this if you want to optimize for product or service discovery through AI-powered search.', 'rain-os-aeo-analyzer' ); ?>">

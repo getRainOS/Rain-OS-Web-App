@@ -207,7 +207,6 @@ function Sidebar({ currentPage, setCurrentPage }) {
               textTransform: 'uppercase',
               letterSpacing: '0.8px',
               color: 'var(--text-muted)',
-              opacity: 0.55,
             }}>
               {section.label}
             </div>
@@ -3005,6 +3004,8 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod, pdMuted, setPd
   const filteredPillarData = getFilteredPillarData()
   const overallScore = Math.round(filteredPillarData.reduce((sum, p) => sum + p.value, 0) / filteredPillarData.length)
   
+  const circumference = 2 * Math.PI * 60
+
   return (
     <>
       <header className="animate-in" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
@@ -3018,7 +3019,30 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod, pdMuted, setPd
         </div>
       </header>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div className="animate-in" style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <div style={{ position: 'relative', width: '150px', height: '150px', margin: '0 auto 16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <svg style={{ position: 'absolute', top: 0, left: 0, width: '150px', height: '150px', filter: 'drop-shadow(0 0 12px rgba(34,211,238,0.25))' }} viewBox="0 0 150 150">
+            <defs>
+              <linearGradient id="pbRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#22d3ee" />
+                <stop offset="100%" stopColor="#a855f7" />
+              </linearGradient>
+            </defs>
+            <circle cx="75" cy="75" r="60" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="12" />
+            <circle cx="75" cy="75" r="60" fill="none" stroke="url(#pbRingGrad)" strokeWidth="12"
+              strokeLinecap="round"
+              strokeDasharray={`${(circumference * overallScore / 100).toFixed(2)} ${circumference.toFixed(2)}`}
+              transform="rotate(-90 75 75)" />
+          </svg>
+          <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+            <span style={{ fontSize: '34px', fontWeight: 800, color: '#fff', lineHeight: 1 }}>{overallScore}</span>
+            <span style={{ fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--text-muted)' }}>Score</span>
+          </div>
+        </div>
+        <div style={{ fontSize: '14px', color: 'var(--text-secondary)', fontWeight: 500 }}>Overall AEO Score</div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
           {filteredPillarData.map((pillar, i) => {
             const subcategories = pillar.name === 'AI Readability' 
               ? [{ name: 'Semantic Clarity', value: 85 }, { name: 'Readability Score', value: 78 }, { name: 'Logical Structure', value: 82 }, { name: 'AEO Alignment', value: 80 }]
@@ -3027,40 +3051,36 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod, pdMuted, setPd
               : pillar.name === 'Product Discoverability'
               ? [{ name: 'Schema Completeness', value: 74 }, { name: 'Answer Layer Quality', value: 70 }, { name: 'Freshness Signals', value: 68 }, { name: 'Conversational Query Match', value: 72 }]
               : [{ name: 'Schema Extraction', value: 80 }, { name: 'QA-Format Detection', value: 76 }, { name: 'Metadata Audit', value: 84 }]
-            
+
+            const colorRgb = pillar.color === '#22d3ee' ? '34,211,238' : pillar.color === '#10b981' ? '16,185,129' : pillar.color === '#a855f7' ? '168,85,247' : '249,115,22'
+
             return (
-              <div key={i} className={`animate-in-delay-${i + 2}`} style={{
-                backgroundColor: 'var(--bg-secondary)',
-                border: '1px solid var(--border-color)',
+              <div key={i} className={`animate-in-delay-${i + 1}`} style={{
+                background: `linear-gradient(145deg, rgba(${colorRgb},0.10) 0%, rgba(${colorRgb},0.02) 100%)`,
+                border: `1px solid var(--border-color)`,
+                borderTop: `3px solid ${pillar.color}`,
                 borderRadius: '12px',
                 padding: '24px',
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: pillar.color }} />
-                    <span style={{ fontSize: '16px', fontWeight: 500 }}>{pillar.name}</span>
-                  </div>
-                  <span style={{ fontSize: '24px', fontWeight: 600, color: pillar.color }}>{pillar.value}</span>
-                </div>
-                <div style={{ height: '8px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '4px', overflow: 'hidden' }}>
-                  <div style={{ height: '100%', width: `${pillar.value}%`, backgroundColor: pillar.color, borderRadius: '4px', transition: 'width 0.5s ease' }} />
-                </div>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '12px', marginBottom: '16px' }}>
-                  {pillar.name === 'AI Readability' && 'Measures semantic clarity, logical structure, and overall readability for AI systems.'}
-                  {pillar.name === 'Digital Authority' && 'Evaluates credibility signals, citation readiness, and trustworthiness indicators.'}
-                  {pillar.name === 'Conversion Readiness' && 'Assesses user engagement potential and action-driving effectiveness.'}
-                  {pillar.name === 'Product Discoverability' && 'Measures how easily your product or service can be found through AI-powered search and recommendations.'}
-                </p>
-                <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
-                  <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '12px', fontWeight: 500 }}>SUBCATEGORIES</div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    {subcategories.map((sub, j) => (
-                      <div key={j} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
-                        <span style={{ fontSize: '13px', color: 'var(--text-primary)' }}>{sub.name}</span>
-                        <span style={{ fontSize: '13px', fontWeight: 600, color: pillar.color }}>{sub.value}</span>
+                transition: 'transform 0.25s ease, box-shadow 0.25s ease',
+                boxShadow: `0 4px 20px rgba(${colorRgb},0.10)`,
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = `0 12px 32px rgba(${colorRgb},0.18)` }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = `0 4px 20px rgba(${colorRgb},0.10)` }}
+              >
+                <h3 style={{ fontSize: '15px', fontWeight: 600, color: pillar.color, margin: '0 0 6px', letterSpacing: '0.2px' }}>{pillar.name}</h3>
+                <div style={{ fontSize: '40px', fontWeight: 800, color: pillar.color, lineHeight: 1, marginBottom: '20px' }}>{pillar.value}</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  {subcategories.map((sub, j) => (
+                    <div key={j}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '6px' }}>
+                        <span style={{ color: 'var(--text-muted)' }}>{sub.name}</span>
+                        <span style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>{sub.value}%</span>
                       </div>
-                    ))}
-                  </div>
+                      <div style={{ height: '5px', backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '3px', overflow: 'hidden' }}>
+                        <div style={{ height: '100%', width: `${sub.value}%`, background: `linear-gradient(90deg, ${pillar.color}, ${pillar.color}99)`, borderRadius: '3px', transition: 'width 0.6s ease' }} />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )
