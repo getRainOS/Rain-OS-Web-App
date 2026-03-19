@@ -3,9 +3,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-$current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'getting-started';
+$rain_os_current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'getting-started'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Admin-only read-only section filter; no data is modified.
 
-$sections = array(
+$rain_os_sections = array(
     'getting-started'   => __( 'Getting Started', 'rain-os-aeo-analyzer' ),
     'four-pillars'      => __( 'The Four Pillars', 'rain-os-aeo-analyzer' ),
     'url-scanner'       => __( 'URL Scanner', 'rain-os-aeo-analyzer' ),
@@ -35,16 +35,16 @@ $sections = array(
 
     <div class="rain-os-docs-layout">
         <nav class="rain-os-docs-nav">
-            <?php foreach ( $sections as $key => $label ) : ?>
-            <a href="<?php echo esc_url( admin_url( 'admin.php?page=rain-os-aeo-docs&section=' . $key ) ); ?>" 
-               class="rain-os-docs-nav-item <?php echo esc_attr( $current_section === $key ? 'active' : '' ); ?>">
-                <?php echo esc_html( $label ); ?>
+            <?php foreach ( $rain_os_sections as $rain_os_key => $rain_os_label ) : ?>
+            <a href="<?php echo esc_url( admin_url( 'admin.php?page=rain-os-aeo-docs&section=' . $rain_os_key ) ); ?>" 
+               class="rain-os-docs-nav-item <?php echo esc_attr( $rain_os_current_section === $rain_os_key ? 'active' : '' ); ?>">
+                <?php echo esc_html( $rain_os_label ); ?>
             </a>
             <?php endforeach; ?>
         </nav>
 
         <div class="rain-os-docs-content">
-            <?php if ( 'getting-started' === $current_section ) : ?>
+            <?php if ( 'getting-started' === $rain_os_current_section ) : ?>
             <div class="rain-os-docs-section">
                 <h1><?php esc_html_e( 'Getting Started with Rain OS AI Readability Analyzer', 'rain-os-aeo-analyzer' ); ?></h1>
                 <p class="rain-os-docs-intro"><?php esc_html_e( 'Welcome to Rain OS AI Readability Analyzer! This guide will help you set up and start optimizing your content for AI-powered answer engines.', 'rain-os-aeo-analyzer' ); ?></p>
@@ -54,7 +54,7 @@ $sections = array(
                     <ol class="rain-os-docs-steps">
                         <li>
                             <strong><?php esc_html_e( 'Sign Up or Log In', 'rain-os-aeo-analyzer' ); ?></strong>
-                            <p><?php printf( wp_kses( __( 'Visit <a href="%s" target="_blank">app.getrainos.com</a> to create your account or log in.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array(), 'target' => array() ) ) ), 'https://app.getrainos.com/#/login' ); ?></p>
+                            <p><?php /* translators: %s: URL to the Rain OS login page */ printf( wp_kses( __( 'Visit <a href="%s" target="_blank">app.getrainos.com</a> to create your account or log in.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array(), 'target' => array() ) ) ), 'https://app.getrainos.com/#/login' ); ?></p>
                         </li>
                         <li>
                             <strong><?php esc_html_e( 'Copy Your API Key', 'rain-os-aeo-analyzer' ); ?></strong>
@@ -62,7 +62,7 @@ $sections = array(
                         </li>
                         <li>
                             <strong><?php esc_html_e( 'Configure Plugin Settings', 'rain-os-aeo-analyzer' ); ?></strong>
-                            <p><?php printf( wp_kses( __( 'Go to <a href="%s">Rain OS > Settings</a> and paste your API key.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array() ) ) ), esc_url( admin_url( 'admin.php?page=rain-os-aeo-settings' ) ) ); ?></p>
+                            <p><?php /* translators: %s: URL to the Rain OS settings page */ printf( wp_kses( __( 'Go to <a href="%s">Rain OS > Settings</a> and paste your API key.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array() ) ) ), esc_url( admin_url( 'admin.php?page=rain-os-aeo-settings' ) ) ); ?></p>
                         </li>
                     </ol>
                 </div>
@@ -73,7 +73,7 @@ $sections = array(
                 </div>
             </div>
 
-            <?php elseif ( 'four-pillars' === $current_section ) : ?>
+            <?php elseif ( 'four-pillars' === $rain_os_current_section ) : ?>
             <div class="rain-os-docs-section">
                 <h1><?php esc_html_e( 'Understanding the Four Pillars', 'rain-os-aeo-analyzer' ); ?></h1>
                 <p class="rain-os-docs-intro"><?php esc_html_e( 'Rain OS analyzes your content based on four key pillars that determine how well AI systems can understand, trust, extract information from, and discover your content.', 'rain-os-aeo-analyzer' ); ?></p>
@@ -121,7 +121,7 @@ $sections = array(
                 </div>
             </div>
 
-            <?php elseif ( 'url-scanner' === $current_section ) : ?>
+            <?php elseif ( 'url-scanner' === $rain_os_current_section ) : ?>
             <div class="rain-os-docs-section">
                 <h1><?php esc_html_e( 'URL Scanner', 'rain-os-aeo-analyzer' ); ?></h1>
                 <p class="rain-os-docs-intro"><?php esc_html_e( 'The URL Scanner lets you analyze any publicly accessible web page for AEO readiness — without creating or editing a WordPress post. Enter a URL, run the scan, and receive a full four-pillar score plus a technical HTML signal audit.', 'rain-os-aeo-analyzer' ); ?></p>
@@ -141,7 +141,7 @@ $sections = array(
                     <ol class="rain-os-docs-steps">
                         <li>
                             <strong><?php esc_html_e( 'Go to Rain OS > URL Scanner', 'rain-os-aeo-analyzer' ); ?></strong>
-                            <p><?php printf( wp_kses( __( 'Navigate to <a href="%s">Rain OS &rsaquo; URL Scanner</a> in your WordPress admin sidebar.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array() ) ) ), esc_url( admin_url( 'admin.php?page=rain-os-aeo-url-scanner' ) ) ); ?></p>
+                            <p><?php /* translators: %s: URL to the Rain OS URL Scanner page */ printf( wp_kses( __( 'Navigate to <a href="%s">Rain OS &rsaquo; URL Scanner</a> in your WordPress admin sidebar.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array() ) ) ), esc_url( admin_url( 'admin.php?page=rain-os-aeo-url-scanner' ) ) ); ?></p>
                         </li>
                         <li>
                             <strong><?php esc_html_e( 'Enter the URL', 'rain-os-aeo-analyzer' ); ?></strong>
@@ -225,7 +225,7 @@ $sections = array(
                 </div>
             </div>
 
-            <?php elseif ( 'content-analyzer' === $current_section ) : ?>
+            <?php elseif ( 'content-analyzer' === $rain_os_current_section ) : ?>
             <div class="rain-os-docs-section">
                 <h1><?php esc_html_e( 'Using the Gutenberg Sidebar', 'rain-os-aeo-analyzer' ); ?></h1>
                 <p class="rain-os-docs-intro"><?php esc_html_e( 'The Gutenberg Sidebar is your primary tool for evaluating and improving your content AI Readability performance directly in the WordPress block editor.', 'rain-os-aeo-analyzer' ); ?></p>
@@ -241,7 +241,7 @@ $sections = array(
                 </div>
             </div>
 
-            <?php elseif ( 'quick-tools' === $current_section ) : ?>
+            <?php elseif ( 'quick-tools' === $rain_os_current_section ) : ?>
             <div class="rain-os-docs-section">
                 <h1><?php esc_html_e( 'Quick Tools', 'rain-os-aeo-analyzer' ); ?></h1>
                 <p class="rain-os-docs-intro"><?php esc_html_e( 'Quick Tools provide AI-powered micro-actions to enhance your content quickly. Available to all subscribers.', 'rain-os-aeo-analyzer' ); ?></p>
@@ -257,7 +257,7 @@ $sections = array(
                 </div>
             </div>
 
-            <?php elseif ( 'troubleshooting' === $current_section ) : ?>
+            <?php elseif ( 'troubleshooting' === $rain_os_current_section ) : ?>
             <div class="rain-os-docs-section">
                 <h1><?php esc_html_e( 'Troubleshooting', 'rain-os-aeo-analyzer' ); ?></h1>
                 <p class="rain-os-docs-intro"><?php esc_html_e( 'Common issues and solutions', 'rain-os-aeo-analyzer' ); ?></p>
@@ -341,7 +341,7 @@ $sections = array(
                 </div>
             </div>
 
-            <?php elseif ( 'improve-score' === $current_section ) : ?>
+            <?php elseif ( 'improve-score' === $rain_os_current_section ) : ?>
             <div class="rain-os-docs-section">
                 <h1><?php esc_html_e( 'Improve Your Score', 'rain-os-aeo-analyzer' ); ?></h1>
                 <p class="rain-os-docs-intro"><?php esc_html_e( 'Practical tips and strategies to boost your content scores', 'rain-os-aeo-analyzer' ); ?></p>
@@ -397,7 +397,7 @@ $sections = array(
                 </div>
             </div>
 
-            <?php elseif ( 'best-practices' === $current_section ) : ?>
+            <?php elseif ( 'best-practices' === $rain_os_current_section ) : ?>
             <div class="rain-os-docs-section">
                 <h1><?php esc_html_e( 'AI Readability Best Practices', 'rain-os-aeo-analyzer' ); ?></h1>
                 <p class="rain-os-docs-intro"><?php esc_html_e( 'Follow these guidelines to maximize your content performance in AI answer engines.', 'rain-os-aeo-analyzer' ); ?></p>

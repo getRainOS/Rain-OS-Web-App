@@ -3,14 +3,14 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-$api_key = get_option( 'rain_os_api_key', '' );
-$industry = get_option( 'rain_os_industry', '' );
-$cache_time = get_option( 'rain_os_cache_time', 3600 );
-$auto_analyze = get_option( 'rain_os_auto_analyze', 'no' );
-$provenance_tracking = get_option( 'rain_os_provenance_tracking', 'no' );
-$score_alerts = get_option( 'rain_os_score_alerts', 'no' );
-$score_threshold = get_option( 'rain_os_score_threshold', 70 );
-$pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
+$rain_os_api_key = get_option( 'rain_os_api_key', '' );
+$rain_os_industry = get_option( 'rain_os_industry', '' );
+$rain_os_cache_time = get_option( 'rain_os_cache_time', 3600 );
+$rain_os_auto_analyze = get_option( 'rain_os_auto_analyze', 'no' );
+$rain_os_provenance_tracking = get_option( 'rain_os_provenance_tracking', 'no' );
+$rain_os_score_alerts = get_option( 'rain_os_score_alerts', 'no' );
+$rain_os_score_threshold = get_option( 'rain_os_score_threshold', 70 );
+$rain_os_pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
 ?>
 
 <div class="rain-os-wrap">
@@ -51,7 +51,7 @@ $pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
                                     <input type="password" 
                                            id="rain_os_api_key" 
                                            name="rain_os_api_key" 
-                                           value="<?php echo esc_attr( $api_key ); ?>" 
+                                           value="<?php echo esc_attr( $rain_os_api_key ); ?>" 
                                            class="rain-os-input"
                                            placeholder="<?php esc_attr_e( 'Enter your Rain OS API key...', 'rain-os-aeo-analyzer' ); ?>"
                                            autocomplete="off" />
@@ -85,17 +85,17 @@ $pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
                             <div class="rain-os-form-group">
                                 <label for="rain_os_industry"><?php esc_html_e( 'Default Industry', 'rain-os-aeo-analyzer' ); ?></label>
                                 <select id="rain_os_industry" name="rain_os_industry" class="rain-os-select">
-                                    <option value="" <?php selected( $industry, '' ); ?>><?php esc_html_e( 'Select Industry...', 'rain-os-aeo-analyzer' ); ?></option>
-                                    <option value="technology" <?php selected( $industry, 'technology' ); ?>><?php esc_html_e( 'Technology', 'rain-os-aeo-analyzer' ); ?></option>
-                                    <option value="healthcare" <?php selected( $industry, 'healthcare' ); ?>><?php esc_html_e( 'Healthcare', 'rain-os-aeo-analyzer' ); ?></option>
-                                    <option value="finance" <?php selected( $industry, 'finance' ); ?>><?php esc_html_e( 'Finance', 'rain-os-aeo-analyzer' ); ?></option>
-                                    <option value="ecommerce" <?php selected( $industry, 'ecommerce' ); ?>><?php esc_html_e( 'E-commerce', 'rain-os-aeo-analyzer' ); ?></option>
-                                    <option value="education" <?php selected( $industry, 'education' ); ?>><?php esc_html_e( 'Education', 'rain-os-aeo-analyzer' ); ?></option>
-                                    <option value="marketing" <?php selected( $industry, 'marketing' ); ?>><?php esc_html_e( 'Marketing', 'rain-os-aeo-analyzer' ); ?></option>
-                                    <option value="legal" <?php selected( $industry, 'legal' ); ?>><?php esc_html_e( 'Legal', 'rain-os-aeo-analyzer' ); ?></option>
-                                    <option value="realestate" <?php selected( $industry, 'realestate' ); ?>><?php esc_html_e( 'Real Estate', 'rain-os-aeo-analyzer' ); ?></option>
-                                    <option value="travel" <?php selected( $industry, 'travel' ); ?>><?php esc_html_e( 'Travel & Hospitality', 'rain-os-aeo-analyzer' ); ?></option>
-                                    <option value="other" <?php selected( $industry, 'other' ); ?>><?php esc_html_e( 'Other', 'rain-os-aeo-analyzer' ); ?></option>
+                                    <option value="" <?php selected( $rain_os_industry, '' ); ?>><?php esc_html_e( 'Select Industry...', 'rain-os-aeo-analyzer' ); ?></option>
+                                    <option value="technology" <?php selected( $rain_os_industry, 'technology' ); ?>><?php esc_html_e( 'Technology', 'rain-os-aeo-analyzer' ); ?></option>
+                                    <option value="healthcare" <?php selected( $rain_os_industry, 'healthcare' ); ?>><?php esc_html_e( 'Healthcare', 'rain-os-aeo-analyzer' ); ?></option>
+                                    <option value="finance" <?php selected( $rain_os_industry, 'finance' ); ?>><?php esc_html_e( 'Finance', 'rain-os-aeo-analyzer' ); ?></option>
+                                    <option value="ecommerce" <?php selected( $rain_os_industry, 'ecommerce' ); ?>><?php esc_html_e( 'E-commerce', 'rain-os-aeo-analyzer' ); ?></option>
+                                    <option value="education" <?php selected( $rain_os_industry, 'education' ); ?>><?php esc_html_e( 'Education', 'rain-os-aeo-analyzer' ); ?></option>
+                                    <option value="marketing" <?php selected( $rain_os_industry, 'marketing' ); ?>><?php esc_html_e( 'Marketing', 'rain-os-aeo-analyzer' ); ?></option>
+                                    <option value="legal" <?php selected( $rain_os_industry, 'legal' ); ?>><?php esc_html_e( 'Legal', 'rain-os-aeo-analyzer' ); ?></option>
+                                    <option value="realestate" <?php selected( $rain_os_industry, 'realestate' ); ?>><?php esc_html_e( 'Real Estate', 'rain-os-aeo-analyzer' ); ?></option>
+                                    <option value="travel" <?php selected( $rain_os_industry, 'travel' ); ?>><?php esc_html_e( 'Travel & Hospitality', 'rain-os-aeo-analyzer' ); ?></option>
+                                    <option value="other" <?php selected( $rain_os_industry, 'other' ); ?>><?php esc_html_e( 'Other', 'rain-os-aeo-analyzer' ); ?></option>
                                 </select>
                                 <p class="rain-os-form-help"><?php esc_html_e( 'Industry context helps the AI provide more relevant and accurate analysis for your content.', 'rain-os-aeo-analyzer' ); ?></p>
                             </div>
@@ -103,10 +103,10 @@ $pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
                             <div class="rain-os-form-group">
                                 <label for="rain_os_cache_time"><?php esc_html_e( 'Cache Duration', 'rain-os-aeo-analyzer' ); ?></label>
                                 <select id="rain_os_cache_time" name="rain_os_cache_time" class="rain-os-select">
-                                    <option value="1800" <?php selected( $cache_time, 1800 ); ?>><?php esc_html_e( '30 minutes', 'rain-os-aeo-analyzer' ); ?></option>
-                                    <option value="3600" <?php selected( $cache_time, 3600 ); ?>><?php esc_html_e( '1 hour', 'rain-os-aeo-analyzer' ); ?></option>
-                                    <option value="7200" <?php selected( $cache_time, 7200 ); ?>><?php esc_html_e( '2 hours', 'rain-os-aeo-analyzer' ); ?></option>
-                                    <option value="86400" <?php selected( $cache_time, 86400 ); ?>><?php esc_html_e( '24 hours', 'rain-os-aeo-analyzer' ); ?></option>
+                                    <option value="1800" <?php selected( $rain_os_cache_time, 1800 ); ?>><?php esc_html_e( '30 minutes', 'rain-os-aeo-analyzer' ); ?></option>
+                                    <option value="3600" <?php selected( $rain_os_cache_time, 3600 ); ?>><?php esc_html_e( '1 hour', 'rain-os-aeo-analyzer' ); ?></option>
+                                    <option value="7200" <?php selected( $rain_os_cache_time, 7200 ); ?>><?php esc_html_e( '2 hours', 'rain-os-aeo-analyzer' ); ?></option>
+                                    <option value="86400" <?php selected( $rain_os_cache_time, 86400 ); ?>><?php esc_html_e( '24 hours', 'rain-os-aeo-analyzer' ); ?></option>
                                 </select>
                                 <p class="rain-os-form-help"><?php esc_html_e( 'How long to cache analysis results before refreshing.', 'rain-os-aeo-analyzer' ); ?></p>
                             </div>
@@ -127,9 +127,9 @@ $pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
                                         <input type="checkbox" 
                                                name="rain_os_pd_enabled" 
                                                value="yes" 
-                                               <?php checked( $pd_enabled, 'yes' ); ?> 
+                                               <?php checked( $rain_os_pd_enabled, 'yes' ); ?> 
                                                class="rain-os-checkbox" />
-                                        <span class="rain-os-toggle-switch" style="<?php echo 'yes' === $pd_enabled ? 'background-color: var(--rain-pillar-orange); animation: rainPdGlow 2s ease-in-out infinite;' : ''; ?>"></span>
+                                        <span class="rain-os-toggle-switch" style="<?php echo 'yes' === $rain_os_pd_enabled ? 'background-color: var(--rain-pillar-orange); animation: rainPdGlow 2s ease-in-out infinite;' : ''; ?>"></span>
                                         <span class="rain-os-toggle-title">
                                             <?php esc_html_e( 'Product Discoverability Pillar', 'rain-os-aeo-analyzer' ); ?>
                                             <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'Enable or disable the Product Discoverability pillar. When disabled, your overall AEO score will be calculated from the three core content pillars only (AI Readability, Digital Authority, Conversion Readiness). Enable this if you want to optimize for product or service discovery through AI-powered search.', 'rain-os-aeo-analyzer' ); ?>">
@@ -147,7 +147,7 @@ $pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
                                         <input type="checkbox" 
                                                name="rain_os_auto_analyze" 
                                                value="yes" 
-                                               <?php checked( $auto_analyze, 'yes' ); ?> 
+                                               <?php checked( $rain_os_auto_analyze, 'yes' ); ?> 
                                                class="rain-os-checkbox" />
                                         <span class="rain-os-toggle-switch"></span>
                                         <span class="rain-os-toggle-title">
@@ -167,7 +167,7 @@ $pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
                                         <input type="checkbox" 
                                                name="rain_os_provenance_tracking" 
                                                value="yes" 
-                                               <?php checked( $provenance_tracking, 'yes' ); ?> 
+                                               <?php checked( $rain_os_provenance_tracking, 'yes' ); ?> 
                                                class="rain-os-checkbox" />
                                         <span class="rain-os-toggle-switch"></span>
                                         <span class="rain-os-toggle-title">
@@ -187,7 +187,7 @@ $pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
                                         <input type="checkbox" 
                                                name="rain_os_score_alerts" 
                                                value="yes" 
-                                               <?php checked( $score_alerts, 'yes' ); ?> 
+                                               <?php checked( $rain_os_score_alerts, 'yes' ); ?> 
                                                class="rain-os-checkbox" />
                                         <span class="rain-os-toggle-switch"></span>
                                         <span class="rain-os-toggle-title">
@@ -198,12 +198,12 @@ $pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
                                         </span>
                                     </label>
                                 </div>
-                                <div class="rain-os-threshold-input" id="threshold-container" style="<?php echo esc_attr( $score_alerts !== 'yes' ? 'display:none;' : '' ); ?>">
+                                <div class="rain-os-threshold-input" id="threshold-container" style="<?php echo esc_attr( $rain_os_score_alerts !== 'yes' ? 'display:none;' : '' ); ?>">
                                     <label for="rain_os_score_threshold"><?php esc_html_e( 'Alert Threshold:', 'rain-os-aeo-analyzer' ); ?></label>
                                     <input type="number" 
                                            id="rain_os_score_threshold" 
                                            name="rain_os_score_threshold" 
-                                           value="<?php echo esc_attr( $score_threshold ); ?>" 
+                                           value="<?php echo esc_attr( $rain_os_score_threshold ); ?>" 
                                            min="0" 
                                            max="100" 
                                            class="rain-os-input rain-os-input-small" />
@@ -304,7 +304,7 @@ $pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
                     </div>
                     <div class="rain-os-card-body" id="account-status-container">
                         <?php 
-                        if ( ! empty( $api_key ) ) :
+                        if ( ! empty( $rain_os_api_key ) ) :
                             $api_client = rain_os_aeo()->get_api_client();
                             $subscription = $api_client->get_subscription_status();
                         ?>

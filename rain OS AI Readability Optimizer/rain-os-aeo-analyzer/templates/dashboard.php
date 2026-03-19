@@ -4,45 +4,47 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 global $wpdb;
-$table_name = $wpdb->prefix . 'rain_os_analysis_history';
-$period = isset( $_GET['period'] ) ? absint( $_GET['period'] ) : 30;
-$date_limit = gmdate( 'Y-m-d H:i:s', strtotime( "-{$period} days" ) );
+$rain_os_table_name = $wpdb->prefix . 'rain_os_analysis_history';
+$rain_os_period     = isset( $_GET['period'] ) ? absint( $_GET['period'] ) : 30; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Admin-only read-only period filter; no data is modified.
+$rain_os_date_limit = gmdate( 'Y-m-d H:i:s', strtotime( '-' . $rain_os_period . ' days' ) );
 
-$averages = $wpdb->get_row(
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Analytics query on plugin-managed table; caching not appropriate for live dashboard metrics.
+$rain_os_averages = $wpdb->get_row(
     $wpdb->prepare(
-        "SELECT 
+        'SELECT 
             ROUND(AVG(overall_score)) as avg_overall,
             ROUND(AVG(ai_readability)) as avg_ai_readability,
             ROUND(AVG(digital_authority)) as avg_digital_authority,
             ROUND(AVG(conversion_readiness)) as avg_conversion_readiness,
             ROUND(AVG(product_discoverability)) as avg_product_discoverability,
             COUNT(*) as total_analyzed
-        FROM {$table_name} 
-        WHERE analyzed_at >= %s",
-        $date_limit
+        FROM ' . $rain_os_table_name . '
+        WHERE analyzed_at >= %s',
+        $rain_os_date_limit
     ),
     ARRAY_A
 );
 
-$analysis_data = $wpdb->get_results(
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Analytics query on plugin-managed table; caching not appropriate for live dashboard metrics.
+$rain_os_analysis_data = $wpdb->get_results(
     $wpdb->prepare(
-        "SELECT h.*, p.post_title, p.post_name 
-        FROM {$table_name} h 
-        LEFT JOIN {$wpdb->posts} p ON h.post_id = p.ID 
+        'SELECT h.*, p.post_title, p.post_name 
+        FROM ' . $rain_os_table_name . ' h 
+        LEFT JOIN ' . $wpdb->posts . ' p ON h.post_id = p.ID 
         WHERE h.analyzed_at >= %s 
         ORDER BY h.analyzed_at DESC
-        LIMIT 10",
-        $date_limit
+        LIMIT 10',
+        $rain_os_date_limit
     ),
     ARRAY_A
 );
 
-$overall_score = isset( $averages['avg_overall'] ) ? intval( $averages['avg_overall'] ) : 0;
-$ai_readability = isset( $averages['avg_ai_readability'] ) ? intval( $averages['avg_ai_readability'] ) : 0;
-$digital_authority = isset( $averages['avg_digital_authority'] ) ? intval( $averages['avg_digital_authority'] ) : 0;
-$conversion_readiness = isset( $averages['avg_conversion_readiness'] ) ? intval( $averages['avg_conversion_readiness'] ) : 0;
-$product_discoverability = isset( $averages['avg_product_discoverability'] ) ? intval( $averages['avg_product_discoverability'] ) : 0;
-$total_analyzed = isset( $averages['total_analyzed'] ) ? intval( $averages['total_analyzed'] ) : 0;
+$rain_os_overall_score = isset( $rain_os_averages['avg_overall'] ) ? intval( $rain_os_averages['avg_overall'] ) : 0;
+$rain_os_ai_readability = isset( $rain_os_averages['avg_ai_readability'] ) ? intval( $rain_os_averages['avg_ai_readability'] ) : 0;
+$rain_os_digital_authority = isset( $rain_os_averages['avg_digital_authority'] ) ? intval( $rain_os_averages['avg_digital_authority'] ) : 0;
+$rain_os_conversion_readiness = isset( $rain_os_averages['avg_conversion_readiness'] ) ? intval( $rain_os_averages['avg_conversion_readiness'] ) : 0;
+$rain_os_product_discoverability = isset( $rain_os_averages['avg_product_discoverability'] ) ? intval( $rain_os_averages['avg_product_discoverability'] ) : 0;
+$rain_os_total_analyzed = isset( $rain_os_averages['total_analyzed'] ) ? intval( $rain_os_averages['total_analyzed'] ) : 0;
 
 function rain_os_get_score_class( $score ) {
     if ( $score >= 80 ) {
@@ -64,9 +66,9 @@ function rain_os_get_score_class( $score ) {
             <div class="rain-os-header-actions">
                 <div class="rain-os-period-select">
                     <select id="rain-os-period">
-                        <option value="7" <?php selected( $period, 7 ); ?>><?php esc_html_e( 'Last 7 Days', 'rain-os-aeo-analyzer' ); ?></option>
-                        <option value="30" <?php selected( $period, 30 ); ?>><?php esc_html_e( 'Last 30 Days', 'rain-os-aeo-analyzer' ); ?></option>
-                        <option value="90" <?php selected( $period, 90 ); ?>><?php esc_html_e( 'Last 90 Days', 'rain-os-aeo-analyzer' ); ?></option>
+                        <option value="7" <?php selected( $rain_os_period, 7 ); ?>><?php esc_html_e( 'Last 7 Days', 'rain-os-aeo-analyzer' ); ?></option>
+                        <option value="30" <?php selected( $rain_os_period, 30 ); ?>><?php esc_html_e( 'Last 30 Days', 'rain-os-aeo-analyzer' ); ?></option>
+                        <option value="90" <?php selected( $rain_os_period, 90 ); ?>><?php esc_html_e( 'Last 90 Days', 'rain-os-aeo-analyzer' ); ?></option>
                     </select>
                 </div>
                 <div class="rain-os-search-bar" id="rain-os-search-bar">
@@ -110,9 +112,9 @@ function rain_os_get_score_class( $score ) {
                     <div class="rain-os-kpi-icon rain-os-kpi-icon-cyan">
                         <span class="dashicons dashicons-media-document"></span>
                     </div>
-                    <div class="rain-os-kpi-gauge" data-value="<?php echo esc_attr( min( 100, $total_analyzed ) ); ?>" data-color="#22d3ee"></div>
+                    <div class="rain-os-kpi-gauge" data-value="<?php echo esc_attr( min( 100, $rain_os_total_analyzed ) ); ?>" data-color="#22d3ee"></div>
                 </div>
-                <div class="rain-os-kpi-value"><?php echo esc_html( $total_analyzed ); ?></div>
+                <div class="rain-os-kpi-value"><?php echo esc_html( $rain_os_total_analyzed ); ?></div>
                 <div class="rain-os-kpi-label">
                     <span class="rain-os-tooltip-wrap">
                         <?php esc_html_e( 'Total Analyses', 'rain-os-aeo-analyzer' ); ?>
@@ -122,7 +124,7 @@ function rain_os_get_score_class( $score ) {
                         <span class="rain-os-tooltip-content"><?php esc_html_e( 'Total number of content analyses performed in the selected time period. Each analysis evaluates your content across all four AEO pillars.', 'rain-os-aeo-analyzer' ); ?></span>
                     </span>
                 </div>
-                <div class="rain-os-kpi-subtitle"><?php printf( esc_html__( 'Last %d Days', 'rain-os-aeo-analyzer' ), $period ); ?></div>
+                <div class="rain-os-kpi-subtitle"><?php /* translators: %d: number of days */ printf( esc_html__( 'Last %d Days', 'rain-os-aeo-analyzer' ), $rain_os_period ); ?></div>
             </div>
 
             <div class="rain-os-kpi-card rain-os-animate-delay-2">
@@ -130,9 +132,9 @@ function rain_os_get_score_class( $score ) {
                     <div class="rain-os-kpi-icon rain-os-kpi-icon-cyan">
                         <span class="dashicons dashicons-chart-line"></span>
                     </div>
-                    <div class="rain-os-kpi-gauge" data-value="<?php echo esc_attr( $overall_score ); ?>" data-color="#22d3ee"></div>
+                    <div class="rain-os-kpi-gauge" data-value="<?php echo esc_attr( $rain_os_overall_score ); ?>" data-color="#22d3ee"></div>
                 </div>
-                <div class="rain-os-kpi-value"><?php echo esc_html( $overall_score ); ?></div>
+                <div class="rain-os-kpi-value"><?php echo esc_html( $rain_os_overall_score ); ?></div>
                 <div class="rain-os-kpi-label">
                     <span class="rain-os-tooltip-wrap">
                         <?php esc_html_e( 'Average Score', 'rain-os-aeo-analyzer' ); ?>
@@ -142,7 +144,7 @@ function rain_os_get_score_class( $score ) {
                         <span class="rain-os-tooltip-content"><?php esc_html_e( 'The average AEO score across all analyzed content. This combines AI Readability, Digital Authority, Conversion Readiness, and Product Discoverability scores.', 'rain-os-aeo-analyzer' ); ?></span>
                     </span>
                 </div>
-                <div class="rain-os-kpi-subtitle"><?php printf( esc_html__( 'Last %d Days', 'rain-os-aeo-analyzer' ), $period ); ?></div>
+                <div class="rain-os-kpi-subtitle"><?php /* translators: %d: number of days */ printf( esc_html__( 'Last %d Days', 'rain-os-aeo-analyzer' ), $rain_os_period ); ?></div>
             </div>
 
             <div class="rain-os-kpi-card rain-os-animate-delay-3">
@@ -151,16 +153,16 @@ function rain_os_get_score_class( $score ) {
                         <span class="dashicons dashicons-heart"></span>
                     </div>
                     <?php 
-                    $pd_on = Rain_OS_Settings::is_pd_enabled();
-                    $content_health = $total_analyzed > 0 
-                        ? ( $pd_on 
-                            ? round( ( $ai_readability + $digital_authority + $conversion_readiness + $product_discoverability ) / 4 ) 
-                            : round( ( $ai_readability + $digital_authority + $conversion_readiness ) / 3 ) ) 
+                    $rain_os_pd_on = Rain_OS_Settings::is_pd_enabled();
+                    $rain_os_content_health = $rain_os_total_analyzed > 0 
+                        ? ( $rain_os_pd_on 
+                            ? round( ( $rain_os_ai_readability + $rain_os_digital_authority + $rain_os_conversion_readiness + $rain_os_product_discoverability ) / 4 ) 
+                            : round( ( $rain_os_ai_readability + $rain_os_digital_authority + $rain_os_conversion_readiness ) / 3 ) ) 
                         : 0;
                     ?>
-                    <div class="rain-os-kpi-gauge" data-value="<?php echo esc_attr( $content_health ); ?>" data-color="#a855f7"></div>
+                    <div class="rain-os-kpi-gauge" data-value="<?php echo esc_attr( $rain_os_content_health ); ?>" data-color="#a855f7"></div>
                 </div>
-                <div class="rain-os-kpi-value"><?php echo esc_html( $content_health ); ?>%</div>
+                <div class="rain-os-kpi-value"><?php echo esc_html( $rain_os_content_health ); ?>%</div>
                 <div class="rain-os-kpi-label">
                     <span class="rain-os-tooltip-wrap">
                         <?php esc_html_e( 'Content Health', 'rain-os-aeo-analyzer' ); ?>
@@ -170,7 +172,7 @@ function rain_os_get_score_class( $score ) {
                         <span class="rain-os-tooltip-content"><?php esc_html_e( 'Overall health score of your content portfolio. Scores above 80% indicate strong AI readiness across all four pillars.', 'rain-os-aeo-analyzer' ); ?></span>
                     </span>
                 </div>
-                <div class="rain-os-kpi-subtitle"><?php printf( esc_html__( 'Last %d Days', 'rain-os-aeo-analyzer' ), $period ); ?></div>
+                <div class="rain-os-kpi-subtitle"><?php /* translators: %d: number of days */ printf( esc_html__( 'Last %d Days', 'rain-os-aeo-analyzer' ), $rain_os_period ); ?></div>
             </div>
 
             <div class="rain-os-kpi-card rain-os-animate-delay-4">
@@ -179,21 +181,21 @@ function rain_os_get_score_class( $score ) {
                         <span class="dashicons dashicons-performance"></span>
                     </div>
                     <?php 
-                    $options = get_option( 'rain_os_settings', array() );
-                    $api_usage = isset( $options['api_usage'] ) ? intval( $options['api_usage'] ) : 0;
-                    $api_limit = isset( $options['api_limit'] ) ? intval( $options['api_limit'] ) : 100;
-                    $api_percent = $api_limit > 0 ? round( ( $api_usage / $api_limit ) * 100 ) : 0;
+                    $rain_os_options = get_option( 'rain_os_settings', array() );
+                    $rain_os_api_usage = isset( $rain_os_options['api_usage'] ) ? intval( $rain_os_options['api_usage'] ) : 0;
+                    $rain_os_api_limit = isset( $rain_os_options['api_limit'] ) ? intval( $rain_os_options['api_limit'] ) : 100;
+                    $rain_os_api_percent = $rain_os_api_limit > 0 ? round( ( $rain_os_api_usage / $rain_os_api_limit ) * 100 ) : 0;
                     ?>
-                    <div class="rain-os-kpi-gauge" data-value="<?php echo esc_attr( $api_percent ); ?>" data-color="#f59e0b"></div>
+                    <div class="rain-os-kpi-gauge" data-value="<?php echo esc_attr( $rain_os_api_percent ); ?>" data-color="#f59e0b"></div>
                 </div>
-                <div class="rain-os-kpi-value"><?php echo esc_html( $api_percent ); ?>%</div>
+                <div class="rain-os-kpi-value"><?php echo esc_html( $rain_os_api_percent ); ?>%</div>
                 <div class="rain-os-kpi-label">
                     <span class="rain-os-tooltip-wrap">
                         <?php esc_html_e( 'API Usage', 'rain-os-aeo-analyzer' ); ?>
                         <span class="rain-os-tooltip-trigger">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
                         </span>
-                        <span class="rain-os-tooltip-content"><?php printf( esc_html__( 'Current API usage: %1$d of %2$d requests this billing cycle. Upgrade your plan for more analyses.', 'rain-os-aeo-analyzer' ), $api_usage, $api_limit ); ?></span>
+                        <span class="rain-os-tooltip-content"><?php /* translators: %1$d: current API request count, %2$d: API request limit */ printf( esc_html__( 'Current API usage: %1$d of %2$d requests this billing cycle. Upgrade your plan for more analyses.', 'rain-os-aeo-analyzer' ), $rain_os_api_usage, $rain_os_api_limit ); ?></span>
                     </span>
                 </div>
                 <div class="rain-os-kpi-subtitle"><?php esc_html_e( 'This Billing Cycle', 'rain-os-aeo-analyzer' ); ?></div>
@@ -204,10 +206,11 @@ function rain_os_get_score_class( $score ) {
             <div class="rain-os-chart-card">
                 <div class="rain-os-chart-header">
                     <h3><?php esc_html_e( 'Performance History', 'rain-os-aeo-analyzer' ); ?></h3>
-                    <span class="rain-os-chart-period"><?php 
+                    <span class="rain-os-chart-period"><?php
+                        /* translators: %d: number of days */
                         printf( 
                             esc_html__( 'Last %d Days', 'rain-os-aeo-analyzer' ), 
-                            $period 
+                            $rain_os_period 
                         ); 
                     ?></span>
                 </div>
@@ -224,37 +227,37 @@ function rain_os_get_score_class( $score ) {
                     <div class="rain-os-pillar-bar">
                         <div class="rain-os-pillar-bar-label">
                             <span><?php esc_html_e( 'AI Readability', 'rain-os-aeo-analyzer' ); ?></span>
-                            <span><?php echo esc_html( $ai_readability ); ?>%</span>
+                            <span><?php echo esc_html( $rain_os_ai_readability ); ?>%</span>
                         </div>
                         <div class="rain-os-pillar-bar-track">
-                            <div class="rain-os-pillar-bar-fill rain-os-pillar-cyan" style="width: <?php echo esc_attr( $ai_readability ); ?>%;"></div>
+                            <div class="rain-os-pillar-bar-fill rain-os-pillar-cyan" style="width: <?php echo esc_attr( $rain_os_ai_readability ); ?>%;"></div>
                         </div>
                     </div>
                     <div class="rain-os-pillar-bar">
                         <div class="rain-os-pillar-bar-label">
                             <span><?php esc_html_e( 'Digital Authority', 'rain-os-aeo-analyzer' ); ?></span>
-                            <span><?php echo esc_html( $digital_authority ); ?>%</span>
+                            <span><?php echo esc_html( $rain_os_digital_authority ); ?>%</span>
                         </div>
                         <div class="rain-os-pillar-bar-track">
-                            <div class="rain-os-pillar-bar-fill rain-os-pillar-green" style="width: <?php echo esc_attr( $digital_authority ); ?>%;"></div>
+                            <div class="rain-os-pillar-bar-fill rain-os-pillar-green" style="width: <?php echo esc_attr( $rain_os_digital_authority ); ?>%;"></div>
                         </div>
                     </div>
                     <div class="rain-os-pillar-bar">
                         <div class="rain-os-pillar-bar-label">
                             <span><?php esc_html_e( 'Conversion Readiness', 'rain-os-aeo-analyzer' ); ?></span>
-                            <span><?php echo esc_html( $conversion_readiness ); ?>%</span>
+                            <span><?php echo esc_html( $rain_os_conversion_readiness ); ?>%</span>
                         </div>
                         <div class="rain-os-pillar-bar-track">
-                            <div class="rain-os-pillar-bar-fill rain-os-pillar-purple" style="width: <?php echo esc_attr( $conversion_readiness ); ?>%;"></div>
+                            <div class="rain-os-pillar-bar-fill rain-os-pillar-purple" style="width: <?php echo esc_attr( $rain_os_conversion_readiness ); ?>%;"></div>
                         </div>
                     </div>
                     <div class="rain-os-pillar-bar">
                         <div class="rain-os-pillar-bar-label">
                             <span><?php esc_html_e( 'Product Discoverability', 'rain-os-aeo-analyzer' ); ?></span>
-                            <span><?php echo esc_html( $product_discoverability ); ?>%</span>
+                            <span><?php echo esc_html( $rain_os_product_discoverability ); ?>%</span>
                         </div>
                         <div class="rain-os-pillar-bar-track">
-                            <div class="rain-os-pillar-bar-fill rain-os-pillar-orange" style="width: <?php echo esc_attr( $product_discoverability ); ?>%;"></div>
+                            <div class="rain-os-pillar-bar-fill rain-os-pillar-orange" style="width: <?php echo esc_attr( $rain_os_product_discoverability ); ?>%;"></div>
                         </div>
                     </div>
                 </div>
@@ -269,7 +272,7 @@ function rain_os_get_score_class( $score ) {
                 </a>
             </div>
             <div class="rain-os-chart-body">
-                <?php if ( ! empty( $analysis_data ) ) : ?>
+                <?php if ( ! empty( $rain_os_analysis_data ) ) : ?>
                 <table class="rain-os-table">
                     <thead>
                         <tr>
@@ -285,41 +288,41 @@ function rain_os_get_score_class( $score ) {
                     </thead>
                     <tbody>
                         <?php 
-                        $count = 0;
-                        foreach ( $analysis_data as $item ) : 
-                            if ( $count >= 5 ) break;
-                            $count++;
-                            $avg_score = $pd_on 
-                                ? round( ( intval( $item['ai_readability'] ) + intval( $item['digital_authority'] ) + intval( $item['conversion_readiness'] ) + intval( $item['product_discoverability'] ?? 0 ) ) / 4 )
-                                : round( ( intval( $item['ai_readability'] ) + intval( $item['digital_authority'] ) + intval( $item['conversion_readiness'] ) ) / 3 );
+                        $rain_os_count = 0;
+                        foreach ( $rain_os_analysis_data as $rain_os_item ) : 
+                            if ( $rain_os_count >= 5 ) break;
+                            $rain_os_count++;
+                            $rain_os_avg_score = $rain_os_pd_on 
+                                ? round( ( intval( $rain_os_item['ai_readability'] ) + intval( $rain_os_item['digital_authority'] ) + intval( $rain_os_item['conversion_readiness'] ) + intval( $rain_os_item['product_discoverability'] ?? 0 ) ) / 4 )
+                                : round( ( intval( $rain_os_item['ai_readability'] ) + intval( $rain_os_item['digital_authority'] ) + intval( $rain_os_item['conversion_readiness'] ) ) / 3 );
                         ?>
                         <tr>
-                            <td><?php echo esc_html( $count ); ?></td>
+                            <td><?php echo esc_html( $rain_os_count ); ?></td>
                             <td>
-                                <div class="rain-os-post-title"><?php echo esc_html( $item['post_title'] ? $item['post_title'] : __( 'Untitled', 'rain-os-aeo-analyzer' ) ); ?></div>
-                                <div class="rain-os-post-slug">/<?php echo esc_html( $item['post_name'] ? $item['post_name'] : '' ); ?>/</div>
+                                <div class="rain-os-post-title"><?php echo esc_html( $rain_os_item['post_title'] ? $rain_os_item['post_title'] : __( 'Untitled', 'rain-os-aeo-analyzer' ) ); ?></div>
+                                <div class="rain-os-post-slug">/<?php echo esc_html( $rain_os_item['post_name'] ? $rain_os_item['post_name'] : '' ); ?>/</div>
                             </td>
                             <td>
-                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_get_score_class( $avg_score ) ); ?>"></span>
-                                <?php echo esc_html( $avg_score ); ?>
+                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_get_score_class( $rain_os_avg_score ) ); ?>"></span>
+                                <?php echo esc_html( $rain_os_avg_score ); ?>
                             </td>
                             <td>
-                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_get_score_class( intval( $item['ai_readability'] ) ) ); ?>"></span>
-                                <?php echo esc_html( $item['ai_readability'] ); ?>
+                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_get_score_class( intval( $rain_os_item['ai_readability'] ) ) ); ?>"></span>
+                                <?php echo esc_html( $rain_os_item['ai_readability'] ); ?>
                             </td>
                             <td>
-                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_get_score_class( intval( $item['digital_authority'] ) ) ); ?>"></span>
-                                <?php echo esc_html( $item['digital_authority'] ); ?>
+                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_get_score_class( intval( $rain_os_item['digital_authority'] ) ) ); ?>"></span>
+                                <?php echo esc_html( $rain_os_item['digital_authority'] ); ?>
                             </td>
                             <td>
-                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_get_score_class( intval( $item['conversion_readiness'] ) ) ); ?>"></span>
-                                <?php echo esc_html( $item['conversion_readiness'] ); ?>
+                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_get_score_class( intval( $rain_os_item['conversion_readiness'] ) ) ); ?>"></span>
+                                <?php echo esc_html( $rain_os_item['conversion_readiness'] ); ?>
                             </td>
                             <td>
-                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_get_score_class( intval( $item['product_discoverability'] ?? 0 ) ) ); ?>"></span>
-                                <?php echo esc_html( $item['product_discoverability'] ?? 0 ); ?>
+                                <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_get_score_class( intval( $rain_os_item['product_discoverability'] ?? 0 ) ) ); ?>"></span>
+                                <?php echo esc_html( $rain_os_item['product_discoverability'] ?? 0 ); ?>
                             </td>
-                            <td><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $item['analyzed_at'] ) ) ); ?></td>
+                            <td><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $rain_os_item['analyzed_at'] ) ) ); ?></td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>

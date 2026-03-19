@@ -276,6 +276,7 @@ class Rain_OS_Gutenberg {
         if ( $word_count < 300 ) {
             $recommendations[] = array(
                 'title'       => __( 'Increase Content Length', 'rain-os-aeo-analyzer' ),
+                /* translators: %d: current word count */
                 'description' => sprintf( __( 'Add more content. Aim for at least 300 words (currently %d).', 'rain-os-aeo-analyzer' ), $word_count ),
                 'icon'        => '📝',
                 'color'       => '#f59e0b',
