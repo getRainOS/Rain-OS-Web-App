@@ -801,7 +801,7 @@ function GutenbergSidebarPage({ pdMuted, setPdMuted }) {
       <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>Your content is analyzed against our Proprietary 4-pillar AI Readability Score, further verified for AI metrics, and Safeguards are monitored</p>
 
       <div style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
-        <div style={{ flex: 1, backgroundColor: 'var(--bg-secondary)', borderRadius: '12px', padding: '24px', border: '1px solid var(--border-color)' }}>
+        <div style={{ flex: 1, background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', borderRadius: '12px', padding: '24px', border: '1px solid var(--border-color)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', paddingBottom: '16px', borderBottom: '1px solid var(--border-color)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ width: '32px', height: '32px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -1416,51 +1416,48 @@ function SettingsPage({ setCurrentPage }) {
               These settings control how the plugin behaves within your WordPress site. They do not require API calls.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <label style={{
+              <div style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '12px',
                 padding: '12px 16px',
                 backgroundColor: 'var(--bg-tertiary)',
                 borderRadius: '8px',
-                cursor: 'pointer',
               }}>
-                <input type="checkbox" checked={autoAnalyze} onChange={(e) => setAutoAnalyze(e.target.checked)} style={{ accentColor: 'var(--accent)', width: '18px', height: '18px' }} />
                 <Sliders size={16} color="var(--text-secondary)" />
                 <Tooltip id="auto-analyze" text="When enabled, the plugin will automatically run an AI Readability analysis every time you publish or update a post. This uses one API credit per analysis. Disable this if you prefer to manually trigger analyses.">
-                  <span>Auto-Analyze on Publish</span>
+                  <span style={{ flex: 1 }}>Auto-Analyze on Publish</span>
                 </Tooltip>
-              </label>
-              <label style={{
+                <ToggleSwitch checked={autoAnalyze} onChange={setAutoAnalyze} />
+              </div>
+              <div style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '12px',
                 padding: '12px 16px',
                 backgroundColor: 'var(--bg-tertiary)',
                 borderRadius: '8px',
-                cursor: 'pointer',
               }}>
-                <input type="checkbox" checked={provenanceTracking} onChange={(e) => setProvenanceTracking(e.target.checked)} style={{ accentColor: 'var(--accent)', width: '18px', height: '18px' }} />
                 <Fingerprint size={16} color="var(--text-secondary)" />
                 <Tooltip id="provenance" text="Provenance tracking creates a cryptographic hash of your content at the time of analysis, serving as proof of authorship. This helps establish content ownership and can be useful for copyright protection or demonstrating when content was created.">
-                  <span>Enable Provenance Tracking</span>
+                  <span style={{ flex: 1 }}>Enable Provenance Tracking</span>
                 </Tooltip>
-              </label>
-              <label style={{
+                <ToggleSwitch checked={provenanceTracking} onChange={setProvenanceTracking} />
+              </div>
+              <div style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '12px',
                 padding: '12px 16px',
                 backgroundColor: 'var(--bg-tertiary)',
                 borderRadius: '8px',
-                cursor: 'pointer',
               }}>
-                <input type="checkbox" checked={scoreAlerts} onChange={(e) => setScoreAlerts(e.target.checked)} style={{ accentColor: 'var(--accent)', width: '18px', height: '18px' }} />
                 <Bell size={16} color="var(--text-secondary)" />
                 <Tooltip id="score-alerts" text="When enabled, you will receive a notification in your WordPress dashboard whenever a post scores below the threshold you set. This helps you identify content that may need improvement for better AI visibility.">
-                  <span>Score Alerts Below Threshold</span>
+                  <span style={{ flex: 1 }}>Score Alerts Below Threshold</span>
                 </Tooltip>
-              </label>
+                <ToggleSwitch checked={scoreAlerts} onChange={setScoreAlerts} />
+              </div>
               {scoreAlerts && (
                 <div style={{ padding: '16px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px', marginLeft: '30px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
@@ -1629,7 +1626,9 @@ function DocsPage({ setCurrentPage }) {
             className="animate-in"
             onClick={() => setCurrentPage(doc.page)}
             style={{
-              backgroundColor: 'var(--bg-secondary)',
+              background: 'var(--glass-bg)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
               border: '1px solid var(--border-color)',
               borderRadius: '12px',
               padding: '20px 24px',
@@ -1961,7 +1960,7 @@ function FourPillarsPage() {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <div className="animate-in-delay-1" style={{ backgroundColor: 'var(--bg-secondary)', border: '2px solid var(--accent)', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-1" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '2px solid var(--accent)', borderRadius: '12px', padding: '32px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
             <div style={{ width: '16px', height: '16px', borderRadius: '4px', background: 'linear-gradient(135deg, #22d3ee 0%, #a855f7 100%)' }} />
             <h2 style={{ fontSize: '22px', fontWeight: 600, color: 'var(--accent)' }}>AI Readability vs. Answer Engine Optimization</h2>
@@ -2034,7 +2033,7 @@ function FourPillarsPage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '2px solid #22d3ee', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-2" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '2px solid #22d3ee', borderRadius: '12px', padding: '32px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
             <div style={{ width: '16px', height: '16px', borderRadius: '4px', backgroundColor: '#22d3ee' }} />
             <h2 style={{ fontSize: '22px', fontWeight: 600, color: '#22d3ee' }}>AI Readability</h2>
@@ -2058,7 +2057,7 @@ function FourPillarsPage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-2" style={{ backgroundColor: 'var(--bg-secondary)', border: '2px solid #10b981', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-2" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '2px solid #10b981', borderRadius: '12px', padding: '32px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
             <div style={{ width: '16px', height: '16px', borderRadius: '4px', backgroundColor: '#10b981' }} />
             <h2 style={{ fontSize: '22px', fontWeight: 600, color: '#10b981' }}>Digital Authority</h2>
@@ -2082,7 +2081,7 @@ function FourPillarsPage() {
           </div>
         </div>
 
-        <div className="animate-in-delay-3" style={{ backgroundColor: 'var(--bg-secondary)', border: '2px solid #a855f7', borderRadius: '12px', padding: '32px' }}>
+        <div className="animate-in-delay-3" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '2px solid #a855f7', borderRadius: '12px', padding: '32px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
             <div style={{ width: '16px', height: '16px', borderRadius: '4px', backgroundColor: '#a855f7' }} />
             <h2 style={{ fontSize: '22px', fontWeight: 600, color: '#a855f7' }}>Conversion Readiness</h2>
@@ -2236,7 +2235,9 @@ function UpgradePage() {
       
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px', maxWidth: '900px', margin: '0 auto' }}>
         <div className="animate-in" style={{
-          backgroundColor: 'var(--bg-secondary)',
+          background: 'var(--glass-bg)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
           border: '2px solid var(--accent)',
           borderRadius: '16px',
           padding: '32px',
@@ -2296,7 +2297,9 @@ function UpgradePage() {
         </div>
         
         <div className="animate-in" style={{
-          backgroundColor: 'var(--bg-secondary)',
+          background: 'var(--glass-bg)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
           border: '1px solid var(--border-color)',
           borderRadius: '16px',
           padding: '32px',
@@ -2915,7 +2918,9 @@ function PerformancePage({ selectedPeriod, setSelectedPeriod, pdMuted, setPdMute
           ]
         })().map((stat, i) => (
           <div key={i} className={`animate-in-delay-${i + 2}`} style={{
-            backgroundColor: 'var(--bg-secondary)',
+            background: 'var(--glass-bg)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
             border: '1px solid var(--border-color)',
             borderRadius: '12px',
             padding: '20px',
@@ -3481,7 +3486,7 @@ function LearnAIReadabilityPage({ setCurrentPage }) {
             </div>
           </div>
 
-          <div className="animate-in-delay-5" style={{ backgroundColor: 'var(--bg-secondary)', border: '2px solid var(--accent)', borderRadius: '12px', padding: '32px' }}>
+          <div className="animate-in-delay-5" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '2px solid var(--accent)', borderRadius: '12px', padding: '32px' }}>
             <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>AI Readability vs. Answer Engine Optimization</h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
               As digital marketing evolves, the industry has shifted from traditional SEO to Answer Engine Optimization (AEO)—optimizing content so AI systems can surface it as direct answers. However, there is a foundational reality often overlooked:
@@ -3836,6 +3841,37 @@ function EmptyState({ message = "No data available for this time period" }) {
       <FileText size={48} style={{ marginBottom: '16px', opacity: 0.5 }} />
       <p style={{ fontSize: '14px', marginBottom: '8px' }}>{message}</p>
       <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Try selecting a different time range</p>
+    </div>
+  )
+}
+
+function ToggleSwitch({ checked, onChange }) {
+  return (
+    <div
+      onClick={() => onChange(!checked)}
+      style={{
+        width: '36px',
+        height: '20px',
+        borderRadius: '10px',
+        backgroundColor: checked ? 'var(--accent)' : 'rgba(255,255,255,0.15)',
+        cursor: 'pointer',
+        position: 'relative',
+        flexShrink: 0,
+        transition: 'background-color 0.2s ease',
+        boxShadow: checked ? '0 0 8px rgba(34,211,238,0.4)' : 'none',
+      }}
+    >
+      <div style={{
+        width: '12px',
+        height: '12px',
+        borderRadius: '50%',
+        backgroundColor: '#ffffff',
+        position: 'absolute',
+        top: '4px',
+        left: checked ? '20px' : '4px',
+        transition: 'left 0.2s ease',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+      }} />
     </div>
   )
 }
