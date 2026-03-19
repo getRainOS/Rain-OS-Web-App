@@ -286,10 +286,18 @@
 }
 
 .rain-os-chart-card {
-    background-color: var(--rain-bg-secondary);
+    background: linear-gradient(135deg, rgba(22,36,55,0.82) 0%, rgba(15,23,42,0.64) 100%);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--rain-border-color);
     border-radius: 12px;
     overflow: hidden;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rain-os-chart-card:hover {
+    border-color: var(--rain-border-hover);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .rain-os-chart-card.rain-os-full-width {

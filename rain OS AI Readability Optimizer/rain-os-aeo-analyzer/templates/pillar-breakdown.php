@@ -279,18 +279,18 @@ $pd_structured = rairo_sub( $p4, 'structured_content_quality', $product_discover
 
                 <?php if ( ! empty( $crawler ) ) : ?>
                 <div class="rain-os-crawler-signals" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08);">
-                    <h4 style="font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 12px;"><?php esc_html_e( 'Crawler Signals', 'rain-os-aeo-analyzer' ); ?></h4>
+                    <h4 style="font-size: 13px; color: rgba(255,255,255,0.72); margin-bottom: 12px;"><?php esc_html_e( 'Crawler Signals', 'rain-os-aeo-analyzer' ); ?></h4>
                     <div class="rain-os-crawler-row" style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 12px;">
-                        <span style="color: rgba(255,255,255,0.5);"><?php esc_html_e( 'AI Crawler Access', 'rain-os-aeo-analyzer' ); ?></span>
-                        <strong style="color: rgba(255,255,255,0.8);"><?php echo esc_html( ucfirst( $crawler['ai_crawler_access'] ?? 'unknown' ) ); ?> (<?php echo esc_html( $crawler['ai_crawler_access_score'] ?? 0 ); ?>)</strong>
+                        <span style="color: rgba(255,255,255,0.72);"><?php esc_html_e( 'AI Crawler Access', 'rain-os-aeo-analyzer' ); ?></span>
+                        <strong style="color: rgba(255,255,255,0.9);"><?php echo esc_html( ucfirst( $crawler['ai_crawler_access'] ?? 'unknown' ) ); ?> (<?php echo esc_html( $crawler['ai_crawler_access_score'] ?? 0 ); ?>)</strong>
                     </div>
                     <div class="rain-os-crawler-row" style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 12px;">
-                        <span style="color: rgba(255,255,255,0.5);"><?php esc_html_e( 'LLMs.txt Status', 'rain-os-aeo-analyzer' ); ?></span>
-                        <strong style="color: rgba(255,255,255,0.8);"><?php echo esc_html( ucfirst( $crawler['llms_txt_status'] ?? 'missing' ) ); ?> (<?php echo esc_html( $crawler['llms_txt_permissions'] ?? 0 ); ?>)</strong>
+                        <span style="color: rgba(255,255,255,0.72);"><?php esc_html_e( 'LLMs.txt Status', 'rain-os-aeo-analyzer' ); ?></span>
+                        <strong style="color: rgba(255,255,255,0.9);"><?php echo esc_html( ucfirst( $crawler['llms_txt_status'] ?? 'missing' ) ); ?> (<?php echo esc_html( $crawler['llms_txt_permissions'] ?? 0 ); ?>)</strong>
                     </div>
                     <div class="rain-os-crawler-row" style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 12px;">
-                        <span style="color: rgba(255,255,255,0.5);"><?php esc_html_e( 'Schema Maturity', 'rain-os-aeo-analyzer' ); ?></span>
-                        <strong style="color: rgba(255,255,255,0.8);"><?php echo esc_html( ucfirst( $crawler['schema_maturity_level'] ?? 'none' ) ); ?></strong>
+                        <span style="color: rgba(255,255,255,0.72);"><?php esc_html_e( 'Schema Maturity', 'rain-os-aeo-analyzer' ); ?></span>
+                        <strong style="color: rgba(255,255,255,0.9);"><?php echo esc_html( ucfirst( $crawler['schema_maturity_level'] ?? 'none' ) ); ?></strong>
                     </div>
                 </div>
                 <?php endif; ?>

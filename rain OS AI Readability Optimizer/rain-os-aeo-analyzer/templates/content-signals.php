@@ -39,7 +39,7 @@ $analysis_data = $wpdb->get_results(
             <div class="rain-os-chart-header">
                 <div>
                     <h3><?php esc_html_e( 'Content Signals', 'rain-os-aeo-analyzer' ); ?></h3>
-                    <span style="font-size: 13px; color: rgba(255,255,255,0.5);"><?php esc_html_e( 'Word Count vs. AEO Score', 'rain-os-aeo-analyzer' ); ?></span>
+                    <span style="font-size: 13px; color: rgba(255,255,255,0.72);"><?php esc_html_e( 'Word Count vs. AEO Score', 'rain-os-aeo-analyzer' ); ?></span>
                 </div>
             </div>
             <div class="rain-os-chart-body">
@@ -154,26 +154,26 @@ $analysis_data = $wpdb->get_results(
                     title: {
                         display: true,
                         text: 'Word Count',
-                        color: 'rgba(255,255,255,0.5)'
+                        color: 'rgba(255,255,255,0.72)'
                     },
                     grid: {
                         color: 'rgba(255,255,255,0.05)'
                     },
                     ticks: {
-                        color: 'rgba(255,255,255,0.5)'
+                        color: 'rgba(255,255,255,0.72)'
                     }
                 },
                 y: {
                     title: {
                         display: true,
                         text: 'AEO Score',
-                        color: 'rgba(255,255,255,0.5)'
+                        color: 'rgba(255,255,255,0.72)'
                     },
                     grid: {
                         color: 'rgba(255,255,255,0.05)'
                     },
                     ticks: {
-                        color: 'rgba(255,255,255,0.5)'
+                        color: 'rgba(255,255,255,0.72)'
                     },
                     min: 0,
                     max: 100
