@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "VdgDsQ6rx64IaMu1yi6jS"
+uri = "file://rain OS AI Readability Optimizer/rain-os-aeo-analyzer/dist/rain-os-aeo-analyzer.zip"
+type = "unspecified"
+title = "rain-os-aeo-analyzer.zip — WordPress Plugin (ready to install)"
