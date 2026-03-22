@@ -12,7 +12,14 @@ export default function History() {
   useEffect(() => {
     api.history()
       .then(({ data }) => setHistory(Array.isArray(data) ? data : data?.items ?? []))
-      .catch(() => setHistory([]))
+      .catch(err => {
+        setHistory([]);
+        if (err.status === 401) {
+          setError('Session expired. Please sign out and re-enter your API key.');
+        } else if (err.status >= 500) {
+          setError('History service temporarily unavailable.');
+        }
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -33,7 +40,7 @@ export default function History() {
 
       {error && <p className={styles.error}>{error}</p>}
 
-      {!loading && !error && history.length === 0 && (
+      {!loading && history.length === 0 && (
         <div className={styles.empty}>
           <p>No analyses yet.</p>
           <p className={styles.emptySub}>Run a content analysis to see your history here.</p>

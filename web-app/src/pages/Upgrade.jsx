@@ -74,8 +74,8 @@ export default function Upgrade() {
   async function handleUpgrade(priceId) {
     setError('');
     setLoadingPlan(priceId);
-    const successUrl = window.location.origin + '/dashboard';
-    const cancelUrl = window.location.origin + '/upgrade';
+    const successUrl = window.location.origin + '/#/dashboard';
+    const cancelUrl = window.location.origin + '/#/upgrade';
     try {
       const { data } = await api.createCheckoutSession(priceId, successUrl, cancelUrl);
       if (data?.url) {
@@ -94,7 +94,7 @@ export default function Upgrade() {
     setError('');
     setPortalLoading(true);
     try {
-      const { data } = await api.createBillingPortal(window.location.origin + '/upgrade');
+      const { data } = await api.createBillingPortal(window.location.origin + '/#/upgrade');
       if (data?.url) {
         window.location.href = data.url;
       } else {

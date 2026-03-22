@@ -67,12 +67,12 @@ export default function AuthGate({ onAuth }) {
         <p className={styles.footer}>
           Don't have an API key?{' '}
           <a
-            href="https://www.getrainos.com"
+            href="https://app.getrainos.com"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.link}
           >
-            Get started at getrainos.com
+            Get one at app.getrainos.com
           </a>
         </p>
       </div>
