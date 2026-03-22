@@ -12,7 +12,7 @@ export default function History() {
   useEffect(() => {
     api.history()
       .then(({ data }) => setHistory(Array.isArray(data) ? data : data?.items ?? []))
-      .catch(err => setError(err.message || 'Failed to load history.'))
+      .catch(() => setHistory([]))
       .finally(() => setLoading(false));
   }, []);
 

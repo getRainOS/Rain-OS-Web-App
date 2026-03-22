@@ -52,7 +52,14 @@ export default function QuickTools({ content, title }) {
           <button
             key={t.action}
             className={`${styles.toolBtn} ${activeTool === t.action ? styles.toolBtnActive : ''}`}
-            onClick={() => { reset(); run(t.action); }}
+            onClick={() => {
+              reset();
+              if (t.action === 'rewrite_sentence') {
+                setActiveTool('rewrite_sentence');
+              } else {
+                run(t.action);
+              }
+            }}
             disabled={loading || !content?.trim()}
           >
             <span className={styles.toolIcon}>{t.icon}</span>
@@ -71,13 +78,16 @@ export default function QuickTools({ content, title }) {
             value={rewriteTarget}
             onChange={e => setRewriteTarget(e.target.value)}
           />
-          <button
-            className="btn btn-primary"
-            onClick={() => run('rewrite_sentence')}
-            disabled={loading || !rewriteTarget.trim()}
-          >
-            {loading ? <><span className="spinner" /> Rewriting…</> : 'Rewrite'}
-          </button>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button
+              className="btn btn-primary"
+              onClick={() => run('rewrite_sentence')}
+              disabled={loading || !rewriteTarget.trim()}
+            >
+              {loading ? <><span className="spinner" /> Rewriting…</> : 'Rewrite'}
+            </button>
+            <button className="btn btn-ghost" onClick={reset}>Cancel</button>
+          </div>
         </div>
       )}
 
