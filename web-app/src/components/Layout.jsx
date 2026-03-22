@@ -4,11 +4,18 @@ import { useApp } from '../App.jsx';
 import { api, clearApiKey } from '../api/client.js';
 import styles from './Layout.module.css';
 
+const PRICE_TO_PLAN = {
+  'price_1SeCJH3NMjs4uYdgpi0xB0XN': 'Business',
+  'price_1SeCKM3NMjs4uYdgcBRhgIhD': 'Pro',
+  'price_1SeCHg3NMjs4uYdguOgkr3SQ': 'Free',
+};
+
 const NAV = [
   { to: '/dashboard',   label: 'Dashboard',         icon: '⊞' },
   { to: '/analyze',     label: 'Content Analyzer',  icon: '✦' },
   { to: '/url-scanner', label: 'URL Scanner',        icon: '◎' },
   { to: '/history',     label: 'Score History',      icon: '≡' },
+  { to: '/settings',    label: 'Settings',           icon: '⚙' },
 ];
 
 export default function Layout({ children }) {
@@ -35,10 +42,9 @@ export default function Layout({ children }) {
   }
 
   const pct = usage ? Math.round((usage.count / usage.limit) * 100) : 0;
-  const tier = user?.subscriptionStatus === 'active' ? (
-    user?.stripePriceId?.includes('Business') ? 'Business' :
-    user?.stripePriceId?.includes('Pro') ? 'Pro' : 'Free'
-  ) : 'Free';
+  const tier = (user?.subscriptionStatus === 'active' && user?.stripePriceId)
+    ? (PRICE_TO_PLAN[user.stripePriceId] ?? 'Pro')
+    : 'Free';
 
   return (
     <div className={styles.root}>
@@ -60,6 +66,10 @@ export default function Layout({ children }) {
             {[NAV[0], NAV[3]].map(n => (
               <NavItem key={n.to} {...n} />
             ))}
+          </div>
+          <div className={styles.navGroup}>
+            <span className={styles.navLabel}>Account</span>
+            <NavItem key={NAV[4].to} {...NAV[4]} />
           </div>
         </nav>
 

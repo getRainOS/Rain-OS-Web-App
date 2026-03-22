@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { useApp } from '../App.jsx';
+import { api } from '../api/client.js';
 import styles from './Upgrade.module.css';
 
 const PLANS = [
@@ -15,8 +17,6 @@ const PLANS = [
       'Basic recommendations',
       'Content Analyzer',
     ],
-    cta: 'Current Plan',
-    ctaDisabled: true,
   },
   {
     name: 'Pro',
@@ -34,8 +34,6 @@ const PLANS = [
       'URL Scanner',
       'Priority support',
     ],
-    cta: 'Upgrade to Pro',
-    checkoutUrl: 'https://www.getrainos.com/upgrade?plan=pro',
   },
   {
     name: 'Business',
@@ -53,22 +51,61 @@ const PLANS = [
       'Dedicated support',
       'Custom integrations',
     ],
-    cta: 'Upgrade to Business',
-    checkoutUrl: 'https://www.getrainos.com/upgrade?plan=business',
   },
 ];
 
 export default function Upgrade() {
   const { user } = useApp();
+  const [loadingPlan, setLoadingPlan] = useState(null);
+  const [portalLoading, setPortalLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  function getCurrentPlan() {
-    if (!user?.stripePriceId) return 'Free';
-    if (user.stripePriceId === 'price_1SeCJH3NMjs4uYdgpi0xB0XN') return 'Business';
-    if (user.stripePriceId === 'price_1SeCKM3NMjs4uYdgcBRhgIhD') return 'Pro';
-    return 'Free';
+  const currentPriceId = user?.stripePriceId ?? null;
+
+  function getCurrentPlanName() {
+    if (!currentPriceId) return 'Free';
+    const match = PLANS.find(p => p.priceId === currentPriceId);
+    return match?.name ?? 'Free';
   }
 
-  const currentPlan = getCurrentPlan();
+  const currentPlan = getCurrentPlanName();
+  const isSubscribed = user?.subscriptionStatus === 'active';
+
+  async function handleUpgrade(priceId) {
+    setError('');
+    setLoadingPlan(priceId);
+    const successUrl = window.location.origin + '/dashboard';
+    const cancelUrl = window.location.origin + '/upgrade';
+    try {
+      const { data } = await api.createCheckoutSession(priceId, successUrl, cancelUrl);
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL returned');
+      }
+    } catch (err) {
+      setError(err.message || 'Could not start checkout. Please try at getrainos.com.');
+    } finally {
+      setLoadingPlan(null);
+    }
+  }
+
+  async function handleManageBilling() {
+    setError('');
+    setPortalLoading(true);
+    try {
+      const { data } = await api.createBillingPortal(window.location.origin + '/upgrade');
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No portal URL returned');
+      }
+    } catch (err) {
+      setError(err.message || 'Could not open billing portal.');
+    } finally {
+      setPortalLoading(false);
+    }
+  }
 
   return (
     <div className={`${styles.root} fade-in`}>
@@ -77,9 +114,12 @@ export default function Upgrade() {
         <p className={styles.sub}>Choose the plan that fits your AEO optimization needs</p>
       </div>
 
+      {error && <p className={styles.error}>{error}</p>}
+
       <div className={styles.plans}>
         {PLANS.map(plan => {
           const isCurrent = currentPlan === plan.name;
+          const isLoading = loadingPlan === plan.priceId;
           return (
             <div
               key={plan.name}
@@ -109,24 +149,40 @@ export default function Upgrade() {
               <div className={styles.planBottom}>
                 {isCurrent ? (
                   <span className={styles.currentBadge}>Current Plan</span>
-                ) : plan.checkoutUrl ? (
-                  <a
-                    href={plan.checkoutUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                ) : plan.priceId === 'price_1SeCHg3NMjs4uYdguOgkr3SQ' ? (
+                  <span className={styles.currentBadge} style={{ opacity: 0.5 }}>Free Tier</span>
+                ) : (
+                  <button
                     className={styles.ctaBtn}
                     style={{ background: plan.color, boxShadow: `0 0 20px ${plan.color}40` }}
+                    onClick={() => handleUpgrade(plan.priceId)}
+                    disabled={isLoading}
                   >
-                    {plan.cta}
-                  </a>
-                ) : (
-                  <button className={styles.ctaBtn} disabled>{plan.cta}</button>
+                    {isLoading ? (
+                      <><span className="spinner" style={{ width: 14, height: 14 }} /> Processing…</>
+                    ) : (
+                      `Upgrade to ${plan.name}`
+                    )}
+                  </button>
                 )}
               </div>
             </div>
           );
         })}
       </div>
+
+      {isSubscribed && (
+        <div className={styles.billingRow}>
+          <span className={styles.billingText}>Manage your subscription, invoices, and payment methods:</span>
+          <button
+            className="btn btn-ghost"
+            onClick={handleManageBilling}
+            disabled={portalLoading}
+          >
+            {portalLoading ? <><span className="spinner" /> Opening…</> : 'Manage Billing →'}
+          </button>
+        </div>
+      )}
 
       <p className={styles.note}>
         All plans billed monthly. Cancel anytime.{' '}

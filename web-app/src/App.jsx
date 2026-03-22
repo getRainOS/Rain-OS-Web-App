@@ -8,6 +8,7 @@ import ContentAnalyzer from './pages/ContentAnalyzer.jsx';
 import UrlScanner from './pages/UrlScanner.jsx';
 import History from './pages/History.jsx';
 import Upgrade from './pages/Upgrade.jsx';
+import Settings from './pages/Settings.jsx';
 
 export const AppContext = createContext(null);
 
@@ -43,6 +44,7 @@ export default function App() {
               <Route path="/url-scanner" element={<UrlScanner />} />
               <Route path="/history" element={<History />} />
               <Route path="/upgrade" element={<Upgrade />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Routes>
           </Layout>

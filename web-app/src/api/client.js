@@ -55,4 +55,9 @@ export const api = {
     return request('GET', `/api/history${qs}`);
   },
   scanUrl: (url) => request('POST', '/api/scan', { url }),
+  usage: () => request('GET', '/api/usage'),
+  createCheckoutSession: (priceId, successUrl, cancelUrl) =>
+    request('POST', '/api/checkout-session', { priceId, successUrl, cancelUrl }),
+  createBillingPortal: (returnUrl) =>
+    request('POST', '/api/billing-portal', { returnUrl }),
 };
