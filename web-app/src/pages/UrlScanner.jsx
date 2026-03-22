@@ -72,11 +72,11 @@ export default function UrlScanner() {
 
           <PillarScores result={result} />
 
-          {result.signals?.length > 0 && (
+          {(result.signals ?? result.technical_signals)?.length > 0 && (
             <div className={`card ${styles.signalsCard}`}>
               <h3 className={styles.sectionTitle}>Technical Signals</h3>
               <div className={styles.signalGrid}>
-                {result.signals.map((s, i) => (
+                {(result.signals ?? result.technical_signals).map((s, i) => (
                   <div key={i} className={styles.signal}>
                     <span
                       className={styles.signalDot}
@@ -95,11 +95,11 @@ export default function UrlScanner() {
             </div>
           )}
 
-          {result.recommendations?.length > 0 && (
+          {(result.recommendations ?? result.technical_recommendations)?.length > 0 && (
             <div className={`card ${styles.recoCard}`}>
               <h3 className={styles.sectionTitle}>Recommendations</h3>
               <ul className={styles.recoList}>
-                {result.recommendations.map((r, i) => (
+                {(result.recommendations ?? result.technical_recommendations).map((r, i) => (
                   <li key={i} className={styles.recoItem}>
                     <span className={styles.recoNum}>{i + 1}</span>
                     <span>{r}</span>

@@ -78,7 +78,9 @@ export default function Layout({ children }) {
             <div className={styles.usageBox}>
               <div className={styles.usageRow}>
                 <span className={styles.usageLabel}>API Usage</span>
-                <span className={styles.usageCount}>{usage.count} / {usage.limit}</span>
+                <span className={styles.usageCount}>
+                  {Math.max(0, usage.limit - usage.count)} remaining
+                </span>
               </div>
               <div className={styles.usageTrack}>
                 <div

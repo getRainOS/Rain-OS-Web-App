@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext, useContext } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter as BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { getApiKey } from './api/client.js';
 import AuthGate from './pages/AuthGate.jsx';
 import Layout from './components/Layout.jsx';

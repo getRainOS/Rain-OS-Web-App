@@ -13,8 +13,16 @@ function scoreLabel(s) {
   return 'Needs Work';
 }
 
+function resolveScore(result, key) {
+  const sources = [result, result?.pillars, result?.scores, result?.pillar_scores];
+  for (const src of sources) {
+    if (src && src[key] !== undefined && src[key] !== null) return src[key];
+  }
+  return null;
+}
+
 export default function PillarScores({ result }) {
-  const overall = result?.overall_score ?? result?.score ?? null;
+  const overall = result?.overall_score ?? result?.score ?? result?.overall ?? null;
 
   return (
     <div className={styles.root}>
@@ -32,8 +40,8 @@ export default function PillarScores({ result }) {
 
       <div className={styles.pillars}>
         {PILLARS.map(p => {
-          const score = result?.[p.key];
-          const pct = score !== undefined && score !== null ? Math.min(Math.round(score), 100) : null;
+          const score = resolveScore(result, p.key);
+          const pct = score !== null ? Math.min(Math.round(score), 100) : null;
           return (
             <div key={p.key} className={styles.pillar}>
               <div className={styles.pillarHeader}>
