@@ -54,10 +54,10 @@ export const api = {
     const qs = params ? '?' + new URLSearchParams(params).toString() : '';
     return request('GET', `/api/history${qs}`);
   },
-  scanUrl: (url) => request('POST', '/api/scan', { url }),
+  scanUrl: (url) => request('POST', '/api/url-scan', { url }),
   usage: () => request('GET', '/api/usage'),
   createCheckoutSession: (priceId, successUrl, cancelUrl) =>
-    request('POST', '/api/checkout-session', { priceId, successUrl, cancelUrl }),
+    request('POST', '/api/stripe/create-checkout-session', { priceId, successUrl, cancelUrl }),
   createBillingPortal: (returnUrl) =>
-    request('POST', '/api/billing-portal', { returnUrl }),
+    request('POST', '/api/stripe/create-portal-session', { returnUrl }),
 };

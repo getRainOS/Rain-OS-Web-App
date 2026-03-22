@@ -23,6 +23,7 @@ export default function Settings() {
     setKeyLoading(true);
     setKeyError('');
     setKeySuccess('');
+    const previousKey = getApiKey();
     setApiKey(newKey.trim());
     try {
       const { data } = await api.me();
@@ -30,7 +31,7 @@ export default function Settings() {
       setKeySuccess('API key updated and verified successfully.');
       setNewKey('');
     } catch (err) {
-      setApiKey(getApiKey());
+      setApiKey(previousKey);
       setKeyError(err.status === 401
         ? 'Invalid API key. Your previous key has been restored.'
         : err.message || 'Could not verify the key. Please try again.');
