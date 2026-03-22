@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { api } from '../api/client.js';
+import { useApp } from '../App.jsx';
 import PillarScores from '../components/PillarScores.jsx';
 import QuickTools from '../components/QuickTools.jsx';
 import styles from './ContentAnalyzer.module.css';
 
 export default function ContentAnalyzer() {
+  const { refreshUser } = useApp();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [url, setUrl] = useState('');
@@ -21,6 +23,7 @@ export default function ContentAnalyzer() {
     try {
       const { data } = await api.analyze({ title, content, url });
       setResult(data);
+      refreshUser();
     } catch (err) {
       setError(err.message || 'Analysis failed. Please try again.');
     } finally {

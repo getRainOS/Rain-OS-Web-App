@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { api } from '../api/client.js';
+import { useApp } from '../App.jsx';
 import PillarScores from '../components/PillarScores.jsx';
 import styles from './UrlScanner.module.css';
 
 export default function UrlScanner() {
+  const { refreshUser } = useApp();
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -18,6 +20,7 @@ export default function UrlScanner() {
     try {
       const { data } = await api.scanUrl(url.trim());
       setResult(data);
+      refreshUser();
     } catch (err) {
       setError(err.message || 'Scan failed. Please try again.');
     } finally {

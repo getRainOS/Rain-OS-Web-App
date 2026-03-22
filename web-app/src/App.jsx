@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { HashRouter as BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { getApiKey } from './api/client.js';
+import { getApiKey, api } from './api/client.js';
 import AuthGate from './pages/AuthGate.jsx';
 import Layout from './components/Layout.jsx';
 import Dashboard from './pages/Dashboard.jsx';
@@ -30,8 +30,14 @@ export default function App() {
     setUser(null);
   }
 
+  function refreshUser() {
+    api.me()
+      .then(({ data }) => setUser(data))
+      .catch(() => {});
+  }
+
   return (
-    <AppContext.Provider value={{ apiKey, user, setUser, onLogout }}>
+    <AppContext.Provider value={{ apiKey, user, setUser, onLogout, refreshUser }}>
       <BrowserRouter>
         {!apiKey ? (
           <AuthGate onAuth={onAuth} />
