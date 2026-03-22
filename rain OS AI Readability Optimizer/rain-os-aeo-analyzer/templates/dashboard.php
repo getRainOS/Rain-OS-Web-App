@@ -263,6 +263,7 @@ function rain_os_get_score_class( $score ) {
                             <div class="rain-os-pillar-bar-fill rain-os-pillar-purple" style="width: <?php echo esc_attr( $rain_os_conversion_readiness ); ?>%;"></div>
                         </div>
                     </div>
+                    <?php if ( $rain_os_pd_on ) : ?>
                     <div class="rain-os-pillar-bar">
                         <div class="rain-os-pillar-bar-label">
                             <span><?php esc_html_e( 'Product Discoverability', 'rain-os-aeo-analyzer' ); ?></span>
@@ -272,6 +273,7 @@ function rain_os_get_score_class( $score ) {
                             <div class="rain-os-pillar-bar-fill rain-os-pillar-orange" style="width: <?php echo esc_attr( $rain_os_product_discoverability ); ?>%;"></div>
                         </div>
                     </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -294,7 +296,9 @@ function rain_os_get_score_class( $score ) {
                             <th><?php esc_html_e( 'AI Readability', 'rain-os-aeo-analyzer' ); ?></th>
                             <th><?php esc_html_e( 'Authority', 'rain-os-aeo-analyzer' ); ?></th>
                             <th><?php esc_html_e( 'Conversion', 'rain-os-aeo-analyzer' ); ?></th>
+                            <?php if ( $rain_os_pd_on ) : ?>
                             <th><?php esc_html_e( 'Discoverability', 'rain-os-aeo-analyzer' ); ?></th>
+                            <?php endif; ?>
                             <th><?php esc_html_e( 'Date', 'rain-os-aeo-analyzer' ); ?></th>
                         </tr>
                     </thead>
@@ -330,10 +334,12 @@ function rain_os_get_score_class( $score ) {
                                 <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_get_score_class( intval( $rain_os_item['conversion_readiness'] ) ) ); ?>"></span>
                                 <?php echo esc_html( $rain_os_item['conversion_readiness'] ); ?>
                             </td>
+                            <?php if ( $rain_os_pd_on ) : ?>
                             <td>
                                 <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_get_score_class( intval( $rain_os_item['product_discoverability'] ?? 0 ) ) ); ?>"></span>
                                 <?php echo esc_html( $rain_os_item['product_discoverability'] ?? 0 ); ?>
                             </td>
+                            <?php endif; ?>
                             <td><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $rain_os_item['analyzed_at'] ) ) ); ?></td>
                         </tr>
                         <?php endforeach; ?>
