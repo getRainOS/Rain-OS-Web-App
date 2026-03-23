@@ -61,7 +61,7 @@ function AuthGateRoute({ onAuth }) {
         if (pending.pendingContent) {
           navigate('/analyze', {
             replace: true,
-            state: { pendingContent: pending.pendingContent, pendingIndustry: pending.pendingIndustry },
+            state: { pendingContent: pending.pendingContent },
           });
         } else {
           navigate('/dashboard', { replace: true });
@@ -88,7 +88,7 @@ function AppRoutes({ apiKey, onAuth }) {
             element={
               <LandingWrapper>
                 <LandingPage
-                  onAnalyze={(content, industry) => navigate('/login', { state: { pendingContent: content, pendingIndustry: industry } })}
+                  onAnalyze={(content) => navigate('/login', { state: { pendingContent: content } })}
                   onLoginClick={() => navigate('/login')}
                 />
               </LandingWrapper>
