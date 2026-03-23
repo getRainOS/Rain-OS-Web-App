@@ -513,7 +513,7 @@ const mockAnalysis = {
   ]
 }
 
-function GutenbergSidebarPage() {
+function GutenbergSidebarPage({ pdMuted, setPdMuted }) {
   const [activeTab, setActiveTab] = useState('overview')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [analysisData, setAnalysisData] = useState(null)
@@ -620,11 +620,14 @@ function GutenbergSidebarPage() {
 
   const generateMockAnalysisData = () => {
     const recommendations = generateDynamicRecommendations(mockPillars, mockSubScores, aiReadinessScores, localAuditResults)
-    const pillarValues = Object.values(mockPillars).map(p => p.score)
+    const activePillars = pdMuted
+      ? Object.fromEntries(Object.entries(mockPillars).filter(([k]) => k !== 'productDiscoverability'))
+      : mockPillars
+    const pillarValues = Object.values(activePillars).map(p => p.score)
     const computedScore = Math.round(pillarValues.reduce((s, v) => s + v, 0) / pillarValues.length)
     return {
       overallScore: computedScore,
-      pillars: mockPillars,
+      pillars: activePillars,
       subScores: mockSubScores,
       authorship: {
         hasAuthorByline: true,
@@ -787,7 +790,10 @@ function GutenbergSidebarPage() {
     { date: '2025-01-02', overallScore: 75, aiReadability: 79, digitalAuthority: 70, conversionReadiness: 76, productDiscoverability: 63 },
   ]
 
-  const pillars = analysisData?.pillars || mockPillars
+  const allPillars = analysisData?.pillars || mockPillars
+  const pillars = pdMuted
+    ? Object.fromEntries(Object.entries(allPillars).filter(([k]) => k !== 'productDiscoverability'))
+    : allPillars
 
   return (
     <div>
@@ -912,6 +918,10 @@ function GutenbergSidebarPage() {
 
           <ScoreRing score={analysisData?.overallScore || 0} isLoading={isAnalyzing} />
 
+          <div style={{ marginBottom: 12, padding: '8px 12px', backgroundColor: '#1a1f2e', borderRadius: 8, border: '1px solid #334155' }}>
+            <PDMuteToggle pdMuted={pdMuted} setPdMuted={setPdMuted} />
+          </div>
+
           {Object.entries(pillars).map(([key, data]) => (
             <PillarCard key={key} name={data.label} score={analysisData ? data.score : 0} color={data.color} tooltip={data.tooltip} />
           ))}
@@ -1003,7 +1013,7 @@ function GutenbergSidebarPage() {
                     { pillar: 'digitalAuthority', label: 'Digital Authority', color: '#10b981', scores: ['entityRecognition', 'citationReadiness', 'descriptiveMetadata'] },
                     { pillar: 'conversionReadiness', label: 'Conversion Readiness', color: '#a855f7', scores: ['schemaExtraction', 'qaFormat', 'metadataAudit'] },
                     { pillar: 'productDiscoverability', label: 'Product Discoverability', color: '#f97316', scores: ['schemaCompleteness', 'answerLayerQuality', 'freshnessSignals', 'conversationalQueryMatch'] }
-                  ].map(group => (
+                  ].filter(group => !(pdMuted && group.pillar === 'productDiscoverability')).map(group => (
                     <div key={group.pillar} style={{ marginBottom: 16 }}>
                       <div style={{ fontSize: 11, fontWeight: 600, color: group.color, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>{group.label}</div>
                       {group.scores.map(scoreKey => (
@@ -1063,7 +1073,7 @@ function GutenbergSidebarPage() {
                       <span style={{ fontSize: 11, color: '#22d3ee' }}>AI: {entry.aiReadability}</span>
                       <span style={{ fontSize: 11, color: '#10b981' }}>DA: {entry.digitalAuthority}</span>
                       <span style={{ fontSize: 11, color: '#a855f7' }}>CR: {entry.conversionReadiness}</span>
-                      <span style={{ fontSize: 11, color: '#f97316' }}>PD: {entry.productDiscoverability}</span>
+                      {!pdMuted && <span style={{ fontSize: 11, color: '#f97316' }}>PD: {entry.productDiscoverability}</span>}
                     </div>
                   </div>
                   <div style={{ fontSize: 18, fontWeight: 700, color: getScoreColor(entry.overallScore) }}>{entry.overallScore}</div>
@@ -2339,7 +2349,7 @@ function UpgradePage() {
   )
 }
 
-function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelectedPeriod }) {
+function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelectedPeriod, pdMuted, setPdMuted }) {
   const periodLabel = TIME_PERIODS.find(p => p.value === selectedPeriod)?.label || 'Last 30 Days'
   const [showNotifications, setShowNotifications] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -2383,6 +2393,12 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
     let data = performanceData
     if (selectedPeriod === 7) data = data.slice(-2)
     else if (selectedPeriod === 30) data = data.slice(-4)
+    if (pdMuted) {
+      data = data.map(d => ({
+        ...d,
+        average: Math.round((d.aiReadability + d.digitalAuthority + d.conversionReadiness) / 3)
+      }))
+    }
     return data
   }
   
@@ -2707,9 +2723,12 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
         </ChartCard>
 
         <ChartCard title="Pillar Breakdown" period={periodLabel} className="animate-in-delay-3">
+          <div style={{ marginBottom: '12px' }}>
+            <PDMuteToggle pdMuted={pdMuted} setPdMuted={setPdMuted} />
+          </div>
           <div style={{ height: '300px' }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={pillarData}>
+              <BarChart data={pdMuted ? pillarData.filter(p => p.name !== 'Product Discoverability') : pillarData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
                 <XAxis
                   dataKey="name"
@@ -2751,7 +2770,7 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
         <ChartCard title="Analysis Categories" period={periodLabel} className="animate-in-delay-4">
           <div style={{ height: '300px' }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={categoryData}>
+              <BarChart data={pdMuted ? categoryData.filter(c => c.pillar !== 'productDiscoverability') : categoryData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
                 <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={10} angle={-15} textAnchor="end" height={60} />
                 <YAxis stroke="var(--text-muted)" fontSize={12} domain={[0, 100]} />
@@ -2829,13 +2848,19 @@ function DashboardPage({ overallScore, setCurrentPage, selectedPeriod, setSelect
   )
 }
 
-function PerformancePage({ selectedPeriod, setSelectedPeriod }) {
+function PerformancePage({ selectedPeriod, setSelectedPeriod, pdMuted, setPdMuted }) {
   const periodLabel = TIME_PERIODS.find(p => p.value === selectedPeriod)?.label || 'Last 30 Days'
   
   const getFilteredData = () => {
     let data = performanceData
     if (selectedPeriod === 7) data = data.slice(-2)
     else if (selectedPeriod === 30) data = data.slice(-4)
+    if (pdMuted) {
+      data = data.map(d => ({
+        ...d,
+        average: Math.round((d.aiReadability + d.digitalAuthority + d.conversionReadiness) / 3)
+      }))
+    }
     return data
   }
   const filteredData = getFilteredData()
@@ -2848,6 +2873,7 @@ function PerformancePage({ selectedPeriod, setSelectedPeriod }) {
           <p style={{ color: 'var(--text-secondary)' }}>Track your content performance over time</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <PDMuteToggle pdMuted={pdMuted} setPdMuted={setPdMuted} />
           <TimePeriodDropdown selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
         </div>
       </header>
@@ -2978,11 +3004,14 @@ function PerformancePage({ selectedPeriod, setSelectedPeriod }) {
   )
 }
 
-function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
+function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod, pdMuted, setPdMuted }) {
   const periodLabel = TIME_PERIODS.find(p => p.value === selectedPeriod)?.label || 'Last 30 Days'
   
   const getFilteredPillarData = () => {
     let data = pillarData
+    if (pdMuted) {
+      data = data.filter(p => p.name !== 'Product Discoverability')
+    }
     if (selectedPeriod === 7) {
       return data.map(p => ({ ...p, value: Math.max(p.value - 3, 50) }))
     }
@@ -3001,9 +3030,10 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
       <header className="animate-in" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
         <div>
           <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>Pillar Breakdown</h1>
-          <p style={{ color: 'var(--text-secondary)' }}>Analyze your four core optimization pillars</p>
+          <p style={{ color: 'var(--text-secondary)' }}>Analyze your {pdMuted ? 'three' : 'four'} core optimization pillars</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <PDMuteToggle pdMuted={pdMuted} setPdMuted={setPdMuted} />
           <TimePeriodDropdown selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
         </div>
       </header>
@@ -3081,7 +3111,7 @@ function PillarBreakdownPage({ selectedPeriod, setSelectedPeriod }) {
   )
 }
 
-function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
+function CategoryScoresPage({ selectedPeriod, setSelectedPeriod, pdMuted, setPdMuted }) {
   const periodLabel = TIME_PERIODS.find(p => p.value === selectedPeriod)?.label || 'Last 30 Days'
   
   const getFilteredCategoryData = () => {
@@ -3103,6 +3133,7 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
           <p style={{ color: 'var(--text-secondary)' }}>Breakdown of post pillar scores</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <PDMuteToggle pdMuted={pdMuted} setPdMuted={setPdMuted} />
           <TimePeriodDropdown selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
         </div>
       </header>
@@ -3131,13 +3162,15 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
                     <th style={{ textAlign: 'center', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>AI Readability</th>
                     <th style={{ textAlign: 'center', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>Digital Authority</th>
                     <th style={{ textAlign: 'center', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>Conversion</th>
-                    <th style={{ textAlign: 'center', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>Discoverability</th>
+                    {!pdMuted && <th style={{ textAlign: 'center', padding: '12px 8px', color: 'var(--text-muted)', fontWeight: 500, fontSize: '12px' }}>Discoverability</th>}
                   </tr>
                 </thead>
                 <tbody>
                   {filteredPosts.map((post, idx) => {
                     const getScoreColor = (score) => score >= 80 ? '#10b981' : score >= 65 ? '#f59e0b' : '#ef4444'
-                    const avgScore = Math.round((post.pillars.aiReadability + post.pillars.digitalAuthority + post.pillars.conversionReadiness + post.pillars.productDiscoverability) / 4)
+                    const avgScore = pdMuted
+                      ? Math.round((post.pillars.aiReadability + post.pillars.digitalAuthority + post.pillars.conversionReadiness) / 3)
+                      : Math.round((post.pillars.aiReadability + post.pillars.digitalAuthority + post.pillars.conversionReadiness + post.pillars.productDiscoverability) / 4)
                     
                     return (
                       <tr key={post.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
@@ -3210,6 +3243,7 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
                             }}>{post.pillars.conversionReadiness}</span>
                           </div>
                         </td>
+                        {!pdMuted && (
                         <td style={{ padding: '14px 8px', textAlign: 'center' }}>
                           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
                             <span style={{
@@ -3226,6 +3260,7 @@ function CategoryScoresPage({ selectedPeriod, setSelectedPeriod }) {
                             }}>{post.pillars.productDiscoverability}</span>
                           </div>
                         </td>
+                        )}
                       </tr>
                     )
                   })}
@@ -3842,6 +3877,50 @@ function ToggleSwitch({ checked, onChange }) {
   )
 }
 
+function PDMuteToggle({ pdMuted, setPdMuted }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <span style={{ fontSize: '13px', color: pdMuted ? 'var(--text-muted)' : '#f97316', fontWeight: 500, transition: 'color 0.3s' }}>
+        Product Discoverability
+      </span>
+      <div
+        onClick={() => setPdMuted(!pdMuted)}
+        style={{
+          width: '44px',
+          height: '24px',
+          borderRadius: '12px',
+          backgroundColor: pdMuted ? '#374151' : '#f97316',
+          cursor: 'pointer',
+          position: 'relative',
+          transition: 'background-color 0.3s ease',
+          boxShadow: pdMuted ? 'none' : '0 0 8px rgba(249, 115, 22, 0.5), 0 0 16px rgba(249, 115, 22, 0.3)',
+          animation: pdMuted ? 'none' : 'rainOsPdGlow 2s ease-in-out infinite',
+        }}
+      >
+        <div style={{
+          width: '20px',
+          height: '20px',
+          borderRadius: '50%',
+          backgroundColor: '#ffffff',
+          position: 'absolute',
+          top: '2px',
+          left: pdMuted ? '2px' : '22px',
+          transition: 'left 0.3s ease',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+        }} />
+      </div>
+      <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+        {pdMuted ? 'Muted' : 'Active'}
+      </span>
+      <style>{`
+        @keyframes rainOsPdGlow {
+          0%, 100% { box-shadow: 0 0 8px rgba(249, 115, 22, 0.4), 0 0 16px rgba(249, 115, 22, 0.2); }
+          50% { box-shadow: 0 0 14px rgba(249, 115, 22, 0.7), 0 0 28px rgba(249, 115, 22, 0.4); }
+        }
+      `}</style>
+    </div>
+  )
+}
 
 const MOCK_URL_SCAN = {
   scannedUrl: 'https://example.com/product-overview',
@@ -3919,7 +3998,7 @@ const NUMERIC_SIGNAL_DEFS = [
   { key: 'textToHtmlRatio',       label: 'Text/HTML Ratio',      unit: '%',       good: 15   },
 ]
 
-function UrlScannerPage() {
+function UrlScannerPage({ pdMuted }) {
   const [url, setUrl] = useState('http://')
   const [industry, setIndustry] = useState('')
   const [scanning, setScanning] = useState(false)
@@ -3939,12 +4018,18 @@ function UrlScannerPage() {
     }, 1800)
   }
 
-  const activePillarConfig = PILLAR_CONFIG
-  const displayOverall = result ? result.overall : 0
+  const activePillarConfig = pdMuted ? PILLAR_CONFIG.filter(p => p.key !== 'product_discoverability') : PILLAR_CONFIG
+  const displayOverall = result
+    ? (pdMuted
+        ? Math.round((result.pillars.ai_readability + result.pillars.digital_authority + result.pillars.conversion_readiness) / 3)
+        : result.overall)
+    : 0
   const overallColor = result
     ? displayOverall >= 80 ? '#10b981' : displayOverall >= 60 ? '#f59e0b' : '#ef4444'
     : '#22d3ee'
-  const activeRecommendations = result ? result.recommendations : []
+  const activeRecommendations = result
+    ? result.recommendations.filter(r => !(pdMuted && r.pillar === 'product_discoverability'))
+    : []
 
   return (
     <div className="animate-in">
@@ -4167,7 +4252,9 @@ function App() {
   
   const [currentPage, setCurrentPage] = useState(getPageFromHash)
   const [selectedPeriod, setSelectedPeriod] = useState(30)
-  const overallScore = Math.round(pillarData.reduce((sum, p) => sum + p.value, 0) / pillarData.length)
+  const [pdMuted, setPdMuted] = useState(false)
+  const activePillarData = pdMuted ? pillarData.filter(p => p.name !== 'Product Discoverability') : pillarData
+  const overallScore = Math.round(activePillarData.reduce((sum, p) => sum + p.value, 0) / activePillarData.length)
   
   useEffect(() => {
     const handleHashChange = () => setCurrentPage(getPageFromHash())
@@ -4184,9 +4271,9 @@ function App() {
   const renderPage = () => {
     switch (currentPage) {
       case 'gutenberg-sidebar':
-        return <GutenbergSidebarPage />
+        return <GutenbergSidebarPage pdMuted={pdMuted} setPdMuted={setPdMuted} />
       case 'url-scanner':
-        return <UrlScannerPage />
+        return <UrlScannerPage pdMuted={pdMuted} />
       case 'settings':
         return <SettingsPage setCurrentPage={setCurrentPage} />
       case 'docs':
@@ -4194,11 +4281,11 @@ function App() {
       case 'upgrade':
         return <UpgradePage />
       case 'performance':
-        return <PerformancePage selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
+        return <PerformancePage selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} pdMuted={pdMuted} setPdMuted={setPdMuted} />
       case 'pillars':
-        return <PillarBreakdownPage selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
+        return <PillarBreakdownPage selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} pdMuted={pdMuted} setPdMuted={setPdMuted} />
       case 'categories':
-        return <CategoryScoresPage selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
+        return <CategoryScoresPage selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} pdMuted={pdMuted} setPdMuted={setPdMuted} />
       case 'signals':
         return <ContentSignalsPage selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
       case 'learn-ai-readability':
@@ -4216,7 +4303,7 @@ function App() {
       case 'docs-troubleshooting':
         return <TroubleshootingPage />
       default:
-        return <DashboardPage overallScore={overallScore} setCurrentPage={setCurrentPage} selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
+        return <DashboardPage overallScore={overallScore} setCurrentPage={setCurrentPage} selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} pdMuted={pdMuted} setPdMuted={setPdMuted} />
     }
   }
 

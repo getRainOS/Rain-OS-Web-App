@@ -10,6 +10,7 @@ $rain_os_auto_analyze = get_option( 'rain_os_auto_analyze', 'no' );
 $rain_os_provenance_tracking = get_option( 'rain_os_provenance_tracking', 'no' );
 $rain_os_score_alerts = get_option( 'rain_os_score_alerts', 'no' );
 $rain_os_score_threshold = get_option( 'rain_os_score_threshold', 70 );
+$rain_os_pd_enabled = get_option( 'rain_os_pd_enabled', 'yes' );
 ?>
 
 <div class="rain-os-wrap">
@@ -120,6 +121,26 @@ $rain_os_score_threshold = get_option( 'rain_os_score_threshold', 70 );
                         </div>
                         <div class="rain-os-card-body">
                             <p class="rain-os-card-description"><?php esc_html_e( 'These settings control how the plugin behaves within your WordPress site. They do not require API calls.', 'rain-os-aeo-analyzer' ); ?></p>
+
+                            <div class="rain-os-form-group rain-os-toggle-group">
+                                <div class="rain-os-toggle-row">
+                                    <label class="rain-os-toggle-label">
+                                        <input type="checkbox" 
+                                               name="rain_os_pd_enabled" 
+                                               value="yes" 
+                                               <?php checked( $rain_os_pd_enabled, 'yes' ); ?> 
+                                               class="rain-os-checkbox" />
+                                        <span class="rain-os-toggle-switch"></span>
+                                        <span class="rain-os-toggle-title">
+                                            <?php esc_html_e( 'Product Discoverability Pillar', 'rain-os-aeo-analyzer' ); ?>
+                                            <span class="rain-os-tooltip" data-tooltip="<?php esc_attr_e( 'Enable or disable the Product Discoverability pillar. When disabled, your overall AEO score will be calculated from the three core content pillars only (AI Readability, Digital Authority, Conversion Readiness). Enable this if you want to optimize for product or service discovery through AI-powered search.', 'rain-os-aeo-analyzer' ); ?>">
+                                                <span class="dashicons dashicons-info-outline"></span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                                <p class="rain-os-form-help"><?php esc_html_e( 'Include the Product Discoverability pillar in your AEO analysis and scoring.', 'rain-os-aeo-analyzer' ); ?></p>
+                            </div>
 
                             <div class="rain-os-form-group rain-os-toggle-group">
                                 <div class="rain-os-toggle-row">
