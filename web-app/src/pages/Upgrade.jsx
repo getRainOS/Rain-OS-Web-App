@@ -3,6 +3,7 @@ import { useApp } from '../App.jsx';
 import { api } from '../api/client.js';
 import styles from './Upgrade.module.css';
 
+
 const PLANS = [
   {
     name: 'Free',
@@ -55,7 +56,7 @@ const PLANS = [
 ];
 
 export default function Upgrade() {
-  const { user } = useApp();
+  const { user, isDemo } = useApp();
   const [loadingPlan, setLoadingPlan] = useState(null);
   const [portalLoading, setPortalLoading] = useState(false);
   const [error, setError] = useState('');
@@ -113,6 +114,13 @@ export default function Upgrade() {
         <h1 className={styles.title}>Upgrade Your Plan</h1>
         <p className={styles.sub}>Choose the plan that fits your AEO optimization needs</p>
       </div>
+
+      {isDemo && (
+        <div className={styles.demoNotice}>
+          You're exploring in demo mode. To upgrade, sign up for a real account at{' '}
+          <a href="https://app.getrainos.com" target="_blank" rel="noopener noreferrer">app.getrainos.com</a>.
+        </div>
+      )}
 
       {error && <p className={styles.error}>{error}</p>}
 

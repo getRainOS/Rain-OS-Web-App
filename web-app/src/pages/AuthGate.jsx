@@ -1,11 +1,17 @@
 import { useState } from 'react';
 import { setApiKey, api } from '../api/client.js';
+import { DEMO_KEY, DEMO_USER } from '../demo/demoData.js';
 import styles from './AuthGate.module.css';
 
 export default function AuthGate({ onAuth }) {
   const [key, setKey] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  function handleDemo() {
+    setApiKey(DEMO_KEY);
+    onAuth(DEMO_KEY, DEMO_USER);
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -63,6 +69,18 @@ export default function AuthGate({ onAuth }) {
             {loading ? 'Connecting…' : 'Continue'}
           </button>
         </form>
+
+        <div className={styles.divider}>
+          <span>or</span>
+        </div>
+
+        <button
+          type="button"
+          className={`btn ${styles.demoBtn}`}
+          onClick={handleDemo}
+        >
+          Try Demo — no key needed
+        </button>
 
         <p className={styles.footer}>
           Don't have an API key?{' '}

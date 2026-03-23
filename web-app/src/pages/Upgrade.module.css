@@ -2,6 +2,22 @@
   max-width: 960px;
 }
 
+.demoNotice {
+  background: rgba(249,115,22,0.08);
+  border: 1px solid rgba(249,115,22,0.25);
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.demoNotice a {
+  color: #f97316;
+  text-decoration: underline;
+}
+
 .header {
   margin-bottom: 36px;
   text-align: center;

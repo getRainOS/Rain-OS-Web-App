@@ -1,3 +1,5 @@
+import { DEMO_KEY, DEMO_USER, DEMO_HISTORY, DEMO_ANALYSIS, DEMO_SCAN } from '../demo/demoData.js';
+
 const BASE = 'https://api.getrainos.com';
 const KEY_STORAGE = 'rain_os_api_key';
 
@@ -11,6 +13,14 @@ export function setApiKey(key) {
 
 export function clearApiKey() {
   localStorage.removeItem(KEY_STORAGE);
+}
+
+export function isDemo() {
+  return getApiKey() === DEMO_KEY;
+}
+
+function demoDelay(data) {
+  return new Promise(resolve => setTimeout(() => resolve({ data, usage: null }), 400));
 }
 
 async function request(method, path, body) {
@@ -48,16 +58,21 @@ async function request(method, path, body) {
 }
 
 export const api = {
-  me: () => request('GET', '/api/users/me'),
-  analyze: (body) => request('POST', '/api/analyze', body),
+  me: () => isDemo() ? demoDelay(DEMO_USER) : request('GET', '/api/users/me'),
+  analyze: (body) => isDemo() ? demoDelay(DEMO_ANALYSIS) : request('POST', '/api/analyze', body),
   history: (params) => {
+    if (isDemo()) return demoDelay(DEMO_HISTORY);
     const qs = params ? '?' + new URLSearchParams(params).toString() : '';
     return request('GET', `/api/history${qs}`);
   },
-  scanUrl: (url) => request('POST', '/api/url-scan', { url }),
-  usage: () => request('GET', '/api/usage'),
+  scanUrl: (url) => isDemo() ? demoDelay(DEMO_SCAN) : request('POST', '/api/url-scan', { url }),
+  usage: () => isDemo() ? demoDelay({ count: 42, limit: 500 }) : request('GET', '/api/usage'),
   createCheckoutSession: (priceId, successUrl, cancelUrl) =>
-    request('POST', '/api/stripe/create-checkout-session', { priceId, successUrl, cancelUrl }),
+    isDemo()
+      ? Promise.resolve({ data: { url: null }, usage: null })
+      : request('POST', '/api/stripe/create-checkout-session', { priceId, successUrl, cancelUrl }),
   createBillingPortal: (returnUrl) =>
-    request('POST', '/api/stripe/create-portal-session', { returnUrl }),
+    isDemo()
+      ? Promise.resolve({ data: { url: null }, usage: null })
+      : request('POST', '/api/stripe/create-portal-session', { returnUrl }),
 };

@@ -4,6 +4,7 @@ import { useApp } from '../App.jsx';
 import { api, clearApiKey } from '../api/client.js';
 import styles from './Layout.module.css';
 
+
 const PRICE_TO_PLAN = {
   'price_1SeCJH3NMjs4uYdgpi0xB0XN': 'Business',
   'price_1SeCKM3NMjs4uYdgcBRhgIhD': 'Pro',
@@ -19,15 +20,16 @@ const NAV = [
 ];
 
 export default function Layout({ children }) {
-  const { user, setUser, onLogout } = useApp();
+  const { user, setUser, onLogout, isDemo } = useApp();
   const navigate = useNavigate();
   const [usage, setUsage] = useState(null);
 
   useEffect(() => {
+    if (isDemo) return;
     api.me()
       .then(({ data }) => setUser(data))
       .catch(() => {});
-  }, []);
+  }, [isDemo]);
 
   useEffect(() => {
     if (user) {
@@ -52,6 +54,7 @@ export default function Layout({ children }) {
         <div className={styles.brand}>
           <span className={styles.brandRain}>rain</span>
           <span className={styles.brandOS}> OS</span>
+          {isDemo && <span className={styles.demoBadge}>DEMO</span>}
         </div>
 
         <nav className={styles.nav}>
@@ -105,11 +108,13 @@ export default function Layout({ children }) {
           )}
 
           <div className={styles.sidebarActions}>
-            <NavLink to="/upgrade" className={styles.upgradeBtn}>
-              ↑ Upgrade
-            </NavLink>
+            {!isDemo && (
+              <NavLink to="/upgrade" className={styles.upgradeBtn}>
+                ↑ Upgrade
+              </NavLink>
+            )}
             <button onClick={handleLogout} className={styles.logoutBtn}>
-              Sign out
+              {isDemo ? 'Exit Demo' : 'Sign out'}
             </button>
           </div>
         </div>
