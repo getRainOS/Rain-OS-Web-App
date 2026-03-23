@@ -86,26 +86,15 @@
             var techRecs = data.tech_recs || analysis.technical_recommendations || [];
             var usage = data.usage || null;
 
-            // Determine PD enabled state
-            var pdEnabled = (rainOsScanner.pdEnabled !== false && rainOsScanner.pdEnabled !== 'false');
-
             // Build pillar config
             var pillarConfig = [
                 { key: 'ai_readability',         label: 'AI Readability',         color: '#22d3ee', cssClass: 'cyan'   },
                 { key: 'digital_authority',       label: 'Digital Authority',       color: '#10b981', cssClass: 'green'  },
                 { key: 'conversion_readiness',    label: 'Conversion Readiness',    color: '#a855f7', cssClass: 'purple' },
+                { key: 'product_discoverability', label: 'Product Discoverability', color: '#f97316', cssClass: 'orange' },
             ];
-            if (pdEnabled) {
-                pillarConfig.push({ key: 'product_discoverability', label: 'Product Discoverability', color: '#f97316', cssClass: 'orange' });
-            }
 
-            // Compute overall score (recalculate from active pillars if PD is muted)
-            var overall;
-            if (!pdEnabled) {
-                overall = Math.round(((pillars.ai_readability || 0) + (pillars.digital_authority || 0) + (pillars.conversion_readiness || 0)) / 3);
-            } else {
-                overall = analysis.overall_score || 0;
-            }
+            var overall = analysis.overall_score || 0;
             var overallColor = overall >= 80 ? '#10b981' : (overall >= 60 ? '#f59e0b' : '#ef4444');
 
             var html = '';
@@ -154,12 +143,7 @@
                 html += this.renderTechnicalSignals(technical, techRecs);
             }
 
-            // Recommendations (filter PD recs when PD is muted)
-            var activeRecs = recommendations.filter(function(rec) {
-                if (pdEnabled) return true;
-                var pillar = typeof rec === 'object' ? (rec.pillar || '') : '';
-                return pillar !== 'product_discoverability';
-            });
+            var activeRecs = recommendations;
             if (activeRecs.length > 0) {
                 html += '<div class="rain-os-card rain-os-scan-recs">';
                 html += '<div class="rain-os-card-header"><h3>' + (rainOsScanner.i18n.recommendations || 'Recommendations') + '</h3></div>';

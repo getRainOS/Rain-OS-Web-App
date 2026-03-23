@@ -56,7 +56,6 @@ class Rain_OS_Gutenberg {
                 'postId'           => get_the_ID(),
                 'isPro'            => $this->is_pro_user(),
                 'aiBackendEnabled' => Rain_OS_AI_Backend::is_enabled(),
-                'pdEnabled'        => Rain_OS_Settings::is_pd_enabled(),
                 'debug'            => defined( 'WP_DEBUG' ) && WP_DEBUG,
             )
         );
@@ -222,10 +221,7 @@ class Rain_OS_Gutenberg {
         if ( preg_match( '/\?/i', $content ) ) $product_discoverability += 5;
         $product_discoverability = min( 85, $product_discoverability );
 
-        $pd_on = Rain_OS_Settings::is_pd_enabled();
-        $overall = $pd_on 
-            ? round( ( $ai_readability + $digital_authority + $conversion_readiness + $product_discoverability ) / 4 )
-            : round( ( $ai_readability + $digital_authority + $conversion_readiness ) / 3 );
+        $overall = round( ( $ai_readability + $digital_authority + $conversion_readiness + $product_discoverability ) / 4 );
 
         return array(
             'overall_score'           => $overall,
@@ -415,15 +411,6 @@ class Rain_OS_Gutenberg {
              LIMIT 10",
             $post_id
         ), ARRAY_A );
-
-        if ( $results && ! Rain_OS_Settings::is_pd_enabled() ) {
-            foreach ( $results as &$row ) {
-                $row['overallScore'] = round(
-                    ( (int) $row['aiReadability'] + (int) $row['digitalAuthority'] + (int) $row['conversionReadiness'] ) / 3
-                );
-            }
-            unset( $row );
-        }
 
         return new WP_REST_Response( $results ?: array(), 200 );
     }

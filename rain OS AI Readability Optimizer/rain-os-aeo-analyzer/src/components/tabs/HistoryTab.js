@@ -2,8 +2,6 @@ import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 
-const pdEnabled = window.rainOsAeo?.pdEnabled !== false;
-
 const HistoryTab = ({ postId }) => {
   const [history, setHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -90,27 +88,19 @@ const HistoryTab = ({ postId }) => {
               <span style={{ fontSize: '11px', color: '#a855f7' }}>
                 CR: {entry.conversionReadiness}
               </span>
-              {pdEnabled && (
-                <span style={{ fontSize: '11px', color: '#f97316' }}>
-                  PD: {entry.productDiscoverability}
-                </span>
-              )}
+              <span style={{ fontSize: '11px', color: '#f97316' }}>
+                PD: {entry.productDiscoverability}
+              </span>
             </div>
           </div>
           <div
             style={{
               fontSize: '18px',
               fontWeight: 700,
-              color: getScoreColor(
-                pdEnabled
-                  ? entry.overallScore
-                  : Math.round(((entry.aiReadability || 0) + (entry.digitalAuthority || 0) + (entry.conversionReadiness || 0)) / 3)
-              ),
+              color: getScoreColor(entry.overallScore),
             }}
           >
-            {pdEnabled
-              ? entry.overallScore
-              : Math.round(((entry.aiReadability || 0) + (entry.digitalAuthority || 0) + (entry.conversionReadiness || 0)) / 3)}
+            {entry.overallScore}
           </div>
         </div>
       ))}

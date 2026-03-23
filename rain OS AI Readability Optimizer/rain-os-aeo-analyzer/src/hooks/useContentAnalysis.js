@@ -3,8 +3,6 @@ import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { refreshBackendAnalysis } from './useAIReadiness';
 
-const pdEnabled = window.rainOsAeo?.pdEnabled !== false;
-
 export const useContentAnalysis = (postId, title, content) => {
   const [analysisData, setAnalysisData] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -57,13 +55,11 @@ export const useContentAnalysis = (postId, title, content) => {
               label: 'Conversion Readiness',
               color: '#a855f7',
             },
-            ...(pdEnabled ? {
-              productDiscoverability: {
-                score: response.data.product_discoverability || 0,
-                label: 'Product Discoverability',
-                color: '#f97316',
-              },
-            } : {}),
+            productDiscoverability: {
+              score: response.data.product_discoverability || 0,
+              label: 'Product Discoverability',
+              color: '#f97316',
+            },
           },
           subScores: {
             ...(response.data.sub_scores || {}),

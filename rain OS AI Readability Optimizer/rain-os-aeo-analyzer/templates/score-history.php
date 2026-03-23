@@ -20,8 +20,6 @@ $rain_os_analysis_data = $wpdb->get_results(
     ),
     ARRAY_A
 );
-$rain_os_pd_on = Rain_OS_Settings::is_pd_enabled();
-
 function rain_os_score_class( $score ) {
     if ( $score >= 80 ) {
         return 'green';
@@ -79,9 +77,7 @@ function rain_os_score_class( $score ) {
                             <th><?php esc_html_e( 'AI Readability', 'rain-os-aeo-analyzer' ); ?></th>
                             <th><?php esc_html_e( 'Digital Authority', 'rain-os-aeo-analyzer' ); ?></th>
                             <th><?php esc_html_e( 'Conversion', 'rain-os-aeo-analyzer' ); ?></th>
-                            <?php if ( $rain_os_pd_on ) : ?>
                             <th><?php esc_html_e( 'Discoverability', 'rain-os-aeo-analyzer' ); ?></th>
-                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -90,11 +86,7 @@ function rain_os_score_class( $score ) {
                         foreach ( $rain_os_analysis_data as $rain_os_item ) : 
                             $rain_os_count++;
                             $rain_os_pd_val = intval( $rain_os_item['product_discoverability'] ?? 0 );
-                            if ( $rain_os_pd_on ) {
-                                $rain_os_avg_score = round( ( intval( $rain_os_item['ai_readability'] ) + intval( $rain_os_item['digital_authority'] ) + intval( $rain_os_item['conversion_readiness'] ) + $rain_os_pd_val ) / 4 );
-                            } else {
-                                $rain_os_avg_score = round( ( intval( $rain_os_item['ai_readability'] ) + intval( $rain_os_item['digital_authority'] ) + intval( $rain_os_item['conversion_readiness'] ) ) / 3 );
-                            }
+                            $rain_os_avg_score = round( ( intval( $rain_os_item['ai_readability'] ) + intval( $rain_os_item['digital_authority'] ) + intval( $rain_os_item['conversion_readiness'] ) + $rain_os_pd_val ) / 4 );
                         ?>
                         <tr>
                             <td class="rain-os-row-num"><?php echo esc_html( $rain_os_count ); ?></td>
@@ -118,12 +110,10 @@ function rain_os_score_class( $score ) {
                                 <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_score_class( intval( $rain_os_item['conversion_readiness'] ) ) ); ?>"></span>
                                 <span class="rain-os-score-value"><?php echo esc_html( $rain_os_item['conversion_readiness'] ); ?></span>
                             </td>
-                            <?php if ( $rain_os_pd_on ) : ?>
                             <td class="rain-os-score-cell">
                                 <span class="rain-os-score-indicator rain-os-score-<?php echo esc_attr( rain_os_score_class( $rain_os_pd_val ) ); ?>"></span>
                                 <span class="rain-os-score-value"><?php echo esc_html( $rain_os_pd_val ); ?></span>
                             </td>
-                            <?php endif; ?>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>

@@ -1,7 +1,5 @@
 import { __ } from '@wordpress/i18n';
 
-const pdEnabled = window.rainOsAeo?.pdEnabled !== false;
-
 const MetricsTab = ({ analysisData }) => {
   const subcategories = {
     aiReadability: [
@@ -20,23 +18,19 @@ const MetricsTab = ({ analysisData }) => {
       { name: __('QA-Format Detection', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.qaFormat || 0 },
       { name: __('Metadata Audit', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.metadataAudit || 0 },
     ],
-    ...(pdEnabled ? {
-      productDiscoverability: [
-        { name: __('Schema Completeness', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.schemaCompleteness || 0 },
-        { name: __('Answer Layer Quality', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.answerLayerQuality || 0 },
-        { name: __('Freshness Signals', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.freshnessSignals || 0 },
-        { name: __('Conversational Query Match', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.conversationalQueryMatch || 0 },
-      ],
-    } : {}),
+    productDiscoverability: [
+      { name: __('Schema Completeness', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.schemaCompleteness || 0 },
+      { name: __('Answer Layer Quality', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.answerLayerQuality || 0 },
+      { name: __('Freshness Signals', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.freshnessSignals || 0 },
+      { name: __('Conversational Query Match', 'rain-os-aeo-analyzer'), value: analysisData?.subScores?.conversationalQueryMatch || 0 },
+    ],
   };
 
   const pillarMeta = {
     aiReadability: { label: __('AI Readability', 'rain-os-aeo-analyzer'), color: '#22d3ee' },
     digitalAuthority: { label: __('Digital Authority', 'rain-os-aeo-analyzer'), color: '#10b981' },
     conversionReadiness: { label: __('Conversion Readiness', 'rain-os-aeo-analyzer'), color: '#a855f7' },
-    ...(pdEnabled ? {
-      productDiscoverability: { label: __('Product Discoverability', 'rain-os-aeo-analyzer'), color: '#f97316' },
-    } : {}),
+    productDiscoverability: { label: __('Product Discoverability', 'rain-os-aeo-analyzer'), color: '#f97316' },
   };
 
   const getScoreColor = (score) => {

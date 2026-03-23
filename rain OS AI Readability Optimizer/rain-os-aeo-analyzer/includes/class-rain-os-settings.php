@@ -20,7 +20,6 @@ class Rain_OS_Settings {
             'rain_os_ai_backend_enabled'  => get_option( 'rain_os_ai_backend_enabled', 'no' ),
             'rain_os_ai_score_panel'      => get_option( 'rain_os_ai_score_panel', 'no' ),
             'rain_os_ai_normalize'        => get_option( 'rain_os_ai_normalize', 'no' ),
-            'rain_os_pd_enabled'          => get_option( 'rain_os_pd_enabled', 'yes' ),
         );
 
         add_action( 'admin_init', array( $this, 'register_settings' ) );
@@ -146,16 +145,6 @@ class Rain_OS_Settings {
             )
         );
 
-        register_setting(
-            'rain_os_aeo_settings',
-            'rain_os_pd_enabled',
-            array(
-                'type'              => 'string',
-                'sanitize_callback' => array( $this, 'sanitize_checkbox' ),
-                'default'           => 'yes',
-            )
-        );
-
         add_settings_section(
             'rain_os_api_section',
             __( 'API Configuration', 'rain-os-aeo-analyzer' ),
@@ -274,7 +263,5 @@ class Rain_OS_Settings {
         return get_option( 'rain_os_industry', '' );
     }
 
-    public static function is_pd_enabled() {
-        return 'yes' === get_option( 'rain_os_pd_enabled', 'yes' );
-    }
 }
+

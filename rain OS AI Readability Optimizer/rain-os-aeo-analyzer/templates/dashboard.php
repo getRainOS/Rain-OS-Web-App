@@ -159,11 +159,8 @@ function rain_os_get_score_class( $score ) {
                         <span class="dashicons dashicons-heart"></span>
                     </div>
                     <?php 
-                    $rain_os_pd_on = Rain_OS_Settings::is_pd_enabled();
                     $rain_os_content_health = $rain_os_total_analyzed > 0 
-                        ? ( $rain_os_pd_on 
-                            ? round( ( $rain_os_ai_readability + $rain_os_digital_authority + $rain_os_conversion_readiness + $rain_os_product_discoverability ) / 4 ) 
-                            : round( ( $rain_os_ai_readability + $rain_os_digital_authority + $rain_os_conversion_readiness ) / 3 ) ) 
+                        ? round( ( $rain_os_ai_readability + $rain_os_digital_authority + $rain_os_conversion_readiness + $rain_os_product_discoverability ) / 4 )
                         : 0;
                     ?>
                     <div class="rain-os-kpi-gauge" data-value="<?php echo esc_attr( $rain_os_content_health ); ?>" data-color="#a855f7"></div>

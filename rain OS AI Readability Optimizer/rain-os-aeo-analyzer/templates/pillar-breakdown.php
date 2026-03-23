@@ -26,11 +26,8 @@ $ai_readability = isset( $averages['avg_ai_readability'] ) ? intval( $averages['
 $digital_authority = isset( $averages['avg_digital_authority'] ) ? intval( $averages['avg_digital_authority'] ) : 0;
 $conversion_readiness = isset( $averages['avg_conversion_readiness'] ) ? intval( $averages['avg_conversion_readiness'] ) : 0;
 $product_discoverability = isset( $averages['avg_product_discoverability'] ) ? intval( $averages['avg_product_discoverability'] ) : 0;
-$pd_on = Rain_OS_Settings::is_pd_enabled();
 $overall_score = $ai_readability + $digital_authority + $conversion_readiness > 0 
-    ? ( $pd_on 
-        ? round( ( $ai_readability + $digital_authority + $conversion_readiness + $product_discoverability ) / 4 ) 
-        : round( ( $ai_readability + $digital_authority + $conversion_readiness ) / 3 ) )
+    ? round( ( $ai_readability + $digital_authority + $conversion_readiness + $product_discoverability ) / 4 )
     : 0;
 
 $latest = $wpdb->get_var( "SELECT analysis_data FROM {$table_name} ORDER BY analyzed_at DESC LIMIT 1" );
