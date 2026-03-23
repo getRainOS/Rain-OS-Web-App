@@ -3,7 +3,7 @@ import { setApiKey, api } from '../api/client.js';
 import { DEMO_KEY, DEMO_USER } from '../demo/demoData.js';
 import styles from './AuthGate.module.css';
 
-export default function AuthGate({ onAuth }) {
+export default function AuthGate({ onAuth, onBack }) {
   const [key, setKey] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -93,6 +93,16 @@ export default function AuthGate({ onAuth }) {
             Get one at app.getrainos.com
           </a>
         </p>
+
+        {onBack && (
+          <button
+            type="button"
+            className={styles.backBtn}
+            onClick={onBack}
+          >
+            ← Back to home
+          </button>
+        )}
       </div>
     </div>
   );

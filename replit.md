@@ -16,8 +16,16 @@ Full-featured WordPress plugin packaged at `dist/rain-os-aeo-analyzer.zip`.
 #### 2. Standalone Web App (`web-app/`)
 Vite + React SPA running on port 3000. API key is stored in localStorage (`rain_os_api_key`). Bearer token authentication via `Authorization: Bearer {key}` header.
 
+**Entry Flow (unauthenticated users):**
+- Visitor arrives → **Marketing Landing Page** (`src/pages/LandingPage.tsx`) — full marketing site with hero, features, pricing, FAQ
+- "Login" click → **Auth Gate** — API key form with "Try Demo" option and "← Back to home"
+- After auth → **Analytics Dashboard** (all existing pages unchanged)
+
+**Authenticated users** (API key in localStorage) skip directly to the dashboard.
+
 Pages:
-- **Auth Gate** — API key entry, validated against `GET /api/users/me`
+- **Landing Page** — Marketing homepage (Tailwind CSS, Framer Motion, rain animations). Entry for all unauthenticated visitors.
+- **Auth Gate** — API key entry, validated against `GET /api/users/me`. Has `onBack` to return to landing.
 - **Dashboard** — KPI cards, performance history line chart, pillar breakdown bar chart, recent analyses table
 - **Content Analyzer** — Paste content, run full AEO analysis, view pillar scores + recommendations + Quick Tools
 - **URL Scanner** — Enter a URL, get technical signals + pillar scores + recommendations
@@ -28,6 +36,13 @@ Components:
 - `Layout.jsx` — Sidebar with nav, usage bar, user info, upgrade button, sign-out
 - `PillarScores.jsx` — Reusable pillar score display with progress bars and sub-scores
 - `QuickTools.jsx` — Suggest Titles, Meta Description, Summarize, Rewrite actions
+
+Marketing components (`src/components/marketing/`, `src/components/ui/`, `src/components/RainfallBeams.tsx`):
+- Tailwind CSS v4 (via `@tailwindcss/vite` plugin) + Framer Motion animations
+- `RainfallBeams.tsx` — Canvas-based animated rain beams in the hero
+- `RainBackground.tsx` — Full-page subtle rain canvas effect
+- `MarketingComponents.tsx` — HybridFuture, ThreePillars, FeatureGrid, Testimonials, Pricing, FAQ, CTA sections
+- UI primitives: `Button`, `Badge` (shadcn-style with class-variance-authority)
 
 API client (`src/api/client.js`):
 - `api.me()` → `GET /api/users/me`
