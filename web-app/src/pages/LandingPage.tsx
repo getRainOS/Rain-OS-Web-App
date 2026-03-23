@@ -8,8 +8,6 @@ import {
 } from '@/components/marketing/MarketingComponents';
 import { RainfallBeams } from '@/components/RainfallBeams';
 
-const MotionDiv = motion.div as any;
-
 interface LandingPageProps {
   onAnalyze: (content: string, industry: string) => void;
   onLoginClick: () => void;
@@ -85,7 +83,7 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
 
           <div className="max-w-5xl mx-auto flex flex-col gap-12 items-center">
             {/* Heading */}
-            <MotionDiv
+            <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: 'easeOut' }}
@@ -100,10 +98,10 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
               <p className="text-slate-400 text-lg md:text-xl font-light tracking-wide">
                 Optimize for the AI era by analyzing your content's defensibility.
               </p>
-            </MotionDiv>
+            </motion.div>
 
             {/* Content Box */}
-            <MotionDiv
+            <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -160,10 +158,10 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
                   </div>
                 </div>
               </form>
-            </MotionDiv>
+            </motion.div>
 
             {/* Secondary Hero Text */}
-            <MotionDiv
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
@@ -186,7 +184,7 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
                 <strong className="text-white font-semibold">people and machines</strong>. It focuses on what most optimization tools miss:{' '}
                 <strong className="text-white font-semibold">AI readability</strong>.
               </p>
-            </MotionDiv>
+            </motion.div>
           </div>
         </section>
 

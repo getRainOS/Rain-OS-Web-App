@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../App.jsx';
 import PillarScores from '../components/PillarScores.jsx';
@@ -7,8 +8,10 @@ import styles from './ContentAnalyzer.module.css';
 
 export default function ContentAnalyzer() {
   const { refreshUser } = useApp();
+  const location = useLocation();
+  const prefill = location.state || {};
   const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState(prefill.pendingContent || '');
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');

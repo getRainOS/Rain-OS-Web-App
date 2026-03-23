@@ -7,13 +7,11 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const MotionDiv = motion.div as any;
-
 export const HybridFuture = () => {
   return (
     <section id="hybrid-future" className="py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-6">
-        <MotionDiv 
+        <motion.div 
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
           className="flex flex-col items-center mb-24 relative"
         >
@@ -41,29 +39,29 @@ export const HybridFuture = () => {
               <Sparkles className="w-4 h-4 text-rain-400" />
             </div>
           </div>
-        </MotionDiv>
+        </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <MotionDiv initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }} className="card-gradient rounded-3xl p-8 hover:border-white/20 transition-all">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }} className="card-gradient rounded-3xl p-8 hover:border-white/20 transition-all">
             <Globe2 className="w-8 h-8 text-slate-400 mb-6" />
             <h3 className="text-2xl font-bold text-white mb-4">The Old Way (SEO)</h3>
             <p className="text-slate-400 leading-relaxed">Traditional SEO focuses on keywords and backlinks. It works for Google, but fails when AI models try to extract facts and logic from your content.</p>
-          </MotionDiv>
+          </motion.div>
           
-          <MotionDiv initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="card-gradient rounded-3xl p-8 hover:border-white/20 transition-all relative overflow-hidden">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="card-gradient rounded-3xl p-8 hover:border-white/20 transition-all relative overflow-hidden">
             <AlertTriangle className="w-8 h-8 text-rose-400 mb-6" />
             <h3 className="text-2xl font-bold text-white mb-4">The Hybrid Gap</h3>
             <p className="text-slate-400 leading-relaxed relative z-10">As search shifts to AI answers, traditional traffic is dropping. If LLMs can't parse your content, you won't be cited in the new search landscape.</p>
-          </MotionDiv>
+          </motion.div>
           
-          <MotionDiv initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }} className="card-gradient rounded-3xl p-8 hover:border-rain-400/30 transition-all">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }} className="card-gradient rounded-3xl p-8 hover:border-rain-400/30 transition-all">
             <div className="flex items-center justify-between mb-6">
               <Shield className="w-8 h-8 text-rain-400" />
               <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-full">Insurance</span>
             </div>
             <h3 className="text-2xl font-bold text-white mb-4">The rain OS Standard</h3>
             <p className="text-slate-400 leading-relaxed">We bridge the gap. We ensure your content is perfectly structured for AI extraction while maintaining all traditional SEO benefits.</p>
-          </MotionDiv>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -76,7 +74,7 @@ export const ThreePillars = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Pillar 1 */}
-          <MotionDiv 
+          <motion.div 
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
             whileHover={{ y: -10, scale: 1.02 }}
             className="group bg-surface/30 backdrop-blur-xl border border-white/10 rounded-[32px] p-8 transition-all duration-500 hover:shadow-[0_0_60px_rgba(14,165,233,0.25)] hover:border-rain-400/50 relative overflow-hidden"
@@ -94,10 +92,10 @@ export const ThreePillars = () => {
                 </li>
               ))}
             </ul>
-          </MotionDiv>
+          </motion.div>
 
           {/* Pillar 2 */}
-          <MotionDiv 
+          <motion.div 
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }}
             whileHover={{ y: -10, scale: 1.02 }}
             className="group bg-surface/30 backdrop-blur-xl border border-white/10 rounded-[32px] p-8 transition-all duration-500 hover:shadow-[0_0_60px_rgba(251,191,36,0.25)] hover:border-amber-400/50 relative overflow-hidden"
@@ -115,10 +113,10 @@ export const ThreePillars = () => {
                 </li>
               ))}
             </ul>
-          </MotionDiv>
+          </motion.div>
 
           {/* Pillar 3 */}
-          <MotionDiv 
+          <motion.div 
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }}
             whileHover={{ y: -10, scale: 1.02 }}
             className="group bg-surface/30 backdrop-blur-xl border border-white/10 rounded-[32px] p-8 transition-all duration-500 hover:shadow-[0_0_60px_rgba(168,85,247,0.25)] hover:border-purple-400/50 relative overflow-hidden"
@@ -136,7 +134,7 @@ export const ThreePillars = () => {
                 </li>
               ))}
             </ul>
-          </MotionDiv>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -149,12 +147,12 @@ export const FeatureGrid = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">The 9-Point Framework</h2>
-          <a href="/docs" className="text-rain-400 hover:text-rain-300 font-medium">Read the full documentation →</a>
+          <a href="https://www.getrainos.com/docs" target="_blank" rel="noopener noreferrer" className="text-rain-400 hover:text-rain-300 font-medium">Read the full documentation →</a>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Card 1 */}
-          <MotionDiv initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="md:col-span-2 bg-gradient-to-br from-white/[0.08] to-white/[0.02] border border-white/10 backdrop-blur-sm rounded-3xl p-8 relative overflow-hidden group hover:border-rain-500/30 transition-all duration-300">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="md:col-span-2 bg-gradient-to-br from-white/[0.08] to-white/[0.02] border border-white/10 backdrop-blur-sm rounded-3xl p-8 relative overflow-hidden group hover:border-rain-500/30 transition-all duration-300">
             <BrainCircuit className="absolute -right-10 -bottom-10 w-64 h-64 text-rain-400 opacity-5 group-hover:opacity-10 transition-opacity duration-500" />
             <BrainCircuit className="w-8 h-8 text-rain-400 mb-6 relative z-10" />
             <h3 className="text-2xl font-bold text-white mb-4 relative z-10">Semantic Clarity Analysis</h3>
@@ -163,49 +161,49 @@ export const FeatureGrid = () => {
               <div className="flex items-center gap-2 text-sm text-rose-400 line-through mb-2"><span className="w-2 h-2 rounded-full bg-rose-500" /> It's good for you</div>
               <div className="flex items-center gap-2 text-sm text-emerald-400"><span className="w-2 h-2 rounded-full bg-emerald-500" /> Moringa reduces inflammation</div>
             </div>
-          </MotionDiv>
+          </motion.div>
 
           {/* Card 2 */}
-          <MotionDiv initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-emerald-500/30 transition-all duration-300">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-emerald-500/30 transition-all duration-300">
             <ShieldCheck className="w-8 h-8 text-emerald-400 mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">Authorship Proof</h3>
             <p className="text-slate-400 text-sm">Generate a verifiable SHA-256 hash timestamp of your content to prove original authorship in the age of AI generation.</p>
-          </MotionDiv>
+          </motion.div>
 
           {/* Card 3 */}
-          <MotionDiv initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-purple-500/30 transition-all duration-300">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-purple-500/30 transition-all duration-300">
             <SearchCheck className="w-8 h-8 text-purple-400 mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">AEO Alignment</h3>
             <p className="text-slate-400 text-sm">Score your content on 'quotability' for Answer Engine Optimization. Ensure you provide direct answers to complex queries.</p>
-          </MotionDiv>
+          </motion.div>
 
           {/* Card 4 */}
-          <MotionDiv initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-orange-500/30 transition-all duration-300">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-orange-500/30 transition-all duration-300">
             <Network className="w-8 h-8 text-orange-400 mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">Entity Mapping</h3>
             <p className="text-slate-400 text-sm">Automatically link concepts to the broader Knowledge Graph so AI models understand exactly what you're talking about.</p>
-          </MotionDiv>
+          </motion.div>
 
           {/* Card 5 */}
-          <MotionDiv initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.4 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-blue-500/30 transition-all duration-300">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.4 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-blue-500/30 transition-all duration-300">
             <Target className="w-8 h-8 text-blue-400 mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">Position Zero Control</h3>
             <p className="text-slate-400 text-sm">Structure headers and summaries to win Featured Snippets and AI Overviews on Google.</p>
-          </MotionDiv>
+          </motion.div>
 
           {/* Card 6 */}
-          <MotionDiv initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.5 }} className="md:col-span-2 bg-gradient-to-br from-indigo-500/[0.05] to-surface/50 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-indigo-500/30 transition-all duration-300">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.5 }} className="md:col-span-2 bg-gradient-to-br from-indigo-500/[0.05] to-surface/50 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-indigo-500/30 transition-all duration-300">
             <Sparkles className="w-8 h-8 text-indigo-400 mb-6" />
             <h3 className="text-2xl font-bold text-white mb-4">Generative Optimization</h3>
             <p className="text-slate-400 max-w-md">Fix it instantly. Use our built-in AI to rewrite complex sentences into machine-readable facts without losing your brand voice.</p>
-          </MotionDiv>
+          </motion.div>
 
           {/* Card 7 */}
-          <MotionDiv initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.6 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-cyan-500/30 transition-all duration-300">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.6 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-cyan-500/30 transition-all duration-300">
             <FileJson className="w-8 h-8 text-cyan-400 mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">Schema Markup Gen</h3>
             <p className="text-slate-400 text-sm">Auto-inject JSON-LD structured data to explicitly tell search engines what your content means.</p>
-          </MotionDiv>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -217,7 +215,7 @@ export const ReadabilityIntelligence = () => {
     <section className="py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <MotionDiv initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
+          <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
             <span className="text-rain-400 font-bold tracking-wider text-xs uppercase mb-2 block flex items-center gap-2">
               <Layers className="w-4 h-4" /> Readability Intelligence
             </span>
@@ -261,10 +259,10 @@ export const ReadabilityIntelligence = () => {
                 </p>
               </div>
             </div>
-          </MotionDiv>
+          </motion.div>
 
           {/* CycleVisual */}
-          <MotionDiv initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="relative h-[400px] flex items-center justify-center">
+          <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="relative h-[400px] flex items-center justify-center">
             <div className="absolute inset-0 border-2 border-dashed border-white/10 rounded-full animate-[spin_60s_linear_infinite]" />
             
             <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface border border-white/10 rounded-2xl p-4 shadow-[0_0_30px_rgba(56,189,248,0.2)]">
@@ -296,7 +294,7 @@ export const ReadabilityIntelligence = () => {
               <div className="w-12 h-px bg-slate-200 my-2" />
               <Sparkles className="w-5 h-5 text-rain-500" />
             </div>
-          </MotionDiv>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -318,7 +316,7 @@ export const ComparisonTable = () => {
   return (
     <section className="py-24 relative z-10">
       <div className="max-w-4xl mx-auto px-6">
-        <MotionDiv initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
           <div className="bg-surface/40 border border-white/10 rounded-3xl overflow-hidden backdrop-blur-sm">
             <div className="grid grid-cols-3 border-b border-white/10 bg-white/5">
               <div className="p-6 font-bold text-white">Feature</div>
@@ -347,7 +345,7 @@ export const ComparisonTable = () => {
               </div>
             ))}
           </div>
-        </MotionDiv>
+        </motion.div>
       </div>
     </section>
   );
@@ -372,7 +370,7 @@ export const Testimonials = () => {
       </div>
       
       <div className="mask-fade-sides flex overflow-hidden">
-        <MotionDiv 
+        <motion.div 
           animate={{ x: "-50%" }} 
           transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
           className="flex gap-6 px-3 w-max"
@@ -384,7 +382,7 @@ export const Testimonials = () => {
               <div className="text-sm font-bold text-white">— {q.src}</div>
             </div>
           ))}
-        </MotionDiv>
+        </motion.div>
       </div>
     </section>
   );
@@ -433,7 +431,7 @@ export const Pricing = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
           {plans.map((p, i) => (
-            <MotionDiv 
+            <motion.div 
               key={i}
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }}
               className={`relative bg-surface/40 border border-white/10 rounded-3xl p-8 backdrop-blur-sm flex flex-col h-full ${p.isPopular ? '-mt-4 mb-4 bg-rain-900/10' : ''}`}
@@ -464,7 +462,7 @@ export const Pricing = () => {
                   ))}
                 </ul>
               </div>
-            </MotionDiv>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -531,7 +529,7 @@ export const CTA = () => {
   return (
     <section className="py-24 relative z-10">
       <div className="max-w-5xl mx-auto px-6">
-        <MotionDiv initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="relative bg-gradient-to-r from-rain-900/40 to-midnight border border-rain-500/20 rounded-3xl p-8 md:p-16 text-center overflow-hidden">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="relative bg-gradient-to-r from-rain-900/40 to-midnight border border-rain-500/20 rounded-3xl p-8 md:p-16 text-center overflow-hidden">
           <div className="absolute top-0 left-1/2 w-[600px] h-[300px] bg-rain-500/20 blur-[100px] -translate-x-1/2 pointer-events-none" />
           
           <div className="relative z-10 flex flex-col items-center">
@@ -548,7 +546,7 @@ export const CTA = () => {
               Get Started for Free
             </a>
           </div>
-        </MotionDiv>
+        </motion.div>
       </div>
     </section>
   );
