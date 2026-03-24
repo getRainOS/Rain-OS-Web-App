@@ -123,7 +123,7 @@ function AppRoutes({ apiKey, onAuth }) {
 
 function LandingWrapper({ children }) {
   return (
-    <div className="min-h-screen text-slate-50 overflow-x-hidden font-sans relative" style={{ background: '#020410' }}>
+    <div className="min-h-screen text-slate-50 font-sans relative" style={{ background: '#020410' }}>
       <div className="fixed inset-0 z-0" style={{ background: '#020410' }} />
       <div className="fixed top-[-20%] left-[-10%] w-[800px] h-[800px] rounded-full pointer-events-none z-[2]"
         style={{ background: 'rgba(14,165,233,0.05)', filter: 'blur(150px)', mixBlendMode: 'screen' }} />

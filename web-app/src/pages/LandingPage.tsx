@@ -77,7 +77,7 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
 
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="pt-40 pb-24 md:pt-52 md:pb-40 relative z-10 px-6 overflow-hidden">
+        <section className="pt-40 pb-24 md:pt-52 md:pb-40 relative z-10 px-6 overflow-hidden" style={{ paddingTop: '10rem', paddingBottom: '6rem' }}>
           <RainfallBeams />
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[150%] h-[500px] bg-arc-glow opacity-30 pointer-events-none -z-10" />
 
