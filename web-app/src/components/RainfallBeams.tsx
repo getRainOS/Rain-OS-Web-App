@@ -28,14 +28,14 @@ export const RainfallBeams: React.FC = () => {
     window.addEventListener('resize', resize);
     resize();
 
-    const beamCount = 70;
+    const beamCount = 22;
     const beams: Beam[] = [];
     for (let i = 0; i < beamCount; i++) {
       beams.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         length: 40 + Math.random() * 80,
-        speed: 1.5 + Math.random() * 2.5,
+        speed: 0.4 + Math.random() * 0.6,
         opacity: 0.1 + Math.random() * 0.3,
       });
     }
@@ -52,7 +52,7 @@ export const RainfallBeams: React.FC = () => {
         if (beam.y > canvas.height) {
           beam.y = -beam.length;
           beam.x = Math.random() * canvas.width;
-          beam.speed = 1.5 + Math.random() * 2.5;
+          beam.speed = 0.4 + Math.random() * 0.6;
           beam.length = 40 + Math.random() * 80;
         }
 
