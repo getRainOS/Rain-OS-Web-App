@@ -41,21 +41,19 @@ export const RainfallBeams: React.FC = () => {
     }
     beamsRef.current = beams;
 
-    const startTime = performance.now();
-    const animate = (time: number) => {
+    let animationId: number;
+
+    const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const fadeStartHeight = canvas.height * 0.7;
-      const isMoving = time - startTime < 5000;
 
       beamsRef.current.forEach((beam) => {
-        if (isMoving) {
-          beam.y += beam.speed;
-          if (beam.y > canvas.height) {
-            beam.y = -beam.length;
-            beam.x = Math.random() * canvas.width;
-            beam.speed = 1.5 + Math.random() * 2.5;
-            beam.length = 40 + Math.random() * 80;
-          }
+        beam.y += beam.speed;
+        if (beam.y > canvas.height) {
+          beam.y = -beam.length;
+          beam.x = Math.random() * canvas.width;
+          beam.speed = 1.5 + Math.random() * 2.5;
+          beam.length = 40 + Math.random() * 80;
         }
 
         let globalFade = 1;
@@ -78,10 +76,10 @@ export const RainfallBeams: React.FC = () => {
         ctx.stroke();
       });
 
-      requestAnimationFrame(animate);
+      animationId = requestAnimationFrame(animate);
     };
 
-    const animationId = requestAnimationFrame(animate);
+    animationId = requestAnimationFrame(animate);
     return () => {
       window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationId);
