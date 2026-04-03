@@ -51,7 +51,7 @@ export const HybridFuture = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="card-gradient rounded-3xl p-8 hover:border-white/20 transition-all relative overflow-hidden">
             <AlertTriangle className="w-8 h-8 text-rose-400 mb-6" />
             <h3 className="text-2xl font-bold text-white mb-4">The Hybrid Gap</h3>
-            <p className="text-slate-400 leading-relaxed relative z-10">AI-generated sites built on Bolt, Lovable, or Cursor look great — but they're often invisible to AI crawlers. Missing schema, no llms.txt, JS-rendered content: if LLMs can't parse your page, you won't be cited.</p>
+            <p className="text-slate-400 leading-relaxed relative z-10">AI-generated and vibe-coded sites built on Bolt, Lovable, or Cursor look great — but they're often invisible to AI crawlers. Missing schema, no llms.txt, JS-rendered content: if LLMs can't parse your page, you won't be cited.</p>
           </motion.div>
           
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }} className="card-gradient rounded-3xl p-8 hover:border-rain-400/30 transition-all">
