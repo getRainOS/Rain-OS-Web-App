@@ -34,7 +34,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
   return (
     <div className="flex flex-col min-h-screen relative z-10 selection:bg-rain-500/30">
       {/* Navbar */}
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 flex justify-center ${isScrolled ? 'py-4' : 'py-6'}`}>
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 flex justify-center border-b border-white/10 ${isScrolled ? 'py-4' : 'py-6'}`}>
         <div className={`flex items-center justify-between px-8 transition-all duration-500 ${
           isScrolled
             ? 'w-full max-w-5xl py-3 rounded-full bg-midnight/60 backdrop-blur-2xl border border-white/5 shadow-2xl shadow-black/40'
@@ -50,6 +50,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
 
           <nav className="hidden md:flex items-center gap-10 text-sm font-medium text-slate-400">
             <a href="#features" className="hover:text-white transition-colors">Features</a>
+            <a href="/community" className="hover:text-white transition-colors">Community</a>
             <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
             <a href="https://www.getrainos.com/docs" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Docs</a>
             <a href="https://www.getrainos.com/wordpress-plugin" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">WordPress Plugin</a>
@@ -77,9 +78,12 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
         <section className="pt-40 pb-24 md:pt-52 md:pb-40 relative z-10 px-6 overflow-hidden" style={{ paddingTop: '10rem', paddingBottom: '6rem' }}>
           <RainfallBeams />
 
-          {/* Single center bloom — one clean light source */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] pointer-events-none -z-10"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(14,165,233,0.11) 0%, rgba(14,165,233,0.04) 50%, transparent 75%)' }} />
+          {/* Center bloom — bright focused halo behind textarea */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] pointer-events-none -z-10"
+            style={{ background: 'radial-gradient(ellipse at center, rgba(14,165,233,0.32) 0%, rgba(14,165,233,0.14) 35%, rgba(14,165,233,0.04) 60%, transparent 80%)' }} />
+          {/* Tight inner glow directly behind the input form */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[260px] pointer-events-none -z-10"
+            style={{ background: 'radial-gradient(ellipse at center, rgba(56,189,248,0.22) 0%, rgba(14,165,233,0.10) 50%, transparent 80%)', filter: 'blur(16px)' }} />
 
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[150%] h-[500px] bg-arc-glow opacity-60 pointer-events-none -z-10" />
 
@@ -97,7 +101,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
                 Built for AI-generated sites & content
               </div>
 
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.05] text-white"
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.05] text-white"
                 style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
                 Score Your Content's{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-100 via-sky-200 to-sky-400">
