@@ -76,7 +76,20 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
         {/* Hero Section */}
         <section className="pt-40 pb-24 md:pt-52 md:pb-40 relative z-10 px-6 overflow-hidden" style={{ paddingTop: '10rem', paddingBottom: '6rem' }}>
           <RainfallBeams />
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[150%] h-[500px] bg-arc-glow opacity-30 pointer-events-none -z-10" />
+
+          {/* Center bloom — bright light source */}
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] pointer-events-none -z-10"
+            style={{ background: 'radial-gradient(ellipse at center, rgba(14,165,233,0.22) 0%, rgba(6,182,212,0.1) 40%, transparent 70%)' }} />
+
+          {/* Left accent orb */}
+          <div className="absolute top-1/4 left-[12%] w-64 h-64 rounded-full pointer-events-none -z-10"
+            style={{ background: 'radial-gradient(circle, rgba(20,184,166,0.18) 0%, transparent 70%)', filter: 'blur(40px)' }} />
+
+          {/* Right accent orb */}
+          <div className="absolute top-1/3 right-[10%] w-48 h-48 rounded-full pointer-events-none -z-10"
+            style={{ background: 'radial-gradient(circle, rgba(56,189,248,0.2) 0%, transparent 70%)', filter: 'blur(30px)' }} />
+
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[150%] h-[500px] bg-arc-glow opacity-60 pointer-events-none -z-10" />
 
           <div className="max-w-5xl mx-auto flex flex-col gap-12 items-center">
             {/* Heading */}
@@ -84,15 +97,22 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: 'easeOut' }}
-              className="text-center space-y-4"
+              className="text-center space-y-5"
             >
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.1] tracking-tight text-slate-200">
+              {/* Bright accent chip */}
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-sky-400/30 bg-sky-400/10 text-sky-300 text-xs font-bold tracking-widest uppercase shadow-[0_0_20px_rgba(56,189,248,0.2)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
+                AI Search Optimization
+              </div>
+
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.08] tracking-tight text-white">
                 Get Cited by AI.{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-cyan-400 to-teal-400 italic font-medium">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-cyan-300 to-teal-300"
+                  style={{ filter: 'drop-shadow(0 0 24px rgba(56,189,248,0.5))' }}>
                   Not Just Ranked by Google.
                 </span>
               </h1>
-              <p className="text-slate-400 text-lg md:text-xl font-light tracking-wide">
+              <p className="text-slate-300 text-lg md:text-xl font-light tracking-wide max-w-2xl mx-auto">
                 See how ChatGPT, Perplexity, and Gemini read your content — and get a clear score with steps to improve.
               </p>
             </motion.div>
@@ -104,7 +124,10 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
               transition={{ duration: 0.6, delay: 0.2 }}
               className="relative w-full max-w-3xl"
             >
-              <form onSubmit={handleSubmit} className="card-surface p-2 text-left relative group">
+              {/* Glow ring behind card */}
+              <div className="absolute -inset-[1px] rounded-[25px] pointer-events-none"
+                style={{ background: 'linear-gradient(135deg, rgba(56,189,248,0.3), rgba(20,184,166,0.15), rgba(56,189,248,0.1))', filter: 'blur(1px)' }} />
+              <form onSubmit={handleSubmit} className="card-surface p-2 text-left relative group" style={{ boxShadow: '0 0 60px rgba(14,165,233,0.15), 0 20px 50px -12px rgba(0,0,0,0.6)' }}>
                 <div className="relative">
                   <textarea
                     value={content}
@@ -147,7 +170,8 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
                     <Button
                       type="submit"
                       size="sm"
-                      className="bg-rain-500 hover:bg-rain-400 text-white rounded-xl px-6 py-2.5 text-sm font-bold shadow-lg shadow-rain-500/20 transition-all flex items-center gap-2 group/btn"
+                      className="bg-sky-500 hover:bg-sky-400 text-white rounded-xl px-6 py-2.5 text-sm font-bold transition-all flex items-center gap-2 group/btn"
+                      style={{ boxShadow: '0 0 24px rgba(14,165,233,0.5), 0 4px 16px rgba(14,165,233,0.3)' }}
                     >
                       Analyze now
                       <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
@@ -158,14 +182,33 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
             </motion.div>
 
             {/* Secondary Hero Text */}
+            {/* Stat strip */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.35 }}
+              className="flex flex-wrap items-center justify-center gap-3 -mt-4"
+            >
+              {[
+                { label: '4 AI Pillars Scored', color: 'rgba(56,189,248,0.15)', border: 'rgba(56,189,248,0.3)', text: '#7dd3fc' },
+                { label: 'Instant Results', color: 'rgba(20,184,166,0.12)', border: 'rgba(20,184,166,0.3)', text: '#5eead4' },
+                { label: 'WordPress & Web App', color: 'rgba(56,189,248,0.1)', border: 'rgba(56,189,248,0.2)', text: '#93c5fd' },
+              ].map((s) => (
+                <span key={s.label} className="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide"
+                  style={{ background: s.color, border: `1px solid ${s.border}`, color: s.text }}>
+                  {s.label}
+                </span>
+              ))}
+            </motion.div>
+
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
               className="space-y-8 text-center flex flex-col items-center mt-12"
             >
-              <div className="inline-flex items-center rounded-full border border-rain-500/20 bg-rain-500/5 px-4 py-1.5 text-xs font-bold text-rain-400 tracking-[0.2em] uppercase">
-                <span className="flex h-2 w-2 rounded-full bg-rain-400 mr-3 animate-pulse" />
+              <div className="inline-flex items-center rounded-full border border-sky-400/30 bg-sky-400/10 px-4 py-1.5 text-xs font-bold text-sky-300 tracking-[0.2em] uppercase shadow-[0_0_16px_rgba(56,189,248,0.15)]">
+                <span className="flex h-2 w-2 rounded-full bg-sky-400 mr-3 animate-pulse" />
                 Answer Engine Optimization
               </div>
 
