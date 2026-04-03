@@ -96,9 +96,9 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
               className="text-center space-y-5"
             >
               {/* Accent chip */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-white/10 bg-white/5 text-slate-400 text-xs font-medium tracking-widest uppercase">
-                <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
-                Built for AI-generated sites & content
+              <div className="flex flex-col items-center gap-1">
+                <p className="text-sm font-bold text-white">Built for AI-Generated Sites and Content.</p>
+                <p className="text-sm font-bold text-white">Used To Optimize All Content and Websites For AI Citation.</p>
               </div>
 
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.05] text-white"
