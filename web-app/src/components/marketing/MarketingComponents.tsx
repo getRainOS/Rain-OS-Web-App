@@ -68,73 +68,108 @@ export const HybridFuture = () => {
   );
 };
 
-export const ThreePillars = () => {
+export const FourPillars = () => {
+  const pillars = [
+    {
+      name: 'AI Readability',
+      weight: '30%',
+      tagline: 'Can AI actually extract your answers?',
+      description: 'Measures how easily ChatGPT, Perplexity, and Gemini can parse, chunk, and lift exact answers from your content — the foundation of being cited.',
+      color: 'rain-400',
+      glowColor: 'rgba(14,165,233,0.25)',
+      borderColor: 'rain-400/50',
+      viaColor: 'via-sky-400',
+      bgColor: 'bg-rain-500/20',
+      dotColor: 'bg-rain-500',
+      Icon: BrainCircuit,
+      scores: ['Structural Clarity', 'Answer-First Formatting', 'Semantic Precision', 'Context Sufficiency', 'Section Concept Isolation'],
+    },
+    {
+      name: 'Digital Authority',
+      weight: '25%',
+      tagline: 'Does AI trust you enough to cite you?',
+      description: 'AI models only quote sources they consider credible. This pillar scores the trust signals — citations, entity clarity, and expertise depth — that make you citable.',
+      color: 'emerald-400',
+      glowColor: 'rgba(16,185,129,0.25)',
+      borderColor: 'emerald-400/50',
+      viaColor: 'via-emerald-400',
+      bgColor: 'bg-emerald-500/20',
+      dotColor: 'bg-emerald-500',
+      Icon: ShieldCheck,
+      scores: ['Citation Signals', 'Entity Clarity', 'Topical Authority', 'Freshness Signals', 'Social Proof Markup'],
+    },
+    {
+      name: 'Conversion Readiness',
+      weight: '25%',
+      tagline: 'Does your content move people to act?',
+      description: "Getting cited is half the battle. This pillar scores how effectively your content turns AI-referred visitors into customers — from CTA clarity to objection handling.",
+      color: 'violet-400',
+      glowColor: 'rgba(139,92,246,0.2)',
+      borderColor: 'violet-400/50',
+      viaColor: 'via-violet-400',
+      bgColor: 'bg-violet-500/20',
+      dotColor: 'bg-violet-500',
+      Icon: MousePointerClick,
+      scores: ['CTA Clarity', 'Trust Signals', 'Value Proposition', 'Friction Reduction'],
+    },
+    {
+      name: 'Product Discoverability',
+      weight: '20%',
+      tagline: 'Will AI recommend your product?',
+      description: 'As ChatGPT and Gemini become shopping assistants, this pillar ensures your product data — pricing, variants, availability — is structured so AI recommends you over competitors.',
+      color: 'orange-400',
+      glowColor: 'rgba(249,115,22,0.2)',
+      borderColor: 'orange-400/50',
+      viaColor: 'via-orange-400',
+      bgColor: 'bg-orange-500/20',
+      dotColor: 'bg-orange-500',
+      Icon: Target,
+      scores: ['Product Variant Coverage', 'Merchant Identity Clarity', 'Pricing Transparency', 'Availability Signals', 'Comparative Context'],
+    },
+  ];
+
   return (
-    <section id="three-pillars" className="py-24 relative z-10">
+    <section id="four-pillars" className="py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Pillar 1 */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
-            whileHover={{ y: -10, scale: 1.02 }}
-            className="group bg-surface/30 backdrop-blur-xl border border-white/10 rounded-[32px] p-8 transition-all duration-500 hover:shadow-[0_0_60px_rgba(14,165,233,0.25)] hover:border-rain-400/50 relative overflow-hidden"
-          >
-            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-rain-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="w-12 h-12 rounded-2xl bg-rain-500/20 flex items-center justify-center mb-6">
-              <BrainCircuit className="w-6 h-6 text-rain-400" />
-            </div>
-            <h3 className="text-2xl font-bold text-rain-400 mb-4">Parse & Understand</h3>
-            <p className="text-slate-400 mb-8 leading-relaxed">How easily artificial intelligence can parse, understand, and process your content.</p>
-            <ul className="space-y-3">
-              {['Semantic Clarity', 'Logical Structure', 'AEO Alignment', 'Readability'].map((item, i) => (
-                <li key={i} className="flex items-center text-sm text-slate-300">
-                  <span className="w-1.5 h-1.5 rounded-full bg-rain-500 mr-3" /> {item}
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+        <div className="text-center mb-16">
+          <span className="text-rain-400 font-bold tracking-wider text-xs uppercase mb-3 block">The Scoring Framework</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Four Pillars. One Score.</h2>
+          <p className="text-slate-400 max-w-2xl mx-auto">Every analysis returns a weighted score across four dimensions — each one a signal that AI models use to decide what content gets cited, recommended, and surfaced.</p>
+        </div>
 
-          {/* Pillar 2 */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }}
-            whileHover={{ y: -10, scale: 1.02 }}
-            className="group bg-surface/30 backdrop-blur-xl border border-white/10 rounded-[32px] p-8 transition-all duration-500 hover:shadow-[0_0_60px_rgba(251,191,36,0.25)] hover:border-amber-400/50 relative overflow-hidden"
-          >
-            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/20 flex items-center justify-center mb-6">
-              <ShieldCheck className="w-6 h-6 text-amber-400" />
-            </div>
-            <h3 className="text-2xl font-bold text-amber-400 mb-4">Trust & Verify</h3>
-            <p className="text-slate-400 mb-8 leading-relaxed">Assessing the trustworthiness and verifiability of your content.</p>
-            <ul className="space-y-3">
-              {['Descriptive Metadata', 'Entity Recognition', 'Citation Readiness'].map((item, i) => (
-                <li key={i} className="flex items-center text-sm text-slate-300">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-3" /> {item}
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {pillars.map((p, i) => (
+            <motion.div
+              key={p.name}
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }}
+              whileHover={{ y: -6, scale: 1.01 }}
+              className={`group bg-surface/30 backdrop-blur-xl border border-white/10 rounded-[32px] p-8 transition-all duration-500 hover:border-${p.borderColor} relative overflow-hidden`}
+              style={{ '--hover-shadow': p.glowColor } as React.CSSProperties}
+              onMouseEnter={e => (e.currentTarget.style.boxShadow = `0 0 60px ${p.glowColor}`)}
+              onMouseLeave={e => (e.currentTarget.style.boxShadow = '')}
+            >
+              <div className={`absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent ${p.viaColor} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
 
-          {/* Pillar 3 */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }}
-            whileHover={{ y: -10, scale: 1.02 }}
-            className="group bg-surface/30 backdrop-blur-xl border border-white/10 rounded-[32px] p-8 transition-all duration-500 hover:shadow-[0_0_60px_rgba(20,184,166,0.2)] hover:border-teal-400/50 relative overflow-hidden"
-          >
-            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-teal-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="w-12 h-12 rounded-2xl bg-teal-500/20 flex items-center justify-center mb-6">
-              <MousePointerClick className="w-6 h-6 text-teal-400" />
-            </div>
-            <h3 className="text-2xl font-bold text-teal-400 mb-4">Answer & Act</h3>
-            <p className="text-slate-400 mb-8 leading-relaxed">Structuring content to provide direct answers and facilitate action.</p>
-            <ul className="space-y-3">
-              {['Schema Extraction', 'QA-Format Detection'].map((item, i) => (
-                <li key={i} className="flex items-center text-sm text-slate-300">
-                  <span className="w-1.5 h-1.5 rounded-full bg-teal-500 mr-3" /> {item}
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+              <div className="flex items-start justify-between mb-6">
+                <div className={`w-12 h-12 rounded-2xl ${p.bgColor} flex items-center justify-center`}>
+                  <p.Icon className={`w-6 h-6 text-${p.color}`} />
+                </div>
+                <span className={`text-xs font-bold text-${p.color} bg-${p.color.replace('400','500')}/10 border border-${p.color.replace('400','500')}/20 px-3 py-1 rounded-full`}>{p.weight} weight</span>
+              </div>
+
+              <h3 className={`text-2xl font-bold text-${p.color} mb-1`}>{p.name}</h3>
+              <p className="text-slate-500 text-sm font-medium mb-4 italic">{p.tagline}</p>
+              <p className="text-slate-400 mb-6 leading-relaxed text-sm">{p.description}</p>
+
+              <ul className="space-y-2">
+                {p.scores.map((s, j) => (
+                  <li key={j} className="flex items-center text-sm text-slate-300">
+                    <span className={`w-1.5 h-1.5 rounded-full ${p.dotColor} mr-3 shrink-0`} /> {s}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
@@ -146,63 +181,64 @@ export const FeatureGrid = () => {
     <section id="features" className="py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">The 9-Point Framework</h2>
-          <a href="https://www.getrainos.com/docs" target="_blank" rel="noopener noreferrer" className="text-rain-400 hover:text-rain-300 font-medium">Read the full documentation →</a>
+          <span className="text-rain-400 font-bold tracking-wider text-xs uppercase mb-3 block">Under the Hood</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">What No Other Tool Measures</h2>
+          <p className="text-slate-400 max-w-2xl mx-auto">Beyond the four pillars, rain OS runs a deeper layer of signals that most tools don't even know exist.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Card 1 */}
+          {/* Card 1 — big feature */}
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="md:col-span-2 bg-gradient-to-br from-white/[0.08] to-white/[0.02] border border-white/10 backdrop-blur-sm rounded-3xl p-8 relative overflow-hidden group hover:border-rain-500/30 transition-all duration-300">
             <BrainCircuit className="absolute -right-10 -bottom-10 w-64 h-64 text-rain-400 opacity-5 group-hover:opacity-10 transition-opacity duration-500" />
             <BrainCircuit className="w-8 h-8 text-rain-400 mb-6 relative z-10" />
-            <h3 className="text-2xl font-bold text-white mb-4 relative z-10">Semantic Clarity Analysis</h3>
-            <p className="text-slate-400 mb-6 relative z-10 max-w-md">Machines read logic, not just words. We analyze your sentence structure to ensure facts are easily extractable by LLMs.</p>
+            <h3 className="text-2xl font-bold text-white mb-4 relative z-10">Semantic Precision Scoring</h3>
+            <p className="text-slate-400 mb-6 relative z-10 max-w-md">LLMs don't read like humans — they extract facts. We score every sentence on how machine-extractable it is and flag anything too vague to be cited.</p>
             <div className="bg-midnight/50 rounded-xl p-4 border border-white/5 relative z-10">
-              <div className="flex items-center gap-2 text-sm text-rose-400 line-through mb-2"><span className="w-2 h-2 rounded-full bg-rose-500" /> It's good for you</div>
-              <div className="flex items-center gap-2 text-sm text-emerald-400"><span className="w-2 h-2 rounded-full bg-emerald-500" /> Moringa reduces inflammation</div>
+              <div className="flex items-center gap-2 text-sm text-rose-400 line-through mb-2"><span className="w-2 h-2 rounded-full bg-rose-500" /> "We've seen some really significant growth recently"</div>
+              <div className="flex items-center gap-2 text-sm text-emerald-400"><span className="w-2 h-2 rounded-full bg-emerald-500" /> "Revenue grew 34% quarter-over-quarter in Q2 2025"</div>
             </div>
           </motion.div>
 
           {/* Card 2 */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-emerald-500/30 transition-all duration-300">
-            <ShieldCheck className="w-8 h-8 text-emerald-400 mb-6" />
-            <h3 className="text-xl font-bold text-white mb-4">Authorship Proof</h3>
-            <p className="text-slate-400 text-sm">Generate a verifiable SHA-256 hash timestamp of your content to prove original authorship in the age of AI generation.</p>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-sky-500/30 transition-all duration-300">
+            <Layers className="w-8 h-8 text-sky-400 mb-6" />
+            <h3 className="text-xl font-bold text-white mb-4">RAG Chunking Quality</h3>
+            <p className="text-slate-400 text-sm">Most AI systems retrieve content in chunks. We score how cleanly your content breaks into standalone, answerable units — the way retrieval systems actually read it.</p>
           </motion.div>
 
           {/* Card 3 */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-cyan-500/30 transition-all duration-300">
-            <SearchCheck className="w-8 h-8 text-cyan-400 mb-6" />
-            <h3 className="text-xl font-bold text-white mb-4">AEO Alignment</h3>
-            <p className="text-slate-400 text-sm">Score your content on 'quotability' for Answer Engine Optimization. Ensure you provide direct answers to complex queries.</p>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-emerald-500/30 transition-all duration-300">
+            <SearchCheck className="w-8 h-8 text-emerald-400 mb-6" />
+            <h3 className="text-xl font-bold text-white mb-4">Information Gain Score</h3>
+            <p className="text-slate-400 text-sm">AI already knows what's common. This score measures how much genuinely new or specific information your content adds — the higher it is, the more likely AI is to quote you over a generic source.</p>
           </motion.div>
 
           {/* Card 4 */}
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-orange-500/30 transition-all duration-300">
             <Network className="w-8 h-8 text-orange-400 mb-6" />
-            <h3 className="text-xl font-bold text-white mb-4">Entity Mapping</h3>
-            <p className="text-slate-400 text-sm">Automatically link concepts to the broader Knowledge Graph so AI models understand exactly what you're talking about.</p>
+            <h3 className="text-xl font-bold text-white mb-4">Query Alignment Score</h3>
+            <p className="text-slate-400 text-sm">Maps your content against the real questions people ask AI tools in your topic area. If your content doesn't match the query patterns AI sees, it won't get surfaced.</p>
           </motion.div>
 
           {/* Card 5 */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.4 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-blue-500/30 transition-all duration-300">
-            <Target className="w-8 h-8 text-blue-400 mb-6" />
-            <h3 className="text-xl font-bold text-white mb-4">Position Zero Control</h3>
-            <p className="text-slate-400 text-sm">Structure headers and summaries to win Featured Snippets and AI Overviews on Google.</p>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.4 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-violet-500/30 transition-all duration-300">
+            <Target className="w-8 h-8 text-violet-400 mb-6" />
+            <h3 className="text-xl font-bold text-white mb-4">Semantic Redundancy Detection</h3>
+            <p className="text-slate-400 text-sm">Repeated or padded content dilutes AI extraction confidence. We flag every redundant passage so you can cut it — tighter content scores higher.</p>
           </motion.div>
 
-          {/* Card 6 */}
+          {/* Card 6 — big */}
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.5 }} className="md:col-span-2 bg-gradient-to-br from-cyan-500/[0.05] to-surface/50 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-cyan-500/30 transition-all duration-300">
             <Sparkles className="w-8 h-8 text-cyan-400 mb-6" />
-            <h3 className="text-2xl font-bold text-white mb-4">Generative Optimization</h3>
-            <p className="text-slate-400 max-w-md">Fix it instantly. Use our built-in AI to rewrite complex sentences into machine-readable facts without losing your brand voice.</p>
+            <h3 className="text-2xl font-bold text-white mb-4">AI-Powered Rewrite Tools</h3>
+            <p className="text-slate-400 max-w-md">Don't just see the problem — fix it. Built-in tools suggest improved titles, generate meta descriptions, summarize for AI snippets, and rewrite vague sentences into citable facts. All without losing your voice.</p>
           </motion.div>
 
           {/* Card 7 */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.6 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-cyan-500/30 transition-all duration-300">
-            <FileJson className="w-8 h-8 text-cyan-400 mb-6" />
-            <h3 className="text-xl font-bold text-white mb-4">Schema Markup Gen</h3>
-            <p className="text-slate-400 text-sm">Auto-inject JSON-LD structured data to explicitly tell search engines what your content means.</p>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.6 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-teal-500/30 transition-all duration-300">
+            <FileJson className="w-8 h-8 text-teal-400 mb-6" />
+            <h3 className="text-xl font-bold text-white mb-4">Multimodal Readiness</h3>
+            <p className="text-slate-400 text-sm">Images and tables are invisible to AI unless they're described in text. We flag every non-text element that's missing an AI-readable description.</p>
           </motion.div>
         </div>
       </div>
@@ -303,14 +339,16 @@ export const ReadabilityIntelligence = () => {
 
 export const ComparisonTable = () => {
   const features = [
-    { name: 'Optimizes Tone & Flow', seo: true, rain: true },
-    { name: 'Structure & Logic Metadata', seo: false, rain: true },
-    { name: 'Ambiguity Detection', seo: false, rain: true },
-    { name: 'Cryptographic Authorship', seo: false, rain: true },
-    { name: 'Fact Extraction Readiness', seo: false, rain: true },
-    { name: 'Entity Disambiguation', seo: false, rain: true },
-    { name: 'Voice Search Formatting', seo: true, rain: true },
-    { name: 'Hallucination Prevention', seo: false, rain: true },
+    { name: 'Keyword & Readability Scoring', seo: true, rain: true },
+    { name: 'AI Readability Score (LLM parse-ability)', seo: false, rain: true },
+    { name: 'Digital Authority & Citation Signals', seo: false, rain: true },
+    { name: 'Conversion Readiness Analysis', seo: false, rain: true },
+    { name: 'Product Discoverability for AI Shopping', seo: false, rain: true },
+    { name: 'RAG Chunking Quality Score', seo: false, rain: true },
+    { name: 'Information Gain Score', seo: false, rain: true },
+    { name: 'Query Alignment Score', seo: false, rain: true },
+    { name: 'Semantic Redundancy Detection', seo: false, rain: true },
+    { name: 'Multimodal Readiness Check', seo: false, rain: true },
   ];
 
   return (
@@ -392,33 +430,37 @@ export const Pricing = () => {
   const plans = [
     {
       plan: "Free", price: "Free", checkCount: "5 Answer Engine Optimizations / month",
-      description: "Great for hobbyists looking to experiment. Get full access to our 3 Pillar Framework.",
+      description: "Great for hobbyists and experimenters. Get full access to all four scoring pillars and see exactly how AI reads your content.",
       buttonText: "Get Started",
       features: [
-        "Semantic Clarity: Precision & ambiguity check.", "Readability Score: AI & human processing ease.",
-        "Metadata Audit: Schema & HTML verification.", "Logical Structure: Heading hierarchy analysis.",
-        "Entity Recognition: Knowledge graph linking.", "Citation Readiness: Quotable snippet detection.",
-        "Answer Engine Optimization Alignment: Direct answer scoring.", "Schema Extraction: Structured data opportunities.",
-        "QA-Format Detection: Question/Answer optimization."
+        "AI Readability Score: How easily LLMs parse your content.",
+        "Digital Authority Score: Trust signals AI uses to decide to cite you.",
+        "Conversion Readiness Score: How well your content drives action.",
+        "Product Discoverability Score: Visibility in AI shopping recommendations.",
+        "Actionable recommendations on every analysis.",
+        "Built-in AI rewrite tools: titles, meta, summaries."
       ]
     },
     {
-      plan: "Business", price: "$29.99", checkCount: "100 Answer Engine Optimizations", isPopular: true,
-      description: "Perfect for local businesses, early-stage startups, product teams and solo-creators optimizing for Gemini, Perplexity, Claude and the emerging ChatGPT shopping experience.",
+      plan: "Business", price: "$29.99", checkCount: "100 Answer Engine Optimizations / month", isPopular: true,
+      description: "Perfect for local businesses, early-stage startups, and solo creators optimizing for ChatGPT, Perplexity, Gemini, and Claude.",
       buttonText: "Get Started",
       features: [
-        "Semantic Clarity: Precision & ambiguity check.", "Readability Score: AI & human processing ease.",
-        "Metadata Audit: Schema & HTML verification.", "Logical Structure: Heading hierarchy analysis.",
-        "Entity Recognition: Knowledge graph linking.", "Citation Readiness: Quotable snippet detection.",
-        "Answer Engine Optimization Alignment: Direct answer scoring.", "Schema Extraction: Structured data opportunities.",
-        "QA-Format Detection: Question/Answer optimization."
+        "Everything in Free, plus:",
+        "AI Readability: Structural clarity, answer-first formatting, semantic precision.",
+        "Digital Authority: Citation signals, entity clarity, topical authority.",
+        "Conversion Readiness: CTA clarity, trust signals, value proposition.",
+        "Product Discoverability: Pricing transparency, availability signals, comparative context.",
+        "Phase 2 signals: RAG chunking quality, information gain, query alignment.",
+        "URL Scanner: Analyze any live page without pasting content.",
+        "Score history with expandable pillar breakdowns."
       ]
     },
     {
-      plan: "Pro", price: "$99.99", checkCount: "500 Answer Engine Optimizations",
-      description: "Ideal for enterprises, scaling SaaS brands, product teams and other power users...",
+      plan: "Pro", price: "$99.99", checkCount: "500 Answer Engine Optimizations / month",
+      description: "Ideal for content teams, agencies, scaling SaaS brands, and e-commerce stores publishing at volume.",
       buttonText: "Get Started",
-      features: ["Everything in Business +", "400 Additional AI Optimizations", "Priority E-mail Support"]
+      features: ["Everything in Business, plus:", "400 additional monthly optimizations.", "Priority email support.", "Early access to new pillars and signals."]
     }
   ];
 
@@ -501,13 +543,13 @@ export const FAQ = () => {
   const faqs = [
     { q: "Who is rain OS for?", a: "Anyone who relies on organic traffic. We're especially powerful for SaaS, E-commerce, and Tech Publishers..." },
     { q: "Does rain OS replace Yoast or RankMath?", a: "No, rain OS is designed to work alongside your existing SEO plugins..." },
-    { q: "What does the 'Beta' tag mean?", a: "It means rain OS is currently in active development..." },
+    { q: "How does rain OS decide what to score?", a: "Every analysis runs your content through four weighted pillars — AI Readability (30%), Digital Authority (25%), Conversion Readiness (25%), and Product Discoverability (20%) — plus a deeper layer of Phase 2 signals covering things like RAG chunking quality, information gain, and query alignment. The result is a single overall score from 0 to 100 with a breakdown for every dimension." },
     { q: "How does the Authorship Proof work?", a: "We generate a SHA-256 cryptographic hash of your content at the time of publishing..." },
     { q: "What is the 'Zero-Click Problem' and how does rain OS help?", a: "The Zero-Click Problem occurs when AI answers a user's query directly, resulting in no traffic to your site..." },
     { q: "Will this slow down my WordPress site?", a: "Not at all. rain OS runs its analysis asynchronously in the cloud..." },
     { q: "What is 'AI Readability' exactly?", a: "AI Readability measures how easily a Large Language Model (like ChatGPT or Google Gemini) can parse..." },
     { q: "What does the 'AEO Alignment' score actually measure?", a: "It measures how 'citable' your content is..." },
-    { q: "Can rain OS fix my content, or just analyze it?", a: "Both. We provide a deep 9-point analysis, but we also offer generative AI tools..." },
+    { q: "Can rain OS fix my content, or just analyze it?", a: "Both. Every analysis includes a full four-pillar breakdown with actionable recommendations. We also offer built-in AI tools to rewrite sentences, generate better titles, create meta descriptions, and summarize content for AI snippet extraction — all without leaving the dashboard." },
     { q: "Do you guarantee that I will be cited by AI models?", a: "Just like with traditional SEO, no one can guarantee specific rankings..." },
     { q: "How does the pricing work? What is an 'Action'?", a: "We offer simple flat-rate monthly plans..." },
     { q: "What happens to my content if I cancel?", a: "Your content remains 100% yours and stays on your WordPress site..." },

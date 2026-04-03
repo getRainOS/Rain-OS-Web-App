@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Sparkles, Plus, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  HybridFuture, ThreePillars, FeatureGrid, ReadabilityIntelligence,
+  HybridFuture, FourPillars, FeatureGrid, ReadabilityIntelligence,
   ComparisonTable, Testimonials, Pricing, FAQ, CTA
 } from '@/components/marketing/MarketingComponents';
 import { RainfallBeams } from '@/components/RainfallBeams';
@@ -228,7 +228,7 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
 
         <div id="features">
           <HybridFuture />
-          <ThreePillars />
+          <FourPillars />
           <FeatureGrid />
           <ReadabilityIntelligence />
           <ComparisonTable />
