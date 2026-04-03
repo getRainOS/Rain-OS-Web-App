@@ -17,6 +17,7 @@ const noopClient = {
     signUp: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') }),
     signInWithPassword: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') }),
     signInWithOAuth: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') }),
+    resetPasswordForEmail: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') }),
   },
 };
 

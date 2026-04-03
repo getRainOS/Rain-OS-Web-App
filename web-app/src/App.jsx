@@ -37,13 +37,21 @@ export default function App() {
   useEffect(() => {
     async function initAuth() {
       const { data: { session } } = await supabase.auth.getSession();
-      if (session && !getApiKey()) {
+      if (session) {
         try {
           const userData = await syncWithBackend(session.access_token);
           setApiKey(userData.apiKey);
           setApiKeyState(userData.apiKey);
           setUser(userData);
-        } catch (_) {}
+        } catch (_) {
+          const existingKey = getApiKey();
+          if (existingKey && existingKey !== '__demo__') {
+            try {
+              const { data } = await api.me();
+              setUser(data);
+            } catch (_2) {}
+          }
+        }
       } else if (getApiKey() && getApiKey() !== '__demo__') {
         try {
           const { data } = await api.me();
