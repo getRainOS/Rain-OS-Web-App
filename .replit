@@ -101,3 +101,7 @@ externalPort = 8000
 deploymentTarget = "static"
 build = ["npm", "run", "build"]
 publicDir = "web-app/dist"
+
+[postMerge]
+path = "scripts/post-merge.sh"
+timeoutMs = 120000
