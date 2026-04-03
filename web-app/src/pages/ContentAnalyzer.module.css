@@ -204,6 +204,11 @@
   line-height: 1.5;
 }
 
+.recoContent {
+  flex: 1;
+  min-width: 0;
+}
+
 .recoNum {
   flex-shrink: 0;
   width: 22px;

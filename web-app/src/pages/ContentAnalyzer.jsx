@@ -4,6 +4,7 @@ import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
 import QuickTools from '../components/QuickTools.jsx';
+import ArtifactBlock from '../components/ArtifactBlock.jsx';
 import styles from './ContentAnalyzer.module.css';
 
 export default function ContentAnalyzer() {
@@ -138,12 +139,22 @@ export default function ContentAnalyzer() {
             <div className={`card ${styles.recoCard}`}>
               <h3 className={styles.sectionTitle}>Recommendations</h3>
               <ul className={styles.recoList}>
-                {result.recommendations.map((r, i) => (
-                  <li key={i} className={styles.recoItem}>
-                    <span className={styles.recoNum}>{i + 1}</span>
-                    <span>{r}</span>
-                  </li>
-                ))}
+                {result.recommendations.map((r, i) => {
+                  const isObj = typeof r === 'object' && r !== null;
+                  const text = isObj
+                    ? (r.recommendation || r.description || r.issue || '')
+                    : String(r);
+                  const artifact = isObj ? r.artifact : null;
+                  return (
+                    <li key={i} className={styles.recoItem}>
+                      <span className={styles.recoNum}>{i + 1}</span>
+                      <div className={styles.recoContent}>
+                        <span>{text}</span>
+                        {artifact && <ArtifactBlock artifact={artifact} />}
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           )}

@@ -150,8 +150,8 @@ index: number;
 }
 export interface RecommendationArtifact {
   type: 'json-ld' | 'llms-txt' | 'robots-txt' | 'html';
-  filename: string;
   content: string;
+  filename?: string;
 }
 
 export interface AIRecommendation {

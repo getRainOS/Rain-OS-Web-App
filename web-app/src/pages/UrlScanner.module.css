@@ -148,6 +148,12 @@
   font-size: 13.5px;
   color: var(--text-muted);
   line-height: 1.5;
+  align-items: flex-start;
+}
+
+.recoContent {
+  flex: 1;
+  min-width: 0;
 }
 
 .recoItemTop {

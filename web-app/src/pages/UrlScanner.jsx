@@ -2,28 +2,8 @@ import { useState } from 'react';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
+import ArtifactBlock from '../components/ArtifactBlock.jsx';
 import styles from './UrlScanner.module.css';
-
-function ArtifactBlock({ artifact }) {
-  const [copied, setCopied] = useState(false);
-  function handleCopy() {
-    navigator.clipboard.writeText(artifact.content).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  }
-  return (
-    <div className={styles.artifact}>
-      <div className={styles.artifactHeader}>
-        <span className={styles.artifactFilename}>{artifact.filename}</span>
-        <button className={styles.artifactCopy} onClick={handleCopy}>
-          {copied ? '✓ Copied' : 'Copy'}
-        </button>
-      </div>
-      <pre className={styles.artifactCode}><code>{artifact.content}</code></pre>
-    </div>
-  );
-}
 
 export default function UrlScanner() {
   const { refreshUser } = useApp();
@@ -53,6 +33,14 @@ export default function UrlScanner() {
     setResult(null);
     setError('');
   }
+
+  const techRecs = result?.technical_recommendations;
+  const geminiRecs = result?.recommendations;
+  const recommendations = (Array.isArray(techRecs) && techRecs.length > 0)
+    ? techRecs
+    : (Array.isArray(geminiRecs) && geminiRecs.length > 0)
+      ? geminiRecs
+      : [];
 
   return (
     <div className={`${styles.root} fade-in`}>
@@ -119,20 +107,21 @@ export default function UrlScanner() {
             </div>
           )}
 
-          {(result.recommendations ?? result.technical_recommendations)?.length > 0 && (
+          {recommendations.length > 0 && (
             <div className={`card ${styles.recoCard}`}>
               <h3 className={styles.sectionTitle}>Recommendations</h3>
               <ul className={styles.recoList}>
-                {(result.recommendations ?? result.technical_recommendations).map((r, i) => {
-                  const text = typeof r === 'string' ? r : r.text;
-                  const artifact = typeof r === 'object' ? r.artifact : null;
+                {recommendations.map((r, i) => {
+                  const isObj = typeof r === 'object' && r !== null;
+                  const text = isObj ? r.recommendation : r;
+                  const artifact = isObj ? r.artifact : null;
                   return (
                     <li key={i} className={styles.recoItem}>
-                      <div className={styles.recoItemTop}>
-                        <span className={styles.recoNum}>{i + 1}</span>
+                      <span className={styles.recoNum}>{i + 1}</span>
+                      <div className={styles.recoContent}>
                         <span>{text}</span>
+                        {artifact && <ArtifactBlock artifact={artifact} />}
                       </div>
-                      {artifact && <ArtifactBlock artifact={artifact} />}
                     </li>
                   );
                 })}

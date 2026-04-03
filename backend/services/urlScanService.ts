@@ -39,21 +39,21 @@ hasDescriptiveAnchors: boolean;
 wordCount: number;
 extractedText: string;
 }
-export interface ScanArtifact {
-  type: 'json-ld' | 'llms-txt' | 'robots-txt' | 'html';
-  filename: string;
-  content: string;
-}
-
-export interface ScanRecommendation {
-  text: string;
-  artifact?: ScanArtifact;
+export interface UrlScanRecommendation {
+  issue: string;
+  recommendation: string;
+  severity: 'low' | 'medium' | 'high';
+  artifact?: {
+    type: 'json-ld' | 'llms-txt' | 'robots-txt' | 'html';
+    content: string;
+    filename?: string;
+  };
 }
 
 export interface UrlScanResult {
 signals: TechnicalSignals;
 extractedText: string;
-recommendations: ScanRecommendation[];
+recommendations: UrlScanRecommendation[];
 }
 export async function scanUrlForTechnicalSignals(
 html: string,
@@ -165,138 +165,146 @@ signals.extractedText = extractedText;
 
 
 // ─── Recommendations with code artifacts ─────────────────────────────────────
-const recs: ScanRecommendation[] = [];
-const host = parsedUrl.host;
-const origin = `${parsedUrl.protocol}//${host}`;
+const recs: UrlScanRecommendation[] = [];
+const host = `${parsedUrl.protocol}//${parsedUrl.host}`;
 
 if (!signals.hasSchemaMarkup) {
+  const jsonLdContent = signals.hasFaqSchema
+    ? JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        'mainEntity': [
+          {
+            '@type': 'Question',
+            'name': 'What is your main question?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Your answer goes here.'
+            }
+          }
+        ]
+      }, null, 2)
+    : JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        'headline': 'Your Article Title',
+        'author': {
+          '@type': 'Person',
+          'name': 'Author Name'
+        },
+        'datePublished': new Date().toISOString().split('T')[0],
+        'dateModified': new Date().toISOString().split('T')[0],
+        'description': 'A short description of the article.',
+        'url': pageUrl
+      }, null, 2);
+
   recs.push({
-    text: 'Add JSON-LD structured data. Start with Article or WebPage schema so AI crawlers can identify your content type.',
+    issue: 'Missing schema markup',
+    recommendation: 'Add JSON-LD structured data. Start with Article or FAQPage schema.',
+    severity: 'high',
     artifact: {
       type: 'json-ld',
+      content: `<script type="application/ld+json">\n${jsonLdContent}\n</script>`,
       filename: 'schema.json',
-      content: JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'WebPage',
-        'name': 'Page Title',
-        'description': 'A concise description of this page.',
-        'url': pageUrl,
-        'publisher': {
-          '@type': 'Organization',
-          'name': 'Your Brand Name',
-          'url': origin,
-        },
-      }, null, 2) + '\n\n/* Paste inside a <script type="application/ld+json"> tag in your <head> */',
     },
   });
 }
 
-if (!signals.hasLlmsTxt) {
+if (!signals.hasSemanticHtml) {
   recs.push({
-    text: `Create /llms.txt at your domain root to guide AI crawlers on how to index your site.`,
+    issue: 'Missing semantic HTML',
+    recommendation: 'Replace div wrappers with semantic HTML5: article, main, section.',
+    severity: 'medium',
+  });
+}
+
+if (!signals.hasProperHeadingHierarchy) {
+  recs.push({
+    issue: 'Improper heading hierarchy',
+    recommendation: 'Use exactly one h1 per page, then logical h2/h3 subheadings.',
+    severity: 'medium',
+  });
+}
+
+if (!signals.hasMetaDescription) {
+  recs.push({
+    issue: 'Meta description absent',
+    recommendation: 'Add a meta description (150-160 chars).',
+    severity: 'high',
     artifact: {
-      type: 'llms-txt',
-      filename: 'llms.txt',
-      content: `# ${host}
+      type: 'html',
+      content: `<meta name="description" content="A concise 150-160 character description of this page that includes your primary keyword." />`,
+      filename: 'meta-description.html',
+    },
+  });
+}
 
-> This file tells AI crawlers how to read and index this site.
-
-## About
-[Brief description of what this site is and who it serves.]
-
-## Content
-- [Link to key page or section]
-- [Link to key page or section]
-
-## Contact
-[Optional: email or contact page URL]
-
-## Usage
-AI systems may read and summarise this site's public content for informational purposes.
-`,
+if (!signals.hasCanonicalTag) {
+  recs.push({
+    issue: 'Missing canonical tag',
+    recommendation: 'Add a canonical tag to establish the authoritative URL.',
+    severity: 'low',
+    artifact: {
+      type: 'html',
+      content: `<link rel="canonical" href="${pageUrl}" />`,
+      filename: 'canonical.html',
     },
   });
 }
 
 if (signals.isJsRendered) {
   recs.push({
-    text: 'CRITICAL: Page requires JavaScript to render. AI crawlers see an empty page. Add this to allow crawlers while you implement SSR.',
+    issue: 'JavaScript-rendered content blocking AI crawlers',
+    recommendation: 'CRITICAL: Page requires JavaScript. AI crawlers see an empty page. Implement SSR immediately.',
+    severity: 'high',
     artifact: {
       type: 'robots-txt',
-      filename: 'robots.txt addition',
-      content: `# Allow major AI crawlers (add to your existing robots.txt)
-User-agent: GPTBot
-Allow: /
-
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-User-agent: Amazonbot
-Allow: /`,
+      content: `# Allow major AI crawlers (add to your existing robots.txt)\nUser-agent: GPTBot\nAllow: /\n\nUser-agent: ClaudeBot\nAllow: /\n\nUser-agent: PerplexityBot\nAllow: /\n\nUser-agent: Google-Extended\nAllow: /\n\nUser-agent: Amazonbot\nAllow: /`,
+      filename: 'robots.txt',
     },
   });
 }
 
-if (!signals.hasOpenGraphTags) {
+if (!signals.hasLlmsTxt) {
   recs.push({
-    text: 'Add Open Graph meta tags so your pages render correctly when shared and are recognized by AI tools.',
+    issue: 'llms.txt absent',
+    recommendation: 'Create /llms.txt at your domain root to guide AI crawlers.',
+    severity: 'high',
     artifact: {
-      type: 'html',
-      filename: 'og-tags.html',
-      content: `<!-- Paste these into your <head> -->
-<meta property="og:type" content="website" />
-<meta property="og:title" content="Your Page Title" />
-<meta property="og:description" content="A concise description of this page (150–160 chars)." />
-<meta property="og:image" content="${origin}/og-image.png" />
-<meta property="og:url" content="${pageUrl}" />`,
-    },
-  });
-}
-
-if (!signals.hasMetaDescription) {
-  recs.push({
-    text: 'Add a meta description (150–160 chars). AI tools use this to understand the page purpose.',
-    artifact: {
-      type: 'html',
-      filename: 'meta-description.html',
-      content: `<!-- Paste into your <head> -->
-<meta name="description" content="A clear, concise description of what this page offers. Keep it under 160 characters." />`,
-    },
-  });
-}
-
-if (!signals.hasSemanticHtml) {
-  recs.push({ text: 'Replace generic div wrappers with semantic HTML5 elements: <article>, <main>, <section>, <nav>, <aside>. AI crawlers use these to identify content structure.' });
-}
-
-if (!signals.hasProperHeadingHierarchy) {
-  recs.push({ text: 'Use exactly one <h1> per page, followed by logical <h2> and <h3> subheadings. This is how AI models parse document structure.' });
-}
-
-if (!signals.hasCanonicalTag) {
-  recs.push({
-    text: 'Add a canonical tag to tell search engines and AI crawlers which URL is authoritative.',
-    artifact: {
-      type: 'html',
-      filename: 'canonical.html',
-      content: `<!-- Paste into your <head> -->
-<link rel="canonical" href="${pageUrl}" />`,
+      type: 'llms-txt',
+      content: `# ${parsedUrl.host}\n\n> This file helps AI language models understand and navigate this site.\n\n## About\n\nThis is a website at ${host}. Replace this description with a brief summary of what your site offers and who it serves.\n\n## Key Pages\n\n- [Home](${host}/): Main landing page\n- [About](${host}/about): About us\n- [Blog](${host}/blog): Articles and updates\n\n## Guidelines for AI\n\n- Content on this site may be cited with attribution.\n- Please link back to the original source when referencing content.\n- For questions or permissions, contact: hello@${parsedUrl.host}`,
+      filename: 'llms.txt',
     },
   });
 }
 
 if (signals.missingAltTextRatio > 0.3) {
-  recs.push({ text: `${Math.round(signals.missingAltTextRatio * 100)}% of images are missing alt text. Add descriptive alt attributes — AI models use these to understand image context.` });
+  recs.push({
+    issue: 'Images missing alt text',
+    recommendation: `${Math.round(signals.missingAltTextRatio * 100)}% of images have no alt text. Add descriptive alt attributes.`,
+    severity: 'medium',
+  });
 }
 
 if (!signals.hasDescriptiveAnchors) {
-  recs.push({ text: 'Replace generic anchor text ("click here", "read more") with descriptive link text. AI models use anchor text to understand what the linked page is about.' });
+  recs.push({
+    issue: 'Generic anchor text',
+    recommendation: 'Replace generic anchor text ("click here", "read more") with descriptive text.',
+    severity: 'low',
+  });
+}
+
+if (!signals.hasOpenGraphTags) {
+  recs.push({
+    issue: 'Open Graph tags missing',
+    recommendation: 'Add Open Graph meta tags (og:title, og:description, og:image).',
+    severity: 'medium',
+    artifact: {
+      type: 'html',
+      content: `<meta property="og:title" content="Your Page Title" />\n<meta property="og:description" content="A compelling description of this page (150-160 characters)." />\n<meta property="og:image" content="${host}/og-image.jpg" />\n<meta property="og:url" content="${pageUrl}" />\n<meta property="og:type" content="website" />`,
+      filename: 'og-tags.html',
+    },
+  });
 }
 
 return { signals, extractedText, recommendations: recs };
