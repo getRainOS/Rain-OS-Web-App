@@ -1,0 +1,5 @@
+{
+  "name": "Rain OS: Backend API",
+  "description": "The backend API for Rain OS, a headless service that analyzes web content to score and improve its AI Readability for Answer Engine Optimization (AEO). This service is designed to be consumed by other applications, such as a WordPress plugin or custom frontend.",
+  "requestFramePermissions": []
+}

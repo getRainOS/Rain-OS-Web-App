@@ -1,0 +1,271 @@
+// services/dbService.ts
+// This service interacts with the PostgreSQL database.
+
+// Fix: Import Buffer to make it available in this module.
+import { Buffer } from 'buffer';
+import type { User, SubscriptionStatus } from '../types';
+import { randomBytes, createHash, createCipheriv, createDecipheriv } from 'crypto';
+import { pool } from './db';
+
+// --- Crypto Helpers ---
+const ALGORITHM = 'aes-256-cbc';
+const IV_LENGTH = 16;
+const ENCRYPTION_SECRET = process.env.ENCRYPTION_SECRET;
+
+if (!ENCRYPTION_SECRET || ENCRYPTION_SECRET.length !== 32) {
+    throw new Error('ENCRYPTION_SECRET environment variable must be set and be 32 characters long.');
+}
+const secretKey = Buffer.from(ENCRYPTION_SECRET, 'utf8');
+
+const encrypt = (text: string): string => {
+    const iv = randomBytes(IV_LENGTH);
+    const cipher = createCipheriv(ALGORITHM, secretKey, iv);
+    let encrypted = cipher.update(text, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    return iv.toString('hex') + ':' + encrypted;
+};
+
+const decrypt = (text: string): string => {
+    const textParts = text.split(':');
+    const iv = Buffer.from(textParts.shift()!, 'hex');
+    const encryptedText = Buffer.from(textParts.join(':'), 'hex');
+    const decipher = createDecipheriv(ALGORITHM, secretKey, iv);
+    let decrypted = decipher.update(encryptedText);
+    decrypted = Buffer.concat([decrypted, decipher.final()]);
+    return decrypted.toString();
+};
+
+export const hash = (data: string) => createHash('sha256').update(data).digest('hex');
+
+// --- DB to Application Mapper ---
+const mapRowToUser = (row: any): User => {
+    if (!row) return null as any;
+    return {
+        id: row.id,
+        email: row.email,
+        googleId: row.google_id,
+        hashedPassword: row.hashed_password,
+        passwordResetToken: row.password_reset_token,
+        passwordResetExpires: row.password_reset_expires,
+        apiKey: decrypt(row.encrypted_api_key),
+        hashedApiKey: row.hashed_api_key,
+        stripeCustomerId: row.stripe_customer_id,
+        stripePriceId: row.stripe_price_id,
+        subscriptionStatus: row.subscription_status,
+        usage: row.usage,
+        createdAt: row.created_at,
+    };
+};
+
+
+// --- User Management ---
+
+export const findUserByEmail = async (email: string): Promise<User | null> => {
+    const res = await pool.query('SELECT * FROM users WHERE email = $1', [email.toLowerCase()]);
+    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+};
+
+export const findUserById = async (id: string): Promise<User | null> => {
+    const res = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+};
+
+export const findUserByApiKey = async (apiKey: string): Promise<User | null> => {
+    const apiKeyHash = hash(apiKey);
+    const res = await pool.query('SELECT * FROM users WHERE hashed_api_key = $1', [apiKeyHash]);
+    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+};
+
+export const findUserByStripeCustomerId = async (stripeCustomerId: string): Promise<User | null> => {
+    const res = await pool.query('SELECT * FROM users WHERE stripe_customer_id = $1', [stripeCustomerId]);
+    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+};
+
+export const findUserByGoogleId = async (googleId: string): Promise<User | null> => {
+    const res = await pool.query('SELECT * FROM users WHERE google_id = $1', [googleId]);
+    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+};
+
+export const findUserByPasswordResetToken = async (hashedToken: string): Promise<User | null> => {
+    const res = await pool.query(
+        'SELECT * FROM users WHERE password_reset_token = $1 AND password_reset_expires > NOW()',
+        [hashedToken]
+    );
+    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+};
+
+export const createUser = async (email: string, password?: string, googleId?: string): Promise<User> => {
+    if (await findUserByEmail(email)) {
+        throw new Error('User already exists');
+    }
+
+    const id = `user_${randomBytes(16).toString('hex')}`;
+    const apiKey = `rain_os_key_${randomBytes(24).toString('hex')}`;
+    const hashedApiKey = hash(apiKey);
+    const encryptedApiKey = encrypt(apiKey);
+
+    const newUser: Omit<User, 'apiKey' | 'createdAt'> & { encryptedApiKey: string, hashedPassword?: string } = {
+        id,
+        email: email.toLowerCase(),
+        googleId,
+        hashedApiKey,
+        encryptedApiKey,
+        subscriptionStatus: 'active',
+        usage: { count: 0, limit: 5 },
+    };
+    if (password) {
+        newUser.hashedPassword = hash(password);
+    }
+
+    const query = `
+        INSERT INTO users (id, email, google_id, hashed_password, hashed_api_key, encrypted_api_key, subscription_status, usage)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        RETURNING *
+    `;
+    const values = [
+        newUser.id, newUser.email, newUser.googleId, newUser.hashedPassword,
+        newUser.hashedApiKey, newUser.encryptedApiKey, newUser.subscriptionStatus,
+        JSON.stringify(newUser.usage)
+    ];
+
+    const res = await pool.query(query, values);
+    return mapRowToUser(res.rows[0]);
+};
+
+export const updateUser = async (userId: string, updates: Partial<Pick<User, 'googleId' | 'hashedPassword' | 'passwordResetToken' | 'passwordResetExpires'>>): Promise<User | null> => {
+    const setClauses: string[] = [];
+    const values: any[] = [userId];
+
+    if (updates.googleId !== undefined) {
+        values.push(updates.googleId);
+        setClauses.push(`google_id = $${values.length}`);
+    }
+    if (updates.hashedPassword !== undefined) {
+        values.push(updates.hashedPassword);
+        setClauses.push(`hashed_password = $${values.length}`);
+    }
+    if (updates.passwordResetToken !== undefined) {
+        values.push(updates.passwordResetToken);
+        setClauses.push(`password_reset_token = $${values.length}`);
+    }
+    if (updates.passwordResetExpires !== undefined) {
+        values.push(updates.passwordResetExpires);
+        setClauses.push(`password_reset_expires = $${values.length}`);
+    }
+    
+    if (setClauses.length === 0) {
+        return findUserById(userId);
+    }
+
+    const query = `UPDATE users SET ${setClauses.join(', ')} WHERE id = $1 RETURNING *`;
+    const res = await pool.query(query, values);
+    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+};
+
+
+export const regenerateUserApiKey = async (userId: string): Promise<User | null> => {
+    const newApiKey = `rain_os_key_${randomBytes(24).toString('hex')}`;
+    const newHashedApiKey = hash(newApiKey);
+    const newEncryptedApiKey = encrypt(newApiKey);
+
+    const query = `
+        UPDATE users
+        SET hashed_api_key = $1, encrypted_api_key = $2
+        WHERE id = $3
+        RETURNING *
+    `;
+    const res = await pool.query(query, [newHashedApiKey, newEncryptedApiKey, userId]);
+    
+    // mapRowToUser will decrypt the key correctly, returning the new raw key.
+    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+};
+
+// --- Subscription Management ---
+
+export const updateUserSubscription = async (
+    userId: string,
+    updates: {
+        stripeCustomerId?: string;
+        subscriptionStatus?: SubscriptionStatus;
+        stripePriceId?: string | null;
+        usageLimit?: number;
+    }
+): Promise<User | null> => {
+    const setClauses: string[] = [];
+    const values: any[] = [userId];
+
+    if (updates.stripeCustomerId !== undefined) {
+        values.push(updates.stripeCustomerId);
+        setClauses.push(`stripe_customer_id = $${values.length}`);
+    }
+    if (updates.subscriptionStatus !== undefined) {
+        values.push(updates.subscriptionStatus);
+        setClauses.push(`subscription_status = $${values.length}`);
+    }
+    if (updates.stripePriceId !== undefined) {
+        values.push(updates.stripePriceId);
+        setClauses.push(`stripe_price_id = $${values.length}`);
+    }
+    if (updates.usageLimit !== undefined) {
+        values.push(updates.usageLimit);
+        // Use jsonb_set to update a nested value in the JSONB column
+        setClauses.push(`usage = jsonb_set(usage, '{limit}', $${values.length}::jsonb)`);
+    }
+
+    if (setClauses.length === 0) {
+        return findUserById(userId);
+    }
+    
+    const query = `UPDATE users SET ${setClauses.join(', ')} WHERE id = $1 RETURNING *`;
+    const res = await pool.query(query, values);
+    console.log(`Updated user ${userId} subscription. Status: ${res.rows[0]?.subscription_status}, Limit: ${res.rows[0]?.usage.limit}`);
+    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+};
+
+// --- Usage Management ---
+
+export const incrementUserUsage = async (userId: string): Promise<User | null> => {
+    const query = `
+        UPDATE users
+        SET usage = jsonb_set(usage, '{count}', ((usage->>'count')::int + 1)::text::jsonb)
+        WHERE id = $1
+        RETURNING *
+    `;
+    const res = await pool.query(query, [userId]);
+    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+};
+
+export const resetUserUsage = async (userId: string): Promise<void> => {
+    await pool.query("UPDATE users SET usage = jsonb_set(usage, '{count}', '0') WHERE id = $1", [userId]);
+    console.log(`Reset usage for user ${userId}.`);
+};
+
+export const resetAllUsersUsage = async (): Promise<number> => {
+    const res = await pool.query("UPDATE users SET usage = jsonb_set(usage, '{count}', '0')");
+    const count = res.rowCount || 0;
+    console.log(`Reset usage for all ${count} users.`);
+    return count;
+};
+
+// --------------------------
+// AI content profile cache (additive)
+// --------------------------
+
+export const upsertAiContentProfile = async (contentId: string, profileData: any, fingerprint?: any): Promise<void> => {
+  await pool.query(
+    `INSERT INTO ai_content_profiles (content_id, profile_data, fingerprint, updated_at)
+     VALUES ($1, $2, $3, NOW())
+     ON CONFLICT (content_id)
+     DO UPDATE SET profile_data = $2, fingerprint = COALESCE($3, ai_content_profiles.fingerprint), updated_at = NOW()`,
+    [contentId, JSON.stringify(profileData), fingerprint ? JSON.stringify(fingerprint) : null]
+  );
+};
+
+export const getAiContentProfile = async (contentId: string): Promise<{ profile_data: any; fingerprint: any } | null> => {
+  const res = await pool.query('SELECT profile_data, fingerprint FROM ai_content_profiles WHERE content_id = $1', [contentId]);
+  if (!res.rows[0]) return null;
+  return {
+    profile_data: res.rows[0].profile_data,
+    fingerprint: res.rows[0].fingerprint,
+  };
+};
