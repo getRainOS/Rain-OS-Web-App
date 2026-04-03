@@ -51,7 +51,7 @@ export const HybridFuture = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="card-gradient rounded-3xl p-8 hover:border-white/20 transition-all relative overflow-hidden">
             <AlertTriangle className="w-8 h-8 text-rose-400 mb-6" />
             <h3 className="text-2xl font-bold text-white mb-4">The Hybrid Gap</h3>
-            <p className="text-slate-400 leading-relaxed relative z-10">As search shifts to AI answers, traditional traffic is dropping. If LLMs can't parse your content, you won't be cited in the new search landscape.</p>
+            <p className="text-slate-400 leading-relaxed relative z-10">AI-generated sites built on Bolt, Lovable, or Cursor look great — but they're often invisible to AI crawlers. Missing schema, no llms.txt, JS-rendered content: if LLMs can't parse your page, you won't be cited.</p>
           </motion.div>
           
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }} className="card-gradient rounded-3xl p-8 hover:border-rain-400/30 transition-all">
@@ -589,6 +589,46 @@ export const CTA = () => {
             </a>
           </div>
         </motion.div>
+      </div>
+    </section>
+  );
+};
+
+export const VibeCoderBand = ({ onGetStarted }: { onGetStarted?: () => void }) => {
+  const platforms = ['Bolt', 'Lovable', 'Cursor', 'v0', 'Replit', 'Windsurf'];
+  return (
+    <section className="py-16 relative z-10 border-y border-white/[0.06]">
+      <div className="max-w-5xl mx-auto px-6 flex flex-col items-center text-center gap-6">
+        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500">Built for AI-generated sites</p>
+
+        <h2 className="text-2xl md:text-3xl font-semibold text-white leading-tight max-w-2xl" style={{ letterSpacing: '-0.03em' }}>
+          Your AI built the site.{' '}
+          <span className="text-slate-400">Now find out if AI can actually find it.</span>
+        </h2>
+
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          {platforms.map((p) => (
+            <span
+              key={p}
+              className="px-4 py-1.5 rounded-full text-sm font-medium text-slate-300 bg-white/[0.04] border border-white/10 tracking-wide"
+            >
+              {p}
+            </span>
+          ))}
+        </div>
+
+        <p className="text-sm text-slate-500 max-w-lg leading-relaxed">
+          If you shipped with any of these, your site likely has invisible AI readability gaps — missing schema, no llms.txt, JS-rendered pages that AI crawlers can't see.
+        </p>
+
+        {onGetStarted && (
+          <button
+            onClick={onGetStarted}
+            className="px-6 py-2.5 rounded-lg border border-sky-500/30 text-sky-400 text-sm font-semibold hover:border-sky-400/60 hover:text-sky-300 transition-all"
+          >
+            Scan your site free →
+          </button>
+        )}
       </div>
     </section>
   );

@@ -39,10 +39,21 @@ hasDescriptiveAnchors: boolean;
 wordCount: number;
 extractedText: string;
 }
+export interface ScanArtifact {
+  type: 'json-ld' | 'llms-txt' | 'robots-txt' | 'html';
+  filename: string;
+  content: string;
+}
+
+export interface ScanRecommendation {
+  text: string;
+  artifact?: ScanArtifact;
+}
+
 export interface UrlScanResult {
 signals: TechnicalSignals;
 extractedText: string;
-recommendations: string[];
+recommendations: ScanRecommendation[];
 }
 export async function scanUrlForTechnicalSignals(
 html: string,
@@ -153,28 +164,140 @@ signals.extractedText = extractedText;
 
 
 
-// ─── Recommendations ─────────────────────────────────────────────────────────
-const recs: string[] = [];
-if (!signals.hasSchemaMarkup)
-recs.push('Add JSON-LD structured data. Start with Article or FAQPage schema.');
-if (!signals.hasSemanticHtml)
-recs.push('Replace div wrappers with semantic HTML5: article, main, section.');
-if (!signals.hasProperHeadingHierarchy)
-recs.push('Use exactly one h1 per page, then logical h2/h3 subheadings.');
-if (!signals.hasMetaDescription)
-recs.push('Add a meta description (150-160 chars).');
-if (!signals.hasCanonicalTag)
-recs.push('Add a canonical tag to establish the authoritative URL.');
-if (signals.isJsRendered)
-recs.push('CRITICAL: Page requires JavaScript. AI crawlers see an empty page. Implement SSR immediately.');
-if (!signals.hasLlmsTxt)
-recs.push('Create /llms.txt at your domain root to guide AI crawlers.');
-if (signals.missingAltTextRatio > 0.3)
-recs.push(`${Math.round(signals.missingAltTextRatio * 100)}% of images have no
-alt text. Add descriptive alt attributes.`);
-if (!signals.hasDescriptiveAnchors)
-recs.push('Replace generic anchor text ("click here", "read more") with descriptive text.');
-if (!signals.hasOpenGraphTags)
-recs.push('Add Open Graph meta tags (og:title, og:description, og:image).');
+// ─── Recommendations with code artifacts ─────────────────────────────────────
+const recs: ScanRecommendation[] = [];
+const host = parsedUrl.host;
+const origin = `${parsedUrl.protocol}//${host}`;
+
+if (!signals.hasSchemaMarkup) {
+  recs.push({
+    text: 'Add JSON-LD structured data. Start with Article or WebPage schema so AI crawlers can identify your content type.',
+    artifact: {
+      type: 'json-ld',
+      filename: 'schema.json',
+      content: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        'name': 'Page Title',
+        'description': 'A concise description of this page.',
+        'url': pageUrl,
+        'publisher': {
+          '@type': 'Organization',
+          'name': 'Your Brand Name',
+          'url': origin,
+        },
+      }, null, 2) + '\n\n/* Paste inside a <script type="application/ld+json"> tag in your <head> */',
+    },
+  });
+}
+
+if (!signals.hasLlmsTxt) {
+  recs.push({
+    text: `Create /llms.txt at your domain root to guide AI crawlers on how to index your site.`,
+    artifact: {
+      type: 'llms-txt',
+      filename: 'llms.txt',
+      content: `# ${host}
+
+> This file tells AI crawlers how to read and index this site.
+
+## About
+[Brief description of what this site is and who it serves.]
+
+## Content
+- [Link to key page or section]
+- [Link to key page or section]
+
+## Contact
+[Optional: email or contact page URL]
+
+## Usage
+AI systems may read and summarise this site's public content for informational purposes.
+`,
+    },
+  });
+}
+
+if (signals.isJsRendered) {
+  recs.push({
+    text: 'CRITICAL: Page requires JavaScript to render. AI crawlers see an empty page. Add this to allow crawlers while you implement SSR.',
+    artifact: {
+      type: 'robots-txt',
+      filename: 'robots.txt addition',
+      content: `# Allow major AI crawlers (add to your existing robots.txt)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Amazonbot
+Allow: /`,
+    },
+  });
+}
+
+if (!signals.hasOpenGraphTags) {
+  recs.push({
+    text: 'Add Open Graph meta tags so your pages render correctly when shared and are recognized by AI tools.',
+    artifact: {
+      type: 'html',
+      filename: 'og-tags.html',
+      content: `<!-- Paste these into your <head> -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Your Page Title" />
+<meta property="og:description" content="A concise description of this page (150–160 chars)." />
+<meta property="og:image" content="${origin}/og-image.png" />
+<meta property="og:url" content="${pageUrl}" />`,
+    },
+  });
+}
+
+if (!signals.hasMetaDescription) {
+  recs.push({
+    text: 'Add a meta description (150–160 chars). AI tools use this to understand the page purpose.',
+    artifact: {
+      type: 'html',
+      filename: 'meta-description.html',
+      content: `<!-- Paste into your <head> -->
+<meta name="description" content="A clear, concise description of what this page offers. Keep it under 160 characters." />`,
+    },
+  });
+}
+
+if (!signals.hasSemanticHtml) {
+  recs.push({ text: 'Replace generic div wrappers with semantic HTML5 elements: <article>, <main>, <section>, <nav>, <aside>. AI crawlers use these to identify content structure.' });
+}
+
+if (!signals.hasProperHeadingHierarchy) {
+  recs.push({ text: 'Use exactly one <h1> per page, followed by logical <h2> and <h3> subheadings. This is how AI models parse document structure.' });
+}
+
+if (!signals.hasCanonicalTag) {
+  recs.push({
+    text: 'Add a canonical tag to tell search engines and AI crawlers which URL is authoritative.',
+    artifact: {
+      type: 'html',
+      filename: 'canonical.html',
+      content: `<!-- Paste into your <head> -->
+<link rel="canonical" href="${pageUrl}" />`,
+    },
+  });
+}
+
+if (signals.missingAltTextRatio > 0.3) {
+  recs.push({ text: `${Math.round(signals.missingAltTextRatio * 100)}% of images are missing alt text. Add descriptive alt attributes — AI models use these to understand image context.` });
+}
+
+if (!signals.hasDescriptiveAnchors) {
+  recs.push({ text: 'Replace generic anchor text ("click here", "read more") with descriptive link text. AI models use anchor text to understand what the linked page is about.' });
+}
+
 return { signals, extractedText, recommendations: recs };
 }

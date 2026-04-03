@@ -148,6 +148,12 @@ wordCount: number;
 headingLevel?: number;
 index: number;
 }
+export interface RecommendationArtifact {
+  type: 'json-ld' | 'llms-txt' | 'robots-txt' | 'html';
+  filename: string;
+  content: string;
+}
+
 export interface AIRecommendation {
 scope: 'chunk' | 'section' | 'document';
 chunkId?: string;
@@ -157,6 +163,7 @@ severity: 'low' | 'medium' | 'high';
 issue: string;
 recommendation: string;
 expectedImpact: number;
+artifact?: RecommendationArtifact;
 }
 
 export interface NormalizationFingerprint {

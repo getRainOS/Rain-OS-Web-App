@@ -4,6 +4,27 @@ import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
 import styles from './UrlScanner.module.css';
 
+function ArtifactBlock({ artifact }) {
+  const [copied, setCopied] = useState(false);
+  function handleCopy() {
+    navigator.clipboard.writeText(artifact.content).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+  return (
+    <div className={styles.artifact}>
+      <div className={styles.artifactHeader}>
+        <span className={styles.artifactFilename}>{artifact.filename}</span>
+        <button className={styles.artifactCopy} onClick={handleCopy}>
+          {copied ? '✓ Copied' : 'Copy'}
+        </button>
+      </div>
+      <pre className={styles.artifactCode}><code>{artifact.content}</code></pre>
+    </div>
+  );
+}
+
 export default function UrlScanner() {
   const { refreshUser } = useApp();
   const [url, setUrl] = useState('');
@@ -102,12 +123,19 @@ export default function UrlScanner() {
             <div className={`card ${styles.recoCard}`}>
               <h3 className={styles.sectionTitle}>Recommendations</h3>
               <ul className={styles.recoList}>
-                {(result.recommendations ?? result.technical_recommendations).map((r, i) => (
-                  <li key={i} className={styles.recoItem}>
-                    <span className={styles.recoNum}>{i + 1}</span>
-                    <span>{r}</span>
-                  </li>
-                ))}
+                {(result.recommendations ?? result.technical_recommendations).map((r, i) => {
+                  const text = typeof r === 'string' ? r : r.text;
+                  const artifact = typeof r === 'object' ? r.artifact : null;
+                  return (
+                    <li key={i} className={styles.recoItem}>
+                      <div className={styles.recoItemTop}>
+                        <span className={styles.recoNum}>{i + 1}</span>
+                        <span>{text}</span>
+                      </div>
+                      {artifact && <ArtifactBlock artifact={artifact} />}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           )}
