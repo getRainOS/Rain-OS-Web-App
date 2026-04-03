@@ -186,6 +186,7 @@ function AppRoutes({ apiKey, onAuth }) {
                 <LandingPage
                   onAnalyze={(content) => navigate('/login', { state: { pendingContent: content } })}
                   onLoginClick={() => navigate('/login?mode=login')}
+                  onGetStartedClick={() => navigate('/login')}
                 />
               </LandingWrapper>
             }

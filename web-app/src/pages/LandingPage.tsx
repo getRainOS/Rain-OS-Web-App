@@ -11,9 +11,10 @@ import { RainfallBeams } from '@/components/RainfallBeams';
 interface LandingPageProps {
   onAnalyze: (content: string, industry: string) => void;
   onLoginClick: () => void;
+  onGetStartedClick?: () => void;
 }
 
-export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProps) {
+export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick }: LandingPageProps) {
   const [content, setContent] = useState('');
   const [industry, setIndustry] = useState('Technology');
   const [isScrolled, setIsScrolled] = useState(false);
@@ -53,21 +54,19 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
             <a href="https://www.getrainos.com/docs" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Docs</a>
           </nav>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
             <button
               onClick={onLoginClick}
               className="text-sm font-medium text-slate-400 hover:text-white transition-colors hidden sm:block"
             >
               Login
             </button>
-            <a
-              href="https://www.getrainos.com/wordpress-plugin"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={onGetStartedClick || onLoginClick}
               className="bg-sky-500 hover:bg-sky-400 text-white rounded-lg px-5 py-2 text-sm font-semibold shadow-lg shadow-sky-500/20 transition-all hover:scale-105 active:scale-95"
             >
-              Get the Plugin
-            </a>
+              Get started
+            </button>
           </div>
         </div>
       </header>
