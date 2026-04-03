@@ -133,7 +133,7 @@ export const FourPillars = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <span className="text-rain-400 font-bold tracking-wider text-xs uppercase mb-3 block">The Scoring Framework</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Four Pillars. One Score.</h2>
+          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Four Pillars. One Score.</h2>
           <p className="text-slate-400 max-w-2xl mx-auto">Every analysis returns a weighted score across four dimensions — each one a signal that AI models use to decide what content gets cited, recommended, and surfaced.</p>
         </div>
 
@@ -182,7 +182,7 @@ export const FeatureGrid = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <span className="text-rain-400 font-bold tracking-wider text-xs uppercase mb-3 block">Under the Hood</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">What No Other Tool Measures</h2>
+          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">What No Other Tool Measures</h2>
           <p className="text-slate-400 max-w-2xl mx-auto">Beyond the four pillars, rain OS runs a deeper layer of signals that most tools don't even know exist.</p>
         </div>
 
@@ -255,7 +255,7 @@ export const ReadabilityIntelligence = () => {
             <span className="text-rain-400 font-bold tracking-wider text-xs uppercase mb-2 block flex items-center gap-2">
               <Layers className="w-4 h-4" /> Readability Intelligence
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-6 leading-tight">
+            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-6 leading-[1.1]">
               Built for the AI Era, <br/><span className="text-slate-500">Not 2015.</span>
             </h2>
             <p className="text-slate-400 leading-relaxed mb-8">
@@ -403,7 +403,7 @@ export const Testimonials = () => {
   return (
     <section className="py-24 relative z-10 overflow-hidden">
       <div className="text-center mb-16 px-6">
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">The Market is Speaking</h2>
+        <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">The Market is Speaking</h2>
         <p className="text-slate-400">The shift to AI search is already happening.</p>
       </div>
       
@@ -468,7 +468,7 @@ export const Pricing = () => {
     <section id="pricing" className="py-32 relative z-10">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Simple, transparent pricing</h2>
+          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Simple, transparent pricing</h2>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
@@ -558,7 +558,7 @@ export const FAQ = () => {
   return (
     <section className="py-24 relative z-10">
       <div className="max-w-3xl mx-auto px-6">
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Frequently Asked Questions</h2>
+        <h2 className="text-3xl md:text-4xl font-semibold text-white mb-12 text-center">Frequently Asked Questions</h2>
         <div className="space-y-2">
           {faqs.map((faq, i) => <AccordionItem key={i} question={faq.q} answer={faq.a} />)}
         </div>
@@ -575,11 +575,11 @@ export const CTA = () => {
           <div className="absolute top-0 left-1/2 w-[600px] h-[300px] bg-rain-500/20 blur-[100px] -translate-x-1/2 pointer-events-none" />
           
           <div className="relative z-10 flex flex-col items-center">
-            <div className="w-20 h-20 bg-rain-500/10 rounded-2xl border border-rain-500/30 shadow-[0_0_50px_rgba(14,165,233,0.3)] flex items-center justify-center mb-8">
+            <div className="w-20 h-20 bg-rain-500/10 rounded-2xl border border-white/10 flex items-center justify-center mb-8">
               <Sparkles className="w-10 h-10 text-rain-400" />
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-6">
-              Ready to <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-teal-400">grow</span> your reach?
+            <h2 className="text-4xl md:text-5xl font-semibold text-white mb-6 leading-[1.05]">
+              Ready to <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-100 via-sky-200 to-sky-400">grow</span> your reach?
             </h2>
             <p className="text-lg text-slate-400 max-w-2xl mx-auto mb-10">
               Start optimizing for the future of search today. Join thousands of creators ensuring their content survives the AI shift.

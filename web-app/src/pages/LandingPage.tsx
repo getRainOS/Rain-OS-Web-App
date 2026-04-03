@@ -77,17 +77,9 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
         <section className="pt-40 pb-24 md:pt-52 md:pb-40 relative z-10 px-6 overflow-hidden" style={{ paddingTop: '10rem', paddingBottom: '6rem' }}>
           <RainfallBeams />
 
-          {/* Center bloom — bright light source */}
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] pointer-events-none -z-10"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(14,165,233,0.22) 0%, rgba(6,182,212,0.1) 40%, transparent 70%)' }} />
-
-          {/* Left accent orb */}
-          <div className="absolute top-1/4 left-[12%] w-64 h-64 rounded-full pointer-events-none -z-10"
-            style={{ background: 'radial-gradient(circle, rgba(20,184,166,0.18) 0%, transparent 70%)', filter: 'blur(40px)' }} />
-
-          {/* Right accent orb */}
-          <div className="absolute top-1/3 right-[10%] w-48 h-48 rounded-full pointer-events-none -z-10"
-            style={{ background: 'radial-gradient(circle, rgba(56,189,248,0.2) 0%, transparent 70%)', filter: 'blur(30px)' }} />
+          {/* Single center bloom — one clean light source */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] pointer-events-none -z-10"
+            style={{ background: 'radial-gradient(ellipse at center, rgba(14,165,233,0.11) 0%, rgba(14,165,233,0.04) 50%, transparent 75%)' }} />
 
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[150%] h-[500px] bg-arc-glow opacity-60 pointer-events-none -z-10" />
 
@@ -99,20 +91,20 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
               transition={{ duration: 0.8, ease: 'easeOut' }}
               className="text-center space-y-5"
             >
-              {/* Bright accent chip */}
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-sky-400/30 bg-sky-400/10 text-sky-300 text-xs font-bold tracking-widest uppercase shadow-[0_0_20px_rgba(56,189,248,0.2)]">
-                <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
+              {/* Accent chip */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-white/10 bg-white/5 text-slate-400 text-xs font-medium tracking-widest uppercase">
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
                 AI Search Optimization
               </div>
 
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.08] tracking-tight text-white">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.05] text-white"
+                style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
                 Score Your Content's{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-cyan-300 to-teal-300"
-                  style={{ filter: 'drop-shadow(0 0 24px rgba(56,189,248,0.5))' }}>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-100 via-sky-200 to-sky-400">
                   AI Readability
                 </span>
               </h1>
-              <p className="text-slate-300 text-lg md:text-xl font-light tracking-wide max-w-2xl mx-auto">
+              <p className="text-slate-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
                 Find out how ChatGPT, Perplexity, and Gemini read your content — and how likely they are to cite it when someone asks a question you should own.
               </p>
             </motion.div>
@@ -124,10 +116,10 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
               transition={{ duration: 0.6, delay: 0.2 }}
               className="relative w-full max-w-3xl"
             >
-              {/* Glow ring behind card */}
+              {/* Subtle border gradient */}
               <div className="absolute -inset-[1px] rounded-[25px] pointer-events-none"
-                style={{ background: 'linear-gradient(135deg, rgba(56,189,248,0.3), rgba(20,184,166,0.15), rgba(56,189,248,0.1))', filter: 'blur(1px)' }} />
-              <form onSubmit={handleSubmit} className="card-surface p-2 text-left relative group" style={{ boxShadow: '0 0 60px rgba(14,165,233,0.15), 0 20px 50px -12px rgba(0,0,0,0.6)' }}>
+                style={{ background: 'linear-gradient(135deg, rgba(56,189,248,0.12), rgba(255,255,255,0.04), rgba(56,189,248,0.06))', filter: 'blur(0px)' }} />
+              <form onSubmit={handleSubmit} className="card-surface p-2 text-left relative group" style={{ boxShadow: '0 0 40px rgba(14,165,233,0.07), 0 20px 60px -12px rgba(0,0,0,0.7)' }}>
                 <div className="relative">
                   <textarea
                     value={content}
@@ -171,7 +163,7 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
                       type="submit"
                       size="sm"
                       className="bg-sky-500 hover:bg-sky-400 text-white rounded-xl px-6 py-2.5 text-sm font-bold transition-all flex items-center gap-2 group/btn"
-                      style={{ boxShadow: '0 0 24px rgba(14,165,233,0.5), 0 4px 16px rgba(14,165,233,0.3)' }}
+                      style={{ boxShadow: '0 0 16px rgba(14,165,233,0.25), 0 2px 8px rgba(0,0,0,0.4)' }}
                     >
                       Analyze now
                       <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
