@@ -113,7 +113,7 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
                 </span>
               </h1>
               <p className="text-slate-300 text-lg md:text-xl font-light tracking-wide max-w-2xl mx-auto">
-                Find out how ChatGPT, Perplexity, and Gemini read your content — and whether they'll cite it when someone asks a question you should own.
+                Find out how ChatGPT, Perplexity, and Gemini read your content — and how likely they are to cite it when someone asks a question you should own.
               </p>
             </motion.div>
 
