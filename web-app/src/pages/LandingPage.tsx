@@ -87,13 +87,13 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
               className="text-center space-y-4"
             >
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.1] tracking-tight text-slate-200">
-                Check Your Content's{' '}
+                Get Cited by AI.{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-rain-400 via-indigo-300 to-purple-400 italic font-medium">
-                  AI Readability
+                  Not Just Ranked by Google.
                 </span>
               </h1>
               <p className="text-slate-400 text-lg md:text-xl font-light tracking-wide">
-                Optimize for the AI era by analyzing your content's defensibility.
+                See how ChatGPT, Perplexity, and Gemini read your content — and get a clear score with steps to improve.
               </p>
             </motion.div>
 
@@ -166,20 +166,18 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
             >
               <div className="inline-flex items-center rounded-full border border-rain-500/20 bg-rain-500/5 px-4 py-1.5 text-xs font-bold text-rain-400 tracking-[0.2em] uppercase">
                 <span className="flex h-2 w-2 rounded-full bg-rain-400 mr-3 animate-pulse" />
-                Your SEO companion
+                Answer Engine Optimization
               </div>
 
               <h2 className="text-4xl md:text-6xl font-semibold leading-tight tracking-tight text-white max-w-3xl">
-                Make Your Content{' '}
+                Built for the Way{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-rain-400 via-indigo-400 to-purple-400 drop-shadow-lg">
-                  Defensible
+                  People Search Now
                 </span>
               </h2>
 
               <p className="text-lg md:text-xl text-slate-400 leading-relaxed font-light max-w-2xl mx-auto">
-                <strong className="text-white font-semibold">rain OS</strong> helps your content speak clearly to both{' '}
-                <strong className="text-white font-semibold">people and machines</strong>. It focuses on what most optimization tools miss:{' '}
-                <strong className="text-white font-semibold">AI readability</strong>.
+                <strong className="text-white font-semibold">rain OS</strong> scores your content against the signals that AI tools use to choose their answers — so you show up when people ask questions, not just when they type keywords.
               </p>
             </motion.div>
           </div>
