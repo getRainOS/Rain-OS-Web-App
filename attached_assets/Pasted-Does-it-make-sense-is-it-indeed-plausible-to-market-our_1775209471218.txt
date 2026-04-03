@@ -1,0 +1,33 @@
+Does it make sense is it indeed plausible to market our service as a service that helps optimize ai built / vibe coded websites and web applications and if so how would we actually specifically be able to meet that market's need
+
+Mar 2
+Yes it's plausible, and it's actually a sharp positioning move because it targets a problem that is both real and almost entirely unaddressed right now. But the honest answer is that your current product meets about 40% of that market's actual need, and the other 60% would require deliberate feature additions. Let me break down both sides.
+
+Why it's a real and growing market
+
+Vibe-coded sites have a specific, predictable set of AI readiness problems that are different from traditionally built sites. When someone builds a site by prompting an AI — Cursor, Bolt, Lovable, v0, Replit — the output tends to be visually functional but semantically thin. The AI generates clean HTML and working components, but it does not think about schema markup, it does not structure content for answer extraction, it does not add llms.txt, it does not write with AEO alignment in mind, and it absolutely does not think about whether an AI shopping agent will be able to identify the merchant, the product variants, or the pricing clearly. Every single one of those gaps maps directly to signals your engine already scores.
+
+There is also a behavioural pattern in this market that works in your favour. Vibe coders iterate fast. They are comfortable with tooling, they respond well to scores and metrics, they are used to running audits and acting on feedback, and they are not intimidated by technical recommendations. Your write-score-improve loop is psychologically native to how they already work.
+
+What your product already covers for this market
+
+Your Pillar 4 signals are almost perfectly matched to the gaps vibe-coded sites have. Schema completeness, merchant identity clarity, product variant coverage, price and availability clarity, structured content quality — these are exactly what AI-generated sites are missing. Pillar 2's social proof markup signal catches another common gap. The JS dependency flag in Phase 2 is directly relevant because many vibe-coded sites are heavily JavaScript-rendered, which means AI crawlers cannot read them at all. The llms.txt signals catch the fact that almost no vibe-coded site has one.
+
+The Phase 2 instruction determinism signal is relevant too because a lot of vibe-coded SaaS sites have documentation and onboarding copy that is vague and procedurally incomplete — the AI wrote something that sounds right but does not actually tell the user what to do.
+
+Where your product falls short for this market right now
+
+The honest gap is that your tool is built around content paste. A vibe-coded site is not primarily a content problem — it is a structure, schema, and crawlability problem. The person who built the site in Cursor is not going to paste their homepage copy into a text box. They want to drop in a URL and get a full site audit. That means URL fetch mode is not a deferred nice-to-have for this market — it is the primary interaction model. Without it you are asking this audience to use the tool in a way that does not match how they think about their problem.
+
+The second gap is page-level vs site-level. Vibe-coded sites tend to have systemic problems — if the schema is missing on one page it is missing everywhere, if the JS dependency flag is 0 on one page it is probably 0 across the whole site. A single-page analyser helps but what this market really needs is a crawl of multiple pages with aggregated scores and a site-level fix list. That is a meaningfully larger build.
+
+The third gap is the output format. Your recommendations are written for content writers — they say things like "restructure this section" or "add a definition block here." A vibe coder does not want that. They want something they can paste into Cursor or Bolt as a prompt. The recommendation for this market should read: "Add this Schema.org JSON-LD block to your product pages" with the actual code ready to copy, or "Add this to your robots.txt to grant AI crawler access" with the exact text. Actionable for a developer, not a writer.
+
+How you would specifically meet this market's need
+
+The minimum viable pivot has three pieces. First, build URL fetch mode — that is the non-negotiable entry point for this audience. Second, add a code output layer to the recommendation engine — when a recommendation is schema-related, generate the actual JSON-LD. When it is llms.txt-related, generate the file. When it is robots.txt-related, generate the directive. The engine already knows what is missing, it just needs to output fix artifacts not just fix descriptions. Third, rewrite the copy in the recommendations from writer-friendly to developer-friendly — same underlying advice, different framing and format.
+
+The medium-term addition that would make the product genuinely compelling for this market is a site crawl mode — give it a root URL, it crawls N pages, aggregates scores by page type, and gives you a prioritised fix list for the whole site. That is a sprint of real backend work but it is not architectural — it is a loop around your existing single-page analyser.
+
+The positioning line that would land for this market is something like: your AI built the site, now find out if AI can actually find it. That framing is precise, it names the irony that resonates, and it points directly at the problem your engine solves.
+
