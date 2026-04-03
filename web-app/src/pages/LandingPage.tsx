@@ -106,14 +106,14 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
               </div>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.08] tracking-tight text-white">
-                Get Cited by AI.{' '}
+                Score Your Content's{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-cyan-300 to-teal-300"
                   style={{ filter: 'drop-shadow(0 0 24px rgba(56,189,248,0.5))' }}>
-                  Not Just Ranked by Google.
+                  AI Readability
                 </span>
               </h1>
               <p className="text-slate-300 text-lg md:text-xl font-light tracking-wide max-w-2xl mx-auto">
-                See how ChatGPT, Perplexity, and Gemini read your content — and get a clear score with steps to improve.
+                Find out how ChatGPT, Perplexity, and Gemini read your content — and whether they'll cite it when someone asks a question you should own.
               </p>
             </motion.div>
 
