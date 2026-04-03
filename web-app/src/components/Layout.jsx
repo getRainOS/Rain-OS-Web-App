@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useApp } from '../App.jsx';
+import { useApp } from '../context/AppContext.jsx';
 import { api, clearApiKey } from '../api/client.js';
+import { supabase } from '../lib/supabase.js';
 import styles from './Layout.module.css';
-
 
 const PRICE_TO_PLAN = {
   'price_1SeCJH3NMjs4uYdgpi0xB0XN': 'Business',
@@ -33,20 +33,25 @@ export default function Layout({ children }) {
 
   useEffect(() => {
     if (user) {
-      setUsage({ count: user.usage?.count ?? 0, limit: user.usage?.limit ?? 100 });
+      setUsage({ count: user.usage?.count ?? 0, limit: user.usage?.limit ?? 5 });
     }
   }, [user]);
 
   function handleLogout() {
+    supabase.auth.signOut().catch(() => {});
     clearApiKey();
     onLogout();
     navigate('/');
   }
 
+  const remaining = usage ? Math.max(0, usage.limit - usage.count) : null;
   const pct = usage ? Math.round((usage.count / usage.limit) * 100) : 0;
   const tier = (user?.subscriptionStatus === 'active' && user?.stripePriceId)
     ? (PRICE_TO_PLAN[user.stripePriceId] ?? 'Pro')
     : 'Free';
+  const isFree = tier === 'Free';
+  const isNearLimit = isFree && pct >= 60;
+  const isAtLimit = isFree && pct >= 100;
 
   return (
     <div className={styles.root}>
@@ -80,9 +85,16 @@ export default function Layout({ children }) {
           {usage && (
             <div className={styles.usageBox}>
               <div className={styles.usageRow}>
-                <span className={styles.usageLabel}>API Usage</span>
-                <span className={styles.usageCount}>
-                  {Math.max(0, usage.limit - usage.count)} remaining
+                <span className={styles.usageLabel}>
+                  {isFree ? 'Free analyses' : 'API Usage'}
+                </span>
+                <span
+                  className={styles.usageCount}
+                  style={{ color: isAtLimit ? 'var(--red)' : isNearLimit ? 'var(--yellow)' : undefined }}
+                >
+                  {isFree
+                    ? `${remaining} remaining`
+                    : `${Math.max(0, usage.limit - usage.count)} remaining`}
                 </span>
               </div>
               <div className={styles.usageTrack}>
@@ -90,10 +102,18 @@ export default function Layout({ children }) {
                   className={styles.usageFill}
                   style={{
                     width: `${Math.min(pct, 100)}%`,
-                    background: pct > 80 ? 'var(--red)' : pct > 60 ? 'var(--yellow)' : 'var(--accent)',
+                    background: isAtLimit ? 'var(--red)' : isNearLimit ? 'var(--yellow)' : 'var(--accent)',
                   }}
                 />
               </div>
+              {isAtLimit && (
+                <button
+                  className={styles.limitCta}
+                  onClick={() => navigate('/upgrade')}
+                >
+                  Upgrade to continue →
+                </button>
+              )}
             </div>
           )}
 
@@ -108,7 +128,7 @@ export default function Layout({ children }) {
           )}
 
           <div className={styles.sidebarActions}>
-            {!isDemo && (
+            {!isDemo && isFree && (
               <NavLink to="/upgrade" className={styles.upgradeBtn}>
                 ↑ Upgrade
               </NavLink>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { api } from '../api/client.js';
-import { useApp } from '../App.jsx';
+import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
 import styles from './UrlScanner.module.css';
 

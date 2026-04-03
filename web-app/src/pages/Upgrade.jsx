@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useApp } from '../App.jsx';
+import { useApp } from '../context/AppContext.jsx';
 import { api } from '../api/client.js';
 import styles from './Upgrade.module.css';
 
@@ -193,11 +193,11 @@ export default function Upgrade() {
       )}
 
       <p className={styles.note}>
-        All plans billed monthly. Cancel anytime.{' '}
+        All plans billed monthly. Cancel anytime. Subscribed users can manage billing directly from the
+        "Manage Billing" button above or from{' '}
         <a href="https://www.getrainos.com" target="_blank" rel="noopener noreferrer" className={styles.link}>
-          Visit getrainos.com
-        </a>{' '}
-        to manage your subscription.
+          getrainos.com
+        </a>.
       </p>
     </div>
   );

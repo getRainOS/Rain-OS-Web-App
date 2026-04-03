@@ -1,7 +1,9 @@
-import { useState, useEffect, createContext, useContext, lazy, Suspense } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { HashRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
-import { getApiKey, api, isDemo as checkDemo } from './api/client.js';
-import AuthGate from './pages/AuthGate.jsx';
+import { getApiKey, setApiKey, clearApiKey, api } from './api/client.js';
+import { supabase } from './lib/supabase.js';
+import { AppContext } from './context/AppContext.jsx';
+import AuthModal from './components/AuthModal.jsx';
 import Layout from './components/Layout.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import ContentAnalyzer from './pages/ContentAnalyzer.jsx';
@@ -12,16 +14,56 @@ import Settings from './pages/Settings.jsx';
 
 const LandingPage = lazy(() => import('./pages/LandingPage.tsx'));
 
-export const AppContext = createContext(null);
+const BASE_API = 'https://api.getrainos.com';
 
-export function useApp() {
-  return useContext(AppContext);
+async function syncWithBackend(accessToken) {
+  const res = await fetch(`${BASE_API}/api/auth/sync`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
+    },
+  });
+  if (!res.ok) throw new Error('Account sync failed');
+  return res.json();
 }
 
 export default function App() {
   const [apiKey, setApiKeyState] = useState(getApiKey);
   const [user, setUser] = useState(null);
+  const [authChecked, setAuthChecked] = useState(false);
   const isDemo = apiKey === '__demo__';
+
+  useEffect(() => {
+    async function initAuth() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session && !getApiKey()) {
+        try {
+          const userData = await syncWithBackend(session.access_token);
+          setApiKey(userData.apiKey);
+          setApiKeyState(userData.apiKey);
+          setUser(userData);
+        } catch (_) {}
+      } else if (getApiKey() && getApiKey() !== '__demo__') {
+        try {
+          const { data } = await api.me();
+          setUser(data);
+        } catch (_) {}
+      }
+      setAuthChecked(true);
+    }
+    initAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_OUT') {
+        clearApiKey();
+        setApiKeyState('');
+        setUser(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   function onAuth(key, userData) {
     setApiKeyState(key);
@@ -29,15 +71,25 @@ export default function App() {
   }
 
   function onLogout() {
+    supabase.auth.signOut().catch(() => {});
+    clearApiKey();
     setApiKeyState('');
     setUser(null);
   }
 
   function refreshUser() {
-    if (checkDemo()) return;
+    if (isDemo) return;
     api.me()
       .then(({ data }) => setUser(data))
       .catch(() => {});
+  }
+
+  if (!authChecked) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#020410' }}>
+        <div className="spinner" />
+      </div>
+    );
   }
 
   return (
@@ -49,26 +101,62 @@ export default function App() {
   );
 }
 
-function AuthGateRoute({ onAuth }) {
+function AuthCallbackRoute({ onAuth }) {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function handleCallback() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        try {
+          const userData = await syncWithBackend(session.access_token);
+          setApiKey(userData.apiKey);
+          onAuth(userData.apiKey, userData);
+          navigate('/dashboard', { replace: true });
+        } catch {
+          navigate('/login', { replace: true });
+        }
+      } else {
+        navigate('/login', { replace: true });
+      }
+    }
+    handleCallback();
+  }, []);
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#020410' }}>
+      <div className="spinner" />
+    </div>
+  );
+}
+
+function AuthModalRoute({ onAuth }) {
   const navigate = useNavigate();
   const location = useLocation();
   const pending = location.state || {};
+  const params = new URLSearchParams(location.search);
+  const initialMode = params.get('mode') === 'login' ? 'login' : 'signup';
 
   return (
-    <AuthGate
-      onAuth={(key, userData) => {
-        onAuth(key, userData);
-        if (pending.pendingContent) {
-          navigate('/analyze', {
-            replace: true,
-            state: { pendingContent: pending.pendingContent },
-          });
-        } else {
-          navigate('/dashboard', { replace: true });
-        }
-      }}
-      onBack={() => navigate('/')}
-    />
+    <LandingWrapper>
+      <LandingPage
+        onAnalyze={() => {}}
+        onLoginClick={() => {}}
+      />
+      <AuthModal
+        onAuth={(key, userData) => {
+          onAuth(key, userData);
+          if (pending.pendingContent) {
+            navigate('/analyze', { replace: true, state: { pendingContent: pending.pendingContent } });
+          } else {
+            navigate('/dashboard', { replace: true });
+          }
+        }}
+        onBack={() => navigate('/')}
+        initialMode={initialMode}
+        pendingContent={pending.pendingContent}
+      />
+    </LandingWrapper>
   );
 }
 
@@ -89,15 +177,13 @@ function AppRoutes({ apiKey, onAuth }) {
               <LandingWrapper>
                 <LandingPage
                   onAnalyze={(content) => navigate('/login', { state: { pendingContent: content } })}
-                  onLoginClick={() => navigate('/login')}
+                  onLoginClick={() => navigate('/login?mode=login')}
                 />
               </LandingWrapper>
             }
           />
-          <Route
-            path="/login"
-            element={<AuthGateRoute onAuth={onAuth} />}
-          />
+          <Route path="/login" element={<AuthModalRoute onAuth={onAuth} />} />
+          <Route path="/auth/callback" element={<AuthCallbackRoute onAuth={onAuth} />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
@@ -109,6 +195,7 @@ function AppRoutes({ apiKey, onAuth }) {
       <Routes>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/login" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/auth/callback" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/analyze" element={<ContentAnalyzer />} />
         <Route path="/url-scanner" element={<UrlScanner />} />

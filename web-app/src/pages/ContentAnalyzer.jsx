@@ -1,13 +1,14 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../api/client.js';
-import { useApp } from '../App.jsx';
+import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
 import QuickTools from '../components/QuickTools.jsx';
 import styles from './ContentAnalyzer.module.css';
 
 export default function ContentAnalyzer() {
-  const { refreshUser } = useApp();
+  const { refreshUser, user, isDemo } = useApp();
+  const navigate = useNavigate();
   const location = useLocation();
   const prefill = location.state || {};
   const [title, setTitle] = useState('');
@@ -16,6 +17,10 @@ export default function ContentAnalyzer() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
+
+  const usageCount = user?.usage?.count ?? 0;
+  const usageLimit = user?.usage?.limit ?? 5;
+  const isAtLimit = !isDemo && user && usageCount >= usageLimit && user.subscriptionStatus !== 'active';
 
   async function handleAnalyze(e) {
     e.preventDefault();
@@ -45,6 +50,19 @@ export default function ContentAnalyzer() {
         <h1 className={styles.title}>Content Analyzer</h1>
         <p className={styles.sub}>Paste your content below to get a full AEO analysis across four pillars</p>
       </div>
+
+      {isAtLimit && (
+        <div className={styles.upgradeGate}>
+          <span className={styles.upgradeGateIcon}>⚡</span>
+          <p className={styles.upgradeGateText}>
+            You've used all {usageLimit} free analyses.
+          </p>
+          <p className={styles.upgradeGateSub}>Upgrade your plan to continue analyzing content.</p>
+          <button className="btn btn-primary" onClick={() => navigate('/upgrade')}>
+            View Plans →
+          </button>
+        </div>
+      )}
 
       {!result ? (
         <form onSubmit={handleAnalyze} className={styles.form}>
@@ -89,7 +107,7 @@ export default function ContentAnalyzer() {
             <button
               type="submit"
               className="btn btn-primary"
-              disabled={loading || (!content.trim() && !url.trim())}
+              disabled={loading || isAtLimit || (!content.trim() && !url.trim())}
             >
               {loading ? <><span className="spinner" /> Analyzing…</> : '✦ Analyze Content'}
             </button>

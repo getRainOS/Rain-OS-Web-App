@@ -223,6 +223,27 @@
   color: var(--text);
 }
 
+.limitCta {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 7px;
+  border-radius: var(--radius-sm);
+  background: rgba(239,68,68,0.12);
+  color: #f87171;
+  font-size: 11.5px;
+  font-weight: 600;
+  border: 1px solid rgba(239,68,68,0.25);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+  text-align: center;
+}
+
+.limitCta:hover {
+  background: rgba(239,68,68,0.2);
+}
+
 .main {
   flex: 1;
   overflow-y: auto;
