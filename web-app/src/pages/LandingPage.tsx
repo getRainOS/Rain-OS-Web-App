@@ -44,9 +44,6 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
               <span className="font-bold text-3xl tracking-tighter text-white transition-all">
                 r<span className="text-sky-400">ai</span>n
               </span>
-              <div className="ml-2 px-2.5 py-1 rounded-lg border border-white/10 bg-white/5 flex items-center justify-center">
-                <span className="text-[10px] font-bold tracking-wider text-sky-400 uppercase">BETA</span>
-              </div>
             </a>
           </div>
 
@@ -210,9 +207,6 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
             <span className="font-bold text-3xl tracking-tighter text-white">
               r<span className="text-sky-400">ai</span>n
             </span>
-            <div className="ml-2 px-2.5 py-1 rounded-lg border border-white/10 bg-white/5 flex items-center justify-center">
-              <span className="text-[10px] font-bold tracking-wider text-sky-400 uppercase">BETA</span>
-            </div>
           </div>
 
           <div className="flex items-center justify-center gap-6 text-sm text-slate-400">
