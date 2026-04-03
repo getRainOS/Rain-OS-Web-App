@@ -119,18 +119,18 @@ export const ThreePillars = () => {
           <motion.div 
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }}
             whileHover={{ y: -10, scale: 1.02 }}
-            className="group bg-surface/30 backdrop-blur-xl border border-white/10 rounded-[32px] p-8 transition-all duration-500 hover:shadow-[0_0_60px_rgba(168,85,247,0.25)] hover:border-purple-400/50 relative overflow-hidden"
+            className="group bg-surface/30 backdrop-blur-xl border border-white/10 rounded-[32px] p-8 transition-all duration-500 hover:shadow-[0_0_60px_rgba(20,184,166,0.2)] hover:border-teal-400/50 relative overflow-hidden"
           >
-            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="w-12 h-12 rounded-2xl bg-purple-500/20 flex items-center justify-center mb-6">
-              <MousePointerClick className="w-6 h-6 text-purple-400" />
+            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-teal-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="w-12 h-12 rounded-2xl bg-teal-500/20 flex items-center justify-center mb-6">
+              <MousePointerClick className="w-6 h-6 text-teal-400" />
             </div>
-            <h3 className="text-2xl font-bold text-purple-400 mb-4">Answer & Act</h3>
+            <h3 className="text-2xl font-bold text-teal-400 mb-4">Answer & Act</h3>
             <p className="text-slate-400 mb-8 leading-relaxed">Structuring content to provide direct answers and facilitate action.</p>
             <ul className="space-y-3">
               {['Schema Extraction', 'QA-Format Detection'].map((item, i) => (
                 <li key={i} className="flex items-center text-sm text-slate-300">
-                  <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mr-3" /> {item}
+                  <span className="w-1.5 h-1.5 rounded-full bg-teal-500 mr-3" /> {item}
                 </li>
               ))}
             </ul>
@@ -171,8 +171,8 @@ export const FeatureGrid = () => {
           </motion.div>
 
           {/* Card 3 */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-purple-500/30 transition-all duration-300">
-            <SearchCheck className="w-8 h-8 text-purple-400 mb-6" />
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-cyan-500/30 transition-all duration-300">
+            <SearchCheck className="w-8 h-8 text-cyan-400 mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">AEO Alignment</h3>
             <p className="text-slate-400 text-sm">Score your content on 'quotability' for Answer Engine Optimization. Ensure you provide direct answers to complex queries.</p>
           </motion.div>
@@ -192,8 +192,8 @@ export const FeatureGrid = () => {
           </motion.div>
 
           {/* Card 6 */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.5 }} className="md:col-span-2 bg-gradient-to-br from-indigo-500/[0.05] to-surface/50 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-indigo-500/30 transition-all duration-300">
-            <Sparkles className="w-8 h-8 text-indigo-400 mb-6" />
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.5 }} className="md:col-span-2 bg-gradient-to-br from-cyan-500/[0.05] to-surface/50 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-cyan-500/30 transition-all duration-300">
+            <Sparkles className="w-8 h-8 text-cyan-400 mb-6" />
             <h3 className="text-2xl font-bold text-white mb-4">Generative Optimization</h3>
             <p className="text-slate-400 max-w-md">Fix it instantly. Use our built-in AI to rewrite complex sentences into machine-readable facts without losing your brand voice.</p>
           </motion.div>
@@ -270,20 +270,20 @@ export const ReadabilityIntelligence = () => {
               <div className="text-xs font-bold text-white mt-2 text-center">SEO</div>
             </div>
 
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-surface border border-white/10 rounded-2xl p-4 shadow-[0_0_30px_rgba(168,85,247,0.2)]">
-              <BrainCircuit className="w-6 h-6 text-purple-400" />
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-surface border border-white/10 rounded-2xl p-4 shadow-[0_0_30px_rgba(20,184,166,0.2)]">
+              <BrainCircuit className="w-6 h-6 text-teal-400" />
               <div className="text-xs font-bold text-white mt-2 text-center">AEO</div>
             </div>
 
             <div className="absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
               <div className="text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Feeds</div>
-              <div className="w-px h-16 bg-gradient-to-b from-rain-400 to-purple-400 relative">
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 border-b-2 border-r-2 border-purple-400 transform rotate-45" />
+              <div className="w-px h-16 bg-gradient-to-b from-rain-400 to-teal-400 relative">
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 border-b-2 border-r-2 border-teal-400 transform rotate-45" />
               </div>
             </div>
 
             <div className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-              <div className="w-px h-16 bg-gradient-to-t from-purple-400 to-rain-400 relative mb-2">
+              <div className="w-px h-16 bg-gradient-to-t from-teal-400 to-rain-400 relative mb-2">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 border-t-2 border-l-2 border-rain-400 transform rotate-45" />
               </div>
               <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Strengthens</div>
@@ -355,7 +355,7 @@ export const Testimonials = () => {
   const quotes = [
     { src: 'Gartner Research', icon: TrendingDown, color: 'text-orange-400', text: "By 2026, traditional search engine volume will drop by 25%..." },
     { src: 'Search Engine Land', icon: Search, color: 'text-rain-400', text: "SEO is evolving into GEO (Generative Engine Optimization)..." },
-    { src: 'Bing Webmaster Team', icon: Quote, color: 'text-purple-400', text: "We want to see the same thing that users see..." },
+    { src: 'Bing Webmaster Team', icon: Quote, color: 'text-teal-400', text: "We want to see the same thing that users see..." },
     { src: 'Marketing AI Institute', icon: Quote, color: 'text-emerald-400', text: "The future isn't just links. It's answers..." },
     { src: 'Google DeepMind', icon: BarChart, color: 'text-blue-400', text: "LLMs favor content that reduces token complexity..." },
     { src: 'Neil Patel', icon: Search, color: 'text-rose-400', text: "Optimizing for the answer engine is about becoming the definitive source of truth..." },
@@ -537,7 +537,7 @@ export const CTA = () => {
               <Sparkles className="w-10 h-10 text-rain-400" />
             </div>
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-6">
-              Ready to <span className="text-transparent bg-clip-text bg-gradient-to-r from-rain-400 to-purple-400">rocket</span> your growth?
+              Ready to <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-teal-400">grow</span> your reach?
             </h2>
             <p className="text-lg text-slate-400 max-w-2xl mx-auto mb-10">
               Start optimizing for the future of search today. Join thousands of creators ensuring their content survives the AI shift.

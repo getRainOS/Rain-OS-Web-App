@@ -88,7 +88,7 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
             >
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.1] tracking-tight text-slate-200">
                 Get Cited by AI.{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-rain-400 via-indigo-300 to-purple-400 italic font-medium">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-cyan-400 to-teal-400 italic font-medium">
                   Not Just Ranked by Google.
                 </span>
               </h1>
@@ -171,7 +171,7 @@ export default function LandingPage({ onAnalyze, onLoginClick }: LandingPageProp
 
               <h2 className="text-4xl md:text-6xl font-semibold leading-tight tracking-tight text-white max-w-3xl">
                 Built for the Way{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-rain-400 via-indigo-400 to-purple-400 drop-shadow-lg">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-cyan-400 to-teal-400 drop-shadow-lg">
                   People Search Now
                 </span>
               </h2>

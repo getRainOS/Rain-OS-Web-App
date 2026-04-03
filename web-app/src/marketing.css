@@ -7,8 +7,8 @@
   --color-rain-500: #0ea5e9;
   --color-rain-900: #0c4a6e;
 
-  --color-midnight: #020410;
-  --color-surface: #0a0f1e;
+  --color-midnight: #030b18;
+  --color-surface: #0a1728;
   --color-border: rgba(255, 255, 255, 0.08);
 
   --color-primary: #0ea5e9;
@@ -22,7 +22,7 @@
 
 @layer utilities {
   .card-surface {
-    background: rgba(26, 27, 30, 0.7);
+    background: rgba(5, 18, 40, 0.75);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow:
@@ -32,7 +32,7 @@
   }
 
   .glass-nav {
-    background: rgba(2, 4, 16, 0.6);
+    background: rgba(3, 11, 24, 0.65);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -43,7 +43,7 @@
   }
 
   .bg-arc-glow {
-    background: radial-gradient(ellipse at center, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
+    background: radial-gradient(ellipse at center, rgba(20, 184, 166, 0.18) 0%, rgba(14, 165, 233, 0.08) 50%, transparent 70%);
   }
 
   .btn-pill {
@@ -57,7 +57,7 @@
   }
 
   .card-gradient {
-    background: linear-gradient(135deg, rgba(10, 15, 30, 0.8) 0%, rgba(4, 7, 20, 0.8) 100%);
+    background: linear-gradient(135deg, rgba(8, 22, 46, 0.8) 0%, rgba(3, 11, 26, 0.8) 100%);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
