@@ -31,7 +31,7 @@ export default async function handler(req: express.Request, res: express.Respons
     }
 
     // Create a cryptographically random nonce — never exposes the API key in URLs
-    const state = createOAuthState(user.id);
+    const state = await createOAuthState(user.id);
 
     const params = new URLSearchParams({
       client_id: clientId,
