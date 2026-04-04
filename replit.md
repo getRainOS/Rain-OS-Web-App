@@ -64,7 +64,7 @@ Three independent analysis tools accessible from the sidebar:
 - **Auth**: `Authorization: Bearer {key}`
 - **Usage**: `x-usage-info` response header; `/api/users/me` returns `usage.count`, `usage.limit`, `subscriptionStatus`, `stripePriceId`, `email`
 - **Quick tool actions**: `suggest_titles`, `generate_description`, `summarize_content`, `rewrite_sentence`
-- **GitHub OAuth endpoints**: `GET /api/github/oauth`, `GET /api/github/oauth/callback`
+- **GitHub OAuth endpoints**: `POST /api/github/oauth/init` (init, returns `{ url }` for redirect), `GET /api/github/oauth/callback` (OAuth callback, redirects to `/#/repo-analysis`)
 - **Repo Analysis endpoints**: `GET /api/github/repos`, `POST /api/github/analyze`, `DELETE /api/github/disconnect`
 - **GitHub env vars needed**: `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` (Railway env), callback URL: `https://api.getrainos.com/api/github/oauth/callback`
 

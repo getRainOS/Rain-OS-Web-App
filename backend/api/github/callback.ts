@@ -100,7 +100,7 @@ export default async function handler(req: express.Request, res: express.Respons
     // Save GitHub auth to the user record (token is encrypted inside saveGithubAuth)
     await saveGithubAuth(user.id, githubId, githubLogin, accessToken);
 
-    res.redirect(`${APP_URL}/#/settings?github=connected&login=${encodeURIComponent(githubLogin)}`);
+    res.redirect(`${APP_URL}/#/repo-analysis?github=connected&login=${encodeURIComponent(githubLogin)}`);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     console.error('GitHub OAuth callback error:', message);

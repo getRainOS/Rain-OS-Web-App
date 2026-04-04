@@ -29,6 +29,7 @@ export default function RepoAnalysis() {
   const [analyzing, setAnalyzing] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
+  const [connectSuccess, setConnectSuccess] = useState('');
 
   useEffect(() => {
     if (isDemo) { setReposLoading(false); return; }
@@ -40,6 +41,18 @@ export default function RepoAnalysis() {
       .catch(() => setConnected(false))
       .finally(() => setReposLoading(false));
   }, [isDemo]);
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash.includes('github=connected')) return;
+    const params = new URLSearchParams(hash.split('?')[1] || '');
+    const login = params.get('login');
+    setConnectSuccess(login ? `GitHub connected as @${login}` : 'GitHub connected successfully');
+    // Clean the URL without reloading
+    window.history.replaceState(null, '', window.location.pathname + window.location.search + '#/repo-analysis');
+    const t = setTimeout(() => setConnectSuccess(''), 6000);
+    return () => clearTimeout(t);
+  }, []);
 
   async function handleAnalyze(e) {
     e.preventDefault();
@@ -92,6 +105,12 @@ export default function RepoAnalysis() {
           Analyze your GitHub repository's source code for AI readability and AEO performance
         </p>
       </div>
+
+      {connectSuccess && (
+        <div className={styles.connectSuccessBanner}>
+          <span>✓</span> {connectSuccess}
+        </div>
+      )}
 
       {!connected && !isDemo && (
         <div className={styles.connectCard}>
