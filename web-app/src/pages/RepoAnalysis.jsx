@@ -240,16 +240,16 @@ export default function RepoAnalysis() {
                 { label: 'robots.txt', pass: result.signals.hasRobotsTxt },
                 { label: 'AI crawlers allowed', pass: result.signals.robotsTxtAllowsAiCrawlers },
                 { label: 'index.html title', pass: result.signals.indexHtmlHasTitle },
-                { label: 'Meta description', pass: result.signals.indexHtmlHasMetaDescription },
-                { label: 'Open Graph tags', pass: result.signals.indexHtmlHasOpenGraph },
-                { label: 'JSON-LD schema', pass: result.signals.indexHtmlHasSchemaMarkup },
+                { label: 'Meta description (any)', pass: result.signals.hasMetaDescription },
+                { label: 'Open Graph tags (any)', pass: result.signals.hasOpenGraph },
+                { label: 'JSON-LD schema (any)', pass: result.signals.hasSchemaMarkup },
+                { label: 'Canonical URL in template', pass: result.signals.templateHasCanonical },
                 { label: 'LICENSE file', pass: result.signals.hasLicense },
                 { label: 'package.json description', pass: !!result.signals.packageDescription },
                 { label: 'package.json keywords', pass: result.signals.packageHasKeywords },
                 { label: 'OpenAPI spec', pass: result.signals.hasOpenApiSpec },
                 { label: 'App entry file (src/App)', pass: result.signals.hasSrcAppFile },
-                { label: 'Layout component', pass: result.signals.hasSrcLayoutFile },
-                { label: 'Custom _document', pass: result.signals.hasSrcDocumentFile },
+                { label: 'Layout / _document template', pass: result.signals.hasSrcLayoutFile || result.signals.hasSrcDocumentFile },
               ].map((s, i) => (
                 <div key={i} className={styles.signal}>
                   <span

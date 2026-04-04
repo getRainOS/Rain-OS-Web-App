@@ -3,39 +3,54 @@
 // the 4 AEO pillars: AI Readability, Digital Authority,
 // Conversion Readiness, Product Discoverability.
 
-export type DetectedFramework = 'Next.js' | 'Nuxt' | 'SvelteKit' | 'Remix' | 'Astro' | 'React (SPA)' | 'Vue (SPA)' | 'Angular' | 'Svelte' | 'Unknown';
+export type DetectedFramework =
+  | 'Next.js' | 'Nuxt' | 'SvelteKit' | 'Remix' | 'Astro'
+  | 'React (SPA)' | 'Vue (SPA)' | 'Angular' | 'Svelte' | 'Unknown';
 
 export interface RepoSignals {
+  // README
   hasReadme: boolean;
   readmeWordCount: number;
   readmeHasHeadings: boolean;
   readmeHasCta: boolean;
+  hasDemoSection: boolean;
+  hasInstallInstructions: boolean;
+  // AI crawlability
   hasLlmsTxt: boolean;
   hasRobotsTxt: boolean;
   robotsTxtAllowsAiCrawlers: boolean;
+  // Package
   hasPackageJson: boolean;
   packageName: string | null;
   packageDescription: string | null;
   packageHasKeywords: boolean;
+  // index.html signals
   hasIndexHtml: boolean;
+  indexHtmlHasTitle: boolean;
   indexHtmlHasMetaDescription: boolean;
   indexHtmlHasOpenGraph: boolean;
   indexHtmlHasSchemaMarkup: boolean;
-  indexHtmlHasTitle: boolean;
+  // Template / layout file signals (App.tsx, layout.tsx, _document.tsx, etc.)
+  hasSrcAppFile: boolean;
+  hasSrcLayoutFile: boolean;
+  hasSrcDocumentFile: boolean;
+  templateHasMetaDescription: boolean;
+  templateHasOpenGraph: boolean;
+  templateHasSchemaMarkup: boolean;
+  templateHasCanonical: boolean;
+  // Computed composites (index.html OR template)
+  hasMetaDescription: boolean;
+  hasOpenGraph: boolean;
+  hasSchemaMarkup: boolean;
+  // Authority
   hasLicense: boolean;
   hasContributing: boolean;
   hasChangelog: boolean;
   hasOpenApiSpec: boolean;
-  hasDemoSection: boolean;
-  hasInstallInstructions: boolean;
   // Framework detection
   detectedFramework: DetectedFramework;
   hasSSR: boolean;
   jsRenderingRisk: 'low' | 'medium' | 'high';
-  // Source file signals
-  hasSrcAppFile: boolean;
-  hasSrcLayoutFile: boolean;
-  hasSrcDocumentFile: boolean;
 }
 
 export interface RepoRecommendation {
@@ -67,6 +82,8 @@ export interface RepoAnalysisResult {
   recommendations: RepoRecommendation[];
 }
 
+// ─── GitHub API helpers ────────────────────────────────────────────────────
+
 const GH_API = 'https://api.github.com';
 
 async function ghFetch(path: string, token: string): Promise<any> {
@@ -88,19 +105,117 @@ async function fetchFileContent(owner: string, repo: string, path: string, token
   return Buffer.from(data.content.replace(/\n/g, ''), 'base64').toString('utf-8');
 }
 
-async function fileExists(owner: string, repo: string, path: string, token: string): Promise<boolean> {
-  const data = await ghFetch(`/repos/${owner}/${repo}/contents/${path}`, token);
-  return data !== null && !Array.isArray(data);
+/**
+ * Try each path in order; return the first non-null content found.
+ * Fixes the `promiseA || promiseB` anti-pattern: a Promise is always truthy,
+ * so right-hand fallbacks in `||` chains are never executed.
+ */
+async function fetchFirstContent(
+  owner: string, repo: string, paths: string[], token: string
+): Promise<string | null> {
+  for (const path of paths) {
+    try {
+      const content = await fetchFileContent(owner, repo, path, token);
+      if (content !== null) return content;
+    } catch {}
+  }
+  return null;
 }
+
+/**
+ * Return true if any of the given paths exists in the repo.
+ */
+async function anyExists(
+  owner: string, repo: string, paths: string[], token: string
+): Promise<boolean> {
+  for (const path of paths) {
+    try {
+      const data = await ghFetch(`/repos/${owner}/${repo}/contents/${path}`, token);
+      if (data !== null && !Array.isArray(data)) return true;
+    } catch {}
+  }
+  return false;
+}
+
+// ─── Framework detection ───────────────────────────────────────────────────
+
+function detectFramework(pkg: any): { framework: DetectedFramework; hasSSR: boolean; jsRenderingRisk: 'low' | 'medium' | 'high' } {
+  if (!pkg) return { framework: 'Unknown', hasSSR: false, jsRenderingRisk: 'medium' };
+
+  const deps = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
+  const scripts = pkg.scripts || {};
+  const scriptText = Object.values(scripts).join(' ').toLowerCase();
+
+  // SSR / hybrid frameworks — low JS-rendering risk
+  if (deps['next']) return { framework: 'Next.js', hasSSR: true, jsRenderingRisk: 'low' };
+  if (deps['nuxt'] || deps['nuxt3']) return { framework: 'Nuxt', hasSSR: true, jsRenderingRisk: 'low' };
+  if (deps['@sveltejs/kit']) return { framework: 'SvelteKit', hasSSR: true, jsRenderingRisk: 'low' };
+  if (deps['@remix-run/react'] || deps['@remix-run/node']) return { framework: 'Remix', hasSSR: true, jsRenderingRisk: 'low' };
+  if (deps['astro']) return { framework: 'Astro', hasSSR: true, jsRenderingRisk: 'low' };
+
+  // SPA frameworks without SSR — high JS-rendering risk unless scripts hint at SSR
+  if (deps['react'] || deps['react-dom']) {
+    const hasServerEntry = scriptText.includes('server') || scriptText.includes('ssr');
+    return { framework: 'React (SPA)', hasSSR: hasServerEntry, jsRenderingRisk: hasServerEntry ? 'medium' : 'high' };
+  }
+  if (deps['vue']) {
+    const hasServerEntry = scriptText.includes('server') || scriptText.includes('ssr');
+    return { framework: 'Vue (SPA)', hasSSR: hasServerEntry, jsRenderingRisk: hasServerEntry ? 'medium' : 'high' };
+  }
+  if (deps['@angular/core']) {
+    return { framework: 'Angular', hasSSR: !!deps['@angular/ssr'], jsRenderingRisk: deps['@angular/ssr'] ? 'low' : 'high' };
+  }
+  if (deps['svelte']) return { framework: 'Svelte', hasSSR: false, jsRenderingRisk: 'high' };
+
+  return { framework: 'Unknown', hasSSR: false, jsRenderingRisk: 'medium' };
+}
+
+// ─── Template content analysis ─────────────────────────────────────────────
+
+/** Parse JSX/TSX/HTML template content for common HTML meta patterns. */
+function parseTemplateSignals(content: string): {
+  hasMetaDescription: boolean;
+  hasOpenGraph: boolean;
+  hasSchemaMarkup: boolean;
+  hasCanonical: boolean;
+} {
+  const lower = content.toLowerCase();
+  return {
+    // meta name="description" or <Meta name="description" (Next.js Head)
+    hasMetaDescription:
+      lower.includes('name="description"') ||
+      lower.includes("name='description'") ||
+      lower.includes('name={`description`}') ||
+      /name=\{['"` ]?description/.test(lower),
+    // og: property
+    hasOpenGraph:
+      lower.includes('property="og:') ||
+      lower.includes("property='og:") ||
+      lower.includes('property={`og:'),
+    // JSON-LD / application/ld+json
+    hasSchemaMarkup:
+      lower.includes('application/ld+json') ||
+      lower.includes('jsonld') ||
+      lower.includes('json-ld'),
+    // canonical link
+    hasCanonical:
+      lower.includes('rel="canonical"') ||
+      lower.includes("rel='canonical'") ||
+      /rel=\{['"` ]?canonical/.test(lower),
+  };
+}
+
+// ─── Scoring functions ─────────────────────────────────────────────────────
 
 function scoreAiReadability(signals: RepoSignals): number {
   let score = 40;
-  if (signals.hasReadme) score += 12;
-  if (signals.readmeHasHeadings) score += 10;
-  if (signals.readmeWordCount > 200) score += 8;
-  if (signals.readmeWordCount > 500) score += 5;
+  if (signals.hasReadme) score += 10;
+  if (signals.readmeHasHeadings) score += 8;
+  if (signals.readmeWordCount > 200) score += 6;
+  if (signals.readmeWordCount > 500) score += 4;
   if (signals.hasLlmsTxt) score += 15;
-  if (signals.indexHtmlHasSchemaMarkup) score += 10;
+  if (signals.hasSchemaMarkup) score += 12;
+  if (signals.templateHasCanonical) score += 5;
   return Math.min(100, score);
 }
 
@@ -109,34 +224,39 @@ function scoreDigitalAuthority(signals: RepoSignals): number {
   if (signals.hasLicense) score += 12;
   if (signals.hasContributing) score += 8;
   if (signals.hasChangelog) score += 8;
-  if (signals.hasOpenApiSpec) score += 12;
-  if (signals.indexHtmlHasOpenGraph) score += 10;
-  if (signals.hasReadme && signals.readmeWordCount > 300) score += 10;
-  if (signals.packageHasKeywords) score += 10;
+  if (signals.hasOpenApiSpec) score += 10;
+  if (signals.hasOpenGraph) score += 10;
+  if (signals.hasReadme && signals.readmeWordCount > 300) score += 8;
+  if (signals.packageHasKeywords) score += 8;
+  if (signals.templateHasCanonical) score += 6;
   return Math.min(100, score);
 }
 
 function scoreConversionReadiness(signals: RepoSignals): number {
   let score = 35;
-  if (signals.readmeHasCta) score += 15;
-  if (signals.hasInstallInstructions) score += 15;
-  if (signals.hasDemoSection) score += 15;
-  if (signals.indexHtmlHasMetaDescription) score += 10;
-  if (signals.indexHtmlHasTitle) score += 10;
+  if (signals.readmeHasCta) score += 14;
+  if (signals.hasInstallInstructions) score += 14;
+  if (signals.hasDemoSection) score += 12;
+  if (signals.hasMetaDescription) score += 12;
+  if (signals.indexHtmlHasTitle) score += 8;
+  if (signals.hasSrcDocumentFile) score += 5;
   return Math.min(100, score);
 }
 
 function scoreProductDiscoverability(signals: RepoSignals): number {
   let score = 25;
-  if (signals.hasPackageJson) score += 8;
+  if (signals.hasPackageJson) score += 7;
   if (signals.packageDescription) score += 10;
   if (signals.packageHasKeywords) score += 10;
-  if (signals.hasRobotsTxt) score += 8;
+  if (signals.hasRobotsTxt) score += 7;
   if (signals.robotsTxtAllowsAiCrawlers) score += 10;
-  if (signals.hasLlmsTxt) score += 15;
-  if (signals.indexHtmlHasSchemaMarkup) score += 14;
+  if (signals.hasLlmsTxt) score += 14;
+  if (signals.hasSchemaMarkup) score += 12;
+  if (signals.hasOpenGraph) score += 5;
   return Math.min(100, score);
 }
+
+// ─── Recommendations ───────────────────────────────────────────────────────
 
 function buildRecommendations(signals: RepoSignals, owner: string, repo: string): RepoRecommendation[] {
   const recs: RepoRecommendation[] = [];
@@ -167,9 +287,9 @@ function buildRecommendations(signals: RepoSignals, owner: string, repo: string)
     });
   }
 
-  if (!signals.indexHtmlHasSchemaMarkup) {
+  if (!signals.hasSchemaMarkup) {
     recs.push({
-      issue: 'No JSON-LD schema markup in index.html',
+      issue: 'No JSON-LD schema markup found in index.html or layout files',
       recommendation: 'Add structured data so AI engines can understand your product identity.',
       severity: 'high',
       artifact: {
@@ -188,10 +308,10 @@ function buildRecommendations(signals: RepoSignals, owner: string, repo: string)
     });
   }
 
-  if (!signals.indexHtmlHasMetaDescription) {
+  if (!signals.hasMetaDescription) {
     recs.push({
-      issue: 'index.html missing meta description',
-      recommendation: 'Add a meta description (150–160 chars) to your index.html.',
+      issue: 'Meta description missing from index.html and layout templates',
+      recommendation: 'Add a meta description (150–160 chars) to your HTML entry point or Next.js/Nuxt layout.',
       severity: 'high',
       artifact: {
         type: 'html',
@@ -201,9 +321,9 @@ function buildRecommendations(signals: RepoSignals, owner: string, repo: string)
     });
   }
 
-  if (!signals.indexHtmlHasOpenGraph) {
+  if (!signals.hasOpenGraph) {
     recs.push({
-      issue: 'Open Graph tags missing from index.html',
+      issue: 'Open Graph tags missing from index.html and layout templates',
       recommendation: 'Add og:title, og:description, og:image so AI engines see rich metadata.',
       severity: 'medium',
       artifact: {
@@ -259,110 +379,157 @@ function buildRecommendations(signals: RepoSignals, owner: string, repo: string)
     });
   }
 
+  if (!signals.templateHasCanonical && signals.hasSSR) {
+    recs.push({
+      issue: 'No canonical URL tag found in layout templates',
+      recommendation: 'Add a canonical link to prevent duplicate content penalties and help AI crawlers identify the authoritative URL.',
+      severity: 'low',
+      artifact: {
+        type: 'html',
+        filename: 'canonical.html',
+        content: `<link rel="canonical" href="https://your-domain.com/" />`,
+      },
+    });
+  }
+
   return recs;
 }
 
-function detectFramework(pkg: any): { framework: DetectedFramework; hasSSR: boolean; jsRenderingRisk: 'low' | 'medium' | 'high' } {
-  if (!pkg) return { framework: 'Unknown', hasSSR: false, jsRenderingRisk: 'medium' };
-
-  const deps = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
-  const scripts = pkg.scripts || {};
-  const scriptText = Object.values(scripts).join(' ').toLowerCase();
-
-  if (deps['next']) return { framework: 'Next.js', hasSSR: true, jsRenderingRisk: 'low' };
-  if (deps['nuxt'] || deps['nuxt3']) return { framework: 'Nuxt', hasSSR: true, jsRenderingRisk: 'low' };
-  if (deps['@sveltejs/kit']) return { framework: 'SvelteKit', hasSSR: true, jsRenderingRisk: 'low' };
-  if (deps['@remix-run/react'] || deps['@remix-run/node']) return { framework: 'Remix', hasSSR: true, jsRenderingRisk: 'low' };
-  if (deps['astro']) return { framework: 'Astro', hasSSR: true, jsRenderingRisk: 'low' };
-
-  // SPA frameworks without SSR
-  if (deps['react'] || deps['react-dom']) {
-    // Check for SSR indicators
-    const hasServerEntry = scriptText.includes('server') || scriptText.includes('ssr');
-    return { framework: 'React (SPA)', hasSSR: hasServerEntry, jsRenderingRisk: hasServerEntry ? 'medium' : 'high' };
-  }
-  if (deps['vue']) {
-    const hasServerEntry = scriptText.includes('server') || scriptText.includes('ssr');
-    return { framework: 'Vue (SPA)', hasSSR: hasServerEntry, jsRenderingRisk: hasServerEntry ? 'medium' : 'high' };
-  }
-  if (deps['@angular/core']) return { framework: 'Angular', hasSSR: !!deps['@angular/ssr'], jsRenderingRisk: deps['@angular/ssr'] ? 'low' : 'high' };
-  if (deps['svelte']) return { framework: 'Svelte', hasSSR: false, jsRenderingRisk: 'high' };
-
-  return { framework: 'Unknown', hasSSR: false, jsRenderingRisk: 'medium' };
-}
+// ─── Main export ───────────────────────────────────────────────────────────
 
 export async function analyzeRepo(owner: string, repo: string, token: string): Promise<RepoAnalysisResult> {
-  const [repoData, readme, llmsTxt, robotsTxt, packageJson, indexHtml, licenseExists, contributingExists, changelogExists, openApiExists, srcAppExists, srcLayoutExists, srcDocumentExists] = await Promise.all([
+  // ── Fetch all source files in parallel using sequential fallbacks ─────────
+  const [
+    repoData,
+    readme,
+    llmsTxt,
+    robotsTxt,
+    packageJsonRaw,
+    indexHtml,
+    licenseExists,
+    contributingExists,
+    changelogExists,
+    openApiExists,
+    appFileContent,
+    layoutFileContent,
+    documentFileContent,
+  ] = await Promise.all([
     ghFetch(`/repos/${owner}/${repo}`, token),
-    fetchFileContent(owner, repo, 'README.md', token).catch(() => null),
+
+    // README — try .md then no extension
+    fetchFirstContent(owner, repo, ['README.md', 'readme.md', 'Readme.md', 'README'], token),
+
+    // llms.txt — root only
     fetchFileContent(owner, repo, 'llms.txt', token).catch(() => null),
-    fetchFileContent(owner, repo, 'public/robots.txt', token).catch(() => null) ||
-      fetchFileContent(owner, repo, 'robots.txt', token).catch(() => null),
+
+    // robots.txt — public/ first, then root
+    fetchFirstContent(owner, repo, ['public/robots.txt', 'robots.txt', 'static/robots.txt'], token),
+
+    // package.json
     fetchFileContent(owner, repo, 'package.json', token).catch(() => null),
-    fetchFileContent(owner, repo, 'index.html', token).catch(() =>
-      fetchFileContent(owner, repo, 'public/index.html', token).catch(() => null)
-    ),
-    fileExists(owner, repo, 'LICENSE', token).catch(() => false) ||
-      fileExists(owner, repo, 'LICENSE.md', token).catch(() => false),
-    fileExists(owner, repo, 'CONTRIBUTING.md', token).catch(() => false),
-    fileExists(owner, repo, 'CHANGELOG.md', token).catch(() =>
-      fileExists(owner, repo, 'CHANGELOG', token).catch(() => false)
-    ),
-    fileExists(owner, repo, 'openapi.yaml', token).catch(() => false) ||
-      fileExists(owner, repo, 'openapi.json', token).catch(() => false) ||
-      fileExists(owner, repo, 'swagger.yaml', token).catch(() => false),
-    // Source file probes for template / layout / document variants
-    fileExists(owner, repo, 'src/App.tsx', token).catch(() => false) ||
-      fileExists(owner, repo, 'src/App.jsx', token).catch(() => false) ||
-      fileExists(owner, repo, 'src/app.tsx', token).catch(() => false),
-    fileExists(owner, repo, 'src/components/Layout.tsx', token).catch(() => false) ||
-      fileExists(owner, repo, 'src/layouts/default.vue', token).catch(() => false) ||
-      fileExists(owner, repo, 'src/layouts/Layout.astro', token).catch(() => false) ||
-      fileExists(owner, repo, 'app/layout.tsx', token).catch(() => false),
-    fileExists(owner, repo, 'pages/_document.tsx', token).catch(() => false) ||
-      fileExists(owner, repo, 'pages/_document.js', token).catch(() => false) ||
-      fileExists(owner, repo, 'app/_document.tsx', token).catch(() => false),
+
+    // index.html — root then public/
+    fetchFirstContent(owner, repo, ['index.html', 'public/index.html', 'src/index.html'], token),
+
+    // LICENSE — try multiple common filenames
+    anyExists(owner, repo, ['LICENSE', 'LICENSE.md', 'LICENSE.txt', 'license', 'LICENCE'], token),
+
+    // CONTRIBUTING
+    anyExists(owner, repo, ['CONTRIBUTING.md', 'CONTRIBUTING', '.github/CONTRIBUTING.md'], token),
+
+    // CHANGELOG
+    anyExists(owner, repo, ['CHANGELOG.md', 'CHANGELOG', 'CHANGES.md', 'HISTORY.md'], token),
+
+    // OpenAPI spec
+    anyExists(owner, repo, ['openapi.yaml', 'openapi.json', 'swagger.yaml', 'swagger.json', 'api/openapi.yaml'], token),
+
+    // App entry file — fetch content for template analysis
+    fetchFirstContent(owner, repo, [
+      'src/App.tsx', 'src/App.jsx', 'src/app.tsx', 'src/app.jsx',
+      'app/page.tsx', 'app/page.jsx',  // Next.js App Router root page
+    ], token),
+
+    // Layout / _document — fetch content for template analysis
+    fetchFirstContent(owner, repo, [
+      'app/layout.tsx', 'app/layout.jsx',         // Next.js App Router layout
+      'pages/_document.tsx', 'pages/_document.js', // Next.js Pages Router _document
+      'src/layouts/default.vue',                   // Nuxt
+      'src/layouts/Layout.astro',                  // Astro
+      'src/components/Layout.tsx', 'src/components/Layout.jsx',
+      'src/Layout.tsx', 'src/Layout.jsx',
+    ], token),
+
+    // pages/_document specifically (Next.js)
+    fetchFirstContent(owner, repo, ['pages/_document.tsx', 'pages/_document.js', 'pages/_document.jsx'], token),
   ]);
 
-  // Parse signals
+  // ── Parse package.json ────────────────────────────────────────────────────
   let pkg: any = null;
-  try { if (packageJson) pkg = JSON.parse(packageJson); } catch {}
+  try { if (packageJsonRaw) pkg = JSON.parse(packageJsonRaw); } catch {}
 
-  const readmeLower = (readme || '').toLowerCase();
+  // ── Parse template signals from fetched content ───────────────────────────
+  const appSignals = appFileContent ? parseTemplateSignals(appFileContent) : null;
+  const layoutSignals = layoutFileContent ? parseTemplateSignals(layoutFileContent) : null;
+  const docSignals = documentFileContent ? parseTemplateSignals(documentFileContent) : null;
+
+  const templateHasMetaDescription = !!(appSignals?.hasMetaDescription || layoutSignals?.hasMetaDescription || docSignals?.hasMetaDescription);
+  const templateHasOpenGraph = !!(appSignals?.hasOpenGraph || layoutSignals?.hasOpenGraph || docSignals?.hasOpenGraph);
+  const templateHasSchemaMarkup = !!(appSignals?.hasSchemaMarkup || layoutSignals?.hasSchemaMarkup || docSignals?.hasSchemaMarkup);
+  const templateHasCanonical = !!(appSignals?.hasCanonical || layoutSignals?.hasCanonical || docSignals?.hasCanonical);
+
+  // ── Parse index.html signals ──────────────────────────────────────────────
   const indexLower = (indexHtml || '').toLowerCase();
+  const indexHtmlHasMetaDescription = indexLower.includes('name="description"');
+  const indexHtmlHasOpenGraph = indexLower.includes('property="og:');
+  const indexHtmlHasSchemaMarkup = indexLower.includes('application/ld+json');
+  const indexHtmlHasTitle = indexLower.includes('<title');
+
+  // ── Framework detection ───────────────────────────────────────────────────
   const { framework, hasSSR, jsRenderingRisk } = detectFramework(pkg);
 
+  // ── Build signals object ──────────────────────────────────────────────────
   const signals: RepoSignals = {
     hasReadme: !!readme,
     readmeWordCount: readme ? readme.split(/\s+/).length : 0,
     readmeHasHeadings: (readme || '').includes('#'),
     readmeHasCta: /\[.*(get started|demo|try|install|launch|sign up|start|download).*\]/i.test(readme || ''),
+    hasDemoSection: /demo|screenshot|preview|live/i.test(readme || ''),
+    hasInstallInstructions: /npm install|yarn add|pip install|cargo add|go get|brew install|apt install/i.test(readme || ''),
     hasLlmsTxt: !!llmsTxt,
     hasRobotsTxt: !!robotsTxt,
-    robotsTxtAllowsAiCrawlers: (robotsTxt || '').toLowerCase().includes('gptbot') || (robotsTxt || '').toLowerCase().includes('claudebot'),
+    robotsTxtAllowsAiCrawlers:
+      (robotsTxt || '').toLowerCase().includes('gptbot') ||
+      (robotsTxt || '').toLowerCase().includes('claudebot'),
     hasPackageJson: !!pkg,
     packageName: pkg?.name || null,
     packageDescription: pkg?.description || null,
     packageHasKeywords: Array.isArray(pkg?.keywords) && pkg.keywords.length > 0,
     hasIndexHtml: !!indexHtml,
-    indexHtmlHasMetaDescription: indexLower.includes('name="description"'),
-    indexHtmlHasOpenGraph: indexLower.includes('property="og:'),
-    indexHtmlHasSchemaMarkup: indexLower.includes('application/ld+json'),
-    indexHtmlHasTitle: indexLower.includes('<title'),
-    hasLicense: !!licenseExists,
-    hasContributing: !!contributingExists,
-    hasChangelog: !!changelogExists,
-    hasOpenApiSpec: !!openApiExists,
-    hasDemoSection: /demo|screenshot|preview|live/i.test(readme || ''),
-    hasInstallInstructions: /npm install|yarn add|pip install|cargo add|go get|brew install|apt install/i.test(readme || ''),
+    indexHtmlHasTitle,
+    indexHtmlHasMetaDescription,
+    indexHtmlHasOpenGraph,
+    indexHtmlHasSchemaMarkup,
+    hasSrcAppFile: !!appFileContent,
+    hasSrcLayoutFile: !!layoutFileContent,
+    hasSrcDocumentFile: !!documentFileContent,
+    templateHasMetaDescription,
+    templateHasOpenGraph,
+    templateHasSchemaMarkup,
+    templateHasCanonical,
+    // Composites — true if found in EITHER index.html OR template files
+    hasMetaDescription: indexHtmlHasMetaDescription || templateHasMetaDescription,
+    hasOpenGraph: indexHtmlHasOpenGraph || templateHasOpenGraph,
+    hasSchemaMarkup: indexHtmlHasSchemaMarkup || templateHasSchemaMarkup,
+    hasLicense: licenseExists,
+    hasContributing: contributingExists,
+    hasChangelog: changelogExists,
+    hasOpenApiSpec: openApiExists,
     detectedFramework: framework,
     hasSSR,
     jsRenderingRisk,
-    hasSrcAppFile: !!srcAppExists,
-    hasSrcLayoutFile: !!srcLayoutExists,
-    hasSrcDocumentFile: !!srcDocumentExists,
   };
 
+  // ── Score pillars ─────────────────────────────────────────────────────────
   const pillarScores = {
     aiReadability: scoreAiReadability(signals),
     digitalAuthority: scoreDigitalAuthority(signals),
