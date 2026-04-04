@@ -37,10 +37,22 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS github_login TEXT;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS encrypted_github_token TEXT;
 `;
 
+// Durable OAuth state store — shared across all instances, TTL enforced via expires_at.
+const createOAuthStatesQuery = `
+CREATE TABLE IF NOT EXISTS oauth_states (
+  nonce TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  expires_at TIMESTAMPTZ NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_oauth_states_expires_at ON oauth_states(expires_at);
+`;
+
 export const setupDatabase = async () => {
   try {
     await pool.query(createTableQuery);
     await pool.query(addGithubColumnsQuery);
+    await pool.query(createOAuthStatesQuery);
     console.log('Database table "users" is ready.');
   } catch (error) {
     console.error('Error setting up database table:', error);

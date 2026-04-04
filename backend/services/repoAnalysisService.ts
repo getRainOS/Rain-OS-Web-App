@@ -82,11 +82,27 @@ export interface RepoAnalysisResult {
   recommendations: RepoRecommendation[];
 }
 
+// ─── Types for third-party payloads ───────────────────────────────────────
+
+interface PackageJson {
+  name?: string;
+  description?: string;
+  keywords?: string[];
+  dependencies?: Record<string, string>;
+  devDependencies?: Record<string, string>;
+  scripts?: Record<string, string>;
+}
+
+interface GitHubContentsItem {
+  encoding: string;
+  content: string;
+}
+
 // ─── GitHub API helpers ────────────────────────────────────────────────────
 
 const GH_API = 'https://api.github.com';
 
-async function ghFetch(path: string, token: string): Promise<any> {
+async function ghFetch<T>(path: string, token: string): Promise<T | null> {
   const res = await fetch(`${GH_API}${path}`, {
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -96,11 +112,17 @@ async function ghFetch(path: string, token: string): Promise<any> {
     signal: AbortSignal.timeout(8000),
   });
   if (!res.ok) return null;
-  return res.json();
+  return res.json() as Promise<T>;
+}
+
+interface RepoMetadata {
+  default_branch: string;
+  description: string | null;
+  stargazers_count: number;
 }
 
 async function fetchFileContent(owner: string, repo: string, path: string, token: string): Promise<string | null> {
-  const data = await ghFetch(`/repos/${owner}/${repo}/contents/${path}`, token);
+  const data = await ghFetch<GitHubContentsItem>(`/repos/${owner}/${repo}/contents/${path}`, token);
   if (!data || data.encoding !== 'base64' || !data.content) return null;
   return Buffer.from(data.content.replace(/\n/g, ''), 'base64').toString('utf-8');
 }
@@ -130,7 +152,7 @@ async function anyExists(
 ): Promise<boolean> {
   for (const path of paths) {
     try {
-      const data = await ghFetch(`/repos/${owner}/${repo}/contents/${path}`, token);
+      const data = await ghFetch<GitHubContentsItem | GitHubContentsItem[]>(`/repos/${owner}/${repo}/contents/${path}`, token);
       if (data !== null && !Array.isArray(data)) return true;
     } catch {}
   }
@@ -139,12 +161,11 @@ async function anyExists(
 
 // ─── Framework detection ───────────────────────────────────────────────────
 
-function detectFramework(pkg: any): { framework: DetectedFramework; hasSSR: boolean; jsRenderingRisk: 'low' | 'medium' | 'high' } {
+function detectFramework(pkg: PackageJson | null): { framework: DetectedFramework; hasSSR: boolean; jsRenderingRisk: 'low' | 'medium' | 'high' } {
   if (!pkg) return { framework: 'Unknown', hasSSR: false, jsRenderingRisk: 'medium' };
 
-  const deps = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
-  const scripts = pkg.scripts || {};
-  const scriptText = Object.values(scripts).join(' ').toLowerCase();
+  const deps: Record<string, string> = { ...(pkg.dependencies ?? {}), ...(pkg.devDependencies ?? {}) };
+  const scriptText = Object.values(pkg.scripts ?? {}).join(' ').toLowerCase();
 
   // SSR / hybrid frameworks — low JS-rendering risk
   if (deps['next']) return { framework: 'Next.js', hasSSR: true, jsRenderingRisk: 'low' };
@@ -414,7 +435,7 @@ export async function analyzeRepo(owner: string, repo: string, token: string): P
     layoutFileContent,
     documentFileContent,
   ] = await Promise.all([
-    ghFetch(`/repos/${owner}/${repo}`, token),
+    ghFetch<RepoMetadata>(`/repos/${owner}/${repo}`, token),
 
     // README — try .md then no extension
     fetchFirstContent(owner, repo, ['README.md', 'readme.md', 'Readme.md', 'README'], token),
@@ -464,8 +485,8 @@ export async function analyzeRepo(owner: string, repo: string, token: string): P
   ]);
 
   // ── Parse package.json ────────────────────────────────────────────────────
-  let pkg: any = null;
-  try { if (packageJsonRaw) pkg = JSON.parse(packageJsonRaw); } catch {}
+  let pkg: PackageJson | null = null;
+  try { if (packageJsonRaw) pkg = JSON.parse(packageJsonRaw) as PackageJson; } catch {}
 
   // ── Parse template signals from fetched content ───────────────────────────
   const appSignals = appFileContent ? parseTemplateSignals(appFileContent) : null;

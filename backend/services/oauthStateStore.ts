@@ -1,36 +1,31 @@
 // services/oauthStateStore.ts
-// In-memory nonce store for OAuth state verification.
-// Maps nonce → { userId, expiresAt } with 10-minute TTL.
-// No DB required — state is ephemeral and only valid for one OAuth flow.
+// DB-backed OAuth nonce store — deployment-safe across multiple instances.
+// Uses the `oauth_states` table (created by dbSetup.ts) with a 10-minute TTL.
+// Nonces are consumed on first use (one-time semantics) to prevent replay.
 
 import { randomBytes } from 'crypto';
+import { pool } from './db';
 
-interface StateEntry {
-  userId: string;
-  expiresAt: number;
-}
+const TTL_MINUTES = 10;
 
-const store = new Map<string, StateEntry>();
-const TTL_MS = 10 * 60 * 1000; // 10 minutes
-
-function cleanUp() {
-  const now = Date.now();
-  for (const [nonce, entry] of store) {
-    if (entry.expiresAt < now) store.delete(nonce);
-  }
-}
-
-export function createOAuthState(userId: string): string {
-  cleanUp();
-  const nonce = randomBytes(24).toString('hex');
-  store.set(nonce, { userId, expiresAt: Date.now() + TTL_MS });
+export async function createOAuthState(userId: string): Promise<string> {
+  const nonce = randomBytes(32).toString('hex');
+  await pool.query(
+    `INSERT INTO oauth_states (nonce, user_id, expires_at)
+     VALUES ($1, $2, NOW() + INTERVAL '${TTL_MINUTES} minutes')`,
+    [nonce, userId]
+  );
+  // Best-effort cleanup of expired rows — does not block the OAuth flow
+  pool.query(`DELETE FROM oauth_states WHERE expires_at < NOW()`).catch(() => undefined);
   return nonce;
 }
 
-export function consumeOAuthState(nonce: string): string | null {
-  cleanUp();
-  const entry = store.get(nonce);
-  if (!entry || entry.expiresAt < Date.now()) return null;
-  store.delete(nonce);
-  return entry.userId;
+export async function consumeOAuthState(nonce: string): Promise<string | null> {
+  const result = await pool.query<{ user_id: string }>(
+    `DELETE FROM oauth_states
+     WHERE nonce = $1 AND expires_at > NOW()
+     RETURNING user_id`,
+    [nonce]
+  );
+  return result.rows[0]?.user_id ?? null;
 }

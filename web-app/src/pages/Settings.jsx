@@ -61,7 +61,7 @@ export default function Settings() {
   async function handleConnectGithub() {
     if (isDemo) return;
     try {
-      const { data } = await api.github.initOAuth();
+      const { data } = await api.github.connect();
       if (data?.url) {
         window.location.href = data.url;
       } else {

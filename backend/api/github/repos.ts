@@ -7,6 +7,20 @@ import { findUserByApiKey, getUserGithubToken, disconnectGithub } from '../../se
 import { analyzeRepo } from '../../services/repoAnalysisService';
 import type { ApiError } from '../../types';
 
+// Minimal shape of a GitHub /user/repos entry we care about
+interface GitHubRepo {
+  id: number;
+  name: string;
+  full_name: string;
+  description: string | null;
+  html_url: string;
+  homepage: string | null;
+  stargazers_count: number;
+  private: boolean;
+  language: string | null;
+  updated_at: string;
+}
+
 function getApiKey(req: express.Request): string | null {
   const h = req.headers.authorization;
   if (!h) return null;
@@ -56,7 +70,7 @@ export async function listReposHandler(req: express.Request, res: express.Respon
       return res.status(200).json({ connected: false, repos: [], reason: 'github_token_invalid' });
     }
 
-    const repos = await response.json() as any[];
+    const repos = await response.json() as GitHubRepo[];
     const simplified = repos.map(r => ({
       id: r.id,
       name: r.name,
@@ -75,8 +89,9 @@ export async function listReposHandler(req: express.Request, res: express.Respon
       githubLogin: user.githubLogin,
       repos: simplified,
     });
-  } catch (err) {
-    console.error('GitHub repo list error:', err);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Upstream error';
+    console.error('GitHub repo list error:', message);
     return res.status(502).json({ error: 'upstream_error', message: 'Failed to fetch GitHub repos' });
   }
 }
@@ -116,9 +131,10 @@ export async function analyzeRepoHandler(req: express.Request, res: express.Resp
   try {
     const result = await analyzeRepo(owner, repo, token);
     return res.status(200).json(result);
-  } catch (err: any) {
-    console.error('Repo analysis error:', err);
-    if (err?.message?.includes('404') || err?.message?.includes('Not Found')) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Analysis failed';
+    console.error('Repo analysis error:', message);
+    if (message.includes('404') || message.includes('Not Found')) {
       return res.status(404).json({ error: 'not_found', message: 'Repository not found or not accessible with your GitHub permissions.' });
     }
     return res.status(500).json({ error: 'analysis_failed', message: 'Repo analysis failed. Please try again.' });
@@ -133,8 +149,9 @@ export async function disconnectGithubHandler(req: express.Request, res: express
   try {
     await disconnectGithub(user.id);
     return res.status(200).json({ success: true });
-  } catch (err) {
-    console.error('GitHub disconnect error:', err);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Failed to disconnect';
+    console.error('GitHub disconnect error:', message);
     return res.status(500).json({ error: 'internal_server_error', message: 'Failed to disconnect GitHub' });
   }
 }
