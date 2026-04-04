@@ -6,7 +6,7 @@ import {
   HybridFuture, FourPillars, FeatureGrid, ReadabilityIntelligence,
   ComparisonTable, Testimonials, Pricing, FAQ, CTA, VibeCoderBand
 } from '@/components/marketing/MarketingComponents';
-import { RainfallBeams } from '@/components/RainfallBeams';
+
 
 interface LandingPageProps {
   onAnalyze: (content: string, industry: string) => void;
@@ -76,8 +76,6 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="pt-40 pb-24 md:pt-52 md:pb-40 relative z-10 px-6 overflow-hidden" style={{ paddingTop: '10rem', paddingBottom: '6rem' }}>
-          <RainfallBeams />
-
           {/* Center bloom — bright focused halo behind textarea */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] pointer-events-none -z-10"
             style={{ background: 'radial-gradient(ellipse at center, rgba(14,165,233,0.32) 0%, rgba(14,165,233,0.14) 35%, rgba(14,165,233,0.04) 60%, transparent 80%)' }} />
