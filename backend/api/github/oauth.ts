@@ -33,9 +33,10 @@ export default async function handler(req: express.Request, res: express.Respons
     // Create a cryptographically random nonce — never exposes the API key in URLs
     const state = await createOAuthState(user.id);
 
+    const apiBase = process.env.API_BASE_URL || 'https://api.getrainos.com';
     const params = new URLSearchParams({
       client_id: clientId,
-      redirect_uri: `https://api.getrainos.com/api/github/oauth/callback`,
+      redirect_uri: `${apiBase}/api/github/oauth/callback`,
       scope: 'repo read:user',
       state,
     });

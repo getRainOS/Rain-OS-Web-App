@@ -66,7 +66,10 @@ export async function listReposHandler(req: express.Request, res: express.Respon
     });
 
     if (!response.ok) {
-      // Token may have expired or been revoked
+      // Token expired or revoked — clear stale linkage so UI doesn't show phantom connection
+      if (response.status === 401) {
+        await disconnectGithub(user.id).catch(() => undefined);
+      }
       return res.status(200).json({ connected: false, repos: [], reason: 'github_token_invalid' });
     }
 

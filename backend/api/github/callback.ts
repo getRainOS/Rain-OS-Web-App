@@ -22,7 +22,8 @@ interface GitHubUserProfile {
 }
 
 const APP_URL = process.env.APP_URL || 'https://getrainos.com';
-const CALLBACK_URL = 'https://api.getrainos.com/api/github/oauth/callback';
+const API_BASE = process.env.API_BASE_URL || 'https://api.getrainos.com';
+const CALLBACK_URL = `${API_BASE}/api/github/oauth/callback`;
 
 export default async function handler(req: express.Request, res: express.Response) {
   const { code, state, error } = req.query;
