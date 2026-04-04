@@ -53,16 +53,31 @@ API client (`src/api/client.js`):
 #### 3. Chrome Extension (planned)
 Future third client for the Rain OS platform.
 
+### Analysis Modes (Web App)
+Three independent analysis tools accessible from the sidebar:
+1. **Content Analyzer** (`/analyze`) — Paste text → full 4-pillar AI analysis via Gemini
+2. **URL Scanner** (`/url-scanner`) — Fetch a URL → static HTML signals + Gemini scoring; shows yellow JS-rendering warning banner when site requires JS, with CTA to Repo Analysis
+3. **Repo Analysis** (`/repo-analysis`) — GitHub OAuth → source file analysis (README, package.json, index.html, llms.txt, robots.txt, etc.) → 4-pillar scores + ArtifactBlock recommendations
+
 ### API
 - **Base URL**: `https://api.getrainos.com`
 - **Auth**: `Authorization: Bearer {key}`
 - **Usage**: `x-usage-info` response header; `/api/users/me` returns `usage.count`, `usage.limit`, `subscriptionStatus`, `stripePriceId`, `email`
 - **Quick tool actions**: `suggest_titles`, `generate_description`, `summarize_content`, `rewrite_sentence`
+- **GitHub OAuth endpoints**: `GET /api/github/oauth`, `GET /api/github/oauth/callback`
+- **Repo Analysis endpoints**: `GET /api/github/repos`, `POST /api/github/analyze`, `DELETE /api/github/disconnect`
+- **GitHub env vars needed**: `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` (Railway env), callback URL: `https://api.getrainos.com/api/github/oauth/callback`
 
 ### Stripe Price IDs
 - Free: `price_1SeCHg3NMjs4uYdguOgkr3SQ`
 - Pro: `price_1SeCKM3NMjs4uYdgcBRhgIhD`
 - Business: `price_1SeCJH3NMjs4uYdgpi0xB0XN`
+
+### Database Schema (users table)
+Standard columns + additive GitHub columns (added via ALTER TABLE IF NOT EXISTS on startup):
+- `github_id TEXT UNIQUE` — GitHub user numeric ID
+- `github_login TEXT` — GitHub username (@handle)
+- `encrypted_github_token TEXT` — AES-256-CBC encrypted OAuth access token
 
 ### UI/UX Decisions
 - **Design Language**: Dark theme — bg `#020410`, surface `#040714`, accent `#0EA5E9`, font Inter
