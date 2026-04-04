@@ -63,6 +63,7 @@ export async function listReposHandler(req: express.Request, res: express.Respon
       fullName: r.full_name,
       description: r.description,
       url: r.html_url,
+      homepage: r.homepage || null,
       stars: r.stargazers_count,
       private: r.private,
       language: r.language,

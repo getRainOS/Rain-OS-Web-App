@@ -84,7 +84,7 @@ export default function UrlScanner() {
             </button>
           </div>
 
-          {result.signals?.isJsRendered && (
+          {(result.technical_signals?.isJsRendered || result.signals?.isJsRendered) && (
             <div className={styles.jsWarningBanner}>
               <div className={styles.jsWarningIcon}>⚠</div>
               <div className={styles.jsWarningBody}>

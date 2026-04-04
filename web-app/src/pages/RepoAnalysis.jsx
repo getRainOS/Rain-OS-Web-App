@@ -6,6 +6,19 @@ import PillarScores from '../components/PillarScores.jsx';
 import ArtifactBlock from '../components/ArtifactBlock.jsx';
 import styles from './RepoAnalysis.module.css';
 
+const JS_RISK_COLORS = { low: '#22c55e', medium: '#f59e0b', high: '#ef4444' };
+const JS_RISK_LABELS = {
+  low: 'Low JS-Rendering Risk — site is SSR/SSG; AI crawlers can read your content',
+  medium: 'Medium JS-Rendering Risk — some server-side rendering detected; spot-check with URL Scanner',
+  high: 'High JS-Rendering Risk — SPA detected with no SSR. AI crawlers may miss your content',
+};
+
+function formatUpdatedAt(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
 export default function RepoAnalysis() {
   const { user, isDemo } = useApp();
   const navigate = useNavigate();
@@ -68,6 +81,9 @@ export default function RepoAnalysis() {
     );
   }
 
+  const jsRisk = result?.signals?.jsRenderingRisk;
+  const framework = result?.signals?.detectedFramework;
+
   return (
     <div className={`${styles.root} fade-in`}>
       <div className={styles.header}>
@@ -114,7 +130,23 @@ export default function RepoAnalysis() {
                     </div>
                     <div className={styles.repoMeta}>
                       {repo.description && <span className={styles.repoDesc}>{repo.description}</span>}
-                      <span className={styles.repoStars}>★ {repo.stars}</span>
+                      <div className={styles.repoMetaRow}>
+                        <span className={styles.repoStars}>★ {repo.stars}</span>
+                        {repo.updatedAt && (
+                          <span className={styles.repoUpdated}>Updated {formatUpdatedAt(repo.updatedAt)}</span>
+                        )}
+                        {repo.homepage && (
+                          <a
+                            href={repo.homepage}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.repoHomepage}
+                            onClick={e => e.stopPropagation()}
+                          >
+                            ↗ Site
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </button>
                 ))}
@@ -167,6 +199,32 @@ export default function RepoAnalysis() {
             </button>
           </div>
 
+          {/* Framework Detection + JS-Rendering Risk Banner */}
+          <div className={styles.frameworkRow}>
+            {framework && framework !== 'Unknown' && (
+              <div className={styles.frameworkBadge}>
+                <span className={styles.frameworkLabel}>Framework</span>
+                <span className={styles.frameworkValue}>{framework}</span>
+                {result.signals.hasSSR && <span className={styles.ssrTag}>SSR</span>}
+              </div>
+            )}
+            {jsRisk && (
+              <div
+                className={styles.jsRiskBanner}
+                style={{ borderColor: JS_RISK_COLORS[jsRisk], background: `${JS_RISK_COLORS[jsRisk]}18` }}
+              >
+                <span
+                  className={styles.jsRiskDot}
+                  style={{ background: JS_RISK_COLORS[jsRisk] }}
+                />
+                <span className={styles.jsRiskText} style={{ color: JS_RISK_COLORS[jsRisk] }}>
+                  {jsRisk.charAt(0).toUpperCase() + jsRisk.slice(1)} JS-Rendering Risk
+                </span>
+                <span className={styles.jsRiskDesc}>{JS_RISK_LABELS[jsRisk]}</span>
+              </div>
+            )}
+          </div>
+
           <PillarScores result={{ pillarScores: result.pillarScores, overallScore: result.overallScore }} />
 
           <div className={`card ${styles.signalsCard}`}>
@@ -189,6 +247,9 @@ export default function RepoAnalysis() {
                 { label: 'package.json description', pass: !!result.signals.packageDescription },
                 { label: 'package.json keywords', pass: result.signals.packageHasKeywords },
                 { label: 'OpenAPI spec', pass: result.signals.hasOpenApiSpec },
+                { label: 'App entry file (src/App)', pass: result.signals.hasSrcAppFile },
+                { label: 'Layout component', pass: result.signals.hasSrcLayoutFile },
+                { label: 'Custom _document', pass: result.signals.hasSrcDocumentFile },
               ].map((s, i) => (
                 <div key={i} className={styles.signal}>
                   <span

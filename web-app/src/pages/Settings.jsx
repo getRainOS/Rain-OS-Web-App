@@ -58,8 +58,18 @@ export default function Settings() {
     navigate('/');
   }
 
-  function handleConnectGithub() {
-    window.location.href = api.github.connectUrl();
+  async function handleConnectGithub() {
+    if (isDemo) return;
+    try {
+      const { data } = await api.github.initOAuth();
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        setError('Could not start GitHub connection. Please try again.');
+      }
+    } catch (err) {
+      setError(err.message || 'Could not start GitHub connection. Please try again.');
+    }
   }
 
   async function handleDisconnectGithub() {

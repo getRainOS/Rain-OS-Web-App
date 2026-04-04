@@ -1,9 +1,10 @@
 // api/github/callback.ts
-// Handles the GitHub OAuth callback: exchanges code for access token,
-// fetches the GitHub user profile, and links it to the Rain OS user.
+// Handles the GitHub OAuth callback: verifies nonce state, exchanges code for
+// access token, fetches GitHub user profile, and links it to the Rain OS user.
 
 import express from 'express';
-import { findUserByApiKey, saveGithubAuth } from '../../services/dbService';
+import { findUserById, saveGithubAuth } from '../../services/dbService';
+import { consumeOAuthState } from '../../services/oauthStateStore';
 
 const APP_URL = process.env.APP_URL || 'https://getrainos.com';
 const CALLBACK_URL = 'https://api.getrainos.com/api/github/oauth/callback';
@@ -20,11 +21,15 @@ export default async function handler(req: express.Request, res: express.Respons
   }
 
   try {
-    // Decode the state to get the Rain OS API key
-    const apiKey = Buffer.from(state, 'base64url').toString('utf8');
-    const user = await findUserByApiKey(apiKey);
+    // Consume the nonce — verifies the request came from us and retrieves userId
+    const userId = consumeOAuthState(state);
+    if (!userId) {
+      return res.redirect(`${APP_URL}/#/settings?github=error&reason=invalid_or_expired_state`);
+    }
+
+    const user = await findUserById(userId);
     if (!user) {
-      return res.redirect(`${APP_URL}/#/settings?github=error&reason=invalid_state`);
+      return res.redirect(`${APP_URL}/#/settings?github=error&reason=user_not_found`);
     }
 
     const clientId = process.env.GITHUB_CLIENT_ID;
@@ -77,7 +82,7 @@ export default async function handler(req: express.Request, res: express.Respons
     const githubId = String(profile.id);
     const githubLogin = profile.login as string;
 
-    // Save GitHub auth to the user record
+    // Save GitHub auth to the user record (token is encrypted inside saveGithubAuth)
     await saveGithubAuth(user.id, githubId, githubLogin, accessToken);
 
     res.redirect(`${APP_URL}/#/settings?github=connected&login=${encodeURIComponent(githubLogin)}`);

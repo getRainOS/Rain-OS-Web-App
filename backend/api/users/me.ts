@@ -32,10 +32,12 @@ export default async function handler(req: express.Request, res: express.Respons
       id: user.id,
       email: user.email,
       subscriptionStatus: user.subscriptionStatus,
-      stripePriceId: user.stripePriceId, // Include this to track current plan
+      stripePriceId: user.stripePriceId,
       usage: user.usage,
       createdAt: user.createdAt,
-      apiKey:user?.apiKey
+      apiKey: user?.apiKey,
+      githubId: user.githubId,
+      githubLogin: user.githubLogin,
     };
 
     console.log('Fetched user:', clientSafeUser);

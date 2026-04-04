@@ -3,6 +3,8 @@
 // the 4 AEO pillars: AI Readability, Digital Authority,
 // Conversion Readiness, Product Discoverability.
 
+export type DetectedFramework = 'Next.js' | 'Nuxt' | 'SvelteKit' | 'Remix' | 'Astro' | 'React (SPA)' | 'Vue (SPA)' | 'Angular' | 'Svelte' | 'Unknown';
+
 export interface RepoSignals {
   hasReadme: boolean;
   readmeWordCount: number;
@@ -26,6 +28,14 @@ export interface RepoSignals {
   hasOpenApiSpec: boolean;
   hasDemoSection: boolean;
   hasInstallInstructions: boolean;
+  // Framework detection
+  detectedFramework: DetectedFramework;
+  hasSSR: boolean;
+  jsRenderingRisk: 'low' | 'medium' | 'high';
+  // Source file signals
+  hasSrcAppFile: boolean;
+  hasSrcLayoutFile: boolean;
+  hasSrcDocumentFile: boolean;
 }
 
 export interface RepoRecommendation {
@@ -252,8 +262,37 @@ function buildRecommendations(signals: RepoSignals, owner: string, repo: string)
   return recs;
 }
 
+function detectFramework(pkg: any): { framework: DetectedFramework; hasSSR: boolean; jsRenderingRisk: 'low' | 'medium' | 'high' } {
+  if (!pkg) return { framework: 'Unknown', hasSSR: false, jsRenderingRisk: 'medium' };
+
+  const deps = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
+  const scripts = pkg.scripts || {};
+  const scriptText = Object.values(scripts).join(' ').toLowerCase();
+
+  if (deps['next']) return { framework: 'Next.js', hasSSR: true, jsRenderingRisk: 'low' };
+  if (deps['nuxt'] || deps['nuxt3']) return { framework: 'Nuxt', hasSSR: true, jsRenderingRisk: 'low' };
+  if (deps['@sveltejs/kit']) return { framework: 'SvelteKit', hasSSR: true, jsRenderingRisk: 'low' };
+  if (deps['@remix-run/react'] || deps['@remix-run/node']) return { framework: 'Remix', hasSSR: true, jsRenderingRisk: 'low' };
+  if (deps['astro']) return { framework: 'Astro', hasSSR: true, jsRenderingRisk: 'low' };
+
+  // SPA frameworks without SSR
+  if (deps['react'] || deps['react-dom']) {
+    // Check for SSR indicators
+    const hasServerEntry = scriptText.includes('server') || scriptText.includes('ssr');
+    return { framework: 'React (SPA)', hasSSR: hasServerEntry, jsRenderingRisk: hasServerEntry ? 'medium' : 'high' };
+  }
+  if (deps['vue']) {
+    const hasServerEntry = scriptText.includes('server') || scriptText.includes('ssr');
+    return { framework: 'Vue (SPA)', hasSSR: hasServerEntry, jsRenderingRisk: hasServerEntry ? 'medium' : 'high' };
+  }
+  if (deps['@angular/core']) return { framework: 'Angular', hasSSR: !!deps['@angular/ssr'], jsRenderingRisk: deps['@angular/ssr'] ? 'low' : 'high' };
+  if (deps['svelte']) return { framework: 'Svelte', hasSSR: false, jsRenderingRisk: 'high' };
+
+  return { framework: 'Unknown', hasSSR: false, jsRenderingRisk: 'medium' };
+}
+
 export async function analyzeRepo(owner: string, repo: string, token: string): Promise<RepoAnalysisResult> {
-  const [repoData, readme, llmsTxt, robotsTxt, packageJson, indexHtml, licenseExists, contributingExists, changelogExists, openApiExists] = await Promise.all([
+  const [repoData, readme, llmsTxt, robotsTxt, packageJson, indexHtml, licenseExists, contributingExists, changelogExists, openApiExists, srcAppExists, srcLayoutExists, srcDocumentExists] = await Promise.all([
     ghFetch(`/repos/${owner}/${repo}`, token),
     fetchFileContent(owner, repo, 'README.md', token).catch(() => null),
     fetchFileContent(owner, repo, 'llms.txt', token).catch(() => null),
@@ -272,6 +311,17 @@ export async function analyzeRepo(owner: string, repo: string, token: string): P
     fileExists(owner, repo, 'openapi.yaml', token).catch(() => false) ||
       fileExists(owner, repo, 'openapi.json', token).catch(() => false) ||
       fileExists(owner, repo, 'swagger.yaml', token).catch(() => false),
+    // Source file probes for template / layout / document variants
+    fileExists(owner, repo, 'src/App.tsx', token).catch(() => false) ||
+      fileExists(owner, repo, 'src/App.jsx', token).catch(() => false) ||
+      fileExists(owner, repo, 'src/app.tsx', token).catch(() => false),
+    fileExists(owner, repo, 'src/components/Layout.tsx', token).catch(() => false) ||
+      fileExists(owner, repo, 'src/layouts/default.vue', token).catch(() => false) ||
+      fileExists(owner, repo, 'src/layouts/Layout.astro', token).catch(() => false) ||
+      fileExists(owner, repo, 'app/layout.tsx', token).catch(() => false),
+    fileExists(owner, repo, 'pages/_document.tsx', token).catch(() => false) ||
+      fileExists(owner, repo, 'pages/_document.js', token).catch(() => false) ||
+      fileExists(owner, repo, 'app/_document.tsx', token).catch(() => false),
   ]);
 
   // Parse signals
@@ -280,6 +330,7 @@ export async function analyzeRepo(owner: string, repo: string, token: string): P
 
   const readmeLower = (readme || '').toLowerCase();
   const indexLower = (indexHtml || '').toLowerCase();
+  const { framework, hasSSR, jsRenderingRisk } = detectFramework(pkg);
 
   const signals: RepoSignals = {
     hasReadme: !!readme,
@@ -304,6 +355,12 @@ export async function analyzeRepo(owner: string, repo: string, token: string): P
     hasOpenApiSpec: !!openApiExists,
     hasDemoSection: /demo|screenshot|preview|live/i.test(readme || ''),
     hasInstallInstructions: /npm install|yarn add|pip install|cargo add|go get|brew install|apt install/i.test(readme || ''),
+    detectedFramework: framework,
+    hasSSR,
+    jsRenderingRisk,
+    hasSrcAppFile: !!srcAppExists,
+    hasSrcLayoutFile: !!srcLayoutExists,
+    hasSrcDocumentFile: !!srcDocumentExists,
   };
 
   const pillarScores = {

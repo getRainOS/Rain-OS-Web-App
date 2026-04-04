@@ -76,7 +76,7 @@ export const api = {
       ? Promise.resolve({ data: { url: null }, usage: null })
       : request('POST', '/api/stripe/create-portal-session', { returnUrl }),
   github: {
-    connectUrl: () => `${BASE}/api/github/oauth?api_key=${encodeURIComponent(getApiKey())}`,
+    initOAuth: () => request('POST', '/api/github/oauth/init'),
     repos: () => request('GET', '/api/github/repos'),
     analyze: (repoUrl) => request('POST', '/api/github/analyze', { repoUrl }),
     disconnect: () => request('DELETE', '/api/github/disconnect'),

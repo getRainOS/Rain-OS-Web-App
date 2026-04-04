@@ -95,7 +95,7 @@ app.post('/api/stripe/create-portal-session', createPortalSessionHandler);
 // ─── Cron ──────────────────────────────────────────────────────────────────
 app.post('/api/cron/reset-usage', cronResetUsageHandler);
 // ─── GitHub OAuth + Repo Analysis ─────────────────────────────────────────
-app.get('/api/github/oauth', githubOauthHandler);
+app.post('/api/github/oauth/init', githubOauthHandler);
 app.get('/api/github/oauth/callback', githubCallbackHandler);
 app.get('/api/github/repos', listReposHandler);
 app.post('/api/github/analyze', analyzeRepoHandler);
