@@ -12,11 +12,12 @@ const PRICE_TO_PLAN = {
 };
 
 const NAV = [
-  { to: '/dashboard',   label: 'Dashboard',         icon: '⊞' },
-  { to: '/analyze',     label: 'Content Analyzer',  icon: '✦' },
-  { to: '/url-scanner', label: 'URL Scanner',        icon: '◎' },
-  { to: '/history',     label: 'Score History',      icon: '≡' },
-  { to: '/settings',    label: 'Settings',           icon: '⚙' },
+  { to: '/dashboard',      label: 'Dashboard',         icon: '⊞' },
+  { to: '/analyze',        label: 'Content Analyzer',  icon: '✦' },
+  { to: '/url-scanner',    label: 'URL Scanner',        icon: '◎' },
+  { to: '/repo-analysis',  label: 'Repo Analysis',      icon: '⊕' },
+  { to: '/history',        label: 'Score History',      icon: '≡' },
+  { to: '/settings',       label: 'Settings',           icon: '⚙' },
 ];
 
 export default function Layout({ children }) {
@@ -65,19 +66,19 @@ export default function Layout({ children }) {
         <nav className={styles.nav}>
           <div className={styles.navGroup}>
             <span className={styles.navLabel}>Analyze</span>
-            {NAV.slice(1, 3).map(n => (
+            {NAV.slice(1, 4).map(n => (
               <NavItem key={n.to} {...n} />
             ))}
           </div>
           <div className={styles.navGroup}>
             <span className={styles.navLabel}>Reports</span>
-            {[NAV[0], NAV[3]].map(n => (
+            {[NAV[0], NAV[4]].map(n => (
               <NavItem key={n.to} {...n} />
             ))}
           </div>
           <div className={styles.navGroup}>
             <span className={styles.navLabel}>Account</span>
-            <NavItem key={NAV[4].to} {...NAV[4]} />
+            <NavItem key={NAV[5].to} {...NAV[5]} />
           </div>
         </nav>
 

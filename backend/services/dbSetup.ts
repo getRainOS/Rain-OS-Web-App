@@ -31,9 +31,16 @@ CREATE TABLE IF NOT EXISTS ai_content_profiles (
 CREATE INDEX IF NOT EXISTS idx_ai_content_profiles_updated_at ON ai_content_profiles(updated_at);
 `;
 
+const addGithubColumnsQuery = `
+ALTER TABLE users ADD COLUMN IF NOT EXISTS github_id TEXT UNIQUE;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS github_login TEXT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS encrypted_github_token TEXT;
+`;
+
 export const setupDatabase = async () => {
   try {
     await pool.query(createTableQuery);
+    await pool.query(addGithubColumnsQuery);
     console.log('Database table "users" is ready.');
   } catch (error) {
     console.error('Error setting up database table:', error);

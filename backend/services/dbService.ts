@@ -44,6 +44,8 @@ const mapRowToUser = (row: any): User => {
         id: row.id,
         email: row.email,
         googleId: row.google_id,
+        githubId: row.github_id,
+        githubLogin: row.github_login,
         hashedPassword: row.hashed_password,
         passwordResetToken: row.password_reset_token,
         passwordResetExpires: row.password_reset_expires,
@@ -84,6 +86,33 @@ export const findUserByStripeCustomerId = async (stripeCustomerId: string): Prom
 export const findUserByGoogleId = async (googleId: string): Promise<User | null> => {
     const res = await pool.query('SELECT * FROM users WHERE google_id = $1', [googleId]);
     return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+};
+
+export const findUserByGithubId = async (githubId: string): Promise<User | null> => {
+    const res = await pool.query('SELECT * FROM users WHERE github_id = $1', [githubId]);
+    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+};
+
+export const saveGithubAuth = async (userId: string, githubId: string, githubLogin: string, plainToken: string): Promise<User | null> => {
+    const encryptedToken = encrypt(plainToken);
+    const res = await pool.query(
+        'UPDATE users SET github_id = $1, github_login = $2, encrypted_github_token = $3 WHERE id = $4 RETURNING *',
+        [githubId, githubLogin, encryptedToken, userId]
+    );
+    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+};
+
+export const getUserGithubToken = async (userId: string): Promise<string | null> => {
+    const res = await pool.query('SELECT encrypted_github_token FROM users WHERE id = $1', [userId]);
+    if (!res.rows[0]?.encrypted_github_token) return null;
+    return decrypt(res.rows[0].encrypted_github_token);
+};
+
+export const disconnectGithub = async (userId: string): Promise<void> => {
+    await pool.query(
+        'UPDATE users SET github_id = NULL, github_login = NULL, encrypted_github_token = NULL WHERE id = $1',
+        [userId]
+    );
 };
 
 export const findUserByPasswordResetToken = async (hashedToken: string): Promise<User | null> => {

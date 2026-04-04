@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useApp } from '../context/AppContext.jsx';
 import { api, getApiKey, clearApiKey } from '../api/client.js';
 import { supabase } from '../lib/supabase.js';
@@ -12,11 +12,27 @@ const PRICE_TO_PLAN = {
 };
 
 export default function Settings() {
-  const { user, onLogout, isDemo } = useApp();
+  const { user, onLogout, isDemo, refreshUser } = useApp();
   const navigate = useNavigate();
+  const location = useLocation();
   const [copied, setCopied] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
   const [error, setError] = useState('');
+  const [githubStatus, setGithubStatus] = useState(null);
+  const [disconnecting, setDisconnecting] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const ghParam = params.get('github');
+    if (ghParam === 'connected') {
+      setGithubStatus('just_connected');
+      refreshUser();
+    } else if (ghParam === 'cancelled') {
+      setGithubStatus('cancelled');
+    } else if (ghParam === 'error') {
+      setGithubStatus('error');
+    }
+  }, [location.search]);
 
   const apiKey = getApiKey();
   const plan = user?.subscriptionStatus === 'active' && user?.stripePriceId
@@ -40,6 +56,23 @@ export default function Settings() {
     clearApiKey();
     onLogout();
     navigate('/');
+  }
+
+  function handleConnectGithub() {
+    window.location.href = api.github.connectUrl();
+  }
+
+  async function handleDisconnectGithub() {
+    setDisconnecting(true);
+    try {
+      await api.github.disconnect();
+      setGithubStatus('disconnected');
+      refreshUser();
+    } catch (err) {
+      setError(err.message || 'Failed to disconnect GitHub');
+    } finally {
+      setDisconnecting(false);
+    }
   }
 
   async function handleManageBilling() {
@@ -162,6 +195,66 @@ export default function Settings() {
 
           <p className={styles.wpHint}>
             In WordPress: go to <strong>Rain OS → Settings</strong> and paste your key in the API Key field.
+          </p>
+        </div>
+
+        <div className="card">
+          <h2 className={styles.sectionTitle}>GitHub Integration</h2>
+          <p className={styles.wpDesc}>
+            Connect your GitHub account to analyze source code repositories for AI readability and AEO performance.
+          </p>
+
+          {githubStatus === 'just_connected' && (
+            <p className={styles.successBanner}>✓ GitHub connected successfully!</p>
+          )}
+          {githubStatus === 'error' && (
+            <p className={styles.errorBanner}>GitHub connection failed. Please try again.</p>
+          )}
+          {githubStatus === 'cancelled' && (
+            <p className={styles.warningBanner}>GitHub connection was cancelled.</p>
+          )}
+          {githubStatus === 'disconnected' && (
+            <p className={styles.warningBanner}>GitHub account disconnected.</p>
+          )}
+
+          {user?.githubLogin ? (
+            <div className={styles.githubConnected}>
+              <div className={styles.githubInfo}>
+                <span className={styles.githubIcon}>⊕</span>
+                <div>
+                  <div className={styles.githubLogin}>@{user.githubLogin}</div>
+                  <div className={styles.githubLabel}>Connected</div>
+                </div>
+              </div>
+              <div className={styles.githubActions}>
+                <button
+                  className="btn btn-ghost"
+                  onClick={() => navigate('/repo-analysis')}
+                >
+                  Analyze Repos →
+                </button>
+                <button
+                  className={styles.disconnectBtn}
+                  onClick={handleDisconnectGithub}
+                  disabled={disconnecting || isDemo}
+                >
+                  {disconnecting ? 'Disconnecting…' : 'Disconnect'}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              className="btn btn-primary"
+              onClick={handleConnectGithub}
+              disabled={isDemo}
+              style={{ marginTop: 12 }}
+            >
+              Connect GitHub
+            </button>
+          )}
+
+          <p className={styles.wpHint}>
+            Requires a GitHub OAuth App. Set <strong>GITHUB_CLIENT_ID</strong> and <strong>GITHUB_CLIENT_SECRET</strong> in your backend environment.
           </p>
         </div>
 

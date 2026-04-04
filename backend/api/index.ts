@@ -32,6 +32,10 @@ import aiSiteLlmsHandler from './ai/site-llms';
 import aiNormalizeHandler from './ai/normalize';
 import aiContentHandler from './ai/content';
 import aiDiagnosticsHandler from './ai/diagnostics';
+// GitHub OAuth + Repo Analysis
+import githubOauthHandler from './github/oauth';
+import githubCallbackHandler from './github/callback';
+import { listReposHandler, analyzeRepoHandler, disconnectGithubHandler } from './github/repos';
 // ─── CORS configuration ───────────────────────────────────────────────────────
 // IMPORTANT: Keep origin: '*' so the WordPress plugin works from any site.
 // Restricting origin here would 403 every WP install that has the plugin.
@@ -40,7 +44,7 @@ import aiDiagnosticsHandler from './ai/diagnostics';
 // add a separate router with a scoped CORS config — do not change this globalone.
 const corsOptions: cors.CorsOptions = {
 origin: '*',
-methods: ['GET', 'POST', 'OPTIONS'],
+methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
 allowedHeaders: ['Content-Type', 'Authorization'],
 exposedHeaders: ['X-Usage-Info'],
 };
@@ -90,6 +94,12 @@ app.post('/api/stripe/create-checkout-session', createCheckoutSessionHandler);
 app.post('/api/stripe/create-portal-session', createPortalSessionHandler);
 // ─── Cron ──────────────────────────────────────────────────────────────────
 app.post('/api/cron/reset-usage', cronResetUsageHandler);
+// ─── GitHub OAuth + Repo Analysis ─────────────────────────────────────────
+app.get('/api/github/oauth', githubOauthHandler);
+app.get('/api/github/oauth/callback', githubCallbackHandler);
+app.get('/api/github/repos', listReposHandler);
+app.post('/api/github/analyze', analyzeRepoHandler);
+app.delete('/api/github/disconnect', disconnectGithubHandler);
 // ─── Plugin-facing endpoints ───────────────────────────────────────────────
 app.get('/api/plugin/health', pluginHealthHandler);
 app.get('/api/plugin/content/:contentId/analysis',

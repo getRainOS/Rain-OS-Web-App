@@ -8,6 +8,8 @@ export interface User {
 id: string;
 email: string;
 googleId?: string;
+githubId?: string;
+githubLogin?: string;
 hashedPassword?: string;
 passwordResetToken?: string;
 passwordResetExpires?: Date;

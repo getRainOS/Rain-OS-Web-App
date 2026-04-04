@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
@@ -7,6 +8,7 @@ import styles from './UrlScanner.module.css';
 
 export default function UrlScanner() {
   const { refreshUser } = useApp();
+  const navigate = useNavigate();
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -81,6 +83,25 @@ export default function UrlScanner() {
               ← New Scan
             </button>
           </div>
+
+          {result.signals?.isJsRendered && (
+            <div className={styles.jsWarningBanner}>
+              <div className={styles.jsWarningIcon}>⚠</div>
+              <div className={styles.jsWarningBody}>
+                <strong className={styles.jsWarningTitle}>JavaScript-rendered site detected</strong>
+                <p className={styles.jsWarningText}>
+                  AI crawlers (ChatGPT, Perplexity, Claude) see an empty page — they don't execute JavaScript.
+                  The scores below reflect what they actually see, not your full app.
+                </p>
+                <button
+                  className={styles.jsWarningCta}
+                  onClick={() => navigate('/repo-analysis')}
+                >
+                  Analyze source code instead →
+                </button>
+              </div>
+            </div>
+          )}
 
           <PillarScores result={result} />
 
