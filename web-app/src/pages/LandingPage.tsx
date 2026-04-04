@@ -6,6 +6,7 @@ import {
   HybridFuture, FourPillars, FeatureGrid, ReadabilityIntelligence,
   ComparisonTable, Testimonials, Pricing, FAQ, CTA, VibeCoderBand
 } from '@/components/marketing/MarketingComponents';
+import { DemoShowcase } from '@/components/marketing/DemoShowcase';
 
 
 interface LandingPageProps {
@@ -18,6 +19,12 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
   const [content, setContent] = useState('');
   const [industry, setIndustry] = useState('Technology');
   const [isScrolled, setIsScrolled] = useState(false);
+  const heroInputRef = React.useRef<HTMLTextAreaElement>(null);
+
+  const scrollToHero = () => {
+    heroInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => heroInputRef.current?.focus(), 600);
+  };
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -124,6 +131,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
               <form onSubmit={handleSubmit} className="card-surface p-2 text-left relative group" style={{ boxShadow: '0 0 40px rgba(14,165,233,0.07), 0 20px 60px -12px rgba(0,0,0,0.7)' }}>
                 <div className="relative">
                   <textarea
+                    ref={heroInputRef}
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     placeholder="Paste your content here to get started..."
@@ -220,6 +228,8 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
             </motion.div>
           </div>
         </section>
+
+        <DemoShowcase onAnalyzeClick={scrollToHero} />
 
         <VibeCoderBand onGetStarted={onGetStartedClick || onLoginClick} />
 
