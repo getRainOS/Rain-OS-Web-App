@@ -492,6 +492,212 @@
   text-align: right;
 }
 
+/* ── Gauge KPI Card ── */
+.kpiGaugeCard {
+  align-items: center;
+  text-align: center;
+}
+
+.gaugeWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: -4px 0 -4px;
+}
+
+.gaugeCenter {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  pointer-events: none;
+}
+
+/* ── Donut Chart ── */
+.donutWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.donutChartArea {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.donutCenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  gap: 1px;
+}
+
+.donutScore {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.donutLabel {
+  font-size: 9px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.donutLegend {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.donutLegendRow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.donutLegendDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.donutLegendLabel {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  flex: 1;
+  min-width: 0;
+}
+
+.donutLegendBarWrap {
+  flex: 1;
+  min-width: 40px;
+  max-width: 80px;
+}
+
+.donutLegendBar {
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.donutLegendScore {
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 22px;
+  text-align: right;
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+}
+
+.contentHealth {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.contentHealth strong {
+  font-weight: 700;
+}
+
+/* ── Pillar Sub-scores ── */
+.subScoresGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 1000px) {
+  .subScoresGrid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.subScorePillar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.subScorePillarHeader {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 4px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.subScorePillarLabel {
+  font-size: 12px;
+  font-weight: 600;
+  flex: 1;
+  min-width: 0;
+}
+
+.subScorePillarScore {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.subScoreRow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.subScoreLabel {
+  font-size: 10.5px;
+  color: var(--text-dim);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subScoreTrack {
+  width: 36px;
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.subScoreFill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+
+.subScoreVal {
+  font-size: 10.5px;
+  font-weight: 700;
+  min-width: 22px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
 /* ── Quick Actions ── */
 .quickActions {
   background: var(--surface);

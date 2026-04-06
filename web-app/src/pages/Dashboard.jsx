@@ -5,24 +5,33 @@ import { useApp } from '../context/AppContext.jsx';
 import {
   AreaChart, Area, XAxis, YAxis,
   Tooltip, ResponsiveContainer,
+  PieChart, Pie, Cell,
 } from 'recharts';
 import {
   Plus, TrendingUp, TrendingDown,
   FileText, Globe, GitBranch, ArrowRight,
   BrainCircuit, ShieldCheck, MousePointerClick, SearchCheck,
-  Activity, Zap, Minus,
+  Activity, Zap, Minus, Heart,
 } from 'lucide-react';
 import styles from './Dashboard.module.css';
 
 const PILLARS = [
-  { key: 'ai_readability',        label: 'AI Readability',       color: '#06b6d4', Icon: BrainCircuit },
-  { key: 'digital_authority',     label: 'Digital Authority',    color: '#22c55e', Icon: ShieldCheck },
-  { key: 'conversion_readiness',  label: 'Conversion Readiness', color: '#a855f7', Icon: MousePointerClick },
-  { key: 'product_discoverability', label: 'Discoverability',    color: '#f97316', Icon: SearchCheck },
+  { key: 'ai_readability',          label: 'AI Readability',       color: '#06b6d4', Icon: BrainCircuit,
+    subs: ['semantic_clarity','readability_score','logical_structure','aeo_alignment'],
+    subLabels: ['Semantic Clarity','Readability Score','Logical Structure','AEO Alignment'] },
+  { key: 'digital_authority',       label: 'Digital Authority',    color: '#22c55e', Icon: ShieldCheck,
+    subs: ['entity_recognition','citation_readiness','descriptive_metadata'],
+    subLabels: ['Entity Recognition','Citation Readiness','Descriptive Metadata'] },
+  { key: 'conversion_readiness',    label: 'Conversion Readiness', color: '#a855f7', Icon: MousePointerClick,
+    subs: ['schema_extraction','qa_format_detection','metadata_audit'],
+    subLabels: ['Schema Extraction','QA-Format Detection','Metadata Audit'] },
+  { key: 'product_discoverability', label: 'Discoverability',      color: '#f97316', Icon: SearchCheck,
+    subs: ['schema_completeness','answer_layer_quality','freshness_signals','conversational_query_match'],
+    subLabels: ['Schema Completeness','Answer Layer Quality','Freshness Signals','Query Match'] },
 ];
 
 const QUICK_ACTIONS = [
-  { to: '/analyze',       label: 'Content Analysis', sub: 'Paste and score any text',       Icon: FileText,  color: '#06b6d4' },
+  { to: '/analyze',       label: 'Content Analysis', sub: 'Paste and score any text',         Icon: FileText,  color: '#06b6d4' },
   { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit a live URL for AEO signals', Icon: Globe,     color: '#a855f7' },
   { to: '/repo-analysis', label: 'Repo Analysis',     sub: 'Connect GitHub and score source',  Icon: GitBranch, color: '#22c55e' },
 ];
@@ -64,25 +73,80 @@ function getItemType(item) {
   return 'Content';
 }
 
+/* ── Gas Gauge Arc ── */
+function GaugeArc({ score = 0, color = '#0ea5e9', size = 120 }) {
+  const cx = size / 2;
+  const cy = size * 0.54;
+  const r = size * 0.36;
+  const sw = size * 0.062;
+  const startDeg = 155;
+  const span = 230;
+  const endDeg = startDeg + span;
+  const fillEnd = startDeg + (span * Math.min(Math.max(score, 0), 100) / 100);
+
+  function pt(deg) {
+    const rad = (deg - 90) * (Math.PI / 180);
+    return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+  }
+  function arc(s, e) {
+    const a = pt(s), b = pt(e);
+    const large = e - s > 180 ? 1 : 0;
+    return `M ${a.x.toFixed(2)} ${a.y.toFixed(2)} A ${r} ${r} 0 ${large} 1 ${b.x.toFixed(2)} ${b.y.toFixed(2)}`;
+  }
+
+  const ticks = [0, 25, 50, 75, 100].map(v => {
+    const d = startDeg + (span * v / 100);
+    const inner = size * 0.28;
+    const outer = size * 0.32;
+    const p1 = { x: cx + inner * Math.cos((d - 90) * Math.PI / 180), y: cy + inner * Math.sin((d - 90) * Math.PI / 180) };
+    const p2 = { x: cx + outer * Math.cos((d - 90) * Math.PI / 180), y: cy + outer * Math.sin((d - 90) * Math.PI / 180) };
+    return { p1, p2 };
+  });
+
+  return (
+    <svg width={size} height={size * 0.72} viewBox={`0 0 ${size} ${size * 0.72}`} style={{ display: 'block', overflow: 'visible' }}>
+      {ticks.map((t, i) => (
+        <line key={i} x1={t.p1.x.toFixed(2)} y1={t.p1.y.toFixed(2)} x2={t.p2.x.toFixed(2)} y2={t.p2.y.toFixed(2)}
+          stroke="rgba(255,255,255,0.18)" strokeWidth="1" strokeLinecap="round" />
+      ))}
+      <path d={arc(startDeg, endDeg - 0.1)} fill="none" stroke="rgba(255,255,255,0.07)"
+        strokeWidth={sw} strokeLinecap="round" />
+      {score > 0 && (
+        <path d={arc(startDeg, Math.min(fillEnd, endDeg - 0.1))} fill="none" stroke={color}
+          strokeWidth={sw} strokeLinecap="round"
+          style={{ filter: `drop-shadow(0 0 5px ${color}90)` }} />
+      )}
+    </svg>
+  );
+}
+
+/* ── Donut Center Label ── */
+function DonutLabel({ score, color }) {
+  return (
+    <div className={styles.donutCenter}>
+      <span className={styles.donutScore} style={{ color }}>{score ?? '—'}</span>
+      <span className={styles.donutLabel}>avg score</span>
+    </div>
+  );
+}
+
+/* ── Trend Badge ── */
 function TrendBadge({ pct }) {
   if (pct === null || pct === undefined) return null;
-  const up = pct > 0;
-  const flat = pct === 0;
+  const up = pct > 0, flat = pct === 0;
   return (
-    <span
-      className={styles.trendBadge}
-      style={{
-        color: flat ? 'var(--text-muted)' : up ? '#22c55e' : '#ef4444',
-        background: flat ? 'rgba(255,255,255,0.05)' : up ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)',
-        borderColor: flat ? 'rgba(255,255,255,0.08)' : up ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.25)',
-      }}
-    >
+    <span className={styles.trendBadge} style={{
+      color: flat ? 'var(--text-muted)' : up ? '#22c55e' : '#ef4444',
+      background: flat ? 'rgba(255,255,255,0.05)' : up ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)',
+      borderColor: flat ? 'rgba(255,255,255,0.08)' : up ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.25)',
+    }}>
       {flat ? <Minus className={styles.trendIcon} /> : up ? <TrendingUp className={styles.trendIcon} /> : <TrendingDown className={styles.trendIcon} />}
       {flat ? 'Flat' : `${up ? '+' : ''}${pct}%`}
     </span>
   );
 }
 
+/* ── Area chart tooltip ── */
 function CustomTooltip({ active, payload }) {
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
@@ -95,6 +159,33 @@ function CustomTooltip({ active, payload }) {
   );
 }
 
+/* ── Donut tooltip ── */
+function DonutTooltip({ active, payload }) {
+  if (!active || !payload?.length) return null;
+  const d = payload[0].payload;
+  return (
+    <div className={styles.chartTooltip} style={{ minWidth: 140 }}>
+      <div className={styles.tooltipDate} style={{ color: d.color }}>{d.name}</div>
+      <div className={styles.tooltipScore} style={{ color: d.color }}>{d.value}</div>
+      <div className={styles.tooltipLabel}>avg pillar score</div>
+    </div>
+  );
+}
+
+/* ── Sub-score bar ── */
+function SubScoreBar({ label, value, color }) {
+  return (
+    <div className={styles.subScoreRow}>
+      <span className={styles.subScoreLabel}>{label}</span>
+      <div className={styles.subScoreTrack}>
+        <div className={styles.subScoreFill} style={{ width: `${value ?? 0}%`, background: color }} />
+      </div>
+      <span className={styles.subScoreVal} style={{ color }}>{value ?? '—'}</span>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════ */
 export default function Dashboard() {
   const { user, isDemo } = useApp();
   const navigate = useNavigate();
@@ -134,6 +225,10 @@ export default function Dashboard() {
     trend: computeTrend(history, p.key),
   }));
 
+  const contentHealth = pillarAvgs.some(p => p.avg > 0)
+    ? Math.round(pillarAvgs.reduce((s, p) => s + p.avg, 0) / pillarAvgs.length)
+    : 0;
+
   const weakestPillar = totalAnalyses >= 3
     ? [...pillarAvgs].sort((a, b) => a.avg - b.avg)[0]
     : null;
@@ -147,6 +242,24 @@ export default function Dashboard() {
       date: h.analyzed_at ? timeAgo(h.analyzed_at) : '',
     }));
 
+  const donutData = pillarAvgs.map(p => ({ name: p.label, value: p.avg || 1, color: p.color, real: p.avg }));
+
+  /* ── sub-scores from most recent analysis ── */
+  const latest = history[0];
+  const latestSubs = latest
+    ? PILLARS.map(p => {
+        const detail = latest[`${p.key}_detail`] ?? {};
+        return {
+          ...p,
+          pillarScore: latest[p.key] ?? 0,
+          subscores: p.subs.map((sk, si) => ({
+            label: p.subLabels[si],
+            value: detail[sk] ?? null,
+          })),
+        };
+      })
+    : null;
+
   const kpis = [
     {
       label: 'Total Analyses',
@@ -158,12 +271,21 @@ export default function Dashboard() {
     },
     {
       label: 'Average Score',
-      value: loading ? '—' : `${avgScore}`,
+      value: loading ? '—' : avgScore,
       sub: 'Last 30 analyses',
       color: scoreColor(avgScore),
       Icon: Zap,
       trend: scoreTrend,
       suffix: '/100',
+      isGauge: true,
+    },
+    {
+      label: 'Content Health',
+      value: loading ? '—' : `${contentHealth}%`,
+      sub: 'Across all pillars',
+      color: scoreColor(contentHealth),
+      Icon: Heart,
+      trend: null,
     },
     {
       label: 'API Usage',
@@ -174,20 +296,12 @@ export default function Dashboard() {
       trend: null,
       suffix: `/${user?.usage?.limit ?? 100}`,
     },
-    {
-      label: 'Plan',
-      value: tier,
-      sub: tier === 'Free' ? 'Upgrade for more analyses' : 'Active subscription',
-      color: tier === 'Business' ? '#f97316' : tier === 'Pro' ? '#a855f7' : '#475569',
-      Icon: Zap,
-      trend: null,
-    },
   ];
 
   return (
     <div className={`${styles.root} fade-in`}>
 
-      {/* Header */}
+      {/* ── Header ── */}
       <div className={styles.header}>
         <div>
           <h1 className={styles.greeting}>
@@ -199,51 +313,75 @@ export default function Dashboard() {
             <span style={{ color: 'var(--accent)' }}>{totalAnalyses} total analyses</span>
           </p>
         </div>
-        <button
-          onClick={() => navigate('/analyze')}
-          className={styles.newBtn}
-        >
+        <button onClick={() => navigate('/analyze')} className={styles.newBtn}>
           <Plus className={styles.newBtnIcon} />
           New Analysis
         </button>
       </div>
 
-      {/* KPI Cards */}
+      {/* ── KPI Cards ── */}
       <div className={styles.kpis}>
         {kpis.map((k) => (
-          <div key={k.label} className={styles.kpiCard} style={{ '--kpi-color': k.color }}>
-            <div className={styles.kpiTop}>
-              <span className={styles.kpiLabel}>{k.label}</span>
-              <div className={styles.kpiIconWrap} style={{ background: `${k.color}15`, border: `1px solid ${k.color}30` }}>
-                <k.Icon className={styles.kpiIcon} style={{ color: k.color }} />
-              </div>
-            </div>
-            <div className={styles.kpiValueRow}>
-              <span className={styles.kpiValue} style={{ color: k.color === '#475569' ? 'var(--text)' : k.color }}>
-                {k.value}
-              </span>
-              {k.suffix && <span className={styles.kpiSuffix}>{k.suffix}</span>}
-            </div>
-            <div className={styles.kpiBottom}>
-              <span className={styles.kpiSub}>{k.sub}</span>
-              {k.trend !== null && <TrendBadge pct={k.trend} />}
-            </div>
+          <div key={k.label} className={`${styles.kpiCard} ${k.isGauge ? styles.kpiGaugeCard : ''}`}
+            style={{ '--kpi-color': k.color }}>
+            {k.isGauge ? (
+              /* Gauge-style card */
+              <>
+                <div className={styles.kpiTop}>
+                  <span className={styles.kpiLabel}>{k.label}</span>
+                  {k.trend !== null && <TrendBadge pct={k.trend} />}
+                </div>
+                <div className={styles.gaugeWrap}>
+                  <GaugeArc score={typeof k.value === 'number' ? k.value : 0} color={k.color} size={110} />
+                  <div className={styles.gaugeCenter}>
+                    <span className={styles.kpiValue} style={{ color: k.color, fontSize: 26 }}>
+                      {k.value}
+                    </span>
+                    {k.suffix && <span className={styles.kpiSuffix}>{k.suffix}</span>}
+                  </div>
+                </div>
+                <div className={styles.kpiBottom}>
+                  <span className={styles.kpiSub}>{k.sub}</span>
+                </div>
+              </>
+            ) : (
+              /* Standard card */
+              <>
+                <div className={styles.kpiTop}>
+                  <span className={styles.kpiLabel}>{k.label}</span>
+                  <div className={styles.kpiIconWrap} style={{ background: `${k.color}15`, border: `1px solid ${k.color}30` }}>
+                    <k.Icon className={styles.kpiIcon} style={{ color: k.color }} />
+                  </div>
+                </div>
+                <div className={styles.kpiValueRow}>
+                  <span className={styles.kpiValue} style={{ color: k.color === '#475569' ? 'var(--text)' : k.color }}>
+                    {k.value}
+                  </span>
+                  {k.suffix && <span className={styles.kpiSuffix}>{k.suffix}</span>}
+                </div>
+                <div className={styles.kpiBottom}>
+                  <span className={styles.kpiSub}>{k.sub}</span>
+                  {k.trend !== null && <TrendBadge pct={k.trend} />}
+                </div>
+              </>
+            )}
           </div>
         ))}
       </div>
 
-      {/* Insight callout */}
+      {/* ── Insight callout ── */}
       {weakestPillar && weakestPillar.avg < 70 && (
         <div className={styles.insight}>
           <div className={styles.insightDot} style={{ background: weakestPillar.color }} />
           <span className={styles.insightText}>
-            <strong style={{ color: weakestPillar.color }}>{weakestPillar.label}</strong> is your weakest pillar — averaging <strong style={{ color: 'var(--text)' }}>{weakestPillar.avg}/100</strong> across recent analyses.
+            <strong style={{ color: weakestPillar.color }}>{weakestPillar.label}</strong> is your weakest pillar — averaging{' '}
+            <strong style={{ color: 'var(--text)' }}>{weakestPillar.avg}/100</strong> across recent analyses.
           </span>
           <Link to="/analyze" className={styles.insightAction}>Improve it →</Link>
         </div>
       )}
 
-      {/* Charts row */}
+      {/* ── Charts row ── */}
       <div className={styles.chartsRow}>
 
         {/* Score Trend */}
@@ -255,11 +393,9 @@ export default function Dashboard() {
             </div>
             <div className={styles.rangeToggle}>
               {[7, 14, 30].map(r => (
-                <button
-                  key={r}
+                <button key={r}
                   className={`${styles.rangeBtn} ${chartRange === r ? styles.rangeBtnActive : ''}`}
-                  onClick={() => setChartRange(r)}
-                >
+                  onClick={() => setChartRange(r)}>
                   {r}
                 </button>
               ))}
@@ -285,74 +421,87 @@ export default function Dashboard() {
                     <stop offset="100%" stopColor="#0ea5e9" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis
-                  dataKey="idx"
-                  stroke="transparent"
-                  tick={{ fill: 'rgba(255,255,255,0.25)', fontSize: 11 }}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <YAxis
-                  domain={[0, 100]}
-                  stroke="transparent"
-                  tick={{ fill: 'rgba(255,255,255,0.25)', fontSize: 11 }}
-                  tickLine={false}
-                  axisLine={false}
-                />
+                <XAxis dataKey="idx" stroke="transparent"
+                  tick={{ fill: 'rgba(255,255,255,0.25)', fontSize: 11 }} tickLine={false} axisLine={false} />
+                <YAxis domain={[0, 100]} stroke="transparent"
+                  tick={{ fill: 'rgba(255,255,255,0.25)', fontSize: 11 }} tickLine={false} axisLine={false} />
                 <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(14,165,233,0.2)', strokeWidth: 1 }} />
-                <Area
-                  type="monotone"
-                  dataKey="score"
-                  stroke="#0ea5e9"
-                  strokeWidth={2}
-                  fill="url(#scoreGrad)"
-                  dot={false}
-                  activeDot={{ r: 4, fill: '#0ea5e9', strokeWidth: 0 }}
-                />
+                <Area type="monotone" dataKey="score" stroke="#0ea5e9" strokeWidth={2}
+                  fill="url(#scoreGrad)" dot={false}
+                  activeDot={{ r: 4, fill: '#0ea5e9', strokeWidth: 0 }} />
               </AreaChart>
             </ResponsiveContainer>
           )}
         </div>
 
-        {/* Pillar Health */}
+        {/* Pillar Donut */}
         <div className={styles.chartCard}>
           <div className={styles.chartHeader}>
             <div>
-              <h2 className={styles.chartTitle}>Pillar Health</h2>
-              <p className={styles.chartSub}>Average across {totalAnalyses} {totalAnalyses === 1 ? 'analysis' : 'analyses'}</p>
+              <h2 className={styles.chartTitle}>Pillar Breakdown</h2>
+              <p className={styles.chartSub}>Relative score distribution</p>
             </div>
           </div>
-          <div className={styles.pillarList}>
-            {pillarAvgs.map(p => (
-              <div key={p.key} className={styles.pillarRow}>
-                <div className={styles.pillarMeta}>
-                  <p.Icon className={styles.pillarIcon} style={{ color: p.color }} />
-                  <span className={styles.pillarLabel}>{p.label}</span>
-                </div>
-                <div className={styles.pillarBarWrap}>
-                  <div className={styles.pillarTrack}>
-                    <div
-                      className={styles.pillarFill}
-                      style={{
-                        width: loading ? '0%' : `${p.avg}%`,
-                        background: p.color,
-                        boxShadow: `0 0 8px ${p.color}60`,
-                      }}
-                    />
+
+          {loading ? (
+            <div className={styles.chartEmpty}><span className="spinner" /></div>
+          ) : !pillarAvgs.some(p => p.avg > 0) ? (
+            <div className={styles.chartEmpty}>
+              <div className={styles.emptyState}>
+                <Activity className={styles.emptyIcon} />
+                <p>No pillar data yet</p>
+                <Link to="/analyze" className={styles.emptyLink}>Run analysis →</Link>
+              </div>
+            </div>
+          ) : (
+            <div className={styles.donutWrap}>
+              <div className={styles.donutChartArea}>
+                <ResponsiveContainer width="100%" height={160}>
+                  <PieChart>
+                    <Pie data={donutData} cx="50%" cy="50%"
+                      innerRadius={48} outerRadius={72}
+                      paddingAngle={2} dataKey="value" strokeWidth={0}
+                      startAngle={90} endAngle={-270}>
+                      {donutData.map((entry, i) => (
+                        <Cell key={i} fill={entry.color}
+                          style={{ filter: `drop-shadow(0 0 4px ${entry.color}50)` }} />
+                      ))}
+                    </Pie>
+                    <Tooltip content={<DonutTooltip />} />
+                  </PieChart>
+                </ResponsiveContainer>
+                <DonutLabel score={avgScore} color={scoreColor(avgScore)} />
+              </div>
+
+              <div className={styles.donutLegend}>
+                {pillarAvgs.map(p => (
+                  <div key={p.key} className={styles.donutLegendRow}>
+                    <div className={styles.donutLegendDot} style={{ background: p.color, boxShadow: `0 0 5px ${p.color}70` }} />
+                    <span className={styles.donutLegendLabel}>{p.label}</span>
+                    <div className={styles.donutLegendBarWrap}>
+                      <div className={styles.donutLegendBar}>
+                        <div style={{ width: `${p.avg}%`, background: p.color, height: '100%', borderRadius: 2 }} />
+                      </div>
+                    </div>
+                    <span className={styles.donutLegendScore} style={{ color: p.color }}>{p.avg}</span>
                   </div>
-                  <span className={styles.pillarScore} style={{ color: p.color }}>{loading ? '—' : p.avg}</span>
+                ))}
+                <div className={styles.contentHealth}>
+                  <Heart style={{ width: 11, height: 11, color: scoreColor(contentHealth) }} />
+                  <span>Content Health: </span>
+                  <strong style={{ color: scoreColor(contentHealth) }}>{contentHealth}%</strong>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Bottom row */}
+      {/* ── Bottom row ── */}
       <div className={styles.bottomRow}>
 
         {/* Recent Analyses */}
-        <div className={styles.chartCard} style={{ flex: '1 1 0' }}>
+        <div className={styles.chartCard}>
           <div className={styles.chartHeader}>
             <div>
               <h2 className={styles.chartTitle}>Recent Analyses</h2>
@@ -376,25 +525,20 @@ export default function Dashboard() {
               {history.slice(0, 7).map((item, i) => {
                 const type = getItemType(item);
                 const typeColor = type === 'URL' ? '#a855f7' : type === 'Repo' ? '#22c55e' : '#06b6d4';
-                const typeIcon = type === 'URL' ? Globe : type === 'Repo' ? GitBranch : FileText;
-                const TypeIcon = typeIcon;
+                const TypeIcon = type === 'URL' ? Globe : type === 'Repo' ? GitBranch : FileText;
                 return (
                   <div key={i} className={styles.analysisRow}>
-                    <div className={styles.analysisBadge} style={{ color: typeColor, background: `${typeColor}12`, borderColor: `${typeColor}30` }}>
+                    <div className={styles.analysisBadge}
+                      style={{ color: typeColor, background: `${typeColor}12`, borderColor: `${typeColor}30` }}>
                       <TypeIcon className={styles.analysisBadgeIcon} />
                       {type}
                     </div>
-                    <span className={styles.analysisTitle}>
-                      {item.title || item.url || 'Untitled'}
-                    </span>
+                    <span className={styles.analysisTitle}>{item.title || item.url || 'Untitled'}</span>
                     <div className={styles.pillarDots}>
                       {PILLARS.map(p => (
-                        <span
-                          key={p.key}
-                          className={styles.pillarDot}
+                        <span key={p.key} className={styles.pillarDot}
                           style={{ background: p.color, opacity: item[p.key] ? (item[p.key] / 100) * 0.7 + 0.3 : 0.2 }}
-                          title={`${p.label}: ${item[p.key] ?? '—'}`}
-                        />
+                          title={`${p.label}: ${item[p.key] ?? '—'}`} />
                       ))}
                     </div>
                     <span className={styles.analysisScore} style={{ color: scoreColor(item.overall_score) }}>
@@ -432,6 +576,38 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* ── Pillar Sub-scores (last analysis) ── */}
+      {latestSubs && latestSubs.some(p => p.subscores.some(s => s.value !== null)) && (
+        <div className={styles.chartCard}>
+          <div className={styles.chartHeader}>
+            <div>
+              <h2 className={styles.chartTitle}>Pillar Sub-scores</h2>
+              <p className={styles.chartSub}>
+                Detailed breakdown from{' '}
+                <span style={{ color: 'var(--accent)' }}>{latest?.title || latest?.url || 'last analysis'}</span>
+              </p>
+            </div>
+          </div>
+          <div className={styles.subScoresGrid}>
+            {latestSubs.map(p => (
+              <div key={p.key} className={styles.subScorePillar}>
+                <div className={styles.subScorePillarHeader}>
+                  <p.Icon style={{ width: 13, height: 13, color: p.color }} />
+                  <span className={styles.subScorePillarLabel} style={{ color: p.color }}>{p.label}</span>
+                  <span className={styles.subScorePillarScore} style={{ color: p.color }}>{p.pillarScore}</span>
+                </div>
+                {p.subscores.map(s => (
+                  s.value !== null && (
+                    <SubScoreBar key={s.label} label={s.label} value={s.value} color={p.color} />
+                  )
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
