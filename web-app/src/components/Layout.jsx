@@ -3,6 +3,10 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext.jsx';
 import { api, clearApiKey } from '../api/client.js';
 import { supabase } from '../lib/supabase.js';
+import {
+  LayoutDashboard, FileText, Globe, GitBranch,
+  Clock, Settings, ArrowUp, LogOut,
+} from 'lucide-react';
 import styles from './Layout.module.css';
 
 const PRICE_TO_PLAN = {
@@ -12,12 +16,12 @@ const PRICE_TO_PLAN = {
 };
 
 const NAV = [
-  { to: '/dashboard',      label: 'Dashboard',         icon: '⊞' },
-  { to: '/analyze',        label: 'Content Analyzer',  icon: '✦' },
-  { to: '/url-scanner',    label: 'URL Scanner',        icon: '◎' },
-  { to: '/repo-analysis',  label: 'Repo Analysis',      icon: '⊕' },
-  { to: '/history',        label: 'Score History',      icon: '≡' },
-  { to: '/settings',       label: 'Settings',           icon: '⚙' },
+  { to: '/dashboard',      label: 'Dashboard',         Icon: LayoutDashboard },
+  { to: '/analyze',        label: 'Content Analyzer',  Icon: FileText },
+  { to: '/url-scanner',    label: 'URL Scanner',        Icon: Globe },
+  { to: '/repo-analysis',  label: 'Repo Analysis',      Icon: GitBranch },
+  { to: '/history',        label: 'Score History',      Icon: Clock },
+  { to: '/settings',       label: 'Settings',           Icon: Settings },
 ];
 
 export default function Layout({ children }) {
@@ -131,10 +135,12 @@ export default function Layout({ children }) {
           <div className={styles.sidebarActions}>
             {!isDemo && isFree && (
               <NavLink to="/upgrade" className={styles.upgradeBtn}>
-                ↑ Upgrade
+                <ArrowUp style={{ width: 12, height: 12 }} />
+                Upgrade
               </NavLink>
             )}
             <button onClick={handleLogout} className={styles.logoutBtn}>
+              <LogOut style={{ width: 12, height: 12, opacity: 0.6 }} />
               {isDemo ? 'Exit Demo' : 'Sign out'}
             </button>
           </div>
@@ -148,7 +154,7 @@ export default function Layout({ children }) {
   );
 }
 
-function NavItem({ to, label, icon }) {
+function NavItem({ to, label, Icon }) {
   return (
     <NavLink
       to={to}
@@ -156,7 +162,7 @@ function NavItem({ to, label, icon }) {
         `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
       }
     >
-      <span className={styles.navIcon}>{icon}</span>
+      <Icon className={styles.navIcon} />
       {label}
     </NavLink>
   );

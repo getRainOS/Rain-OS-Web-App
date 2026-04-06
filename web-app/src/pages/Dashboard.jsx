@@ -1,240 +1,437 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import {
-  BarChart, Bar, LineChart, Line, XAxis, YAxis,
-  Tooltip, ResponsiveContainer, CartesianGrid, Cell,
+  AreaChart, Area, XAxis, YAxis,
+  Tooltip, ResponsiveContainer,
 } from 'recharts';
+import {
+  Plus, TrendingUp, TrendingDown,
+  FileText, Globe, GitBranch, ArrowRight,
+  BrainCircuit, ShieldCheck, MousePointerClick, SearchCheck,
+  Activity, Zap, Minus,
+} from 'lucide-react';
 import styles from './Dashboard.module.css';
 
-const PILLAR_COLORS = {
-  ai_readability:        '#06b6d4',
-  digital_authority:     '#22c55e',
-  conversion_readiness:  '#a855f7',
-  product_discoverability: '#f97316',
-};
+const PILLARS = [
+  { key: 'ai_readability',        label: 'AI Readability',       color: '#06b6d4', Icon: BrainCircuit },
+  { key: 'digital_authority',     label: 'Digital Authority',    color: '#22c55e', Icon: ShieldCheck },
+  { key: 'conversion_readiness',  label: 'Conversion Readiness', color: '#a855f7', Icon: MousePointerClick },
+  { key: 'product_discoverability', label: 'Discoverability',    color: '#f97316', Icon: SearchCheck },
+];
 
-const PILLAR_LABELS = {
-  ai_readability:        'AI Readability',
-  digital_authority:     'Digital Authority',
-  conversion_readiness:  'Conversion Readiness',
-  product_discoverability: 'Product Discoverability',
-};
+const QUICK_ACTIONS = [
+  { to: '/analyze',       label: 'Content Analysis', sub: 'Paste and score any text',       Icon: FileText,  color: '#06b6d4' },
+  { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit a live URL for AEO signals', Icon: Globe,     color: '#a855f7' },
+  { to: '/repo-analysis', label: 'Repo Analysis',     sub: 'Connect GitHub and score source',  Icon: GitBranch, color: '#22c55e' },
+];
 
-function scoreClass(s) {
-  if (s >= 75) return styles.scoreGood;
-  if (s >= 50) return styles.scoreOk;
-  return styles.scorePoor;
+function timeAgo(dateStr) {
+  if (!dateStr) return '—';
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor(diff / 3600000);
+  if (days === 0 && hours < 1) return 'Just now';
+  if (days === 0) return `${hours}h ago`;
+  if (days === 1) return 'Yesterday';
+  if (days < 30) return `${days}d ago`;
+  return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function computeTrend(arr, key) {
+  if (arr.length < 4) return null;
+  const half = Math.min(7, Math.floor(arr.length / 2));
+  const recent = arr.slice(0, half);
+  const older = arr.slice(half, half * 2);
+  if (!older.length) return null;
+  const recentAvg = recent.reduce((s, h) => s + (h[key] ?? 0), 0) / recent.length;
+  const olderAvg = older.reduce((s, h) => s + (h[key] ?? 0), 0) / older.length;
+  if (olderAvg === 0) return null;
+  return Math.round(((recentAvg - olderAvg) / olderAvg) * 100);
+}
+
+function scoreColor(s) {
+  if (!s && s !== 0) return 'var(--text-dim)';
+  if (s >= 75) return '#22c55e';
+  if (s >= 50) return '#eab308';
+  return '#ef4444';
+}
+
+function getItemType(item) {
+  if (item.repo) return 'Repo';
+  if (item.url) return 'URL';
+  return 'Content';
+}
+
+function TrendBadge({ pct }) {
+  if (pct === null || pct === undefined) return null;
+  const up = pct > 0;
+  const flat = pct === 0;
+  return (
+    <span
+      className={styles.trendBadge}
+      style={{
+        color: flat ? 'var(--text-muted)' : up ? '#22c55e' : '#ef4444',
+        background: flat ? 'rgba(255,255,255,0.05)' : up ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)',
+        borderColor: flat ? 'rgba(255,255,255,0.08)' : up ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.25)',
+      }}
+    >
+      {flat ? <Minus className={styles.trendIcon} /> : up ? <TrendingUp className={styles.trendIcon} /> : <TrendingDown className={styles.trendIcon} />}
+      {flat ? 'Flat' : `${up ? '+' : ''}${pct}%`}
+    </span>
+  );
+}
+
+function CustomTooltip({ active, payload }) {
+  if (!active || !payload?.length) return null;
+  const d = payload[0].payload;
+  return (
+    <div className={styles.chartTooltip}>
+      <div className={styles.tooltipDate}>{d.date}</div>
+      <div className={styles.tooltipScore} style={{ color: scoreColor(d.score) }}>{d.score}</div>
+      <div className={styles.tooltipLabel}>Overall score</div>
+    </div>
+  );
 }
 
 export default function Dashboard() {
-  const { user } = useApp();
+  const { user, isDemo } = useApp();
+  const navigate = useNavigate();
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [chartRange, setChartRange] = useState(14);
 
   useEffect(() => {
-    api.history({ limit: 30 })
+    api.history({ limit: 50 })
       .then(({ data }) => setHistory(Array.isArray(data) ? data : data?.items ?? []))
       .catch(() => setHistory([]))
       .finally(() => setLoading(false));
   }, []);
+
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+  const rawName = user?.email?.split('@')[0]?.replace(/[._]/g, ' ');
+  const displayName = rawName ? rawName.charAt(0).toUpperCase() + rawName.slice(1) : '';
 
   const totalAnalyses = history.length;
   const avgScore = totalAnalyses > 0
     ? Math.round(history.reduce((s, h) => s + (h.overall_score ?? 0), 0) / totalAnalyses)
     : 0;
 
-  const pillarAvgs = Object.keys(PILLAR_LABELS).map(key => ({
-    key,
-    label: PILLAR_LABELS[key],
-    value: totalAnalyses > 0
-      ? Math.round(history.reduce((s, h) => s + (h[key] ?? 0), 0) / totalAnalyses)
+  const scoreTrend = computeTrend(history, 'overall_score');
+  const usagePct = user ? Math.round(((user.usage?.count ?? 0) / (user.usage?.limit ?? 100)) * 100) : 0;
+
+  const tier = (user?.subscriptionStatus === 'active' && user?.stripePriceId)
+    ? ({ 'price_1SeCJH3NMjs4uYdgpi0xB0XN': 'Business', 'price_1SeCKM3NMjs4uYdgcBRhgIhD': 'Pro', 'price_1SeCHg3NMjs4uYdguOgkr3SQ': 'Free' }[user.stripePriceId] ?? 'Pro')
+    : 'Free';
+
+  const pillarAvgs = PILLARS.map(p => ({
+    ...p,
+    avg: totalAnalyses > 0
+      ? Math.round(history.reduce((s, h) => s + (h[p.key] ?? 0), 0) / totalAnalyses)
       : 0,
-    color: PILLAR_COLORS[key],
+    trend: computeTrend(history, p.key),
   }));
 
-  const chartHistory = [...history]
-    .slice(-14)
+  const weakestPillar = totalAnalyses >= 3
+    ? [...pillarAvgs].sort((a, b) => a.avg - b.avg)[0]
+    : null;
+
+  const chartData = [...history]
+    .slice(0, chartRange)
     .reverse()
     .map((h, i) => ({
-      name: i + 1,
+      idx: i + 1,
       score: h.overall_score ?? 0,
-      date: h.analyzed_at ? new Date(h.analyzed_at).toLocaleDateString() : '',
+      date: h.analyzed_at ? timeAgo(h.analyzed_at) : '',
     }));
 
-  const pillarBarData = pillarAvgs.map(p => ({
-    name: p.label.split(' ')[0],
-    value: p.value,
-    color: p.color,
-  }));
+  const kpis = [
+    {
+      label: 'Total Analyses',
+      value: loading ? '—' : totalAnalyses,
+      sub: 'All time',
+      color: '#06b6d4',
+      Icon: Activity,
+      trend: null,
+    },
+    {
+      label: 'Average Score',
+      value: loading ? '—' : `${avgScore}`,
+      sub: 'Last 30 analyses',
+      color: scoreColor(avgScore),
+      Icon: Zap,
+      trend: scoreTrend,
+      suffix: '/100',
+    },
+    {
+      label: 'API Usage',
+      value: user ? `${user.usage?.count ?? 0}` : '—',
+      sub: `of ${user?.usage?.limit ?? 100} this cycle`,
+      color: usagePct > 80 ? '#ef4444' : usagePct > 60 ? '#eab308' : '#a855f7',
+      Icon: Activity,
+      trend: null,
+      suffix: `/${user?.usage?.limit ?? 100}`,
+    },
+    {
+      label: 'Plan',
+      value: tier,
+      sub: tier === 'Free' ? 'Upgrade for more analyses' : 'Active subscription',
+      color: tier === 'Business' ? '#f97316' : tier === 'Pro' ? '#a855f7' : '#475569',
+      Icon: Zap,
+      trend: null,
+    },
+  ];
 
   return (
     <div className={`${styles.root} fade-in`}>
+
+      {/* Header */}
       <div className={styles.header}>
         <div>
-          <h1 className={styles.title}>Dashboard</h1>
-          <p className={styles.sub}>Monitor your content's AI readability performance</p>
+          <h1 className={styles.greeting}>
+            {greeting}{displayName ? `, ${displayName}` : ''}
+          </h1>
+          <p className={styles.headerSub}>
+            {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+            {' · '}
+            <span style={{ color: 'var(--accent)' }}>{totalAnalyses} total analyses</span>
+          </p>
         </div>
-        <Link to="/analyze" className="btn btn-primary">
-          + New Analysis
-        </Link>
+        <button
+          onClick={() => navigate('/analyze')}
+          className={styles.newBtn}
+        >
+          <Plus className={styles.newBtnIcon} />
+          New Analysis
+        </button>
       </div>
 
+      {/* KPI Cards */}
       <div className={styles.kpis}>
-        <KpiCard
-          label="Total Analyses"
-          value={loading ? '—' : totalAnalyses}
-          sub="All time"
-          color="var(--cyan)"
-        />
-        <KpiCard
-          label="Average Score"
-          value={loading ? '—' : `${avgScore}%`}
-          sub="Last 30 analyses"
-          color="var(--green)"
-          valueClass={!loading ? scoreClass(avgScore) : ''}
-        />
-        <KpiCard
-          label="API Usage"
-          value={user ? `${user.usage?.count ?? 0} / ${user.usage?.limit ?? 100}` : '—'}
-          sub="This billing cycle"
-          color="var(--purple)"
-        />
-        <KpiCard
-          label="Plan"
-          value={user?.subscriptionStatus === 'active' ? 'Active' : 'Free'}
-          sub="Current subscription"
-          color="var(--orange)"
-        />
+        {kpis.map((k) => (
+          <div key={k.label} className={styles.kpiCard} style={{ '--kpi-color': k.color }}>
+            <div className={styles.kpiTop}>
+              <span className={styles.kpiLabel}>{k.label}</span>
+              <div className={styles.kpiIconWrap} style={{ background: `${k.color}15`, border: `1px solid ${k.color}30` }}>
+                <k.Icon className={styles.kpiIcon} style={{ color: k.color }} />
+              </div>
+            </div>
+            <div className={styles.kpiValueRow}>
+              <span className={styles.kpiValue} style={{ color: k.color === '#475569' ? 'var(--text)' : k.color }}>
+                {k.value}
+              </span>
+              {k.suffix && <span className={styles.kpiSuffix}>{k.suffix}</span>}
+            </div>
+            <div className={styles.kpiBottom}>
+              <span className={styles.kpiSub}>{k.sub}</span>
+              {k.trend !== null && <TrendBadge pct={k.trend} />}
+            </div>
+          </div>
+        ))}
       </div>
 
-      <div className={styles.charts}>
-        <div className="card">
+      {/* Insight callout */}
+      {weakestPillar && weakestPillar.avg < 70 && (
+        <div className={styles.insight}>
+          <div className={styles.insightDot} style={{ background: weakestPillar.color }} />
+          <span className={styles.insightText}>
+            <strong style={{ color: weakestPillar.color }}>{weakestPillar.label}</strong> is your weakest pillar — averaging <strong style={{ color: 'var(--text)' }}>{weakestPillar.avg}/100</strong> across recent analyses.
+          </span>
+          <Link to="/analyze" className={styles.insightAction}>Improve it →</Link>
+        </div>
+      )}
+
+      {/* Charts row */}
+      <div className={styles.chartsRow}>
+
+        {/* Score Trend */}
+        <div className={styles.chartCard}>
           <div className={styles.chartHeader}>
-            <h2 className={styles.chartTitle}>Performance History</h2>
-            <span className={styles.chartSub}>Last 14 analyses</span>
+            <div>
+              <h2 className={styles.chartTitle}>Score Trend</h2>
+              <p className={styles.chartSub}>Overall Rain Score over time</p>
+            </div>
+            <div className={styles.rangeToggle}>
+              {[7, 14, 30].map(r => (
+                <button
+                  key={r}
+                  className={`${styles.rangeBtn} ${chartRange === r ? styles.rangeBtnActive : ''}`}
+                  onClick={() => setChartRange(r)}
+                >
+                  {r}
+                </button>
+              ))}
+            </div>
           </div>
+
           {loading ? (
             <div className={styles.chartEmpty}><span className="spinner" /></div>
-          ) : chartHistory.length === 0 ? (
+          ) : chartData.length < 2 ? (
             <div className={styles.chartEmpty}>
-              <p>No analyses yet. <Link to="/analyze" className={styles.link}>Run your first analysis</Link></p>
+              <div className={styles.emptyState}>
+                <Activity className={styles.emptyIcon} />
+                <p>Run your first analysis to see trends here</p>
+                <Link to="/analyze" className={styles.emptyLink}>Get started →</Link>
+              </div>
             </div>
           ) : (
             <ResponsiveContainer width="100%" height={200}>
-              <LineChart data={chartHistory} margin={{ top: 5, right: 10, bottom: 5, left: -20 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="name" stroke="rgba(255,255,255,0.25)" tick={{ fontSize: 11 }} />
-                <YAxis domain={[0, 100]} stroke="rgba(255,255,255,0.25)" tick={{ fontSize: 11 }} />
-                <Tooltip
-                  contentStyle={{ background: 'var(--surface-3)', border: '1px solid var(--border)', borderRadius: 8 }}
-                  labelStyle={{ color: 'var(--text-muted)', fontSize: 11 }}
-                  itemStyle={{ color: 'var(--accent)' }}
-                  formatter={(v) => [`${v}%`, 'Score']}
-                  labelFormatter={(_, p) => p?.[0]?.payload?.date ?? ''}
+              <AreaChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
+                <defs>
+                  <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#0ea5e9" stopOpacity={0.25} />
+                    <stop offset="100%" stopColor="#0ea5e9" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis
+                  dataKey="idx"
+                  stroke="transparent"
+                  tick={{ fill: 'rgba(255,255,255,0.25)', fontSize: 11 }}
+                  tickLine={false}
+                  axisLine={false}
                 />
-                <Line type="monotone" dataKey="score" stroke="var(--accent)" strokeWidth={2} dot={{ r: 3, fill: 'var(--accent)' }} activeDot={{ r: 5 }} />
-              </LineChart>
+                <YAxis
+                  domain={[0, 100]}
+                  stroke="transparent"
+                  tick={{ fill: 'rgba(255,255,255,0.25)', fontSize: 11 }}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(14,165,233,0.2)', strokeWidth: 1 }} />
+                <Area
+                  type="monotone"
+                  dataKey="score"
+                  stroke="#0ea5e9"
+                  strokeWidth={2}
+                  fill="url(#scoreGrad)"
+                  dot={false}
+                  activeDot={{ r: 4, fill: '#0ea5e9', strokeWidth: 0 }}
+                />
+              </AreaChart>
             </ResponsiveContainer>
           )}
         </div>
 
-        <div className="card">
+        {/* Pillar Health */}
+        <div className={styles.chartCard}>
           <div className={styles.chartHeader}>
-            <h2 className={styles.chartTitle}>Pillar Breakdown</h2>
-            <span className={styles.chartSub}>Average scores</span>
+            <div>
+              <h2 className={styles.chartTitle}>Pillar Health</h2>
+              <p className={styles.chartSub}>Average across {totalAnalyses} {totalAnalyses === 1 ? 'analysis' : 'analyses'}</p>
+            </div>
           </div>
+          <div className={styles.pillarList}>
+            {pillarAvgs.map(p => (
+              <div key={p.key} className={styles.pillarRow}>
+                <div className={styles.pillarMeta}>
+                  <p.Icon className={styles.pillarIcon} style={{ color: p.color }} />
+                  <span className={styles.pillarLabel}>{p.label}</span>
+                </div>
+                <div className={styles.pillarBarWrap}>
+                  <div className={styles.pillarTrack}>
+                    <div
+                      className={styles.pillarFill}
+                      style={{
+                        width: loading ? '0%' : `${p.avg}%`,
+                        background: p.color,
+                        boxShadow: `0 0 8px ${p.color}60`,
+                      }}
+                    />
+                  </div>
+                  <span className={styles.pillarScore} style={{ color: p.color }}>{loading ? '—' : p.avg}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom row */}
+      <div className={styles.bottomRow}>
+
+        {/* Recent Analyses */}
+        <div className={styles.chartCard} style={{ flex: '1 1 0' }}>
+          <div className={styles.chartHeader}>
+            <div>
+              <h2 className={styles.chartTitle}>Recent Analyses</h2>
+              <p className={styles.chartSub}>Your latest content scores</p>
+            </div>
+            <Link to="/history" className={styles.viewAll}>View all →</Link>
+          </div>
+
           {loading ? (
             <div className={styles.chartEmpty}><span className="spinner" /></div>
-          ) : totalAnalyses === 0 ? (
-            <div className={styles.chartEmpty}><p>No data yet</p></div>
+          ) : history.length === 0 ? (
+            <div className={styles.chartEmpty}>
+              <div className={styles.emptyState}>
+                <FileText className={styles.emptyIcon} />
+                <p>No analyses yet</p>
+                <Link to="/analyze" className={styles.emptyLink}>Run your first →</Link>
+              </div>
+            </div>
           ) : (
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={pillarBarData} margin={{ top: 5, right: 10, bottom: 5, left: -20 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="name" stroke="rgba(255,255,255,0.25)" tick={{ fontSize: 11 }} />
-                <YAxis domain={[0, 100]} stroke="rgba(255,255,255,0.25)" tick={{ fontSize: 11 }} />
-                <Tooltip
-                  contentStyle={{ background: 'var(--surface-3)', border: '1px solid var(--border)', borderRadius: 8 }}
-                  labelStyle={{ color: 'var(--text-muted)', fontSize: 11 }}
-                  formatter={(v) => [`${v}%`, 'Score']}
-                />
-                <Bar dataKey="value" radius={[4, 4, 0, 0]}>
-                  {pillarBarData.map((entry) => (
-                    <Cell key={entry.name} fill={entry.color} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+            <div className={styles.analysesList}>
+              {history.slice(0, 7).map((item, i) => {
+                const type = getItemType(item);
+                const typeColor = type === 'URL' ? '#a855f7' : type === 'Repo' ? '#22c55e' : '#06b6d4';
+                const typeIcon = type === 'URL' ? Globe : type === 'Repo' ? GitBranch : FileText;
+                const TypeIcon = typeIcon;
+                return (
+                  <div key={i} className={styles.analysisRow}>
+                    <div className={styles.analysisBadge} style={{ color: typeColor, background: `${typeColor}12`, borderColor: `${typeColor}30` }}>
+                      <TypeIcon className={styles.analysisBadgeIcon} />
+                      {type}
+                    </div>
+                    <span className={styles.analysisTitle}>
+                      {item.title || item.url || 'Untitled'}
+                    </span>
+                    <div className={styles.pillarDots}>
+                      {PILLARS.map(p => (
+                        <span
+                          key={p.key}
+                          className={styles.pillarDot}
+                          style={{ background: p.color, opacity: item[p.key] ? (item[p.key] / 100) * 0.7 + 0.3 : 0.2 }}
+                          title={`${p.label}: ${item[p.key] ?? '—'}`}
+                        />
+                      ))}
+                    </div>
+                    <span className={styles.analysisScore} style={{ color: scoreColor(item.overall_score) }}>
+                      {item.overall_score ?? '—'}
+                    </span>
+                    <span className={styles.analysisDate}>{timeAgo(item.analyzed_at)}</span>
+                  </div>
+                );
+              })}
+            </div>
           )}
         </div>
-      </div>
 
-      <div className="card" style={{ marginTop: 24 }}>
-        <div className={styles.chartHeader}>
-          <h2 className={styles.chartTitle}>Recent Analyses</h2>
-          <Link to="/history" className={styles.link}>View all →</Link>
+        {/* Quick Actions */}
+        <div className={styles.quickActions}>
+          <div className={styles.chartHeader}>
+            <div>
+              <h2 className={styles.chartTitle}>Analyze</h2>
+              <p className={styles.chartSub}>Pick your analysis mode</p>
+            </div>
+          </div>
+          <div className={styles.actionList}>
+            {QUICK_ACTIONS.map(a => (
+              <Link key={a.to} to={a.to} className={styles.actionCard}>
+                <div className={styles.actionIconWrap} style={{ background: `${a.color}12`, borderColor: `${a.color}25` }}>
+                  <a.Icon className={styles.actionIcon} style={{ color: a.color }} />
+                </div>
+                <div className={styles.actionText}>
+                  <span className={styles.actionLabel}>{a.label}</span>
+                  <span className={styles.actionSub}>{a.sub}</span>
+                </div>
+                <ArrowRight className={styles.actionArrow} />
+              </Link>
+            ))}
+          </div>
         </div>
-        {loading ? (
-          <div className={styles.chartEmpty}><span className="spinner" /></div>
-        ) : history.length === 0 ? (
-          <div className={styles.chartEmpty}>
-            <p>No analyses yet. <Link to="/analyze" className={styles.link}>Get started</Link></p>
-          </div>
-        ) : (
-          <div className={styles.tableWrap}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>Title / URL</th>
-                  <th>Overall</th>
-                  <th>AI Read.</th>
-                  <th>Authority</th>
-                  <th>Conversion</th>
-                  <th>Discoverability</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {history.slice(0, 8).map((item, i) => (
-                  <tr key={i}>
-                    <td className={styles.tdTitle}>{item.title || item.url || '—'}</td>
-                    <td><ScoreBadge value={item.overall_score} /></td>
-                    <td><ScoreBadge value={item.ai_readability} color="var(--cyan)" /></td>
-                    <td><ScoreBadge value={item.digital_authority} color="var(--green)" /></td>
-                    <td><ScoreBadge value={item.conversion_readiness} color="var(--purple)" /></td>
-                    <td><ScoreBadge value={item.product_discoverability} color="var(--orange)" /></td>
-                    <td className={styles.tdDate}>{item.analyzed_at ? new Date(item.analyzed_at).toLocaleDateString() : '—'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
       </div>
     </div>
-  );
-}
-
-function KpiCard({ label, value, sub, color, valueClass }) {
-  return (
-    <div className={`card ${styles.kpiCard}`} style={{ '--pillar-color': color }}>
-      <div className={`${styles.kpiValue} ${valueClass || ''}`}>{value}</div>
-      <div className={styles.kpiLabel}>{label}</div>
-      <div className={styles.kpiSub}>{sub}</div>
-      <div className={styles.kpiBar} />
-    </div>
-  );
-}
-
-function ScoreBadge({ value, color }) {
-  if (value === undefined || value === null) return <span className={styles.scoreDash}>—</span>;
-  const v = Math.round(value);
-  const c = color || (v >= 75 ? 'var(--green)' : v >= 50 ? 'var(--yellow)' : 'var(--red)');
-  return (
-    <span className={styles.scoreBadge} style={{ color: c, borderColor: c }}>
-      {v}
-    </span>
   );
 }

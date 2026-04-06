@@ -90,10 +90,15 @@
 }
 
 .navIcon {
-  font-size: 15px;
-  width: 18px;
-  text-align: center;
+  width: 15px;
+  height: 15px;
   flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.navItemActive .navIcon,
+.navItem:hover .navIcon {
+  opacity: 1;
 }
 
 .bottom {
@@ -191,8 +196,10 @@
 }
 
 .upgradeBtn {
-  display: block;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   padding: 9px;
   border-radius: var(--radius-sm);
   background: rgba(14,165,233,0.12);
@@ -216,6 +223,10 @@
   font-size: 12px;
   border: 1px solid var(--border);
   transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 .logoutBtn:hover {
