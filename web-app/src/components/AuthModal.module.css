@@ -241,3 +241,45 @@
 }
 
 .backBtn:hover { color: #64748b; }
+
+.demoDivider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.25rem 0 1rem;
+  color: #334155;
+  font-size: 0.75rem;
+}
+
+.demoDivider::before,
+.demoDivider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.demoBtn {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  background: rgba(14, 165, 233, 0.06);
+  border: 1px solid rgba(14, 165, 233, 0.2);
+  border-radius: 10px;
+  color: #7dd3fc;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.demoBtn:hover:not(:disabled) {
+  background: rgba(14, 165, 233, 0.1);
+  border-color: rgba(14, 165, 233, 0.35);
+  color: #bae6fd;
+}
+
+.demoBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
