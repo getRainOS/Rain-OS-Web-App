@@ -14,6 +14,7 @@ import Upgrade from './pages/Upgrade.jsx';
 import Settings from './pages/Settings.jsx';
 
 const LandingPage = lazy(() => import('./pages/LandingPage.tsx'));
+const ContentWriters = lazy(() => import('./pages/ContentWriters.tsx'));
 
 const BASE_API = 'https://api.getrainos.com';
 
@@ -194,6 +195,7 @@ function AppRoutes({ apiKey, onAuth }) {
           />
           <Route path="/login" element={<AuthModalRoute onAuth={onAuth} />} />
           <Route path="/auth/callback" element={<AuthCallbackRoute onAuth={onAuth} />} />
+          <Route path="/content-writers" element={<LandingWrapper><ContentWriters /></LandingWrapper>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
@@ -213,6 +215,7 @@ function AppRoutes({ apiKey, onAuth }) {
         <Route path="/history" element={<History />} />
         <Route path="/upgrade" element={<Upgrade />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/content-writers" element={<LandingWrapper><ContentWriters /></LandingWrapper>} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Layout>
