@@ -4,7 +4,7 @@ import { Plus, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import {
   HybridFuture, FourPillars, FeatureGrid, ReadabilityIntelligence,
-  ComparisonTable, Pricing, FAQ, CTA, VibeCoderBand
+  ComparisonTable, Pricing, FAQ, CTA, VibeCoderBand, ThreeModesSection
 } from '@/components/marketing/MarketingComponents';
 import { DemoShowcase } from '@/components/marketing/DemoShowcase';
 
@@ -228,6 +228,8 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
         </section>
 
         <DemoShowcase onAnalyzeClick={scrollToHero} />
+
+        <ThreeModesSection onGetStarted={onGetStartedClick || onLoginClick} />
 
         <VibeCoderBand onGetStarted={onGetStartedClick || onLoginClick} />
 

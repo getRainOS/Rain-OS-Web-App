@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   BrainCircuit, ShieldCheck, MousePointerClick, SearchCheck, Network, Target, 
   Sparkles, FileJson, Layers, Cpu, Users, Globe2, AlertTriangle, Shield,
-  Search, Info, Plus, Minus, CheckCircle2
+  Search, Info, Plus, Minus, CheckCircle2,
+  FileText, Globe, GitBranch, ArrowRight, Lock
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -558,16 +559,150 @@ export const CTA = () => {
   );
 };
 
+export const ThreeModesSection = ({ onGetStarted }: { onGetStarted?: () => void }) => {
+  const modes = [
+    {
+      Icon: FileText,
+      accent: '#38bdf8',
+      bg: 'rgba(14,165,233,0.08)',
+      border: 'rgba(14,165,233,0.2)',
+      glow: 'rgba(14,165,233,0.12)',
+      tag: 'Most popular',
+      tagColor: 'text-sky-300 bg-sky-400/10 border-sky-400/25',
+      title: 'Content Analysis',
+      description: 'Paste any content — a blog post, product page, or landing copy — and get a full 4-pillar Rain Score with actionable recommendations in seconds.',
+      availability: ['WordPress Plugin', 'Web App'],
+      availColor: 'text-sky-400',
+      detail: 'The fastest way to go from draft to AI-optimized. Works on any text, any format.',
+    },
+    {
+      Icon: Globe,
+      accent: '#a78bfa',
+      bg: 'rgba(139,92,246,0.08)',
+      border: 'rgba(139,92,246,0.2)',
+      glow: 'rgba(139,92,246,0.12)',
+      tag: 'Technical signals',
+      tagColor: 'text-violet-300 bg-violet-400/10 border-violet-400/25',
+      title: 'URL Scanner',
+      description: 'Enter any live URL. We fetch the page, parse the HTML, and surface every technical AEO signal: schema markup, llms.txt, JS rendering risk, open graph, and more.',
+      availability: ['WordPress Plugin', 'Web App'],
+      availColor: 'text-violet-400',
+      detail: 'Spot what\'s invisible in the rendered page — because AI crawlers see the raw HTML, not what your browser shows.',
+    },
+    {
+      Icon: GitBranch,
+      accent: '#34d399',
+      bg: 'rgba(16,185,129,0.08)',
+      border: 'rgba(16,185,129,0.2)',
+      glow: 'rgba(16,185,129,0.12)',
+      tag: 'For vibe coders',
+      tagColor: 'text-emerald-300 bg-emerald-400/10 border-emerald-400/25',
+      title: 'Repo Analysis',
+      description: 'Built with Bolt, Lovable, Cursor, or v0? Connect your GitHub repo and we scan the actual source files — README, package.json, llms.txt, robots.txt, index.html — not just the rendered output.',
+      availability: ['Web App only'],
+      availColor: 'text-emerald-400',
+      availIcon: Lock,
+      detail: 'The only analysis mode that reads your site the way it was built — at the source level. Catches gaps that URL scanning can\'t see.',
+    },
+  ];
+
+  return (
+    <section className="py-24 px-6 relative z-10 border-t border-white/[0.06]">
+      <div className="max-w-6xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-14"
+        >
+          <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-3 block">Three ways to analyze</span>
+          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4" style={{ letterSpacing: '-0.03em' }}>
+            One platform.{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-emerald-400">
+              Three analysis modes.
+            </span>
+          </h2>
+          <p className="text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">
+            Whatever you built and wherever it lives — rain OS has the right tool. Each mode surfaces different signals, so use all three for complete coverage.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {modes.map((m, i) => (
+            <motion.div
+              key={m.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="relative rounded-2xl p-6 flex flex-col gap-4 group hover:scale-[1.015] transition-transform duration-300"
+              style={{
+                background: m.bg,
+                border: `1px solid ${m.border}`,
+                boxShadow: `0 0 40px ${m.glow}`,
+              }}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                  style={{ background: `${m.accent}18`, border: `1px solid ${m.accent}30` }}>
+                  <m.Icon className="w-5 h-5" style={{ color: m.accent }} />
+                </div>
+                <span className={`text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border ${m.tagColor}`}>
+                  {m.tag}
+                </span>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-2">{m.title}</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">{m.description}</p>
+              </div>
+
+              <p className="text-xs text-slate-600 leading-relaxed italic">{m.detail}</p>
+
+              <div className="mt-auto pt-4 border-t border-white/[0.06]">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600 block mb-2">Available on</span>
+                <div className="flex flex-wrap gap-2">
+                  {m.availability.map((a) => (
+                    <span key={a} className={`text-xs font-semibold px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/10 ${m.availColor}`}>
+                      {a}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {onGetStarted && (
+          <div className="mt-12 text-center">
+            <button
+              onClick={onGetStarted}
+              className="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-white text-sm font-bold shadow-lg shadow-sky-500/20 transition-all hover:scale-105 active:scale-95"
+            >
+              Try all three free
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};
+
 export const VibeCoderBand = ({ onGetStarted }: { onGetStarted?: () => void }) => {
   const platforms = ['Bolt', 'Lovable', 'Cursor', 'v0', 'Replit', 'Windsurf'];
   return (
-    <section className="py-16 relative z-10 border-y border-white/[0.06]">
+    <section className="py-20 relative z-10 border-y border-white/[0.06]" style={{ background: 'radial-gradient(ellipse at center, rgba(16,185,129,0.05) 0%, transparent 70%)' }}>
       <div className="max-w-5xl mx-auto px-6 flex flex-col items-center text-center gap-6">
-        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500">Built for AI-generated sites</p>
+        <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/8 px-4 py-1.5">
+          <GitBranch className="w-3.5 h-3.5 text-emerald-400" />
+          <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-emerald-400">For vibe coders</span>
+        </div>
 
         <h2 className="text-2xl md:text-3xl font-semibold text-white leading-tight max-w-2xl" style={{ letterSpacing: '-0.03em' }}>
           Your AI built the site.{' '}
-          <span className="text-slate-400">Now find out if AI can actually find it.</span>
+          <span className="text-emerald-400">Now scan the repo.</span>
         </h2>
 
         <div className="flex flex-wrap items-center justify-center gap-2">
@@ -581,16 +716,22 @@ export const VibeCoderBand = ({ onGetStarted }: { onGetStarted?: () => void }) =
           ))}
         </div>
 
-        <p className="text-sm text-slate-500 max-w-lg leading-relaxed">
-          If you shipped with any of these, your site likely has invisible AI readability gaps — missing schema, no llms.txt, JS-rendered pages that AI crawlers can't see.
-        </p>
+        <div className="max-w-2xl space-y-3">
+          <p className="text-base text-slate-300 leading-relaxed">
+            AI-generated sites have a blind spot: the rendered page looks fine, but the source is missing the signals that AI search engines actually look for — no llms.txt, no schema, JS-rendered content that crawlers can't parse.
+          </p>
+          <p className="text-sm text-slate-500 leading-relaxed">
+            Connect your GitHub repo and rain OS reads your actual source files — README, package.json, robots.txt, index.html — and gives you a full AEO score at the code level. No URL parsing. No guessing. The real thing.
+          </p>
+        </div>
 
         {onGetStarted && (
           <button
             onClick={onGetStarted}
-            className="px-6 py-2.5 rounded-lg border border-sky-500/30 text-sky-400 text-sm font-semibold hover:border-sky-400/60 hover:text-sky-300 transition-all"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-emerald-500/10 border border-emerald-400/30 text-emerald-300 text-sm font-semibold hover:bg-emerald-500/15 hover:border-emerald-400/50 transition-all"
           >
-            Scan your site free →
+            <GitBranch className="w-4 h-4" />
+            Connect your repo — it's free
           </button>
         )}
       </div>

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight, CheckCircle, Download, Zap, BrainCircuit, ShieldCheck,
   MousePointerClick, Target, Layers, Search, Globe, FileText,
-  BarChart3, Settings, Lock, Plus, Minus
+  BarChart3, Settings, Lock, Plus, Minus, GitBranch, ExternalLink
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -144,6 +144,10 @@ const faqs = [
     q: 'Can I use the plugin with WooCommerce product pages?',
     a: 'Yes. The plugin works on any post type including WooCommerce products. Product Discoverability scoring is particularly valuable for e-commerce — it checks whether AI shopping assistants can surface your products when users ask for recommendations.',
   },
+  {
+    q: 'Does the plugin include Repo Analysis for GitHub repositories?',
+    a: 'No — Repo Analysis is available on the rain OS web app at getrainos.com, not the WordPress plugin. If you built your site with Bolt, Lovable, Cursor, v0, or another AI coding tool, connect your GitHub repo on the web app and we\'ll scan your actual source files for AEO signals. The plugin covers Content Analysis and URL Scanner; the web app adds Repo Analysis on top of those.',
+  },
 ];
 
 function AccordionItem({ question, answer }: { question: string; answer: string }) {
@@ -241,9 +245,21 @@ export default function WordPressPlugin() {
                     </span>
                   </h1>
 
-                  <p className="text-lg text-slate-400 max-w-lg mx-auto lg:mx-0 leading-relaxed mb-8">
-                    The rain OS WordPress plugin brings full AI readability scoring into your editor. Score your content, get recommendations, and optimize — without leaving WordPress.
+                  <p className="text-lg text-slate-400 max-w-lg mx-auto lg:mx-0 leading-relaxed mb-5">
+                    Two powerful analysis tools — Content Analysis and URL Scanner — built directly into your editor. Score, audit, and optimize without leaving WordPress.
                   </p>
+
+                  <div className="flex flex-wrap gap-2 mb-8 justify-center lg:justify-start">
+                    {[
+                      { label: 'Content Analysis', icon: FileText, color: 'text-sky-400 border-sky-400/30 bg-sky-400/8' },
+                      { label: 'URL Scanner', icon: Globe, color: 'text-violet-400 border-violet-400/30 bg-violet-400/8' },
+                    ].map(({ label, icon: Icon, color }) => (
+                      <span key={label} className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold ${color}`}>
+                        <Icon className="w-3 h-3" />
+                        {label}
+                      </span>
+                    ))}
+                  </div>
 
                   <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                     <a
@@ -342,6 +358,130 @@ export default function WordPressPlugin() {
                 </div>
               </motion.div>
             </div>
+          </div>
+        </section>
+
+        {/* Two Analysis Tools */}
+        <section className="py-20 px-6 border-t border-white/[0.06]">
+          <div className="max-w-5xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-3 block">What's inside the plugin</span>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Two analysis tools. Zero context-switching.</h2>
+              <p className="text-slate-400 max-w-xl mx-auto leading-relaxed">
+                Whether you're writing new content or auditing a live page, both tools run directly inside WordPress — no browser tabs, no copy-pasting.
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+              {/* Content Analysis */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="rounded-2xl border border-sky-400/20 bg-sky-400/[0.05] p-7 flex flex-col gap-4"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-sky-400/10 border border-sky-400/20 flex items-center justify-center">
+                    <FileText className="w-5 h-5 text-sky-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-white">Content Analysis</h3>
+                    <span className="text-[10px] font-bold text-sky-400 uppercase tracking-widest">Gutenberg Sidebar + Classic Editor</span>
+                  </div>
+                </div>
+                <p className="text-sm text-slate-400 leading-relaxed">
+                  Score the post you're currently editing. The Gutenberg sidebar panel pulls the live content from the editor and sends it for a full 4-pillar analysis — AI Readability, Digital Authority, Conversion Readiness, and Product Discoverability — without you leaving the screen.
+                </p>
+                <ul className="space-y-2">
+                  {[
+                    'Scores the active post in one click',
+                    'Full 4-pillar Rain Score with sub-scores',
+                    'Inline recommendations ranked by impact',
+                    'Built-in rewrite tools: titles, meta, summarize, rewrite',
+                    'Works on drafts before you publish',
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-2 text-xs text-slate-400">
+                      <CheckCircle className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+
+              {/* URL Scanner */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="rounded-2xl border border-violet-400/20 bg-violet-400/[0.05] p-7 flex flex-col gap-4"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-violet-400/10 border border-violet-400/20 flex items-center justify-center">
+                    <Globe className="w-5 h-5 text-violet-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-white">URL Scanner</h3>
+                    <span className="text-[10px] font-bold text-violet-400 uppercase tracking-widest">Plugin Admin Panel</span>
+                  </div>
+                </div>
+                <p className="text-sm text-slate-400 leading-relaxed">
+                  Enter any URL — your own pages or a competitor's — and we fetch the raw HTML, parse every technical AEO signal, and return a full breakdown. Catch what JS rendering hides, what schema is missing, and what AI crawlers actually see.
+                </p>
+                <ul className="space-y-2">
+                  {[
+                    'Scans any publicly accessible URL',
+                    'Detects llms.txt, schema markup, open graph tags',
+                    'Flags JS rendering risk (content AI crawlers miss)',
+                    'Full pillar scores on the live page',
+                    'Actionable technical AEO recommendations',
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-2 text-xs text-slate-400">
+                      <CheckCircle className="w-3.5 h-3.5 text-violet-400 shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            </div>
+
+            {/* Repo Analysis callout */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.04] p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5"
+            >
+              <div className="w-10 h-10 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center shrink-0">
+                <GitBranch className="w-5 h-5 text-emerald-400" />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="text-sm font-bold text-white">Repo Analysis — Web App only</h3>
+                  <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest px-2 py-0.5 rounded-full border border-emerald-400/25 bg-emerald-400/8">For vibe coders</span>
+                </div>
+                <p className="text-sm text-slate-400 leading-relaxed">
+                  Built with Bolt, Lovable, Cursor, or v0? The third analysis mode — Repo Analysis — connects to your GitHub repository and scores your actual source files. This runs on the rain OS web app, not the plugin. It's the deepest analysis we offer, and it's free on any plan.
+                </p>
+              </div>
+              <a
+                href="https://www.getrainos.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-emerald-400/30 text-emerald-300 text-xs font-bold hover:bg-emerald-400/10 transition-all whitespace-nowrap"
+              >
+                Try Repo Analysis
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </motion.div>
           </div>
         </section>
 
