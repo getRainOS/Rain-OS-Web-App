@@ -41,7 +41,9 @@ Marketing components (`src/components/marketing/`, `src/components/ui/`, `src/co
 - Tailwind CSS v4 (via `@tailwindcss/vite` plugin) + Framer Motion animations
 - `RainfallBeams.tsx` — Canvas-based animated rain beams in the hero
 - `RainBackground.tsx` — Full-page subtle rain canvas effect
-- `MarketingComponents.tsx` — HybridFuture, ThreePillars, FeatureGrid, Testimonials, Pricing, FAQ, CTA sections
+- `MarketingComponents.tsx` — HybridFuture, FourPillars, FeatureGrid, ReadabilityIntelligence, ComparisonTable, ThreeModesSection, VibeCoderBand, Pricing, FAQ, CTA sections. **Testimonials removed.**
+- `ThreeModesSection` — 3-card section explaining Content Analysis / URL Scanner / Repo Analysis with availability badges (WP Plugin + Web App vs. Web App Only). Placed between DemoShowcase and VibeCoderBand on LandingPage.
+- `VibeCoderBand` — Vibe coder section with emerald accent, explicitly calls out GitHub repo scanning for Bolt/Lovable/Cursor/v0 users.
 - UI primitives: `Button`, `Badge` (shadcn-style with class-variance-authority)
 
 API client (`src/api/client.js`):
