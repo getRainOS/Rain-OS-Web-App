@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   BrainCircuit, ShieldCheck, MousePointerClick, SearchCheck, Network, Target, 
   Sparkles, FileJson, Layers, Cpu, Users, Globe2, AlertTriangle, Shield,
-  TrendingDown, Search, Quote, BarChart, Info, Plus, Minus, CheckCircle2
+  Search, Info, Plus, Minus, CheckCircle2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -389,42 +389,6 @@ export const ComparisonTable = () => {
   );
 };
 
-export const Testimonials = () => {
-  const quotes = [
-    { src: 'Gartner Research', icon: TrendingDown, color: 'text-orange-400', text: "By 2026, traditional search engine volume will drop by 25%..." },
-    { src: 'Search Engine Land', icon: Search, color: 'text-rain-400', text: "SEO is evolving into GEO (Generative Engine Optimization)..." },
-    { src: 'Bing Webmaster Team', icon: Quote, color: 'text-teal-400', text: "We want to see the same thing that users see..." },
-    { src: 'Marketing AI Institute', icon: Quote, color: 'text-emerald-400', text: "The future isn't just links. It's answers..." },
-    { src: 'Google DeepMind', icon: BarChart, color: 'text-blue-400', text: "LLMs favor content that reduces token complexity..." },
-    { src: 'Neil Patel', icon: Search, color: 'text-rose-400', text: "Optimizing for the answer engine is about becoming the definitive source of truth..." },
-    { src: 'Moz', icon: Quote, color: 'text-cyan-400', text: "Structure data and schema are the vocabulary of the AI web..." },
-  ];
-
-  return (
-    <section className="py-24 relative z-10 overflow-hidden">
-      <div className="text-center mb-16 px-6">
-        <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">The Market is Speaking</h2>
-        <p className="text-slate-400">The shift to AI search is already happening.</p>
-      </div>
-      
-      <div className="mask-fade-sides flex overflow-hidden">
-        <motion.div 
-          animate={{ x: "-50%" }} 
-          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-          className="flex gap-6 px-3 w-max"
-        >
-          {[...quotes, ...quotes].map((q, i) => (
-            <div key={i} className="w-[350px] md:w-[450px] bg-surface/40 border border-white/10 p-8 rounded-2xl shrink-0">
-              <q.icon className={`w-8 h-8 mb-6 ${q.color}`} />
-              <p className="text-slate-300 text-lg leading-relaxed mb-6">"{q.text}"</p>
-              <div className="text-sm font-bold text-white">— {q.src}</div>
-            </div>
-          ))}
-        </motion.div>
-      </div>
-    </section>
-  );
-};
 
 export const Pricing = () => {
   const plans = [

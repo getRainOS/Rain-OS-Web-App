@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Plus, ArrowRight } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Plus, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 import {
   HybridFuture, FourPillars, FeatureGrid, ReadabilityIntelligence,
-  ComparisonTable, Testimonials, Pricing, FAQ, CTA, VibeCoderBand
+  ComparisonTable, Pricing, FAQ, CTA, VibeCoderBand
 } from '@/components/marketing/MarketingComponents';
 import { DemoShowcase } from '@/components/marketing/DemoShowcase';
 
@@ -24,6 +24,11 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
   const scrollToHero = () => {
     heroInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     setTimeout(() => heroInputRef.current?.focus(), 600);
+  };
+
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
@@ -56,12 +61,11 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
           </div>
 
           <nav className="hidden md:flex items-center gap-10 text-sm font-medium text-slate-400">
-            <a href="#features" className="hover:text-white transition-colors">Features</a>
-            <a href="/community" className="hover:text-white transition-colors">Community</a>
-            <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
-            <a href="https://www.getrainos.com/docs" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Docs</a>
-            <a href="https://www.getrainos.com/wordpress-plugin" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">WordPress Plugin</a>
+            <button onClick={() => scrollToSection('features')} className="hover:text-white transition-colors">Features</button>
             <a href="#/content-writers" className="hover:text-white transition-colors">Content Writers</a>
+            <button onClick={() => scrollToSection('pricing')} className="hover:text-white transition-colors">Pricing</button>
+            <a href="https://www.getrainos.com/docs" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Docs</a>
+            <a href="#/wordpress-plugin" className="hover:text-white transition-colors">WordPress Plugin</a>
           </nav>
 
           <div className="flex items-center gap-4">
@@ -84,10 +88,9 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="pt-40 pb-24 md:pt-52 md:pb-40 relative z-10 px-6 overflow-hidden" style={{ paddingTop: '10rem', paddingBottom: '6rem' }}>
-          {/* Center bloom — bright focused halo behind textarea */}
+          {/* Center bloom */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] pointer-events-none -z-10"
             style={{ background: 'radial-gradient(ellipse at center, rgba(14,165,233,0.32) 0%, rgba(14,165,233,0.14) 35%, rgba(14,165,233,0.04) 60%, transparent 80%)' }} />
-          {/* Tight inner glow directly behind the input form */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[260px] pointer-events-none -z-10"
             style={{ background: 'radial-gradient(ellipse at center, rgba(56,189,248,0.22) 0%, rgba(14,165,233,0.10) 50%, transparent 80%)', filter: 'blur(16px)' }} />
 
@@ -101,11 +104,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
               transition={{ duration: 0.8, ease: 'easeOut' }}
               className="text-center space-y-5"
             >
-              {/* Accent chip */}
-              <div className="flex flex-col items-center gap-1">
-                <p className="text-sm font-bold text-white">Built for AI-Generated Sites and Content.</p>
-                <p className="text-sm font-bold text-white">Used To Optimize All Content and Websites For AI Citation.</p>
-              </div>
+              <p className="text-sm font-bold text-white">Built for AI-Generated Sites and Content.</p>
 
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.05] text-white"
                 style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
@@ -126,7 +125,6 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
               transition={{ duration: 0.6, delay: 0.2 }}
               className="relative w-full max-w-3xl"
             >
-              {/* Subtle border gradient */}
               <div className="absolute -inset-[1px] rounded-[25px] pointer-events-none"
                 style={{ background: 'linear-gradient(135deg, rgba(56,189,248,0.12), rgba(255,255,255,0.04), rgba(56,189,248,0.06))', filter: 'blur(0px)' }} />
               <form onSubmit={handleSubmit} className="card-surface p-2 text-left relative group" style={{ boxShadow: '0 0 40px rgba(14,165,233,0.07), 0 20px 60px -12px rgba(0,0,0,0.7)' }}>
@@ -184,7 +182,6 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
               </form>
             </motion.div>
 
-            {/* Secondary Hero Text */}
             {/* Stat strip */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -240,7 +237,6 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
           <FeatureGrid />
           <ReadabilityIntelligence />
           <ComparisonTable />
-          <Testimonials />
         </div>
         <div id="pricing">
           <Pricing />
