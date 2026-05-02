@@ -68,16 +68,20 @@ outputType = "console"
 name = "Dashboard Preview"
 author = "agent"
 
+[workflows.workflow.metadata]
+outputType = "console"
+
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd \"rain OS AI Readability Optimizer/dashboard-preview\" && npm run dev"
-waitForPort = 5000
-
-[workflows.workflow.metadata]
-outputType = "webview"
+waitForPort = 3001
 
 [[ports]]
 localPort = 3000
+
+[[ports]]
+localPort = 3001
+externalPort = 3001
 
 [[ports]]
 localPort = 5000
