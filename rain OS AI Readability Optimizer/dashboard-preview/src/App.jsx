@@ -132,6 +132,22 @@ const navSections = [
     ]
   },
   {
+    label: 'Reports',
+    items: [
+      {
+        icon: LayoutDashboard,
+        label: 'Dashboard',
+        page: 'dashboard',
+        subItems: [
+          { label: 'Performance', page: 'performance' },
+          { label: 'Pillar Breakdown', page: 'pillars' },
+          { label: 'Score History', page: 'categories' },
+          { label: 'Content Signals', page: 'signals' },
+        ]
+      },
+    ]
+  },
+  {
     label: 'Account',
     items: [
       { icon: Cloud, label: 'Upgrade', page: 'upgrade', isUpgrade: true },
