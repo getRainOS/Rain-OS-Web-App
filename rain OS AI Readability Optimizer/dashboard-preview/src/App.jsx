@@ -116,22 +116,6 @@ const navSections = [
     ]
   },
   {
-    label: 'Reports',
-    items: [
-      {
-        icon: LayoutDashboard,
-        label: 'Dashboard',
-        page: 'dashboard',
-        subItems: [
-          { label: 'Performance', page: 'performance' },
-          { label: 'Pillar Breakdown', page: 'pillars' },
-          { label: 'Score History', page: 'categories' },
-          { label: 'Content Signals', page: 'signals' },
-        ]
-      },
-    ]
-  },
-  {
     label: 'Learn',
     items: [
       { icon: BookOpen, label: 'Learn AI Readability', page: 'learn-ai-readability' },
@@ -143,6 +127,22 @@ const navSections = [
           { label: 'Getting Started', page: 'docs-getting-started' },
           { label: 'Troubleshooting', page: 'docs-troubleshooting' },
           { label: 'Improve Your Score', page: 'improve-score' },
+        ]
+      },
+    ]
+  },
+  {
+    label: 'Reports',
+    items: [
+      {
+        icon: LayoutDashboard,
+        label: 'Dashboard',
+        page: 'dashboard',
+        subItems: [
+          { label: 'Performance', page: 'performance' },
+          { label: 'Pillar Breakdown', page: 'pillars' },
+          { label: 'Score History', page: 'categories' },
+          { label: 'Content Signals', page: 'signals' },
         ]
       },
     ]
