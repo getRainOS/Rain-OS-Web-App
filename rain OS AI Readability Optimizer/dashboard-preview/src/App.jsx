@@ -4308,22 +4308,17 @@ function App() {
   }
 
   return (
-    <>
-      <AdminBar />
-      <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
-      
+    <div style={{ display: 'flex', height: '100vh', backgroundColor: 'var(--bg-primary)' }}>
       <main style={{
-        marginLeft: 'var(--sidebar-width)',
-        marginTop: 'var(--admin-bar-height)',
         padding: '32px',
-        minHeight: 'calc(100vh - var(--admin-bar-height))',
-        width: 'calc(100% - var(--sidebar-width))',
+        flex: 1,
+        overflowY: 'auto',
         backgroundColor: 'var(--bg-primary)',
         boxSizing: 'border-box',
       }}>
         {renderPage()}
       </main>
-    </>
+    </div>
   )
 }
 
