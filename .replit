@@ -57,34 +57,36 @@ name = "Web App"
 author = "agent"
 
 [workflows.workflow.metadata]
-outputType = "webview"
+outputType = "console"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd web-app && npm run dev"
-waitForPort = 5000
+waitForPort = 3001
 
 [[workflows.workflow]]
 name = "Dashboard Preview"
 author = "agent"
 
+[workflows.workflow.metadata]
+outputType = "webview"
+isCanvasWorkflow = true
+
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd \"rain OS AI Readability Optimizer/dashboard-preview\" && npm run dev"
-waitForPort = 3000
-
-[workflows.workflow.metadata]
-outputType = "console"
-isCanvasWorkflow = true
+waitForPort = 5000
 
 [[ports]]
 localPort = 3000
 
 [[ports]]
-localPort = 5000
+localPort = 3001
+externalPort = 3001
 
 [[ports]]
-localPort = 5001
+localPort = 5002
+externalPort = 80
 
 [[ports]]
 localPort = 5173

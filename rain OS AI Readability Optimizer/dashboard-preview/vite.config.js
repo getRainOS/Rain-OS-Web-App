@@ -5,8 +5,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: '0.0.0.0',
-    port: 3000,
-    allowedHosts: ['.replit.dev', '.replit.app', 'localhost'],
+    port: 5000,
+    allowedHosts: true,
     watch: {
       usePolling: true,
       interval: 1000,
