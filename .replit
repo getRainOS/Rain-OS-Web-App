@@ -75,7 +75,6 @@ waitForPort = 5000
 
 [workflows.workflow.metadata]
 outputType = "webview"
-isCanvasWorkflow = true
 
 [[ports]]
 localPort = 3000
@@ -83,9 +82,6 @@ localPort = 3000
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[[ports]]
-localPort = 5173
 
 [[ports]]
 localPort = 8000
