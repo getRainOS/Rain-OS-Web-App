@@ -109,6 +109,11 @@ const TIME_PERIODS = [
 
 const navSections = [
   {
+    items: [
+      { icon: LayoutDashboard, label: 'Dashboard', page: 'dashboard' },
+    ]
+  },
+  {
     label: 'Analyze',
     items: [
       { icon: PanelRightOpen, label: 'Content Analyzer', page: 'gutenberg-sidebar' },
@@ -118,33 +123,16 @@ const navSections = [
   {
     label: 'Reports',
     items: [
-      {
-        icon: LayoutDashboard,
-        label: 'Dashboard',
-        page: 'dashboard',
-        subItems: [
-          { label: 'Performance', page: 'performance' },
-          { label: 'Pillar Breakdown', page: 'pillars' },
-          { label: 'Score History', page: 'categories' },
-          { label: 'Content Signals', page: 'signals' },
-        ]
-      },
+      { icon: History, label: 'Score History', page: 'categories' },
+      { icon: Target, label: 'Pillar Breakdown', page: 'pillars' },
+      { icon: TrendingUp, label: 'Content Signals', page: 'signals' },
     ]
   },
   {
     label: 'Learn',
     items: [
       { icon: BookOpen, label: 'Learn AI Readability', page: 'learn-ai-readability' },
-      {
-        icon: HelpCircle,
-        label: 'Documentation',
-        page: 'docs',
-        subItems: [
-          { label: 'Getting Started', page: 'docs-getting-started' },
-          { label: 'Troubleshooting', page: 'docs-troubleshooting' },
-          { label: 'Improve Your Score', page: 'improve-score' },
-        ]
-      },
+      { icon: HelpCircle, label: 'Documentation', page: 'docs' },
     ]
   },
   {
