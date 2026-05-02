@@ -24,11 +24,11 @@ args = "Package Plugin"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Dashboard Preview"
+args = "Web App"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Web App"
+args = "Dashboard Preview"
 
 [[workflows.workflow]]
 name = "Build Plugin"
@@ -53,18 +53,6 @@ args = "cd \"rain OS AI Readability Optimizer/rain-os-aeo-analyzer\" && npm run 
 outputType = "console"
 
 [[workflows.workflow]]
-name = "Dashboard Preview"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd \"rain OS AI Readability Optimizer/dashboard-preview\" && npm run dev"
-waitForPort = 5000
-
-[workflows.workflow.metadata]
-outputType = "webview"
-
-[[workflows.workflow]]
 name = "Web App"
 author = "agent"
 
@@ -76,16 +64,25 @@ waitForPort = 3000
 [workflows.workflow.metadata]
 outputType = "console"
 
+[[workflows.workflow]]
+name = "Dashboard Preview"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd \"rain OS AI Readability Optimizer/dashboard-preview\" && npm run dev"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+isCanvasWorkflow = true
+
 [[ports]]
 localPort = 3000
 
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[[ports]]
-localPort = 5001
-externalPort = 3002
 
 [[ports]]
 localPort = 5173
