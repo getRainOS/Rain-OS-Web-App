@@ -4300,7 +4300,7 @@ function App() {
   }
 
   return (
-    <div style={{ display: 'flex', height: '100vh', backgroundColor: 'var(--bg-primary)' }}>
+    <div style={{ display: 'flex', width: '100%', height: '100vh', backgroundColor: 'var(--bg-primary)', overflow: 'hidden' }}>
       <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
       <main style={{
         marginLeft: 'var(--sidebar-width)',
