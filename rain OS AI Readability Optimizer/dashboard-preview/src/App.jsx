@@ -223,16 +223,17 @@ function Sidebar({ currentPage, setCurrentPage }) {
                     borderRadius: '6px',
                     color: item.isUpgrade
                       ? 'var(--accent)'
-                      : currentPage === item.page ? 'var(--accent)' : 'var(--text-secondary)',
+                      : (currentPage === item.page || item.subItems?.some(si => si.page === currentPage)) ? 'var(--accent)' : 'var(--text-secondary)',
                     backgroundColor: item.isUpgrade
                       ? 'rgba(34, 211, 238, 0.06)'
-                      : currentPage === item.page ? 'rgba(34, 211, 238, 0.08)' : 'transparent',
+                      : (currentPage === item.page || item.subItems?.some(si => si.page === currentPage)) ? 'rgba(34, 211, 238, 0.08)' : 'transparent',
                     textDecoration: 'none',
                     marginBottom: '2px',
                     transition: 'all 0.2s ease',
                     fontSize: '13px',
-                    fontWeight: currentPage === item.page ? 500 : 400,
+                    fontWeight: (currentPage === item.page || item.subItems?.some(si => si.page === currentPage)) ? 500 : 400,
                     cursor: 'pointer',
+                    outline: 'none',
                   }}
                 >
                   {item.icon && <item.icon size={16} />}
@@ -249,11 +250,14 @@ function Sidebar({ currentPage, setCurrentPage }) {
                           display: 'block',
                           padding: '6px 12px',
                           paddingLeft: '36px',
+                          borderRadius: '6px',
                           color: currentPage === subItem.page ? 'var(--accent)' : 'var(--text-muted)',
+                          backgroundColor: currentPage === subItem.page ? 'rgba(34, 211, 238, 0.06)' : 'transparent',
                           textDecoration: 'none',
                           fontSize: '12px',
                           transition: 'color 0.2s ease',
                           cursor: 'pointer',
+                          outline: 'none',
                         }}
                         onMouseEnter={(e) => { if (currentPage !== subItem.page) e.currentTarget.style.color = 'var(--text-secondary)' }}
                         onMouseLeave={(e) => { if (currentPage !== subItem.page) e.currentTarget.style.color = 'var(--text-muted)' }}
