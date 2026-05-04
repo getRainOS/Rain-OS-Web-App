@@ -23,7 +23,7 @@ function scoreColor(score) {
 }
 
 export default function CitationMonitor() {
-  const { isDemo } = useApp();
+  const { isDemo, refreshUser } = useApp();
   const [topic, setTopic] = useState('');
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -39,6 +39,7 @@ export default function CitationMonitor() {
     try {
       const { data } = await api.citationCheck({ topic: topic.trim(), url: url.trim() || undefined });
       setResult(data);
+      refreshUser?.();
     } catch (err) {
       setError(err.message || 'Citation check failed. Please try again.');
     } finally {
