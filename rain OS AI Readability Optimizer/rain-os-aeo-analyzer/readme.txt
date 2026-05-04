@@ -2,7 +2,7 @@
 Contributors: rainos
 Tags: aeo, ai, content optimization, answer engine, seo
 Requires at least: 5.8
-Tested up to: 6.7
+Tested up to: 6.9
 Requires PHP: 7.4
 Stable tag: 2.3.0
 License: GPLv2 or later
