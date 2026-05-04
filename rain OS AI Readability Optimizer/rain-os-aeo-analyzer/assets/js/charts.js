@@ -182,6 +182,13 @@
             var ctx = canvas.getContext('2d');
             var self = this;
 
+            // Use pre-loaded signals data if available (Content Signals page),
+            // otherwise fall back to AJAX (Dashboard).
+            if (typeof rainOsSignalsData !== 'undefined' && rainOsSignalsData.length > 0) {
+                self.createScatterChartFromSignals(ctx, rainOsSignalsData);
+                return;
+            }
+
             $.ajax({
                 url: typeof rainOsAeo !== 'undefined' ? rainOsAeo.ajaxUrl : ajaxurl,
                 type: 'POST',
@@ -200,6 +207,80 @@
                 },
                 error: function() {
                     self.createScatterChartWithData(ctx, []);
+                }
+            });
+        },
+
+        createScatterChartFromSignals: function(ctx, data) {
+            var self = this;
+            var dataPoints = [];
+            var pointColors = [];
+            var titles = [];
+
+            data.forEach(function(row) {
+                var wordCount = parseInt(row.word_count) || 0;
+                var score     = parseFloat(row.overall_score) || 0;
+                var title     = row.post_title || 'Untitled';
+
+                dataPoints.push({ x: wordCount, y: score });
+                titles.push(title);
+
+                if (score >= 80) {
+                    pointColors.push('#10b981');
+                } else if (score >= 65) {
+                    pointColors.push('#f59e0b');
+                } else {
+                    pointColors.push('#ef4444');
+                }
+            });
+
+            new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Posts',
+                        data: dataPoints,
+                        backgroundColor: pointColors,
+                        borderColor: pointColors,
+                        pointRadius: 8,
+                        pointHoverRadius: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            titleColor: '#fff',
+                            bodyColor: 'rgba(255,255,255,0.75)',
+                            borderColor: 'rgba(255,255,255,0.1)',
+                            borderWidth: 1,
+                            callbacks: {
+                                title: function(context) {
+                                    return titles[context[0].dataIndex];
+                                },
+                                label: function(context) {
+                                    return 'Word Count: ' + context.parsed.x + ' | Score: ' + context.parsed.y;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Word Count', color: 'rgba(255,255,255,0.75)' },
+                            grid:  { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: 'rgba(255,255,255,0.75)' }
+                        },
+                        y: {
+                            title: { display: true, text: 'AEO Score', color: 'rgba(255,255,255,0.75)' },
+                            grid:  { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: 'rgba(255,255,255,0.75)' },
+                            min: 0,
+                            max: 100
+                        }
+                    }
                 }
             });
         },

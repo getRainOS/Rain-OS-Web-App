@@ -3,16 +3,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-global $wpdb;
-$table_name = $wpdb->prefix . 'rain_os_analysis_history';
-$analysis_data = $wpdb->get_results(
-    "SELECT h.*, p.post_title, p.post_name 
-    FROM {$table_name} h 
-    LEFT JOIN {$wpdb->posts} p ON h.post_id = p.ID 
-    ORDER BY h.analyzed_at DESC
-    LIMIT 50",
-    ARRAY_A
-);
+if ( ! isset( $analysis_data ) || ! is_array( $analysis_data ) ) {
+    $analysis_data = array();
+}
 ?>
 
 <div class="rain-os-wrap">
@@ -83,103 +76,3 @@ $analysis_data = $wpdb->get_results(
     </div>
 </div>
 
-<script>
-(function() {
-    var canvas = document.getElementById('rain-os-scatter-chart');
-    if (!canvas || typeof Chart === 'undefined') return;
-    if (canvas.getAttribute('data-chart-initialized')) return;
-    canvas.setAttribute('data-chart-initialized', 'true');
-
-    var analysisData = <?php echo wp_json_encode($analysis_data ? $analysis_data : array()); ?>;
-
-    var dataPoints = [];
-    var pointColors = [];
-    var titles = [];
-
-    analysisData.forEach(function(row) {
-        var wordCount = parseInt(row.word_count) || 0;
-        var score = parseFloat(row.overall_score) || 0;
-        var title = row.post_title || 'Untitled';
-
-        dataPoints.push({ x: wordCount, y: score });
-        titles.push(title);
-
-        if (score >= 80) {
-            pointColors.push('#10b981');
-        } else if (score >= 65) {
-            pointColors.push('#f59e0b');
-        } else {
-            pointColors.push('#ef4444');
-        }
-    });
-
-    new Chart(canvas, {
-        type: 'scatter',
-        data: {
-            datasets: [{
-                label: 'Posts',
-                data: dataPoints,
-                backgroundColor: pointColors,
-                borderColor: pointColors,
-                pointRadius: 8,
-                pointHoverRadius: 10
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(0,0,0,0.8)',
-                    titleColor: '#fff',
-                    bodyColor: 'rgba(255,255,255,0.75)',
-                    borderColor: 'rgba(255,255,255,0.1)',
-                    borderWidth: 1,
-                    callbacks: {
-                        title: function(context) {
-                            var idx = context[0].dataIndex;
-                            return titles[idx];
-                        },
-                        label: function(context) {
-                            return 'Word Count: ' + context.parsed.x + ' | Score: ' + context.parsed.y;
-                        }
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Word Count',
-                        color: 'rgba(255,255,255,0.75)'
-                    },
-                    grid: {
-                        color: 'rgba(255,255,255,0.05)'
-                    },
-                    ticks: {
-                        color: 'rgba(255,255,255,0.75)'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'AEO Score',
-                        color: 'rgba(255,255,255,0.75)'
-                    },
-                    grid: {
-                        color: 'rgba(255,255,255,0.05)'
-                    },
-                    ticks: {
-                        color: 'rgba(255,255,255,0.75)'
-                    },
-                    min: 0,
-                    max: 100
-                }
-            }
-        }
-    });
-})();
-</script>

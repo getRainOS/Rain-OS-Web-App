@@ -33,7 +33,7 @@ class Rain_OS_Assets {
             'chartjs',
             RAIN_OS_AEO_PLUGIN_URL . 'assets/js/chart.min.js',
             array(),
-            '4.4.1',
+            '4.5.1',
             true
         );
 
@@ -54,17 +54,56 @@ class Rain_OS_Assets {
                 'pluginUrl' => RAIN_OS_AEO_PLUGIN_URL,
                 'pdEnabled' => Rain_OS_Settings::is_pd_enabled(),
                 'i18n'      => array(
-                    'analyzing'    => __( 'Analyzing...', 'rain-os-aeo-analyzer' ),
-                    'scanning'     => __( 'Scanning URL…', 'rain-os-aeo-analyzer' ),
-                    'error'        => __( 'An error occurred. Please try again.', 'rain-os-aeo-analyzer' ),
-                    'success'      => __( 'Analysis complete!', 'rain-os-aeo-analyzer' ),
-                    'noApiKey'     => __( 'Please configure your API key in Settings.', 'rain-os-aeo-analyzer' ),
-                    'confirm'      => __( 'Are you sure?', 'rain-os-aeo-analyzer' ),
-                    'urlRequired'  => __( 'Please enter a URL to scan.', 'rain-os-aeo-analyzer' ),
-                    'urlInvalid'   => __( 'Please enter a valid URL including http:// or https://', 'rain-os-aeo-analyzer' ),
+                    'analyzing'        => __( 'Analyzing...', 'rain-os-aeo-analyzer' ),
+                    'scanning'         => __( 'Scanning URL…', 'rain-os-aeo-analyzer' ),
+                    'error'            => __( 'An error occurred. Please try again.', 'rain-os-aeo-analyzer' ),
+                    'success'          => __( 'Analysis complete!', 'rain-os-aeo-analyzer' ),
+                    'noApiKey'         => __( 'Please configure your API key in Settings.', 'rain-os-aeo-analyzer' ),
+                    'confirm'          => __( 'Are you sure?', 'rain-os-aeo-analyzer' ),
+                    'urlRequired'      => __( 'Please enter a URL to scan.', 'rain-os-aeo-analyzer' ),
+                    'urlInvalid'       => __( 'Please enter a valid URL including http:// or https://', 'rain-os-aeo-analyzer' ),
+                    'hide'             => __( 'Hide', 'rain-os-aeo-analyzer' ),
+                    'view'             => __( 'View', 'rain-os-aeo-analyzer' ),
+                    'connectionFailed' => __( 'Connection failed. Please check your API key.', 'rain-os-aeo-analyzer' ),
                 ),
             )
         );
+
+        $separator_css = '
+            #adminmenu li a[href$="page=rain-os-aeo-sep-analyze"],
+            #adminmenu li a[href$="page=rain-os-aeo-sep-reports"],
+            #adminmenu li a[href$="page=rain-os-aeo-sep-learn"],
+            #adminmenu li a[href$="page=rain-os-aeo-sep-account"] {
+                pointer-events: none;
+                cursor: default;
+                font-size: 10px !important;
+                font-weight: 700 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.8px !important;
+                color: rgba(255,255,255,0.3) !important;
+                padding-top: 14px !important;
+                padding-bottom: 2px !important;
+                margin-top: 4px;
+            }
+            #adminmenu li a[href$="page=rain-os-aeo-sep-analyze"]:hover,
+            #adminmenu li a[href$="page=rain-os-aeo-sep-reports"]:hover,
+            #adminmenu li a[href$="page=rain-os-aeo-sep-learn"]:hover,
+            #adminmenu li a[href$="page=rain-os-aeo-sep-account"]:hover {
+                background: transparent !important;
+                color: rgba(255,255,255,0.3) !important;
+            }
+        ';
+        wp_add_inline_style( 'rain-os-admin', $separator_css );
+
+        // Settings page — dedicated stylesheet
+        if ( strpos( $hook, 'rain-os-aeo-settings' ) !== false ) {
+            wp_enqueue_style(
+                'rain-os-settings',
+                RAIN_OS_AEO_PLUGIN_URL . 'assets/css/settings.css',
+                array( 'rain-os-admin' ),
+                RAIN_OS_AEO_VERSION
+            );
+        }
 
         // Upgrade & Settings — Stripe checkout / portal / key regen
         if ( strpos( $hook, 'rain-os-aeo-upgrade' ) !== false || strpos( $hook, 'rain-os-aeo-settings' ) !== false ) {
