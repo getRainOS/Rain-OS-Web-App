@@ -1,11 +1,47 @@
 // services/citationCheckService.ts — Rain OS AI Citation Monitor
 // Uses Gemini with Google Search grounding to test whether a user's content
 // would be cited by AI engines when answering a given topic/question.
-// SDK: @google/generative-ai (googleSearch tool)
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import {
+  GoogleGenerativeAI,
+  type GenerativeModel,
+  type GenerateContentRequest,
+  type Tool,
+  type GroundingChunk,
+} from '@google/generative-ai';
 
 const API_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
 const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+
+// Gemini 2.0+ uses the `googleSearch` tool; the @google/generative-ai SDK
+// only ships the older `googleSearchRetrieval` shape in its public types.
+// Declare the new shape locally so we can build a properly typed Tool.
+interface GoogleSearchTool {
+  googleSearch: Record<string, never>;
+}
+type GroundedTool = Tool | GoogleSearchTool;
+
+// The grounding response uses both old (`groundingChuncks` typo, `groundingSupport`)
+// and new (`groundingChunks`, `groundingSupports`) field names depending on
+// SDK / API version. Declare a forgiving shape that covers both.
+interface GroundingSupportSegment {
+  text?: string;
+  startIndex?: number;
+  endIndex?: number;
+}
+interface GroundingSupport {
+  segment?: GroundingSupportSegment;
+  groundingChunkIndices?: number[];
+  confidenceScores?: number[];
+}
+interface CandidateGroundingMetadata {
+  groundingChunks?: GroundingChunk[];
+  groundingChuncks?: GroundingChunk[];
+  groundingSupports?: GroundingSupport[];
+  groundingSupport?: GroundingSupport[];
+}
+interface CandidateWithGrounding {
+  groundingMetadata?: CandidateGroundingMetadata;
+}
 
 export interface CitationSource {
   title: string;
@@ -25,6 +61,12 @@ export interface CitationCheckResult {
   recommendations: string[];
   summary: string;
   answerExcerpt: string;
+}
+
+interface AnalysisJson {
+  alignmentScore?: number;
+  summary?: string;
+  recommendations?: string[];
 }
 
 function extractDomain(rawUrl: string): string {
@@ -57,11 +99,14 @@ export async function runCitationCheck(
   const client = new GoogleGenerativeAI(API_KEY);
 
   // ─── Step 1: Grounded query — ask Gemini the topic as if a user asked it ──
-  // We use the googleSearch tool so Gemini retrieves and cites real sources.
-  const groundedModel = client.getGenerativeModel({
+  // Build the tools array as our extended type, then narrow to Tool[] at the
+  // single boundary where the SDK accepts it. This keeps the rest of the
+  // function fully typed without sprinkling `any` casts.
+  const groundedTools: GroundedTool[] = [{ googleSearch: {} }];
+  const groundedModel: GenerativeModel = client.getGenerativeModel({
     model: MODEL,
-    tools: [{ googleSearch: {} } as any],
-  } as any);
+    tools: groundedTools as Tool[],
+  });
 
   const groundedPrompt =
     `A user is asking an AI assistant the following question. ` +
@@ -69,42 +114,45 @@ export async function runCitationCheck(
     `QUESTION: ${trimmedTopic}\n\n` +
     `Provide a concise, factual answer (2-4 short paragraphs). Cite sources naturally.`;
 
-  const groundedResult = await groundedModel.generateContent({
+  const groundedRequest: GenerateContentRequest = {
     contents: [{ role: 'user', parts: [{ text: groundedPrompt }] }],
     generationConfig: {
       temperature: 0.2,
       maxOutputTokens: 1024,
     },
-  } as any);
+  };
+  const groundedResult = await groundedModel.generateContent(groundedRequest);
 
   const answerText = groundedResult.response.text();
-  const candidate: any = groundedResult.response.candidates?.[0] || {};
-  const groundingMetadata: any = candidate.groundingMetadata || {};
-  const chunks: any[] = groundingMetadata.groundingChunks || [];
-  const supports: any[] = groundingMetadata.groundingSupports || [];
+  const candidate = (groundedResult.response.candidates?.[0] || {}) as CandidateWithGrounding;
+  const groundingMetadata: CandidateGroundingMetadata = candidate.groundingMetadata || {};
+  const chunks: GroundingChunk[] =
+    groundingMetadata.groundingChunks || groundingMetadata.groundingChuncks || [];
+  const supports: GroundingSupport[] =
+    groundingMetadata.groundingSupports || groundingMetadata.groundingSupport || [];
 
   // ─── Build the sources list from grounding chunks ─────────────────────────
   const seen = new Set<string>();
   const sources: CitationSource[] = [];
   for (const chunk of chunks) {
-    const web = chunk?.web || {};
-    const rawUrl: string = web.uri || web.url || '';
+    const web = chunk.web;
+    const rawUrl = web?.uri || '';
     if (!rawUrl) continue;
     const domain = extractDomain(rawUrl);
     if (seen.has(rawUrl)) continue;
     seen.add(rawUrl);
     sources.push({
-      title: web.title || domain || 'Untitled source',
+      title: web?.title || domain || 'Untitled source',
       url: rawUrl,
       domain,
       snippet: '',
     });
   }
 
-  // Attach snippets from groundingSupports text segments where possible
+  // Attach snippets from grounding supports text segments where possible
   for (const support of supports) {
-    const indices: number[] = support?.groundingChunkIndices || [];
-    const segmentText: string = support?.segment?.text || '';
+    const indices = support.groundingChunkIndices || [];
+    const segmentText = support.segment?.text || '';
     if (!segmentText) continue;
     for (const idx of indices) {
       if (sources[idx] && !sources[idx].snippet) {
@@ -116,7 +164,12 @@ export async function runCitationCheck(
   // Citation match against user's domain
   let citedSourceIndex: number | null = null;
   if (userDomain) {
-    const idx = sources.findIndex(s => s.domain === userDomain || s.domain.endsWith('.' + userDomain) || userDomain.endsWith('.' + s.domain));
+    const idx = sources.findIndex(
+      s =>
+        s.domain === userDomain ||
+        s.domain.endsWith('.' + userDomain) ||
+        userDomain.endsWith('.' + s.domain)
+    );
     if (idx >= 0) citedSourceIndex = idx;
   }
   const cited = citedSourceIndex !== null;
@@ -126,8 +179,7 @@ export async function runCitationCheck(
     .map(s => s.domain);
 
   // ─── Step 2: Structured analysis call (no grounding, JSON only) ──────────
-  // Ask Gemini to score alignment and produce recommendations.
-  const analysisModel = client.getGenerativeModel({ model: MODEL });
+  const analysisModel: GenerativeModel = client.getGenerativeModel({ model: MODEL });
   const analysisPrompt = [
     `You are an AEO (Answer Engine Optimization) strategist analysing whether a user's website would be cited by AI engines for a given query.`,
     ``,
@@ -139,7 +191,14 @@ export async function runCitationCheck(
     `SOURCES AI ACTUALLY CITED FOR THIS QUERY:`,
     sources.length === 0
       ? '(No grounded sources returned)'
-      : sources.map((s, i) => `${i + 1}. ${s.title} — ${s.domain}${s.snippet ? `\n   "${s.snippet.slice(0, 160)}"` : ''}`).join('\n'),
+      : sources
+          .map(
+            (s, i) =>
+              `${i + 1}. ${s.title} — ${s.domain}${
+                s.snippet ? `\n   "${s.snippet.slice(0, 160)}"` : ''
+              }`
+          )
+          .join('\n'),
     ``,
     `AI ANSWER GIVEN TO USER QUERY:`,
     answerText.slice(0, 1500),
@@ -154,25 +213,26 @@ export async function runCitationCheck(
     `Rules:`,
     `- If the user's domain IS cited, score 70-95 and recommend protecting/extending the position.`,
     `- If NOT cited but the domain is reasonable for the topic, score 30-60 and give specific gap-closing recommendations referencing the actual cited competitors.`,
-    `- If no URL was provided, score the citation field's competitiveness (how dominated it is, how fresh the sources are) and recommendations should be generic AEO best practices for the topic.`,
+    `- If no URL was provided, score the citation field's competitiveness and recommend generic AEO best practices for the topic.`,
     `- Recommendations must be concrete (mention schema markup, content structure, citation patterns, freshness, etc.) — no vague advice.`,
     `- Respond with valid JSON only. No markdown fences, no preamble.`,
   ].join('\n');
 
-  const analysisResult = await analysisModel.generateContent({
+  const analysisRequest: GenerateContentRequest = {
     contents: [{ role: 'user', parts: [{ text: analysisPrompt }] }],
     generationConfig: {
       temperature: 0.3,
       maxOutputTokens: 768,
       responseMimeType: 'application/json',
     },
-  });
+  };
+  const analysisResult = await analysisModel.generateContent(analysisRequest);
 
   const rawAnalysis = analysisResult.response.text();
-  let analysis: any = {};
+  let analysis: AnalysisJson = {};
   try {
-    analysis = JSON.parse(rawAnalysis.replace(/```json|```/g, '').trim());
-  } catch (e) {
+    analysis = JSON.parse(rawAnalysis.replace(/```json|```/g, '').trim()) as AnalysisJson;
+  } catch (err) {
     console.error('Citation analysis parse error:', rawAnalysis.slice(0, 400));
     analysis = {
       alignmentScore: cited ? 75 : 40,
@@ -196,7 +256,7 @@ export async function runCitationCheck(
     sources,
     competitorDomains: Array.from(new Set(competitorDomains)),
     recommendations: Array.isArray(analysis.recommendations)
-      ? analysis.recommendations.slice(0, 4).map((r: any) => String(r))
+      ? analysis.recommendations.slice(0, 4).map(r => String(r))
       : [],
     summary: typeof analysis.summary === 'string' ? analysis.summary : '',
     answerExcerpt: answerText.slice(0, 600),

@@ -263,6 +263,45 @@ export default function CitationMonitor() {
             </div>
           )}
 
+          {/* Competitor gap analysis — competitor domains being cited instead of you */}
+          {!result.cited && result.competitorDomains?.length > 0 && (
+            <div className={`card ${styles.gapCard}`}>
+              <h3 className={styles.sectionTitle}>
+                {result.url ? 'Competitor Gap' : 'Who Owns This Topic'}
+                <span className={styles.sectionCount}>{result.competitorDomains.length}</span>
+              </h3>
+              <p className={styles.sectionSub}>
+                {result.url
+                  ? `These domains are being cited for this query instead of yours. Earning citations from them, or out-ranking them with similar content, is your most direct path to inclusion.`
+                  : `These domains dominate AI citations for this query. They define the competitive bar for content.`}
+              </p>
+              <div className={styles.gapList}>
+                {result.competitorDomains.map((domain, i) => {
+                  const matchingSource = result.sources.find(s => s.domain === domain);
+                  return (
+                    <a
+                      key={domain + i}
+                      href={matchingSource?.url || `https://${domain}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.gapItem}
+                    >
+                      <img
+                        className={styles.gapFavicon}
+                        src={getFavicon(domain)}
+                        alt=""
+                        loading="lazy"
+                        onError={e => { e.target.style.visibility = 'hidden'; }}
+                      />
+                      <span className={styles.gapDomain}>{domain}</span>
+                      <ExternalLink className={styles.gapExternal} />
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* AI answer excerpt */}
           {result.answerExcerpt && (
             <div className={`card ${styles.answerCard}`}>

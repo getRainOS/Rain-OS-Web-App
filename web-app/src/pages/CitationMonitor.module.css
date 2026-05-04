@@ -402,6 +402,55 @@
   margin-top: 5px;
 }
 
+/* Competitor gap */
+.gapCard {}
+
+.gapList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gapItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  background: rgba(239,68,68,0.05);
+  border: 1px solid rgba(239,68,68,0.18);
+  border-radius: 999px;
+  text-decoration: none;
+  color: var(--text);
+  font-size: 12.5px;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+
+.gapItem:hover {
+  background: rgba(239,68,68,0.1);
+  border-color: rgba(239,68,68,0.35);
+  transform: translateY(-1px);
+}
+
+.gapFavicon {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.04);
+}
+
+.gapDomain {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.gapExternal {
+  width: 11px;
+  height: 11px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
 /* Answer excerpt */
 .answerQuote {
   font-size: 13.5px;
