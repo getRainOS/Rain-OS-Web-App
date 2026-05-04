@@ -1,0 +1,1 @@
+/*! Source: https://github.com/getRainOS/Web-Application | License: GPLv2 or later */

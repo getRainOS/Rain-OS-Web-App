@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const DependencyExtractionWebpackPlugin = require('@wordpress/dependency-extraction-webpack-plugin');
 
@@ -32,6 +33,10 @@ module.exports = {
     ],
   },
   plugins: [
+    new webpack.BannerPlugin({
+      banner: 'Source: https://github.com/getRainOS/Web-Application | License: GPLv2 or later',
+      raw: false,
+    }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
     }),

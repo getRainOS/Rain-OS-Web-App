@@ -77,6 +77,21 @@ Subscription billing and payment processing is handled by Stripe through the Rai
 * Stripe Terms of Service: https://stripe.com/legal
 * Stripe Privacy Policy: https://stripe.com/privacy
 
+== Source Code ==
+
+This plugin includes compiled JavaScript built from human-readable source code. The full, unminified source is publicly available on GitHub:
+
+https://github.com/getRainOS/Web-Application
+
+The Gutenberg sidebar (`build/gutenberg-sidebar.js`) is compiled from the `src/` directory using webpack and Babel. To build from source:
+
+1. Clone or download the repository from https://github.com/getRainOS/Web-Application
+2. Navigate to the plugin directory: `cd "rain OS AI Readability Optimizer/rain-os-aeo-analyzer"`
+3. Install dependencies: `npm install`
+4. Build the plugin: `npm run build`
+
+The minified charting library (`assets/js/chart.min.js`) is Chart.js, an open-source library. Its full source code is available at: https://github.com/chartjs/Chart.js
+
 == Installation ==
 
 1. Upload the plugin files to `/wp-content/plugins/rain-os-aeo-analyzer/` or install through WordPress plugins screen
