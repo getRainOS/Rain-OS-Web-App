@@ -69,7 +69,7 @@ interface AnalysisJson {
   recommendations?: string[];
 }
 
-function extractDomain(rawUrl: string): string {
+export function extractDomain(rawUrl: string): string {
   try {
     const u = new URL(rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl}`);
     return u.hostname.replace(/^www\./i, '').toLowerCase();
@@ -80,6 +80,27 @@ function extractDomain(rawUrl: string): string {
 
 function clamp(n: number): number {
   return Math.max(0, Math.min(100, Math.round(n)));
+}
+
+/**
+ * Find the index of the first source whose domain matches the user's domain.
+ * Matches on:
+ *  - exact host match (after stripping www.)
+ *  - source domain is a subdomain of the user domain (s.domain endsWith "." + userDomain)
+ *  - user domain is a subdomain of the source domain (userDomain endsWith "." + s.domain)
+ * Returns -1 when there is no user domain or no match.
+ */
+export function findCitedSourceIndex(
+  sources: Array<{ domain: string }>,
+  userDomain: string | null
+): number {
+  if (!userDomain) return -1;
+  return sources.findIndex(
+    s =>
+      s.domain === userDomain ||
+      s.domain.endsWith('.' + userDomain) ||
+      userDomain.endsWith('.' + s.domain)
+  );
 }
 
 export async function runCitationCheck(
@@ -162,16 +183,8 @@ export async function runCitationCheck(
   }
 
   // Citation match against user's domain
-  let citedSourceIndex: number | null = null;
-  if (userDomain) {
-    const idx = sources.findIndex(
-      s =>
-        s.domain === userDomain ||
-        s.domain.endsWith('.' + userDomain) ||
-        userDomain.endsWith('.' + s.domain)
-    );
-    if (idx >= 0) citedSourceIndex = idx;
-  }
+  const matchIdx = findCitedSourceIndex(sources, userDomain);
+  const citedSourceIndex: number | null = matchIdx >= 0 ? matchIdx : null;
   const cited = citedSourceIndex !== null;
 
   const competitorDomains = sources
