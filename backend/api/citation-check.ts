@@ -2,7 +2,13 @@
 // Run a Google-grounded Gemini query to test whether a user's content would be
 // cited by AI engines for a given topic. Counts as one usage credit.
 import express from 'express';
-import { findUserByApiKey, incrementUserUsage } from '../services/dbService';
+import {
+  findUserByApiKey,
+  incrementUserUsage,
+  saveCitationCheck,
+  getCitationChecksByTopic,
+  getCitationChecksByUser,
+} from '../services/dbService';
 import { runCitationCheck } from '../services/citationCheckService';
 import type { ApiError } from '../types';
 
@@ -10,6 +16,32 @@ function getApiKey(req: express.Request): string | null {
   const h = req.headers.authorization;
   if (!h) return null;
   return (Array.isArray(h) ? h[0] : h)?.split(' ')[1] || null;
+}
+
+export async function listHandler(req: express.Request, res: express.Response) {
+  const apiKey = getApiKey(req);
+  if (!apiKey) {
+    return res.status(401).json({ error: 'unauthorized', message: 'API key missing' } as ApiError);
+  }
+  const user = await findUserByApiKey(apiKey);
+  if (!user) {
+    return res.status(401).json({ error: 'unauthorized', message: 'Invalid API key' } as ApiError);
+  }
+
+  const topic = typeof req.query.topic === 'string' ? req.query.topic : '';
+  const limitRaw = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : NaN;
+  const limit = Number.isFinite(limitRaw) ? Math.max(1, Math.min(100, limitRaw)) : undefined;
+
+  try {
+    const items = topic && topic.trim().length >= 3
+      ? await getCitationChecksByTopic(user.id, topic, limit ?? 20)
+      : await getCitationChecksByUser(user.id, limit ?? 50);
+    return res.status(200).json({ success: true, data: items, items });
+  } catch (error) {
+    console.error('Citation history error:', error);
+    const msg = error instanceof Error ? error.message : 'Internal error';
+    return res.status(500).json({ error: 'internal_server_error', message: msg } as ApiError);
+  }
 }
 
 export default async function handler(req: express.Request, res: express.Response) {
@@ -61,11 +93,28 @@ export default async function handler(req: express.Request, res: express.Respons
   try {
     const result = await runCitationCheck(topic, normalisedUrl);
 
+    // Persist to citation history (best-effort — never block the response on a save error)
+    let history: any[] = [];
+    try {
+      await saveCitationCheck(user.id, {
+        topic: result.topic,
+        url: result.url,
+        cited: result.cited,
+        alignmentScore: result.alignmentScore,
+        sources: result.sources,
+        recommendations: result.recommendations,
+        summary: result.summary,
+      });
+      history = await getCitationChecksByTopic(user.id, result.topic, 20);
+    } catch (saveErr) {
+      console.error('Citation save error:', saveErr);
+    }
+
     // Increment usage (citation check = 1 credit)
     const updated = await incrementUserUsage(user.id);
     if (updated) res.setHeader('X-Usage-Info', JSON.stringify(updated.usage));
 
-    return res.status(200).json({ success: true, data: result, ...result });
+    return res.status(200).json({ success: true, data: result, history, ...result });
   } catch (error) {
     console.error('Citation check error:', error);
     const msg = error instanceof Error ? error.message : 'Internal error';

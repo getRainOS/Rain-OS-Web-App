@@ -29,6 +29,26 @@ CREATE TABLE IF NOT EXISTS ai_content_profiles (
 );
 
 CREATE INDEX IF NOT EXISTS idx_ai_content_profiles_updated_at ON ai_content_profiles(updated_at);
+
+-- Citation Monitor history (additive)
+CREATE TABLE IF NOT EXISTS citation_checks (
+  id BIGSERIAL PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  topic TEXT NOT NULL,
+  topic_key TEXT NOT NULL,
+  url TEXT,
+  cited BOOLEAN NOT NULL,
+  alignment_score INTEGER NOT NULL,
+  sources JSONB NOT NULL,
+  recommendations JSONB NOT NULL,
+  summary TEXT,
+  checked_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_citation_checks_user_topic
+  ON citation_checks(user_id, topic_key, checked_at DESC);
+CREATE INDEX IF NOT EXISTS idx_citation_checks_user_checked_at
+  ON citation_checks(user_id, checked_at DESC);
 `;
 
 const addGithubColumnsQuery = `

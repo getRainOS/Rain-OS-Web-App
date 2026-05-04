@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
-import { Radar, Search, ExternalLink, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Radar, Search, ExternalLink, CheckCircle2, AlertCircle, History as HistoryIcon, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import styles from './CitationMonitor.module.css';
 
 const EXAMPLE_TOPICS = [
@@ -29,6 +29,21 @@ export default function CitationMonitor() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
+  const [history, setHistory] = useState([]);
+
+  async function loadHistory(forTopic) {
+    if (!forTopic || forTopic.trim().length < 3) {
+      setHistory([]);
+      return;
+    }
+    try {
+      const { data } = await api.citationHistory({ topic: forTopic.trim() });
+      const items = Array.isArray(data) ? data : data?.items ?? [];
+      setHistory(items);
+    } catch (_) {
+      setHistory([]);
+    }
+  }
 
   async function handleCheck(e) {
     e.preventDefault();
@@ -39,6 +54,12 @@ export default function CitationMonitor() {
     try {
       const { data } = await api.citationCheck({ topic: topic.trim(), url: url.trim() || undefined });
       setResult(data);
+      // Prefer the history payload that came back with the check; fall back to a fetch.
+      if (Array.isArray(data?.history) && data.history.length > 0) {
+        setHistory(data.history);
+      } else {
+        loadHistory(data?.topic || topic.trim());
+      }
       refreshUser?.();
     } catch (err) {
       setError(err.message || 'Citation check failed. Please try again.');
@@ -56,6 +77,7 @@ export default function CitationMonitor() {
   function handleReset() {
     setResult(null);
     setError('');
+    setHistory([]);
   }
 
   return (
@@ -309,6 +331,57 @@ export default function CitationMonitor() {
               <h3 className={styles.sectionTitle}>What AI Actually Said</h3>
               <p className={styles.sectionSub}>The grounded answer Gemini gave for your query.</p>
               <blockquote className={styles.answerQuote}>{result.answerExcerpt}</blockquote>
+            </div>
+          )}
+
+          {/* Previous checks for this topic */}
+          {history.length > 1 && (
+            <div className={`card ${styles.timelineCard}`}>
+              <h3 className={styles.sectionTitle}>
+                <HistoryIcon style={{ width: 14, height: 14, marginRight: 6, verticalAlign: '-2px' }} />
+                Previous checks for this topic
+                <span className={styles.sectionCount}>{history.length}</span>
+              </h3>
+              <p className={styles.sectionSub}>
+                Track how your alignment score and citation status have changed over time for this query.
+              </p>
+              <ol className={styles.timelineList}>
+                {history.map((h, i) => {
+                  const next = history[i + 1];
+                  const delta = next ? h.alignmentScore - next.alignmentScore : 0;
+                  const TrendIcon = delta > 0 ? TrendingUp : delta < 0 ? TrendingDown : Minus;
+                  const trendColor = delta > 0 ? '#22c55e' : delta < 0 ? '#ef4444' : 'var(--text-dim)';
+                  return (
+                    <li key={h.id ?? i} className={styles.timelineItem}>
+                      <div className={styles.timelineDot} style={{ background: scoreColor(h.alignmentScore) }} />
+                      <div className={styles.timelineMain}>
+                        <div className={styles.timelineRow}>
+                          <span className={styles.timelineDate}>
+                            {new Date(h.checkedAt).toLocaleDateString(undefined, {
+                              year: 'numeric', month: 'short', day: 'numeric',
+                            })}
+                          </span>
+                          <span
+                            className={styles.timelineStatus}
+                            style={{ color: h.cited ? '#22c55e' : 'var(--text-dim)' }}
+                          >
+                            {h.cited ? 'Cited' : 'Not cited'}
+                          </span>
+                        </div>
+                      </div>
+                      <div className={styles.timelineScore} style={{ color: scoreColor(h.alignmentScore) }}>
+                        {h.alignmentScore}
+                      </div>
+                      {next && (
+                        <div className={styles.timelineDelta} style={{ color: trendColor }}>
+                          <TrendIcon style={{ width: 12, height: 12 }} />
+                          {delta > 0 ? `+${delta}` : delta}
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
+              </ol>
             </div>
           )}
 

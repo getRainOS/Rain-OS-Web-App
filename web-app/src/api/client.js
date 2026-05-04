@@ -1,4 +1,4 @@
-import { DEMO_KEY, DEMO_USER, DEMO_HISTORY, DEMO_ANALYSIS, DEMO_SCAN, DEMO_CITATION } from '../demo/demoData.js';
+import { DEMO_KEY, DEMO_USER, DEMO_HISTORY, DEMO_ANALYSIS, DEMO_SCAN, DEMO_CITATION, DEMO_CITATION_HISTORY } from '../demo/demoData.js';
 
 const BASE = 'https://api.getrainos.com';
 const KEY_STORAGE = 'rain_os_api_key';
@@ -67,8 +67,18 @@ export const api = {
   },
   scanUrl: (url) => isDemo() ? demoDelay(DEMO_SCAN) : request('POST', '/api/url-scan', { url }),
   citationCheck: ({ topic, url }) => isDemo()
-    ? demoDelay({ ...DEMO_CITATION, topic, url: url || null })
+    ? demoDelay({
+        ...DEMO_CITATION,
+        topic,
+        url: url || null,
+        history: DEMO_CITATION_HISTORY,
+      })
     : request('POST', '/api/citation-check', { topic, url }),
+  citationHistory: (params) => {
+    if (isDemo()) return demoDelay(DEMO_CITATION_HISTORY);
+    const qs = params ? '?' + new URLSearchParams(params).toString() : '';
+    return request('GET', `/api/citation-checks${qs}`);
+  },
   usage: () => isDemo() ? demoDelay({ count: 42, limit: 500 }) : request('GET', '/api/usage'),
   createCheckoutSession: (priceId, successUrl, cancelUrl) =>
     isDemo()

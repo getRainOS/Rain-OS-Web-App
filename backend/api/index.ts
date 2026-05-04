@@ -7,7 +7,7 @@ import process from 'process';
 // Phase 2: new analyze controller (replaces inline analyzeHandler)
 import { handleAnalyze, handleCapabilities } from '../services/analyzeController';
 import urlScanHandler from './url-scan';
-import citationCheckHandler from './citation-check';
+import citationCheckHandler, { listHandler as citationChecksListHandler } from './citation-check';
 // Auth
 import googleAuthHandler from './auth/google';
 import googleRedirectHandler from './auth/google-redirect';
@@ -81,6 +81,8 @@ app.post('/v1/api/url-scan', urlScanHandler);
 // ─── Citation Monitor (new in v2.4) ────────────────────────────────────────
 app.post('/api/citation-check', citationCheckHandler);
 app.post('/v1/api/citation-check', citationCheckHandler);
+app.get('/api/citation-checks', citationChecksListHandler);
+app.get('/v1/api/citation-checks', citationChecksListHandler);
 // ─── Auth ──────────────────────────────────────────────────────────────────
 app.post('/api/auth/google', googleAuthHandler);
 app.get( '/api/auth/google', googleRedirectHandler);

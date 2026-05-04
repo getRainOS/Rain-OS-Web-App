@@ -298,3 +298,97 @@ export const getAiContentProfile = async (contentId: string): Promise<{ profile_
     fingerprint: res.rows[0].fingerprint,
   };
 };
+
+// --------------------------
+// Citation Monitor history
+// --------------------------
+
+export interface CitationCheckRecord {
+  id: number;
+  topic: string;
+  url: string | null;
+  cited: boolean;
+  alignmentScore: number;
+  sources: any[];
+  recommendations: string[];
+  summary: string | null;
+  checkedAt: string;
+}
+
+const mapCitationRow = (row: any): CitationCheckRecord => ({
+  id: Number(row.id),
+  topic: row.topic,
+  url: row.url,
+  cited: row.cited,
+  alignmentScore: row.alignment_score,
+  sources: Array.isArray(row.sources) ? row.sources : [],
+  recommendations: Array.isArray(row.recommendations) ? row.recommendations : [],
+  summary: row.summary,
+  checkedAt: row.checked_at instanceof Date ? row.checked_at.toISOString() : row.checked_at,
+});
+
+export const normaliseTopicKey = (topic: string): string =>
+  topic.trim().toLowerCase().replace(/\s+/g, ' ').slice(0, 500);
+
+export const saveCitationCheck = async (
+  userId: string,
+  data: {
+    topic: string;
+    url: string | null;
+    cited: boolean;
+    alignmentScore: number;
+    sources: any[];
+    recommendations: string[];
+    summary?: string;
+  }
+): Promise<CitationCheckRecord | null> => {
+  const topicKey = normaliseTopicKey(data.topic);
+  const res = await pool.query(
+    `INSERT INTO citation_checks
+       (user_id, topic, topic_key, url, cited, alignment_score, sources, recommendations, summary)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+     RETURNING *`,
+    [
+      userId,
+      data.topic,
+      topicKey,
+      data.url,
+      data.cited,
+      Math.max(0, Math.min(100, Math.round(data.alignmentScore))),
+      JSON.stringify(data.sources || []),
+      JSON.stringify(data.recommendations || []),
+      data.summary || null,
+    ]
+  );
+  return res.rows[0] ? mapCitationRow(res.rows[0]) : null;
+};
+
+export const getCitationChecksByTopic = async (
+  userId: string,
+  topic: string,
+  limit = 20
+): Promise<CitationCheckRecord[]> => {
+  const topicKey = normaliseTopicKey(topic);
+  const res = await pool.query(
+    `SELECT * FROM citation_checks
+     WHERE user_id = $1 AND topic_key = $2
+     ORDER BY checked_at DESC
+     LIMIT $3`,
+    [userId, topicKey, limit]
+  );
+  return res.rows.map(mapCitationRow);
+};
+
+export const getCitationChecksByUser = async (
+  userId: string,
+  limit = 50
+): Promise<CitationCheckRecord[]> => {
+  const res = await pool.query(
+    `SELECT * FROM citation_checks
+     WHERE user_id = $1
+     ORDER BY checked_at DESC
+     LIMIT $2`,
+    [userId, limit]
+  );
+  return res.rows.map(mapCitationRow);
+};

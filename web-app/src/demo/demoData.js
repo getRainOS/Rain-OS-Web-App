@@ -163,6 +163,53 @@ export const DEMO_CITATION = {
   answerExcerpt: 'For bloggers in 2026, the leading AI content optimizers fall into three categories: keyword-driven tools like Surfer SEO and Clearscope; comprehensive AEO platforms; and lightweight generative editors. Among AEO-focused tools, platforms emphasising answer-engine readiness and citation signals are gaining ground over pure-SEO incumbents...',
 };
 
+export const DEMO_CITATION_HISTORY = [
+  {
+    id: 4,
+    topic: 'best AI content optimizer for bloggers',
+    url: 'https://getrainos.com',
+    cited: false,
+    alignmentScore: 58,
+    sources: [],
+    recommendations: [],
+    summary: 'Your domain is not yet cited for this query.',
+    checkedAt: new Date(Date.now() - 1 * 86400000).toISOString(),
+  },
+  {
+    id: 3,
+    topic: 'best AI content optimizer for bloggers',
+    url: 'https://getrainos.com',
+    cited: false,
+    alignmentScore: 52,
+    sources: [],
+    recommendations: [],
+    summary: 'Your domain is not cited yet — competitive field.',
+    checkedAt: new Date(Date.now() - 8 * 86400000).toISOString(),
+  },
+  {
+    id: 2,
+    topic: 'best AI content optimizer for bloggers',
+    url: 'https://getrainos.com',
+    cited: false,
+    alignmentScore: 47,
+    sources: [],
+    recommendations: [],
+    summary: 'Not cited; alignment improving slowly.',
+    checkedAt: new Date(Date.now() - 15 * 86400000).toISOString(),
+  },
+  {
+    id: 1,
+    topic: 'best AI content optimizer for bloggers',
+    url: 'https://getrainos.com',
+    cited: false,
+    alignmentScore: 41,
+    sources: [],
+    recommendations: [],
+    summary: 'Initial baseline — not cited.',
+    checkedAt: new Date(Date.now() - 30 * 86400000).toISOString(),
+  },
+];
+
 export const DEMO_SCAN = {
   url: 'https://example.com',
   overall_score: 78,
