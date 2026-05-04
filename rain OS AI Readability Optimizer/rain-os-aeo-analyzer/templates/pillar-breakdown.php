@@ -5,18 +5,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 global $wpdb;
 $table_name = $wpdb->prefix . 'rain_os_analysis_history';
-$period = isset( $_GET['period'] ) ? absint( $_GET['period'] ) : 30;
-$date_limit = gmdate( 'Y-m-d H:i:s', strtotime( "-{$period} days" ) );
+$period     = isset( $_GET['period'] ) ? absint( $_GET['period'] ) : 30; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Admin-only read-only period filter; no data is modified.
+$date_limit = gmdate( 'Y-m-d H:i:s', strtotime( '-' . $period . ' days' ) );
 
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is derived from $wpdb->prefix (trusted); live pillar metrics make caching inappropriate.
 $averages = $wpdb->get_row(
     $wpdb->prepare(
-        "SELECT 
+        'SELECT 
             ROUND(AVG(ai_readability)) as avg_ai_readability,
             ROUND(AVG(digital_authority)) as avg_digital_authority,
             ROUND(AVG(conversion_readiness)) as avg_conversion_readiness,
             ROUND(AVG(product_discoverability)) as avg_product_discoverability
-        FROM {$table_name} 
-        WHERE analyzed_at >= %s",
+        FROM ' . $table_name . '
+        WHERE analyzed_at >= %s',
         $date_limit
     ),
     ARRAY_A
@@ -33,7 +34,8 @@ $overall_score = $ai_readability + $digital_authority + $conversion_readiness > 
         : round( ( $ai_readability + $digital_authority + $conversion_readiness ) / 3 ) )
     : 0;
 
-$latest = $wpdb->get_var( "SELECT analysis_data FROM {$table_name} ORDER BY analyzed_at DESC LIMIT 1" );
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is derived from $wpdb->prefix (trusted); live pillar breakdown makes caching inappropriate.
+$latest = $wpdb->get_var( 'SELECT analysis_data FROM ' . $table_name . ' ORDER BY analyzed_at DESC LIMIT 1' );
 $latest_data = $latest ? json_decode( $latest, true ) : array();
 
 $p1 = isset( $latest_data['ai_readability_detail'] ) ? $latest_data['ai_readability_detail'] : array();
@@ -42,31 +44,31 @@ $p3 = isset( $latest_data['conversion_readiness_detail'] ) ? $latest_data['conve
 $p4 = isset( $latest_data['product_discoverability_detail'] ) ? $latest_data['product_discoverability_detail'] : array();
 $crawler = isset( $latest_data['crawler_signals'] ) ? $latest_data['crawler_signals'] : array();
 
-if ( ! function_exists( 'rairo_sub' ) ) {
-    function rairo_sub( $arr, $key, $fallback = 0 ) {
+if ( ! function_exists( 'rain_os_sub' ) ) {
+    function rain_os_sub( $arr, $key, $fallback = 0 ) {
         return isset( $arr[ $key ] ) ? intval( $arr[ $key ] ) : $fallback;
     }
 }
 
-$ai_semantic   = rairo_sub( $p1, 'semantic_clarity', $ai_readability );
-$ai_read_score = rairo_sub( $p1, 'readability_score', $ai_readability );
-$ai_structure  = rairo_sub( $p1, 'logical_structure', $ai_readability );
-$ai_aeo        = rairo_sub( $p1, 'aeo_alignment', $ai_readability );
+$ai_semantic   = rain_os_sub( $p1, 'semantic_clarity', $ai_readability );
+$ai_read_score = rain_os_sub( $p1, 'readability_score', $ai_readability );
+$ai_structure  = rain_os_sub( $p1, 'logical_structure', $ai_readability );
+$ai_aeo        = rain_os_sub( $p1, 'aeo_alignment', $ai_readability );
 
-$da_entity   = rairo_sub( $p2, 'entity_recognition', $digital_authority );
-$da_citation = rairo_sub( $p2, 'citation_readiness', $digital_authority );
-$da_metadata = rairo_sub( $p2, 'descriptive_metadata', $digital_authority );
+$da_entity   = rain_os_sub( $p2, 'entity_recognition', $digital_authority );
+$da_citation = rain_os_sub( $p2, 'citation_readiness', $digital_authority );
+$da_metadata = rain_os_sub( $p2, 'descriptive_metadata', $digital_authority );
 
-$cr_schema   = rairo_sub( $p3, 'schema_extraction', $conversion_readiness );
-$cr_qa       = rairo_sub( $p3, 'qa_format_detection', $conversion_readiness );
-$cr_metadata = rairo_sub( $p3, 'metadata_audit', $conversion_readiness );
+$cr_schema   = rain_os_sub( $p3, 'schema_extraction', $conversion_readiness );
+$cr_qa       = rain_os_sub( $p3, 'qa_format_detection', $conversion_readiness );
+$cr_metadata = rain_os_sub( $p3, 'metadata_audit', $conversion_readiness );
 
-$pd_schema     = rairo_sub( $p4, 'schema_completeness', $product_discoverability );
-$pd_answer     = rairo_sub( $p4, 'answer_layer_quality', $product_discoverability );
-$pd_entity     = rairo_sub( $p4, 'entity_disambiguation', $product_discoverability );
-$pd_query      = rairo_sub( $p4, 'conversational_query_match', $product_discoverability );
-$pd_freshness  = rairo_sub( $p4, 'freshness_signals', $product_discoverability );
-$pd_structured = rairo_sub( $p4, 'structured_content_quality', $product_discoverability );
+$pd_schema     = rain_os_sub( $p4, 'schema_completeness', $product_discoverability );
+$pd_answer     = rain_os_sub( $p4, 'answer_layer_quality', $product_discoverability );
+$pd_entity     = rain_os_sub( $p4, 'entity_disambiguation', $product_discoverability );
+$pd_query      = rain_os_sub( $p4, 'conversational_query_match', $product_discoverability );
+$pd_freshness  = rain_os_sub( $p4, 'freshness_signals', $product_discoverability );
+$pd_structured = rain_os_sub( $p4, 'structured_content_quality', $product_discoverability );
 ?>
 
 <div class="rain-os-wrap">

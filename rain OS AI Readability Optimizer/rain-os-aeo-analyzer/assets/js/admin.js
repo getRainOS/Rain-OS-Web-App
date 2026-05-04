@@ -286,7 +286,7 @@
                 alert(rainOsAeo.i18n.urlRequired || 'Please enter a URL to scan.');
                 return;
             }
-            var industry = $('#rairo_industry').length ? $('#rairo_industry').val() : '';
+            var industry = $('#rain_os_industry').length ? $('#rain_os_industry').val() : '';
             var postId = rainOsAeo.postId || 0;
 
             $btn.prop('disabled', true).html('<span class="dashicons dashicons-update spin"></span> ' + (rainOsAeo.i18n.scanning || 'Scanning URL…'));
