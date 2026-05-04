@@ -120,6 +120,49 @@ export const DEMO_ANALYSIS = {
   },
 };
 
+export const DEMO_CITATION = {
+  topic: 'best AI content optimizer for bloggers',
+  url: 'https://getrainos.com',
+  cited: false,
+  citedSourceIndex: null,
+  alignmentScore: 58,
+  sources: [
+    {
+      title: 'Top 10 AI Writing Tools for Bloggers in 2026 — SearchEngineJournal',
+      url: 'https://www.searchenginejournal.com/ai-writing-tools-bloggers/',
+      domain: 'searchenginejournal.com',
+      snippet: 'Roundup of leading AI content tools, ranking generative editors, SEO optimizers, and AEO platforms for blog publishers.',
+    },
+    {
+      title: 'Surfer SEO vs Frase vs Clearscope: Content Optimizer Comparison',
+      url: 'https://www.semrush.com/blog/content-optimizer-comparison/',
+      domain: 'semrush.com',
+      snippet: 'Side-by-side comparison of the major AI-driven content optimization platforms used by bloggers in 2026.',
+    },
+    {
+      title: 'How AI Search Engines Pick Which Sources to Cite — HubSpot',
+      url: 'https://blog.hubspot.com/marketing/ai-search-citation',
+      domain: 'blog.hubspot.com',
+      snippet: 'A look at the structural and authority signals that determine whether AI assistants cite a blog post in their answers.',
+    },
+    {
+      title: 'AEO 101: Optimizing Content for Answer Engines — Ahrefs',
+      url: 'https://ahrefs.com/blog/answer-engine-optimization/',
+      domain: 'ahrefs.com',
+      snippet: 'Practical guide to making blog content discoverable and quotable by ChatGPT, Perplexity, and Google AI Overviews.',
+    },
+  ],
+  competitorDomains: ['searchenginejournal.com', 'semrush.com', 'blog.hubspot.com', 'ahrefs.com'],
+  recommendations: [
+    'Add comparative review content that names specific competitor tools — AI engines favour sources that explicitly compare options.',
+    'Implement Article + FAQPage structured data on your tool overview page so AI parsers can extract direct answers about pricing, features, and use cases.',
+    'Publish a dated "2026 update" post — three of the four cited sources have publish dates in the last 6 months, suggesting freshness is a strong ranking signal here.',
+    'Earn editorial mentions from at least one of the cited domains (HubSpot, Ahrefs, SEJ) — AI engines disproportionately cite the same authority hubs.',
+  ],
+  summary: 'Your domain is not yet cited for this query. The field is dominated by four established marketing-authority blogs that publish frequently updated comparison content.',
+  answerExcerpt: 'For bloggers in 2026, the leading AI content optimizers fall into three categories: keyword-driven tools like Surfer SEO and Clearscope; comprehensive AEO platforms; and lightweight generative editors. Among AEO-focused tools, platforms emphasising answer-engine readiness and citation signals are gaining ground over pure-SEO incumbents...',
+};
+
 export const DEMO_SCAN = {
   url: 'https://example.com',
   overall_score: 78,
