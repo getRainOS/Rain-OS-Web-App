@@ -8,7 +8,7 @@ Stable tag: 2.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-AI-powered Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO) for WordPress. Analyze and optimize your content for AI-driven search engines.
+AI-powered AEO & GEO optimizer for WordPress. Optimize your content for AI search engines: ChatGPT, Perplexity, Google Overviews & Gemini.
 
 == Description ==
 
