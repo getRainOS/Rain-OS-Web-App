@@ -81,11 +81,11 @@ Subscription billing and payment processing is handled by Stripe through the Rai
 
 This plugin includes compiled JavaScript built from human-readable source code. The full, unminified source is publicly available on GitHub:
 
-https://github.com/getRainOS/Web-Application
+https://github.com/getRainOS/rain-os-aeo-analyzer
 
 The Gutenberg sidebar (`build/gutenberg-sidebar.js`) is compiled from the `src/` directory using webpack and Babel. To build from source:
 
-1. Clone or download the repository from https://github.com/getRainOS/Web-Application
+1. Clone or download the repository from https://github.com/getRainOS/rain-os-aeo-analyzer
 2. Navigate to the plugin directory: `cd "rain OS AI Readability Optimizer/rain-os-aeo-analyzer"`
 3. Install dependencies: `npm install`
 4. Build the plugin: `npm run build`

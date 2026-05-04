@@ -34,7 +34,7 @@ module.exports = {
   },
   plugins: [
     new webpack.BannerPlugin({
-      banner: 'Source: https://github.com/getRainOS/Web-Application | License: GPLv2 or later',
+      banner: 'Source: https://github.com/getRainOS/rain-os-aeo-analyzer | License: GPLv2 or later',
       raw: false,
     }),
     new MiniCssExtractPlugin({
