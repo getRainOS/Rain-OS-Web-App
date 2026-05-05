@@ -262,7 +262,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
               </div>
 
               <p className="text-base text-slate-300 leading-relaxed">
-                AI-generated sites have a blind spot: the rendered page looks fine, but the source is missing the signals that AI search engines actually look for — no llms.txt, no schema, JS-rendered content that crawlers can’t parse.
+                AI-made sites can look great on the surface, but still miss important details that help search tools understand and recommend them.
               </p>
 
             </motion.div>
