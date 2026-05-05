@@ -164,8 +164,9 @@ export const DEMO_CITATION = {
 };
 
 export const DEMO_CITATION_HISTORY = [
+  // Topic 1 — "best AI content optimizer for bloggers" (improving, not cited)
   {
-    id: 4,
+    id: 12,
     topic: 'best AI content optimizer for bloggers',
     url: 'https://getrainos.com',
     cited: false,
@@ -176,7 +177,7 @@ export const DEMO_CITATION_HISTORY = [
     checkedAt: new Date(Date.now() - 1 * 86400000).toISOString(),
   },
   {
-    id: 3,
+    id: 11,
     topic: 'best AI content optimizer for bloggers',
     url: 'https://getrainos.com',
     cited: false,
@@ -187,7 +188,7 @@ export const DEMO_CITATION_HISTORY = [
     checkedAt: new Date(Date.now() - 8 * 86400000).toISOString(),
   },
   {
-    id: 2,
+    id: 10,
     topic: 'best AI content optimizer for bloggers',
     url: 'https://getrainos.com',
     cited: false,
@@ -198,7 +199,7 @@ export const DEMO_CITATION_HISTORY = [
     checkedAt: new Date(Date.now() - 15 * 86400000).toISOString(),
   },
   {
-    id: 1,
+    id: 9,
     topic: 'best AI content optimizer for bloggers',
     url: 'https://getrainos.com',
     cited: false,
@@ -207,6 +208,78 @@ export const DEMO_CITATION_HISTORY = [
     recommendations: [],
     summary: 'Initial baseline — not cited.',
     checkedAt: new Date(Date.now() - 30 * 86400000).toISOString(),
+  },
+
+  // Topic 2 — "how to improve AEO for a SaaS landing page" (just cited!)
+  {
+    id: 8,
+    topic: 'how to improve AEO for a SaaS landing page',
+    url: 'https://getrainos.com',
+    cited: true,
+    alignmentScore: 78,
+    sources: [],
+    recommendations: [],
+    summary: 'Cited as source #2 — strong topical alignment.',
+    checkedAt: new Date(Date.now() - 2 * 86400000).toISOString(),
+  },
+  {
+    id: 7,
+    topic: 'how to improve AEO for a SaaS landing page',
+    url: 'https://getrainos.com',
+    cited: false,
+    alignmentScore: 64,
+    sources: [],
+    recommendations: [],
+    summary: 'Close, but not yet cited — schema gap.',
+    checkedAt: new Date(Date.now() - 12 * 86400000).toISOString(),
+  },
+  {
+    id: 6,
+    topic: 'how to improve AEO for a SaaS landing page',
+    url: 'https://getrainos.com',
+    cited: false,
+    alignmentScore: 55,
+    sources: [],
+    recommendations: [],
+    summary: 'Behind the cited authority hubs.',
+    checkedAt: new Date(Date.now() - 24 * 86400000).toISOString(),
+  },
+
+  // Topic 3 — "what is answer engine optimization" (regressing slightly)
+  {
+    id: 5,
+    topic: 'what is answer engine optimization',
+    url: 'https://getrainos.com',
+    cited: false,
+    alignmentScore: 49,
+    sources: [],
+    recommendations: [],
+    summary: 'Slight drop vs. last check; competitor moved up.',
+    checkedAt: new Date(Date.now() - 4 * 86400000).toISOString(),
+  },
+  {
+    id: 4,
+    topic: 'what is answer engine optimization',
+    url: 'https://getrainos.com',
+    cited: false,
+    alignmentScore: 55,
+    sources: [],
+    recommendations: [],
+    summary: 'Mid-tier alignment in a crowded definition query.',
+    checkedAt: new Date(Date.now() - 18 * 86400000).toISOString(),
+  },
+
+  // Topic 4 — "AEO best practices 2026" (single check — flag as new)
+  {
+    id: 3,
+    topic: 'AEO best practices 2026',
+    url: 'https://getrainos.com',
+    cited: true,
+    alignmentScore: 71,
+    sources: [],
+    recommendations: [],
+    summary: 'Cited on first check — strong head start.',
+    checkedAt: new Date(Date.now() - 6 * 86400000).toISOString(),
   },
 ];
 

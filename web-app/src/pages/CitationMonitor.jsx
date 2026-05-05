@@ -94,8 +94,8 @@ const DEMO_SEED = [
 export default function CitationMonitor() {
   const { isDemo, refreshUser, user, apiKey } = useApp();
   const scope = isDemo ? '__demo__' : (user?.id || apiKey || 'anon');
-
   const [searchParams, setSearchParams] = useSearchParams();
+
   const initialTab = searchParams.get('tab') === 'map' ? 'map' : 'check';
   const [tab, setTab] = useState(initialTab);
 
@@ -115,7 +115,7 @@ export default function CitationMonitor() {
     }
     setSearchParams(params, { replace: true });
   }
-  const [topic, setTopic] = useState('');
+  const [topic, setTopic] = useState(() => searchParams.get('topic') || '');
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -135,6 +135,23 @@ export default function CitationMonitor() {
     }
     setMapHistory(h);
   }, [scope, isDemo]);
+
+  // Respond to ?topic= deep-links (e.g. from the Dashboard's Citations widget)
+  useEffect(() => {
+    const t = searchParams.get('topic');
+    if (!t) return;
+    setTab('check');
+    setTopic(t);
+    setResult(null);
+    setError('');
+    loadTopicHistory(t);
+    // Clear the URL param so browser back navigation behaves naturally
+    // and re-clicking the same topic from the dashboard still triggers this effect.
+    const next = new URLSearchParams(searchParams);
+    next.delete('topic');
+    setSearchParams(next, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   async function loadTopicHistory(forTopic) {
     if (!forTopic || forTopic.trim().length < 3) {

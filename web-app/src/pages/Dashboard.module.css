@@ -698,7 +698,152 @@
   flex-shrink: 0;
 }
 
-/* ── Top Cited Competitors Widget ── */
+</* ── Citations Being Tracked ── */
+.citationsList {
+  display: flex;
+  flex-direction: column;
+}
+
+.citationRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 4px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.15s, padding 0.15s;
+  border-radius: 6px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.citationRow:last-child { border-bottom: none; }
+
+.citationRow:hover {
+  background: rgba(255,255,255,0.03);
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.citationStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  border: 1px solid;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  min-width: 78px;
+  justify-content: center;
+}
+
+.citationStatusIcon {
+  width: 10px;
+  height: 10px;
+}
+
+.citationMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.citationTopic {
+  font-size: 12.5px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.citationMeta {
+  font-size: 10.5px;
+  color: var(--text-dim);
+}
+
+.citationSpark {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: 86px;
+}
+
+.sparkSvg {
+  display: block;
+}
+
+.sparkPlaceholder {
+  display: inline-block;
+  width: 86px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.citationScore {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 50px;
+  text-align: right;
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 1px;
+}
+
+.citationScoreSuffix {
+  font-size: 9.5px;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.citationDelta {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  min-width: 40px;
+  justify-content: flex-end;
+}
+
+.citationDeltaNone {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.citationArrow {
+  width: 13px;
+  height: 13px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  transition: transform 0.15s, color 0.15s;
+}
+
+.citationRow:hover .citationArrow {
+  color: var(--text-muted);
+  transform: translateX(2px);
+}
+
+@media (max-width: 700px) {
+  .citationSpark { display: none; }
+  .citationMeta { font-size: 10px; }
+}
+
+/* ── Top cited competitors ── */
 .competitorCard {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -815,6 +960,8 @@
   color: var(--text-muted);
   font-size: 13px;
   padding: 24px 0 8px;
+}
+
 }
 
 /* ── Quick Actions ── */

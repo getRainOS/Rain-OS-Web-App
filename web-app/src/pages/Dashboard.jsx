@@ -13,6 +13,7 @@ import {
   FileText, Globe, GitBranch, ArrowRight,
   BrainCircuit, ShieldCheck, MousePointerClick, SearchCheck,
   Activity, Zap, Minus, Heart, Map as MapIcon, Radar,
+  CheckCircle2, AlertCircle,
 } from 'lucide-react';
 import styles from './Dashboard.module.css';
 
@@ -178,6 +179,38 @@ function DonutTooltip({ active, payload }) {
   );
 }
 
+/* ── Inline sparkline (citations widget) ── */
+function Sparkline({ values, color, width = 86, height = 26 }) {
+  if (!values || values.length < 2) {
+    return <span className={styles.sparkPlaceholder}>—</span>;
+  }
+  const pad = 2;
+  const w = width - pad * 2;
+  const h = height - pad * 2;
+  const step = values.length > 1 ? w / (values.length - 1) : 0;
+  const clamp = (v) => Math.min(Math.max(v ?? 0, 0), 100);
+  const points = values
+    .map((v, i) => `${(pad + i * step).toFixed(2)},${(pad + h - (clamp(v) / 100) * h).toFixed(2)}`)
+    .join(' ');
+  const last = values[values.length - 1];
+  const lastX = pad + (values.length - 1) * step;
+  const lastY = pad + h - (clamp(last) / 100) * h;
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className={styles.sparkSvg}>
+      <polyline
+        fill="none"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        points={points}
+        style={{ filter: `drop-shadow(0 0 2px ${color}80)` }}
+      />
+      <circle cx={lastX} cy={lastY} r="2" fill={color} />
+    </svg>
+  );
+}
+
 /* ── Sub-score bar ── */
 function SubScoreBar({ label, value, color }) {
   return (
@@ -198,6 +231,8 @@ export default function Dashboard() {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [chartRange, setChartRange] = useState(14);
+  const [citations, setCitations] = useState([]);
+  const [citationsLoading, setCitationsLoading] = useState(true);
   const [citationHistory, setCitationHistory] = useState([]);
 
   const citationScope = isDemo ? '__demo__' : (user?.id || apiKey || 'anon');
@@ -218,6 +253,54 @@ export default function Dashboard() {
     [citationHistory]
   );
   const topCompetitors = competitorMap.domains.slice(0, 3);
+
+  useEffect(() => {
+    api.citationHistory({ limit: 50 })
+      .then(({ data }) => {
+        const items = Array.isArray(data) ? data : data?.items ?? [];
+        setCitations(items);
+      })
+      .catch(() => setCitations([]))
+      .finally(() => setCitationsLoading(false));
+  }, []);
+
+  const trackedTopics = useMemo(() => {
+    if (!citations.length) return [];
+    const groups = new Map();
+    for (const c of citations) {
+      const key = (c.topic || '').trim().toLowerCase().replace(/\s+/g, ' ');
+      if (!key) continue;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(c);
+    }
+    const out = [];
+    for (const [key, arr] of groups) {
+      arr.sort((a, b) => new Date(b.checkedAt).getTime() - new Date(a.checkedAt).getTime());
+      const latest = arr[0];
+      const previous = arr[1];
+      const delta = previous
+        ? (latest.alignmentScore ?? 0) - (previous.alignmentScore ?? 0)
+        : null;
+      const spark = arr
+        .slice(0, 8)
+        .reverse()
+        .map((h) => h.alignmentScore ?? 0);
+      out.push({
+        key,
+        topic: latest.topic,
+        latestScore: latest.alignmentScore ?? 0,
+        cited: !!latest.cited,
+        checkedAt: latest.checkedAt,
+        delta,
+        checkCount: arr.length,
+        spark,
+      });
+    }
+    out.sort(
+      (a, b) => new Date(b.checkedAt).getTime() - new Date(a.checkedAt).getTime()
+    );
+    return out.slice(0, 5);
+  }, [citations]);
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
@@ -667,6 +750,88 @@ export default function Dashboard() {
                     </span>
                   </span>
                 </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* ── Citations Being Tracked ── */}
+      <div className={styles.chartCard}>
+        <div className={styles.chartHeader}>
+          <div>
+            <h2 className={styles.chartTitle}>
+              <Radar style={{ width: 14, height: 14, marginRight: 6, verticalAlign: '-2px', color: '#0EA5E9' }} />
+              Citations Being Tracked
+            </h2>
+            <p className={styles.chartSub}>How AI engines are citing you for your tracked queries</p>
+          </div>
+          <Link to="/citation-monitor" className={styles.viewAll}>Open Citation Monitor →</Link>
+        </div>
+
+        {citationsLoading ? (
+          <div className={styles.chartEmpty}><span className="spinner" /></div>
+        ) : trackedTopics.length === 0 ? (
+          <div className={styles.chartEmpty}>
+            <div className={styles.emptyState}>
+              <Radar className={styles.emptyIcon} />
+              <p>No citation checks yet</p>
+              <Link to="/citation-monitor" className={styles.emptyLink}>Run your first →</Link>
+            </div>
+          </div>
+        ) : (
+          <div className={styles.citationsList}>
+            {trackedTopics.map((t) => {
+              const sColor = scoreColor(t.latestScore);
+              const deltaUp = t.delta !== null && t.delta > 0;
+              const deltaDown = t.delta !== null && t.delta < 0;
+              const deltaColor = deltaUp ? '#22c55e' : deltaDown ? '#ef4444' : 'var(--text-dim)';
+              const DeltaIcon = deltaUp ? TrendingUp : deltaDown ? TrendingDown : Minus;
+              return (
+                <Link
+                  key={t.key}
+                  to={`/citation-monitor?topic=${encodeURIComponent(t.topic)}`}
+                  className={styles.citationRow}
+                >
+                  <div
+                    className={styles.citationStatus}
+                    style={{
+                      color: t.cited ? '#22c55e' : '#ef4444',
+                      background: t.cited ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.08)',
+                      borderColor: t.cited ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.25)',
+                    }}
+                    title={t.cited ? 'Your domain is being cited' : 'Your domain is not currently cited'}
+                  >
+                    {t.cited
+                      ? <CheckCircle2 className={styles.citationStatusIcon} />
+                      : <AlertCircle className={styles.citationStatusIcon} />}
+                    {t.cited ? 'Cited' : 'Not cited'}
+                  </div>
+                  <div className={styles.citationMain}>
+                    <span className={styles.citationTopic}>{t.topic}</span>
+                    <span className={styles.citationMeta}>
+                      {t.checkCount} check{t.checkCount === 1 ? '' : 's'} · {timeAgo(t.checkedAt)}
+                    </span>
+                  </div>
+                  <div className={styles.citationSpark}>
+                    <Sparkline values={t.spark} color={sColor} />
+                  </div>
+                  <span className={styles.citationScore} style={{ color: sColor }}>
+                    {t.latestScore}
+                    <span className={styles.citationScoreSuffix}>/100</span>
+                  </span>
+                  <div className={styles.citationDelta} style={{ color: deltaColor }}>
+                    {t.delta === null ? (
+                      <span className={styles.citationDeltaNone}>new</span>
+                    ) : (
+                      <>
+                        <DeltaIcon style={{ width: 11, height: 11 }} />
+                        {t.delta === 0 ? '0' : `${t.delta > 0 ? '+' : ''}${t.delta}`}
+                      </>
+                    )}
+                  </div>
+                  <ArrowRight className={styles.citationArrow} />
+                </Link>
               );
             })}
           </div>
