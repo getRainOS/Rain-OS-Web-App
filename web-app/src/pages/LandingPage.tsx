@@ -265,16 +265,6 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
                 AI-generated sites have a blind spot: the rendered page looks fine, but the source is missing the signals that AI search engines actually look for — no llms.txt, no schema, JS-rendered content that crawlers can’t parse.
               </p>
 
-              <p className="text-sm text-slate-500 leading-relaxed">
-                Connect your GitHub repo and rain OS reads your actual source files — README, package.json, robots.txt, index.html — and gives you a full AEO score at the code level. No URL parsing. No guessing. The real thing.
-              </p>
-
-              <button
-                onClick={onGetStartedClick || onLoginClick}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-emerald-500/10 border border-emerald-400/30 text-emerald-300 text-sm font-semibold hover:bg-emerald-500/15 hover:border-emerald-400/50 transition-all"
-              >
-                Connect your repo — it’s free
-              </button>
             </motion.div>
           </div>
         </section>
