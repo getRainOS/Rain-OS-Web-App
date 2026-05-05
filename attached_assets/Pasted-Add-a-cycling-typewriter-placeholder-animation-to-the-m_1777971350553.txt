@@ -1,0 +1,34 @@
+Add a cycling typewriter placeholder animation to the main content textarea.
+The placeholder text inside the content input box should cycle through 6 phrases using a typewriter effect — typing out each phrase character by character, pausing, then deleting it character by character before typing the next one. This should feel exactly like the cycling placeholder animations on Bolt.new and Lovable.
+The 6 phrases to cycle through in this exact order:
+Paste your latest blog post...
+Paste your product description...
+Paste your homepage copy...
+Paste your FAQ section...
+Paste your how-to guide...
+Paste your case study...
+After phrase 6, loop back to phrase 1 infinitely.
+Timing specifications:
+Type speed: 50ms per character — feels natural, not robotic
+Delete speed: 30ms per character — slightly faster than typing
+Pause after fully typed: 2000ms — long enough to read comfortably
+Pause before typing next phrase: 300ms — brief breath between phrases
+Behavior rules:
+Animation only runs when the textarea is empty and unfocused
+The moment a user clicks into the textarea or starts typing, the placeholder disappears completely and immediately — standard placeholder behavior
+When the user clears the textarea and clicks away, the cycling animation resumes from the beginning of the phrase list — do not resume mid-phrase
+The cycling placeholder must never interfere with actual user input under any circumstance
+Visual styling:
+Placeholder text color: rgba(255, 255, 255, 0.35) — subtle, clearly distinguishable from real user input
+Font matches the textarea exactly — same size, same weight, same font family as whatever the textarea uses
+No cursor blinking animation needed — the typing effect itself implies the cursor
+Implementation:
+Use JavaScript to simulate the placeholder via an absolutely positioned overlay <div> sitting inside the textarea container rather than the native HTML placeholder attribute — this gives full control over the animation
+The overlay div must be pointer-events: none so it never blocks clicks into the actual textarea
+When the textarea has focus or contains any value, set the overlay div to display: none immediately
+Do not:
+Use the native HTML placeholder attribute for this animation — it cannot be styled or animated precisely enough
+Add a blinking cursor character
+Let the animation run while the user is typing
+Change the cycling speed based on phrase length — keep timing consistent across all 6 phrases
+That said, look at the 6 phrases that we’re cycling through and determine if there should be more updated phrases that reflects our offering more accurately / vibe coders, while not excluding other client profiles
