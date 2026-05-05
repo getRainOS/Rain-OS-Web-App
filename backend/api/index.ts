@@ -7,7 +7,7 @@ import process from 'process';
 // Phase 2: new analyze controller (replaces inline analyzeHandler)
 import { handleAnalyze, handleCapabilities } from '../services/analyzeController';
 import urlScanHandler from './url-scan';
-import citationCheckHandler, { listHandler as citationChecksListHandler } from './citation-check';
+import citationCheckHandler, { listHandler as citationChecksListHandler, deleteHandler as citationCheckDeleteHandler } from './citation-check';
 // Auth
 import googleAuthHandler from './auth/google';
 import googleRedirectHandler from './auth/google-redirect';
@@ -83,6 +83,8 @@ app.post('/api/citation-check', citationCheckHandler);
 app.post('/v1/api/citation-check', citationCheckHandler);
 app.get('/api/citation-checks', citationChecksListHandler);
 app.get('/v1/api/citation-checks', citationChecksListHandler);
+app.delete('/api/citation-checks/:id', citationCheckDeleteHandler);
+app.delete('/v1/api/citation-checks/:id', citationCheckDeleteHandler);
 // ─── Auth ──────────────────────────────────────────────────────────────────
 app.post('/api/auth/google', googleAuthHandler);
 app.get( '/api/auth/google', googleRedirectHandler);

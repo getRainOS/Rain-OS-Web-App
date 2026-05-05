@@ -392,3 +392,14 @@ export const getCitationChecksByUser = async (
   );
   return res.rows.map(mapCitationRow);
 };
+
+export const deleteCitationCheck = async (
+  userId: string,
+  id: number
+): Promise<boolean> => {
+  const res = await pool.query(
+    `DELETE FROM citation_checks WHERE id = $1 AND user_id = $2`,
+    [id, userId]
+  );
+  return (res.rowCount || 0) > 0;
+};

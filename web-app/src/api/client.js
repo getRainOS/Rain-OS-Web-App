@@ -79,6 +79,9 @@ export const api = {
     const qs = params ? '?' + new URLSearchParams(params).toString() : '';
     return request('GET', `/api/citation-checks${qs}`);
   },
+  deleteCitationCheck: (id) => isDemo()
+    ? demoDelay({ success: true })
+    : request('DELETE', `/api/citation-checks/${id}`),
   usage: () => isDemo() ? demoDelay({ count: 42, limit: 500 }) : request('GET', '/api/usage'),
   createCheckoutSession: (priceId, successUrl, cancelUrl) =>
     isDemo()

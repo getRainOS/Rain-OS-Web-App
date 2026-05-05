@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { api } from '../api/client.js';
 import PillarScores from '../components/PillarScores.jsx';
-import { CheckCircle2, AlertCircle, ExternalLink } from 'lucide-react';
+import { CheckCircle2, AlertCircle, ExternalLink, Trash2 } from 'lucide-react';
 import styles from './History.module.css';
 
 function citationScoreColor(score) {
@@ -22,6 +22,9 @@ export default function History() {
   const [citationsLoading, setCitationsLoading] = useState(false);
   const [citationsError, setCitationsError] = useState('');
   const [citationsLoaded, setCitationsLoaded] = useState(false);
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
+  const [deleteError, setDeleteError] = useState('');
 
   useEffect(() => {
     api.history()
@@ -62,6 +65,27 @@ export default function History() {
 
   function toggleExpand(i) {
     setExpanded(prev => prev === i ? null : i);
+  }
+
+  async function handleDeleteCitation(id) {
+    setDeletingId(id);
+    setDeleteError('');
+    try {
+      await api.deleteCitationCheck(id);
+      setCitations(prev => prev.filter(c => c.id !== id));
+      setConfirmDeleteId(null);
+    } catch (err) {
+      if (err.status === 404) {
+        setCitations(prev => prev.filter(c => c.id !== id));
+        setConfirmDeleteId(null);
+      } else if (err.status === 401) {
+        setDeleteError('Session expired. Please sign out and re-enter your API key.');
+      } else {
+        setDeleteError(err.message || 'Failed to delete citation check.');
+      }
+    } finally {
+      setDeletingId(null);
+    }
   }
 
   return (
@@ -184,11 +208,15 @@ export default function History() {
             </div>
           )}
 
+          {deleteError && <p className={styles.error}>{deleteError}</p>}
+
           {!citationsLoading && citations.length > 0 && (
             <div className={styles.list}>
               {citations.map((c, i) => {
                 const score = c.alignmentScore ?? null;
                 const color = score === null ? 'var(--text-dim)' : citationScoreColor(score);
+                const isConfirming = confirmDeleteId === c.id;
+                const isDeleting = deletingId === c.id;
                 return (
                   <div key={c.id ?? i} className={styles.item}>
                     <div className={styles.itemHeader}>
@@ -228,6 +256,40 @@ export default function History() {
                         <div className={styles.overallScore} style={{ color }}>
                           {score !== null ? Math.round(score) : '—'}
                         </div>
+                        {isConfirming ? (
+                          <div className={styles.deleteConfirm}>
+                            <span className={styles.deleteConfirmText}>Delete?</span>
+                            <button
+                              type="button"
+                              className={`${styles.deleteAction} ${styles.deleteActionConfirm}`}
+                              onClick={() => handleDeleteCitation(c.id)}
+                              disabled={isDeleting}
+                              aria-label="Confirm delete"
+                            >
+                              {isDeleting ? '…' : 'Yes'}
+                            </button>
+                            <button
+                              type="button"
+                              className={styles.deleteAction}
+                              onClick={() => { setConfirmDeleteId(null); setDeleteError(''); }}
+                              disabled={isDeleting}
+                              aria-label="Cancel delete"
+                            >
+                              No
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            className={styles.deleteBtn}
+                            onClick={() => { setConfirmDeleteId(c.id); setDeleteError(''); }}
+                            disabled={c.id == null}
+                            aria-label="Delete citation check"
+                            title="Delete"
+                          >
+                            <Trash2 style={{ width: 14, height: 14 }} />
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
