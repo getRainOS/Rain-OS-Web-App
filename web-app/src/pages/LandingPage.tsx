@@ -248,13 +248,9 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
               transition={{ duration: 0.7, delay: 0.35 }}
               className="flex flex-col items-center text-center gap-5 w-full max-w-2xl"
             >
-              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.08] px-4 py-1.5">
-                <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-emerald-400">For vibe coders</span>
-              </div>
-
               <h2 className="text-2xl md:text-3xl font-semibold text-white leading-tight" style={{ letterSpacing: '-0.03em' }}>
                 Your AI built the site.{' '}
-                <span className="text-emerald-400">Now scan the repo.</span>
+                <span className="text-emerald-400">Now paste the content, scan the URL, or connect the repo.</span>
               </h2>
 
               <div className="flex flex-wrap items-center justify-center gap-2">
