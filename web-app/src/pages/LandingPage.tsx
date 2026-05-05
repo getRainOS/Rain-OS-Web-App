@@ -153,8 +153,6 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
               transition={{ duration: 0.8, ease: 'easeOut' }}
               className="text-center space-y-5"
             >
-              <p className="text-sm font-bold text-white">Built for AI-Generated Sites and Content.</p>
-
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.05] text-white"
                 style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
                 Vibe Coded Your Site or Web App?
