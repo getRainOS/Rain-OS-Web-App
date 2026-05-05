@@ -153,28 +153,12 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
               transition={{ duration: 0.8, ease: 'easeOut' }}
               className="text-center space-y-5"
             >
-              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/8 px-4 py-1.5">
-                <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-emerald-400">For vibe coders</span>
-              </div>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.05] text-white"
                 style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
-                Your AI built the site. <span className="text-emerald-400">Now scan the repo.</span>
+                Vibe Coded Your Site or Web App?
               </h1>
-              <div className="flex flex-wrap items-center justify-center gap-2">
-                {['Bolt', 'Lovable', 'Cursor', 'v0', 'Replit', 'Windsurf'].map((p) => (
-                  <span
-                    key={p}
-                    className="px-4 py-1.5 rounded-full text-sm font-medium text-slate-300 bg-white/[0.04] border border-white/10 tracking-wide"
-                  >
-                    {p}
-                  </span>
-                ))}
-              </div>
-              <p className="text-slate-400 text-base md:text-lg font-normal max-w-2xl mx-auto leading-relaxed">
-                AI-generated sites have a blind spot: the rendered page looks fine, but the source is missing the signals that AI search engines actually look for — no llms.txt, no schema, JS-rendered content that crawlers can't parse.
-              </p>
-              <p className="text-sm text-slate-500 max-w-2xl mx-auto leading-relaxed">
-                Connect your GitHub repo and rain OS reads your actual source files — README, package.json, robots.txt, index.html — and gives you a full AEO score at the code level. No URL parsing. No guessing. The real thing.
+              <p className="text-slate-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
+                Find out how ChatGPT, Perplexity, and Gemini read your content — and how likely they are to cite it when someone asks a question you should own.
               </p>
             </motion.div>
 
@@ -257,35 +241,44 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
               </form>
             </motion.div>
 
-            {/* Stat strip */}
+            {/* Vibe Coder Block — below the text box */}
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.35 }}
-              className="flex flex-wrap items-center justify-center gap-3 -mt-4"
+              transition={{ duration: 0.7, delay: 0.35 }}
+              className="flex flex-col items-center text-center gap-5 w-full max-w-2xl"
             >
-              <span
-                className="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide"
-                style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', color: '#c4b5fd' }}
-              >
-                Works with Bolt, Lovable, Cursor & more
-              </span>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="space-y-8 text-center flex flex-col items-center mt-12"
-            >
-              <div className="max-w-3xl text-center space-y-4">
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight leading-tight text-white">
-                  It’s built for vibe coders, founders, marketers, and content teams alike.
-                </h2>
-                <p className="text-slate-400 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
-                  Optimize AI readability, authority, and conversion across the content that matters most — from product pages and homepages to docs, blogs, and app copy.
-                </p>
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.08] px-4 py-1.5">
+                <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-emerald-400">For vibe coders</span>
               </div>
+
+              <h2 className="text-2xl md:text-3xl font-semibold text-white leading-tight" style={{ letterSpacing: '-0.03em' }}>
+                Your AI built the site.{' '}
+                <span className="text-emerald-400">Now scan the repo.</span>
+              </h2>
+
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                {['Bolt', 'Lovable', 'Cursor', 'v0', 'Replit', 'Windsurf'].map((p) => (
+                  <span key={p} className="px-4 py-1.5 rounded-full text-sm font-medium text-slate-300 bg-white/[0.04] border border-white/10 tracking-wide">
+                    {p}
+                  </span>
+                ))}
+              </div>
+
+              <p className="text-base text-slate-300 leading-relaxed">
+                AI-generated sites have a blind spot: the rendered page looks fine, but the source is missing the signals that AI search engines actually look for — no llms.txt, no schema, JS-rendered content that crawlers can’t parse.
+              </p>
+
+              <p className="text-sm text-slate-500 leading-relaxed">
+                Connect your GitHub repo and rain OS reads your actual source files — README, package.json, robots.txt, index.html — and gives you a full AEO score at the code level. No URL parsing. No guessing. The real thing.
+              </p>
+
+              <button
+                onClick={onGetStartedClick || onLoginClick}
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-emerald-500/10 border border-emerald-400/30 text-emerald-300 text-sm font-semibold hover:bg-emerald-500/15 hover:border-emerald-400/50 transition-all"
+              >
+                Connect your repo — it’s free
+              </button>
             </motion.div>
           </div>
         </section>
