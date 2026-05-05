@@ -11,14 +11,59 @@ import { DemoShowcase } from '@/components/marketing/DemoShowcase';
 
 
 interface LandingPageProps {
-  onAnalyze: (content: string, industry: string) => void;
+  onAnalyze: (content: string, siteType: string) => void;
   onLoginClick: () => void;
   onGetStartedClick?: () => void;
 }
 
+const SITE_TYPES = [
+  {
+    value: 'SaaS app / web app',
+    label: 'SaaS app / web app',
+    hint: 'Tune for onboarding, feature clarity, and trust',
+    focus: 'conversion readiness + product discoverability',
+  },
+  {
+    value: 'Marketing site / landing page',
+    label: 'Marketing site / landing page',
+    hint: 'Tune for hero, proof, and CTA conversion',
+    focus: 'conversion readiness + AI readability',
+  },
+  {
+    value: 'Blog / content site',
+    label: 'Blog / content site',
+    hint: 'Tune for answer-first structure and citations',
+    focus: 'AI readability + digital authority',
+  },
+  {
+    value: 'Ecommerce / product page',
+    label: 'Ecommerce / product page',
+    hint: 'Tune for benefits, FAQs, and product signals',
+    focus: 'product discoverability + conversion readiness',
+  },
+  {
+    value: 'Docs / knowledge base',
+    label: 'Docs / knowledge base',
+    hint: 'Tune for clarity, snippetability, and steps',
+    focus: 'AI readability + discoverability',
+  },
+  {
+    value: 'Local / service business',
+    label: 'Local / service business',
+    hint: 'Tune for trust, services, and contact intent',
+    focus: 'authority + conversion readiness',
+  },
+  {
+    value: 'Other',
+    label: 'Other',
+    hint: 'General optimization for any web content',
+    focus: 'balanced across all pillars',
+  },
+];
+
 export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick }: LandingPageProps) {
   const [content, setContent] = useState('');
-  const [industry, setIndustry] = useState('Technology');
+  const [siteType, setSiteType] = useState('SaaS app / web app');
   const [isScrolled, setIsScrolled] = useState(false);
   const [heroFocused, setHeroFocused] = useState(false);
   const heroInputRef = React.useRef<HTMLTextAreaElement>(null);
@@ -42,8 +87,10 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim()) return;
-    onAnalyze(content, industry);
+    onAnalyze(content, siteType);
   };
+
+  const selectedSiteType = SITE_TYPES.find(option => option.value === siteType) || SITE_TYPES[0];
 
   return (
     <div className="flex flex-col min-h-screen relative z-10 selection:bg-rain-500/30">
@@ -147,44 +194,50 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
                   />
                 </div>
 
-                <div className="flex items-center justify-between gap-4 px-6 pb-4 relative z-10">
-                  <div className="flex items-center gap-6">
-                    <button
-                      type="button"
-                      className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all active:scale-90"
-                      onClick={() => setContent('')}
-                      title="Clear"
-                    >
-                      <Plus className="w-5 h-5" />
-                    </button>
-
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs text-slate-500 font-bold uppercase tracking-widest">Industry</span>
-                      <select
-                        value={industry}
-                        onChange={(e) => setIndustry(e.target.value)}
-                        className="bg-transparent border-0 text-slate-400 text-xs font-semibold focus:ring-0 focus:outline-none cursor-pointer hover:text-white transition-colors p-0 uppercase tracking-widest"
+                <div className="px-6 pb-4 relative z-10 space-y-4">
+                  <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex items-center gap-6">
+                      <button
+                        type="button"
+                        className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all active:scale-90"
+                        onClick={() => setContent('')}
+                        title="Clear"
                       >
-                        <option value="Technology" className="bg-[#0b0f19] text-slate-300">Technology</option>
-                        <option value="Marketing" className="bg-[#0b0f19] text-slate-300">Marketing</option>
-                        <option value="Healthcare" className="bg-[#0b0f19] text-slate-300">Healthcare</option>
-                        <option value="Finance" className="bg-[#0b0f19] text-slate-300">Finance</option>
-                        <option value="Ecommerce" className="bg-[#0b0f19] text-slate-300">E-commerce</option>
-                        <option value="General" className="bg-[#0b0f19] text-slate-300">General</option>
-                      </select>
+                        <Plus className="w-5 h-5" />
+                      </button>
+
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs text-slate-500 font-bold uppercase tracking-widest">Site type</span>
+                        <select
+                          value={siteType}
+                          onChange={(e) => setSiteType(e.target.value)}
+                          className="bg-transparent border-0 text-slate-400 text-xs font-semibold focus:ring-0 focus:outline-none cursor-pointer hover:text-white transition-colors p-0 uppercase tracking-widest max-w-[240px]"
+                        >
+                          {SITE_TYPES.map(option => (
+                            <option key={option.value} value={option.value} className="bg-[#0b0f19] text-slate-300">
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                      <Button
+                        type="submit"
+                        size="sm"
+                        className="bg-sky-500 hover:bg-sky-400 text-white rounded-xl px-6 py-2.5 text-sm font-bold transition-all flex items-center gap-2 group/btn"
+                        style={{ boxShadow: '0 0 16px rgba(14,165,233,0.25), 0 2px 8px rgba(0,0,0,0.4)' }}
+                      >
+                        Analyze now
+                        <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                      </Button>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4">
-                    <Button
-                      type="submit"
-                      size="sm"
-                      className="bg-sky-500 hover:bg-sky-400 text-white rounded-xl px-6 py-2.5 text-sm font-bold transition-all flex items-center gap-2 group/btn"
-                      style={{ boxShadow: '0 0 16px rgba(14,165,233,0.25), 0 2px 8px rgba(0,0,0,0.4)' }}
-                    >
-                      Analyze now
-                      <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
-                    </Button>
+                  <div className="flex flex-wrap gap-2 text-[11px] text-slate-400">
+                    <span className="px-3 py-1 rounded-full border border-white/10 bg-white/5">{selectedSiteType.label}</span>
+                    <span className="px-3 py-1 rounded-full border border-white/10 bg-white/5">{selectedSiteType.focus}</span>
                   </div>
                 </div>
               </form>
