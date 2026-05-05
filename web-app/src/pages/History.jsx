@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { api } from '../api/client.js';
 import PillarScores from '../components/PillarScores.jsx';
 import { CheckCircle2, AlertCircle, ExternalLink, Trash2 } from 'lucide-react';
 import styles from './History.module.css';
+
+const UNDO_DELAY_MS = 5000;
 
 function normaliseTopicKey(topic) {
   return topic.trim().toLowerCase().replace(/\s+/g, ' ');
@@ -38,6 +40,11 @@ export default function History() {
   const [clearingAll, setClearingAll] = useState(false);
   const [confirmClearTopic, setConfirmClearTopic] = useState(null);
   const [clearingTopic, setClearingTopic] = useState(null);
+
+  const [undoToast, setUndoToast] = useState(null);
+  const [undoCountdown, setUndoCountdown] = useState(0);
+  const undoTimerRef = useRef(null);
+  const undoIntervalRef = useRef(null);
 
   useEffect(() => {
     api.history()
@@ -75,6 +82,49 @@ export default function History() {
         setCitationsLoaded(true);
       });
   }, [tab, citationsLoaded]);
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(undoTimerRef.current);
+      clearInterval(undoIntervalRef.current);
+    };
+  }, []);
+
+  function cancelUndoTimer() {
+    clearTimeout(undoTimerRef.current);
+    clearInterval(undoIntervalRef.current);
+    undoTimerRef.current = null;
+    undoIntervalRef.current = null;
+  }
+
+  function startUndoCountdown(toast, onExpire) {
+    cancelUndoTimer();
+    setUndoToast(toast);
+    setUndoCountdown(Math.round(UNDO_DELAY_MS / 1000));
+
+    undoIntervalRef.current = setInterval(() => {
+      setUndoCountdown(prev => {
+        if (prev <= 1) {
+          clearInterval(undoIntervalRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    undoTimerRef.current = setTimeout(() => {
+      clearInterval(undoIntervalRef.current);
+      setUndoToast(null);
+      setUndoCountdown(0);
+      onExpire();
+    }, UNDO_DELAY_MS);
+  }
+
+  function handleUndo() {
+    cancelUndoTimer();
+    setUndoToast(null);
+    setUndoCountdown(0);
+  }
 
   function toggleExpand(i) {
     setExpanded(prev => prev === i ? null : i);
@@ -123,41 +173,55 @@ export default function History() {
     }
   }
 
-  async function handleClearAll() {
-    setClearingAll(true);
-    setDeleteError('');
-    try {
-      await api.clearCitationHistory();
-      setCitations([]);
-      setConfirmClearAll(false);
-    } catch (err) {
-      if (err.status === 401) {
-        setDeleteError('Session expired. Please sign out and re-enter your API key.');
-      } else {
-        setDeleteError(err.message || 'Failed to clear citation history.');
+  function handleClearAll() {
+    const count = citations.length;
+    setConfirmClearAll(false);
+
+    startUndoCountdown(
+      { type: 'all', label: `Clearing ${count} citation check${count !== 1 ? 's' : ''}…` },
+      async () => {
+        setClearingAll(true);
+        setDeleteError('');
+        try {
+          await api.clearCitationHistory();
+          setCitations([]);
+        } catch (err) {
+          if (err.status === 401) {
+            setDeleteError('Session expired. Please sign out and re-enter your API key.');
+          } else {
+            setDeleteError(err.message || 'Failed to clear citation history.');
+          }
+        } finally {
+          setClearingAll(false);
+        }
       }
-    } finally {
-      setClearingAll(false);
-    }
+    );
   }
 
-  async function handleClearTopic(topic) {
-    setClearingTopic(topic);
-    setDeleteError('');
-    try {
-      await api.clearCitationHistory({ topic });
-      const clearedKey = normaliseTopicKey(topic);
-      setCitations(prev => prev.filter(c => normaliseTopicKey(c.topic) !== clearedKey));
-      setConfirmClearTopic(null);
-    } catch (err) {
-      if (err.status === 401) {
-        setDeleteError('Session expired. Please sign out and re-enter your API key.');
-      } else {
-        setDeleteError(err.message || 'Failed to clear topic history.');
+  function handleClearTopic(topic) {
+    const clearedKey = normaliseTopicKey(topic);
+    const count = citations.filter(c => normaliseTopicKey(c.topic) === clearedKey).length;
+    setConfirmClearTopic(null);
+
+    startUndoCountdown(
+      { type: 'topic', topic, label: `Clearing "${topic}" (${count} check${count !== 1 ? 's' : ''})…` },
+      async () => {
+        setClearingTopic(topic);
+        setDeleteError('');
+        try {
+          await api.clearCitationHistory({ topic });
+          setCitations(prev => prev.filter(c => normaliseTopicKey(c.topic) !== clearedKey));
+        } catch (err) {
+          if (err.status === 401) {
+            setDeleteError('Session expired. Please sign out and re-enter your API key.');
+          } else {
+            setDeleteError(err.message || 'Failed to clear topic history.');
+          }
+        } finally {
+          setClearingTopic(null);
+        }
       }
-    } finally {
-      setClearingTopic(null);
-    }
+    );
   }
 
   return (
@@ -317,7 +381,7 @@ export default function History() {
 
           {citationsError && <p className={styles.error}>{citationsError}</p>}
 
-          {!citationsLoading && citations.length === 0 && !citationsError && (
+          {!citationsLoading && citations.length === 0 && !citationsError && !undoToast && (
             <div className={styles.empty}>
               <p>No citation checks yet.</p>
               <p className={styles.emptySub}>Run a check from Citation Monitor to start tracking citations over time.</p>
@@ -488,6 +552,21 @@ export default function History() {
             </>
           )}
         </>
+      )}
+
+      {undoToast && (
+        <div className={styles.undoToast} role="status" aria-live="polite">
+          <span className={styles.undoToastLabel}>{undoToast.label}</span>
+          <button
+            type="button"
+            className={styles.undoBtn}
+            onClick={handleUndo}
+            aria-label="Undo clear"
+          >
+            Undo
+          </button>
+          <span className={styles.undoCountdown}>{undoCountdown}s</span>
+        </div>
       )}
     </div>
   );
