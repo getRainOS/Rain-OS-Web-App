@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import {
@@ -94,7 +95,26 @@ export default function CitationMonitor() {
   const { isDemo, refreshUser, user, apiKey } = useApp();
   const scope = isDemo ? '__demo__' : (user?.id || apiKey || 'anon');
 
-  const [tab, setTab] = useState('check');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialTab = searchParams.get('tab') === 'map' ? 'map' : 'check';
+  const [tab, setTab] = useState(initialTab);
+
+  useEffect(() => {
+    const next = searchParams.get('tab') === 'map' ? 'map' : 'check';
+    setTab(next);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  function changeTab(nextTab) {
+    setTab(nextTab);
+    const params = new URLSearchParams(searchParams);
+    if (nextTab === 'map') {
+      params.set('tab', 'map');
+    } else {
+      params.delete('tab');
+    }
+    setSearchParams(params, { replace: true });
+  }
   const [topic, setTopic] = useState('');
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -204,7 +224,7 @@ export default function CitationMonitor() {
           role="tab"
           aria-selected={tab === 'check'}
           className={`${styles.tab} ${tab === 'check' ? styles.tabActive : ''}`}
-          onClick={() => setTab('check')}
+          onClick={() => changeTab('check')}
         >
           <Search style={{ width: 14, height: 14 }} /> New Check
         </button>
@@ -213,7 +233,7 @@ export default function CitationMonitor() {
           role="tab"
           aria-selected={tab === 'map'}
           className={`${styles.tab} ${tab === 'map' ? styles.tabActive : ''}`}
-          onClick={() => setTab('map')}
+          onClick={() => changeTab('map')}
         >
           <MapIcon style={{ width: 14, height: 14 }} /> Competitor Map
           {mapHistory.length > 0 && <span className={styles.tabCount}>{mapHistory.length}</span>}
@@ -225,7 +245,7 @@ export default function CitationMonitor() {
           map={competitorMap}
           history={mapHistory}
           ownDomain={ownDomain}
-          onRunCheck={() => setTab('check')}
+          onRunCheck={() => changeTab('check')}
           onClearHistory={handleClearHistory}
         />
       ) : (
@@ -462,7 +482,7 @@ export default function CitationMonitor() {
                 <button
                   type="button"
                   className={styles.viewMapLink}
-                  onClick={() => setTab('map')}
+                  onClick={() => changeTab('map')}
                 >
                   <MapIcon style={{ width: 12, height: 12 }} />
                   See how these domains compare across all your tracked queries

@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
+import { loadCitationHistory, buildCompetitorMap } from '../lib/citationHistory.js';
 import {
   AreaChart, Area, XAxis, YAxis,
   Tooltip, ResponsiveContainer,
@@ -11,9 +12,14 @@ import {
   Plus, TrendingUp, TrendingDown,
   FileText, Globe, GitBranch, ArrowRight,
   BrainCircuit, ShieldCheck, MousePointerClick, SearchCheck,
-  Activity, Zap, Minus, Heart,
+  Activity, Zap, Minus, Heart, Map as MapIcon, Radar,
 } from 'lucide-react';
 import styles from './Dashboard.module.css';
+
+function getFavicon(domain) {
+  if (!domain) return '';
+  return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+}
 
 const PILLARS = [
   { key: 'ai_readability',          label: 'AI Readability',       color: '#06b6d4', Icon: BrainCircuit,
@@ -187,11 +193,14 @@ function SubScoreBar({ label, value, color }) {
 
 /* ══════════════════════════════════════════ */
 export default function Dashboard() {
-  const { user, isDemo } = useApp();
+  const { user, isDemo, apiKey } = useApp();
   const navigate = useNavigate();
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [chartRange, setChartRange] = useState(14);
+  const [citationHistory, setCitationHistory] = useState([]);
+
+  const citationScope = isDemo ? '__demo__' : (user?.id || apiKey || 'anon');
 
   useEffect(() => {
     api.history({ limit: 50 })
@@ -199,6 +208,16 @@ export default function Dashboard() {
       .catch(() => setHistory([]))
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    setCitationHistory(loadCitationHistory(citationScope));
+  }, [citationScope]);
+
+  const competitorMap = useMemo(
+    () => buildCompetitorMap(citationHistory, null),
+    [citationHistory]
+  );
+  const topCompetitors = competitorMap.domains.slice(0, 3);
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
@@ -575,6 +594,83 @@ export default function Dashboard() {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* ── Top cited competitors ── */}
+      <div
+        className={`${styles.competitorCard} ${topCompetitors.length > 0 ? styles.competitorCardClickable : ''}`}
+        role={topCompetitors.length > 0 ? 'button' : undefined}
+        tabIndex={topCompetitors.length > 0 ? 0 : undefined}
+        onClick={topCompetitors.length > 0 ? () => navigate('/citation-monitor?tab=map') : undefined}
+        onKeyDown={topCompetitors.length > 0 ? (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            navigate('/citation-monitor?tab=map');
+          }
+        } : undefined}
+      >
+        <div className={styles.chartHeader}>
+          <div>
+            <h2 className={styles.chartTitle}>
+              <MapIcon style={{ width: 13, height: 13, marginRight: 6, verticalAlign: '-2px', color: '#a855f7' }} />
+              Top cited competitors
+            </h2>
+            <p className={styles.chartSub}>
+              {competitorMap.totalQueries > 0
+                ? `Dominating across your ${competitorMap.totalQueries} tracked ${competitorMap.totalQueries === 1 ? 'query' : 'queries'}`
+                : 'AEO snapshot from your Citation Monitor history'}
+            </p>
+          </div>
+          {topCompetitors.length > 0 && (
+            <span className={styles.viewAll}>Open Competitor Map →</span>
+          )}
+        </div>
+
+        {topCompetitors.length === 0 ? (
+          <div className={styles.competitorEmpty}>
+            <Radar className={styles.emptyIcon} />
+            <p>No citation history yet</p>
+            <Link
+              to="/citation-monitor"
+              className={styles.emptyLink}
+              onClick={(e) => e.stopPropagation()}
+            >
+              Run your first citation check →
+            </Link>
+          </div>
+        ) : (
+          <div className={styles.competitorList}>
+            {topCompetitors.map((c, i) => {
+              const coveragePct = Math.round(c.coverage * 100);
+              return (
+                <div key={c.domain} className={styles.competitorRow}>
+                  <span className={styles.competitorRank}>#{i + 1}</span>
+                  <img
+                    src={getFavicon(c.domain)}
+                    alt=""
+                    className={styles.competitorFavicon}
+                    onError={(e) => { e.currentTarget.style.visibility = 'hidden'; }}
+                  />
+                  <span className={styles.competitorDomain}>{c.domain}</span>
+                  <div className={styles.competitorBarWrap}>
+                    <div className={styles.competitorBar}>
+                      <div
+                        className={styles.competitorBarFill}
+                        style={{ width: `${coveragePct}%` }}
+                      />
+                    </div>
+                  </div>
+                  <span className={styles.competitorCoverage}>
+                    {coveragePct}%
+                    <span className={styles.competitorCoverageSub}>
+                      {c.queryCount}/{competitorMap.totalQueries}
+                    </span>
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* ── Pillar Sub-scores (last analysis) ── */}
