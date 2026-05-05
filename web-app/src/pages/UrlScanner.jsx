@@ -10,9 +10,10 @@ import styles from './UrlScanner.module.css';
 
 function GithubPushPanel({ result, scannedUrl }) {
   const { user, isDemo } = useApp();
+  const LS_KEY = 'urlscanner_last_github_repo';
   const [step, setStep] = useState('idle'); // idle | loading-repos | pick-repo | loading-preview | review | pushing | success | error
   const [repos, setRepos] = useState([]);
-  const [selectedRepo, setSelectedRepo] = useState('');
+  const [selectedRepo, setSelectedRepo] = useState(() => localStorage.getItem(LS_KEY) || '');
   const [preview, setPreview] = useState(null); // { toCreate, toPatch, manual }
   const [checked, setChecked] = useState({}); // id → boolean
   const [prUrl, setPrUrl] = useState('');
@@ -64,7 +65,13 @@ function GithubPushPanel({ result, scannedUrl }) {
         setStep('error');
         return;
       }
-      setRepos(data.repos || []);
+      const repoList = data.repos || [];
+      setRepos(repoList);
+      const saved = localStorage.getItem(LS_KEY);
+      if (saved && !repoList.some((r) => r.fullName === saved)) {
+        setSelectedRepo('');
+        localStorage.removeItem(LS_KEY);
+      }
       setStep('pick-repo');
     } catch (err) {
       setErrorMsg(err.message || 'Could not load repos.');
@@ -74,6 +81,7 @@ function GithubPushPanel({ result, scannedUrl }) {
 
   async function handlePreview() {
     if (!selectedRepo) return;
+    localStorage.setItem(LS_KEY, selectedRepo);
     setStep('loading-preview');
     setErrorMsg('');
     try {
