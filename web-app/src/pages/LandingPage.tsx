@@ -256,8 +256,11 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
                 { label: 'WordPress & Web App', color: 'rgba(56,189,248,0.1)', border: 'rgba(56,189,248,0.2)', text: '#93c5fd' },
                 { label: 'Works with Bolt, Lovable, Cursor & more', color: 'rgba(139,92,246,0.1)', border: 'rgba(139,92,246,0.25)', text: '#c4b5fd' },
               ].map((s) => (
-                <span key={s.label} className="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide"
-                  style={{ background: s.color, border: `1px solid ${s.border}`, color: s.text }}>
+                <span
+                  key={s.label}
+                  className="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide"
+                  style={{ background: s.color, border: `1px solid ${s.border}`, color: s.text }}
+                >
                   {s.label}
                 </span>
               ))}
