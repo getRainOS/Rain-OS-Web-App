@@ -283,6 +283,20 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
             </motion.div>
           </div>
         </section>
+
+        <DemoShowcase onAnalyzeClick={onGetStartedClick || onLoginClick} />
+        <ThreeModesSection />
+        <VibeCoderBand onGetStarted={onGetStartedClick || onLoginClick} />
+        <HybridFuture />
+        <FourPillars />
+        <FeatureGrid />
+        <ReadabilityIntelligence />
+        <ComparisonTable />
+        <div id="pricing">
+          <Pricing />
+        </div>
+        <FAQ />
+        <CTA />
       </main>
     </div>
   );
