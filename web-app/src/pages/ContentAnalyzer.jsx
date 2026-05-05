@@ -5,6 +5,7 @@ import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
 import QuickTools from '../components/QuickTools.jsx';
 import ArtifactBlock from '../components/ArtifactBlock.jsx';
+import TypewriterPlaceholder from '../components/TypewriterPlaceholder.jsx';
 import styles from './ContentAnalyzer.module.css';
 
 export default function ContentAnalyzer() {
@@ -18,6 +19,7 @@ export default function ContentAnalyzer() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
+  const [textareaFocused, setTextareaFocused] = useState(false);
 
   const usageCount = user?.usage?.count ?? 0;
   const usageLimit = user?.usage?.limit ?? 5;
@@ -92,13 +94,23 @@ export default function ContentAnalyzer() {
 
           <div className={styles.field}>
             <label className={styles.label}>Content</label>
-            <textarea
-              className={styles.textarea}
-              placeholder="Paste your article, page copy, or any text content here…"
-              value={content}
-              onChange={e => setContent(e.target.value)}
-              rows={14}
-            />
+            <div className={styles.textareaWrap}>
+              <TypewriterPlaceholder
+                value={content}
+                isFocused={textareaFocused}
+                padding="12px 14px"
+                fontSize="14px"
+                lineHeight="1.6"
+              />
+              <textarea
+                className={styles.textarea}
+                value={content}
+                onChange={e => setContent(e.target.value)}
+                onFocus={() => setTextareaFocused(true)}
+                onBlur={() => setTextareaFocused(false)}
+                rows={14}
+              />
+            </div>
             <span className={styles.wordCount}>{content.trim() ? content.trim().split(/\s+/).length : 0} words</span>
           </div>
 

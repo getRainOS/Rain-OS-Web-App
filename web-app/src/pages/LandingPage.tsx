@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import TypewriterPlaceholder from '@/components/TypewriterPlaceholder';
 import { Button } from '@/components/ui/button';
 import { Plus, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -19,6 +20,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
   const [content, setContent] = useState('');
   const [industry, setIndustry] = useState('Technology');
   const [isScrolled, setIsScrolled] = useState(false);
+  const [heroFocused, setHeroFocused] = useState(false);
   const heroInputRef = React.useRef<HTMLTextAreaElement>(null);
 
   const scrollToHero = () => {
@@ -129,12 +131,21 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
                 style={{ background: 'linear-gradient(135deg, rgba(56,189,248,0.12), rgba(255,255,255,0.04), rgba(56,189,248,0.06))', filter: 'blur(0px)' }} />
               <form onSubmit={handleSubmit} className="card-surface p-2 text-left relative group" style={{ boxShadow: '0 0 40px rgba(14,165,233,0.07), 0 20px 60px -12px rgba(0,0,0,0.7)' }}>
                 <div className="relative">
+                  <TypewriterPlaceholder
+                    value={content}
+                    isFocused={heroFocused}
+                    padding="24px"
+                    fontSize="18px"
+                    lineHeight="1.625"
+                    color="rgba(255,255,255,0.28)"
+                  />
                   <textarea
                     ref={heroInputRef}
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    placeholder="Paste your content here to get started..."
-                    className="w-full h-40 bg-transparent border-0 resize-none p-6 text-slate-200 placeholder:text-slate-600 focus:ring-0 focus:outline-none text-lg leading-relaxed font-sans relative z-10"
+                    onFocus={() => setHeroFocused(true)}
+                    onBlur={() => setHeroFocused(false)}
+                    className="w-full h-40 bg-transparent border-0 resize-none p-6 text-slate-200 focus:ring-0 focus:outline-none text-lg leading-relaxed font-sans relative z-10"
                     required
                   />
                 </div>

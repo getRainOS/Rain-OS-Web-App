@@ -98,6 +98,10 @@
 
 .input::placeholder { color: var(--text-dim); }
 
+.textareaWrap {
+  position: relative;
+}
+
 .textarea {
   background: var(--surface-2);
   border: 1px solid var(--border);
@@ -110,6 +114,9 @@
   min-height: 200px;
   line-height: 1.6;
   transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+  z-index: 2;
+  width: 100%;
 }
 
 .textarea:focus {
