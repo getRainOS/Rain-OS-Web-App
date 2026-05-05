@@ -193,6 +193,10 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
                 </div>
 
                 <div className="px-6 pb-4 relative z-10 space-y-4">
+                  <p className="text-sm text-slate-300/80 leading-relaxed max-w-2xl">
+                    Your AI built the site — now scan the repo to see how ChatGPT, Perplexity, and Gemini read it, and how likely they are to cite it when someone asks a question you should own.
+                  </p>
+
                   <div className="flex flex-wrap items-center justify-between gap-4">
                     <div className="flex items-center gap-6">
                       <button
