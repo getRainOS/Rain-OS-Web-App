@@ -155,7 +155,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
             >
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.05] text-white"
                 style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
-                Vibe Coded Your Site or Web App?
+                Your AI built the site. Now paste the content, scan the URL, or connect the repo to determine its AI Readability.
               </h1>
               <p className="text-slate-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
                 Find out how ChatGPT, Perplexity, and Gemini read your content — and how likely they are to cite it when someone asks a question you should own.
