@@ -157,9 +157,6 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
                 style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
                 Vibe Coded Your Site or Web App?
               </h1>
-              <p className="text-slate-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
-                Your AI built the site — now scan the repo to see how ChatGPT, Perplexity, and Gemini read it, and how likely they are to cite it when someone asks a question you should own.
-              </p>
             </motion.div>
 
             {/* Content Box */}
@@ -193,7 +190,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
                 </div>
 
                 <div className="px-6 pb-4 relative z-10 space-y-4">
-                  <p className="text-sm text-slate-300/80 leading-relaxed max-w-2xl">
+                  <p className="text-sm text-slate-400 leading-relaxed max-w-2xl">
                     Your AI built the site — now scan the repo to see how ChatGPT, Perplexity, and Gemini read it, and how likely they are to cite it when someone asks a question you should own.
                   </p>
 
