@@ -49,6 +49,25 @@ CREATE INDEX IF NOT EXISTS idx_citation_checks_user_topic
   ON citation_checks(user_id, topic_key, checked_at DESC);
 CREATE INDEX IF NOT EXISTS idx_citation_checks_user_checked_at
   ON citation_checks(user_id, checked_at DESC);
+
+-- Content analysis history (additive)
+CREATE TABLE IF NOT EXISTS content_analyses (
+  id BIGSERIAL PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  title TEXT,
+  url TEXT,
+  overall_score NUMERIC,
+  ai_readability NUMERIC,
+  digital_authority NUMERIC,
+  conversion_readiness NUMERIC,
+  product_discoverability NUMERIC,
+  summary TEXT,
+  result_json JSONB,
+  analyzed_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_content_analyses_user_analyzed_at
+  ON content_analyses(user_id, analyzed_at DESC);
 `;
 
 const addGithubColumnsQuery = `

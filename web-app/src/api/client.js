@@ -82,6 +82,9 @@ export const api = {
   deleteCitationCheck: (id) => isDemo()
     ? demoDelay({ success: true })
     : request('DELETE', `/api/citation-checks/${id}`),
+  deleteAnalysis: (id) => isDemo()
+    ? demoDelay({ success: true })
+    : request('DELETE', `/api/history/${id}`),
   usage: () => isDemo() ? demoDelay({ count: 42, limit: 500 }) : request('GET', '/api/usage'),
   createCheckoutSession: (priceId, successUrl, cancelUrl) =>
     isDemo()

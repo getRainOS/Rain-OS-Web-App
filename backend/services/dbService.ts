@@ -403,3 +403,96 @@ export const deleteCitationCheck = async (
   );
   return (res.rowCount || 0) > 0;
 };
+
+// --------------------------
+// Content analysis history
+// --------------------------
+
+export interface AnalysisRecord {
+  id: number;
+  title: string | null;
+  url: string | null;
+  overall_score: number | null;
+  ai_readability: number | null;
+  digital_authority: number | null;
+  conversion_readiness: number | null;
+  product_discoverability: number | null;
+  summary: string | null;
+  analyzed_at: string;
+}
+
+const mapAnalysisRow = (row: any): AnalysisRecord => ({
+  id: Number(row.id),
+  title: row.title ?? null,
+  url: row.url ?? null,
+  overall_score: row.overall_score !== null ? Number(row.overall_score) : null,
+  ai_readability: row.ai_readability !== null ? Number(row.ai_readability) : null,
+  digital_authority: row.digital_authority !== null ? Number(row.digital_authority) : null,
+  conversion_readiness: row.conversion_readiness !== null ? Number(row.conversion_readiness) : null,
+  product_discoverability: row.product_discoverability !== null ? Number(row.product_discoverability) : null,
+  summary: row.summary ?? null,
+  analyzed_at: row.analyzed_at instanceof Date ? row.analyzed_at.toISOString() : row.analyzed_at,
+});
+
+export const saveAnalysis = async (
+  userId: string,
+  data: {
+    title?: string | null;
+    url?: string | null;
+    overall_score?: number | null;
+    ai_readability?: number | null;
+    digital_authority?: number | null;
+    conversion_readiness?: number | null;
+    product_discoverability?: number | null;
+    summary?: string | null;
+    result_json?: any;
+  }
+): Promise<AnalysisRecord | null> => {
+  const res = await pool.query(
+    `INSERT INTO content_analyses
+       (user_id, title, url, overall_score, ai_readability, digital_authority,
+        conversion_readiness, product_discoverability, summary, result_json)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+     RETURNING *`,
+    [
+      userId,
+      data.title ?? null,
+      data.url ?? null,
+      data.overall_score ?? null,
+      data.ai_readability ?? null,
+      data.digital_authority ?? null,
+      data.conversion_readiness ?? null,
+      data.product_discoverability ?? null,
+      data.summary ?? null,
+      data.result_json ? JSON.stringify(data.result_json) : null,
+    ]
+  );
+  return res.rows[0] ? mapAnalysisRow(res.rows[0]) : null;
+};
+
+export const getAnalysesByUser = async (
+  userId: string,
+  limit = 50
+): Promise<AnalysisRecord[]> => {
+  const res = await pool.query(
+    `SELECT id, title, url, overall_score, ai_readability, digital_authority,
+            conversion_readiness, product_discoverability, summary, analyzed_at
+     FROM content_analyses
+     WHERE user_id = $1
+     ORDER BY analyzed_at DESC
+     LIMIT $2`,
+    [userId, limit]
+  );
+  return res.rows.map(mapAnalysisRow);
+};
+
+export const deleteAnalysis = async (
+  userId: string,
+  id: number
+): Promise<boolean> => {
+  const res = await pool.query(
+    `DELETE FROM content_analyses WHERE id = $1 AND user_id = $2`,
+    [id, userId]
+  );
+  return (res.rowCount || 0) > 0;
+};

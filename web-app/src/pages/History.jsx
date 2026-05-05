@@ -18,6 +18,10 @@ export default function History() {
   const [error, setError] = useState('');
   const [expanded, setExpanded] = useState(null);
 
+  const [confirmDeleteAnalysisId, setConfirmDeleteAnalysisId] = useState(null);
+  const [deletingAnalysisId, setDeletingAnalysisId] = useState(null);
+  const [deleteAnalysisError, setDeleteAnalysisError] = useState('');
+
   const [citations, setCitations] = useState([]);
   const [citationsLoading, setCitationsLoading] = useState(false);
   const [citationsError, setCitationsError] = useState('');
@@ -65,6 +69,28 @@ export default function History() {
 
   function toggleExpand(i) {
     setExpanded(prev => prev === i ? null : i);
+  }
+
+  async function handleDeleteAnalysis(id) {
+    setDeletingAnalysisId(id);
+    setDeleteAnalysisError('');
+    try {
+      await api.deleteAnalysis(id);
+      setHistory(prev => prev.filter(a => a.id !== id));
+      setConfirmDeleteAnalysisId(null);
+      setExpanded(null);
+    } catch (err) {
+      if (err.status === 404) {
+        setHistory(prev => prev.filter(a => a.id !== id));
+        setConfirmDeleteAnalysisId(null);
+      } else if (err.status === 401) {
+        setDeleteAnalysisError('Session expired. Please sign out and re-enter your API key.');
+      } else {
+        setDeleteAnalysisError(err.message || 'Failed to delete analysis.');
+      }
+    } finally {
+      setDeletingAnalysisId(null);
+    }
   }
 
   async function handleDeleteCitation(id) {
@@ -122,7 +148,9 @@ export default function History() {
 
           {error && <p className={styles.error}>{error}</p>}
 
-          {!loading && history.length === 0 && (
+          {deleteAnalysisError && <p className={styles.error}>{deleteAnalysisError}</p>}
+
+          {!loading && history.length === 0 && !error && (
             <div className={styles.empty}>
               <p>No analyses yet.</p>
               <p className={styles.emptySub}>Run a content analysis to see your history here.</p>
@@ -138,9 +166,17 @@ export default function History() {
                   : score >= 75 ? 'var(--green)'
                   : score >= 50 ? 'var(--yellow)'
                   : 'var(--red)';
+                const isConfirming = confirmDeleteAnalysisId === item.id;
+                const isDeleting = deletingAnalysisId === item.id;
                 return (
-                  <div key={i} className={styles.item}>
-                    <div className={styles.itemHeader} onClick={() => toggleExpand(i)} role="button" tabIndex={0}>
+                  <div key={item.id ?? i} className={styles.item}>
+                    <div
+                      className={styles.itemHeader}
+                      onClick={() => !isConfirming && toggleExpand(i)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={e => { if ((e.key === 'Enter' || e.key === ' ') && !isConfirming) toggleExpand(i); }}
+                    >
                       <div className={styles.itemLeft}>
                         <div className={styles.itemTitle}>
                           {item.title || item.url || `Analysis #${history.length - i}`}
@@ -163,13 +199,47 @@ export default function History() {
                             { key: 'product_discoverability', color: 'var(--orange)' },
                           ].map(p => (
                             <span key={p.key} className={styles.miniScore} style={{ color: p.color }}>
-                              {item[p.key] !== undefined ? Math.round(item[p.key]) : '—'}
+                              {item[p.key] !== undefined && item[p.key] !== null ? Math.round(item[p.key]) : '—'}
                             </span>
                           ))}
                         </div>
                         <div className={styles.overallScore} style={{ color: scoreColor }}>
                           {score !== null ? Math.round(score) : '—'}
                         </div>
+                        {isConfirming ? (
+                          <div className={styles.deleteConfirm} onClick={e => e.stopPropagation()}>
+                            <span className={styles.deleteConfirmText}>Delete?</span>
+                            <button
+                              type="button"
+                              className={`${styles.deleteAction} ${styles.deleteActionConfirm}`}
+                              onClick={() => handleDeleteAnalysis(item.id)}
+                              disabled={isDeleting}
+                              aria-label="Confirm delete"
+                            >
+                              {isDeleting ? '…' : 'Yes'}
+                            </button>
+                            <button
+                              type="button"
+                              className={styles.deleteAction}
+                              onClick={() => { setConfirmDeleteAnalysisId(null); setDeleteAnalysisError(''); }}
+                              disabled={isDeleting}
+                              aria-label="Cancel delete"
+                            >
+                              No
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            className={styles.deleteBtn}
+                            onClick={e => { e.stopPropagation(); setConfirmDeleteAnalysisId(item.id); setDeleteAnalysisError(''); }}
+                            disabled={item.id == null}
+                            aria-label="Delete analysis"
+                            title="Delete"
+                          >
+                            <Trash2 style={{ width: 14, height: 14 }} />
+                          </button>
+                        )}
                         <span className={styles.chevron}>{isOpen ? '▲' : '▼'}</span>
                       </div>
                     </div>

@@ -8,6 +8,7 @@ import process from 'process';
 import { handleAnalyze, handleCapabilities } from '../services/analyzeController';
 import urlScanHandler from './url-scan';
 import citationCheckHandler, { listHandler as citationChecksListHandler, deleteHandler as citationCheckDeleteHandler } from './citation-check';
+import { listHandler as historyListHandler, deleteHandler as historyDeleteHandler } from './history';
 // Auth
 import googleAuthHandler from './auth/google';
 import googleRedirectHandler from './auth/google-redirect';
@@ -85,6 +86,11 @@ app.get('/api/citation-checks', citationChecksListHandler);
 app.get('/v1/api/citation-checks', citationChecksListHandler);
 app.delete('/api/citation-checks/:id', citationCheckDeleteHandler);
 app.delete('/v1/api/citation-checks/:id', citationCheckDeleteHandler);
+// ─── Content analysis history ───────────────────────────────────────────────
+app.get('/api/history', historyListHandler);
+app.get('/v1/api/history', historyListHandler);
+app.delete('/api/history/:id', historyDeleteHandler);
+app.delete('/v1/api/history/:id', historyDeleteHandler);
 // ─── Auth ──────────────────────────────────────────────────────────────────
 app.post('/api/auth/google', googleAuthHandler);
 app.get( '/api/auth/google', googleRedirectHandler);

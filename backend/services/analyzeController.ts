@@ -3,8 +3,8 @@
 // Auth, usage-check, and incrementing all live here — keeping api/index.ts thin.
 import express from 'express';
 import { analyzeContent, API_VERSION } from './geminiService';
-import { findUserByApiKey, incrementUserUsage } from './dbService';
-import type { ApiError, CapabilitiesResponse } from '../types';
+import { findUserByApiKey, incrementUserUsage, saveAnalysis } from './dbService';
+import type { ApiError, CapabilitiesResponse, AnalysisResponse } from '../types';
 const PHASE2_SUB_SCORES = [
 'sectionConceptIsolation',
 'instructionDeterminism',
@@ -54,6 +54,23 @@ const result = await analyzeContent(content, industry || 'General / Other');
 const updatedUser = await incrementUserUsage(user.id);
 if (updatedUser) res.setHeader('X-Usage-Info',
 JSON.stringify(updatedUser.usage));
+
+// Persist to analysis history (best-effort — never block the response)
+try {
+  const typedResult = result as AnalysisResponse;
+  const pillar = typedResult.pillarScores;
+  await saveAnalysis(user.id, {
+    overall_score: typeof typedResult.overallScore === 'number' ? typedResult.overallScore : null,
+    ai_readability: typeof pillar?.aiReadability === 'number' ? pillar.aiReadability : null,
+    digital_authority: typeof pillar?.digitalAuthority === 'number' ? pillar.digitalAuthority : null,
+    conversion_readiness: typeof pillar?.conversionReadiness === 'number' ? pillar.conversionReadiness : null,
+    product_discoverability: typeof pillar?.productDiscoverability === 'number' ? pillar.productDiscoverability : null,
+    result_json: result,
+  });
+} catch (saveErr) {
+  console.error('Analysis save error:', saveErr);
+}
+
 return res.status(200).json({ success: true, data: result, ...result });
 } catch (error) {
 console.error('Analysis error:', error);
