@@ -75,13 +75,23 @@ export const api = {
       })
     : request('POST', '/api/citation-check', { topic, url }),
   citationHistory: (params) => {
-    if (isDemo()) return demoDelay(DEMO_CITATION_HISTORY);
+    if (isDemo()) {
+      const topic = params?.topic ? String(params.topic).trim().toLowerCase() : '';
+      const items = topic
+        ? DEMO_CITATION_HISTORY.filter(h => (h.topic || '').toLowerCase() === topic)
+        : DEMO_CITATION_HISTORY;
+      return demoDelay(items);
+    }
     const qs = params ? '?' + new URLSearchParams(params).toString() : '';
     return request('GET', `/api/citation-checks${qs}`);
   },
   deleteCitationCheck: (id) => isDemo()
     ? demoDelay({ success: true })
     : request('DELETE', `/api/citation-checks/${id}`),
+  deleteCitationHistory: () => {
+    if (isDemo()) return demoDelay({ success: true, deleted: 0 });
+    return request('DELETE', '/api/citation-checks');
+  },
   deleteAnalysis: (id) => isDemo()
     ? demoDelay({ success: true })
     : request('DELETE', `/api/history/${id}`),

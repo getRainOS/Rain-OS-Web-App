@@ -1,61 +1,7 @@
-const STORAGE_PREFIX = 'rain_os_citation_history';
-const MAX_ENTRIES = 50;
-
-function storageKey(scope) {
-  return `${STORAGE_PREFIX}:${scope || 'anon'}`;
-}
-
-function safeParse(raw) {
-  if (!raw) return [];
-  try {
-    const v = JSON.parse(raw);
-    return Array.isArray(v) ? v : [];
-  } catch {
-    return [];
-  }
-}
-
-export function loadCitationHistory(scope) {
-  if (typeof window === 'undefined') return [];
-  return safeParse(window.localStorage.getItem(storageKey(scope)));
-}
-
-export function saveCitationCheck(scope, result) {
-  if (typeof window === 'undefined' || !result || !result.topic) return [];
-  const entry = {
-    id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    timestamp: Date.now(),
-    topic: result.topic,
-    url: result.url || null,
-    cited: !!result.cited,
-    citedSourceIndex: result.citedSourceIndex ?? null,
-    alignmentScore: result.alignmentScore ?? null,
-    sources: (result.sources || []).map((s, i) => ({
-      rank: i + 1,
-      title: s.title || '',
-      url: s.url || '',
-      domain: s.domain || '',
-    })),
-    competitorDomains: result.competitorDomains || [],
-  };
-  const existing = loadCitationHistory(scope);
-  const next = [entry, ...existing].slice(0, MAX_ENTRIES);
-  try {
-    window.localStorage.setItem(storageKey(scope), JSON.stringify(next));
-  } catch {
-    /* quota — silently ignore */
-  }
-  return next;
-}
-
-export function clearCitationHistory(scope) {
-  if (typeof window === 'undefined') return;
-  try {
-    window.localStorage.removeItem(storageKey(scope));
-  } catch {
-    /* ignore */
-  }
-}
+// Cross-topic competitor map aggregation. Operates on backend-shaped citation
+// history records (see GET /api/citation-checks). Each entry should have:
+//   { topic, url, sources: [{ domain, url, rank? }], competitorDomains? }
+// `rank` is optional — when missing we use 1-based position in the sources array.
 
 function insightFor({ queryCount, totalQueries, avgRank, citedAsTop }) {
   const dominanceRatio = queryCount / Math.max(totalQueries, 1);
@@ -86,7 +32,8 @@ export function buildCompetitorMap(history, ownDomain) {
 
   for (const entry of history) {
     const seenInQuery = new Set();
-    const fallbackRank = (entry.sources?.length || 0) + 1;
+    const sources = entry.sources || [];
+    const fallbackRank = sources.length + 1;
 
     const upsert = (rawDomain, rank, url) => {
       const domain = (rawDomain || '').toLowerCase().replace(/^www\./, '');
@@ -107,18 +54,22 @@ export function buildCompetitorMap(history, ownDomain) {
         };
         byDomain.set(domain, agg);
       }
+      const effectiveRank = rank || fallbackRank;
       agg.queryCount += 1;
-      agg.rankSum += rank || 0;
-      agg.bestRank = Math.min(agg.bestRank, rank || Infinity);
+      agg.rankSum += effectiveRank;
+      agg.bestRank = Math.min(agg.bestRank, effectiveRank);
       if (entry.topic && !agg.topics.includes(entry.topic)) {
         agg.topics.push(entry.topic);
       }
       if (!agg.sampleUrl && url) agg.sampleUrl = url;
     };
 
-    for (const src of entry.sources || []) {
-      upsert(src.domain, src.rank, src.url);
-    }
+    sources.forEach((src, i) => {
+      // Backend rows store sources without a `rank` field — derive it from
+      // the array order (1-based) so older v0.5 localStorage entries with an
+      // explicit `rank` still work too.
+      upsert(src.domain, src.rank ?? (i + 1), src.url);
+    });
     // Fallback: use stored competitorDomains for any domain not surfaced via sources
     // (covers cases where the API returns competitor domains without full source rows).
     for (const dom of entry.competitorDomains || []) {

@@ -7,12 +7,7 @@ import {
   Map as MapIcon, Trophy, Trash2, Info,
   History as HistoryIcon, TrendingUp, TrendingDown, Minus,
 } from 'lucide-react';
-import {
-  loadCitationHistory,
-  saveCitationCheck,
-  clearCitationHistory,
-  buildCompetitorMap,
-} from '../lib/citationHistory.js';
+import { buildCompetitorMap } from '../lib/citationHistory.js';
 import styles from './CitationMonitor.module.css';
 
 const EXAMPLE_TOPICS = [
@@ -46,56 +41,10 @@ function normalizeDomain(input) {
   }
 }
 
-const DEMO_SEED = [
-  {
-    topic: 'best AI content optimizer for bloggers',
-    url: 'https://getrainos.com',
-    cited: false,
-    citedSourceIndex: null,
-    alignmentScore: 58,
-    sources: [
-      { title: 'Top 10 AI Writing Tools for Bloggers', url: 'https://www.searchenginejournal.com/ai-writing-tools-bloggers/', domain: 'searchenginejournal.com' },
-      { title: 'Surfer vs Frase vs Clearscope', url: 'https://www.semrush.com/blog/content-optimizer-comparison/', domain: 'semrush.com' },
-      { title: 'How AI Picks Citations', url: 'https://blog.hubspot.com/marketing/ai-search-citation', domain: 'blog.hubspot.com' },
-      { title: 'AEO 101', url: 'https://ahrefs.com/blog/answer-engine-optimization/', domain: 'ahrefs.com' },
-    ],
-    competitorDomains: ['searchenginejournal.com', 'semrush.com', 'blog.hubspot.com', 'ahrefs.com'],
-  },
-  {
-    topic: 'how to improve AEO for a SaaS landing page',
-    url: 'https://getrainos.com',
-    cited: false,
-    citedSourceIndex: null,
-    alignmentScore: 62,
-    sources: [
-      { title: 'AEO for SaaS', url: 'https://blog.hubspot.com/marketing/aeo-saas', domain: 'blog.hubspot.com' },
-      { title: 'Optimizing for AI Answers', url: 'https://ahrefs.com/blog/aeo-saas-landing/', domain: 'ahrefs.com' },
-      { title: 'Schema Markup for SaaS', url: 'https://www.semrush.com/blog/saas-schema/', domain: 'semrush.com' },
-      { title: 'Landing Page AEO Audit', url: 'https://moz.com/blog/landing-page-aeo', domain: 'moz.com' },
-    ],
-    competitorDomains: ['blog.hubspot.com', 'ahrefs.com', 'semrush.com', 'moz.com'],
-  },
-  {
-    topic: 'what is answer engine optimization',
-    url: 'https://getrainos.com',
-    cited: false,
-    citedSourceIndex: null,
-    alignmentScore: 55,
-    sources: [
-      { title: 'Answer Engine Optimization Guide', url: 'https://blog.hubspot.com/marketing/aeo-guide', domain: 'blog.hubspot.com' },
-      { title: 'Defining AEO', url: 'https://searchengineland.com/what-is-aeo', domain: 'searchengineland.com' },
-      { title: 'AEO vs SEO', url: 'https://ahrefs.com/blog/aeo-vs-seo/', domain: 'ahrefs.com' },
-      { title: 'AEO Strategy Playbook', url: 'https://www.gartner.com/en/articles/aeo-playbook', domain: 'gartner.com' },
-    ],
-    competitorDomains: ['blog.hubspot.com', 'searchengineland.com', 'ahrefs.com', 'gartner.com'],
-  },
-];
-
 export default function CitationMonitor() {
-  const { isDemo, refreshUser, user, apiKey } = useApp();
-  const scope = isDemo ? '__demo__' : (user?.id || apiKey || 'anon');
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { isDemo, refreshUser } = useApp();
 
+  const [searchParams, setSearchParams] = useSearchParams();
   const initialTab = searchParams.get('tab') === 'map' ? 'map' : 'check';
   const [tab, setTab] = useState(initialTab);
 
@@ -115,43 +64,35 @@ export default function CitationMonitor() {
     }
     setSearchParams(params, { replace: true });
   }
-  const [topic, setTopic] = useState(() => searchParams.get('topic') || '');
+  const [topic, setTopic] = useState('');
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
-  // Local cross-topic history (drives the Competitor Map)
+  // Cross-topic citation history from the backend (drives the Competitor Map)
   const [mapHistory, setMapHistory] = useState([]);
+  const [mapLoading, setMapLoading] = useState(false);
   // Backend per-topic timeline (drives "Previous checks for this topic")
   const [topicHistory, setTopicHistory] = useState([]);
 
-  // Load local map history (and seed demo if needed) on mount / scope change
-  useEffect(() => {
-    let h = loadCitationHistory(scope);
-    if (isDemo && h.length === 0) {
-      let next = h;
-      DEMO_SEED.forEach(seed => { next = saveCitationCheck(scope, seed); });
-      h = next;
+  async function fetchMapHistory() {
+    setMapLoading(true);
+    try {
+      const { data } = await api.citationHistory();
+      const items = Array.isArray(data) ? data : data?.items ?? [];
+      setMapHistory(items);
+    } catch (_) {
+      setMapHistory([]);
+    } finally {
+      setMapLoading(false);
     }
-    setMapHistory(h);
-  }, [scope, isDemo]);
+  }
 
-  // Respond to ?topic= deep-links (e.g. from the Dashboard's Citations widget)
+  // Load cross-topic history from the backend on mount / when demo flag flips
   useEffect(() => {
-    const t = searchParams.get('topic');
-    if (!t) return;
-    setTab('check');
-    setTopic(t);
-    setResult(null);
-    setError('');
-    loadTopicHistory(t);
-    // Clear the URL param so browser back navigation behaves naturally
-    // and re-clicking the same topic from the dashboard still triggers this effect.
-    const next = new URLSearchParams(searchParams);
-    next.delete('topic');
-    setSearchParams(next, { replace: true });
+    fetchMapHistory();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
+  }, [isDemo]);
 
   async function loadTopicHistory(forTopic) {
     if (!forTopic || forTopic.trim().length < 3) {
@@ -176,15 +117,14 @@ export default function CitationMonitor() {
     try {
       const { data } = await api.citationCheck({ topic: topic.trim(), url: url.trim() || undefined });
       setResult(data);
-      // Persist to local store for the cross-topic Competitor Map
-      const next = saveCitationCheck(scope, data);
-      setMapHistory(next);
       // Prefer the per-topic history payload that came back with the check; fall back to a fetch.
       if (Array.isArray(data?.history) && data.history.length > 0) {
         setTopicHistory(data.history);
       } else {
         loadTopicHistory(data?.topic || topic.trim());
       }
+      // Refresh the cross-topic map from the backend so the new check shows up.
+      fetchMapHistory();
       refreshUser?.();
     } catch (err) {
       setError(err.message || 'Citation check failed. Please try again.');
@@ -205,10 +145,15 @@ export default function CitationMonitor() {
     setTopicHistory([]);
   }
 
-  function handleClearHistory() {
-    if (!window.confirm('Clear all saved citation checks? This only removes locally stored history in this browser.')) return;
-    clearCitationHistory(scope);
-    setMapHistory([]);
+  async function handleClearHistory() {
+    if (!window.confirm('Clear all saved citation checks? This permanently deletes your citation history from your account.')) return;
+    try {
+      await api.deleteCitationHistory();
+      setMapHistory([]);
+      setTopicHistory([]);
+    } catch (err) {
+      setError(err.message || 'Failed to clear citation history.');
+    }
   }
 
   const ownDomain = useMemo(() => {
@@ -262,6 +207,7 @@ export default function CitationMonitor() {
           map={competitorMap}
           history={mapHistory}
           ownDomain={ownDomain}
+          loading={mapLoading}
           onRunCheck={() => changeTab('check')}
           onClearHistory={handleClearHistory}
         />
@@ -593,7 +539,17 @@ export default function CitationMonitor() {
   );
 }
 
-function CompetitorMapView({ map, history, ownDomain, onRunCheck, onClearHistory }) {
+function CompetitorMapView({ map, history, ownDomain, loading, onRunCheck, onClearHistory }) {
+  if (loading && !history.length) {
+    return (
+      <div className={`card ${styles.emptyMap}`}>
+        <span className="spinner" />
+        <p className={styles.emptyMapDesc} style={{ marginTop: 16 }}>
+          Loading your citation history…
+        </p>
+      </div>
+    );
+  }
   if (!history.length) {
     return (
       <div className={`card ${styles.emptyMap}`}>
@@ -641,9 +597,9 @@ function CompetitorMapView({ map, history, ownDomain, onRunCheck, onClearHistory
       <div className={styles.mapNote}>
         <Info className={styles.mapNoteIcon} />
         <span>
-          History is stored locally in this browser ({totalQueries} check{totalQueries === 1 ? '' : 's'} saved
-          {ownDomain ? `, excluding your domain ${ownDomain}` : ''}).
-          {' '}Once persistent history ships, this map will follow you across devices.
+          Synced to your account — {totalQueries} check{totalQueries === 1 ? '' : 's'} saved
+          {ownDomain ? `, excluding your domain ${ownDomain}` : ''}.
+          {' '}Your map follows you across devices and sessions.
         </span>
       </div>
 
@@ -658,7 +614,7 @@ function CompetitorMapView({ map, history, ownDomain, onRunCheck, onClearHistory
             type="button"
             className={styles.clearBtn}
             onClick={onClearHistory}
-            title="Clear locally stored citation history"
+            title="Permanently delete your saved citation history"
           >
             <Trash2 style={{ width: 12, height: 12 }} /> Clear history
           </button>

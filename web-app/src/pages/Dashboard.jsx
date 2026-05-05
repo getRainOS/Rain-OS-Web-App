@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
-import { loadCitationHistory, buildCompetitorMap } from '../lib/citationHistory.js';
+import { buildCompetitorMap } from '../lib/citationHistory.js';
 import {
   AreaChart, Area, XAxis, YAxis,
   Tooltip, ResponsiveContainer,
@@ -226,7 +226,7 @@ function SubScoreBar({ label, value, color }) {
 
 /* ══════════════════════════════════════════ */
 export default function Dashboard() {
-  const { user, isDemo, apiKey } = useApp();
+  const { user } = useApp();
   const navigate = useNavigate();
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -234,8 +234,6 @@ export default function Dashboard() {
   const [citations, setCitations] = useState([]);
   const [citationsLoading, setCitationsLoading] = useState(true);
   const [citationHistory, setCitationHistory] = useState([]);
-
-  const citationScope = isDemo ? '__demo__' : (user?.id || apiKey || 'anon');
 
   useEffect(() => {
     api.history({ limit: 50 })
@@ -245,8 +243,16 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    setCitationHistory(loadCitationHistory(citationScope));
-  }, [citationScope]);
+    let cancelled = false;
+    api.citationHistory()
+      .then(({ data }) => {
+        if (cancelled) return;
+        const items = Array.isArray(data) ? data : data?.items ?? [];
+        setCitationHistory(items);
+      })
+      .catch(() => { if (!cancelled) setCitationHistory([]); });
+    return () => { cancelled = true; };
+  }, [user?.id]);
 
   const competitorMap = useMemo(
     () => buildCompetitorMap(citationHistory, null),

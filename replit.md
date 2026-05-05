@@ -51,6 +51,11 @@ API client (`src/api/client.js`):
 - `api.analyze(body)` → `POST /api/analyze`
 - `api.history(params)` → `GET /api/history`
 - `api.scanUrl(url)` → `POST /api/scan`
+- `api.citationCheck({topic, url})` → `POST /api/citation-check`
+- `api.citationHistory({topic?})` → `GET /api/citation-checks` (omit `topic` for full user-wide history)
+- `api.deleteCitationHistory()` → `DELETE /api/citation-checks` (used by Competitor Map "Clear history")
+
+The Citation Monitor's Competitor Map (`web-app/src/pages/CitationMonitor.jsx`) reads from the persistent backend history (cross-device) — `web-app/src/lib/citationHistory.js` only exports the `buildCompetitorMap` aggregator now (the localStorage store has been removed).
 
 #### 3. Chrome Extension (planned)
 Future third client for the Rain OS platform.

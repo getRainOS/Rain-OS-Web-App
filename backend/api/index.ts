@@ -7,7 +7,11 @@ import process from 'process';
 // Phase 2: new analyze controller (replaces inline analyzeHandler)
 import { handleAnalyze, handleCapabilities } from '../services/analyzeController';
 import urlScanHandler from './url-scan';
-import citationCheckHandler, { listHandler as citationChecksListHandler, deleteHandler as citationCheckDeleteHandler, bulkDeleteHandler as citationChecksBulkDeleteHandler } from './citation-check';
+import citationCheckHandler, {
+  listHandler as citationChecksListHandler,
+  deleteHandler as citationCheckDeleteHandler,
+  bulkDeleteHandler as citationChecksBulkDeleteHandler,
+} from './citation-check';
 import { listHandler as historyListHandler, deleteHandler as historyDeleteHandler } from './history';
 // Auth
 import googleAuthHandler from './auth/google';
