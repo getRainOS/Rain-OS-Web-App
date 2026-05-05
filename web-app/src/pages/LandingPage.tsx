@@ -158,7 +158,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
                 Vibe Coded Your Site or Web App?
               </h1>
               <p className="text-slate-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
-                Your AI built the site — now scan the repo to see how ChatGPT, Perplexity, and Gemini read it, and how likely they are to cite it when someone asks a question you should own.
+                Find out how ChatGPT, Perplexity, and Gemini read your content — and how likely they are to cite it when someone asks a question you should own.
               </p>
             </motion.div>
 
@@ -256,6 +256,21 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
               </span>
             </motion.div>
 
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="space-y-8 text-center flex flex-col items-center mt-12"
+            >
+              <div className="max-w-3xl text-center space-y-4">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight leading-tight text-white">
+                  It’s built for vibe coders, founders, marketers, and content teams alike.
+                </h2>
+                <p className="text-slate-400 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
+                  Optimize AI readability, authority, and conversion across the content that matters most — from product pages and homepages to docs, blogs, and app copy.
+                </p>
+              </div>
+            </motion.div>
           </div>
         </section>
 
