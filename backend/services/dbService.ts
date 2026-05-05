@@ -404,6 +404,26 @@ export const deleteCitationCheck = async (
   return (res.rowCount || 0) > 0;
 };
 
+export const deleteCitationChecksByUser = async (
+  userId: string,
+  opts: { topicKey?: string } = {}
+): Promise<number> => {
+  let res;
+  if (opts.topicKey) {
+    const key = normaliseTopicKey(opts.topicKey);
+    res = await pool.query(
+      `DELETE FROM citation_checks WHERE user_id = $1 AND topic_key = $2`,
+      [userId, key]
+    );
+  } else {
+    res = await pool.query(
+      `DELETE FROM citation_checks WHERE user_id = $1`,
+      [userId]
+    );
+  }
+  return res.rowCount || 0;
+};
+
 // --------------------------
 // Content analysis history
 // --------------------------

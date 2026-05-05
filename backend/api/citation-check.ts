@@ -9,6 +9,7 @@ import {
   getCitationChecksByTopic,
   getCitationChecksByUser,
   deleteCitationCheck,
+  deleteCitationChecksByUser,
 } from '../services/dbService';
 import { runCitationCheck } from '../services/citationCheckService';
 import type { ApiError } from '../types';
@@ -17,6 +18,28 @@ function getApiKey(req: express.Request): string | null {
   const h = req.headers.authorization;
   if (!h) return null;
   return (Array.isArray(h) ? h[0] : h)?.split(' ')[1] || null;
+}
+
+export async function bulkDeleteHandler(req: express.Request, res: express.Response) {
+  const apiKey = getApiKey(req);
+  if (!apiKey) {
+    return res.status(401).json({ error: 'unauthorized', message: 'API key missing' } as ApiError);
+  }
+  const user = await findUserByApiKey(apiKey);
+  if (!user) {
+    return res.status(401).json({ error: 'unauthorized', message: 'Invalid API key' } as ApiError);
+  }
+
+  const topic = typeof req.query.topic === 'string' ? req.query.topic.trim() : '';
+
+  try {
+    const count = await deleteCitationChecksByUser(user.id, topic ? { topicKey: topic } : {});
+    return res.status(200).json({ success: true, deleted: count });
+  } catch (error) {
+    console.error('Citation bulk delete error:', error);
+    const msg = error instanceof Error ? error.message : 'Internal error';
+    return res.status(500).json({ error: 'internal_server_error', message: msg } as ApiError);
+  }
 }
 
 export async function deleteHandler(req: express.Request, res: express.Response) {

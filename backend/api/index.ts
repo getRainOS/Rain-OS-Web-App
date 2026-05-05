@@ -7,7 +7,7 @@ import process from 'process';
 // Phase 2: new analyze controller (replaces inline analyzeHandler)
 import { handleAnalyze, handleCapabilities } from '../services/analyzeController';
 import urlScanHandler from './url-scan';
-import citationCheckHandler, { listHandler as citationChecksListHandler, deleteHandler as citationCheckDeleteHandler } from './citation-check';
+import citationCheckHandler, { listHandler as citationChecksListHandler, deleteHandler as citationCheckDeleteHandler, bulkDeleteHandler as citationChecksBulkDeleteHandler } from './citation-check';
 import { listHandler as historyListHandler, deleteHandler as historyDeleteHandler } from './history';
 // Auth
 import googleAuthHandler from './auth/google';
@@ -84,6 +84,8 @@ app.post('/api/citation-check', citationCheckHandler);
 app.post('/v1/api/citation-check', citationCheckHandler);
 app.get('/api/citation-checks', citationChecksListHandler);
 app.get('/v1/api/citation-checks', citationChecksListHandler);
+app.delete('/api/citation-checks', citationChecksBulkDeleteHandler);
+app.delete('/v1/api/citation-checks', citationChecksBulkDeleteHandler);
 app.delete('/api/citation-checks/:id', citationCheckDeleteHandler);
 app.delete('/v1/api/citation-checks/:id', citationCheckDeleteHandler);
 // ─── Content analysis history ───────────────────────────────────────────────

@@ -4,6 +4,10 @@ import PillarScores from '../components/PillarScores.jsx';
 import { CheckCircle2, AlertCircle, ExternalLink, Trash2 } from 'lucide-react';
 import styles from './History.module.css';
 
+function normaliseTopicKey(topic) {
+  return topic.trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
 function citationScoreColor(score) {
   if (score >= 75) return 'var(--green)';
   if (score >= 50) return 'var(--cyan)';
@@ -29,6 +33,11 @@ export default function History() {
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
   const [deleteError, setDeleteError] = useState('');
+
+  const [confirmClearAll, setConfirmClearAll] = useState(false);
+  const [clearingAll, setClearingAll] = useState(false);
+  const [confirmClearTopic, setConfirmClearTopic] = useState(null);
+  const [clearingTopic, setClearingTopic] = useState(null);
 
   useEffect(() => {
     api.history()
@@ -111,6 +120,43 @@ export default function History() {
       }
     } finally {
       setDeletingId(null);
+    }
+  }
+
+  async function handleClearAll() {
+    setClearingAll(true);
+    setDeleteError('');
+    try {
+      await api.clearCitationHistory();
+      setCitations([]);
+      setConfirmClearAll(false);
+    } catch (err) {
+      if (err.status === 401) {
+        setDeleteError('Session expired. Please sign out and re-enter your API key.');
+      } else {
+        setDeleteError(err.message || 'Failed to clear citation history.');
+      }
+    } finally {
+      setClearingAll(false);
+    }
+  }
+
+  async function handleClearTopic(topic) {
+    setClearingTopic(topic);
+    setDeleteError('');
+    try {
+      await api.clearCitationHistory({ topic });
+      const clearedKey = normaliseTopicKey(topic);
+      setCitations(prev => prev.filter(c => normaliseTopicKey(c.topic) !== clearedKey));
+      setConfirmClearTopic(null);
+    } catch (err) {
+      if (err.status === 401) {
+        setDeleteError('Session expired. Please sign out and re-enter your API key.');
+      } else {
+        setDeleteError(err.message || 'Failed to clear topic history.');
+      }
+    } finally {
+      setClearingTopic(null);
     }
   }
 
@@ -281,91 +327,165 @@ export default function History() {
           {deleteError && <p className={styles.error}>{deleteError}</p>}
 
           {!citationsLoading && citations.length > 0 && (
-            <div className={styles.list}>
-              {citations.map((c, i) => {
-                const score = c.alignmentScore ?? null;
-                const color = score === null ? 'var(--text-dim)' : citationScoreColor(score);
-                const isConfirming = confirmDeleteId === c.id;
-                const isDeleting = deletingId === c.id;
-                return (
-                  <div key={c.id ?? i} className={styles.item}>
-                    <div className={styles.itemHeader}>
-                      <div className={styles.itemLeft}>
-                        <div className={styles.itemTitle}>
-                          {c.cited
-                            ? <CheckCircle2 style={{ width: 13, height: 13, color: 'var(--green)', marginRight: 6, verticalAlign: '-2px' }} />
-                            : <AlertCircle style={{ width: 13, height: 13, color: 'var(--text-dim)', marginRight: 6, verticalAlign: '-2px' }} />}
-                          {c.topic}
-                        </div>
-                        <div className={styles.itemMeta}>
-                          {c.url && (
-                            <a
-                              href={c.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className={styles.itemUrl}
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {c.url} <ExternalLink style={{ width: 10, height: 10, verticalAlign: '-1px' }} />
-                            </a>
-                          )}
-                          {c.checkedAt && (
-                            <span className={styles.itemDate}>
-                              {new Date(c.checkedAt).toLocaleDateString()}
-                            </span>
-                          )}
-                          <span
-                            className={styles.itemDate}
-                            style={{ color: c.cited ? 'var(--green)' : 'var(--text-dim)', fontWeight: 600 }}
-                          >
-                            {c.cited ? 'CITED' : 'NOT CITED'}
-                          </span>
-                        </div>
-                      </div>
-                      <div className={styles.itemRight}>
-                        <div className={styles.overallScore} style={{ color }}>
-                          {score !== null ? Math.round(score) : '—'}
-                        </div>
-                        {isConfirming ? (
-                          <div className={styles.deleteConfirm}>
-                            <span className={styles.deleteConfirmText}>Delete?</span>
-                            <button
-                              type="button"
-                              className={`${styles.deleteAction} ${styles.deleteActionConfirm}`}
-                              onClick={() => handleDeleteCitation(c.id)}
-                              disabled={isDeleting}
-                              aria-label="Confirm delete"
-                            >
-                              {isDeleting ? '…' : 'Yes'}
-                            </button>
-                            <button
-                              type="button"
-                              className={styles.deleteAction}
-                              onClick={() => { setConfirmDeleteId(null); setDeleteError(''); }}
-                              disabled={isDeleting}
-                              aria-label="Cancel delete"
-                            >
-                              No
-                            </button>
+            <>
+              <div className={styles.bulkBar}>
+                {confirmClearAll ? (
+                  <div className={styles.deleteConfirm}>
+                    <span className={styles.deleteConfirmText}>Clear all {citations.length} citation checks?</span>
+                    <button
+                      type="button"
+                      className={`${styles.deleteAction} ${styles.deleteActionConfirm}`}
+                      onClick={handleClearAll}
+                      disabled={clearingAll}
+                      aria-label="Confirm clear all"
+                    >
+                      {clearingAll ? '…' : 'Yes, clear all'}
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.deleteAction}
+                      onClick={() => { setConfirmClearAll(false); setDeleteError(''); }}
+                      disabled={clearingAll}
+                      aria-label="Cancel clear all"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    className={styles.clearAllBtn}
+                    onClick={() => { setConfirmClearAll(true); setDeleteError(''); setConfirmClearTopic(null); setConfirmDeleteId(null); }}
+                    aria-label="Clear all citation history"
+                  >
+                    <Trash2 style={{ width: 13, height: 13 }} />
+                    Clear all
+                  </button>
+                )}
+              </div>
+
+              <div className={styles.list}>
+                {citations.map((c, i) => {
+                  const score = c.alignmentScore ?? null;
+                  const color = score === null ? 'var(--text-dim)' : citationScoreColor(score);
+                  const isConfirming = confirmDeleteId === c.id;
+                  const isDeleting = deletingId === c.id;
+                  const isConfirmingTopic = confirmClearTopic === c.topic;
+                  const isClearingTopic = clearingTopic === c.topic;
+                  return (
+                    <div key={c.id ?? i} className={styles.item}>
+                      <div className={styles.itemHeader}>
+                        <div className={styles.itemLeft}>
+                          <div className={styles.itemTitle}>
+                            {c.cited
+                              ? <CheckCircle2 style={{ width: 13, height: 13, color: 'var(--green)', marginRight: 6, verticalAlign: '-2px' }} />
+                              : <AlertCircle style={{ width: 13, height: 13, color: 'var(--text-dim)', marginRight: 6, verticalAlign: '-2px' }} />}
+                            {c.topic}
                           </div>
-                        ) : (
-                          <button
-                            type="button"
-                            className={styles.deleteBtn}
-                            onClick={() => { setConfirmDeleteId(c.id); setDeleteError(''); }}
-                            disabled={c.id == null}
-                            aria-label="Delete citation check"
-                            title="Delete"
-                          >
-                            <Trash2 style={{ width: 14, height: 14 }} />
-                          </button>
-                        )}
+                          <div className={styles.itemMeta}>
+                            {c.url && (
+                              <a
+                                href={c.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={styles.itemUrl}
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                {c.url} <ExternalLink style={{ width: 10, height: 10, verticalAlign: '-1px' }} />
+                              </a>
+                            )}
+                            {c.checkedAt && (
+                              <span className={styles.itemDate}>
+                                {new Date(c.checkedAt).toLocaleDateString()}
+                              </span>
+                            )}
+                            <span
+                              className={styles.itemDate}
+                              style={{ color: c.cited ? 'var(--green)' : 'var(--text-dim)', fontWeight: 600 }}
+                            >
+                              {c.cited ? 'CITED' : 'NOT CITED'}
+                            </span>
+                          </div>
+                        </div>
+                        <div className={styles.itemRight}>
+                          <div className={styles.overallScore} style={{ color }}>
+                            {score !== null ? Math.round(score) : '—'}
+                          </div>
+
+                          {isConfirmingTopic ? (
+                            <div className={styles.deleteConfirm}>
+                              <span className={styles.deleteConfirmText}>Clear all &quot;{c.topic}&quot;?</span>
+                              <button
+                                type="button"
+                                className={`${styles.deleteAction} ${styles.deleteActionConfirm}`}
+                                onClick={() => handleClearTopic(c.topic)}
+                                disabled={isClearingTopic}
+                                aria-label="Confirm clear topic"
+                              >
+                                {isClearingTopic ? '…' : 'Yes'}
+                              </button>
+                              <button
+                                type="button"
+                                className={styles.deleteAction}
+                                onClick={() => { setConfirmClearTopic(null); setDeleteError(''); }}
+                                disabled={isClearingTopic}
+                                aria-label="Cancel clear topic"
+                              >
+                                No
+                              </button>
+                            </div>
+                          ) : isConfirming ? (
+                            <div className={styles.deleteConfirm}>
+                              <span className={styles.deleteConfirmText}>Delete?</span>
+                              <button
+                                type="button"
+                                className={`${styles.deleteAction} ${styles.deleteActionConfirm}`}
+                                onClick={() => handleDeleteCitation(c.id)}
+                                disabled={isDeleting}
+                                aria-label="Confirm delete"
+                              >
+                                {isDeleting ? '…' : 'Yes'}
+                              </button>
+                              <button
+                                type="button"
+                                className={styles.deleteAction}
+                                onClick={() => { setConfirmDeleteId(null); setDeleteError(''); }}
+                                disabled={isDeleting}
+                                aria-label="Cancel delete"
+                              >
+                                No
+                              </button>
+                            </div>
+                          ) : (
+                            <div className={styles.itemActions}>
+                              <button
+                                type="button"
+                                className={styles.clearTopicBtn}
+                                onClick={() => { setConfirmClearTopic(c.topic); setDeleteError(''); setConfirmDeleteId(null); setConfirmClearAll(false); }}
+                                aria-label={`Clear all checks for topic: ${c.topic}`}
+                                title="Clear this topic"
+                              >
+                                Clear topic
+                              </button>
+                              <button
+                                type="button"
+                                className={styles.deleteBtn}
+                                onClick={() => { setConfirmDeleteId(c.id); setDeleteError(''); }}
+                                disabled={c.id == null}
+                                aria-label="Delete citation check"
+                                title="Delete"
+                              >
+                                <Trash2 style={{ width: 14, height: 14 }} />
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            </>
           )}
         </>
       )}

@@ -85,6 +85,11 @@ export const api = {
   deleteAnalysis: (id) => isDemo()
     ? demoDelay({ success: true })
     : request('DELETE', `/api/history/${id}`),
+  clearCitationHistory: (params) => {
+    if (isDemo()) return demoDelay({ success: true, deleted: 5 });
+    const qs = params ? '?' + new URLSearchParams(params).toString() : '';
+    return request('DELETE', `/api/citation-checks${qs}`);
+  },
   usage: () => isDemo() ? demoDelay({ count: 42, limit: 500 }) : request('GET', '/api/usage'),
   createCheckoutSession: (priceId, successUrl, cancelUrl) =>
     isDemo()
