@@ -110,10 +110,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
 
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.05] text-white"
                 style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
-                Score Your Content's{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-100 via-sky-200 to-sky-400">
-                  AI Readability
-                </span>
+                Vibe Coded Your Site or Web App?
               </h1>
               <p className="text-slate-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
                 Find out how ChatGPT, Perplexity, and Gemini read your content — and how likely they are to cite it when someone asks a question you should own.
@@ -219,81 +216,18 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
               transition={{ duration: 0.8, delay: 0.4 }}
               className="space-y-8 text-center flex flex-col items-center mt-12"
             >
-              <div className="inline-flex items-center rounded-full border border-sky-400/30 bg-sky-400/10 px-4 py-1.5 text-xs font-bold text-sky-300 tracking-[0.2em] uppercase shadow-[0_0_16px_rgba(56,189,248,0.15)]">
-                <span className="flex h-2 w-2 rounded-full bg-sky-400 mr-3 animate-pulse" />
-                Answer Engine Optimization
+              <div className="max-w-3xl text-center space-y-4">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight leading-tight text-white">
+                  It’s built for vibe coders, founders, marketers, and content teams alike.
+                </h2>
+                <p className="text-slate-400 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
+                  Optimize AI readability, authority, and conversion across the content that matters most — from product pages and homepages to docs, blogs, and app copy.
+                </p>
               </div>
-
-              <h2 className="text-4xl md:text-6xl font-semibold leading-tight tracking-tight text-white max-w-3xl">
-                Built for the Way{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-cyan-400 to-teal-400 drop-shadow-lg">
-                  People Search Now
-                </span>
-              </h2>
-
-              <p className="text-lg md:text-xl text-slate-400 leading-relaxed font-light max-w-2xl mx-auto">
-                <strong className="text-white font-semibold">rain OS</strong> scores your content against the signals that AI tools use to choose their answers — so you show up when people ask questions, not just when they type keywords.
-              </p>
             </motion.div>
           </div>
         </section>
-
-        <DemoShowcase onAnalyzeClick={scrollToHero} />
-
-        <ThreeModesSection onGetStarted={onGetStartedClick || onLoginClick} />
-
-        <VibeCoderBand onGetStarted={onGetStartedClick || onLoginClick} />
-
-        <div id="features">
-          <HybridFuture />
-          <FourPillars />
-          <FeatureGrid />
-          <ReadabilityIntelligence />
-          <ComparisonTable />
-        </div>
-        <div id="pricing">
-          <Pricing />
-        </div>
-        <FAQ />
-        <CTA />
       </main>
-
-      {/* Footer */}
-      <footer className="border-t border-white/10 bg-midnight py-12 relative z-10">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-3xl tracking-tighter text-white">
-              r<span className="text-sky-400">ai</span>n
-            </span>
-          </div>
-
-          <div className="flex items-center justify-center gap-6 text-sm text-slate-400">
-            <a
-              href="https://www.getrainos.com/privacy"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-white transition-colors"
-            >
-              Privacy Policy
-            </a>
-            <a
-              href="https://www.getrainos.com/terms"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-white transition-colors"
-            >
-              Terms of Service
-            </a>
-            <a href="mailto:support@getrainos.com" className="hover:text-white transition-colors">
-              Support
-            </a>
-          </div>
-
-          <div className="text-right text-xs text-slate-600">
-            © {new Date().getFullYear()} rain OS. All rights reserved.
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
