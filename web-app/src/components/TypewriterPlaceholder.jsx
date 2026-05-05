@@ -21,6 +21,8 @@ export default function TypewriterPlaceholder({
   fontSize = '14px',
   lineHeight = '1.6',
   color = 'rgba(255,255,255,0.35)',
+  fontFamily = 'inherit',
+  fontWeight = 'inherit',
   topOffset = 0,
 }) {
   const overlayRef = useRef(null);
