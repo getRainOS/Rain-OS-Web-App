@@ -114,5 +114,9 @@ export const api = {
     repos: () => request('GET', '/api/github/repos'),
     analyze: (repoUrl) => request('POST', '/api/github/analyze', { repoUrl }),
     disconnect: () => request('DELETE', '/api/github/disconnect'),
+    previewFixes: ({ url, repoFullName, artifacts }) =>
+      request('POST', '/api/github/preview-fixes', { url, repoFullName, artifacts }),
+    pushFixes: ({ repoFullName, approvedIds, artifacts, scannedUrl }) =>
+      request('POST', '/api/github/push-fixes', { repoFullName, approvedIds, artifacts, scannedUrl }),
   },
 };

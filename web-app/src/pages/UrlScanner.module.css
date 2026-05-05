@@ -288,3 +288,328 @@
   background: rgba(14,165,233,0.2);
   border-color: rgba(14,165,233,0.4);
 }
+
+/* ─── GitHub Push Panel ─────────────────────────────────────────────────────── */
+
+.ghPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.ghPanelHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.ghIcon {
+  font-size: 22px;
+  color: var(--accent);
+  flex-shrink: 0;
+  line-height: 1.3;
+}
+
+.ghPanelTitle {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.ghPanelSub {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.ghError {
+  font-size: 13px;
+  color: var(--red);
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.18);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-top: 12px;
+}
+
+.ghLoading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 14px;
+}
+
+.ghPickRepo {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ghLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ghRepoRow {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ghSelect {
+  flex: 1;
+  min-width: 200px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 14px;
+  padding: 9px 12px;
+  outline: none;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.ghSelect:focus {
+  border-color: var(--accent);
+}
+
+.ghSelect option {
+  background: var(--surface-2);
+}
+
+.ghReview {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ghReviewIntro {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.ghSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ghSectionTitle {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.ghManualNote {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+.ghFixItem {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.02);
+  transition: opacity 0.2s;
+}
+
+.ghFixItemUnchecked {
+  opacity: 0.45;
+}
+
+.ghFixHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.ghFixLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+}
+
+.ghCheckbox {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.ghFixPath {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  word-break: break-all;
+}
+
+.ghFixPath code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  color: var(--accent);
+}
+
+.ghExpandBtn {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 3px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+
+.ghExpandBtn:hover {
+  color: var(--text);
+  background: rgba(255,255,255,0.05);
+}
+
+.ghFixDesc {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+.ghFixCode {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  background: #0d1117;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: #e6edf3;
+  overflow-x: auto;
+  white-space: pre;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.ghDiffDetails {
+  margin-top: 10px;
+}
+
+.ghDiffSummary {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 6px;
+}
+
+.ghDiffWrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+@media (max-width: 620px) {
+  .ghDiffWrap { grid-template-columns: 1fr; }
+}
+
+.ghDiffCol {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ghDiffLabel {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+}
+
+.ghConfirmRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.ghOpenPrBtn {
+  background: #16a34a !important;
+  border-color: #16a34a !important;
+}
+
+.ghOpenPrBtn:hover:not(:disabled) {
+  background: #15803d !important;
+  border-color: #15803d !important;
+}
+
+.ghWarning {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.5;
+  padding: 8px 12px;
+  background: rgba(234,179,8,0.06);
+  border: 1px solid rgba(234,179,8,0.18);
+  border-radius: var(--radius-sm);
+}
+
+.ghSuccess {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: rgba(22,163,74,0.08);
+  border: 1px solid rgba(22,163,74,0.25);
+  border-radius: var(--radius-sm);
+}
+
+.ghSuccessIcon {
+  font-size: 18px;
+  color: #4ade80;
+  flex-shrink: 0;
+}
+
+.ghSuccessText {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #4ade80;
+  margin-bottom: 6px;
+}
+
+.ghPrLink {
+  font-size: 13px;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.15s;
+}
+
+.ghPrLink:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}

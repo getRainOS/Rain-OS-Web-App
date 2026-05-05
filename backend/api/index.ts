@@ -42,6 +42,8 @@ import aiDiagnosticsHandler from './ai/diagnostics';
 import githubOauthHandler from './github/oauth';
 import githubCallbackHandler from './github/callback';
 import { listReposHandler, analyzeRepoHandler, disconnectGithubHandler } from './github/repos';
+import githubPreviewFixesHandler from './github/preview-fixes';
+import githubPushFixesHandler from './github/push-fixes';
 // ─── CORS configuration ───────────────────────────────────────────────────────
 // IMPORTANT: Keep origin: '*' so the WordPress plugin works from any site.
 // Restricting origin here would 403 every WP install that has the plugin.
@@ -120,6 +122,8 @@ app.get('/api/github/oauth/callback', githubCallbackHandler);
 app.get('/api/github/repos', listReposHandler);
 app.post('/api/github/analyze', analyzeRepoHandler);
 app.delete('/api/github/disconnect', disconnectGithubHandler);
+app.post('/api/github/preview-fixes', githubPreviewFixesHandler);
+app.post('/api/github/push-fixes', githubPushFixesHandler);
 // ─── Plugin-facing endpoints ───────────────────────────────────────────────
 app.get('/api/plugin/health', pluginHealthHandler);
 app.get('/api/plugin/content/:contentId/analysis',
