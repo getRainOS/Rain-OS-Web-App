@@ -110,7 +110,6 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
           </div>
 
           <nav className="hidden md:flex items-center gap-10 text-sm font-medium text-slate-400">
-            <button onClick={() => scrollToSection('features')} className="hover:text-white transition-colors">Features</button>
             <a href="#/content-writers" className="hover:text-white transition-colors">Content Writers</a>
             <button onClick={() => scrollToSection('pricing')} className="hover:text-white transition-colors">Pricing</button>
             <a href="https://www.getrainos.com/docs" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Docs</a>
