@@ -241,6 +241,31 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
               </form>
             </motion.div>
 
+            {/* Vibe Coder Block — below the text box */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.35 }}
+              className="flex flex-col items-center text-center gap-5 w-full max-w-2xl"
+            >
+              <h2 className="text-2xl md:text-3xl font-semibold text-white leading-tight" style={{ letterSpacing: '-0.03em' }}>
+                Your AI built the site.{' '}
+                <span className="text-emerald-400">Now paste the content, scan the URL, or connect the repo.</span>
+              </h2>
+
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                {['Bolt', 'Lovable', 'Cursor', 'v0', 'Replit', 'Windsurf'].map((p) => (
+                  <span key={p} className="px-4 py-1.5 rounded-full text-sm font-medium text-slate-300 bg-white/[0.04] border border-white/10 tracking-wide">
+                    {p}
+                  </span>
+                ))}
+              </div>
+
+              <p className="text-base text-slate-300 leading-relaxed">
+                AI-made sites can look great on the surface, but still miss important details that help search tools understand and recommend them.
+              </p>
+
+            </motion.div>
           </div>
         </section>
 
