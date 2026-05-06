@@ -286,7 +286,6 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
 
         <DemoShowcase onAnalyzeClick={onGetStartedClick || onLoginClick} />
         <ThreeModesSection />
-        <VibeCoderBand onGetStarted={onGetStartedClick || onLoginClick} />
         <HybridFuture />
         <FourPillars />
         <FeatureGrid />
