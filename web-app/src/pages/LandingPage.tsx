@@ -155,10 +155,20 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
             >
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.05] text-white"
                 style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
-                Vibe Coded Your Site or Web App?
+                Your AI built the site. Now scan the repo.
               </h1>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                {['Bolt', 'Lovable', 'Cursor', 'v0', 'Replit', 'Windsurf'].map((p) => (
+                  <span key={p} className="px-4 py-1.5 rounded-full text-sm font-medium text-slate-300 bg-white/[0.04] border border-white/10 tracking-wide">
+                    {p}
+                  </span>
+                ))}
+              </div>
               <p className="text-slate-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
-                Find out how ChatGPT, Perplexity, and Gemini read your content — and how likely they are to cite it when someone asks a question you should own.
+                AI-generated sites have a blind spot: the rendered page looks fine, but the source is missing the signals that AI search engines actually look for — no llms.txt, no schema, JS-rendered content that crawlers can't parse.
+              </p>
+              <p className="text-slate-500 text-sm max-w-xl mx-auto leading-relaxed">
+                Connect your GitHub repo and rain OS reads your actual source files — README, package.json, robots.txt, index.html — and gives you a full AEO score at the code level. No URL parsing. No guessing. The real thing.
               </p>
             </motion.div>
 
