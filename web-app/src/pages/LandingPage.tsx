@@ -111,9 +111,9 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
 
           <nav className="hidden md:flex items-center gap-10 text-sm font-medium text-slate-400">
             <a href="#/content-writers" className="hover:text-white transition-colors">Content Writers</a>
-            <a href="#/pricing" className="hover:text-white transition-colors">Pricing</a>
             <a href="https://www.getrainos.com/docs" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Docs</a>
             <a href="#/wordpress-plugin" className="hover:text-white transition-colors">WordPress Plugin</a>
+            <a href="#/pricing" className="hover:text-white transition-colors">Pricing</a>
           </nav>
 
           <div className="flex items-center gap-4">
