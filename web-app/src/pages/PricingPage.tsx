@@ -1,4 +1,4 @@
-import { Pricing, FAQ, CTA } from '@/components/marketing/MarketingComponents';
+import { Pricing, FAQ } from '@/components/marketing/MarketingComponents';
 
 export default function PricingPage() {
   const scrollToSection = (id: string) => {
@@ -38,7 +38,6 @@ export default function PricingPage() {
         </section>
         <Pricing />
         <FAQ />
-        <CTA />
       </main>
     </div>
   );

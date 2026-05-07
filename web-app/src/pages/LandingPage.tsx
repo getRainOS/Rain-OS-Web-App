@@ -272,19 +272,12 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
                 Compare your content, check your URL, or review your repo to see how ready it is for AI search and recommendations.
               </p>
 
-              <button
-                onClick={onGetStartedClick || onLoginClick}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-emerald-500/10 border border-emerald-400/30 text-emerald-300 text-sm font-semibold hover:bg-emerald-500/15 hover:border-emerald-400/50 transition-all"
-              >
-                Connect your repo — it’s free
-              </button>
-
             </motion.div>
           </div>
         </section>
 
         <DemoShowcase onAnalyzeClick={onGetStartedClick || onLoginClick} />
-        <ThreeModesSection />
+        <ThreeModesSection onGetStarted={onGetStartedClick || onLoginClick} />
         <FourPillars />
         <AIRewriteTools />
         <VibeCoderBand onGetStarted={onGetStartedClick || onLoginClick} />
