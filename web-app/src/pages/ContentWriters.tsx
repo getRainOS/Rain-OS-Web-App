@@ -6,6 +6,7 @@ import {
   ShieldCheck, MousePointerClick, Target, Layers
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { HybridFuture, FeatureGrid, ReadabilityIntelligence, ComparisonTable, FAQ } from '@/components/marketing/MarketingComponents';
 
 const pillars = [
   {
@@ -345,6 +346,13 @@ export default function ContentWriters() {
             </div>
           </div>
         </section>
+
+        {/* Moved from homepage */}
+        <HybridFuture />
+        <ReadabilityIntelligence />
+        <FeatureGrid />
+        <ComparisonTable />
+        <FAQ />
 
         {/* CTA */}
         <section className="py-28 px-6 border-t border-white/[0.06] relative overflow-hidden">

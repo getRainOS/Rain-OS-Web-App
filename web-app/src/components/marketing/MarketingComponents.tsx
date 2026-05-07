@@ -74,8 +74,8 @@ export const FourPillars = () => {
     {
       name: 'AI Readability',
       weight: '30%',
-      tagline: 'Can AI actually extract your answers?',
-      description: 'Measures how easily ChatGPT, Perplexity, and Gemini can parse, chunk, and lift exact answers from your content — the foundation of being cited.',
+      tagline: 'Can AI actually read your source?',
+      description: 'Vibe-coded sites render great in a browser, but AI crawlers read the raw HTML. This scores how well your source actually translates into machine-extractable answers — the #1 gap in AI-generated sites.',
       color: 'rain-400',
       glowColor: 'rgba(14,165,233,0.25)',
       borderColor: 'rain-400/50',
@@ -88,8 +88,8 @@ export const FourPillars = () => {
     {
       name: 'Digital Authority',
       weight: '25%',
-      tagline: 'Does AI trust you enough to cite you?',
-      description: 'AI models only quote sources they consider credible. This pillar scores the trust signals — citations, entity clarity, and expertise depth — that make you citable.',
+      tagline: 'Is your site a source AI will quote?',
+      description: 'AI tools built your site fast, but they skipped the trust markup. This pillar scores the schema, entity clarity, and credibility signals that make AI engines treat your domain as a quotable source.',
       color: 'emerald-400',
       glowColor: 'rgba(16,185,129,0.25)',
       borderColor: 'emerald-400/50',
@@ -102,8 +102,8 @@ export const FourPillars = () => {
     {
       name: 'Conversion Readiness',
       weight: '25%',
-      tagline: 'Does your content move people to act?',
-      description: "Getting cited is half the battle. This pillar scores how effectively your content turns AI-referred visitors into customers — from CTA clarity to objection handling.",
+      tagline: 'Does your site convert AI-referred visitors?',
+      description: "Getting traffic from AI is only half the job. This pillar scores whether your site’s copy actually converts that traffic — CTA clarity, trust proof, and friction that vibe-coded landing pages routinely miss.",
       color: 'violet-400',
       glowColor: 'rgba(139,92,246,0.2)',
       borderColor: 'violet-400/50',
@@ -116,8 +116,8 @@ export const FourPillars = () => {
     {
       name: 'Product Discoverability',
       weight: '20%',
-      tagline: 'Will AI recommend your product?',
-      description: 'As ChatGPT and Gemini become shopping assistants, this pillar ensures your product data — pricing, variants, availability — is structured so AI recommends you over competitors.',
+      tagline: 'Can AI shopping assistants find you?',
+      description: 'AI shopping assistants are now driving purchase decisions. This pillar scores whether your product data — pricing, variants, availability — is structured so Gemini and ChatGPT can actually recommend you.',
       color: 'orange-400',
       glowColor: 'rgba(249,115,22,0.2)',
       borderColor: 'orange-400/50',
@@ -135,7 +135,7 @@ export const FourPillars = () => {
         <div className="text-center mb-16">
           <span className="text-rain-400 font-bold tracking-wider text-xs uppercase mb-3 block">The Scoring Framework</span>
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Four Pillars. One Score.</h2>
-          <p className="text-slate-400 max-w-2xl mx-auto">Every analysis returns a weighted score across four dimensions — each one a signal that AI models use to decide what content gets cited, recommended, and surfaced.</p>
+          <p className="text-slate-400 max-w-2xl mx-auto">Every repo or URL scan returns a weighted score across four dimensions. These are the exact signals AI engines use to decide what gets cited, recommended, or surfaced — and the ones most vibe-coded sites are missing.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -685,6 +685,65 @@ export const ThreeModesSection = ({ onGetStarted }: { onGetStarted?: () => void 
             </button>
           </div>
         )}
+      </div>
+    </section>
+  );
+};
+
+
+export const AIRewriteTools = () => {
+  return (
+    <section className="py-20 relative z-10">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-12">
+          <span className="text-cyan-400 font-bold tracking-wider text-xs uppercase mb-3 block">Built-in tools</span>
+          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Fix it without leaving the dashboard</h2>
+          <p className="text-slate-400 max-w-2xl mx-auto">Don&apos;t just see the problem. rain OS gives you one-click AI tools to rewrite, improve, and optimize the exact issues your score flags.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          {[
+            { color: 'text-sky-400', border: 'hover:border-sky-500/30', bg: 'bg-sky-500/5', title: 'Suggest Titles', body: 'Generate AI-optimized headlines that match how people phrase questions to ChatGPT and Perplexity.' },
+            { color: 'text-emerald-400', border: 'hover:border-emerald-500/30', bg: 'bg-emerald-500/5', title: 'Meta Description', body: 'Auto-generate a meta description structured for AI snippet extraction, not just keyword stuffing.' },
+            { color: 'text-violet-400', border: 'hover:border-violet-500/30', bg: 'bg-violet-500/5', title: 'Summarize for AI', body: 'Condense your page into a tight, citable paragraph that AI engines can lift directly as an answer.' },
+            { color: 'text-orange-400', border: 'hover:border-orange-500/30', bg: 'bg-orange-500/5', title: 'Rewrite Sentences', body: 'Flag vague, fluffy sentences and replace them with specific, machine-extractable facts in one click.' },
+          ].map((t, i) => (
+            <motion.div key={t.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }}
+              className={`${t.bg} border border-white/10 ${t.border} rounded-2xl p-6 transition-all duration-300`}>
+              <h3 className={`text-base font-bold ${t.color} mb-3`}>{t.title}</h3>
+              <p className="text-slate-400 text-sm leading-relaxed">{t.body}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export const VibeFAQ = () => {
+  const faqs = [
+    { q: "My Bolt / Lovable / Cursor site looks great — why is my AI readability score low?", a: "Because AI crawlers don’t see what your browser renders. They read the raw HTML. If your content is injected by JavaScript at runtime, AI engines see an empty page. rain OS flags this and tells you exactly what’s missing from the source." },
+    { q: "What is the difference between scanning a URL and scanning my repo?", a: "A URL scan fetches the live rendered HTML and checks technical signals like schema, llms.txt, and open graph. A repo scan reads your actual source files — README, package.json, index.html, robots.txt — and finds issues invisible in the rendered output. For vibe-coded sites, repo analysis almost always finds more." },
+    { q: "What is llms.txt and do I actually need it?", a: "llms.txt is a simple text file (like robots.txt, but for AI crawlers) that tells AI models which parts of your site to read and which to ignore. Without it, AI engines guess. Most vibe-coded sites don’t have one. rain OS flags it as a high-priority fix if it’s missing." },
+    { q: "Why can’t AI cite my site even though it loads fine in the browser?", a: "AI engines crawl your site statically — they don’t execute JavaScript. If your content only exists after JS runs (which is the default for most React, Vue, and Svelte apps), AI sees nothing to quote. This is the single biggest AEO gap for vibe-coded sites, and rain OS’s repo analysis catches it every time." },
+    { q: "Will rain OS work for Next.js, Astro, SvelteKit, or other JS frameworks?", a: "Yes. Repo analysis works at the source level regardless of framework. URL scanning works best with server-rendered output (Next.js SSR, Astro static). For client-side-only apps (Vite SPA, CRA), repo analysis is more accurate than URL scanning." },
+    { q: "Do I need to know how to code to fix the issues rain OS finds?", a: "No. Every recommendation includes a plain-English explanation of what to fix and why it matters. For most issues — missing meta tags, llms.txt, schema markup — you can paste the recommendation straight into Cursor, Bolt, or Lovable and have it fixed in minutes." },
+    { q: "How does the Rain Score work?", a: "Every analysis returns a weighted score from 0–100 built from four pillars: AI Readability (30%), Digital Authority (25%), Conversion Readiness (25%), and Product Discoverability (20%). Each pillar breaks down into specific sub-signals so you know exactly where you’re losing points." },
+    { q: "Can I scan private GitHub repos?", a: "Yes. The GitHub OAuth connection works with both public and private repos you own or have access to. Your code is never stored — rain OS reads the relevant files, scores them, and discards the content." },
+    { q: "How often should I re-scan after making changes?", a: "Re-scan after every significant content or structural update. Most users run a repo scan when they ship a new feature or page, and a URL scan before and after major copy revisions. The Score History tab tracks every run so you can see exactly what moved the needle." },
+    { q: "Who is rain OS for?", a: "Primarily vibe coders (Bolt, Lovable, Cursor, v0, Replit users), developers shipping fast with AI tools, and content writers who want their work cited by AI engines. It’s also powerful for SEO professionals who want to stay ahead of the shift from keyword rankings to AI citations." },
+  ];
+
+  return (
+    <section className="py-24 relative z-10">
+      <div className="max-w-3xl mx-auto px-6">
+        <div className="text-center mb-12">
+          <span className="text-emerald-400 font-bold tracking-wider text-xs uppercase mb-3 block">Got questions?</span>
+          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Frequently Asked Questions</h2>
+          <p className="text-slate-400 max-w-xl mx-auto">Common questions from developers and vibe coders getting their sites AI-ready.</p>
+        </div>
+        <div className="space-y-2">
+          {faqs.map((faq, i) => <AccordionItem key={i} question={faq.q} answer={faq.a} />)}
+        </div>
       </div>
     </section>
   );

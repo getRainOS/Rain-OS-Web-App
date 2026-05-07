@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Trash2, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import {
-  HybridFuture, FourPillars, FeatureGrid, ReadabilityIntelligence,
-  ComparisonTable, VibeCoderBand, ThreeModesSection
+  FourPillars, AIRewriteTools, VibeFAQ,
+  VibeCoderBand, ThreeModesSection
 } from '@/components/marketing/MarketingComponents';
 import { DemoShowcase } from '@/components/marketing/DemoShowcase';
 
@@ -110,7 +110,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
           </div>
 
           <nav className="hidden md:flex items-center gap-10 text-sm font-medium text-slate-400">
-            <a href="#/content-writers" className="hover:text-white transition-colors">Content Writers</a>
+            <a href="#/content-writers" className="hover:text-white transition-colors">Content Writers and Marketing Professionals</a>
             <a href="https://www.getrainos.com/docs" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Docs</a>
             <a href="#/wordpress-plugin" className="hover:text-white transition-colors">WordPress Plugin</a>
             <a href="#/pricing" className="hover:text-white transition-colors">Pricing</a>
@@ -285,11 +285,10 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
 
         <DemoShowcase onAnalyzeClick={onGetStartedClick || onLoginClick} />
         <ThreeModesSection />
-        <HybridFuture />
         <FourPillars />
-        <FeatureGrid />
-        <ReadabilityIntelligence />
-        <ComparisonTable />
+        <AIRewriteTools />
+        <VibeCoderBand onGetStarted={onGetStartedClick || onLoginClick} />
+        <VibeFAQ />
       </main>
     </div>
   );
