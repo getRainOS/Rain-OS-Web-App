@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import TypewriterPlaceholder from '@/components/TypewriterPlaceholder';
 import { Button } from '@/components/ui/button';
-import { Plus, ArrowRight } from 'lucide-react';
+import { Trash2, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import {
   HybridFuture, FourPillars, FeatureGrid, ReadabilityIntelligence,
@@ -200,7 +200,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
                         onClick={() => setContent('')}
                         title="Clear"
                       >
-                        <Plus className="w-5 h-5" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
 
                       <div className="flex items-center gap-3">
