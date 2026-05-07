@@ -5,7 +5,7 @@ import { Plus, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import {
   HybridFuture, FourPillars, FeatureGrid, ReadabilityIntelligence,
-  ComparisonTable, Pricing, FAQ, CTA, VibeCoderBand, ThreeModesSection
+  ComparisonTable, VibeCoderBand, ThreeModesSection
 } from '@/components/marketing/MarketingComponents';
 import { DemoShowcase } from '@/components/marketing/DemoShowcase';
 
@@ -290,11 +290,6 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
         <FeatureGrid />
         <ReadabilityIntelligence />
         <ComparisonTable />
-        <div id="pricing">
-          <Pricing />
-        </div>
-        <FAQ />
-        <CTA />
       </main>
     </div>
   );
