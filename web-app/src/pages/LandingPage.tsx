@@ -276,6 +276,25 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
           </div>
         </section>
 
+        {/* Problem Bridge */}
+        <section className="py-16 px-6 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: 'easeOut' }}
+            className="max-w-2xl mx-auto text-center space-y-4"
+          >
+            <h2 className="text-2xl md:text-3xl font-semibold text-white leading-snug" style={{ letterSpacing: '-0.03em' }}>
+              You built the site.{' '}
+              <span className="text-sky-400">But can AI actually find it?</span>
+            </h2>
+            <p className="text-slate-400 text-base md:text-lg leading-relaxed">
+              Rain makes your content readable to ChatGPT, Gemini, Perplexity, and more — so when someone searches with AI, your name comes up.
+            </p>
+          </motion.div>
+        </section>
+
         <DemoShowcase onAnalyzeClick={onGetStartedClick || onLoginClick} />
         <ThreeModesSection onGetStarted={onGetStartedClick || onLoginClick} />
         <FourPillars />
