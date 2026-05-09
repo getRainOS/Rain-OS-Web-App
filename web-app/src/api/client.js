@@ -65,7 +65,7 @@ export const api = {
     const qs = params ? '?' + new URLSearchParams(params).toString() : '';
     return request('GET', `/api/history${qs}`);
   },
-  scanUrl: (url) => isDemo() ? demoDelay(DEMO_SCAN) : request('POST', '/api/url-scan', { url }),
+  scanUrl: (url, opts = {}) => isDemo() ? demoDelay(DEMO_SCAN) : request('POST', '/api/url-scan', { url, ...opts }),
   citationCheck: ({ topic, url }) => isDemo()
     ? demoDelay({
         ...DEMO_CITATION,
@@ -112,7 +112,7 @@ export const api = {
   github: {
     connect: () => request('POST', '/api/github/oauth/init'),
     repos: () => request('GET', '/api/github/repos'),
-    analyze: (repoUrl) => request('POST', '/api/github/analyze', { repoUrl }),
+    analyze: (repoUrl, opts = {}) => request('POST', '/api/github/analyze', { repoUrl, ...opts }),
     disconnect: () => request('DELETE', '/api/github/disconnect'),
     previewFixes: ({ url, repoFullName, artifacts }) =>
       request('POST', '/api/github/preview-fixes', { url, repoFullName, artifacts }),

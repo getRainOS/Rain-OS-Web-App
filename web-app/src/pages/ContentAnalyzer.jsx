@@ -9,7 +9,7 @@ import TypewriterPlaceholder from '../components/TypewriterPlaceholder.jsx';
 import styles from './ContentAnalyzer.module.css';
 
 export default function ContentAnalyzer() {
-  const { refreshUser, user, isDemo } = useApp();
+  const { refreshUser, user, isDemo, userLane } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
   const prefill = location.state || {};
@@ -32,7 +32,8 @@ export default function ContentAnalyzer() {
     setError('');
     setResult(null);
     try {
-      const { data } = await api.analyze({ title, content, url });
+      const analysisModule = userLane === 'product_sellers' ? 'product_sellers' : userLane === 'developers' ? 'developers' : 'general';
+      const { data } = await api.analyze({ title, content, url, module: analysisModule });
       setResult(data);
       refreshUser();
     } catch (err) {

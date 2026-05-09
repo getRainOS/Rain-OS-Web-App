@@ -20,7 +20,7 @@ function formatUpdatedAt(iso) {
 }
 
 export default function RepoAnalysis() {
-  const { user, isDemo } = useApp();
+  const { user, isDemo, userLane } = useApp();
   const navigate = useNavigate();
   const [repos, setRepos] = useState([]);
   const [connected, setConnected] = useState(false);
@@ -61,7 +61,8 @@ export default function RepoAnalysis() {
     setError('');
     setResult(null);
     try {
-      const { data } = await api.github.analyze(repoUrl.trim());
+      const analysisModule = userLane === 'product_sellers' ? 'product_sellers' : userLane === 'developers' ? 'developers' : 'general';
+      const { data } = await api.github.analyze(repoUrl.trim(), { module: analysisModule });
       setResult(data);
     } catch (err) {
       setError(err.message || 'Analysis failed. Please try again.');

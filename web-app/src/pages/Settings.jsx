@@ -12,7 +12,7 @@ const PRICE_TO_PLAN = {
 };
 
 export default function Settings() {
-  const { user, onLogout, isDemo, refreshUser } = useApp();
+  const { user, onLogout, isDemo, refreshUser, userLane, setUserLane } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
   const [copied, setCopied] = useState(false);
@@ -266,6 +266,41 @@ export default function Settings() {
           <p className={styles.wpHint}>
             Requires a GitHub OAuth App. Set <strong>GITHUB_CLIENT_ID</strong> and <strong>GITHUB_CLIENT_SECRET</strong> in your backend environment.
           </p>
+        </div>
+
+        <div className="card">
+          <h2 className={styles.sectionTitle}>Solution Lane</h2>
+          <p className={styles.wpDesc}>
+            Choose the lane that best describes how you use Rain OS. This adjusts scoring weights and KPI cards across your dashboard and all analysis tools.
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 16 }}>
+            {[
+              { id: 'general',         label: 'Writers & Marketers', desc: 'AI Readability 40% · Digital Authority 30% · Conversion Readiness 30%', color: '#06b6d4' },
+              { id: 'product_sellers', label: 'Product Sellers',     desc: 'Discoverability 50% · AI Readability 20% · Authority 15% · Conversion 15%', color: '#f97316' },
+              { id: 'developers',      label: 'Developers',          desc: 'Doc Structure 35% · Tech Completeness 35% · Technical Clarity 30%', color: '#10b981' },
+            ].map(lane => (
+              <button
+                key={lane.id}
+                onClick={() => setUserLane(lane.id)}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 4,
+                  padding: '12px 16px',
+                  background: userLane === lane.id ? `${lane.color}10` : 'rgba(255,255,255,0.02)',
+                  border: `1px solid ${userLane === lane.id ? lane.color + '50' : 'var(--border)'}`,
+                  borderRadius: 10,
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  fontFamily: 'inherit',
+                  transition: 'border-color 0.15s, background 0.15s',
+                }}
+              >
+                <span style={{ fontSize: 13.5, fontWeight: 700, color: userLane === lane.id ? lane.color : 'var(--text)' }}>{lane.label}</span>
+                <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{lane.desc}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="card">

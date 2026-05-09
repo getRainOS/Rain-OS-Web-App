@@ -43,6 +43,12 @@ const QUICK_ACTIONS = [
   { to: '/repo-analysis', label: 'Repo Analysis',     sub: 'Connect GitHub and score source',  Icon: GitBranch, color: '#22c55e' },
 ];
 
+const LANES = [
+  { id: 'general',         label: 'Writers & Marketers', desc: 'Optimize articles, landing pages, and marketing copy for AI citation.', color: '#06b6d4', Icon: FileText },
+  { id: 'product_sellers', label: 'Product Sellers',     desc: 'Maximize AI product discovery with Discoverability scoring at 50% weight.', color: '#f97316', Icon: SearchCheck },
+  { id: 'developers',      label: 'Developers',          desc: 'Analyze tech docs, READMEs, and API references for AI readability signals.', color: '#10b981', Icon: GitBranch },
+];
+
 function timeAgo(dateStr) {
   if (!dateStr) return '—';
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -224,9 +230,38 @@ function SubScoreBar({ label, value, color }) {
   );
 }
 
+/* ── Lane Selector ── */
+function LaneSelector({ onSelect }) {
+  return (
+    <div className={styles.laneSelector}>
+      <div className={styles.laneSelectorHeader}>
+        <h2 className={styles.laneSelectorTitle}>What are you optimizing for?</h2>
+        <p className={styles.laneSelectorSub}>Choose your solution lane to get the right scoring weights and KPIs across your dashboard and analysis tools.</p>
+      </div>
+      <div className={styles.laneCards}>
+        {LANES.map(lane => (
+          <button
+            key={lane.id}
+            className={styles.laneCard}
+            style={{ '--lane-color': lane.color }}
+            onClick={() => onSelect(lane.id)}
+          >
+            <div className={styles.laneCardIcon} style={{ background: `${lane.color}15`, border: `1px solid ${lane.color}30` }}>
+              <lane.Icon size={20} style={{ color: lane.color }} />
+            </div>
+            <div className={styles.laneCardLabel}>{lane.label}</div>
+            <div className={styles.laneCardDesc}>{lane.desc}</div>
+            <div className={styles.laneCardCta} style={{ color: lane.color }}>Select this lane →</div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ══════════════════════════════════════════ */
 export default function Dashboard() {
-  const { user } = useApp();
+  const { user, userLane, setUserLane } = useApp();
   const navigate = useNavigate();
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -234,6 +269,7 @@ export default function Dashboard() {
   const [citations, setCitations] = useState([]);
   const [citationsLoading, setCitationsLoading] = useState(true);
   const [citationHistory, setCitationHistory] = useState([]);
+  const [showLaneSelector, setShowLaneSelector] = useState(!userLane);
 
   useEffect(() => {
     api.history({ limit: 50 })
@@ -308,6 +344,25 @@ export default function Dashboard() {
     return out.slice(0, 5);
   }, [citations]);
 
+  const activePillars = useMemo(() => {
+    if (userLane === 'product_sellers') return [
+      { ...PILLARS[3], weight: 50 },
+      { ...PILLARS[0], weight: 20 },
+      { ...PILLARS[1], weight: 15 },
+      { ...PILLARS[2], weight: 15 },
+    ];
+    if (userLane === 'developers') return [
+      { ...PILLARS[0], label: 'Doc Structure', weight: 35 },
+      { ...PILLARS[1], label: 'Tech Completeness', weight: 35 },
+      { ...PILLARS[2], label: 'Technical Clarity', weight: 30 },
+    ];
+    return [
+      { ...PILLARS[0], weight: 40 },
+      { ...PILLARS[1], weight: 30 },
+      { ...PILLARS[2], weight: 30 },
+    ];
+  }, [userLane]);
+
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
   const rawName = user?.email?.split('@')[0]?.replace(/[._]/g, ' ');
@@ -325,7 +380,7 @@ export default function Dashboard() {
     ? ({ 'price_1SeCJH3NMjs4uYdgpi0xB0XN': 'Business', 'price_1SeCKM3NMjs4uYdgcBRhgIhD': 'Pro', 'price_1SeCHg3NMjs4uYdguOgkr3SQ': 'Free' }[user.stripePriceId] ?? 'Pro')
     : 'Free';
 
-  const pillarAvgs = PILLARS.map(p => ({
+  const pillarAvgs = activePillars.map(p => ({
     ...p,
     avg: totalAnalyses > 0
       ? Math.round(history.reduce((s, h) => s + (h[p.key] ?? 0), 0) / totalAnalyses)
@@ -355,7 +410,7 @@ export default function Dashboard() {
   /* ── sub-scores from most recent analysis ── */
   const latest = history[0];
   const latestSubs = latest
-    ? PILLARS.map(p => {
+    ? activePillars.map(p => {
         const detail = latest[`${p.key}_detail`] ?? {};
         return {
           ...p,
@@ -367,6 +422,11 @@ export default function Dashboard() {
         };
       })
     : null;
+
+  const citationTotal = citations.length;
+  const citationCitedCount = citations.filter(c => c.cited).length;
+  const citationRate = citationTotal > 0 ? Math.round((citationCitedCount / citationTotal) * 100) : null;
+  const avgAlignment = citationTotal > 0 ? Math.round(citations.reduce((s, c) => s + (c.alignmentScore ?? 0), 0) / citationTotal) : null;
 
   const kpis = [
     {
@@ -404,6 +464,14 @@ export default function Dashboard() {
       trend: null,
       suffix: `/${user?.usage?.limit ?? 100}`,
     },
+    {
+      label: 'Citation Health',
+      value: citationsLoading ? '—' : citationRate !== null ? `${citationRate}%` : '—',
+      sub: citationTotal > 0 ? `${citationTotal} checks · avg ${avgAlignment}` : 'No checks yet',
+      color: citationRate === null ? '#94a3b8' : citationRate >= 60 ? '#a78bfa' : citationRate >= 30 ? '#eab308' : '#ef4444',
+      Icon: Radar,
+      trend: null,
+    },
   ];
 
   return (
@@ -426,6 +494,28 @@ export default function Dashboard() {
           New Analysis
         </button>
       </div>
+
+      {/* ── Lane Banner / Selector ── */}
+      {showLaneSelector ? (
+        <LaneSelector onSelect={(id) => { setUserLane(id); setShowLaneSelector(false); }} />
+      ) : userLane ? (
+        <div className={styles.laneBanner}>
+          {(() => {
+            const lane = LANES.find(l => l.id === userLane);
+            if (!lane) return null;
+            return (
+              <>
+                <div className={styles.laneBadge} style={{ background: `${lane.color}15`, border: `1px solid ${lane.color}25` }}>
+                  <lane.Icon size={13} style={{ color: lane.color }} />
+                  <span className={styles.laneBadgeLabel} style={{ color: lane.color }}>{lane.label}</span>
+                </div>
+                <p className={styles.laneBannerSub}>Your scoring weights and KPIs are optimized for this lane.</p>
+                <button className={styles.laneChangeBtn} onClick={() => setShowLaneSelector(true)}>Change lane</button>
+              </>
+            );
+          })()}
+        </div>
+      ) : null}
 
       {/* ── KPI Cards ── */}
       <div className={styles.kpis}>

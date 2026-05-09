@@ -40,7 +40,14 @@ export default function App() {
   const [apiKey, setApiKeyState] = useState(getApiKey);
   const [user, setUser] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
+  const [userLane, setUserLaneState] = useState(() => localStorage.getItem('rain_os_user_lane') || null);
   const isDemo = apiKey === '__demo__';
+
+  function setUserLane(lane) {
+    if (lane) localStorage.setItem('rain_os_user_lane', lane);
+    else localStorage.removeItem('rain_os_user_lane');
+    setUserLaneState(lane);
+  }
 
   useEffect(() => {
     async function initAuth() {
@@ -109,7 +116,7 @@ export default function App() {
   }
 
   return (
-    <AppContext.Provider value={{ apiKey, user, setUser, onLogout, refreshUser, isDemo }}>
+    <AppContext.Provider value={{ apiKey, user, setUser, onLogout, refreshUser, isDemo, userLane, setUserLane }}>
       <HashRouter>
         <AppRoutes apiKey={apiKey} onAuth={onAuth} onLogout={onLogout} refreshUser={refreshUser} />
       </HashRouter>

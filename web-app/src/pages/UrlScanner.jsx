@@ -359,7 +359,7 @@ function PreviewFixItem({ item, checked, onToggle }) {
 // ─── Main page ───────────────────────────────────────────────────────────────
 
 export default function UrlScanner() {
-  const { refreshUser } = useApp();
+  const { refreshUser, userLane } = useApp();
   const navigate = useNavigate();
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -374,7 +374,8 @@ export default function UrlScanner() {
     setError('');
     setResult(null);
     try {
-      const { data } = await api.scanUrl(url.trim());
+      const analysisModule = userLane === 'product_sellers' ? 'product_sellers' : userLane === 'developers' ? 'developers' : 'general';
+      const { data } = await api.scanUrl(url.trim(), { module: analysisModule });
       setResult(data);
       setScannedUrl(url.trim());
       refreshUser();
