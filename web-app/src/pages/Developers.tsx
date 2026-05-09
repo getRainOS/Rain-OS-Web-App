@@ -482,9 +482,9 @@ export default function Developers() {
             r<span className="text-sky-400">ai</span>n
           </span>
           <div className="flex items-center justify-center gap-6 text-sm text-slate-400">
-            <a href="https://www.getrainos.com/privacy" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="https://www.getrainos.com/terms" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Terms of Service</a>
-            <a href="mailto:support@getrainos.com" className="hover:text-white transition-colors">Support</a>
+            <a href="#/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
+            <a href="#/terms" className="hover:text-white transition-colors">Terms of Service</a>
+            <a href="#/support" className="hover:text-white transition-colors">Support</a>
           </div>
           <div className="text-right text-xs text-slate-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
         </div>

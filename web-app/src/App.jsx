@@ -21,6 +21,9 @@ const PricingPage = lazy(() => import('./pages/PricingPage.tsx'));
 const ProductSellers = lazy(() => import('./pages/ProductSellers.tsx'));
 const Developers = lazy(() => import('./pages/Developers.tsx'));
 const DocsPage = lazy(() => import('./pages/DocsPage.tsx'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy.tsx'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService.tsx'));
+const SupportPage = lazy(() => import('./pages/SupportPage.tsx'));
 
 const BASE_API = 'https://api.getrainos.com';
 
@@ -214,6 +217,9 @@ function AppRoutes({ apiKey, onAuth }) {
           <Route path="/product-sellers" element={<LandingWrapper><ProductSellers /></LandingWrapper>} />
           <Route path="/developers" element={<LandingWrapper><Developers /></LandingWrapper>} />
           <Route path="/docs" element={<LandingWrapper><DocsPage /></LandingWrapper>} />
+          <Route path="/privacy" element={<LandingWrapper><PrivacyPolicy /></LandingWrapper>} />
+          <Route path="/terms" element={<LandingWrapper><TermsOfService /></LandingWrapper>} />
+          <Route path="/support" element={<LandingWrapper><SupportPage /></LandingWrapper>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
@@ -240,6 +246,9 @@ function AppRoutes({ apiKey, onAuth }) {
         <Route path="/product-sellers" element={<LandingWrapper><ProductSellers /></LandingWrapper>} />
         <Route path="/developers" element={<LandingWrapper><Developers /></LandingWrapper>} />
         <Route path="/docs" element={<LandingWrapper><DocsPage /></LandingWrapper>} />
+        <Route path="/privacy" element={<LandingWrapper><PrivacyPolicy /></LandingWrapper>} />
+        <Route path="/terms" element={<LandingWrapper><TermsOfService /></LandingWrapper>} />
+        <Route path="/support" element={<LandingWrapper><SupportPage /></LandingWrapper>} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Layout>

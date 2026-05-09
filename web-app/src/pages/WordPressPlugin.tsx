@@ -122,32 +122,60 @@ const vsComparison = [
 
 const faqs = [
   {
+    q: 'How do I install the rain OS plugin?',
+    a: 'Download the plugin ZIP from your rain OS account or the plugin page. In your WordPress admin, go to Plugins → Add New → Upload Plugin, select the ZIP, and click Install Now. After activation, go to rain OS → Settings, paste your API key, and click Save. The plugin will verify the connection and display your plan status.',
+  },
+  {
+    q: 'Where do I find my API key?',
+    a: 'Log in at getrainos.com, go to Settings, and find the "WordPress Plugin Connection" section. Your API key is shown there — copy it and paste it into the rain OS plugin settings in your WordPress admin under rain OS → Settings.',
+  },
+  {
+    q: 'How does the Gutenberg sidebar work?',
+    a: 'When editing any post or page in the block editor, open the right sidebar and look for the rain OS panel. Click Analyze to score the current content. The panel shows your Rain Score along with AI Readability, Digital Authority, and Conversion Readiness pillar scores, with specific improvement recommendations for each. If the panel is not visible, confirm your API key is saved under rain OS → Settings.',
+  },
+  {
+    q: 'Does the plugin work with Classic Editor?',
+    a: 'Yes. If the Gutenberg block editor is not active, rain OS adds a meta box below your post content in the Classic Editor view. You\'ll see Analyze and URL Scan buttons directly in the post edit screen with results displayed inline — no sidebar required.',
+  },
+  {
+    q: 'What does the URL Scanner do inside the plugin?',
+    a: 'The URL Scanner fetches the live, published version of your page and checks technical AEO signals: schema markup, open graph tags, llms.txt presence, heading structure, and more. It complements Content Analysis — URL scanning catches issues in your rendered HTML that wouldn\'t show up in the raw post text, like missing schema or JS-rendering problems.',
+  },
+  {
     q: 'Does the plugin replace Yoast SEO or RankMath?',
-    a: 'No — rain OS is designed to work alongside your existing SEO plugin. Yoast and RankMath are excellent at traditional SEO signals: keywords, meta descriptions, and schema. rain OS adds the AEO layer that those tools don\'t measure — AI readability, citation authority, and answer-engine signals.',
+    a: 'No — rain OS is designed to work alongside your existing SEO plugin. Yoast and RankMath are excellent at traditional SEO signals: keywords, meta descriptions, and schema. rain OS adds the AEO layer those tools don\'t measure — AI readability, citation authority, and answer-engine signals that determine whether ChatGPT, Perplexity, and Gemini cite your content.',
   },
   {
     q: 'Will the plugin slow down my WordPress site?',
-    a: 'Not at all. rain OS analysis runs asynchronously in the cloud. The plugin sends your content to our API only when you explicitly click Analyze — it never runs in the background, never affects page load time, and never touches your frontend.',
-  },
-  {
-    q: 'Does it work with page builders like Elementor or Divi?',
-    a: 'The plugin works with any content stored in the WordPress post content field. For page builders that store content in custom fields or shortcodes, we recommend pasting the rendered text into the classic editor meta box for analysis.',
-  },
-  {
-    q: 'What PHP and WordPress versions are required?',
-    a: 'The plugin requires WordPress 5.8 or higher and PHP 7.4 or higher. You\'ll also need the curl, json, and mbstring PHP extensions, which are enabled by default on virtually all modern WordPress hosting environments.',
-  },
-  {
-    q: 'How is my content handled? Is it stored?',
-    a: 'Your content is sent to the rain OS API over HTTPS for analysis. We store your Rain Score and pillar breakdown locally in your WordPress database for history tracking. We do not permanently store your raw content on our servers after analysis is complete.',
+    a: 'Not at all. rain OS analysis runs asynchronously in the cloud. The plugin sends your content to our API only when you explicitly click Analyze — it never runs in the background, never hooks into page rendering, and never affects your site\'s frontend performance or page load time.',
   },
   {
     q: 'Can I use the plugin with WooCommerce product pages?',
-    a: 'Yes. The plugin works on any post type including WooCommerce products. Product Discoverability scoring is particularly valuable for e-commerce — it checks whether AI shopping assistants can surface your products when users ask for recommendations.',
+    a: 'Yes. The plugin works on any post type including WooCommerce products and custom post types. Product Discoverability scoring is particularly valuable for e-commerce — it checks whether AI shopping assistants can surface your products when users ask for recommendations in natural language.',
+  },
+  {
+    q: 'Does it work with page builders like Elementor or Divi?',
+    a: 'The plugin works with any content stored in the standard WordPress post content field. Page builders that store content in custom fields or shortcodes may give limited scores. For best results with page builders, paste the rendered visible text into the Content Analyzer on the rain OS web app, which scores plain text directly regardless of how it\'s assembled in your CMS.',
+  },
+  {
+    q: 'How do I view my Rain Score history?',
+    a: 'In your WordPress admin, go to rain OS → Score History to see a log of all analyses run from the plugin, with timestamps and per-pillar scores. You can also view your full history across all tools — web app, plugin, and URL scans — on the rain OS web app under Score History.',
+  },
+  {
+    q: 'Does the plugin work on WordPress Multisite?',
+    a: 'The plugin is designed for single-site installations. We recommend activating it at the individual site level rather than network-activating it. If you need multisite support, contact support@getrainos.com and we can advise.',
+  },
+  {
+    q: 'What PHP and WordPress versions are required?',
+    a: 'The plugin requires WordPress 5.8 or higher and PHP 7.4 or higher, with the curl, json, and mbstring PHP extensions enabled. These are enabled by default on virtually all modern WordPress hosting environments including WP Engine, Kinsta, SiteGround, and Cloudways.',
+  },
+  {
+    q: 'How is my content handled? Is it stored by rain OS?',
+    a: 'Your content is sent to the rain OS API over HTTPS for analysis. We store your Rain Score and pillar breakdown in your WordPress database for history tracking — not the raw content itself. We do not permanently store your post text on rain OS servers after the analysis request completes. See our Privacy Policy for full details.',
   },
   {
     q: 'Does the plugin include Repo Analysis for GitHub repositories?',
-    a: 'No — Repo Analysis is available on the rain OS web app at getrainos.com, not the WordPress plugin. If you built your site with Bolt, Lovable, Cursor, v0, or another AI coding tool, connect your GitHub repo on the web app and we\'ll scan your actual source files for AEO signals. The plugin covers Content Analysis and URL Scanner; the web app adds Repo Analysis on top of those.',
+    a: 'No — Repo Analysis is a web-app-only feature at getrainos.com. If you built your site or theme with Bolt, Lovable, Cursor, v0, or another AI coding tool, connect your GitHub repo on the web app to analyze your actual source files for AEO signals. The WordPress plugin covers Content Analysis and URL Scanner; the web app adds Repo Analysis on top of those.',
   },
 ];
 
@@ -719,9 +747,9 @@ export default function WordPressPlugin() {
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
           <span className="font-bold text-3xl tracking-tighter text-white">r<span className="text-sky-400">ai</span>n</span>
           <div className="flex items-center justify-center gap-6 text-sm text-slate-400">
-            <a href="https://www.getrainos.com/privacy" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="https://www.getrainos.com/terms" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Terms of Service</a>
-            <a href="mailto:support@getrainos.com" className="hover:text-white transition-colors">Support</a>
+            <a href="#/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
+            <a href="#/terms" className="hover:text-white transition-colors">Terms of Service</a>
+            <a href="#/support" className="hover:text-white transition-colors">Support</a>
           </div>
           <div className="text-right text-xs text-slate-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
         </div>
