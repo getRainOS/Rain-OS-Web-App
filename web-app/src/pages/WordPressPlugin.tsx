@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight, CheckCircle, Download, Zap, BrainCircuit, ShieldCheck,
@@ -6,6 +6,7 @@ import {
   BarChart3, Settings, Lock, Plus, Minus, GitBranch, ExternalLink
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import MarketingNav from '@/components/marketing/MarketingNav';
 
 const coreFeatures = [
   {
@@ -181,45 +182,11 @@ function AccordionItem({ question, answer }: { question: string; answer: string 
 }
 
 export default function WordPressPlugin() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
     <div className="flex flex-col min-h-screen relative z-10 selection:bg-sky-500/30">
-      {/* Navbar */}
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 flex justify-center border-b border-white/10 ${isScrolled ? 'py-4' : 'py-6'}`}>
-        <div className={`flex items-center justify-between px-8 transition-all duration-500 ${
-          isScrolled
-            ? 'w-full max-w-5xl py-3 rounded-full bg-midnight/60 backdrop-blur-2xl border border-white/5 shadow-2xl shadow-black/40'
-            : 'w-full max-w-7xl bg-transparent border-transparent'
-        }`}>
-          <a href="#/" className="font-bold text-3xl tracking-tighter text-white">
-            r<span className="text-sky-400">ai</span>n
-          </a>
-          <nav className="hidden md:flex items-center gap-10 text-sm font-medium text-slate-400">
-            <a href="#/" className="hover:text-white transition-colors">Home</a>
-            <a href="#/#features" className="hover:text-white transition-colors">Features</a>
-            <a href="#/#pricing" className="hover:text-white transition-colors">Pricing</a>
-            <a href="https://www.getrainos.com/docs" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Docs</a>
-            <a href="#/content-writers" className="hover:text-white transition-colors">Content Writers</a>
-          </nav>
-          <div className="flex items-center gap-4">
-            <button onClick={() => navigate('/login?mode=login')} className="text-sm font-medium text-slate-400 hover:text-white transition-colors hidden sm:block">Login</button>
-            <button
-              onClick={() => navigate('/login')}
-              className="bg-sky-500 hover:bg-sky-400 text-white rounded-lg px-5 py-2 text-sm font-semibold shadow-lg shadow-sky-500/20 transition-all hover:scale-105 active:scale-95"
-            >
-              Get started
-            </button>
-          </div>
-        </div>
-      </header>
+      <MarketingNav onLoginClick={() => navigate('/login?mode=login')} onGetStartedClick={() => navigate('/login')} />
 
       <main className="flex-grow">
 

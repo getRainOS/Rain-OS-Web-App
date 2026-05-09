@@ -1,7 +1,7 @@
 # rain OS AI Readability Optimizer
 
 ## Overview
-rain OS AI Readability Optimizer is a platform for Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO). It provides AI-powered content analysis across four key pillars: AI Readability, Digital Authority, Conversion Readiness, and Product Discoverability. The platform consists of three clients: a WordPress plugin, a standalone web app, and a planned Chrome extension — all backed by the `api.getrainos.com` Rain OS API.
+rain OS AI Readability Optimizer is a platform for Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO). It provides AI-powered content analysis across three solution lanes: **Writers & Marketers** (3 core pillars: AI Readability 40%, Digital Authority 30%, Conversion Readiness 30%), **Product Sellers** (dedicated Product Discoverability module at 50% weight), and **Developers** (doc-specific 3-pillar analysis). The platform consists of three clients: a WordPress plugin, a standalone web app, and a planned Chrome extension — all backed by the `api.getrainos.com` Rain OS API.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.

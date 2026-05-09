@@ -108,7 +108,9 @@ export default async function handler(req: express.Request, res: express.Respons
       return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Monthly analysis limit exceeded' } as ApiError);
     }
 
-    const { action = 'full_analysis', content, industry, sentence, title } = req.body as any;
+    const { action = 'full_analysis', content, industry, sentence, title, module } = req.body as any;
+    const analysisModule: 'general' | 'product_sellers' | 'developers' =
+      module === 'product_sellers' || module === 'developers' ? module : 'general';
     let result: any;
 
     switch (action) {
@@ -117,7 +119,7 @@ export default async function handler(req: express.Request, res: express.Respons
         if (!content) {
           return res.status(400).json({ error: 'bad_request', message: 'content required' } as ApiError);
         }
-        result = await analyzeContent(content, industry || 'General / Other');
+        result = await analyzeContent(content, industry || 'General / Other', analysisModule);
         break;
 
       case 'suggest_titles':

@@ -8,6 +8,7 @@ import {
   VibeCoderBand, ThreeModesSection
 } from '@/components/marketing/MarketingComponents';
 import { DemoShowcase } from '@/components/marketing/DemoShowcase';
+import MarketingNav from '@/components/marketing/MarketingNav';
 
 
 interface LandingPageProps {
@@ -94,44 +95,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
 
   return (
     <div className="flex flex-col min-h-screen relative z-10 selection:bg-rain-500/30">
-      {/* Navbar */}
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 flex justify-center border-b border-white/10 ${isScrolled ? 'py-4' : 'py-6'}`}>
-        <div className={`flex items-center justify-between px-8 transition-all duration-500 ${
-          isScrolled
-            ? 'w-full max-w-5xl py-3 rounded-full bg-midnight/60 backdrop-blur-2xl border border-white/5 shadow-2xl shadow-black/40'
-            : 'w-full max-w-7xl bg-transparent border-transparent'
-        }`}>
-          <div className="flex items-center gap-3">
-            <a href="#" className="flex items-center gap-2 group">
-              <span className="font-bold text-3xl tracking-tighter text-white transition-all">
-                r<span className="text-sky-400">ai</span>n
-              </span>
-            </a>
-          </div>
-
-          <nav className="hidden md:flex items-center gap-10 text-sm font-medium text-slate-400">
-            <a href="#/content-writers" className="hover:text-white transition-colors">Writers & Marketers</a>
-            <a href="https://www.getrainos.com/docs" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Docs</a>
-            <a href="#/wordpress-plugin" className="hover:text-white transition-colors">WordPress Plugin</a>
-            <a href="#/pricing" className="hover:text-white transition-colors">Pricing</a>
-          </nav>
-
-          <div className="flex items-center gap-4">
-            <button
-              onClick={onLoginClick}
-              className="text-sm font-medium text-slate-400 hover:text-white transition-colors hidden sm:block"
-            >
-              Login
-            </button>
-            <button
-              onClick={onGetStartedClick || onLoginClick}
-              className="bg-sky-500 hover:bg-sky-400 text-white rounded-lg px-5 py-2 text-sm font-semibold shadow-lg shadow-sky-500/20 transition-all hover:scale-105 active:scale-95"
-            >
-              Get started
-            </button>
-          </div>
-        </div>
-      </header>
+      <MarketingNav onLoginClick={onLoginClick} onGetStartedClick={onGetStartedClick || onLoginClick} />
 
       <main className="flex-grow">
         {/* Hero Section */}

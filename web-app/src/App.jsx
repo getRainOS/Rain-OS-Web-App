@@ -18,6 +18,9 @@ const LandingPage = lazy(() => import('./pages/LandingPage.tsx'));
 const ContentWriters = lazy(() => import('./pages/ContentWriters.tsx'));
 const WordPressPlugin = lazy(() => import('./pages/WordPressPlugin.tsx'));
 const PricingPage = lazy(() => import('./pages/PricingPage.tsx'));
+const ProductSellers = lazy(() => import('./pages/ProductSellers.tsx'));
+const Developers = lazy(() => import('./pages/Developers.tsx'));
+const DocsPage = lazy(() => import('./pages/DocsPage.tsx'));
 
 const BASE_API = 'https://api.getrainos.com';
 
@@ -201,6 +204,9 @@ function AppRoutes({ apiKey, onAuth }) {
           <Route path="/content-writers" element={<LandingWrapper><ContentWriters /></LandingWrapper>} />
           <Route path="/wordpress-plugin" element={<LandingWrapper><WordPressPlugin /></LandingWrapper>} />
           <Route path="/pricing" element={<LandingWrapper><PricingPage /></LandingWrapper>} />
+          <Route path="/product-sellers" element={<LandingWrapper><ProductSellers /></LandingWrapper>} />
+          <Route path="/developers" element={<LandingWrapper><Developers /></LandingWrapper>} />
+          <Route path="/docs" element={<LandingWrapper><DocsPage /></LandingWrapper>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
@@ -224,6 +230,9 @@ function AppRoutes({ apiKey, onAuth }) {
         <Route path="/content-writers" element={<LandingWrapper><ContentWriters /></LandingWrapper>} />
         <Route path="/wordpress-plugin" element={<LandingWrapper><WordPressPlugin /></LandingWrapper>} />
         <Route path="/pricing" element={<LandingWrapper><PricingPage /></LandingWrapper>} />
+        <Route path="/product-sellers" element={<LandingWrapper><ProductSellers /></LandingWrapper>} />
+        <Route path="/developers" element={<LandingWrapper><Developers /></LandingWrapper>} />
+        <Route path="/docs" element={<LandingWrapper><DocsPage /></LandingWrapper>} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Layout>

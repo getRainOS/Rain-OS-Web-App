@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import {
   ArrowRight, CheckCircle, FileText, Search, Zap,
   TrendingUp, Globe, Bot, BarChart3, BrainCircuit,
-  ShieldCheck, MousePointerClick, Target, Layers
+  ShieldCheck, MousePointerClick, Layers
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { HybridFuture, FeatureGrid, ReadabilityIntelligence, ComparisonTable, FAQ } from '@/components/marketing/MarketingComponents';
+import MarketingNav from '@/components/marketing/MarketingNav';
 
 const pillars = [
   {
@@ -33,21 +34,13 @@ const pillars = [
     name: 'Conversion Readiness',
     desc: 'How effectively your content turns AI-referred readers into customers.',
   },
-  {
-    color: '#fb923c',
-    bg: 'rgba(249,115,22,0.1)',
-    border: 'rgba(249,115,22,0.25)',
-    Icon: Target,
-    name: 'Product Discoverability',
-    desc: 'Whether AI shopping assistants can surface your product in recommendations.',
-  },
 ];
 
 const features = [
   {
     Icon: Bot,
     title: 'AI Engine Scoring',
-    desc: 'See exactly how ChatGPT, Perplexity, and Gemini read your content and score it across four weighted pillars.',
+    desc: 'See exactly how ChatGPT, Perplexity, and Gemini read your content and score it across three weighted pillars.',
   },
   {
     Icon: BarChart3,
@@ -78,54 +71,16 @@ const features = [
 
 const steps = [
   { num: '01', title: 'Paste your content', desc: 'Drop any blog post, article, or landing page copy into the analyzer.' },
-  { num: '02', title: 'Get your Rain Score', desc: 'Receive a weighted score across four pillars with a full signal breakdown.' },
+  { num: '02', title: 'Get your Rain Score', desc: 'Receive a weighted score across three pillars with a full signal breakdown.' },
   { num: '03', title: 'Fix and re-score', desc: 'Apply the recommendations, re-run the analysis, and watch your score climb.' },
 ];
 
 export default function ContentWriters() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
     <div className="flex flex-col min-h-screen relative z-10 selection:bg-sky-500/30">
-      {/* Navbar */}
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 flex justify-center border-b border-white/10 ${isScrolled ? 'py-4' : 'py-6'}`}>
-        <div className={`flex items-center justify-between px-8 transition-all duration-500 ${
-          isScrolled
-            ? 'w-full max-w-5xl py-3 rounded-full bg-midnight/60 backdrop-blur-2xl border border-white/5 shadow-2xl shadow-black/40'
-            : 'w-full max-w-7xl bg-transparent border-transparent'
-        }`}>
-          <a href="#/" className="font-bold text-3xl tracking-tighter text-white">
-            r<span className="text-sky-400">ai</span>n
-          </a>
-
-          <nav className="hidden md:flex items-center gap-10 text-sm font-medium text-slate-400">
-            <a href="#/" className="hover:text-white transition-colors">Home</a>
-            <a href="#/#features" className="hover:text-white transition-colors">Features</a>
-            <a href="#/#pricing" className="hover:text-white transition-colors">Pricing</a>
-            <a href="https://www.getrainos.com/docs" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Docs</a>
-            <a href="#/wordpress-plugin" className="hover:text-white transition-colors">WordPress Plugin</a>
-          </nav>
-
-          <div className="flex items-center gap-4">
-            <button onClick={() => navigate('/login?mode=login')} className="text-sm font-medium text-slate-400 hover:text-white transition-colors hidden sm:block">
-              Login
-            </button>
-            <button
-              onClick={() => navigate('/login')}
-              className="bg-sky-500 hover:bg-sky-400 text-white rounded-lg px-5 py-2 text-sm font-semibold shadow-lg shadow-sky-500/20 transition-all hover:scale-105 active:scale-95"
-            >
-              Get started
-            </button>
-          </div>
-        </div>
-      </header>
+      <MarketingNav onLoginClick={() => navigate('/login?mode=login')} onGetStartedClick={() => navigate('/login')} />
 
       <main className="flex-grow">
         {/* Hero */}
@@ -238,7 +193,7 @@ export default function ContentWriters() {
           </div>
         </section>
 
-        {/* Four Pillars */}
+        {/* Three Pillars */}
         <section className="py-20 px-6 border-t border-white/[0.06]">
           <div className="max-w-5xl mx-auto">
             <motion.div
@@ -249,9 +204,9 @@ export default function ContentWriters() {
               className="mb-12"
             >
               <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-3 block">How we score</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Four pillars. One Rain Score.</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Three pillars. One Rain Score.</h2>
               <p className="text-slate-400 max-w-xl leading-relaxed">
-                Every analysis returns a weighted score across the four dimensions that determine whether AI engines cite your content.
+                Every analysis returns a weighted score across the three dimensions that determine whether AI engines cite your content.
               </p>
             </motion.div>
 

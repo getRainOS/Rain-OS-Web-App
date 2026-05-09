@@ -1,5 +1,6 @@
 // services/geminiService.ts — Rain OS AEO Scoring Engine v2.3
-// 4-pillar scoring with algorithmic readability pre-analysis grounding.
+// 3-pillar scoring (general) + module-specific scoring (product_sellers, developers)
+// Algorithmic readability pre-analysis grounding.
 // SDK: @google/generative-ai
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
 import { computeReadabilityMetrics, formatMetricsAsGroundingBlock } from './readability'
@@ -42,22 +43,22 @@ Use these as scoring anchors. Do not contradict them.
 2. The content itself.
 3. The industry context.
 Score across 4 pillars (0-100 each):
-PILLAR 1 — AI READABILITY (weight: 30%)
+PILLAR 1 — AI READABILITY (weight: varies by module — 40% general, 20% product_sellers, 35% developers)
 How well can AI systems parse, chunk, and extract answers from this content?
 Sub-scores: structuralClarity, answerFirstFormatting, semanticPrecision,
 contextSufficiency, sectionConceptIsolation
 Anchors: use avgSentenceLength, longSentenceRatio, passiveVoiceRatio,
 nestedClauseDepth, headingDensity, answerFirstRatio from pre-analysis.
-PILLAR 2 — DIGITAL AUTHORITY (weight: 25%)
+PILLAR 2 — DIGITAL AUTHORITY (weight: varies by module — 30% general, 15% product_sellers, 35% developers)
 Does the content signal expertise, trustworthiness, and citability to AI?
 Sub-scores: citationSignals, entityClarity, topicalAuthority, freshnessSignals,
 socialProofMarkup
 Anchors: use entityDensity, definitionDensity from pre-analysis.
-PILLAR 3 — CONVERSION READINESS (weight: 25%)
+PILLAR 3 — CONVERSION READINESS (weight: varies by module — 30% general, 15% product_sellers, 30% developers)
 Does the content guide the reader toward a clear next action?
 Sub-scores: callToActionClarity, trustSignals, valueProposition, frictionReduction
 Anchors: use qaDensity, answerFirstRatio from pre-analysis.
-PILLAR 4 — PRODUCT DISCOVERABILITY (weight: 20%)
+PILLAR 4 — PRODUCT DISCOVERABILITY (weight: varies by module — 0% general, 50% product_sellers, 0% developers)
 For product/service content: how well will AI surface this in shopping or
 discovery contexts?
 Sub-scores: productVariantCoverage, merchantIdentityClarity, pricingTransparency,
@@ -100,7 +101,7 @@ SCORING RULES:
 proportionally.
 - If answerFirstRatio > 0.5, reward answerFirstFormatting generously.
 - If coreferenceLeakCount > 10, penalise semanticPrecision.
-- Overall score = weighted average of 4 pillars (30/25/25/20).
+- Overall score = weighted average of pillars. The MODULE_WEIGHTS instruction above defines the exact weights. Use them precisely.
 - Be calibrated: most real-world content scores 45-72. Reserve 85+ for exceptional
 content.
 - Do not give round numbers (avoid 50, 60, 70 exactly) — scores should reflect
@@ -144,15 +145,30 @@ const clamp = (n: number): number => Math.max(0, Math.min(100, Math.round(n)));
 // ─── Main export ──────────────────────────────────────────────────────────────
 export async function analyzeContent(
 content: string,
-industry: string = 'General / Other'
+industry: string = 'General / Other',
+module: 'general' | 'product_sellers' | 'developers' = 'general'
 ): Promise<AnalysisResponse> {
 if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
 // Step 1: Algorithmic pre-analysis — hard metrics, no API cost
 const metrics = computeReadabilityMetrics(content);
 const groundingBlock = formatMetricsAsGroundingBlock(metrics);
 // Step 2: Build the prompt with grounding anchors injected
+// Build module-specific weight instruction
+const moduleWeightInstructions = module === 'product_sellers'
+  ? 'MODULE: product_sellers
+MODULE_WEIGHTS: AI Readability 20%, Digital Authority 15%, Conversion Readiness 15%, Product Discoverability 50%
+For this module, Product Discoverability is the PRIMARY scoring focus. Score it with maximum precision — pricing transparency, variant coverage, availability, merchant identity, review signals, comparative context.'
+  : module === 'developers'
+  ? 'MODULE: developers
+MODULE_WEIGHTS: AI Readability (Documentation Structure) 35%, Digital Authority (Technical Completeness) 35%, Conversion Readiness (Technical Clarity) 30%, Product Discoverability 0% (not applicable)
+For this module, score AI Readability as Documentation Structure (navigation, TOC, getting started), Digital Authority as Documentation Authority (API completeness, error coverage, versioning), and Conversion Readiness as Technical Clarity (code example quality, step determinism, snippet extractability). Do not score Product Discoverability — set to 0.'
+  : 'MODULE: general
+MODULE_WEIGHTS: AI Readability 40%, Digital Authority 30%, Conversion Readiness 30%, Product Discoverability 0%
+For this module, do not weight Product Discoverability in the overall score. Score it conservatively for WP plugin compatibility (40-60 range) but it does not affect the overall Rain Score.';
+
 const prompt = [
 groundingBlock,
+moduleWeightInstructions,
 `INDUSTRY: ${industry}`,
 '',
 '=== CONTENT TO SCORE ===',
@@ -197,11 +213,17 @@ parsed.phase2_sub_scores.semanticRedundancyScore = 100 - raw_redundancy;
 // Step 6: Compute overall score from pillar weights
 // Recompute and correct if Gemini's value is more than 10 points off
 const p = parsed.pillarScores || {};
+// Module-specific pillar weights
+const moduleWeights = module === 'product_sellers'
+  ? { ar: 0.20, da: 0.15, cr: 0.15, pd: 0.50 }
+  : module === 'developers'
+  ? { ar: 0.35, da: 0.35, cr: 0.30, pd: 0.00 }
+  : { ar: 0.40, da: 0.30, cr: 0.30, pd: 0.00 }; // general (Writers & Marketers)
 const computedOverall = Math.round(
-(p.aiReadability || 0) * 0.30 +
-(p.digitalAuthority || 0) * 0.25 +
-(p.conversionReadiness || 0) * 0.25 +
-(p.productDiscoverability || 0) * 0.20
+(p.aiReadability || 0) * moduleWeights.ar +
+(p.digitalAuthority || 0) * moduleWeights.da +
+(p.conversionReadiness || 0) * moduleWeights.cr +
+(p.productDiscoverability || 0) * moduleWeights.pd
 );
 if (Math.abs((parsed.overallScore || 0) - computedOverall) > 10) {
 parsed.overallScore = computedOverall;

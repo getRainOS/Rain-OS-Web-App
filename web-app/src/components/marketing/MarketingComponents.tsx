@@ -73,7 +73,7 @@ export const FourPillars = () => {
   const pillars = [
     {
       name: 'AI Readability',
-      weight: '30%',
+      weight: '40%',
       tagline: 'Can AI actually read your source?',
       description: 'Vibe-coded sites render great in a browser, but AI crawlers read the raw HTML. This scores how well your source actually translates into machine-extractable answers — the #1 gap in AI-generated sites.',
       color: 'rain-400',
@@ -87,7 +87,7 @@ export const FourPillars = () => {
     },
     {
       name: 'Digital Authority',
-      weight: '25%',
+      weight: '30%',
       tagline: 'Is your site a source AI will quote?',
       description: 'AI tools built your site fast, but they skipped the trust markup. This pillar scores the schema, entity clarity, and credibility signals that make AI engines treat your domain as a quotable source.',
       color: 'emerald-400',
@@ -101,7 +101,7 @@ export const FourPillars = () => {
     },
     {
       name: 'Conversion Readiness',
-      weight: '25%',
+      weight: '30%',
       tagline: 'Does your site convert AI-referred visitors?',
       description: "Getting traffic from AI is only half the job. This pillar scores whether your site’s copy actually converts that traffic — CTA clarity, trust proof, and friction that vibe-coded landing pages routinely miss.",
       color: 'violet-400',
@@ -113,29 +113,15 @@ export const FourPillars = () => {
       Icon: MousePointerClick,
       scores: ['CTA Clarity', 'Trust Signals', 'Value Proposition', 'Friction Reduction'],
     },
-    {
-      name: 'Product Discoverability',
-      weight: '20%',
-      tagline: 'Can AI shopping assistants find you?',
-      description: 'AI shopping assistants are now driving purchase decisions. This pillar scores whether your product data — pricing, variants, availability — is structured so Gemini and ChatGPT can actually recommend you.',
-      color: 'orange-400',
-      glowColor: 'rgba(249,115,22,0.2)',
-      borderColor: 'orange-400/50',
-      viaColor: 'via-orange-400',
-      bgColor: 'bg-orange-500/20',
-      dotColor: 'bg-orange-500',
-      Icon: Target,
-      scores: ['Product Variant Coverage', 'Merchant Identity Clarity', 'Pricing Transparency', 'Availability Signals', 'Comparative Context'],
-    },
   ];
 
   return (
-    <section id="four-pillars" className="py-24 relative z-10">
+    <section id="three-pillars" className="py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <span className="text-rain-400 font-bold tracking-wider text-xs uppercase mb-3 block">The Scoring Framework</span>
-          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Four Pillars. One Score.</h2>
-          <p className="text-slate-400 max-w-2xl mx-auto">Every repo or URL scan returns a weighted score across four dimensions. These are the exact signals AI engines use to decide what gets cited, recommended, or surfaced — and the ones most vibe-coded sites are missing.</p>
+          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Three Pillars. One Score.</h2>
+          <p className="text-slate-400 max-w-2xl mx-auto">Every analysis returns a weighted score across three dimensions. These are the exact signals AI engines use to decide what gets cited and surfaced — and the ones most vibe-coded sites are missing.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -184,7 +170,7 @@ export const FeatureGrid = () => {
         <div className="text-center mb-16">
           <span className="text-rain-400 font-bold tracking-wider text-xs uppercase mb-3 block">Under the Hood</span>
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">What No Other Tool Measures</h2>
-          <p className="text-slate-400 max-w-2xl mx-auto">Beyond the four pillars, rain OS runs a deeper layer of signals that most tools don't even know exist.</p>
+          <p className="text-slate-400 max-w-2xl mx-auto">Beyond the three pillars, rain OS runs a deeper layer of signals that most tools don't even know exist.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -508,7 +494,7 @@ export const FAQ = () => {
   const faqs = [
     { q: "Who is rain OS for?", a: "Anyone who relies on organic traffic. We're especially powerful for SaaS, E-commerce, and Tech Publishers..." },
     { q: "Does rain OS replace Yoast or RankMath?", a: "No, rain OS is designed to work alongside your existing SEO plugins..." },
-    { q: "How does rain OS decide what to score?", a: "Every analysis runs your content through four weighted pillars — AI Readability (30%), Digital Authority (25%), Conversion Readiness (25%), and Product Discoverability (20%) — plus a deeper layer of Phase 2 signals covering things like RAG chunking quality, information gain, and query alignment. The result is a single overall score from 0 to 100 with a breakdown for every dimension." },
+    { q: "How does rain OS decide what to score?", a: "Every analysis runs your content through three weighted pillars — AI Readability (40%), Digital Authority (30%), and Conversion Readiness (30%) — plus a deeper layer of Phase 2 signals covering things like RAG chunking quality, information gain, and query alignment. The result is a single overall score from 0 to 100 with a breakdown for every dimension." },
     { q: "How does the Authorship Proof work?", a: "We generate a SHA-256 cryptographic hash of your content at the time of publishing..." },
     { q: "What is the 'Zero-Click Problem' and how does rain OS help?", a: "The Zero-Click Problem occurs when AI answers a user's query directly, resulting in no traffic to your site..." },
     { q: "Will this slow down my WordPress site?", a: "Not at all. rain OS runs its analysis asynchronously in the cloud..." },
@@ -570,7 +556,7 @@ export const ThreeModesSection = ({ onGetStarted }: { onGetStarted?: () => void 
       tag: 'Most popular',
       tagColor: 'text-sky-300 bg-sky-400/10 border-sky-400/25',
       title: 'Content Analysis',
-      description: 'Paste any content — a blog post, product page, or landing copy — and get a full 4-pillar Rain Score with actionable recommendations in seconds.',
+      description: 'Paste any content — a blog post, product page, or landing copy — and get a full Rain Score with actionable recommendations in seconds.',
       availability: ['WordPress Plugin', 'Web App'],
       availColor: 'text-sky-400',
       detail: 'The fastest way to go from draft to AI-optimized. Works on any text, any format.',
@@ -727,7 +713,7 @@ export const VibeFAQ = () => {
     { q: "Why can’t AI cite my site even though it loads fine in the browser?", a: "AI engines crawl your site statically — they don’t execute JavaScript. If your content only exists after JS runs (which is the default for most React, Vue, and Svelte apps), AI sees nothing to quote. This is the single biggest AEO gap for vibe-coded sites, and rain OS’s repo analysis catches it every time." },
     { q: "Will rain OS work for Next.js, Astro, SvelteKit, or other JS frameworks?", a: "Yes. Repo analysis works at the source level regardless of framework. URL scanning works best with server-rendered output (Next.js SSR, Astro static). For client-side-only apps (Vite SPA, CRA), repo analysis is more accurate than URL scanning." },
     { q: "Do I need to know how to code to fix the issues rain OS finds?", a: "No. Every recommendation includes a plain-English explanation of what to fix and why it matters. For most issues — missing meta tags, llms.txt, schema markup — you can paste the recommendation straight into Cursor, Bolt, or Lovable and have it fixed in minutes." },
-    { q: "How does the Rain Score work?", a: "Every analysis returns a weighted score from 0–100 built from four pillars: AI Readability (30%), Digital Authority (25%), Conversion Readiness (25%), and Product Discoverability (20%). Each pillar breaks down into specific sub-signals so you know exactly where you’re losing points." },
+    { q: "How does the Rain Score work?", a: "Every analysis returns a weighted score from 0–100 built from three pillars: AI Readability (40%), Digital Authority (30%), and Conversion Readiness (30%). Each pillar breaks down into specific sub-signals so you know exactly where you’re losing points. For product sellers, a dedicated Product Discoverability module is available with 50% weight." },
     { q: "Can I scan private GitHub repos?", a: "Yes. The GitHub OAuth connection works with both public and private repos you own or have access to. Your code is never stored — rain OS reads the relevant files, scores them, and discards the content." },
     { q: "How often should I re-scan after making changes?", a: "Re-scan after every significant content or structural update. Most users run a repo scan when they ship a new feature or page, and a URL scan before and after major copy revisions. The Score History tab tracks every run so you can see exactly what moved the needle." },
     { q: "Who is rain OS for?", a: "Primarily vibe coders (Bolt, Lovable, Cursor, v0, Replit users), developers shipping fast with AI tools, and content writers who want their work cited by AI engines. It’s also powerful for SEO professionals who want to stay ahead of the shift from keyword rankings to AI citations." },
