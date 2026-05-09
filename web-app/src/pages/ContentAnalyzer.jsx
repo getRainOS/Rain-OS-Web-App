@@ -141,6 +141,35 @@ export default function ContentAnalyzer() {
 
           <PillarScores result={result} />
 
+          {result.authorship && (
+            <div className={`card ${styles.authorshipCard}`}>
+              <h3 className={styles.sectionTitle}>Authorship &amp; E-E-A-T Signals</h3>
+              <div className={styles.authorshipGrid}>
+                {[
+                  { label: 'Author Byline', ok: result.authorship.hasAuthorByline },
+                  { label: 'Publish Date', ok: result.authorship.hasPublishDate },
+                  { label: 'Organization', ok: result.authorship.hasOrganization },
+                ].map(({ label, ok }) => (
+                  <div
+                    key={label}
+                    className={styles.authorshipBadge}
+                    style={{ borderColor: ok ? 'rgba(34,197,94,0.35)' : 'rgba(239,68,68,0.25)', background: ok ? 'rgba(34,197,94,0.06)' : 'rgba(239,68,68,0.05)' }}
+                  >
+                    <span className={styles.authorshipBadgeIcon} style={{ color: ok ? 'var(--green)' : 'var(--red)' }}>
+                      {ok ? '✓' : '✗'}
+                    </span>
+                    <span style={{ color: ok ? 'var(--text)' : 'var(--text-muted)' }}>{label}</span>
+                  </div>
+                ))}
+                <div className={styles.authorshipScore}>
+                  <span>Authority Score</span>
+                  <span className={styles.authorshipScoreValue}>{result.authorship.authorityScore}</span>
+                  <span style={{ color: 'var(--text-dim)', fontSize: 11 }}>/100</span>
+                </div>
+              </div>
+            </div>
+          )}
+
           {result.summary && (
             <div className={`card ${styles.summaryCard}`}>
               <h3 className={styles.sectionTitle}>Summary</h3>

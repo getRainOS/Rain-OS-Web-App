@@ -71,11 +71,78 @@ export const DEMO_HISTORY = [
 ];
 
 export const DEMO_ANALYSIS = {
+  // ── Top-level scores (snake_case — backward compat with history list) ──────
   overall_score: 84,
   ai_readability: 88,
   digital_authority: 82,
   conversion_readiness: 81,
   product_discoverability: 85,
+
+  // ── camelCase shape — matches live API response ────────────────────────────
+  overallScore: 84,
+  pillarScores: {
+    aiReadability: 88,
+    digitalAuthority: 82,
+    conversionReadiness: 81,
+    productDiscoverability: 85,
+  },
+
+  // ── Phase 2 detail breakdowns ──────────────────────────────────────────────
+  ai_readability_detail: {
+    structuralClarity: 92,
+    answerFirstFormatting: 85,
+    semanticPrecision: 88,
+    contextSufficiency: 86,
+    sectionConceptIsolation: 89,
+  },
+  digital_authority_detail: {
+    citationSignals: 78,
+    entityClarity: 84,
+    topicalAuthority: 82,
+    freshnessSignals: 76,
+    socialProofMarkup: 68,
+  },
+  conversion_readiness_detail: {
+    callToActionClarity: 79,
+    trustSignals: 83,
+    valueProposition: 87,
+    frictionReduction: 75,
+  },
+  product_discoverability_detail: {
+    productVariantCoverage: 81,
+    merchantIdentityClarity: 90,
+    pricingTransparency: 76,
+    availabilitySignals: 88,
+    comparativeContext: 71,
+  },
+
+  // ── Phase 2 flat sub-scores ────────────────────────────────────────────────
+  phase2_sub_scores: {
+    sectionConceptIsolation: 89,
+    instructionDeterminism: 74,
+    retrievalAnswerability: 82,
+    semanticRedundancyScore: 18,
+    socialProofMarkup: 68,
+    contentChunkingQuality: 85,
+    informationGainScore: 79,
+    citationReadiness: 77,
+    entityLinkability: 71,
+    topicalDepthScore: 83,
+    queryAlignmentScore: 86,
+    multimodalReadiness: 62,
+    productVariantCoverage: 81,
+    merchantIdentityClarity: 90,
+  },
+
+  // ── Authorship signals ─────────────────────────────────────────────────────
+  authorship: {
+    hasAuthorByline: true,
+    hasPublishDate: true,
+    hasOrganization: false,
+    authorityScore: 64,
+  },
+
+  // ── Legacy pillars block (still used by some history display code) ─────────
   pillars: {
     ai_readability: {
       score: 88,
@@ -118,6 +185,15 @@ export const DEMO_ANALYSIS = {
       ],
     },
   },
+
+  recommendations: [
+    'Use clearer H2 headings that directly answer user questions.',
+    'Include author bio with credentials to strengthen E-E-A-T signals.',
+    'Add a clear call-to-action within the first two paragraphs.',
+    'Add FAQ schema markup to increase snippet eligibility.',
+    'Break paragraphs longer than 3 sentences into shorter chunks.',
+    'Add references or citations to authoritative external sources.',
+  ],
 };
 
 export const DEMO_CITATION = {
@@ -164,7 +240,6 @@ export const DEMO_CITATION = {
 };
 
 export const DEMO_CITATION_HISTORY = [
-  // Topic 1 — "best AI content optimizer for bloggers" (improving, not cited)
   {
     id: 12,
     topic: 'best AI content optimizer for bloggers',
@@ -209,8 +284,6 @@ export const DEMO_CITATION_HISTORY = [
     summary: 'Initial baseline — not cited.',
     checkedAt: new Date(Date.now() - 30 * 86400000).toISOString(),
   },
-
-  // Topic 2 — "how to improve AEO for a SaaS landing page" (just cited!)
   {
     id: 8,
     topic: 'how to improve AEO for a SaaS landing page',
@@ -244,8 +317,6 @@ export const DEMO_CITATION_HISTORY = [
     summary: 'Behind the cited authority hubs.',
     checkedAt: new Date(Date.now() - 24 * 86400000).toISOString(),
   },
-
-  // Topic 3 — "what is answer engine optimization" (regressing slightly)
   {
     id: 5,
     topic: 'what is answer engine optimization',
@@ -268,8 +339,6 @@ export const DEMO_CITATION_HISTORY = [
     summary: 'Mid-tier alignment in a crowded definition query.',
     checkedAt: new Date(Date.now() - 18 * 86400000).toISOString(),
   },
-
-  // Topic 4 — "AEO best practices 2026" (single check — flag as new)
   {
     id: 3,
     topic: 'AEO best practices 2026',
@@ -286,23 +355,43 @@ export const DEMO_CITATION_HISTORY = [
 export const DEMO_SCAN = {
   url: 'https://example.com',
   overall_score: 78,
+  overallScore: 78,
   ai_readability: 75,
   digital_authority: 80,
   conversion_readiness: 76,
   product_discoverability: 81,
+  pillarScores: {
+    aiReadability: 75,
+    digitalAuthority: 80,
+    conversionReadiness: 76,
+    productDiscoverability: 81,
+  },
+  // Display signals array — pass: boolean matches UrlScanner.jsx expectations
   signals: [
-    { label: 'HTTPS Enabled', status: 'pass', detail: 'Site is served over HTTPS' },
-    { label: 'Canonical Tag', status: 'pass', detail: 'Canonical tag present and correct' },
-    { label: 'Structured Data', status: 'warn', detail: 'Schema markup detected but incomplete — missing Article type' },
-    { label: 'Page Speed', status: 'pass', detail: 'LCP under 2.5s — good performance score' },
-    { label: 'Meta Description', status: 'warn', detail: 'Meta description is 185 characters — slightly long' },
-    { label: 'Open Graph Tags', status: 'pass', detail: 'OG title, description, and image present' },
-    { label: 'Robots.txt', status: 'pass', detail: 'robots.txt found and accessible' },
-    { label: 'Sitemap', status: 'fail', detail: 'No sitemap.xml found — submit one in Google Search Console' },
+    { label: 'JavaScript Rendering', pass: true, detail: 'Page content is available without JavaScript.' },
+    { label: 'Meta Description', pass: true, detail: 'Present (142 chars).' },
+    { label: 'Schema Markup', pass: false, detail: 'No structured data found — add JSON-LD (Article, FAQPage, etc.).' },
+    { label: 'llms.txt', pass: false, detail: 'No llms.txt — AI crawlers must guess what to read.' },
+    { label: 'Heading Hierarchy', pass: true, detail: '12 headings with proper H1 → H2 structure.' },
+    { label: 'Semantic HTML', pass: true, detail: 'Using: article, main, section.' },
+    { label: 'Canonical Tag', pass: true, detail: 'Canonical tag present — duplicate content handled correctly.' },
+    { label: 'Open Graph Tags', pass: true, detail: 'og:title, og:description, and og:image found.' },
+    { label: 'Twitter / X Cards', pass: false, detail: 'No twitter:card meta tag — add one for better social sharing.' },
+    { label: 'Mobile Viewport', pass: true, detail: 'Viewport meta tag present — mobile-friendly.' },
+    { label: 'Indexability', pass: true, detail: 'Page is not set to noindex — AI crawlers can index it.' },
+    { label: 'Hreflang', pass: false, detail: 'No hreflang — add if you target multiple languages or regions.' },
+    { label: 'FAQ Schema', pass: false, detail: 'No FAQPage schema — add one if your page has Q&A content.' },
+    { label: 'Image Alt Text', pass: false, detail: '6 / 10 images have alt text (60%).' },
+    { label: 'Word Count', pass: true, detail: '1,247 words detected — sufficient for AI analysis.' },
+    { label: 'Internal Links', pass: true, detail: '14 internal, 6 external links.' },
+    { label: 'Descriptive Anchors', pass: true, detail: 'No generic anchor text ("click here", "read more") found.' },
+    { label: 'Favicon', pass: true, detail: 'Favicon found.' },
+    { label: 'RSS / Atom Feed', pass: false, detail: 'No RSS/Atom feed — consider adding one if publishing regular content.' },
   ],
   recommendations: [
     'Add Article or BlogPosting structured data to qualify for rich results.',
-    'Shorten meta description to under 160 characters for full display.',
-    'Create and submit an XML sitemap to improve AI crawler discovery.',
+    'Create /llms.txt to help AI crawlers understand your site structure.',
+    'Add twitter:card meta tags for better sharing previews on X.',
+    'Add descriptive alt text to the 4 images currently missing it.',
   ],
 };

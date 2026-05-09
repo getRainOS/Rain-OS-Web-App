@@ -155,16 +155,16 @@ const groundingBlock = formatMetricsAsGroundingBlock(metrics);
 // Step 2: Build the prompt with grounding anchors injected
 // Build module-specific weight instruction
 const moduleWeightInstructions = module === 'product_sellers'
-  ? 'MODULE: product_sellers
+  ? `MODULE: product_sellers
 MODULE_WEIGHTS: AI Readability 20%, Digital Authority 15%, Conversion Readiness 15%, Product Discoverability 50%
-For this module, Product Discoverability is the PRIMARY scoring focus. Score it with maximum precision — pricing transparency, variant coverage, availability, merchant identity, review signals, comparative context.'
+For this module, Product Discoverability is the PRIMARY scoring focus. Score it with maximum precision — pricing transparency, variant coverage, availability, merchant identity, review signals, comparative context.`
   : module === 'developers'
-  ? 'MODULE: developers
+  ? `MODULE: developers
 MODULE_WEIGHTS: AI Readability (Documentation Structure) 35%, Digital Authority (Technical Completeness) 35%, Conversion Readiness (Technical Clarity) 30%, Product Discoverability 0% (not applicable)
-For this module, score AI Readability as Documentation Structure (navigation, TOC, getting started), Digital Authority as Documentation Authority (API completeness, error coverage, versioning), and Conversion Readiness as Technical Clarity (code example quality, step determinism, snippet extractability). Do not score Product Discoverability — set to 0.'
-  : 'MODULE: general
+For this module, score AI Readability as Documentation Structure (navigation, TOC, getting started), Digital Authority as Documentation Authority (API completeness, error coverage, versioning), and Conversion Readiness as Technical Clarity (code example quality, step determinism, snippet extractability). Do not score Product Discoverability — set to 0.`
+  : `MODULE: general
 MODULE_WEIGHTS: AI Readability 40%, Digital Authority 30%, Conversion Readiness 30%, Product Discoverability 0%
-For this module, do not weight Product Discoverability in the overall score. Score it conservatively for WP plugin compatibility (40-60 range) but it does not affect the overall Rain Score.';
+For this module, do not weight Product Discoverability in the overall score. Score it conservatively for WP plugin compatibility (40-60 range) but it does not affect the overall Rain Score.`;
 
 const prompt = [
 groundingBlock,
