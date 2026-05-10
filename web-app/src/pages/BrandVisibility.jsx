@@ -189,7 +189,7 @@ export default function BrandVisibility() {
         setResult({ ...DEMO_RESULT, brand: brand || DEMO_RESULT.brand, topic: topic || DEMO_RESULT.topic });
       } else {
         const { data } = await api.brandVisibility({ brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined });
-        setResult(data || data);
+        setResult(data.data || data);
       }
     } catch (err) {
       setError(err.message || 'Something went wrong. Please try again.');
