@@ -10,6 +10,7 @@ import ContentAnalyzer from './pages/ContentAnalyzer.jsx';
 import UrlScanner from './pages/UrlScanner.jsx';
 import RepoAnalysis from './pages/RepoAnalysis.jsx';
 import CitationMonitor from './pages/CitationMonitor.jsx';
+import BrandVisibility from './pages/BrandVisibility.jsx';
 import History from './pages/History.jsx';
 import Upgrade from './pages/Upgrade.jsx';
 import Settings from './pages/Settings.jsx';
@@ -237,6 +238,7 @@ function AppRoutes({ apiKey, onAuth }) {
         <Route path="/url-scanner" element={<UrlScanner />} />
         <Route path="/repo-analysis" element={<RepoAnalysis />} />
         <Route path="/citation-monitor" element={<CitationMonitor />} />
+        <Route path="/brand-visibility" element={<BrandVisibility />} />
         <Route path="/history" element={<History />} />
         <Route path="/upgrade" element={<Upgrade />} />
         <Route path="/settings" element={<Settings />} />

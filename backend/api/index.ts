@@ -13,6 +13,7 @@ import citationCheckHandler, {
   bulkDeleteHandler as citationChecksBulkDeleteHandler,
 } from './citation-check';
 import { listHandler as historyListHandler, deleteHandler as historyDeleteHandler } from './history';
+import brandVisibilityHandler from './brand-visibility';
 // Auth
 import googleAuthHandler from './auth/google';
 import googleRedirectHandler from './auth/google-redirect';
@@ -85,6 +86,9 @@ app.post('/analyze', handleAnalyze);
 // ─── URL Scan (new in v2.3) ────────────────────────────────────────────────
 app.post('/api/url-scan', urlScanHandler);
 app.post('/v1/api/url-scan', urlScanHandler);
+// ─── AI Brand Visibility (new in v2.5) ────────────────────────────────────
+app.post('/api/brand-visibility', brandVisibilityHandler);
+app.post('/v1/api/brand-visibility', brandVisibilityHandler);
 // ─── Citation Monitor (new in v2.4) ────────────────────────────────────────
 app.post('/api/citation-check', citationCheckHandler);
 app.post('/v1/api/citation-check', citationCheckHandler);

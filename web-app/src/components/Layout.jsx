@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext.jsx';
 import { api, clearApiKey } from '../api/client.js';
 import { supabase } from '../lib/supabase.js';
 import {
-  LayoutDashboard, FileText, Globe, GitBranch, Radar,
+  LayoutDashboard, FileText, Globe, GitBranch, Radar, Eye,
   Clock, Settings, ArrowUp, LogOut,
 } from 'lucide-react';
 import styles from './Layout.module.css';
@@ -21,6 +21,7 @@ const NAV = [
   { to: '/url-scanner',       label: 'URL Scanner',       Icon: Globe },
   { to: '/repo-analysis',     label: 'Repo Analysis',     Icon: GitBranch },
   { to: '/citation-monitor',  label: 'Citation Monitor',  Icon: Radar },
+  { to: '/brand-visibility',  label: 'AI Visibility',     Icon: Eye },
   { to: '/history',           label: 'Score History',     Icon: Clock },
   { to: '/settings',          label: 'Settings',          Icon: Settings },
 ];
@@ -71,19 +72,19 @@ export default function Layout({ children }) {
         <nav className={styles.nav}>
           <div className={styles.navGroup}>
             <span className={styles.navLabel}>Analyze</span>
-            {NAV.slice(1, 5).map(n => (
+            {NAV.slice(1, 6).map(n => (
               <NavItem key={n.to} {...n} />
             ))}
           </div>
           <div className={styles.navGroup}>
             <span className={styles.navLabel}>Reports</span>
-            {[NAV[0], NAV[5]].map(n => (
+            {[NAV[0], NAV[6]].map(n => (
               <NavItem key={n.to} {...n} />
             ))}
           </div>
           <div className={styles.navGroup}>
             <span className={styles.navLabel}>Account</span>
-            <NavItem key={NAV[6].to} {...NAV[6]} />
+            <NavItem key={NAV[7].to} {...NAV[7]} />
           </div>
         </nav>
 
