@@ -258,9 +258,8 @@ export default function WordPressPlugin() {
 
                   <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                     <a
-                      href="https://wordpress.org/plugins/rain-os-aeo-analyzer"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href="/rain-os-aeo-analyzer.zip"
+                      download="rain-os-aeo-analyzer.zip"
                       className="flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white rounded-xl px-7 py-3.5 text-sm font-bold shadow-lg shadow-sky-500/25 transition-all hover:scale-105 active:scale-95 group"
                     >
                       <Download className="w-4 h-4" />
@@ -720,9 +719,8 @@ export default function WordPressPlugin() {
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a
-                  href="https://wordpress.org/plugins/rain-os-aeo-analyzer"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/rain-os-aeo-analyzer.zip"
+                  download="rain-os-aeo-analyzer.zip"
                   className="flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white rounded-xl px-8 py-4 text-sm font-bold shadow-xl shadow-sky-500/25 transition-all hover:scale-105 active:scale-95 group"
                 >
                   <Download className="w-4 h-4" />
