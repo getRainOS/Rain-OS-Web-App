@@ -68,6 +68,26 @@ CREATE TABLE IF NOT EXISTS content_analyses (
 
 CREATE INDEX IF NOT EXISTS idx_content_analyses_user_analyzed_at
   ON content_analyses(user_id, analyzed_at DESC);
+
+-- Share of Voice history (additive)
+CREATE TABLE IF NOT EXISTS sov_checks (
+  id BIGSERIAL PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  brand TEXT NOT NULL,
+  topic TEXT NOT NULL,
+  url TEXT,
+  overall_sov INTEGER NOT NULL,
+  cited_count INTEGER NOT NULL DEFAULT 0,
+  model_results JSONB NOT NULL,
+  top_competitors JSONB NOT NULL DEFAULT '[]',
+  recommendations JSONB NOT NULL DEFAULT '[]',
+  ai_volume_label TEXT NOT NULL DEFAULT 'Medium',
+  ai_volume_estimate TEXT NOT NULL DEFAULT '',
+  summary TEXT,
+  checked_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_sov_checks_user_checked_at
+  ON sov_checks(user_id, checked_at DESC);
 `;
 
 const addGithubColumnsQuery = `

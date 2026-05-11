@@ -14,6 +14,7 @@ import citationCheckHandler, {
 } from './citation-check';
 import { listHandler as historyListHandler, deleteHandler as historyDeleteHandler } from './history';
 import brandVisibilityHandler from './brand-visibility';
+import { sovHandler, sovHistoryHandler, sovDeleteHandler } from './share-of-voice';
 // Auth
 import googleAuthHandler from './auth/google';
 import googleRedirectHandler from './auth/google-redirect';
@@ -89,6 +90,13 @@ app.post('/v1/api/url-scan', urlScanHandler);
 // ─── AI Brand Visibility (new in v2.5) ────────────────────────────────────
 app.post('/api/brand-visibility', brandVisibilityHandler);
 app.post('/v1/api/brand-visibility', brandVisibilityHandler);
+// ─── Share of Voice (new in v2.6) ─────────────────────────────────────────
+app.post('/api/sov', sovHandler);
+app.post('/v1/api/sov', sovHandler);
+app.get('/api/sov', sovHistoryHandler);
+app.get('/v1/api/sov', sovHistoryHandler);
+app.delete('/api/sov', sovDeleteHandler);
+app.delete('/v1/api/sov', sovDeleteHandler);
 // ─── Citation Monitor (new in v2.4) ────────────────────────────────────────
 app.post('/api/citation-check', citationCheckHandler);
 app.post('/v1/api/citation-check', citationCheckHandler);

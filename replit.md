@@ -54,6 +54,9 @@ API client (`src/api/client.js`):
 - `api.citationCheck({topic, url})` → `POST /api/citation-check`
 - `api.citationHistory({topic?})` → `GET /api/citation-checks` (omit `topic` for full user-wide history)
 - `api.deleteCitationHistory()` → `DELETE /api/citation-checks` (used by Competitor Map "Clear history")
+- `api.shareOfVoice({brand, topic, url})` → `POST /api/sov` — runs 3 AI model style checks, returns per-model results + overall SOV score
+- `api.sovHistory()` → `GET /api/sov` — returns saved SOV check history for trend tracking
+- `api.clearSovHistory()` → `DELETE /api/sov`
 
 The Citation Monitor's Competitor Map (`web-app/src/pages/CitationMonitor.jsx`) reads from the persistent backend history (cross-device) — `web-app/src/lib/citationHistory.js` only exports the `buildCompetitorMap` aggregator now (the localStorage store has been removed).
 
@@ -61,10 +64,19 @@ The Citation Monitor's Competitor Map (`web-app/src/pages/CitationMonitor.jsx`) 
 Future third client for the Rain OS platform.
 
 ### Analysis Modes (Web App)
-Three independent analysis tools accessible from the sidebar:
+Six independent analysis tools accessible from the sidebar:
 1. **Content Analyzer** (`/analyze`) — Paste text → full 4-pillar AI analysis via Gemini
 2. **URL Scanner** (`/url-scanner`) — Fetch a URL → static HTML signals + Gemini scoring; shows yellow JS-rendering warning banner when site requires JS, with CTA to Repo Analysis
 3. **Repo Analysis** (`/repo-analysis`) — GitHub OAuth → source file analysis (README, package.json, index.html, llms.txt, robots.txt, etc.) → 4-pillar scores + ArtifactBlock recommendations
+4. **Citation Monitor** (`/citation-monitor`) — Enter topic + optional URL → Gemini grounded check of current AI citations; Competitor Map tab shows domains cited instead of yours across all tracked topics
+5. **AI Visibility** (`/brand-visibility`) — Enter brand + topic → checks how AI portrays your brand, sentiment, mention position, visibility score 0-100
+6. **Share of Voice** (`/share-of-voice`) — NEW: Enter brand + topic → runs 3 prompt styles through Gemini (simulating Gemini/ChatGPT/Perplexity), measures citation rate + visibility score per model, aggregates into overall Share of Voice %, estimates AI search volume (Low/Medium/High/Very High), stores history for trend tracking over time
+
+### Share of Voice Architecture
+- `backend/services/shareOfVoiceService.ts` — runs 3 Gemini calls (grounded informational, non-grounded conversational, grounded research-style), each with structured JSON analysis step. Estimates AI volume from topic characteristics.
+- `backend/api/share-of-voice.ts` — `POST /api/sov` (run check + save), `GET /api/sov` (history), `DELETE /api/sov` (clear)
+- DB table: `sov_checks` — stores brand, topic, url, overall_sov, cited_count, model_results (JSONB), top_competitors (JSONB), recommendations (JSONB), ai_volume_label, ai_volume_estimate, summary
+- NAV array in Layout.jsx now has 9 entries (0-8): `NAV.slice(1,7)` = Analyze group, `[NAV[0], NAV[7]]` = Reports, `NAV[8]` = Account
 
 ### API
 - **Base URL**: `https://api.getrainos.com`

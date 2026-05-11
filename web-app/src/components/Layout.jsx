@@ -5,7 +5,7 @@ import { api, clearApiKey } from '../api/client.js';
 import { supabase } from '../lib/supabase.js';
 import {
   LayoutDashboard, FileText, Globe, GitBranch, Radar, Eye,
-  Clock, Settings, ArrowUp, LogOut,
+  BarChart2, Clock, Settings, ArrowUp, LogOut,
 } from 'lucide-react';
 import styles from './Layout.module.css';
 
@@ -15,15 +15,17 @@ const PRICE_TO_PLAN = {
   'price_1SeCHg3NMjs4uYdguOgkr3SQ': 'Free',
 };
 
+// 0=Dashboard 1=Analyze 2=URL 3=Repo 4=Citation 5=Visibility 6=SOV(new) 7=History 8=Settings
 const NAV = [
-  { to: '/dashboard',         label: 'Dashboard',         Icon: LayoutDashboard },
-  { to: '/analyze',           label: 'Content Analyzer',  Icon: FileText },
-  { to: '/url-scanner',       label: 'URL Scanner',       Icon: Globe },
-  { to: '/repo-analysis',     label: 'Repo Analysis',     Icon: GitBranch },
-  { to: '/citation-monitor',  label: 'Citation Monitor',  Icon: Radar },
-  { to: '/brand-visibility',  label: 'AI Visibility',     Icon: Eye },
-  { to: '/history',           label: 'Score History',     Icon: Clock },
-  { to: '/settings',          label: 'Settings',          Icon: Settings },
+  { to: '/dashboard',        label: 'Dashboard',        Icon: LayoutDashboard },
+  { to: '/analyze',          label: 'Content Analyzer', Icon: FileText },
+  { to: '/url-scanner',      label: 'URL Scanner',      Icon: Globe },
+  { to: '/repo-analysis',    label: 'Repo Analysis',    Icon: GitBranch },
+  { to: '/citation-monitor', label: 'Citation Monitor', Icon: Radar },
+  { to: '/brand-visibility', label: 'AI Visibility',    Icon: Eye },
+  { to: '/share-of-voice',   label: 'Share of Voice',   Icon: BarChart2 },
+  { to: '/history',          label: 'Score History',    Icon: Clock },
+  { to: '/settings',         label: 'Settings',         Icon: Settings },
 ];
 
 export default function Layout({ children }) {
@@ -72,19 +74,19 @@ export default function Layout({ children }) {
         <nav className={styles.nav}>
           <div className={styles.navGroup}>
             <span className={styles.navLabel}>Analyze</span>
-            {NAV.slice(1, 6).map(n => (
+            {NAV.slice(1, 7).map(n => (
               <NavItem key={n.to} {...n} />
             ))}
           </div>
           <div className={styles.navGroup}>
             <span className={styles.navLabel}>Reports</span>
-            {[NAV[0], NAV[6]].map(n => (
+            {[NAV[0], NAV[7]].map(n => (
               <NavItem key={n.to} {...n} />
             ))}
           </div>
           <div className={styles.navGroup}>
             <span className={styles.navLabel}>Account</span>
-            <NavItem key={NAV[7].to} {...NAV[7]} />
+            <NavItem key={NAV[8].to} {...NAV[8]} />
           </div>
         </nav>
 
