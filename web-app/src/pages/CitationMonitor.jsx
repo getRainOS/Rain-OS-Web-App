@@ -175,8 +175,8 @@ export default function CitationMonitor() {
           <span className={styles.newBadge}>NEW</span>
         </div>
         <p className={styles.sub}>
-          When someone asks an AI engine about your topic, does your content get cited?
-          We run the query through Gemini with live Google Search grounding and show you the real sources AI is citing — and how to get yours among them.
+          Check whether AI is citing you right now, then compare the result after you optimize.
+          We run the query through Gemini with live Google Search grounding so you get a real-time snapshot of current AI citations — not a promise, but a live read on where you stand.
         </p>
       </div>
 

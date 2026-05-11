@@ -104,7 +104,7 @@ export default function ContentWriters() {
               </h1>
 
               <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-                rain OS scores your articles, blog posts, and landing pages against the exact signals AI engines use to pick their sources — so your content gets cited, not skipped.
+                rain OS scores your articles, blog posts, and landing pages against the exact signals AI engines use to pick their sources — so you can optimize, then check whether AI cites you right away.
               </p>
             </motion.div>
 

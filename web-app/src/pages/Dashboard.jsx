@@ -796,8 +796,8 @@ export default function Dashboard() {
             </h2>
             <p className={styles.chartSub}>
               {competitorMap.totalQueries > 0
-                ? `Dominating across your ${competitorMap.totalQueries} tracked ${competitorMap.totalQueries === 1 ? 'query' : 'queries'}`
-                : 'AEO snapshot from your Citation Monitor history'}
+                ? `Use this as a before/after snapshot across your ${competitorMap.totalQueries} tracked ${competitorMap.totalQueries === 1 ? 'query' : 'queries'}`
+                : 'Use Citation Monitor to capture a real-time AI citation snapshot after you optimize'}
             </p>
           </div>
           {topCompetitors.length > 0 && (
@@ -814,7 +814,7 @@ export default function Dashboard() {
               className={styles.emptyLink}
               onClick={(e) => e.stopPropagation()}
             >
-              Run your first citation check →
+              Optimize first, then run a citation check →
             </Link>
           </div>
         ) : (
@@ -860,7 +860,7 @@ export default function Dashboard() {
               <Radar style={{ width: 14, height: 14, marginRight: 6, verticalAlign: '-2px', color: '#0EA5E9' }} />
               Citations Being Tracked
             </h2>
-            <p className={styles.chartSub}>How AI engines are citing you for your tracked queries</p>
+            <p className={styles.chartSub}>A live snapshot of how AI engines are citing you after optimization</p>
           </div>
           <Link to="/citation-monitor" className={styles.viewAll}>Open Citation Monitor →</Link>
         </div>
@@ -872,7 +872,7 @@ export default function Dashboard() {
             <div className={styles.emptyState}>
               <Radar className={styles.emptyIcon} />
               <p>No citation checks yet</p>
-              <Link to="/citation-monitor" className={styles.emptyLink}>Run your first →</Link>
+              <Link to="/citation-monitor" className={styles.emptyLink}>Optimize, then verify citations →</Link>
             </div>
           </div>
         ) : (
