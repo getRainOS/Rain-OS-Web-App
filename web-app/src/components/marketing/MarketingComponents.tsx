@@ -378,50 +378,63 @@ export const ComparisonTable = () => {
 
 
 export const Pricing = () => {
-  const plans = [
+  type PlanFeature = { label: string; included: boolean };
+  type Plan = {
+    plan: string; price: string; period?: string; checkCount: string;
+    description: string; buttonText: string; isPopular?: boolean;
+    accentColor: string; features: PlanFeature[];
+  };
+  const plans: Plan[] = [
     {
-      plan: "Free", price: "Free", checkCount: "5 Answer Engine Optimizations / month",
-      description: "Great for hobbyists and experimenters. Get full access to all four scoring pillars and see exactly how AI reads your content.",
+      plan: "Free", price: "Free", checkCount: "5 analyses / month",
+      accentColor: "#64748b",
+      description: "Try Rain OS and see how AI reads your content — no credit card needed.",
       buttonText: "Get Started",
       features: [
-        "AI Readability Score: How easily LLMs parse your content.",
-        "Digital Authority Score: Trust signals AI uses to decide to cite you.",
-        "Conversion Readiness Score: How well your content drives action.",
-        "Product Discoverability Score: Visibility in AI shopping recommendations.",
-        "Actionable recommendations on every analysis.",
-        "Built-in AI rewrite tools: titles, meta, summaries."
+        { label: "Content Analyzer", included: true },
+        { label: "All 4 AEO scoring pillars", included: true },
+        { label: "Actionable recommendations", included: true },
+        { label: "URL Scanner", included: false },
+        { label: "Repo Analysis (GitHub)", included: false },
+        { label: "Citation Monitor", included: false },
+        { label: "AI Visibility", included: false },
+        { label: "Share of Voice", included: false },
       ]
     },
     {
-      plan: "Business", price: "$29.99", checkCount: "100 Answer Engine Optimizations / month", isPopular: true,
-      description: "Perfect for local businesses, early-stage startups, and solo creators optimizing for ChatGPT, Perplexity, Gemini, and Claude.",
+      plan: "Pro", price: "$29", period: "/ mo", checkCount: "200 analyses / month", isPopular: true,
+      accentColor: "#0ea5e9",
+      description: "Full AEO suite for content creators, startups, and growing brands optimizing for ChatGPT, Perplexity, and Gemini.",
       buttonText: "Get Started",
       features: [
-        "Everything in Free, plus:",
-        "AI Readability: Structural clarity, answer-first formatting, semantic precision.",
-        "Digital Authority: Citation signals, entity clarity, topical authority.",
-        "Conversion Readiness: CTA clarity, trust signals, value proposition.",
-        "Product Discoverability: Pricing transparency, availability signals, comparative context.",
-        "Phase 2 signals: RAG chunking quality, information gain, query alignment.",
-        "URL Scanner: Analyze any live page without pasting content.",
-        "Score history with expandable pillar breakdowns."
+        { label: "Content Analyzer", included: true },
+        { label: "URL Scanner", included: true },
+        { label: "Repo Analysis (GitHub)", included: true },
+        { label: "Citation Monitor — 20 checks / mo", included: true },
+        { label: "Quick Tools — titles, meta, summarize", included: true },
+        { label: "Score History", included: true },
+        { label: "AI Visibility", included: false },
+        { label: "Share of Voice", included: false },
       ]
     },
     {
-      plan: "Pro", price: "$99.99", checkCount: "500 Answer Engine Optimizations / month",
-      description: "Ideal for content teams, agencies, scaling SaaS brands, and e-commerce stores publishing at volume.",
+      plan: "Business", price: "$99", period: "/ mo", checkCount: "500 analyses / month",
+      accentColor: "#a855f7",
+      description: "Premium AI intelligence for scaling brands, agencies, and teams that need to track and grow their presence inside AI answers.",
       buttonText: "Get Started",
-      features: ["Everything in Business, plus:", "400 additional monthly optimizations.", "Priority email support.", "Early access to new pillars and signals."]
+      features: [
+        { label: "Everything in Pro", included: true },
+        { label: "Citation Monitor — 100 checks / mo", included: true },
+        { label: "AI Visibility — 50 checks / mo", included: true },
+        { label: "Share of Voice — 20 checks / mo", included: true },
+        { label: "Priority support", included: true },
+      ]
     }
   ];
 
   return (
-    <section id="pricing" className="py-32 relative z-10">
+    <section id="pricing" className="py-16 relative z-10">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Simple, transparent pricing</h2>
-        </div>
-        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
           {plans.map((p, i) => (
             <motion.div 
@@ -438,19 +451,27 @@ export const Pricing = () => {
               
               <div className="relative z-10 flex-grow">
                 <h3 className="text-xl font-bold text-white mb-2">{p.plan}</h3>
-                <div className="text-4xl font-bold text-white mb-4">{p.price}</div>
-                <div className="text-sm font-medium text-rain-400 mb-4">{p.checkCount}</div>
-                <p className="text-slate-400 text-sm mb-8">{p.description}</p>
+                <div className="flex items-baseline gap-1 mb-4">
+                  <span className="text-4xl font-bold text-white">{p.price}</span>
+                  {p.period && <span className="text-slate-500 text-sm">{p.period}</span>}
+                </div>
+                <p className="text-slate-400 text-sm mb-6">{p.description}</p>
                 
                 <a href="https://app.getrainos.com" className={`block w-full text-center py-3 rounded-lg font-medium transition-colors mb-8 ${p.isPopular ? 'bg-rain-500 hover:bg-rain-400 text-white shadow-[0_0_20px_rgba(14,165,233,0.3)]' : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'}`}>
                   {p.buttonText}
                 </a>
                 
-                <ul className="space-y-4">
+                <div className="text-xs font-semibold uppercase tracking-widest mb-6 px-3 py-1.5 rounded-md inline-block" style={{ color: p.accentColor, background: `${p.accentColor}18`, border: `1px solid ${p.accentColor}30` }}>
+                  {p.checkCount}
+                </div>
+                <ul className="space-y-3">
                   {p.features.map((f, j) => (
-                    <li key={j} className="flex items-start text-sm text-slate-300">
-                      <CheckCircle2 className="w-5 h-5 text-rain-400 mr-3 shrink-0" />
-                      <span>{f}</span>
+                    <li key={j} className={`flex items-center text-sm ${f.included ? 'text-slate-300' : 'text-slate-600'}`}>
+                      {f.included
+                        ? <CheckCircle2 className="w-4 h-4 mr-3 shrink-0" style={{ color: p.accentColor }} />
+                        : <Minus className="w-4 h-4 mr-3 shrink-0 text-slate-700" />
+                      }
+                      <span>{f.label}</span>
                     </li>
                   ))}
                 </ul>

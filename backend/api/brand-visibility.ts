@@ -23,6 +23,10 @@ export default async function handler(req: express.Request, res: express.Respons
   if (user.subscriptionStatus !== 'active') {
     return res.status(402).json({ error: 'payment_required', message: 'Active subscription required' } as ApiError);
   }
+  const businessPriceId = process.env.STRIPE_PRICE_ID_BUSINESS || 'price_1SeCJH3NMjs4uYdgpi0xB0XN';
+  if (user.stripePriceId !== businessPriceId) {
+    return res.status(403).json({ error: 'plan_required', message: 'AI Visibility requires a Business plan. Upgrade to unlock multi-model brand tracking.' } as ApiError);
+  }
   if (user.usage.count >= user.usage.limit) {
     return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Monthly limit reached. Upgrade to continue.' } as ApiError);
   }

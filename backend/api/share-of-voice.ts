@@ -24,6 +24,10 @@ export async function sovHandler(req: express.Request, res: express.Response) {
   const user = await authUser(req, res);
   if (!user) return;
 
+  const businessPriceId = process.env.STRIPE_PRICE_ID_BUSINESS || 'price_1SeCJH3NMjs4uYdgpi0xB0XN';
+  if (user.stripePriceId !== businessPriceId) {
+    return res.status(403).json({ error: 'plan_required', message: 'Share of Voice requires a Business plan. Upgrade to track your AI citation rate across models.' } as ApiError);
+  }
   if (user.usage.count >= user.usage.limit) {
     return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Monthly limit reached. Upgrade to continue.' } as ApiError);
   }

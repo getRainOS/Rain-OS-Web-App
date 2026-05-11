@@ -10,13 +10,18 @@ const PLANS = [
     price: '$0',
     period: '/ month',
     priceId: 'price_1SeCHg3NMjs4uYdguOgkr3SQ',
-    description: 'Get started with AI readability insights.',
+    description: 'Try Rain OS and see how AI reads your content.',
     color: 'var(--text-muted)',
+    limit: '5 checks / month',
     features: [
-      '20 analyses / month',
-      'AI Readability pillar',
-      'Basic recommendations',
-      'Content Analyzer',
+      { label: '5 content analyses / month', included: true },
+      { label: 'Content Analyzer', included: true },
+      { label: 'Basic recommendations', included: true },
+      { label: 'URL Scanner', included: false },
+      { label: 'Repo Analysis', included: false },
+      { label: 'Citation Monitor', included: false },
+      { label: 'AI Visibility', included: false },
+      { label: 'Share of Voice', included: false },
     ],
   },
   {
@@ -24,16 +29,20 @@ const PLANS = [
     price: '$29',
     period: '/ month',
     priceId: 'price_1SeCKM3NMjs4uYdgcBRhgIhD',
-    description: 'Full AEO analysis for content creators.',
+    description: 'Full AEO suite for content creators and growing brands.',
     color: 'var(--accent)',
     featured: true,
+    limit: '200 checks / month',
     features: [
-      '500 analyses / month',
-      'All 4 pillars',
-      'Quick Tools (titles, meta, summarize)',
-      'Score History',
-      'URL Scanner',
-      'Priority support',
+      { label: '200 analyses / month', included: true },
+      { label: 'Content Analyzer', included: true },
+      { label: 'URL Scanner', included: true },
+      { label: 'Repo Analysis (GitHub)', included: true },
+      { label: 'Citation Monitor — 20 checks / mo', included: true },
+      { label: 'Quick Tools (titles, meta, summarize)', included: true },
+      { label: 'Score History', included: true },
+      { label: 'AI Visibility', included: false },
+      { label: 'Share of Voice', included: false },
     ],
   },
   {
@@ -41,16 +50,16 @@ const PLANS = [
     price: '$99',
     period: '/ month',
     priceId: 'price_1SeCJH3NMjs4uYdgpi0xB0XN',
-    description: 'High-volume AEO optimization for teams.',
+    description: 'Premium AI intelligence for scaling brands and agencies.',
     color: 'var(--purple)',
+    limit: '500 checks / month',
     features: [
-      'Unlimited analyses',
-      'All 4 pillars',
-      'All Quick Tools',
-      'Team access',
-      'API access',
-      'Dedicated support',
-      'Custom integrations',
+      { label: '500 analyses / month', included: true },
+      { label: 'Everything in Pro', included: true },
+      { label: 'Citation Monitor — 100 checks / mo', included: true },
+      { label: 'AI Visibility — 50 checks / mo', included: true },
+      { label: 'Share of Voice — 20 checks / mo', included: true },
+      { label: 'Priority support', included: true },
     ],
   },
 ];
@@ -145,11 +154,14 @@ export default function Upgrade() {
                 <p className={styles.planDesc}>{plan.description}</p>
               </div>
 
+              <div className={styles.planLimit}>{plan.limit}</div>
               <ul className={styles.features}>
                 {plan.features.map((f, i) => (
-                  <li key={i} className={styles.feature}>
-                    <span className={styles.checkmark} style={{ color: plan.color }}>✓</span>
-                    {f}
+                  <li key={i} className={`${styles.feature} ${!f.included ? styles.featureLocked : ''}`}>
+                    <span className={styles.checkmark} style={{ color: f.included ? plan.color : 'var(--text-dim)' }}>
+                      {f.included ? '✓' : '—'}
+                    </span>
+                    {f.label}
                   </li>
                 ))}
               </ul>

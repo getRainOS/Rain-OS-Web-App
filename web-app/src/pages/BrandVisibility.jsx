@@ -176,12 +176,14 @@ export default function BrandVisibility() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+  const [planGated, setPlanGated] = useState(false);
 
   async function handleCheck(e) {
     e.preventDefault();
     if (!brand.trim() || !topic.trim()) return;
     setLoading(true);
     setError('');
+    setPlanGated(false);
     setResult(null);
     try {
       if (isDemo) {
@@ -192,7 +194,11 @@ export default function BrandVisibility() {
         setResult(data.data || data);
       }
     } catch (err) {
-      setError(err.message || 'Something went wrong. Please try again.');
+      if (err.status === 403) {
+        setPlanGated(true);
+      } else {
+        setError(err.message || 'Something went wrong. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -260,6 +266,29 @@ export default function BrandVisibility() {
         </form>
       </div>
 
+      {planGated && (
+        <div style={{
+          background: 'linear-gradient(135deg, rgba(168,85,247,0.1), rgba(99,102,241,0.08))',
+          border: '1px solid rgba(168,85,247,0.3)',
+          borderRadius: 14, padding: '24px 28px', marginBottom: 20,
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap',
+        }}>
+          <div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#c084fc', marginBottom: 6 }}>Business plan required</div>
+            <div style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.6 }}>
+              AI Visibility tracks how AI models mention your brand across live answers. It runs multiple Gemini calls per check and is available on the Business plan.
+            </div>
+          </div>
+          <a href="#/upgrade" style={{
+            background: 'linear-gradient(135deg, #a855f7, #6366f1)',
+            color: '#fff', borderRadius: 8, padding: '10px 22px',
+            fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap',
+            boxShadow: '0 0 20px rgba(168,85,247,0.25)',
+          }}>
+            Upgrade to Business →
+          </a>
+        </div>
+      )}
       {error && <div style={S.errorBox}>{error}</div>}
 
       {result && (

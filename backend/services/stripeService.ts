@@ -19,8 +19,8 @@ const deriveUsageLimit = (price: Stripe.Price, priceId: string): number => {
   const meta = (price.metadata?.analysis_limit || '').trim();
   const parsed = meta ? parseInt(meta, 10) : NaN;
   if (!Number.isNaN(parsed) && parsed > 0) return parsed;
-  if (BUSINESS_PRICE_ID && priceId === BUSINESS_PRICE_ID) return 100;
-  if (PRO_PRICE_ID && priceId === PRO_PRICE_ID) return 500;
+  if (BUSINESS_PRICE_ID && priceId === BUSINESS_PRICE_ID) return 500;
+  if (PRO_PRICE_ID && priceId === PRO_PRICE_ID) return 200;
   return 5;
 };
 

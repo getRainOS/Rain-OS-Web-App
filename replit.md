@@ -87,6 +87,25 @@ Six independent analysis tools accessible from the sidebar:
 - **Repo Analysis endpoints**: `GET /api/github/repos`, `POST /api/github/analyze`, `DELETE /api/github/disconnect`
 - **GitHub env vars needed**: `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` (Railway env), callback URL: `https://api.getrainos.com/api/github/oauth/callback`
 
+### Pricing Tiers & Feature Gates
+| Feature | Free ($0) | Pro ($29/mo) | Business ($99/mo) |
+|---|---|---|---|
+| Content Analyzer | 5/mo | 200/mo | 500/mo |
+| URL Scanner | ❌ | ✅ | ✅ |
+| Repo Analysis | ❌ | ✅ | ✅ |
+| Citation Monitor | ❌ | 20 checks/mo | 100 checks/mo |
+| AI Visibility | ❌ | ❌ | 50 checks/mo |
+| Share of Voice | ❌ | ❌ | 20 checks/mo |
+| Quick Tools | ❌ | ✅ | ✅ |
+| Score History | ❌ | ✅ | ✅ |
+
+**AI Visibility and Share of Voice are gated to Business tier only** — they run 2–6 Gemini calls per check (vs 1 for content analysis). The backend enforces this with a 403 `plan_required` response checked against `STRIPE_PRICE_ID_BUSINESS`. The frontend shows an upgrade banner on 403.
+
+**Backend usage limits** (set by `deriveUsageLimit` in `stripeService.ts`):
+- Free → 5 (fallback on cancel/inactive)
+- Pro (`STRIPE_PRICE_ID_PRO`) → 200
+- Business (`STRIPE_PRICE_ID_BUSINESS`) → 500
+
 ### Stripe Price IDs
 - Free: `price_1SeCHg3NMjs4uYdguOgkr3SQ`
 - Pro: `price_1SeCKM3NMjs4uYdgcBRhgIhD`

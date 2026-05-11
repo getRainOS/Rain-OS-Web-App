@@ -206,6 +206,7 @@ export default function ShareOfVoice() {
   const [url,   setUrl]     = useState('');
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState('');
+  const [planGated, setPlanGated] = useState(false);
   const [result,  setResult]  = useState(null);
 
   const [history, setHistory]         = useState([]);
@@ -250,13 +251,18 @@ export default function ShareOfVoice() {
     setLoading(true);
     setError('');
     setResult(null);
+    setPlanGated(false);
     try {
       const { data } = await api.shareOfVoice({ brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined });
       setResult(data?.data ?? data);
       // prepend to history without refetch
       setHistory(prev => [{ ...(data?.data ?? data), checkedAt: new Date().toISOString(), id: Date.now() }, ...prev]);
     } catch (err) {
-      setError(err.message || 'Share of voice check failed. Please try again.');
+      if (err.status === 403) {
+        setPlanGated(true);
+      } else {
+        setError(err.message || 'Share of voice check failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -335,6 +341,29 @@ export default function ShareOfVoice() {
       {/* ── Check tab ─────────────────────────────────────────────────────── */}
       {tab === 'check' && (
         <>
+          {planGated && (
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.08))',
+              border: '1px solid rgba(99,102,241,0.3)',
+              borderRadius: 14, padding: '24px 28px', marginBottom: 20,
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap',
+            }}>
+              <div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: '#818cf8', marginBottom: 6 }}>Business plan required</div>
+                <div style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.6 }}>
+                  Share of Voice runs 3 AI model simulations per check — measuring your citation rate across Gemini, ChatGPT-style, and Perplexity-style answers. Available on Business plan.
+                </div>
+              </div>
+              <a href="#/upgrade" style={{
+                background: 'linear-gradient(135deg, #6366f1, #a855f7)',
+                color: '#fff', borderRadius: 8, padding: '10px 22px',
+                fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap',
+                boxShadow: '0 0 20px rgba(99,102,241,0.25)',
+              }}>
+                Upgrade to Business →
+              </a>
+            </div>
+          )}
           {error && <div style={S.errorBox}>{error}</div>}
 
           {!result ? (
