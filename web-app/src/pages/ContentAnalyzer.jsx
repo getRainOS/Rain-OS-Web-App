@@ -202,6 +202,45 @@ export default function ContentAnalyzer() {
           )}
 
           <QuickTools content={content} title={title} />
+
+          <div style={{
+            marginTop: 16,
+            padding: '16px 20px',
+            background: 'rgba(14,165,233,0.06)',
+            border: '1px solid rgba(14,165,233,0.2)',
+            borderRadius: 12,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 16,
+            flexWrap: 'wrap',
+          }}>
+            <div>
+              <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#e2e8f0' }}>
+                Optimization done? Now check if AI actually cites you.
+              </p>
+              <p style={{ margin: '4px 0 0', fontSize: 12, color: '#64748b', lineHeight: 1.5 }}>
+                Citation Monitor gives you a real-time snapshot of current AI citations — run it before and after optimizing to see where you stand.
+              </p>
+            </div>
+            <button
+              onClick={() => navigate('/citation-monitor')}
+              style={{
+                flexShrink: 0,
+                background: 'rgba(14,165,233,0.15)',
+                border: '1px solid rgba(14,165,233,0.35)',
+                color: '#38bdf8',
+                borderRadius: 8,
+                padding: '8px 16px',
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Check citations now →
+            </button>
+          </div>
         </div>
       )}
     </div>
