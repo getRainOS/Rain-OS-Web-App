@@ -44,9 +44,10 @@ const QUICK_ACTIONS = [
 ];
 
 const LANES = [
-  { id: 'general',         label: 'Writers & Marketers', desc: 'Optimize articles, landing pages, and marketing copy for AI citation.', color: '#06b6d4', Icon: FileText },
-  { id: 'product_sellers', label: 'Product Sellers',     desc: 'Maximize AI product discovery with Discoverability scoring at 50% weight.', color: '#f97316', Icon: SearchCheck },
-  { id: 'developers',      label: 'Developers',          desc: 'Analyze tech docs, READMEs, and API references for AI readability signals.', color: '#10b981', Icon: GitBranch },
+  { id: 'general',         label: 'Writers & Marketers',    desc: 'Optimize articles, landing pages, and marketing copy for AI citation.', color: '#06b6d4', Icon: FileText },
+  { id: 'product_sellers', label: 'Product Sellers',        desc: 'Maximize AI product discovery with Discoverability scoring at 50% weight.', color: '#f97316', Icon: SearchCheck },
+  { id: 'developers',      label: 'Developers',             desc: 'Analyze tech docs, READMEs, and API references for AI readability signals.', color: '#10b981', Icon: GitBranch },
+  { id: 'local_business',  label: 'Local Service Business', desc: 'Get your professional services business cited by AI when customers search locally.', color: '#f43f5e', Icon: MapIcon },
 ];
 
 function timeAgo(dateStr) {

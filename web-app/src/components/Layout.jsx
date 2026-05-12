@@ -16,9 +16,10 @@ const PRICE_TO_PLAN = {
 };
 
 const LANE_META = {
-  general:         { label: 'Writers & Marketers', color: '#06b6d4' },
-  product_sellers: { label: 'Product Sellers',     color: '#f97316' },
-  developers:      { label: 'Developers',           color: '#10b981' },
+  general:         { label: 'Writers & Marketers',    color: '#06b6d4' },
+  product_sellers: { label: 'Product Sellers',        color: '#f97316' },
+  developers:      { label: 'Developers',             color: '#10b981' },
+  local_business:  { label: 'Local Service Business', color: '#f43f5e' },
 };
 
 const TOOLS = {
@@ -47,6 +48,11 @@ const LANE_GROUPS = {
   developers: [
     { label: 'Optimize',  tools: ['analyze', 'repo'] },
     { label: 'Monitor',   tools: ['citation'] },
+    { label: 'Measure',   tools: ['sov', 'history'] },
+  ],
+  local_business: [
+    { label: 'Optimize',  tools: ['analyze', 'urlScanner'] },
+    { label: 'Monitor',   tools: ['citation', 'visibility'] },
     { label: 'Measure',   tools: ['sov', 'history'] },
   ],
 };
