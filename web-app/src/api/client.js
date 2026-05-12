@@ -104,6 +104,9 @@ export const api = {
   clearSovHistory: () => isDemo()
     ? demoDelay({ success: true, deleted: 0 })
     : request('DELETE', '/api/sov'),
+  rewrite: ({ content, module }) => isDemo()
+    ? demoDelay({ rewritten: content, changes: ['Answer-first formatting applied', 'Passive voice converted to active', 'Headings made descriptive and standalone', 'Long sentences split for clarity'] })
+    : request('POST', '/api/rewrite', { content, module }),
   deleteAnalysis: (id) => isDemo()
     ? demoDelay({ success: true })
     : request('DELETE', `/api/history/${id}`),

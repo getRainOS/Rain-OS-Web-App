@@ -21,9 +21,29 @@ export default function ContentAnalyzer() {
   const [result, setResult] = useState(null);
   const [textareaFocused, setTextareaFocused] = useState(false);
 
+  const [rewriteLoading, setRewriteLoading] = useState(false);
+  const [rewriteResult, setRewriteResult] = useState(null);
+  const [rewriteError, setRewriteError] = useState('');
+
   const usageCount = user?.usage?.count ?? 0;
   const usageLimit = user?.usage?.limit ?? 5;
   const isAtLimit = !isDemo && user && usageCount >= usageLimit && user.subscriptionStatus !== 'active';
+
+  const analysisModule = userLane === 'product_sellers' ? 'product_sellers'
+    : userLane === 'developers' ? 'developers'
+    : 'general';
+
+  const pageLabel = userLane === 'developers'
+    ? 'Documentation Optimizer'
+    : userLane === 'product_sellers'
+    ? 'Product Content Optimizer'
+    : 'Content Optimizer';
+
+  const pageSub = userLane === 'developers'
+    ? 'Paste your documentation to score and optimize it for AI discoverability across three pillars'
+    : userLane === 'product_sellers'
+    ? 'Paste your product content to analyze it for AI shopping and discovery signals'
+    : 'Paste your content to get a full AEO analysis and rewrite it for AI readability';
 
   async function handleAnalyze(e) {
     e.preventDefault();
@@ -31,8 +51,8 @@ export default function ContentAnalyzer() {
     setLoading(true);
     setError('');
     setResult(null);
+    setRewriteResult(null);
     try {
-      const analysisModule = userLane === 'product_sellers' ? 'product_sellers' : userLane === 'developers' ? 'developers' : 'general';
       const { data } = await api.analyze({ title, content, url, module: analysisModule });
       setResult(data);
       refreshUser();
@@ -43,16 +63,42 @@ export default function ContentAnalyzer() {
     }
   }
 
+  async function handleRewrite() {
+    if (!content.trim()) return;
+    setRewriteLoading(true);
+    setRewriteError('');
+    setRewriteResult(null);
+    try {
+      const { data } = await api.rewrite({ content, module: analysisModule });
+      setRewriteResult(data);
+      refreshUser();
+    } catch (err) {
+      setRewriteError(err.message || 'Rewrite failed. Please try again.');
+    } finally {
+      setRewriteLoading(false);
+    }
+  }
+
+  function handleAcceptRewrite() {
+    if (rewriteResult?.rewritten) {
+      setContent(rewriteResult.rewritten);
+      setRewriteResult(null);
+      setResult(null);
+    }
+  }
+
   function handleReset() {
     setResult(null);
     setError('');
+    setRewriteResult(null);
+    setRewriteError('');
   }
 
   return (
     <div className={`${styles.root} fade-in`}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Content Analyzer</h1>
-        <p className={styles.sub}>Paste your content below to get a full AEO analysis across four pillars</p>
+        <h1 className={styles.title}>{pageLabel}</h1>
+        <p className={styles.sub}>{pageSub}</p>
       </div>
 
       {isAtLimit && (
@@ -125,7 +171,25 @@ export default function ContentAnalyzer() {
             >
               {loading ? <><span className="spinner" /> Analyzing…</> : '✦ Analyze Content'}
             </button>
+            <button
+              type="button"
+              className={styles.rewriteBtn}
+              disabled={rewriteLoading || isAtLimit || !content.trim()}
+              onClick={handleRewrite}
+            >
+              {rewriteLoading ? <><span className="spinner" style={{ width: 14, height: 14 }} /> Rewriting…</> : '✦ Rewrite for AI'}
+            </button>
           </div>
+
+          {rewriteError && <p className={styles.error}>{rewriteError}</p>}
+
+          {rewriteResult && (
+            <RewritePanel
+              rewriteResult={rewriteResult}
+              onAccept={handleAcceptRewrite}
+              onDiscard={() => setRewriteResult(null)}
+            />
+          )}
         </form>
       ) : (
         <div className={styles.results}>
@@ -134,10 +198,29 @@ export default function ContentAnalyzer() {
               <h2 className={styles.resultsTitle}>Analysis Results</h2>
               {result.title && <p className={styles.resultsSub}>{result.title}</p>}
             </div>
-            <button onClick={handleReset} className="btn btn-ghost">
-              ← New Analysis
-            </button>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              <button
+                className={styles.rewriteBtn}
+                disabled={rewriteLoading || !content.trim()}
+                onClick={handleRewrite}
+              >
+                {rewriteLoading ? <><span className="spinner" style={{ width: 14, height: 14 }} /> Rewriting…</> : '✦ Rewrite for AI'}
+              </button>
+              <button onClick={handleReset} className="btn btn-ghost">
+                ← New Analysis
+              </button>
+            </div>
           </div>
+
+          {rewriteError && <p className={styles.error}>{rewriteError}</p>}
+
+          {rewriteResult && (
+            <RewritePanel
+              rewriteResult={rewriteResult}
+              onAccept={handleAcceptRewrite}
+              onDiscard={() => setRewriteResult(null)}
+            />
+          )}
 
           <PillarScores result={result} />
 
@@ -243,6 +326,61 @@ export default function ContentAnalyzer() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function RewritePanel({ rewriteResult, onAccept, onDiscard }) {
+  const [tab, setTab] = useState('rewritten');
+
+  return (
+    <div className={styles.rewritePanel}>
+      <div className={styles.rewritePanelHeader}>
+        <div className={styles.rewritePanelTitle}>
+          <span className={styles.rewriteSparkle}>✦</span>
+          AI-Optimized Rewrite
+        </div>
+        <div className={styles.rewriteTabs}>
+          <button
+            className={`${styles.rewriteTab} ${tab === 'rewritten' ? styles.rewriteTabActive : ''}`}
+            onClick={() => setTab('rewritten')}
+          >
+            Rewritten
+          </button>
+          <button
+            className={`${styles.rewriteTab} ${tab === 'changes' ? styles.rewriteTabActive : ''}`}
+            onClick={() => setTab('changes')}
+          >
+            Changes ({rewriteResult.changes?.length ?? 0})
+          </button>
+        </div>
+      </div>
+
+      {tab === 'rewritten' && (
+        <div className={styles.rewriteContent}>
+          <pre className={styles.rewriteText}>{rewriteResult.rewritten}</pre>
+        </div>
+      )}
+
+      {tab === 'changes' && (
+        <div className={styles.rewriteChangesList}>
+          {(rewriteResult.changes || []).map((change, i) => (
+            <div key={i} className={styles.rewriteChange}>
+              <span className={styles.rewriteChangeTick}>✓</span>
+              <span>{change}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className={styles.rewriteActions}>
+        <button className={styles.rewriteAcceptBtn} onClick={onAccept}>
+          Use this version
+        </button>
+        <button className={styles.rewriteDiscardBtn} onClick={onDiscard}>
+          Keep original
+        </button>
+      </div>
     </div>
   );
 }

@@ -46,6 +46,7 @@ import githubCallbackHandler from './github/callback';
 import { listReposHandler, analyzeRepoHandler, disconnectGithubHandler } from './github/repos';
 import githubPreviewFixesHandler from './github/preview-fixes';
 import githubPushFixesHandler from './github/push-fixes';
+import rewriteHandler from './rewrite';
 // ─── CORS configuration ───────────────────────────────────────────────────────
 // IMPORTANT: Keep origin: '*' so the WordPress plugin works from any site.
 // Restricting origin here would 403 every WP install that has the plugin.
@@ -84,6 +85,9 @@ app.post('/analyze', handleAnalyze);
 
 
 
+// ─── Document Rewrite for AI ──────────────────────────────────────────────
+app.post('/api/rewrite', rewriteHandler);
+app.post('/v1/api/rewrite', rewriteHandler);
 // ─── URL Scan (new in v2.3) ────────────────────────────────────────────────
 app.post('/api/url-scan', urlScanHandler);
 app.post('/v1/api/url-scan', urlScanHandler);

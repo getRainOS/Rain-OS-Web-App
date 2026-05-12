@@ -5,7 +5,7 @@ import { api, clearApiKey } from '../api/client.js';
 import { supabase } from '../lib/supabase.js';
 import {
   LayoutDashboard, FileText, Globe, GitBranch, Radar, Eye,
-  BarChart2, Clock, Settings, ArrowUp, LogOut,
+  BarChart2, Clock, Settings, ArrowUp, LogOut, Wand2,
 } from 'lucide-react';
 import styles from './Layout.module.css';
 
@@ -15,21 +15,44 @@ const PRICE_TO_PLAN = {
   'price_1SeCHg3NMjs4uYdguOgkr3SQ': 'Free',
 };
 
-// 0=Dashboard 1=Analyze 2=URL 3=Repo 4=Citation 5=Visibility 6=SOV(new) 7=History 8=Settings
-const NAV = [
-  { to: '/dashboard',        label: 'Dashboard',        Icon: LayoutDashboard },
-  { to: '/analyze',          label: 'Content Analyzer', Icon: FileText },
-  { to: '/url-scanner',      label: 'URL Scanner',      Icon: Globe },
-  { to: '/repo-analysis',    label: 'Repo Analysis',    Icon: GitBranch },
-  { to: '/citation-monitor', label: 'Citation Monitor', Icon: Radar },
-  { to: '/brand-visibility', label: 'AI Visibility',    Icon: Eye },
-  { to: '/share-of-voice',   label: 'Share of Voice',   Icon: BarChart2 },
-  { to: '/history',          label: 'Score History',    Icon: Clock },
-  { to: '/settings',         label: 'Settings',         Icon: Settings },
-];
+const LANE_META = {
+  general:         { label: 'Writers & Marketers', color: '#06b6d4' },
+  product_sellers: { label: 'Product Sellers',     color: '#f97316' },
+  developers:      { label: 'Developers',           color: '#10b981' },
+};
+
+const TOOLS = {
+  dashboard:  { to: '/dashboard',        label: 'Dashboard',           Icon: LayoutDashboard },
+  analyze:    { to: '/analyze',          label: 'Content Optimizer',   Icon: FileText },
+  urlScanner: { to: '/url-scanner',      label: 'URL Scanner',         Icon: Globe },
+  repo:       { to: '/repo-analysis',    label: 'Repo Analysis',       Icon: GitBranch },
+  citation:   { to: '/citation-monitor', label: 'Citation Monitor',    Icon: Radar },
+  visibility: { to: '/brand-visibility', label: 'AI Visibility',       Icon: Eye },
+  sov:        { to: '/share-of-voice',   label: 'Share of Voice',      Icon: BarChart2 },
+  history:    { to: '/history',          label: 'Score History',        Icon: Clock },
+  settings:   { to: '/settings',         label: 'Settings',             Icon: Settings },
+};
+
+const LANE_GROUPS = {
+  general: [
+    { label: 'Optimize',  tools: ['analyze', 'urlScanner'] },
+    { label: 'Monitor',   tools: ['citation', 'visibility'] },
+    { label: 'Measure',   tools: ['sov', 'history'] },
+  ],
+  product_sellers: [
+    { label: 'Optimize',  tools: ['analyze', 'urlScanner'] },
+    { label: 'Monitor',   tools: ['citation', 'visibility'] },
+    { label: 'Measure',   tools: ['sov', 'history'] },
+  ],
+  developers: [
+    { label: 'Optimize',  tools: ['analyze', 'repo'] },
+    { label: 'Monitor',   tools: ['citation'] },
+    { label: 'Measure',   tools: ['sov', 'history'] },
+  ],
+};
 
 export default function Layout({ children }) {
-  const { user, setUser, onLogout, isDemo } = useApp();
+  const { user, setUser, onLogout, isDemo, userLane } = useApp();
   const navigate = useNavigate();
   const [usage, setUsage] = useState(null);
 
@@ -62,6 +85,9 @@ export default function Layout({ children }) {
   const isNearLimit = isFree && pct >= 60;
   const isAtLimit = isFree && pct >= 100;
 
+  const laneMeta = userLane ? LANE_META[userLane] : null;
+  const laneGroups = userLane ? LANE_GROUPS[userLane] : null;
+
   return (
     <div className={styles.root}>
       <aside className={styles.sidebar}>
@@ -72,21 +98,45 @@ export default function Layout({ children }) {
         </div>
 
         <nav className={styles.nav}>
+          {/* Overview — always visible */}
           <div className={styles.navGroup}>
-            <span className={styles.navLabel}>Analyze</span>
-            {NAV.slice(1, 7).map(n => (
-              <NavItem key={n.to} {...n} />
-            ))}
+            <NavItem {...TOOLS.dashboard} />
           </div>
-          <div className={styles.navGroup}>
-            <span className={styles.navLabel}>Reports</span>
-            {[NAV[0], NAV[7]].map(n => (
-              <NavItem key={n.to} {...n} />
-            ))}
-          </div>
+
+          {/* Lane indicator */}
+          {laneMeta ? (
+            <div className={styles.laneChip} style={{ borderColor: laneMeta.color + '40', background: laneMeta.color + '0d' }}>
+              <span className={styles.laneDot} style={{ background: laneMeta.color }} />
+              <span className={styles.laneChipLabel} style={{ color: laneMeta.color }}>{laneMeta.label}</span>
+              <button className={styles.laneChangeBtn} onClick={() => navigate('/settings')}>change</button>
+            </div>
+          ) : (
+            <button className={styles.lanePrompt} onClick={() => navigate('/settings')}>
+              <Wand2 style={{ width: 13, height: 13, opacity: 0.6 }} />
+              <span>Choose your lane</span>
+            </button>
+          )}
+
+          {/* Lane-specific tool groups */}
+          {laneGroups ? (
+            laneGroups.map(group => (
+              <div key={group.label} className={styles.navGroup}>
+                <span className={styles.navLabel}>{group.label}</span>
+                {group.tools.map(key => (
+                  <NavItem key={key} {...TOOLS[key]} />
+                ))}
+              </div>
+            ))
+          ) : (
+            <div className={styles.noLaneMessage}>
+              <p>Select a lane in Settings to unlock your personalized toolset.</p>
+            </div>
+          )}
+
+          {/* Account — always at bottom */}
           <div className={styles.navGroup}>
             <span className={styles.navLabel}>Account</span>
-            <NavItem key={NAV[8].to} {...NAV[8]} />
+            <NavItem {...TOOLS.settings} />
           </div>
         </nav>
 

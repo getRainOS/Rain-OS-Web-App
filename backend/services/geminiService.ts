@@ -342,3 +342,63 @@ sentence,
 try { return JSON.parse(raw.replace(/```json|```/g, '').trim()); } catch {
 return { rewritten: sentence }; }
 };
+
+// ─── Document rewrite for AI readability ──────────────────────────────────────
+export async function rewriteDocumentForAI(
+  content: string,
+  module: 'general' | 'product_sellers' | 'developers' = 'general'
+): Promise<{ rewritten: string; changes: string[] }> {
+  if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
+
+  const moduleContext = module === 'developers'
+    ? `This is technical documentation. Priorities: clear getting-started section, unambiguous numbered steps (copy-paste ready), code examples clearly framed with context, error scenarios covered, each function/API defined answer-first (what it does before how it works).`
+    : module === 'product_sellers'
+    ? `This is product content. Priorities: lead with the primary benefit, make pricing/variants/availability explicit, add comparison context, ensure strong purchase CTAs, use specific claims over vague descriptions.`
+    : `This is content marketing or editorial content. Priorities: answer-first paragraphs, scannable headings, concise active sentences, strong CTA placement, citation-ready statements (clear subject-predicate-fact structure).`;
+
+  const prompt = `You are an AEO (Answer Engine Optimization) expert rewriting content so AI systems (ChatGPT, Perplexity, Google AI Overviews, Claude) can better extract, quote, and cite it.
+
+Context: ${moduleContext}
+
+REWRITING RULES:
+1. Answer-first: Lead every paragraph and section with the key fact or answer, then explain
+2. Active voice: Convert passive constructions to active wherever natural
+3. Descriptive headings: Use H2/H3 headings that could stand alone as question-answers
+4. Short sentences: Keep sentences under 25 words where possible; split complex ones
+5. Atomic sections: Each section covers exactly ONE concept (critical for AI chunking)
+6. Remove vagueness: Replace words like "some", "often", "various" with specific terms
+7. Preserve ALL facts, data, figures, and meaning — do not add new information or hallucinate
+8. Instructions: Number all steps explicitly; make each step independently executable
+
+CONTENT TO REWRITE:
+${content.slice(0, 10000)}
+
+Respond with valid JSON only (no markdown fences):
+{
+  "rewritten": "the full rewritten content preserving markdown formatting, using \\n for line breaks",
+  "changes": ["specific change 1", "specific change 2", "..."] (4-8 concrete changes made)
+}`;
+
+  const model = getModel();
+  const result = await model.generateContent({
+    contents: [{ role: 'user', parts: [{ text: prompt }] }],
+    generationConfig: {
+      temperature: 0.2,
+      maxOutputTokens: 4096,
+      responseMimeType: 'application/json',
+    },
+  });
+
+  const raw = result.response.text();
+  try {
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+    return {
+      rewritten: typeof parsed.rewritten === 'string' ? parsed.rewritten : '',
+      changes: Array.isArray(parsed.changes) ? parsed.changes : [],
+    };
+  } catch (e) {
+    console.error('Rewrite parse error:', raw.slice(0, 500));
+    throw new Error('Failed to parse rewrite response');
+  }
+}
