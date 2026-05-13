@@ -515,7 +515,11 @@ export default function Dashboard() {
                   <lane.Icon size={13} style={{ color: lane.color }} />
                   <span className={styles.laneBadgeLabel} style={{ color: lane.color }}>{lane.label}</span>
                 </div>
-                <p className={styles.laneBannerSub}>Your scoring weights and KPIs are optimized for this lane.</p>
+                <p className={styles.laneBannerSub}>
+                  {userLane === 'local_business'
+                    ? 'Scoring tuned for local trust signals, AI findability, and getting customers to call or book.'
+                    : 'Your scoring weights and KPIs are optimized for this lane.'}
+                </p>
                 <button className={styles.laneChangeBtn} onClick={() => setShowLaneSelector(true)}>Change lane</button>
               </>
             );

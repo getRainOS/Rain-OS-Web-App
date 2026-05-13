@@ -165,15 +165,27 @@ For this module, score AI Readability as Documentation Structure (navigation, TO
   : module === 'local_business'
   ? `MODULE: local_business
 MODULE_WEIGHTS: AI Readability 30%, Digital Authority 40%, Conversion Readiness 30%, Product Discoverability 0%
-For this module, Digital Authority is the PRIMARY scoring focus — local businesses live or die on trust signals. Score it with maximum precision:
-- LocalBusiness schema presence (name, address, phone, hours, geo coordinates)
+For this module, Digital Authority is the PRIMARY scoring focus — local businesses live or die on trust and findability signals. Score with maximum precision:
+DIGITAL AUTHORITY signals:
+- LocalBusiness schema presence (name, address, phone, hours, geo coordinates, serviceArea)
 - NAP (Name, Address, Phone) consistency and completeness in page content
-- Review signals: star ratings, review count, recent review dates, response presence
-- Local entity clarity: city/neighborhood mentioned, service area defined
-- Citation signals: mentions of business in third-party contexts, local directories
-- Google Business Profile signals: link to GBP, embedded map, verified badge mentions
-Score AI Readability for how well AI systems can extract business details (hours, location, services, pricing) as direct answers.
-Score Conversion Readiness for: phone number prominence, click-to-call, directions link, appointment booking CTA, contact form accessibility.
+- Review signals: star ratings, review count, recent review dates, business response presence
+- Local entity clarity: city/neighborhood explicitly mentioned, service area clearly defined
+- Citation signals: third-party directory mentions, local press, community references
+- Google Business Profile signals: link to GBP, embedded map, claimed/verified signals
+- Business profile completeness: owner name, years in business, staff descriptions, credentials/licenses
+AI READABILITY signals (score how well AI can extract answers):
+- Business name, address, phone, and hours extractable as direct answers
+- Services list with plain-language descriptions
+- Service pricing transparency: clear price ranges or starting prices for each service (from product sellers module — pricing clarity drives AI citations)
+- Availability signals: booking links, appointment CTAs, "same day" or "emergency" availability
+- FAQs answering common local customer questions
+CONVERSION READINESS signals:
+- Phone number prominence and click-to-call markup
+- Online booking or contact form accessibility
+- Directions link / embedded map
+- Service area or delivery radius clearly stated
+- Trust signals: licenses, insurance, certifications, guarantees
 Do not score Product Discoverability — set to 0.`
   : `MODULE: general
 MODULE_WEIGHTS: AI Readability 40%, Digital Authority 30%, Conversion Readiness 30%, Product Discoverability 0%

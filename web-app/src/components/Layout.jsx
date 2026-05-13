@@ -5,7 +5,7 @@ import { api, clearApiKey } from '../api/client.js';
 import { supabase } from '../lib/supabase.js';
 import {
   LayoutDashboard, FileText, Globe, GitBranch, Radar, Eye,
-  BarChart2, Clock, Settings, ArrowUp, LogOut, Wand2,
+  BarChart2, Clock, Settings, ArrowUp, LogOut, Wand2, Sun, Moon,
 } from 'lucide-react';
 import styles from './Layout.module.css';
 
@@ -23,15 +23,15 @@ const LANE_META = {
 };
 
 const TOOLS = {
-  dashboard:  { to: '/dashboard',        label: 'Dashboard',           Icon: LayoutDashboard },
-  analyze:    { to: '/analyze',          label: 'Content Optimizer',   Icon: FileText },
-  urlScanner: { to: '/url-scanner',      label: 'URL Scanner',         Icon: Globe },
-  repo:       { to: '/repo-analysis',    label: 'Repo Analysis',       Icon: GitBranch },
-  citation:   { to: '/citation-monitor', label: 'Citation Monitor',    Icon: Radar },
-  visibility: { to: '/brand-visibility', label: 'AI Visibility',       Icon: Eye },
-  sov:        { to: '/share-of-voice',   label: 'Share of Voice',      Icon: BarChart2 },
-  history:    { to: '/history',          label: 'Score History',        Icon: Clock },
-  settings:   { to: '/settings',         label: 'Settings',             Icon: Settings },
+  dashboard:  { to: '/dashboard',        label: 'Dashboard',           Icon: LayoutDashboard, tooltip: 'Your home base — scores, trends, and performance at a glance.' },
+  analyze:    { to: '/analyze',          label: 'Content Optimizer',   Icon: FileText,         tooltip: 'Paste your content and get an AI readability score plus fix recommendations.' },
+  urlScanner: { to: '/url-scanner',      label: 'URL Scanner',         Icon: Globe,            tooltip: 'Enter a website URL to check how well AI can read and understand your pages.' },
+  repo:       { to: '/repo-analysis',    label: 'Repo Analysis',       Icon: GitBranch,        tooltip: 'Connect your GitHub repo to score docs and source code for AI readability.' },
+  citation:   { to: '/citation-monitor', label: 'Citation Monitor',    Icon: Radar,            tooltip: 'Check whether AI systems like ChatGPT are mentioning you when people ask questions.' },
+  visibility: { to: '/brand-visibility', label: 'AI Visibility',       Icon: Eye,              tooltip: 'See how AI describes your brand — is the sentiment positive and the facts correct?' },
+  sov:        { to: '/share-of-voice',   label: 'Share of Voice',      Icon: BarChart2,        tooltip: 'Measure what % of AI answers include your brand vs. competitors.' },
+  history:    { to: '/history',          label: 'Score History',       Icon: Clock,            tooltip: 'Browse all past analyses and track how your scores improve over time.' },
+  settings:   { to: '/settings',         label: 'Settings',            Icon: Settings,         tooltip: 'Change your solution lane, API settings, and account preferences.' },
 };
 
 const LANE_GROUPS = {
@@ -51,14 +51,26 @@ const LANE_GROUPS = {
     { label: 'Measure',   tools: ['sov', 'history'] },
   ],
   local_business: [
-    { label: 'Optimize',  tools: ['analyze', 'urlScanner'] },
+    { label: 'Optimize',  tools: ['analyze'] },
     { label: 'Monitor',   tools: ['citation', 'visibility'] },
     { label: 'Measure',   tools: ['sov', 'history'] },
   ],
 };
 
+const GROUP_TOOLTIPS = {
+  Optimize:  'Tools to improve how AI reads and presents your content.',
+  Monitor:   'Track where and how you appear in AI-generated answers.',
+  Measure:   'Compare your performance and see progress over time.',
+};
+
+const LOCAL_GROUP_TOOLTIPS = {
+  Optimize:  'Paste your website content to score it for local AI visibility and get plain-English fixes.',
+  Monitor:   'Check if AI tools are recommending your business when local customers ask questions.',
+  Measure:   'Track how often your business comes up in AI answers and see your scores improve.',
+};
+
 export default function Layout({ children }) {
-  const { user, setUser, onLogout, isDemo, userLane } = useApp();
+  const { user, setUser, onLogout, isDemo, userLane, theme, setTheme } = useApp();
   const navigate = useNavigate();
   const [usage, setUsage] = useState(null);
 
@@ -93,14 +105,27 @@ export default function Layout({ children }) {
 
   const laneMeta = userLane ? LANE_META[userLane] : null;
   const laneGroups = userLane ? LANE_GROUPS[userLane] : null;
+  const isLocal = userLane === 'local_business';
+  const groupTooltips = isLocal ? LOCAL_GROUP_TOOLTIPS : GROUP_TOOLTIPS;
 
   return (
     <div className={styles.root}>
       <aside className={styles.sidebar}>
         <div className={styles.brand}>
-          <span className={styles.brandRain}>rain</span>
-          <span className={styles.brandOS}> OS</span>
-          {isDemo && <span className={styles.demoBadge}>DEMO</span>}
+          <div className={styles.brandRow}>
+            <span>
+              <span className={styles.brandRain}>rain</span>
+              <span className={styles.brandOS}> OS</span>
+              {isDemo && <span className={styles.demoBadge}>DEMO</span>}
+            </span>
+            <button
+              className={styles.themeToggle}
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+            </button>
+          </div>
         </div>
 
         <nav className={styles.nav}>
@@ -127,7 +152,12 @@ export default function Layout({ children }) {
           {laneGroups ? (
             laneGroups.map(group => (
               <div key={group.label} className={styles.navGroup}>
-                <span className={styles.navLabel}>{group.label}</span>
+                <div className={styles.navLabelRow}>
+                  <span className={styles.navLabel}>{group.label}</span>
+                  {groupTooltips[group.label] && (
+                    <NavGroupTooltip text={groupTooltips[group.label]} />
+                  )}
+                </div>
                 {group.tools.map(key => (
                   <NavItem key={key} {...TOOLS[key]} />
                 ))}
@@ -214,16 +244,44 @@ export default function Layout({ children }) {
   );
 }
 
-function NavItem({ to, label, Icon }) {
+function NavItem({ to, label, Icon, tooltip }) {
+  const [show, setShow] = useState(false);
+  const [y, setY] = useState(0);
+
   return (
-    <NavLink
-      to={to}
-      className={({ isActive }) =>
-        `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
-      }
+    <div className={styles.navItemWrap}
+      onMouseEnter={(e) => { setShow(true); setY(e.currentTarget.getBoundingClientRect().top + 10); }}
+      onMouseLeave={() => setShow(false)}
     >
-      <Icon className={styles.navIcon} />
-      {label}
-    </NavLink>
+      <NavLink
+        to={to}
+        className={({ isActive }) =>
+          `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
+        }
+      >
+        <Icon className={styles.navIcon} />
+        {label}
+      </NavLink>
+      {show && tooltip && (
+        <div className={styles.navTooltip} style={{ top: y }}>
+          {tooltip}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function NavGroupTooltip({ text }) {
+  const [show, setShow] = useState(false);
+  return (
+    <div className={styles.groupTooltipWrap}
+      onMouseEnter={() => setShow(true)}
+      onMouseLeave={() => setShow(false)}
+    >
+      <span className={styles.groupInfoIcon}>?</span>
+      {show && (
+        <div className={styles.groupTooltip}>{text}</div>
+      )}
+    </div>
   );
 }

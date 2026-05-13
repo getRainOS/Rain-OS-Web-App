@@ -170,3 +170,41 @@ input, textarea, select {
   0%, 100% { box-shadow: 0 0 6px 2px var(--accent-glow); }
   50%       { box-shadow: 0 0 18px 6px var(--accent-glow); }
 }
+
+/* ── Light mode ── */
+[data-theme="light"] {
+  --bg: #f1f5f9;
+  --surface: #ffffff;
+  --surface-2: #f8fafc;
+  --surface-3: #e8eef5;
+  --border: rgba(0,0,0,0.09);
+  --text: #0f172a;
+  --text-muted: rgba(15,23,42,0.55);
+  --text-dim: rgba(15,23,42,0.35);
+  --accent-glow: rgba(14,165,233,0.15);
+}
+
+[data-theme="light"] .spinner {
+  border-color: rgba(0,0,0,0.08);
+  border-top-color: var(--accent);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.15);
+}
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.25);
+}
+
+[data-theme="light"] .btn-ghost {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.12);
+}
+[data-theme="light"] .btn-ghost:hover {
+  background: rgba(0,0,0,0.08);
+}
+
+[data-theme="light"] .card {
+  background: var(--surface);
+  border-color: var(--border);
+}
