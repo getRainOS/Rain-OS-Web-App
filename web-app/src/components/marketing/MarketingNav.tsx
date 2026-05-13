@@ -22,6 +22,12 @@ const SOLUTIONS = [
     desc: 'Tech docs, READMEs, API references',
     color: '#34d399',
   },
+  {
+    label: 'Local Businesses',
+    href: '#/local-business',
+    desc: 'SEO + AEO for local & service businesses',
+    color: '#fb7185',
+  },
 ];
 
 interface MarketingNavProps {
