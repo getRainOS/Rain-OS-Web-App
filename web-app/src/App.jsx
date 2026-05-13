@@ -17,6 +17,7 @@ import Upgrade from './pages/Upgrade.jsx';
 import Settings from './pages/Settings.jsx';
 
 const LandingPage = lazy(() => import('./pages/LandingPage.tsx'));
+const LocalBusinessPage = lazy(() => import('./pages/LocalBusinessPage.tsx'));
 const ContentWriters = lazy(() => import('./pages/ContentWriters.tsx'));
 const WordPressPlugin = lazy(() => import('./pages/WordPressPlugin.tsx'));
 const PricingPage = lazy(() => import('./pages/PricingPage.tsx'));
@@ -211,6 +212,7 @@ function AppRoutes({ apiKey, onAuth }) {
               </LandingWrapper>
             }
           />
+          <Route path="/local-business" element={<LandingWrapper><LocalBusinessPage onBack={() => navigate('/')} /></LandingWrapper>} />
           <Route path="/login" element={<AuthModalRoute onAuth={onAuth} />} />
           <Route path="/auth/callback" element={<AuthCallbackRoute onAuth={onAuth} />} />
           <Route path="/content-writers" element={<LandingWrapper><ContentWriters /></LandingWrapper>} />
@@ -244,6 +246,7 @@ function AppRoutes({ apiKey, onAuth }) {
         <Route path="/history" element={<History />} />
         <Route path="/upgrade" element={<Upgrade />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/local-business" element={<Navigate to="/dashboard" replace />} />
         <Route path="/content-writers" element={<LandingWrapper><ContentWriters /></LandingWrapper>} />
         <Route path="/wordpress-plugin" element={<LandingWrapper><WordPressPlugin /></LandingWrapper>} />
         <Route path="/pricing" element={<LandingWrapper><PricingPage /></LandingWrapper>} />
