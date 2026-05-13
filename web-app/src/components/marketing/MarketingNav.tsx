@@ -6,25 +6,25 @@ import { useNavigate } from 'react-router-dom';
 const SOLUTIONS = [
   {
     label: 'Writers & Marketers',
-    href: '#/content-writers',
+    href: '/content-writers',
     desc: 'Blogs, articles, marketing copy',
     color: '#38bdf8',
   },
   {
     label: 'Product Sellers',
-    href: '#/product-sellers',
+    href: '/product-sellers',
     desc: 'Ecommerce, DTC, product pages',
     color: '#fb923c',
   },
   {
     label: 'Developers',
-    href: '#/developers',
+    href: '/developers',
     desc: 'Tech docs, READMEs, API references',
     color: '#34d399',
   },
   {
     label: 'Local Businesses',
-    href: '#/local-business',
+    href: '/local-business',
     desc: 'SEO + AEO for local & service businesses',
     color: '#fb7185',
   },
@@ -69,7 +69,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick }: Market
             : 'w-full max-w-7xl bg-transparent border-transparent'
         }`}
       >
-        <a href="#/" className="font-bold text-3xl tracking-tighter text-white">
+        <a href="/" className="font-bold text-3xl tracking-tighter text-white">
           r<span className="text-sky-400">ai</span>n
         </a>
 
@@ -122,16 +122,16 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick }: Market
             </AnimatePresence>
           </div>
 
-          <a href="#/blog" className="hover:text-white transition-colors">
+          <a href="/blog" className="hover:text-white transition-colors">
             Blog
           </a>
-          <a href="#/docs" className="hover:text-white transition-colors">
+          <a href="/docs" className="hover:text-white transition-colors">
             Docs
           </a>
-          <a href="#/wordpress-plugin" className="hover:text-white transition-colors">
+          <a href="/wordpress-plugin" className="hover:text-white transition-colors">
             WordPress Plugin
           </a>
-          <a href="#/pricing" className="hover:text-white transition-colors">
+          <a href="/pricing" className="hover:text-white transition-colors">
             Pricing
           </a>
         </nav>

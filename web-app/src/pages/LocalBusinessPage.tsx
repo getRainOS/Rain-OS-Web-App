@@ -31,11 +31,11 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
               ChatGPT, Perplexity, and Google's AI are answering local business questions millions of times a day. rain OS helps your business show up — and get called.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="#/" className="inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-400 text-white rounded-xl px-7 py-3.5 text-sm font-bold shadow-lg shadow-rose-500/25 transition-all hover:scale-105 active:scale-95">
+              <a href="/" className="inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-400 text-white rounded-xl px-7 py-3.5 text-sm font-bold shadow-lg shadow-rose-500/25 transition-all hover:scale-105 active:scale-95">
                 Analyze my business site
                 <ArrowRight className="w-4 h-4" />
               </a>
-              <a href="#pricing" className="inline-flex items-center gap-2 border border-white/10 hover:border-white/20 text-slate-300 hover:text-white rounded-xl px-7 py-3.5 text-sm font-semibold transition-all">
+              <a href="/pricing" className="inline-flex items-center gap-2 border border-white/10 hover:border-white/20 text-slate-300 hover:text-white rounded-xl px-7 py-3.5 text-sm font-semibold transition-all">
                 See pricing
               </a>
             </div>
@@ -386,7 +386,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
             <p className="text-slate-400 text-lg mb-8 leading-relaxed">
               It takes two minutes to get your first score. Paste your homepage copy, pick "Local / service business" as your site type, and rain OS tells you exactly where you're losing customers to AI search — and how to fix it.
             </p>
-            <a href="#/" className="inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-400 text-white rounded-xl px-8 py-4 text-base font-bold shadow-xl shadow-rose-500/20 transition-all hover:scale-105 active:scale-95">
+            <a href="/" className="inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-400 text-white rounded-xl px-8 py-4 text-base font-bold shadow-xl shadow-rose-500/20 transition-all hover:scale-105 active:scale-95">
               Analyze my business free
               <ArrowRight className="w-5 h-5" />
             </a>

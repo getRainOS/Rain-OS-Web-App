@@ -71,7 +71,7 @@ export const HybridFuture = () => {
 export const LocalBusinessBadge = () => {
   return (
     <a
-      href="#/local-business"
+      href="/local-business"
       className="inline-flex items-center gap-2 rounded-xl bg-rose-500 hover:bg-rose-400 px-5 py-2.5 text-sm font-bold text-white transition-all shadow-lg shadow-rose-500/25 hover:scale-105 active:scale-95"
     >
       <MapPin className="w-4 h-4" />

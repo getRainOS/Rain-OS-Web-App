@@ -210,7 +210,7 @@ export default function Developers() {
                 Score your docs free
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </button>
-              <a href="#/repo-analysis" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
+              <a href="/repo-analysis" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
                 Or connect your GitHub repo →
               </a>
             </motion.div>
@@ -465,7 +465,7 @@ export default function Developers() {
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
                 <a
-                  href="#/repo-analysis"
+                  href="/repo-analysis"
                   className="text-sm font-medium text-slate-400 hover:text-white transition-colors"
                 >
                   Connect your GitHub repo →
@@ -482,9 +482,9 @@ export default function Developers() {
             r<span className="text-sky-400">ai</span>n
           </span>
           <div className="flex items-center justify-center gap-6 text-sm text-slate-400">
-            <a href="#/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#/terms" className="hover:text-white transition-colors">Terms of Service</a>
-            <a href="#/support" className="hover:text-white transition-colors">Support</a>
+            <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
+            <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
+            <a href="/support" className="hover:text-white transition-colors">Support</a>
           </div>
           <div className="text-right text-xs text-slate-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
         </div>

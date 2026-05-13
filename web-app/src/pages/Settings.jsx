@@ -89,7 +89,7 @@ export default function Settings() {
     setError('');
     setPortalLoading(true);
     try {
-      const { data } = await api.createBillingPortal(window.location.origin + '/#/settings');
+      const { data } = await api.createBillingPortal(window.location.origin + '/settings');
       if (data?.url) {
         window.location.href = data.url;
       } else {

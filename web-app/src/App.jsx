@@ -1,5 +1,5 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
-import { HashRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { getApiKey, setApiKey, clearApiKey, api } from './api/client.js';
 import { supabase } from './lib/supabase.js';
 import { AppContext } from './context/AppContext.jsx';
@@ -125,9 +125,9 @@ export default function App() {
 
   return (
     <AppContext.Provider value={{ apiKey, user, setUser, onLogout, refreshUser, isDemo, userLane, setUserLane }}>
-      <HashRouter>
+      <BrowserRouter>
         <AppRoutes apiKey={apiKey} onAuth={onAuth} onLogout={onLogout} refreshUser={refreshUser} />
-      </HashRouter>
+      </BrowserRouter>
     </AppContext.Provider>
   );
 }

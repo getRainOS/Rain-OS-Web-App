@@ -49,7 +49,7 @@ export default function RepoAnalysis() {
     const login = params.get('login');
     setConnectSuccess(login ? `GitHub connected as @${login}` : 'GitHub connected successfully');
     // Clean the URL without reloading
-    window.history.replaceState(null, '', window.location.pathname + window.location.search + '#/repo-analysis');
+    window.history.replaceState(null, '', window.location.pathname + window.location.search + '/repo-analysis');
     const t = setTimeout(() => setConnectSuccess(''), 6000);
     return () => clearTimeout(t);
   }, []);

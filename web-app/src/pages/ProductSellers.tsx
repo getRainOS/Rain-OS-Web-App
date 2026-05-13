@@ -204,7 +204,7 @@ export default function ProductSellers() {
                 Score your product page free
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </button>
-              <a href="#/wordpress-plugin" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
+              <a href="/wordpress-plugin" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
                 WooCommerce plugin →
               </a>
             </motion.div>
@@ -404,7 +404,7 @@ export default function ProductSellers() {
                   Score your product page free
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
-                <a href="#/wordpress-plugin" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
+                <a href="/wordpress-plugin" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
                   WooCommerce plugin →
                 </a>
               </div>
@@ -419,9 +419,9 @@ export default function ProductSellers() {
             r<span className="text-sky-400">ai</span>n
           </span>
           <div className="flex items-center justify-center gap-6 text-sm text-slate-400">
-            <a href="#/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#/terms" className="hover:text-white transition-colors">Terms of Service</a>
-            <a href="#/support" className="hover:text-white transition-colors">Support</a>
+            <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
+            <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
+            <a href="/support" className="hover:text-white transition-colors">Support</a>
           </div>
           <div className="text-right text-xs text-slate-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
         </div>

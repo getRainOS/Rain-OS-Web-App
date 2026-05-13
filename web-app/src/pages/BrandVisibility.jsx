@@ -279,7 +279,7 @@ export default function BrandVisibility() {
               AI Visibility tracks how AI models mention your brand across live answers. It runs multiple Gemini calls per check and is available on the Business plan.
             </div>
           </div>
-          <a href="#/upgrade" style={{
+          <a href="/upgrade" style={{
             background: 'linear-gradient(135deg, #a855f7, #6366f1)',
             color: '#fff', borderRadius: 8, padding: '10px 22px',
             fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap',

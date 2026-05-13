@@ -354,7 +354,7 @@ export default function ShareOfVoice() {
                   Share of Voice runs 3 AI model simulations per check — measuring your citation rate across Gemini, ChatGPT-style, and Perplexity-style answers. Available on Business plan.
                 </div>
               </div>
-              <a href="#/upgrade" style={{
+              <a href="/upgrade" style={{
                 background: 'linear-gradient(135deg, #6366f1, #a855f7)',
                 color: '#fff', borderRadius: 8, padding: '10px 22px',
                 fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap',

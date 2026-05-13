@@ -149,7 +149,7 @@ const contactCards = [
     title: 'Documentation',
     desc: 'API reference, plugin setup guide, and integration docs.',
     cta: 'Browse the docs →',
-    href: '#/docs',
+    href: '/docs',
     color: '#a855f7',
     response: 'Self-serve, available 24/7',
   },
@@ -158,7 +158,7 @@ const contactCards = [
     title: 'WordPress Plugin',
     desc: 'Plugin-specific help, changelog, and installation guide.',
     cta: 'Plugin page →',
-    href: '#/wordpress-plugin',
+    href: '/wordpress-plugin',
     color: '#22c55e',
     response: 'Plugin v1.x documentation',
   },
@@ -244,9 +244,9 @@ export default function SupportPage() {
       <footer className="border-t border-white/10 py-10 relative z-10">
         <div className="max-w-6xl mx-auto px-6 flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-6 text-sm text-slate-500">
-            <a href="#/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#/terms" className="hover:text-white transition-colors">Terms of Service</a>
-            <a href="#/support" className="text-sky-400">Support</a>
+            <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
+            <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
+            <a href="/support" className="text-sky-400">Support</a>
           </div>
           <div className="text-xs text-slate-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
         </div>

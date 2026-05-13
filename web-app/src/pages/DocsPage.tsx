@@ -472,7 +472,7 @@ export default function DocsPage() {
 
                   <div className="flex items-center gap-4 pt-2">
                     <a
-                      href="#/wordpress-plugin"
+                      href="/wordpress-plugin"
                       className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-sky-500/10 border border-sky-400/25 text-sky-300 text-sm font-semibold hover:bg-sky-500/15 transition-all"
                     >
                       WordPress Plugin page
@@ -498,9 +498,9 @@ export default function DocsPage() {
             r<span className="text-sky-400">ai</span>n
           </span>
           <div className="flex items-center justify-center gap-6 text-sm text-slate-400">
-            <a href="#/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#/terms" className="hover:text-white transition-colors">Terms of Service</a>
-            <a href="#/support" className="hover:text-white transition-colors">Support</a>
+            <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
+            <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
+            <a href="/support" className="hover:text-white transition-colors">Support</a>
           </div>
           <div className="text-right text-xs text-slate-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
         </div>

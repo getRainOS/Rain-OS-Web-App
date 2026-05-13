@@ -59,7 +59,7 @@ export default function AuthModal({ onAuth, onBack, initialMode = 'signup', pend
         await finishAuth(result.data.session.access_token, result.data.user);
       } else if (mode === 'reset') {
         result = await supabase.auth.resetPasswordForEmail(email.trim(), {
-          redirectTo: `${window.location.origin}/#/auth/callback`,
+          redirectTo: `${window.location.origin}/auth/callback`,
         });
         if (result.error) throw result.error;
         setMessage('Password reset email sent. Check your inbox.');
@@ -78,7 +78,7 @@ export default function AuthModal({ onAuth, onBack, initialMode = 'signup', pend
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/#/auth/callback`,
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
       if (error) throw error;
