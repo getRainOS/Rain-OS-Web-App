@@ -22,7 +22,7 @@ const SITE_TYPES = [
   { value: 'Blog / content site', label: 'Blog / content site', hint: 'Tune for answer-first structure and citations', focus: 'AI readability + digital authority' },
   { value: 'Ecommerce / product page', label: 'Ecommerce / product page', hint: 'Tune for benefits, FAQs, and product signals', focus: 'product discoverability + conversion readiness' },
   { value: 'Docs / knowledge base', label: 'Docs / knowledge base', hint: 'Tune for clarity, snippetability, and steps', focus: 'AI readability + discoverability' },
-  { value: 'Local / service business', label: 'Local / service business', hint: 'Tune for trust, services, and contact intent', focus: 'SEO + local authority + conversion readiness' },
+  { value: 'Local / service business', label: 'Local / service business', hint: 'Tune for trust, services, and contact intent', focus: 'AEO + SEO + local authority + conversion readiness' },
   { value: 'Other', label: 'Other', hint: 'General optimization for any web content', focus: 'balanced across all pillars' },
 ];
 
@@ -65,7 +65,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
             </div>
             <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: 'easeOut' }} className="text-center space-y-5">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.05] text-white" style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
-                SEO + AEO for Local Business and AI Visibility
+                AEO + SEO for Local Business and AI Visibility
               </h1>
               <p className="text-slate-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
                 Find out how ChatGPT, Perplexity, Gemini, and Google Search read your content — and how likely they are to cite it when someone asks for a local solution you should own.

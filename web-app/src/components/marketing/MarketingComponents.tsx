@@ -63,8 +63,8 @@ export const LocalBusinessBadge = ({ onClick }: { onClick?: () => void }) => {
   return (
     <button onClick={onClick} className="inline-flex items-center gap-2 rounded-full border border-rose-400/30 bg-rose-500/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-rose-300 hover:bg-rose-500/15 hover:border-rose-400/50 transition-all">
       <BadgeCheck className="w-3.5 h-3.5" />
-      Local Business
-      <span className="text-[10px] font-semibold normal-case tracking-normal text-rose-200/80">SEO + Google Calling</span>
+      Local Business AEO + SEO
+      <span className="text-[10px] font-semibold normal-case tracking-normal text-rose-200/80">Google Calling</span>
     </button>
   );
 };
