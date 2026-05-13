@@ -146,7 +146,7 @@ const clamp = (n: number): number => Math.max(0, Math.min(100, Math.round(n)));
 export async function analyzeContent(
 content: string,
 industry: string = 'General / Other',
-module: 'general' | 'product_sellers' | 'developers' = 'general'
+module: 'general' | 'product_sellers' | 'developers' | 'local_business' = 'general'
 ): Promise<AnalysisResponse> {
 if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
 // Step 1: Algorithmic pre-analysis — hard metrics, no API cost
@@ -162,6 +162,19 @@ For this module, Product Discoverability is the PRIMARY scoring focus. Score it 
   ? `MODULE: developers
 MODULE_WEIGHTS: AI Readability (Documentation Structure) 35%, Digital Authority (Technical Completeness) 35%, Conversion Readiness (Technical Clarity) 30%, Product Discoverability 0% (not applicable)
 For this module, score AI Readability as Documentation Structure (navigation, TOC, getting started), Digital Authority as Documentation Authority (API completeness, error coverage, versioning), and Conversion Readiness as Technical Clarity (code example quality, step determinism, snippet extractability). Do not score Product Discoverability — set to 0.`
+  : module === 'local_business'
+  ? `MODULE: local_business
+MODULE_WEIGHTS: AI Readability 30%, Digital Authority 40%, Conversion Readiness 30%, Product Discoverability 0%
+For this module, Digital Authority is the PRIMARY scoring focus — local businesses live or die on trust signals. Score it with maximum precision:
+- LocalBusiness schema presence (name, address, phone, hours, geo coordinates)
+- NAP (Name, Address, Phone) consistency and completeness in page content
+- Review signals: star ratings, review count, recent review dates, response presence
+- Local entity clarity: city/neighborhood mentioned, service area defined
+- Citation signals: mentions of business in third-party contexts, local directories
+- Google Business Profile signals: link to GBP, embedded map, verified badge mentions
+Score AI Readability for how well AI systems can extract business details (hours, location, services, pricing) as direct answers.
+Score Conversion Readiness for: phone number prominence, click-to-call, directions link, appointment booking CTA, contact form accessibility.
+Do not score Product Discoverability — set to 0.`
   : `MODULE: general
 MODULE_WEIGHTS: AI Readability 40%, Digital Authority 30%, Conversion Readiness 30%, Product Discoverability 0%
 For this module, do not weight Product Discoverability in the overall score. Score it conservatively for WP plugin compatibility (40-60 range) but it does not affect the overall Rain Score.`;
@@ -218,6 +231,8 @@ const moduleWeights = module === 'product_sellers'
   ? { ar: 0.20, da: 0.15, cr: 0.15, pd: 0.50 }
   : module === 'developers'
   ? { ar: 0.35, da: 0.35, cr: 0.30, pd: 0.00 }
+  : module === 'local_business'
+  ? { ar: 0.30, da: 0.40, cr: 0.30, pd: 0.00 }
   : { ar: 0.40, da: 0.30, cr: 0.30, pd: 0.00 }; // general (Writers & Marketers)
 const computedOverall = Math.round(
 (p.aiReadability || 0) * moduleWeights.ar +

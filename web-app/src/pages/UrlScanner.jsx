@@ -374,7 +374,7 @@ export default function UrlScanner() {
     setError('');
     setResult(null);
     try {
-      const analysisModule = userLane === 'product_sellers' ? 'product_sellers' : userLane === 'developers' ? 'developers' : 'general';
+      const analysisModule = userLane === 'product_sellers' ? 'product_sellers' : userLane === 'developers' ? 'developers' : userLane === 'local_business' ? 'local_business' : 'general';
       const { data } = await api.scanUrl(url.trim(), { module: analysisModule });
       setResult(data);
       setScannedUrl(url.trim());

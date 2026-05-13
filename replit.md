@@ -63,6 +63,15 @@ The Citation Monitor's Competitor Map (`web-app/src/pages/CitationMonitor.jsx`) 
 #### 3. Chrome Extension (planned)
 Future third client for the Rain OS platform.
 
+### Analysis Modules & Solution Lanes
+Four user lanes, each storing a `userLane` value in `localStorage` (`rain_os_user_lane`):
+- `general` — Writers & Marketers: AI Readability 40%, Digital Authority 30%, Conversion Readiness 30%
+- `product_sellers` — Product Sellers: Discoverability 50%, AI Readability 20%, Authority 15%, Conversion 15%
+- `developers` — Developers: Doc Structure 35%, Tech Completeness 35%, Technical Clarity 30%
+- `local_business` — Local Service Business: Local Authority 40%, AI Presence 30%, Trust & Conversion 30%
+
+The `local_business` module passes local-specific scoring guidance to Gemini: NAP consistency, LocalBusiness schema, review signals, GBP mentions, click-to-call CTAs. Pillar weights differ from general (DA elevated to 40% because local trust signals are primary). Fully wired through: Content Analyzer, URL Scanner, Dashboard KPI cards, Settings lane selector, Layout sidebar.
+
 ### Analysis Modes (Web App)
 Six independent analysis tools accessible from the sidebar:
 1. **Content Analyzer** (`/analyze`) — Paste text → full 4-pillar AI analysis via Gemini

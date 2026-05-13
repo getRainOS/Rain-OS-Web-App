@@ -109,8 +109,8 @@ export default async function handler(req: express.Request, res: express.Respons
     }
 
     const { action = 'full_analysis', content, industry, sentence, title, module } = req.body as any;
-    const analysisModule: 'general' | 'product_sellers' | 'developers' =
-      module === 'product_sellers' || module === 'developers' ? module : 'general';
+    const analysisModule: 'general' | 'product_sellers' | 'developers' | 'local_business' =
+      module === 'product_sellers' || module === 'developers' || module === 'local_business' ? module : 'general';
     let result: any;
 
     switch (action) {

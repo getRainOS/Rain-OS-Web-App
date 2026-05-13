@@ -357,6 +357,11 @@ export default function Dashboard() {
       { ...PILLARS[1], label: 'Tech Completeness', weight: 35 },
       { ...PILLARS[2], label: 'Technical Clarity', weight: 30 },
     ];
+    if (userLane === 'local_business') return [
+      { ...PILLARS[1], label: 'Local Authority', weight: 40 },
+      { ...PILLARS[0], label: 'AI Presence', weight: 30 },
+      { ...PILLARS[2], label: 'Trust & Conversion', weight: 30 },
+    ];
     return [
       { ...PILLARS[0], weight: 40 },
       { ...PILLARS[1], weight: 30 },

@@ -278,7 +278,7 @@ export default function Settings() {
               { id: 'general',         label: 'Writers & Marketers',     desc: 'AI Readability 40% · Digital Authority 30% · Conversion Readiness 30%', color: '#06b6d4' },
               { id: 'product_sellers', label: 'Product Sellers',         desc: 'Discoverability 50% · AI Readability 20% · Authority 15% · Conversion 15%', color: '#f97316' },
               { id: 'developers',      label: 'Developers',              desc: 'Doc Structure 35% · Tech Completeness 35% · Technical Clarity 30%', color: '#10b981' },
-              { id: 'local_business',  label: 'Local Service Business',  desc: 'Local Authority 40% · AI Presence 35% · Trust & Conversion 25%', color: '#f43f5e' },
+              { id: 'local_business',  label: 'Local Service Business',  desc: 'Local Authority 40% · AI Presence 30% · Trust & Conversion 30%', color: '#f43f5e' },
             ].map(lane => (
               <button
                 key={lane.id}

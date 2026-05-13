@@ -51,7 +51,9 @@ export default async function handler(req: express.Request, res: express.Respons
   }
 
   // ─── Input validation ─────────────────────────────────────────────────────
-  const { url, industry } = req.body as { url?: string; industry?: string };
+  const { url, industry, module } = req.body as { url?: string; industry?: string; module?: string };
+  const analysisModule: 'general' | 'product_sellers' | 'developers' | 'local_business' =
+    module === 'product_sellers' || module === 'developers' || module === 'local_business' ? module : 'general';
   if (!url) {
     return res.status(400).json({ error: 'bad_request', message: 'url is required' } as ApiError);
   }
@@ -101,7 +103,7 @@ export default async function handler(req: express.Request, res: express.Respons
     }
 
     // ─── Gemini scoring on extracted text ────────────────────────────────────
-    const gemini = await analyzeContent(scan.extractedText, industry || 'General / Other');
+    const gemini = await analyzeContent(scan.extractedText, industry || 'General / Other', analysisModule);
 
     // ─── Adjust score with technical signals ─────────────────────────────────
     const adjustedScore = applyTechnicalAdjustments(gemini.overallScore, scan.signals);

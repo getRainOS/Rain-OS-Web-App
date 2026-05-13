@@ -31,18 +31,23 @@ export default function ContentAnalyzer() {
 
   const analysisModule = userLane === 'product_sellers' ? 'product_sellers'
     : userLane === 'developers' ? 'developers'
+    : userLane === 'local_business' ? 'local_business'
     : 'general';
 
   const pageLabel = userLane === 'developers'
     ? 'Documentation Optimizer'
     : userLane === 'product_sellers'
     ? 'Product Content Optimizer'
+    : userLane === 'local_business'
+    ? 'Local Business Optimizer'
     : 'Content Optimizer';
 
   const pageSub = userLane === 'developers'
     ? 'Paste your documentation to score and optimize it for AI discoverability across three pillars'
     : userLane === 'product_sellers'
     ? 'Paste your product content to analyze it for AI shopping and discovery signals'
+    : userLane === 'local_business'
+    ? 'Paste your website content or Google Business Profile description to score it for local AI visibility'
     : 'Paste your content to get a full AEO analysis and rewrite it for AI readability';
 
   async function handleAnalyze(e) {
