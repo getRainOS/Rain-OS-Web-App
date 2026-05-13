@@ -32,6 +32,7 @@ const TOOLS = {
   sov:        { to: '/share-of-voice',   label: 'Share of Voice',      Icon: BarChart2,        tooltip: 'Measure what % of AI answers include your brand vs. competitors.' },
   history:    { to: '/history',          label: 'Score History',       Icon: Clock,            tooltip: 'Browse all past analyses and track how your scores improve over time.' },
   settings:   { to: '/settings',         label: 'Settings',            Icon: Settings,         tooltip: 'Change your solution lane, API settings, and account preferences.' },
+  blog:       { to: '/blog',             label: 'Blog',                Icon: FileText,         tooltip: 'Read the latest on AI search, accessibility, and building for everyone.' },
 };
 
 const LANE_GROUPS = {
@@ -162,6 +163,7 @@ export default function Layout({ children }) {
           <div className={styles.navGroup}>
             <span className={styles.navLabel}>Account</span>
             <NavItem {...TOOLS.settings} />
+            <NavItem {...TOOLS.blog} />
           </div>
         </nav>
 

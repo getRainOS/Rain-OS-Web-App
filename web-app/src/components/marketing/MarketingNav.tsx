@@ -122,6 +122,9 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick }: Market
             </AnimatePresence>
           </div>
 
+          <a href="#/blog" className="hover:text-white transition-colors">
+            Blog
+          </a>
           <a href="#/docs" className="hover:text-white transition-colors">
             Docs
           </a>
