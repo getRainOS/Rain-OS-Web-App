@@ -47,7 +47,6 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
   const [userLane, setUserLaneState] = useState(() => localStorage.getItem('rain_os_user_lane') || null);
-  const [theme, setThemeState] = useState(() => localStorage.getItem('rain_os_theme') || 'dark');
   const isDemo = apiKey === '__demo__';
 
   function setUserLane(lane) {
@@ -55,16 +54,6 @@ export default function App() {
     else localStorage.removeItem('rain_os_user_lane');
     setUserLaneState(lane);
   }
-
-  function setTheme(t) {
-    localStorage.setItem('rain_os_theme', t);
-    setThemeState(t);
-    document.documentElement.setAttribute('data-theme', t);
-  }
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
 
   useEffect(() => {
     async function initAuth() {
@@ -133,7 +122,7 @@ export default function App() {
   }
 
   return (
-    <AppContext.Provider value={{ apiKey, user, setUser, onLogout, refreshUser, isDemo, userLane, setUserLane, theme, setTheme }}>
+    <AppContext.Provider value={{ apiKey, user, setUser, onLogout, refreshUser, isDemo, userLane, setUserLane }}>
       <HashRouter>
         <AppRoutes apiKey={apiKey} onAuth={onAuth} onLogout={onLogout} refreshUser={refreshUser} />
       </HashRouter>

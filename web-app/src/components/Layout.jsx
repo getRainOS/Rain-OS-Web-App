@@ -5,7 +5,7 @@ import { api, clearApiKey } from '../api/client.js';
 import { supabase } from '../lib/supabase.js';
 import {
   LayoutDashboard, FileText, Globe, GitBranch, Radar, Eye,
-  BarChart2, Clock, Settings, ArrowUp, LogOut, Wand2, Sun, Moon,
+  BarChart2, Clock, Settings, ArrowUp, LogOut, Wand2,
 } from 'lucide-react';
 import styles from './Layout.module.css';
 
@@ -70,7 +70,7 @@ const LOCAL_GROUP_TOOLTIPS = {
 };
 
 export default function Layout({ children }) {
-  const { user, setUser, onLogout, isDemo, userLane, theme, setTheme } = useApp();
+  const { user, setUser, onLogout, isDemo, userLane } = useApp();
   const navigate = useNavigate();
   const [usage, setUsage] = useState(null);
 
@@ -112,20 +112,9 @@ export default function Layout({ children }) {
     <div className={styles.root}>
       <aside className={styles.sidebar}>
         <div className={styles.brand}>
-          <div className={styles.brandRow}>
-            <span>
-              <span className={styles.brandRain}>rain</span>
-              <span className={styles.brandOS}> OS</span>
-              {isDemo && <span className={styles.demoBadge}>DEMO</span>}
-            </span>
-            <button
-              className={styles.themeToggle}
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-            >
-              {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
-            </button>
-          </div>
+          <span className={styles.brandRain}>rain</span>
+          <span className={styles.brandOS}> OS</span>
+          {isDemo && <span className={styles.demoBadge}>DEMO</span>}
         </div>
 
         <nav className={styles.nav}>

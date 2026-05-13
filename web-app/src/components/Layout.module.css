@@ -18,18 +18,11 @@
 
 .brand {
   padding: 0 20px 20px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 16px;
-}
-
-.brandRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
   font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.5px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
 }
 
 .brandRain { color: var(--accent); }
@@ -358,31 +351,6 @@
   color: var(--text-dim);
   line-height: 1.5;
   text-align: center;
-}
-
-/* ── Theme toggle ── */
-.themeToggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid var(--border);
-  color: var(--text-muted);
-  flex-shrink: 0;
-  transition: background 0.15s, color 0.15s;
-}
-.themeToggle:hover {
-  background: rgba(255,255,255,0.12);
-  color: var(--text);
-}
-[data-theme="light"] .themeToggle {
-  background: rgba(0,0,0,0.05);
-}
-[data-theme="light"] .themeToggle:hover {
-  background: rgba(0,0,0,0.1);
 }
 
 /* ── Nav item tooltip ── */
