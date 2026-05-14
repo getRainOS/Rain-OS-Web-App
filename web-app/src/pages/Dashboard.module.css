@@ -522,13 +522,14 @@
 .donutWrap {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 18px;
 }
 
 .donutChartArea {
   position: relative;
   display: flex;
   justify-content: center;
+  padding-bottom: 4px;
 }
 
 .donutCenter {

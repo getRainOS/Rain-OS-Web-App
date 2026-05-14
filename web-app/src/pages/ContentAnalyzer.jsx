@@ -203,7 +203,18 @@ export default function ContentAnalyzer() {
               <h2 className={styles.resultsTitle}>Analysis Results</h2>
               {result.title && <p className={styles.resultsSub}>{result.title}</p>}
             </div>
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+              <a
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I just scored ${result.overall_score ?? result.rain_score ?? '—'}/100 on rain OS for AI readability. How does your content rank?`)}
+&url=${encodeURIComponent(window.location.origin + '/analyze')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-ghost"
+                style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                Share
+              </a>
               <button
                 className={styles.rewriteBtn}
                 disabled={rewriteLoading || !content.trim()}

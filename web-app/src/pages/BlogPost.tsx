@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, Clock, Share2, Link2 } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Link2 } from 'lucide-react';
 import { getPostBySlug } from '../data/blogPosts';
 
 export default function BlogPost() {
@@ -186,11 +186,11 @@ export default function BlogPost() {
             >
               <Link2 size={14} />
             </button>
-            <button
-              onClick={() => {
-                navigator.share?.({ title: post.title, url: window.location.href }).catch(() => {});
-              }}
-              title="Share"
+            <a
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(window.location.href)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Share on X"
               style={{
                 width: '32px',
                 height: '32px',
@@ -203,6 +203,7 @@ export default function BlogPost() {
                 justifyContent: 'center',
                 cursor: 'pointer',
                 transition: 'all 0.15s',
+                textDecoration: 'none',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
@@ -213,8 +214,8 @@ export default function BlogPost() {
                 e.currentTarget.style.color = 'rgba(241,245,249,0.5)';
               }}
             >
-              <Share2 size={14} />
-            </button>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
           </div>
         </div>
 

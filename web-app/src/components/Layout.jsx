@@ -28,11 +28,10 @@ const TOOLS = {
   urlScanner: { to: '/url-scanner',      label: 'URL Scanner',         Icon: Globe,            tooltip: 'Enter a website URL to check how well AI can read and understand your pages.' },
   repo:       { to: '/repo-analysis',    label: 'Repo Analysis',       Icon: GitBranch,        tooltip: 'Connect your GitHub repo to score docs and source code for AI readability.' },
   citation:   { to: '/citation-monitor', label: 'Citation Monitor',    Icon: Radar,            tooltip: 'Check whether AI systems like ChatGPT are mentioning you when people ask questions.' },
-  visibility: { to: '/brand-visibility', label: 'AI Visibility',       Icon: Eye,              tooltip: 'See how AI describes your brand — is the sentiment positive and the facts correct?' },
+  visibility: { to: '/brand-visibility', label: 'Brand Sentiment',       Icon: Eye,              tooltip: 'See how AI describes your brand — is the sentiment positive and the facts correct?' },
   sov:        { to: '/share-of-voice',   label: 'Share of Voice',      Icon: BarChart2,        tooltip: 'Measure what % of AI answers include your brand vs. competitors.' },
   history:    { to: '/history',          label: 'Score History',       Icon: Clock,            tooltip: 'Browse all past analyses and track how your scores improve over time.' },
   settings:   { to: '/settings',         label: 'Settings',            Icon: Settings,         tooltip: 'Change your solution lane, API settings, and account preferences.' },
-  blog:       { to: '/blog',             label: 'Blog',                Icon: FileText,         tooltip: 'Read the latest on AI search, accessibility, and building for everyone.' },
 };
 
 const LANE_GROUPS = {
@@ -163,7 +162,6 @@ export default function Layout({ children }) {
           <div className={styles.navGroup}>
             <span className={styles.navLabel}>Account</span>
             <NavItem {...TOOLS.settings} />
-            <NavItem {...TOOLS.blog} />
           </div>
         </nav>
 

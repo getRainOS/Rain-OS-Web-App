@@ -46,7 +46,7 @@ export default function BlogIndex() {
           lineHeight: 1.1,
           marginBottom: '16px',
         }}>
-          The <span style={{ color: '#0EA5E9' }}>rain</span> OS Blog
+          <span style={{ color: '#0EA5E9' }}>Founders</span> Mode
         </h1>
         <p style={{
           fontSize: '17px',
@@ -55,7 +55,7 @@ export default function BlogIndex() {
           margin: '0 auto',
           lineHeight: 1.6,
         }}>
-          Thoughts on AI search, accessibility, and building technology that serves everyone.
+          Raw notes on AI search, building in public, and why technology should serve everyone.
         </p>
       </div>
 

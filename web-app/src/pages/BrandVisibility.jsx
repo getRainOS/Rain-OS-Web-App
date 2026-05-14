@@ -212,7 +212,7 @@ export default function BrandVisibility() {
 
       <div style={S.header}>
         <div style={S.titleRow}>
-          <h1 style={S.title}>AI Brand Visibility</h1>
+          <h1 style={S.title}>Brand Sentiment</h1>
           <span style={S.badge}>NEW</span>
         </div>
         <p style={S.sub}>See how AI answers mention your brand — and what to do if they don't.</p>
@@ -261,7 +261,7 @@ export default function BrandVisibility() {
           >
             {loading
               ? <><span style={S.spinner} />Checking visibility…</>
-              : 'Check AI Visibility'}
+              : 'Check Brand Sentiment'}
           </button>
         </form>
       </div>
@@ -276,7 +276,7 @@ export default function BrandVisibility() {
           <div>
             <div style={{ fontSize: 15, fontWeight: 700, color: '#c084fc', marginBottom: 6 }}>Business plan required</div>
             <div style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.6 }}>
-              AI Visibility tracks how AI models mention your brand across live answers. It runs multiple Gemini calls per check and is available on the Business plan.
+              Brand Sentiment tracks how AI models mention your brand across live answers. It runs multiple Gemini calls per check and is available on the Business plan.
             </div>
           </div>
           <a href="/upgrade" style={{
