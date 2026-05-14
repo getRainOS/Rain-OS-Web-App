@@ -57,7 +57,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
                 Vibe Coded Your Website or App?
               </h1>
               <p className="text-slate-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
-                Find out how ChatGPT, Perplexity, Gemini, and Google Search read your content — and how likely they are to cite it when someone asks for a local solution you should own.
+                Find out how ChatGPT, Perplexity, Gemini, and Google Search read your content — and how likely they are to cite it when someone asks for a solution you should own.
               </p>
             </motion.div>
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, delay: 0.2 }} className="relative w-full max-w-3xl">
