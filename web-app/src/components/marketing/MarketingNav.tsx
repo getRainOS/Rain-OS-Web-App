@@ -17,6 +17,12 @@ const SOLUTIONS = [
     color: '#fb923c',
   },
   {
+    label: 'Vibe Coders',
+    href: '/vibe-coders',
+    desc: 'Bolt, Lovable, Cursor, v0, Replit builders',
+    color: '#a78bfa',
+  },
+  {
     label: 'Developers',
     href: '/developers',
     desc: 'Tech docs, READMEs, API references',

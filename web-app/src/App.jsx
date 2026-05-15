@@ -22,6 +22,7 @@ const ContentWriters = lazy(() => import('./pages/ContentWriters.tsx'));
 const WordPressPlugin = lazy(() => import('./pages/WordPressPlugin.tsx'));
 const PricingPage = lazy(() => import('./pages/PricingPage.tsx'));
 const ProductSellers = lazy(() => import('./pages/ProductSellers.tsx'));
+const VibeCoders = lazy(() => import('./pages/VibeCoders.tsx'));
 const Developers = lazy(() => import('./pages/Developers.tsx'));
 const DocsPage = lazy(() => import('./pages/DocsPage.tsx'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy.tsx'));
@@ -221,6 +222,7 @@ function AppRoutes({ apiKey, onAuth }) {
           <Route path="/wordpress-plugin" element={<LandingWrapper><WordPressPlugin /></LandingWrapper>} />
           <Route path="/pricing" element={<LandingWrapper><PricingPage /></LandingWrapper>} />
           <Route path="/product-sellers" element={<LandingWrapper><ProductSellers /></LandingWrapper>} />
+          <Route path="/vibe-coders" element={<LandingWrapper><VibeCoders /></LandingWrapper>} />
           <Route path="/developers" element={<LandingWrapper><Developers /></LandingWrapper>} />
           <Route path="/docs" element={<LandingWrapper><DocsPage /></LandingWrapper>} />
           <Route path="/privacy" element={<LandingWrapper><PrivacyPolicy /></LandingWrapper>} />
@@ -255,6 +257,7 @@ function AppRoutes({ apiKey, onAuth }) {
         <Route path="/wordpress-plugin" element={<LandingWrapper><WordPressPlugin /></LandingWrapper>} />
         <Route path="/pricing" element={<LandingWrapper><PricingPage /></LandingWrapper>} />
         <Route path="/product-sellers" element={<LandingWrapper><ProductSellers /></LandingWrapper>} />
+        <Route path="/vibe-coders" element={<LandingWrapper><VibeCoders /></LandingWrapper>} />
         <Route path="/developers" element={<LandingWrapper><Developers /></LandingWrapper>} />
         <Route path="/docs" element={<LandingWrapper><DocsPage /></LandingWrapper>} />
         <Route path="/privacy" element={<LandingWrapper><PrivacyPolicy /></LandingWrapper>} />
