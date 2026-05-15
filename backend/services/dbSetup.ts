@@ -88,6 +88,28 @@ CREATE TABLE IF NOT EXISTS sov_checks (
 );
 CREATE INDEX IF NOT EXISTS idx_sov_checks_user_checked_at
   ON sov_checks(user_id, checked_at DESC);
+
+-- Brand Visibility / Sentiment history (additive)
+CREATE TABLE IF NOT EXISTS brand_visibility_checks (
+  id BIGSERIAL PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  brand TEXT NOT NULL,
+  topic TEXT NOT NULL,
+  url TEXT,
+  visibility_score INTEGER NOT NULL DEFAULT 0,
+  mention_status TEXT NOT NULL DEFAULT 'not_mentioned',
+  mention_position INTEGER,
+  sentiment TEXT NOT NULL DEFAULT 'not_applicable',
+  sentiment_explanation TEXT,
+  answer_excerpt TEXT,
+  sources JSONB NOT NULL DEFAULT '[]',
+  competitors JSONB NOT NULL DEFAULT '[]',
+  recommendations JSONB NOT NULL DEFAULT '[]',
+  summary TEXT,
+  checked_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_brand_vis_checks_user_checked_at
+  ON brand_visibility_checks(user_id, checked_at DESC);
 `;
 
 const addGithubColumnsQuery = `

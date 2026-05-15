@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext.jsx';
 import { api } from '../api/client.js';
 
@@ -177,6 +177,18 @@ export default function BrandVisibility() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [planGated, setPlanGated] = useState(false);
+  const [history, setHistory] = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+
+  useEffect(() => {
+    if (isDemo) return;
+    setHistoryLoading(true);
+    api.brandVisHistory()
+      .then(({ data }) => setHistory(Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : []))
+      .catch(() => setHistory([]))
+      .finally(() => setHistoryLoading(false));
+  }, [isDemo]);
 
   async function handleCheck(e) {
     e.preventDefault();
@@ -192,6 +204,9 @@ export default function BrandVisibility() {
       } else {
         const { data } = await api.brandVisibility({ brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined });
         setResult(data.data || data);
+        // Refresh history
+        const h = await api.brandVisHistory();
+        setHistory(Array.isArray(h.data.data) ? h.data.data : Array.isArray(h.data) ? h.data : []);
       }
     } catch (err) {
       if (err.status === 403) {
@@ -201,6 +216,16 @@ export default function BrandVisibility() {
       }
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function clearHistory() {
+    if (!confirm('Clear all Brand Sentiment history? This cannot be undone.')) return;
+    try {
+      await api.clearBrandVisHistory();
+      setHistory([]);
+    } catch (err) {
+      setError(err.message || 'Failed to clear history.');
     }
   }
 
@@ -375,6 +400,76 @@ export default function BrandVisibility() {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* History */}
+      {history.length > 0 && (
+        <div style={S.card}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+            <div style={{ ...S.sectionTitle, marginBottom: 0 }}>History ({history.length})</div>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button
+                onClick={() => setShowHistory(!showHistory)}
+                style={{ fontSize: 12, color: '#64748b', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+              >
+                {showHistory ? 'Hide' : 'Show all'}
+              </button>
+              <button
+                onClick={clearHistory}
+                style={{ fontSize: 12, color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {(showHistory ? history : history.slice(0, 3)).map((item, i) => (
+              <div
+                key={i}
+                onClick={() => {
+                  setBrand(item.brand);
+                  setTopic(item.topic);
+                  setUrl(item.url || '');
+                  setResult({
+                    brand: item.brand,
+                    topic: item.topic,
+                    url: item.url,
+                    visibilityScore: item.visibility_score,
+                    mentionStatus: item.mention_status,
+                    mentionPosition: item.mention_position,
+                    sentiment: item.sentiment,
+                    sentimentExplanation: item.sentiment_explanation,
+                    answerExcerpt: item.answer_excerpt,
+                    sources: item.sources,
+                    competitors: item.competitors,
+                    recommendations: item.recommendations,
+                    summary: item.summary,
+                  });
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 12,
+                  padding: '10px 12px', borderRadius: 8,
+                  background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)',
+                  cursor: 'pointer', transition: 'background 0.15s',
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+              >
+                <div style={{ width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: item.visibility_score >= 50 ? 'rgba(74,222,128,0.12)' : item.visibility_score >= 25 ? 'rgba(251,191,36,0.12)' : 'rgba(248,113,113,0.12)', border: `1px solid ${item.visibility_score >= 50 ? 'rgba(74,222,128,0.3)' : item.visibility_score >= 25 ? 'rgba(251,191,36,0.3)' : 'rgba(248,113,113,0.3)'}` }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: item.visibility_score >= 50 ? '#4ade80' : item.visibility_score >= 25 ? '#fbbf24' : '#f87171' }}>{item.visibility_score}</span>
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: '#e2e8f0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.brand} — {item.topic}</div>
+                  <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>
+                    {item.mention_status.replace('_', ' ')} · {item.sentiment.replace('_', ' ')} · {new Date(item.checked_at).toLocaleDateString()}
+                  </div>
+                </div>
+                <div style={{ fontSize: 11, color: '#64748b', flexShrink: 0 }}>{new Date(item.checked_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

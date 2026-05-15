@@ -425,6 +425,114 @@ export const deleteCitationChecksByUser = async (
 };
 
 // --------------------------
+// Brand Visibility / Sentiment history
+// --------------------------
+export interface BrandVisibilityRecord {
+  id: number;
+  brand: string;
+  topic: string;
+  url: string | null;
+  visibility_score: number;
+  mention_status: string;
+  mention_position: number | null;
+  sentiment: string;
+  sentiment_explanation: string | null;
+  answer_excerpt: string | null;
+  sources: any[];
+  competitors: string[];
+  recommendations: string[];
+  summary: string | null;
+  checked_at: string;
+}
+
+const mapBrandVisRow = (row: any): BrandVisibilityRecord => ({
+  id: Number(row.id),
+  brand: row.brand,
+  topic: row.topic,
+  url: row.url ?? null,
+  visibility_score: row.visibility_score !== null ? Number(row.visibility_score) : 0,
+  mention_status: row.mention_status ?? 'not_mentioned',
+  mention_position: row.mention_position !== null ? Number(row.mention_position) : null,
+  sentiment: row.sentiment ?? 'not_applicable',
+  sentiment_explanation: row.sentiment_explanation ?? null,
+  answer_excerpt: row.answer_excerpt ?? null,
+  sources: Array.isArray(row.sources) ? row.sources : (typeof row.sources === 'string' ? JSON.parse(row.sources) : []),
+  competitors: Array.isArray(row.competitors) ? row.competitors : (typeof row.competitors === 'string' ? JSON.parse(row.competitors) : []),
+  recommendations: Array.isArray(row.recommendations) ? row.recommendations : (typeof row.recommendations === 'string' ? JSON.parse(row.recommendations) : []),
+  summary: row.summary ?? null,
+  checked_at: row.checked_at instanceof Date ? row.checked_at.toISOString() : row.checked_at,
+});
+
+export const saveBrandVisibilityCheck = async (
+  userId: string,
+  data: {
+    brand: string;
+    topic: string;
+    url?: string | null;
+    visibility_score?: number;
+    mention_status?: string;
+    mention_position?: number | null;
+    sentiment?: string;
+    sentiment_explanation?: string;
+    answer_excerpt?: string;
+    sources?: any[];
+    competitors?: string[];
+    recommendations?: string[];
+    summary?: string;
+  }
+): Promise<BrandVisibilityRecord | null> => {
+  const res = await pool.query(
+    `INSERT INTO brand_visibility_checks
+       (user_id, brand, topic, url, visibility_score, mention_status, mention_position,
+        sentiment, sentiment_explanation, answer_excerpt, sources, competitors, recommendations, summary)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+     RETURNING *`,
+    [
+      userId,
+      data.brand,
+      data.topic,
+      data.url ?? null,
+      data.visibility_score ?? 0,
+      data.mention_status ?? 'not_mentioned',
+      data.mention_position ?? null,
+      data.sentiment ?? 'not_applicable',
+      data.sentiment_explanation ?? null,
+      data.answer_excerpt ?? null,
+      JSON.stringify(data.sources || []),
+      JSON.stringify(data.competitors || []),
+      JSON.stringify(data.recommendations || []),
+      data.summary ?? null,
+    ]
+  );
+  return res.rows[0] ? mapBrandVisRow(res.rows[0]) : null;
+};
+
+export const getBrandVisibilityChecksByUser = async (
+  userId: string,
+  limit = 50
+): Promise<BrandVisibilityRecord[]> => {
+  const res = await pool.query(
+    `SELECT id, brand, topic, url, visibility_score, mention_status, mention_position,
+            sentiment, sentiment_explanation, answer_excerpt, sources, competitors,
+            recommendations, summary, checked_at
+     FROM brand_visibility_checks
+     WHERE user_id = $1
+     ORDER BY checked_at DESC
+     LIMIT $2`,
+    [userId, limit]
+  );
+  return res.rows.map(mapBrandVisRow);
+};
+
+export const deleteBrandVisibilityChecksByUser = async (userId: string): Promise<number> => {
+  const res = await pool.query(
+    `DELETE FROM brand_visibility_checks WHERE user_id = $1`,
+    [userId]
+  );
+  return res.rowCount || 0;
+};
+
+// --------------------------
 // Content analysis history
 // --------------------------
 

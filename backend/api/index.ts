@@ -13,7 +13,7 @@ import citationCheckHandler, {
   bulkDeleteHandler as citationChecksBulkDeleteHandler,
 } from './citation-check';
 import { listHandler as historyListHandler, deleteHandler as historyDeleteHandler } from './history';
-import brandVisibilityHandler from './brand-visibility';
+import brandVisibilityHandler, { brandVisHistoryHandler, brandVisDeleteHandler } from './brand-visibility';
 import { sovHandler, sovHistoryHandler, sovDeleteHandler } from './share-of-voice';
 // Auth
 import googleAuthHandler from './auth/google';
@@ -94,6 +94,10 @@ app.post('/v1/api/url-scan', urlScanHandler);
 // ─── AI Brand Visibility (new in v2.5) ────────────────────────────────────
 app.post('/api/brand-visibility', brandVisibilityHandler);
 app.post('/v1/api/brand-visibility', brandVisibilityHandler);
+app.get('/api/brand-visibility', brandVisHistoryHandler);
+app.get('/v1/api/brand-visibility', brandVisHistoryHandler);
+app.delete('/api/brand-visibility', brandVisDeleteHandler);
+app.delete('/v1/api/brand-visibility', brandVisDeleteHandler);
 // ─── Share of Voice (new in v2.6) ─────────────────────────────────────────
 app.post('/api/sov', sovHandler);
 app.post('/v1/api/sov', sovHandler);

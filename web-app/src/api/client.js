@@ -95,6 +95,12 @@ export const api = {
   brandVisibility: ({ brand, topic, url }) => isDemo()
     ? demoDelay({ visibilityScore: 34, mentionStatus: 'not_mentioned', mentionPosition: null, sentiment: 'not_applicable', sentimentExplanation: `${brand} was not found in AI answers for this topic.`, summary: `${brand} is not currently visible in AI answers about ${topic}.`, answerExcerpt: 'AI tools in this space include Clearscope, Surfer SEO, and Frase for content optimization...', sources: [{ title: 'Clearscope Blog', url: 'https://clearscope.io', domain: 'clearscope.io', snippet: 'Content optimization for AI readability.' }], competitors: ['clearscope.io', 'surferseo.com', 'frase.io'], recommendations: ['Publish a definitive answer-first guide for your main topic.', 'Add FAQ schema markup to your key pages.', 'Build comparison content positioning your brand against established competitors.', 'Get cited on authoritative blogs that AI engines already trust.'], brand, topic, url: url || null })
     : request('POST', '/api/brand-visibility', { brand, topic, url }),
+  brandVisHistory: () => isDemo()
+    ? demoDelay({ data: [] })
+    : request('GET', '/api/brand-visibility'),
+  clearBrandVisHistory: () => isDemo()
+    ? demoDelay({ success: true, deleted: 0 })
+    : request('DELETE', '/api/brand-visibility'),
   shareOfVoice: ({ brand, topic, url }) => isDemo()
     ? demoDelay({ data: null }) // handled inline in the page with DEMO_RESULT
     : request('POST', '/api/sov', { brand, topic, url }),

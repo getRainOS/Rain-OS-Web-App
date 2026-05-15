@@ -492,6 +492,24 @@
   text-align: right;
 }
 
+.shareX {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity .15s, color .15s, background .15s;
+}
+.analysisRow:hover .shareX { opacity: 1; }
+.shareX:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.08);
+}
+
 /* ── Gauge KPI Card ── */
 .kpiGaugeCard {
   align-items: center;
@@ -504,12 +522,12 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin: -4px 0 -4px;
+  margin: -2px 0 -8px;
 }
 
 .gaugeCenter {
   position: absolute;
-  bottom: 2px;
+  bottom: 6px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -522,7 +540,7 @@
 .donutWrap {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 8px;
 }
 
 .donutChartArea {
@@ -545,14 +563,14 @@
 }
 
 .donutScore {
-  font-size: 22px;
+  font-size: 16px;
   font-weight: 800;
-  letter-spacing: -1px;
+  letter-spacing: -0.5px;
   line-height: 1;
 }
 
 .donutLabel {
-  font-size: 9px;
+  font-size: 7px;
   color: var(--text-dim);
   text-transform: uppercase;
   letter-spacing: 0.06em;

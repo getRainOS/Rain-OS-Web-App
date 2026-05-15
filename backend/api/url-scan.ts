@@ -3,6 +3,7 @@ import express from 'express';
 import { findUserByApiKey, incrementUserUsage } from '../services/dbService';
 import { analyzeContent } from '../services/geminiService';
 import { scanUrlForTechnicalSignals } from '../services/urlScanService';
+import { runPageSpeed, isGoogleApiConfigured } from '../services/googleApisService';
 import type { ApiError } from '../types';
 
 function getApiKey(req: express.Request): string | null {
@@ -108,6 +109,16 @@ export default async function handler(req: express.Request, res: express.Respons
     // ─── Adjust score with technical signals ─────────────────────────────────
     const adjustedScore = applyTechnicalAdjustments(gemini.overallScore, scan.signals);
 
+    // ─── PageSpeed Insights — real Core Web Vitals (non-blocking) ───────────
+    let pageSpeed = null;
+    if (isGoogleApiConfigured()) {
+      try {
+        pageSpeed = await runPageSpeed(url, 'mobile');
+      } catch (psErr) {
+        console.warn('PageSpeed Insights failed (non-blocking):', (psErr as Error)?.message || psErr);
+      }
+    }
+
     const result = {
       ...gemini,
       overallScore: adjustedScore,
@@ -118,6 +129,8 @@ export default async function handler(req: express.Request, res: express.Respons
       technical_recommendations: scan.recommendations,
       url_scanned: url,
       scan_timestamp: new Date().toISOString(),
+      // Real performance data from Google
+      page_speed: pageSpeed,
     };
 
     // ─── Increment usage ────────────────────────────────────────────────────

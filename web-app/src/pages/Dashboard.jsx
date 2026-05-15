@@ -540,9 +540,9 @@ export default function Dashboard() {
                   {k.trend !== null && <TrendBadge pct={k.trend} />}
                 </div>
                 <div className={styles.gaugeWrap}>
-                  <GaugeArc score={typeof k.value === 'number' ? k.value : 0} color={k.color} size={110} />
+                  <GaugeArc score={typeof k.value === 'number' ? k.value : 0} color={k.color} size={72} />
                   <div className={styles.gaugeCenter}>
-                    <span className={styles.kpiValue} style={{ color: k.color, fontSize: 26 }}>
+                    <span className={styles.kpiValue} style={{ color: k.color, fontSize: 18 }}>
                       {k.value}
                     </span>
                     {k.suffix && <span className={styles.kpiSuffix}>{k.suffix}</span>}
@@ -664,10 +664,10 @@ export default function Dashboard() {
           ) : (
             <div className={styles.donutWrap}>
               <div className={styles.donutChartArea}>
-                <ResponsiveContainer width="100%" height={160}>
+                <ResponsiveContainer width="100%" height={120}>
                   <PieChart>
                     <Pie data={donutData} cx="50%" cy="50%"
-                      innerRadius={48} outerRadius={72}
+                      innerRadius={38} outerRadius={58}
                       paddingAngle={2} dataKey="value" strokeWidth={0}
                       startAngle={90} endAngle={-270}>
                       {donutData.map((entry, i) => (
@@ -753,6 +753,16 @@ export default function Dashboard() {
                       {item.overall_score ?? '—'}
                     </span>
                     <span className={styles.analysisDate}>{timeAgo(item.analyzed_at)}</span>
+                    <a
+                      href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I scored ${item.overall_score ?? '—'}/100 on rain OS for ${item.title || item.url || 'my content'}. How does yours rank?`)}&url=${encodeURIComponent(window.location.origin + '/analyze')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Share to X"
+                      className={styles.shareX}
+                      onClick={e => e.stopPropagation()}
+                    >
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
                   </div>
                 );
               })}
