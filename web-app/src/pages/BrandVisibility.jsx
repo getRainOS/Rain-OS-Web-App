@@ -15,6 +15,14 @@ const S = {
   },
   sub: { color: '#64748b', fontSize: 14, margin: 0 },
 
+  disclaimer: {
+    background: 'rgba(255,255,255,0.02)',
+    border: '1px solid rgba(255,255,255,0.05)',
+    borderRadius: 8, padding: '12px 16px', marginBottom: 20,
+  },
+  disclaimerText: {
+    fontSize: 12, lineHeight: 1.7, color: '#64748b', margin: 0,
+  },
   card: {
     background: '#040714', border: '1px solid rgba(255,255,255,0.07)',
     borderRadius: 16, padding: 24, marginBottom: 20,
@@ -241,6 +249,12 @@ export default function BrandVisibility() {
           <span style={S.badge}>NEW</span>
         </div>
         <p style={S.sub}>See how AI answers mention your brand — and what to do if they don't.</p>
+      </div>
+
+      <div style={S.disclaimer}>
+        <p style={S.disclaimerText}>
+          <strong style={{ color: '#94a3b8', fontWeight: 600 }}>How this works — and its limits.</strong> We query Google Gemini with live Google Search grounding for your topic, then analyse the real AI-generated answer to see if and how your brand appears. The mention status and sources are drawn from live search data. However: this is a single-model, single-query snapshot — only Gemini, one phrasing, one moment in time. Sentiment scoring and recommendations come from a second AI analysis pass and are interpretive, not empirical. Ask the same question differently ("best project management software" vs "what tool should my team use for task tracking?") and you may get entirely different results. Use this for directional spot-checking and competitor discovery, not as comprehensive brand monitoring.
+        </p>
       </div>
 
       <div style={S.card}>

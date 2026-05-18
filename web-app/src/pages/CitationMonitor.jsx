@@ -176,7 +176,12 @@ export default function CitationMonitor() {
         </div>
         <p className={styles.sub}>
           Check whether AI is citing you right now, then compare the result after you optimize.
-          We run the query through Gemini with live Google Search grounding so you get a real-time snapshot of current AI citations — not a promise, but a live read on where you stand.
+        </p>
+      </div>
+
+      <div className={styles.disclaimer}>
+        <p className={styles.disclaimerText}>
+          <strong>How this works — and its limits.</strong> We query Google Gemini with live Google Search grounding using your exact topic, then check whether your domain appears among the sources Gemini used to generate its answer. The <em>cited / not cited</em> result is a real, factual snapshot of what Gemini pulled right now. However: it reflects only one AI model (Gemini) and one query phrasing; different phrasings or models may yield different sources. The alignment score and recommendations come from a second AI analysis pass and are directional, not quantitative. Run checks on multiple topic variations and re-run regularly to track trends — a single check is a data point, not a verdict.
         </p>
       </div>
 

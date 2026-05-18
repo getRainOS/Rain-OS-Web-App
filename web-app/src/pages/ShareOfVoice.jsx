@@ -51,9 +51,9 @@ const S = {
     borderRadius: 10, padding: '12px 16px', fontSize: 13, color: '#f87171', marginBottom: 20,
   },
   infoBox: {
-    background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.18)',
-    borderRadius: 12, padding: '14px 18px', fontSize: 13, color: '#a5b4fc',
-    display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 20,
+    background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)',
+    borderRadius: 8, padding: '12px 16px', fontSize: 12, color: '#64748b',
+    display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 20, lineHeight: 1.7,
   },
 };
 
@@ -319,8 +319,9 @@ export default function ShareOfVoice() {
       {/* Info box */}
       <div style={S.infoBox}>
         <Info size={15} style={{ flexShrink: 0, marginTop: 1 }} />
-        <span>These are <strong>approximate results</strong> — we simulate three different AI answering styles using Gemini with grounded search.
-        Results reflect current AI answer patterns and will shift as you publish, earn links, and build authority.</span>
+        <span>
+          <strong>How this works — and its limits.</strong> We simulate three AI answering styles using Google Gemini with grounded search: an <em>informational</em> style (like Gemini), a <em>conversational</em> style (like ChatGPT), and a <em>research</em> style (like Perplexity). For each, we check whether your brand is cited and score visibility, sentiment, and prominence. The cited / not cited results are real snapshots of what Gemini pulled from live web sources. However: we do not call actual ChatGPT or Perplexity APIs — the styles are simulated via prompt engineering. The SOV percentage, AI search volume estimate, and recommendations come from our own scoring formula and are directional, not industry-standard metrics. Run checks on multiple topic variations and track over time — use for trend spotting and competitor discovery, not as ground-truth market share data.
+        </span>
       </div>
 
       {/* Tabs */}
