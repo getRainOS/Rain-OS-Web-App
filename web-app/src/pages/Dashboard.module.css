@@ -522,12 +522,14 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin: -2px 0 -8px;
+  margin: -2px 0 0;
+  height: 54px;
+  overflow: hidden;
 }
 
 .gaugeCenter {
   position: absolute;
-  bottom: 6px;
+  bottom: 2px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;

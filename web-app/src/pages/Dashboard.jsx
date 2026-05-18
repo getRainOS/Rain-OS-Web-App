@@ -540,9 +540,9 @@ export default function Dashboard() {
                   {k.trend !== null && <TrendBadge pct={k.trend} />}
                 </div>
                 <div className={styles.gaugeWrap}>
-                  <GaugeArc score={typeof k.value === 'number' ? k.value : 0} color={k.color} size={72} />
+                  <GaugeArc score={typeof k.value === 'number' ? k.value : 0} color={k.color} size={68} />
                   <div className={styles.gaugeCenter}>
-                    <span className={styles.kpiValue} style={{ color: k.color, fontSize: 18 }}>
+                    <span className={styles.kpiValue} style={{ color: k.color, fontSize: 16 }}>
                       {k.value}
                     </span>
                     {k.suffix && <span className={styles.kpiSuffix}>{k.suffix}</span>}
