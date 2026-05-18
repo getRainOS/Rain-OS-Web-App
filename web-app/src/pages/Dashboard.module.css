@@ -17,9 +17,9 @@
 }
 
 .greeting {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
   color: var(--text);
   margin-bottom: 4px;
 }
@@ -84,10 +84,10 @@
 
 .kpiLabel {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
 }
 
 .kpiIconWrap {
@@ -115,17 +115,17 @@
 }
 
 .kpiValue {
-  font-size: 26px;
-  font-weight: 600;
-  letter-spacing: -0.6px;
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
   color: #e2e8f0;
+  font-variant-numeric: tabular-nums;
 }
 
 .kpiSuffix {
   font-size: 13px;
   color: var(--text-muted);
-  font-weight: 500;
-  letter-spacing: -0.5px;
+  font-weight: 400;
 }
 
 .kpiBottom {
@@ -147,7 +147,7 @@
   padding: 2px 7px;
   border-radius: 5px;
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 600;
   border: 1px solid;
   flex-shrink: 0;
 }
@@ -219,15 +219,16 @@
 
 .chartTitle {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text);
   margin-bottom: 2px;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.1px;
 }
 
 .chartSub {
-  font-size: 11.5px;
+  font-size: 12px;
   color: var(--text-dim);
+  font-weight: 400;
 }
 
 .chartEmpty {
@@ -306,10 +307,11 @@
 }
 
 .tooltipScore {
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -0.8px;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 .tooltipLabel {
@@ -347,6 +349,7 @@
   font-size: 11px;
   font-weight: 500;
   color: var(--text-muted);
+  letter-spacing: 0.02em;
 }
 
 .pillarBarWrap {
@@ -371,10 +374,10 @@
 
 .pillarScore {
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   min-width: 24px;
   text-align: right;
-  letter-spacing: -0.5px;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ── Bottom Row ── */
@@ -423,7 +426,7 @@
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 600;
   border: 1px solid;
   flex-shrink: 0;
   text-transform: uppercase;
@@ -437,12 +440,13 @@
 
 .analysisTitle {
   flex: 1;
-  font-size: 12.5px;
+  font-size: 13px;
   color: var(--text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
+  font-weight: 400;
 }
 
 .pillarDots {
@@ -459,11 +463,11 @@
 
 .analysisScore {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 500;
   min-width: 26px;
   text-align: right;
-  letter-spacing: -0.5px;
   flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
 }
 
 .analysisDate {
@@ -549,9 +553,10 @@
 
 .donutScore {
   font-size: 16px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 .donutLabel {
@@ -602,11 +607,11 @@
 
 .donutLegendScore {
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   min-width: 22px;
   text-align: right;
-  letter-spacing: -0.5px;
   flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
 }
 
 .contentHealth {
@@ -621,7 +626,7 @@
 }
 
 .contentHealth strong {
-  font-weight: 700;
+  font-weight: 500;
 }
 
 /* ── Pillar Sub-scores ── */
@@ -659,8 +664,8 @@
 
 .subScorePillarScore {
   font-size: 13px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
 .subScoreRow {
@@ -696,10 +701,11 @@
 
 .subScoreVal {
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 500;
   min-width: 20px;
   text-align: right;
   flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ── Citations Being Tracked ── */
@@ -727,7 +733,7 @@
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 600;
   border: 1px solid;
   flex-shrink: 0;
   text-transform: uppercase;
@@ -784,8 +790,8 @@
 
 .citationScore {
   font-size: 15px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
   line-height: 1;
   flex-shrink: 0;
   min-width: 40px;
@@ -794,6 +800,7 @@
   align-items: baseline;
   justify-content: flex-end;
   gap: 1px;
+  font-variant-numeric: tabular-nums;
 }
 
 .citationScoreSuffix {
@@ -807,7 +814,7 @@
   align-items: center;
   gap: 2px;
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 600;
   flex-shrink: 0;
   min-width: 36px;
   justify-content: flex-end;
@@ -815,7 +822,7 @@
 
 .citationDeltaNone {
   font-size: 9px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-dim);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -896,10 +903,9 @@
 
 .competitorRank {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   color: #94a3b8;
   min-width: 20px;
-  letter-spacing: -0.3px;
 }
 
 .competitorFavicon {
@@ -943,11 +949,11 @@
 
 .competitorCoverage {
   font-size: 12px;
-  font-weight: 700;
-  letter-spacing: -0.3px;
+  font-weight: 500;
   flex-shrink: 0;
   text-align: right;
   min-width: 40px;
+  font-variant-numeric: tabular-nums;
 }
 
 .competitorCoverageSub {
@@ -1016,8 +1022,8 @@
 }
 
 .actionLabel {
-  font-size: 12.5px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
   color: var(--text);
 }
 
@@ -1056,9 +1062,10 @@
 
 .laneSelectorTitle {
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text);
   margin-bottom: 4px;
+  letter-spacing: -0.2px;
 }
 
 .laneSelectorSub {
@@ -1107,7 +1114,7 @@
 
 .laneCardLabel {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text);
 }
 
