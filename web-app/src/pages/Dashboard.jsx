@@ -13,7 +13,7 @@ import {
   FileText, Globe, GitBranch, ArrowRight,
   BrainCircuit, ShieldCheck, MousePointerClick, SearchCheck,
   Activity, Zap, Minus, Heart, Map as MapIcon, Radar,
-  CheckCircle2, AlertCircle,
+  CheckCircle2, AlertCircle, BarChart2, Lock, Clock,
 } from 'lucide-react';
 import styles from './Dashboard.module.css';
 
@@ -269,6 +269,10 @@ export default function Dashboard() {
   const [citations, setCitations] = useState([]);
   const [citationsLoading, setCitationsLoading] = useState(true);
   const [citationHistory, setCitationHistory] = useState([]);
+  const [brandVisHistory, setBrandVisHistory] = useState([]);
+  const [brandVisLoading, setBrandVisLoading] = useState(true);
+  const [sovHistory, setSovHistory] = useState([]);
+  const [sovLoading, setSovLoading] = useState(true);
   const urlWantsLaneSelect = searchParams.get('selectLane') === '1';
   const [showLaneSelector, setShowLaneSelector] = useState(!userLane || urlWantsLaneSelect);
 
@@ -313,6 +317,32 @@ export default function Dashboard() {
       .catch(() => setCitations([]))
       .finally(() => setCitationsLoading(false));
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    api.brandVisHistory()
+      .then(({ data }) => {
+        if (cancelled) return;
+        const items = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
+        setBrandVisHistory(items);
+      })
+      .catch(() => { if (!cancelled) setBrandVisHistory([]); })
+      .finally(() => { if (!cancelled) setBrandVisLoading(false); });
+    return () => { cancelled = true; };
+  }, [user?.id]);
+
+  useEffect(() => {
+    let cancelled = false;
+    api.sovHistory()
+      .then(({ data }) => {
+        if (cancelled) return;
+        const items = Array.isArray(data) ? data : data?.data ?? [];
+        setSovHistory(items);
+      })
+      .catch(() => { if (!cancelled) setSovHistory([]); })
+      .finally(() => { if (!cancelled) setSovLoading(false); });
+    return () => { cancelled = true; };
+  }, [user?.id]);
 
   const trackedTopics = useMemo(() => {
     if (!citations.length) return [];
@@ -441,49 +471,129 @@ export default function Dashboard() {
   const citationRate = citationTotal > 0 ? Math.round((citationCitedCount / citationTotal) * 100) : null;
   const avgAlignment = citationTotal > 0 ? Math.round(citations.reduce((s, c) => s + (c.alignmentScore ?? 0), 0) / citationTotal) : null;
 
-  const kpis = [
+  // Brand Sentiment latest + groups
+  const brandVisGroups = useMemo(() => {
+    const map = new Map();
+    for (const h of brandVisHistory) {
+      const key = `${(h.brand || '').toLowerCase()}::${(h.topic || '').toLowerCase()}`;
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(h);
+    }
+    const out = [];
+    for (const [, arr] of map) {
+      arr.sort((a, b) => new Date(a.checked_at || a.checkedAt) - new Date(b.checked_at || b.checkedAt));
+      const latest = arr[arr.length - 1];
+      const prev = arr[arr.length - 2];
+      const scoreLatest = latest.visibility_score ?? latest.visibilityScore ?? 0;
+      const scorePrev = prev ? (prev.visibility_score ?? prev.visibilityScore ?? 0) : null;
+      out.push({
+        brand: latest.brand,
+        topic: latest.topic,
+        latestScore: scoreLatest,
+        latestMention: latest.mention_status || latest.mentionStatus || 'not_mentioned',
+        latestSentiment: latest.sentiment || 'not_applicable',
+        delta: scorePrev !== null ? scoreLatest - scorePrev : null,
+        spark: arr.map(h => h.visibility_score ?? h.visibilityScore ?? 0),
+        checkedAt: latest.checked_at || latest.checkedAt,
+        checks: arr.length,
+      });
+    }
+    out.sort((a, b) => new Date(b.checkedAt) - new Date(a.checkedAt));
+    return out;
+  }, [brandVisHistory]);
+  const brandVisLatest = brandVisGroups[0] || null;
+
+  // SOV latest + groups
+  const sovGroups = useMemo(() => {
+    const map = new Map();
+    for (const h of sovHistory) {
+      const key = `${(h.brand || '').toLowerCase()}::${(h.topic || '').toLowerCase()}`;
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(h);
+    }
+    const out = [];
+    for (const [, arr] of map) {
+      arr.sort((a, b) => new Date(a.checkedAt || a.checked_at) - new Date(b.checkedAt || b.checked_at));
+      const latest = arr[arr.length - 1];
+      const prev = arr[arr.length - 2];
+      const scoreLatest = latest.overall_sov ?? latest.overallSov ?? 0;
+      const scorePrev = prev ? (prev.overall_sov ?? prev.overallSov ?? 0) : null;
+      out.push({
+        brand: latest.brand,
+        topic: latest.topic,
+        latestSov: scoreLatest,
+        delta: scorePrev !== null ? scoreLatest - scorePrev : null,
+        spark: arr.map(h => h.overall_sov ?? h.overallSov ?? 0),
+        checkedAt: latest.checkedAt || latest.checked_at,
+        checks: arr.length,
+      });
+    }
+    out.sort((a, b) => new Date(b.checkedAt) - new Date(a.checkedAt));
+    return out;
+  }, [sovHistory]);
+  const sovLatest = sovGroups[0] || null;
+
+  // Build tool-specific KPI cards
+  const toolCards = [
     {
-      label: 'Total Analyses',
-      value: loading ? '—' : totalAnalyses,
-      sub: 'All time',
-      color: '#06b6d4',
-      Icon: Activity,
-      trend: null,
-    },
-    {
-      label: 'Average Score',
-      value: loading ? '—' : avgScore,
-      sub: 'Last 30 analyses',
-      color: scoreColor(avgScore),
-      Icon: Zap,
-      trend: scoreTrend,
-      suffix: '/100',
-      isGauge: true,
-    },
-    {
+      key: 'content',
       label: 'Content Health',
-      value: loading ? '—' : `${contentHealth}%`,
-      sub: 'Across all pillars',
-      color: scoreColor(contentHealth),
-      Icon: Heart,
-      trend: null,
+      to: '/analyze',
+      hasData: totalAnalyses > 0,
+      value: totalAnalyses > 0 ? `${avgScore}` : null,
+      suffix: '/100',
+      sub: totalAnalyses > 0 ? `${totalAnalyses} analyses · ${weakestPillar ? `${weakestPillar.label} weakest` : 'all balanced'}` : 'Paste content to score',
+      trend: scoreTrend,
+      Icon: FileText,
+      spark: chartData.length > 1 ? chartData.map(d => d.score) : null,
     },
     {
-      label: 'API Usage',
-      value: user ? `${user.usage?.count ?? 0}` : '—',
-      sub: `of ${user?.usage?.limit ?? 100} this cycle`,
-      color: usagePct > 80 ? '#ef4444' : usagePct > 60 ? '#eab308' : '#a855f7',
-      Icon: Activity,
-      trend: null,
-      suffix: `/${user?.usage?.limit ?? 100}`,
-    },
-    {
-      label: 'Citation Health',
-      value: citationsLoading ? '—' : citationRate !== null ? `${citationRate}%` : '—',
-      sub: citationTotal > 0 ? `${citationTotal} checks · avg ${avgAlignment}` : 'No checks yet',
-      color: citationRate === null ? '#94a3b8' : citationRate >= 60 ? '#a78bfa' : citationRate >= 30 ? '#eab308' : '#ef4444',
+      key: 'citation',
+      label: 'Citation Monitor',
+      to: '/citation-monitor',
+      hasData: citationTotal > 0,
+      value: citationTotal > 0 ? `${citationRate}%` : null,
+      sub: citationTotal > 0 ? `${citationCitedCount}/${citationTotal} topics cited · avg alignment ${avgAlignment}` : 'Check if AI cites you',
       Icon: Radar,
-      trend: null,
+      spark: trackedTopics.length > 0 && trackedTopics[0].spark.length > 1 ? trackedTopics[0].spark : null,
+    },
+    {
+      key: 'brand',
+      label: 'Brand Sentiment',
+      to: '/brand-visibility',
+      hasData: !!brandVisLatest,
+      value: brandVisLatest ? `${brandVisLatest.latestScore}` : null,
+      suffix: '/100',
+      sub: brandVisLatest
+        ? `${brandVisLatest.brand} — ${brandVisLatest.latestMention.replace('_', ' ')} · ${brandVisLatest.checks} check${brandVisLatest.checks > 1 ? 's' : ''}`
+        : 'Track how AI mentions you',
+      trend: brandVisLatest?.delta,
+      Icon: Heart,
+      spark: brandVisLatest?.spark && brandVisLatest.spark.length > 1 ? brandVisLatest.spark : null,
+    },
+    {
+      key: 'sov',
+      label: 'Share of Voice',
+      to: '/share-of-voice',
+      hasData: !!sovLatest,
+      value: sovLatest ? `${sovLatest.latestSov}%` : null,
+      sub: sovLatest
+        ? `${sovLatest.brand} — ${sovLatest.checks} check${sovLatest.checks > 1 ? 's' : ''} · ${sovHistory.length} total`
+        : 'Track brand citations across AI models',
+      trend: sovLatest?.delta,
+      Icon: BarChart2,
+      spark: sovLatest?.spark && sovLatest.spark.length > 1 ? sovLatest.spark : null,
+    },
+    {
+      key: 'usage',
+      label: 'API Usage',
+      to: '/upgrade',
+      hasData: !!user,
+      value: user ? `${user.usage?.count ?? 0}` : null,
+      suffix: `/${user?.usage?.limit ?? 100}`,
+      sub: tier ? `${tier} plan` : 'Sign in to track',
+      Icon: Zap,
+      bar: user ? Math.min(100, Math.round(((user.usage?.count ?? 0) / (user.usage?.limit || 1)) * 100)) : null,
     },
   ];
 
@@ -533,27 +643,54 @@ export default function Dashboard() {
         </div>
       ) : null}
 
-      {/* ── KPI Cards ── */}
-      <div className={styles.kpis}>
-        {kpis.map((k) => (
-          <div key={k.label} className={`${styles.kpiCard} ${k.isGauge ? styles.kpiGaugeCard : ''}`}>
-            <>
-              <div className={styles.kpiTop}>
-                <span className={styles.kpiLabel}>{k.label}</span>
-                <div className={styles.kpiIconWrap}>
-                  <k.Icon className={styles.kpiIcon} />
+      {/* ── Tool Snapshot Cards ── */}
+      <div className={styles.toolCards}>
+        {toolCards.map(t => (
+          <Link key={t.key} to={t.to} className={`${styles.toolCard} ${!t.hasData ? styles.toolCardEmpty : ''}`}>
+            <div className={styles.toolCardTop}>
+              <div className={styles.toolCardLabelRow}>
+                <span className={styles.toolCardLabel}>{t.label}</span>
+                {!t.hasData && (
+                  <span className={styles.toolCardBadgeEmpty}>
+                    <Lock size={9} /> Not set up
+                  </span>
+                )}
+              </div>
+              <div className={styles.kpiIconWrap}>
+                <t.Icon className={styles.kpiIcon} />
+              </div>
+            </div>
+
+            <div className={styles.toolCardValueRow}>
+              {t.hasData && t.value !== null ? (
+                <>
+                  <span className={styles.kpiValue}>{t.value}</span>
+                  {t.suffix && <span className={styles.kpiSuffix}>{t.suffix}</span>}
+                </>
+              ) : (
+                <span className={styles.toolCardPlaceholder}>Set up</span>
+              )}
+            </div>
+
+            <div className={styles.toolCardBottom}>
+              <span className={styles.kpiSub}>{t.sub}</span>
+              {t.trend !== null && t.trend !== undefined && <TrendBadge pct={t.trend} />}
+            </div>
+
+            {t.spark && t.spark.length > 1 && (
+              <div className={styles.toolCardSpark}>
+                <Sparkline values={t.spark} color="#94a3b8" width={120} height={24} />
+              </div>
+            )}
+
+            {t.bar !== null && t.bar !== undefined && (
+              <div className={styles.toolCardBarWrap}>
+                <div className={styles.toolCardBarTrack}>
+                  <div className={styles.toolCardBarFill} style={{ width: `${t.bar}%` }} />
                 </div>
               </div>
-              <div className={styles.kpiValueRow}>
-                <span className={styles.kpiValue}>{k.value}</span>
-                {k.suffix && <span className={styles.kpiSuffix}>{k.suffix}</span>}
-              </div>
-              <div className={styles.kpiBottom}>
-                <span className={styles.kpiSub}>{k.sub}</span>
-                {k.trend !== null && <TrendBadge pct={k.trend} />}
-              </div>
-            </>
-          </div>
+            )}
+          </Link>
         ))}
       </div>
 
