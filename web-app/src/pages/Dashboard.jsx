@@ -482,6 +482,12 @@ export default function Dashboard() {
 
   return (
     <div className={`${styles.root} fade-in`}>
+      {/* ── Ambient background ── */}
+      <div className={styles.ambientBg} aria-hidden="true">
+        <div className={styles.orb1} />
+        <div className={styles.orb2} />
+        <div className={styles.orb3} />
+      </div>
 
       {/* ── Header ── */}
       <div className={styles.header}>
@@ -579,7 +585,7 @@ export default function Dashboard() {
 
       {/* ── Insight callout ── */}
       {weakestPillar && weakestPillar.avg < 70 && (
-        <div className={styles.insight}>
+        <div className={styles.insight} style={{ '--kpi-color': weakestPillar.color }}>
           <div className={styles.insightDot} style={{ background: weakestPillar.color }} />
           <span className={styles.insightText}>
             <strong style={{ color: weakestPillar.color }}>{weakestPillar.label}</strong> is your weakest pillar — averaging{' '}
@@ -625,9 +631,16 @@ export default function Dashboard() {
               <AreaChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
                 <defs>
                   <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#0ea5e9" stopOpacity={0.25} />
+                    <stop offset="0%" stopColor="#0ea5e9" stopOpacity={0.3} />
                     <stop offset="100%" stopColor="#0ea5e9" stopOpacity={0} />
                   </linearGradient>
+                  <filter id="glow">
+                    <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                    <feMerge>
+                      <feMergeNode in="coloredBlur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
                 </defs>
                 <XAxis dataKey="idx" stroke="transparent"
                   tick={{ fill: 'rgba(255,255,255,0.25)', fontSize: 11 }} tickLine={false} axisLine={false} />
@@ -636,7 +649,8 @@ export default function Dashboard() {
                 <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(14,165,233,0.2)', strokeWidth: 1 }} />
                 <Area type="monotone" dataKey="score" stroke="#0ea5e9" strokeWidth={2}
                   fill="url(#scoreGrad)" dot={false}
-                  activeDot={{ r: 4, fill: '#0ea5e9', strokeWidth: 0 }} />
+                  activeDot={{ r: 5, fill: '#0ea5e9', strokeWidth: 0 }}
+                  style={{ filter: 'url(#glow)' }} />
               </AreaChart>
             </ResponsiveContainer>
           )}
