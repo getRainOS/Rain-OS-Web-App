@@ -6,6 +6,7 @@ import {
   Radar, Search, ExternalLink, CheckCircle2, AlertCircle,
   Map as MapIcon, Trophy, Trash2, Info,
   History as HistoryIcon, TrendingUp, TrendingDown, Minus,
+  Clock,
 } from 'lucide-react';
 import { buildCompetitorMap } from '../lib/citationHistory.js';
 import styles from './CitationMonitor.module.css';
@@ -41,15 +42,44 @@ function normalizeDomain(input) {
   }
 }
 
+/* ── Trend sparkline (SVG mini-chart) ────────────────────────────────────── */
+function Spark({ values, color = '#6366f1', width = 80, height = 28 }) {
+  if (!values || values.length < 2) return <span style={{ color: '#475569' }}>—</span>;
+  const pad = 2, w = width - pad * 2, h = height - pad * 2;
+  const step = w / (values.length - 1);
+  const pts = values.map((v, i) => {
+    const x = pad + i * step;
+    const y = pad + h - (Math.min(Math.max(v, 0), 100) / 100) * h;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ display: 'block' }}>
+      <polyline fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" points={pts} />
+    </svg>
+  );
+}
+
+function timeAgo(str) {
+  if (!str) return '—';
+  const diff = Date.now() - new Date(str).getTime();
+  const days = Math.floor(diff / 86400000);
+  const hrs  = Math.floor(diff / 3600000);
+  if (days === 0 && hrs < 1) return 'Just now';
+  if (days === 0) return `${hrs}h ago`;
+  if (days === 1) return 'Yesterday';
+  if (days < 30)  return `${days}d ago`;
+  return new Date(str).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
 export default function CitationMonitor() {
   const { isDemo, refreshUser } = useApp();
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const initialTab = searchParams.get('tab') === 'map' ? 'map' : 'check';
+  const initialTab = searchParams.get('tab') === 'map' ? 'map' : searchParams.get('tab') === 'history' ? 'history' : 'check';
   const [tab, setTab] = useState(initialTab);
 
   useEffect(() => {
-    const next = searchParams.get('tab') === 'map' ? 'map' : 'check';
+    const next = searchParams.get('tab') === 'map' ? 'map' : searchParams.get('tab') === 'history' ? 'history' : 'check';
     setTab(next);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
@@ -59,17 +89,20 @@ export default function CitationMonitor() {
     const params = new URLSearchParams(searchParams);
     if (nextTab === 'map') {
       params.set('tab', 'map');
+    } else if (nextTab === 'history') {
+      params.set('tab', 'history');
     } else {
       params.delete('tab');
     }
     setSearchParams(params, { replace: true });
   }
+
   const [topic, setTopic] = useState('');
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
-  // Cross-topic citation history from the backend (drives the Competitor Map)
+  // Cross-topic citation history from the backend (drives Competitor Map + Trend History)
   const [mapHistory, setMapHistory] = useState([]);
   const [mapLoading, setMapLoading] = useState(false);
   // Backend per-topic timeline (drives "Previous checks for this topic")
@@ -121,11 +154,10 @@ export default function CitationMonitor() {
       if (Array.isArray(data?.history) && data.history.length > 0) {
         setTopicHistory(data.history);
       } else {
-        loadTopicHistory(data?.topic || topic.trim());
+        loadTopicHistory(topic);
       }
-      // Refresh the cross-topic map from the backend so the new check shows up.
+      // Refresh cross-topic history for the Competitor Map
       fetchMapHistory();
-      refreshUser?.();
     } catch (err) {
       setError(err.message || 'Citation check failed. Please try again.');
     } finally {
@@ -133,17 +165,9 @@ export default function CitationMonitor() {
     }
   }
 
-  function handleExample(t) {
-    setTopic(t);
-    setResult(null);
-    setError('');
-  }
+  const ownDomain = normalizeDomain(url);
 
-  function handleReset() {
-    setResult(null);
-    setError('');
-    setTopicHistory([]);
-  }
+  const competitorMap = useMemo(() => buildCompetitorMap(mapHistory, ownDomain), [mapHistory, ownDomain]);
 
   async function handleClearHistory() {
     if (!window.confirm('Clear all saved citation checks? This permanently deletes your citation history from your account.')) return;
@@ -156,25 +180,46 @@ export default function CitationMonitor() {
     }
   }
 
-  const ownDomain = useMemo(() => {
-    const fromHistory = mapHistory.find(h => h.url)?.url;
-    return normalizeDomain(url) || normalizeDomain(fromHistory);
-  }, [url, mapHistory]);
-
-  const competitorMap = useMemo(
-    () => buildCompetitorMap(mapHistory, ownDomain),
-    [mapHistory, ownDomain]
-  );
+  // ── Trend History: group by topic ──────────────────────────────────────
+  const trendGroups = useMemo(() => {
+    const map = new Map();
+    for (const h of mapHistory) {
+      const key = (h.topic || '').toLowerCase().trim();
+      if (!key) continue;
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(h);
+    }
+    const out = [];
+    for (const [, arr] of map) {
+      arr.sort((a, b) => new Date(a.checkedAt || a.checked_at) - new Date(b.checkedAt || b.checked_at));
+      const latest = arr[arr.length - 1];
+      const prev   = arr[arr.length - 2];
+      const scoreLatest = latest.alignmentScore ?? latest.alignment_score ?? 0;
+      const scorePrev   = prev ? (prev.alignmentScore ?? prev.alignment_score ?? 0) : null;
+      const delta  = scorePrev !== null ? scoreLatest - scorePrev : null;
+      out.push({
+        topic: latest.topic || key,
+        latestScore: scoreLatest,
+        cited: latest.cited,
+        delta,
+        spark: arr.map(h => h.alignmentScore ?? h.alignment_score ?? 0),
+        checkedAt: latest.checkedAt || latest.checked_at,
+        checks: arr.length,
+      });
+    }
+    out.sort((a, b) => new Date(b.checkedAt) - new Date(a.checkedAt));
+    return out;
+  }, [mapHistory]);
 
   return (
-    <div className={`${styles.root} fade-in`}>
+    <div className={`${styles.page} fade-in`}>
       <div className={styles.header}>
         <div className={styles.titleRow}>
-          <Radar className={styles.titleIcon} />
+          <Radar className={styles.iconTitle} />
           <h1 className={styles.title}>Citation Monitor</h1>
         </div>
         <p className={styles.sub}>
-          Check whether AI is citing you right now, then compare the result after you optimize.
+          Find out whether AI engines recommend your brand for the topics that matter to you.
         </p>
       </div>
 
@@ -197,6 +242,16 @@ export default function CitationMonitor() {
         <button
           type="button"
           role="tab"
+          aria-selected={tab === 'history'}
+          className={`${styles.tab} ${tab === 'history' ? styles.tabActive : ''}`}
+          onClick={() => changeTab('history')}
+        >
+          <Clock style={{ width: 14, height: 14 }} /> Trend History
+          {mapHistory.length > 0 && <span className={styles.tabCount}>{trendGroups.length}</span>}
+        </button>
+        <button
+          type="button"
+          role="tab"
           aria-selected={tab === 'map'}
           className={`${styles.tab} ${tab === 'map' ? styles.tabActive : ''}`}
           onClick={() => changeTab('map')}
@@ -214,6 +269,14 @@ export default function CitationMonitor() {
           loading={mapLoading}
           onRunCheck={() => changeTab('check')}
           onClearHistory={handleClearHistory}
+        />
+      ) : tab === 'history' ? (
+        <TrendHistoryView
+          groups={trendGroups}
+          loading={mapLoading}
+          onRunCheck={() => changeTab('check')}
+          onClearHistory={handleClearHistory}
+          onTopicClick={(t) => { setTopic(t); changeTab('check'); }}
         />
       ) : (
         <>
@@ -240,210 +303,119 @@ export default function CitationMonitor() {
           </label>
           <input
             id="cm-url"
-            type="text"
+            type="url"
             className={styles.input}
-            placeholder="https://yoursite.com"
+            placeholder="https://yourdomain.com"
             value={url}
             onChange={e => setUrl(e.target.value)}
           />
 
-          <div className={styles.examples}>
-            <span className={styles.examplesLabel}>Try:</span>
-            {EXAMPLE_TOPICS.map(t => (
-              <button
-                key={t}
-                type="button"
-                className={styles.exampleChip}
-                onClick={() => handleExample(t)}
-                disabled={loading}
-              >
-                {t}
-              </button>
-            ))}
+          <div className={styles.formRow}>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="spinner" />
+                  Checking Gemini…
+                </>
+              ) : (
+                <>
+                  <Radar style={{ width: 14, height: 14 }} />
+                  Check citations
+                </>
+              )}
+            </button>
+            <div className={styles.examples}>
+              Try: {EXAMPLE_TOPICS.map((t, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className={styles.exampleLink}
+                  onClick={() => setTopic(t)}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
           </div>
-
-          <button
-            type="submit"
-            className={`btn btn-primary ${styles.submitBtn}`}
-            disabled={loading || !topic.trim()}
-          >
-            {loading
-              ? <><span className="spinner" /> Checking citations…</>
-              : <><Search style={{ width: 14, height: 14 }} /> Check Citations</>}
-          </button>
-
-          {error && <p className={styles.error}>{error}</p>}
-
-          {isDemo && (
-            <p className={styles.demoNote}>
-              Demo mode — results are illustrative. Sign in to run real grounded citation checks.
-            </p>
-          )}
         </form>
       )}
 
+      {error && (
+        <div className={styles.errorBox}>
+          <AlertCircle style={{ width: 14, height: 14, flexShrink: 0 }} />
+          {error}
+        </div>
+      )}
+
       {result && (
-        <div className={`${styles.results} fade-in`}>
-          <div className={styles.resultsHeader}>
-            <div>
-              <h2 className={styles.resultsTitle}>"{result.topic}"</h2>
-              {result.url && (
-                <a
-                  href={result.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.resultsUrl}
-                >
-                  {result.url} <ExternalLink style={{ width: 11, height: 11 }} />
-                </a>
-              )}
-            </div>
-            <button onClick={handleReset} className="btn btn-ghost">
-              ← New Check
-            </button>
-          </div>
-
-          {/* Citation status banner */}
-          <div
-            className={styles.statusBanner}
-            style={{
-              background: result.cited ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.08)',
-              borderColor: result.cited ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.25)',
-            }}
-          >
-            {result.cited ? (
-              <>
-                <CheckCircle2 className={styles.statusIcon} style={{ color: '#22c55e' }} />
-                <div>
-                  <div className={styles.statusTitle} style={{ color: '#22c55e' }}>
-                    Your domain is being cited
+        <div className={styles.resultsWrap}>
+          <div className={`card ${styles.resultCard}`}>
+            <div className={styles.resultMain}>
+              <div className={styles.resultCite}>
+                {result.cited ? (
+                  <div className={styles.resultCiteGood}>
+                    <CheckCircle2 style={{ width: 18, height: 18 }} />
+                    <span>Cited</span>
                   </div>
-                  <div className={styles.statusDesc}>
-                    AI cited your site as source #{(result.citedSourceIndex ?? 0) + 1} for this query.
+                ) : (
+                  <div className={styles.resultCiteBad}>
+                    <AlertCircle style={{ width: 18, height: 18 }} />
+                    <span>Not cited</span>
                   </div>
+                )}
+                <div className={styles.resultTopic}>
+                  {result.topic || topic}
                 </div>
-              </>
-            ) : (
-              <>
-                <AlertCircle className={styles.statusIcon} style={{ color: '#ef4444' }} />
-                <div>
-                  <div className={styles.statusTitle} style={{ color: '#ef4444' }}>
-                    {result.url ? 'Your domain is not cited' : 'No domain provided'}
-                  </div>
-                  <div className={styles.statusDesc}>
-                    {result.url
-                      ? `AI is currently citing ${result.sources.length} other source${result.sources.length === 1 ? '' : 's'} for this query — see the gap analysis below.`
-                      : 'Add your URL above to check whether your domain appears in the cited sources.'}
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* Alignment score */}
-          <div className={`card ${styles.scoreCard}`}>
-            <div className={styles.scoreHeader}>
-              <div>
-                <h3 className={styles.scoreLabel}>Citation Alignment Score</h3>
-                <p className={styles.scoreSub}>How well-positioned you are to be cited for this query</p>
+                <div className={styles.resultSummary}>{result.summary}</div>
               </div>
-              <div className={styles.scoreValue} style={{ color: scoreColor(result.alignmentScore) }}>
-                {result.alignmentScore}
-                <span className={styles.scoreOutOf}>/100</span>
-              </div>
-            </div>
-            <div className={styles.scoreTrack}>
               <div
-                className={styles.scoreFill}
-                style={{
-                  width: `${result.alignmentScore}%`,
-                  background: scoreColor(result.alignmentScore),
-                }}
-              />
+                className={styles.resultScore}
+                style={{ borderColor: scoreColor(result.alignmentScore) }}
+              >
+                <span
+                  className={styles.resultScoreNum}
+                  style={{ color: scoreColor(result.alignmentScore) }}
+                >
+                  {result.alignmentScore}
+                </span>
+                <span className={styles.resultScoreLabel}>Alignment</span>
+              </div>
             </div>
-            {result.summary && <p className={styles.scoreSummary}>{result.summary}</p>}
           </div>
 
-          {/* Sources cited */}
-          {result.sources.length > 0 && (
+          {result.sources && result.sources.length > 0 && (
             <div className={`card ${styles.sourcesCard}`}>
               <h3 className={styles.sectionTitle}>
-                Sources AI Cited
+                Sources Gemini cited
                 <span className={styles.sectionCount}>{result.sources.length}</span>
               </h3>
-              <p className={styles.sectionSub}>
-                These are the actual sources Gemini retrieved via Google Search to answer your query.
-              </p>
-              <div className={styles.sourcesList}>
-                {result.sources.map((s, i) => {
-                  const isUserSource = i === result.citedSourceIndex;
-                  return (
-                    <a
-                      key={i}
-                      href={s.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`${styles.sourceItem} ${isUserSource ? styles.sourceItemSelf : ''}`}
-                    >
-                      <div className={styles.sourceRank}>{i + 1}</div>
-                      <img
-                        className={styles.sourceFavicon}
-                        src={getFavicon(s.domain)}
-                        alt=""
-                        loading="lazy"
-                        onError={e => { e.target.style.visibility = 'hidden'; }}
-                      />
-                      <div className={styles.sourceContent}>
-                        <div className={styles.sourceTitleRow}>
-                          <span className={styles.sourceTitle}>{s.title}</span>
-                          {isUserSource && <span className={styles.youBadge}>YOU</span>}
-                        </div>
-                        <div className={styles.sourceDomain}>{s.domain}</div>
-                        {s.snippet && <p className={styles.sourceSnippet}>"{s.snippet}"</p>}
-                      </div>
-                      <ExternalLink className={styles.sourceExternal} />
-                    </a>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Competitor gap analysis — competitor domains being cited instead of you */}
-          {!result.cited && result.competitorDomains?.length > 0 && (
-            <div className={`card ${styles.gapCard}`}>
-              <h3 className={styles.sectionTitle}>
-                {result.url ? 'Competitor Gap' : 'Who Owns This Topic'}
-                <span className={styles.sectionCount}>{result.competitorDomains.length}</span>
-              </h3>
-              <p className={styles.sectionSub}>
-                {result.url
-                  ? `These domains are being cited for this query instead of yours. Earning citations from them, or out-ranking them with similar content, is your most direct path to inclusion.`
-                  : `These domains dominate AI citations for this query. They define the competitive bar for content.`}
-              </p>
-              <div className={styles.gapList}>
-                {result.competitorDomains.map((domain, i) => {
-                  const matchingSource = result.sources.find(s => s.domain === domain);
-                  return (
-                    <a
-                      key={domain + i}
-                      href={matchingSource?.url || `https://${domain}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.gapItem}
-                    >
-                      <img
-                        className={styles.gapFavicon}
-                        src={getFavicon(domain)}
-                        alt=""
-                        loading="lazy"
-                        onError={e => { e.target.style.visibility = 'hidden'; }}
-                      />
-                      <span className={styles.gapDomain}>{domain}</span>
-                      <ExternalLink className={styles.gapExternal} />
-                    </a>
-                  );
-                })}
+              <div className={styles.sourceGrid}>
+                {result.sources.map((s, i) => (
+                  <a
+                    key={i}
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.sourceItem}
+                  >
+                    <img
+                      src={getFavicon(s.domain)}
+                      alt=""
+                      className={styles.sourceFavicon}
+                      loading="lazy"
+                      onError={e => { e.target.style.visibility = 'hidden'; }}
+                    />
+                    <div className={styles.sourceBody}>
+                      <span className={styles.sourceTitle}>{s.title || s.domain}</span>
+                      <span className={styles.sourceDomain}>{s.domain}</span>
+                    </div>
+                    <ExternalLink style={{ width: 12, height: 12, opacity: 0.5, flexShrink: 0 }} />
+                  </a>
+                ))}
               </div>
               {mapHistory.length >= 2 && (
                 <button
@@ -543,6 +515,95 @@ export default function CitationMonitor() {
   );
 }
 
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  Trend History View                                                         */
+/* ══════════════════════════════════════════════════════════════════════════ */
+function TrendHistoryView({ groups, loading, onRunCheck, onClearHistory, onTopicClick }) {
+  if (loading && !groups.length) {
+    return (
+      <div className={`card ${styles.emptyMap}`}>
+        <span className="spinner" />
+        <p className={styles.emptyMapDesc} style={{ marginTop: 16 }}>
+          Loading your citation history…
+        </p>
+      </div>
+    );
+  }
+  if (!groups.length) {
+    return (
+      <div className={`card ${styles.emptyMap}`}>
+        <HistoryIcon className={styles.emptyMapIcon} />
+        <h3 className={styles.emptyMapTitle}>No citation checks yet</h3>
+        <p className={styles.emptyMapDesc}>
+          Run checks on the topics you care about to track how your citation status and alignment score trend over time.
+        </p>
+        <button type="button" className="btn btn-primary" onClick={onRunCheck}>
+          <Search style={{ width: 14, height: 14 }} /> Run your first check
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="fade-in">
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+        <button onClick={onClearHistory} style={{
+          background: 'rgba(255,255,255,0.06)', color: '#94a3b8',
+          border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10,
+          padding: '9px 18px', fontSize: 13, fontWeight: 500, cursor: 'pointer',
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+        }}>
+          <Trash2 size={12} /> Clear history
+        </button>
+      </div>
+
+      {groups.map((g, i) => {
+        const dUp   = g.delta !== null && g.delta > 0;
+        const dDown = g.delta !== null && g.delta < 0;
+        const color = scoreColor(g.latestScore);
+        return (
+          <div key={i} className={`card ${styles.trendRow}`} style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '16px 20px', marginBottom: 12, cursor: 'pointer' }}
+            onClick={() => onTopicClick(g.topic)}
+            onMouseEnter={e => e.currentTarget.style.background = '#060a18'}
+            onMouseLeave={e => e.currentTarget.style.background = ''}
+          >
+            <div style={{ flexShrink: 0, textAlign: 'center', minWidth: 60 }}>
+              <div style={{ fontSize: 26, fontWeight: 600, color, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{g.latestScore}</div>
+              <div style={{ fontSize: 10, color: '#64748b' }}>Alignment</div>
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 14, fontWeight: 600, color: '#f1f5f9', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {g.topic}
+              </div>
+              <div style={{ fontSize: 12, color: '#64748b' }}>
+                {g.cited ? 'Cited' : 'Not cited'} · {g.checks} check{g.checks > 1 ? 's' : ''}
+              </div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+              <Spark values={g.spark} color={color} width={80} height={28} />
+              <div style={{ fontSize: 10, color: '#475569' }}>{g.checks} check{g.checks > 1 ? 's' : ''}</div>
+            </div>
+            <div style={{ flexShrink: 0, textAlign: 'right' }}>
+              {g.delta !== null && (
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 600, padding: '3px 8px', borderRadius: 6,
+                  color: dUp ? '#4ade80' : dDown ? '#f87171' : '#64748b',
+                  background: dUp ? 'rgba(34,197,94,0.1)' : dDown ? 'rgba(239,68,68,0.1)' : 'rgba(255,255,255,0.05)' }}>
+                  {dUp ? <TrendingUp size={11} /> : dDown ? <TrendingDown size={11} /> : <Minus size={11} />}
+                  {dUp ? '+' : ''}{g.delta}
+                </div>
+              )}
+              <div style={{ fontSize: 11, color: '#475569', marginTop: 4 }}>{timeAgo(g.checkedAt)}</div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  Competitor Map View                                                        */
+/* ══════════════════════════════════════════════════════════════════════════ */
 function CompetitorMapView({ map, history, ownDomain, loading, onRunCheck, onClearHistory }) {
   if (loading && !history.length) {
     return (
@@ -677,26 +738,22 @@ function CompetitorMapView({ map, history, ownDomain, loading, onRunCheck, onCle
                         )}
                       </div>
                     </div>
-                    <div className={styles.coverageTrack}>
+                    <div className={styles.domainBarWrap}>
                       <div
-                        className={styles.coverageFill}
+                        className={styles.domainBar}
                         style={{ width: `${widthPct}%` }}
                       />
-                      <span className={styles.coverageLabel}>{coveragePct}% topic coverage</span>
                     </div>
-                    <p className={styles.domainInsight}>{d.insight}</p>
-                    {d.topics.length > 0 && (
-                      <div className={styles.topicChips}>
-                        {d.topics.slice(0, 4).map(t => (
-                          <span key={t} className={styles.topicChip} title={t}>
-                            {t.length > 60 ? t.slice(0, 57) + '…' : t}
-                          </span>
-                        ))}
-                        {d.topics.length > 4 && (
-                          <span className={styles.topicChipMore}>+{d.topics.length - 4} more</span>
-                        )}
-                      </div>
-                    )}
+                    <div className={styles.domainMeta}>
+                      <span className={styles.domainMetaLabel}>
+                        appears in {coveragePct}% of your tracked queries
+                      </span>
+                      {d.sampleUrl && (
+                        <span className={styles.domainMetaLink}>
+                          cited page: <a href={d.sampleUrl} target="_blank" rel="noopener noreferrer">{d.sampleTitle || 'View'}</a>
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </li>
               );

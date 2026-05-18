@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useApp } from '../context/AppContext.jsx';
 import { api } from '../api/client.js';
 
@@ -6,7 +6,7 @@ const S = {
   page: { padding: '32px 40px', maxWidth: 900, margin: '0 auto' },
   header: { marginBottom: 32 },
   titleRow: { display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 },
-  title: { fontSize: 22, fontWeight: 700, color: '#f1f5f9', margin: 0 },
+  title: { fontSize: 22, fontWeight: 600, color: '#f1f5f9', margin: 0 },
   sub: { color: '#64748b', fontSize: 14, margin: 0 },
 
   disclaimer: {
@@ -38,20 +38,27 @@ const S = {
     color: '#fff', border: 'none', borderRadius: 10,
     padding: '11px 28px', fontSize: 14, fontWeight: 600,
     cursor: 'pointer', transition: 'opacity 0.15s',
+    display: 'inline-flex', alignItems: 'center', gap: 8,
   },
   btnDisabled: { opacity: 0.5, cursor: 'not-allowed' },
+  btnSecondary: {
+    background: 'rgba(255,255,255,0.06)', color: '#94a3b8',
+    border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10,
+    padding: '9px 18px', fontSize: 13, fontWeight: 500, cursor: 'pointer',
+    display: 'inline-flex', alignItems: 'center', gap: 6,
+  },
 
   scoreRing: {
     width: 80, height: 80, borderRadius: '50%',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     flexShrink: 0,
   },
-  scoreNum: { fontSize: 26, fontWeight: 800, lineHeight: 1 },
+  scoreNum: { fontSize: 26, fontWeight: 600, lineHeight: 1, fontVariantNumeric: 'tabular-nums' },
   scoreLabel: { fontSize: 10, fontWeight: 600, color: '#64748b', marginTop: 2 },
 
   resultRow: { display: 'flex', alignItems: 'flex-start', gap: 24 },
   resultMeta: { flex: 1 },
-  resultTitle: { fontSize: 18, fontWeight: 700, color: '#f1f5f9', marginBottom: 6 },
+  resultTitle: { fontSize: 18, fontWeight: 600, color: '#f1f5f9', marginBottom: 6 },
   resultSub: { fontSize: 14, color: '#94a3b8', lineHeight: 1.6 },
 
   pill: { display: 'inline-flex', alignItems: 'center', gap: 6, borderRadius: 20, padding: '4px 12px', fontSize: 12, fontWeight: 600 },
@@ -146,6 +153,86 @@ function SentimentBadge({ sentiment }) {
   );
 }
 
+/* ── Trend sparkline ──────────────────────────────────────────── */
+function Spark({ values, color = '#6366f1', width = 80, height = 28 }) {
+  if (!values || values.length < 2) return <span style={{ color: '#475569' }}>—</span>;
+  const pad = 2, w = width - pad * 2, h = height - pad * 2;
+  const step = w / (values.length - 1);
+  const pts = values.map((v, i) => {
+    const x = pad + i * step;
+    const y = pad + h - (Math.min(Math.max(v, 0), 100) / 100) * h;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ display: 'block' }}>
+      <polyline fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" points={pts} />
+    </svg>
+  );
+}
+
+function timeAgo(str) {
+  if (!str) return '—';
+  const diff = Date.now() - new Date(str).getTime();
+  const days = Math.floor(diff / 86400000);
+  const hrs  = Math.floor(diff / 3600000);
+  if (days === 0 && hrs < 1) return 'Just now';
+  if (days === 0) return `${hrs}h ago`;
+  if (days === 1) return 'Yesterday';
+  if (days < 30)  return `${days}d ago`;
+  return new Date(str).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+/* ── Icons (simple SVG fallbacks) ───────────────────────────────────────────────── */
+function SearchIcon({ size = 14 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+  );
+}
+function ClockIcon({ size = 14 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+    </svg>
+  );
+}
+function TrashIcon({ size = 12 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+    </svg>
+  );
+}
+function TrendUpIcon({ size = 11 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+    </svg>
+  );
+}
+function TrendDownIcon({ size = 11 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/>
+    </svg>
+  );
+}
+function MinusIcon({ size = 11 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+  );
+}
+function AlertIcon({ size = 14 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+  );
+}
+
 const DEMO_RESULT = {
   brand: 'rain OS',
   topic: 'AI readability optimization tools',
@@ -179,9 +266,10 @@ export default function BrandVisibility() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [planGated, setPlanGated] = useState(false);
+
   const [history, setHistory] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
+  const [tab, setTab] = useState('check'); // 'check' | 'history'
 
   useEffect(() => {
     if (isDemo) return;
@@ -222,7 +310,7 @@ export default function BrandVisibility() {
   }
 
   async function clearHistory() {
-    if (!confirm('Clear all Brand Sentiment history? This cannot be undone.')) return;
+    if (!window.confirm('Clear all Brand Sentiment history? This cannot be undone.')) return;
     try {
       await api.clearBrandVisHistory();
       setHistory([]);
@@ -230,6 +318,41 @@ export default function BrandVisibility() {
       setError(err.message || 'Failed to clear history.');
     }
   }
+
+  // Group history by brand+topic for trend sparklines
+  const trendGroups = useMemo(() => {
+    const map = new Map();
+    for (const h of history) {
+      const b = (h.brand || '').toLowerCase().trim();
+      const t = (h.topic || '').toLowerCase().trim();
+      if (!b || !t) continue;
+      const key = `${b}::${t}`;
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(h);
+    }
+    const out = [];
+    for (const [, arr] of map) {
+      arr.sort((a, b) => new Date(a.checked_at || a.checkedAt) - new Date(b.checked_at || b.checkedAt));
+      const latest = arr[arr.length - 1];
+      const prev   = arr[arr.length - 2];
+      const scoreLatest = latest.visibility_score ?? latest.visibilityScore ?? 0;
+      const scorePrev   = prev ? (prev.visibility_score ?? prev.visibilityScore ?? 0) : null;
+      const delta  = scorePrev !== null ? scoreLatest - scorePrev : null;
+      out.push({
+        brand: latest.brand,
+        topic: latest.topic,
+        latestScore: scoreLatest,
+        latestSentiment: latest.sentiment || 'not_applicable',
+        latestMention: latest.mention_status || latest.mentionStatus || 'not_mentioned',
+        delta,
+        spark: arr.map(h => h.visibility_score ?? h.visibilityScore ?? 0),
+        checkedAt: latest.checked_at || latest.checkedAt,
+        checks: arr.length,
+      });
+    }
+    out.sort((a, b) => new Date(b.checkedAt) - new Date(a.checkedAt));
+    return out;
+  }, [history]);
 
   const colors = result ? scoreColor(result.visibilityScore) : null;
 
@@ -249,6 +372,48 @@ export default function BrandVisibility() {
           <strong style={{ color: '#94a3b8', fontWeight: 600 }}>How this works — and its limits.</strong> We query Google Gemini with live Google Search grounding for your topic, then analyse the real AI-generated answer to see if and how your brand appears. The mention status and sources are drawn from live search data. However: this is a single-model, single-query snapshot — only Gemini, one phrasing, one moment in time. Sentiment scoring and recommendations come from a second AI analysis pass and are interpretive, not empirical. Ask the same question differently ("best project management software" vs "what tool should my team use for task tracking?") and you may get entirely different results. Use this for directional spot-checking and competitor discovery, not as comprehensive brand monitoring.
         </p>
       </div>
+
+      {/* Tabs */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
+        {[{ key: 'check', label: 'New Check', Icon: SearchIcon }, { key: 'history', label: `Trend History${history.length ? ` (${trendGroups.length})` : ''}`, Icon: ClockIcon }].map(t => (
+          <button key={t.key} onClick={() => setTab(t.key)}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', border: 'none',
+              background: tab === t.key ? 'rgba(168,85,247,0.18)' : 'rgba(255,255,255,0.05)',
+              color: tab === t.key ? '#c084fc' : '#64748b',
+              boxShadow: tab === t.key ? '0 0 0 1px rgba(168,85,247,0.35)' : '0 0 0 1px rgba(255,255,255,0.06)',
+            }}>
+            <t.Icon size={13} />
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* ── Check tab ─────────────────────────────────────────────────────────────────── */}
+      {tab === 'check' && (
+        <>
+      {planGated && (
+        <div style={{
+          background: 'linear-gradient(135deg, rgba(168,85,247,0.1), rgba(99,102,241,0.08))',
+          border: '1px solid rgba(168,85,247,0.3)',
+          borderRadius: 14, padding: '24px 28px', marginBottom: 20,
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap',
+        }}>
+          <div>
+            <div style={{ fontSize: 15, fontWeight: 600, color: '#c084fc', marginBottom: 6 }}>Business plan required</div>
+            <div style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.6 }}>
+              Brand Sentiment tracks how AI models mention your brand across live answers. It runs multiple Gemini calls per check and is available on the Business plan.
+            </div>
+          </div>
+          <a href="/upgrade" style={{
+            background: 'linear-gradient(135deg, #a855f7, #6366f1)',
+            color: '#fff', borderRadius: 8, padding: '10px 22px',
+            fontSize: 13, fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap',
+          }}>
+            Upgrade to Business →
+          </a>
+        </div>
+      )}
+      {error && <div style={S.errorBox}>{error}</div>}
 
       <div style={S.card}>
         <form onSubmit={handleCheck}>
@@ -286,42 +451,19 @@ export default function BrandVisibility() {
               type="url"
             />
           </div>
-          <button
-            type="submit"
-            style={{ ...S.btn, ...(loading || !brand.trim() || !topic.trim() ? S.btnDisabled : {}) }}
-            disabled={loading || !brand.trim() || !topic.trim()}
-          >
-            {loading
-              ? <><span style={S.spinner} />Checking visibility…</>
-              : 'Check Brand Sentiment'}
-          </button>
+          <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+            <button
+              type="submit"
+              style={{ ...S.btn, ...(loading ? S.btnDisabled : {}) }}
+              disabled={loading}
+            >
+              {loading && <span style={S.spinner} />}
+              {loading ? 'Checking AI answers…' : 'Check brand sentiment'}
+            </button>
+            {loading && <span style={{ fontSize: 12, color: '#64748b' }}>This takes ~20 seconds — we run multiple AI checks.</span>}
+          </div>
         </form>
       </div>
-
-      {planGated && (
-        <div style={{
-          background: 'linear-gradient(135deg, rgba(168,85,247,0.1), rgba(99,102,241,0.08))',
-          border: '1px solid rgba(168,85,247,0.3)',
-          borderRadius: 14, padding: '24px 28px', marginBottom: 20,
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap',
-        }}>
-          <div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#c084fc', marginBottom: 6 }}>Business plan required</div>
-            <div style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.6 }}>
-              Brand Sentiment tracks how AI models mention your brand across live answers. It runs multiple Gemini calls per check and is available on the Business plan.
-            </div>
-          </div>
-          <a href="/upgrade" style={{
-            background: 'linear-gradient(135deg, #a855f7, #6366f1)',
-            color: '#fff', borderRadius: 8, padding: '10px 22px',
-            fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap',
-            boxShadow: '0 0 20px rgba(168,85,247,0.25)',
-          }}>
-            Upgrade to Business →
-          </a>
-        </div>
-      )}
-      {error && <div style={S.errorBox}>{error}</div>}
 
       {result && (
         <div>
@@ -409,75 +551,73 @@ export default function BrandVisibility() {
           )}
         </div>
       )}
+        </>
+      )}
 
-      {/* History */}
-      {history.length > 0 && (
-        <div style={S.card}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-            <div style={{ ...S.sectionTitle, marginBottom: 0 }}>History ({history.length})</div>
-            <div style={{ display: 'flex', gap: 10 }}>
-              <button
-                onClick={() => setShowHistory(!showHistory)}
-                style={{ fontSize: 12, color: '#64748b', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-              >
-                {showHistory ? 'Hide' : 'Show all'}
-              </button>
-              <button
-                onClick={clearHistory}
-                style={{ fontSize: 12, color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-              >
-                Clear
-              </button>
+      {/* ── History tab ─────────────────────────────────────────────────────────────────── */}
+      {tab === 'history' && (
+        <>
+          {historyLoading ? (
+            <div style={{ textAlign: 'center', padding: '60px 0', color: '#64748b' }}>
+              <span style={{ ...S.spinner, width: 24, height: 24, borderWidth: 3 }} />
             </div>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {(showHistory ? history : history.slice(0, 3)).map((item, i) => (
-              <div
-                key={i}
-                onClick={() => {
-                  setBrand(item.brand);
-                  setTopic(item.topic);
-                  setUrl(item.url || '');
-                  setResult({
-                    brand: item.brand,
-                    topic: item.topic,
-                    url: item.url,
-                    visibilityScore: item.visibility_score,
-                    mentionStatus: item.mention_status,
-                    mentionPosition: item.mention_position,
-                    sentiment: item.sentiment,
-                    sentimentExplanation: item.sentiment_explanation,
-                    answerExcerpt: item.answer_excerpt,
-                    sources: item.sources,
-                    competitors: item.competitors,
-                    recommendations: item.recommendations,
-                    summary: item.summary,
-                  });
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 12,
-                  padding: '10px 12px', borderRadius: 8,
-                  background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)',
-                  cursor: 'pointer', transition: 'background 0.15s',
-                }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
-              >
-                <div style={{ width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: item.visibility_score >= 50 ? 'rgba(74,222,128,0.12)' : item.visibility_score >= 25 ? 'rgba(251,191,36,0.12)' : 'rgba(248,113,113,0.12)', border: `1px solid ${item.visibility_score >= 50 ? 'rgba(74,222,128,0.3)' : item.visibility_score >= 25 ? 'rgba(251,191,36,0.3)' : 'rgba(248,113,113,0.3)'}` }}>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: item.visibility_score >= 50 ? '#4ade80' : item.visibility_score >= 25 ? '#fbbf24' : '#f87171' }}>{item.visibility_score}</span>
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: '#e2e8f0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.brand} — {item.topic}</div>
-                  <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>
-                    {item.mention_status.replace('_', ' ')} · {item.sentiment.replace('_', ' ')} · {new Date(item.checked_at).toLocaleDateString()}
-                  </div>
-                </div>
-                <div style={{ fontSize: 11, color: '#64748b', flexShrink: 0 }}>{new Date(item.checked_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</div>
+          ) : trendGroups.length === 0 ? (
+            <div style={{ ...S.card, textAlign: 'center', padding: '48px 24px' }}>
+              <ClockIcon size={32} />
+              <p style={{ color: '#64748b', marginBottom: 16 }}>No Brand Sentiment checks yet. Run your first check to start tracking trends.</p>
+              <button onClick={() => setTab('check')} style={S.btn}><SearchIcon size={13} /> Run first check</button>
+            </div>
+          ) : (
+            <>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+                <button onClick={clearHistory} style={{ ...S.btnSecondary, color: '#ef4444' }}>
+                  <TrashIcon size={12} /> Clear history
+                </button>
               </div>
-            ))}
-          </div>
-        </div>
+
+              {trendGroups.map((g, i) => {
+                const color = scoreColor(g.latestScore);
+                const dUp   = g.delta !== null && g.delta > 0;
+                const dDown = g.delta !== null && g.delta < 0;
+                return (
+                  <div key={i} style={{ ...S.card, display: 'flex', alignItems: 'center', gap: 20, padding: '16px 20px', cursor: 'pointer' }}
+                    onClick={() => { setBrand(g.brand); setTopic(g.topic); setTab('check'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    onMouseEnter={e => e.currentTarget.style.background = '#060a18'}
+                    onMouseLeave={e => e.currentTarget.style.background = ''}
+                  >
+                    <div style={{ flexShrink: 0, textAlign: 'center', minWidth: 60 }}>
+                      <div style={{ fontSize: 26, fontWeight: 600, color: color.text, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{g.latestScore}</div>
+                      <div style={{ fontSize: 10, color: '#64748b' }}>Score</div>
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: '#f1f5f9', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {g.brand} — {g.topic}
+                      </div>
+                      <div style={{ fontSize: 12, color: '#64748b' }}>
+                        {g.latestMention.replace('_', ' ')} · {g.latestSentiment.replace('_', ' ')} · {g.checks} check{g.checks > 1 ? 's' : ''}
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                      <Spark values={g.spark} color={color.text} width={80} height={28} />
+                      <div style={{ fontSize: 10, color: '#475569' }}>{g.checks} check{g.checks > 1 ? 's' : ''}</div>
+                    </div>
+                    <div style={{ flexShrink: 0, textAlign: 'right' }}>
+                      {g.delta !== null && (
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 600, padding: '3px 8px', borderRadius: 6,
+                          color: dUp ? '#4ade80' : dDown ? '#f87171' : '#64748b',
+                          background: dUp ? 'rgba(34,197,94,0.1)' : dDown ? 'rgba(239,68,68,0.1)' : 'rgba(255,255,255,0.05)' }}>
+                          {dUp ? <TrendUpIcon size={11} /> : dDown ? <TrendDownIcon size={11} /> : <MinusIcon size={11} />}
+                          {dUp ? '+' : ''}{g.delta}
+                        </div>
+                      )}
+                      <div style={{ fontSize: 11, color: '#475569', marginTop: 4 }}>{timeAgo(g.checkedAt)}</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </>
+          )}
+        </>
       )}
     </div>
   );
