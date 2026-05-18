@@ -172,7 +172,6 @@ export default function CitationMonitor() {
         <div className={styles.titleRow}>
           <Radar className={styles.titleIcon} />
           <h1 className={styles.title}>Citation Monitor</h1>
-          <span className={styles.newBadge}>NEW</span>
         </div>
         <p className={styles.sub}>
           Check whether AI is citing you right now, then compare the result after you optimize.

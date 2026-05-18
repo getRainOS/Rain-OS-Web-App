@@ -13,12 +13,6 @@ const S = {
   header: { marginBottom: 32 },
   titleRow: { display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 },
   title: { fontSize: 22, fontWeight: 700, color: '#f1f5f9', margin: 0 },
-  badge: {
-    fontSize: 10, fontWeight: 700, letterSpacing: '0.08em',
-    background: 'rgba(99,102,241,0.15)', color: '#818cf8',
-    border: '1px solid rgba(99,102,241,0.3)',
-    borderRadius: 6, padding: '2px 8px',
-  },
   sub: { color: '#64748b', fontSize: 14, margin: 0, lineHeight: 1.6 },
 
   card: {
@@ -308,7 +302,6 @@ export default function ShareOfVoice() {
         <div style={S.titleRow}>
           <BarChart2 size={22} style={{ color: '#6366f1' }} />
           <h1 style={S.title}>Share of Voice</h1>
-          <span style={S.badge}>NEW</span>
         </div>
         <p style={S.sub}>
           See how often your brand gets cited across Gemini, ChatGPT-style, and Perplexity-style AI answers for any topic.

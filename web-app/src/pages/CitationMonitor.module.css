@@ -26,16 +26,6 @@
   margin: 0;
 }
 
-.newBadge {
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  padding: 2px 7px;
-  border-radius: 4px;
-  background: linear-gradient(135deg, #0EA5E9, #22c55e);
-  color: white;
-}
-
 .disclaimer {
   background: rgba(255,255,255,0.02);
   border: 1px solid rgba(255,255,255,0.05);

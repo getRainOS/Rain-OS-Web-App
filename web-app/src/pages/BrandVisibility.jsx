@@ -7,12 +7,6 @@ const S = {
   header: { marginBottom: 32 },
   titleRow: { display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 },
   title: { fontSize: 22, fontWeight: 700, color: '#f1f5f9', margin: 0 },
-  badge: {
-    fontSize: 10, fontWeight: 700, letterSpacing: '0.08em',
-    background: 'rgba(168,85,247,0.15)', color: '#c084fc',
-    border: '1px solid rgba(168,85,247,0.3)',
-    borderRadius: 6, padding: '2px 8px',
-  },
   sub: { color: '#64748b', fontSize: 14, margin: 0 },
 
   disclaimer: {
@@ -246,7 +240,6 @@ export default function BrandVisibility() {
       <div style={S.header}>
         <div style={S.titleRow}>
           <h1 style={S.title}>Brand Sentiment</h1>
-          <span style={S.badge}>NEW</span>
         </div>
         <p style={S.sub}>See how AI answers mention your brand — and what to do if they don't.</p>
       </div>
