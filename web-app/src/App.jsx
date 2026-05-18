@@ -45,11 +45,18 @@ async function syncWithBackend(accessToken) {
   return res.json();
 }
 
+const PREVIEW_LANE = 'general';
+
 export default function App() {
-  const [apiKey, setApiKeyState] = useState(getApiKey);
+  const urlParams = new URLSearchParams(window.location.search);
+  const isPreview = urlParams.get('preview') === '1';
+  const [apiKey, setApiKeyState] = useState(() => isPreview ? '__demo__' : getApiKey());
   const [user, setUser] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
-  const [userLane, setUserLaneState] = useState(() => localStorage.getItem('rain_os_user_lane') || null);
+  const [userLane, setUserLaneState] = useState(() => {
+    if (isPreview) return PREVIEW_LANE;
+    return localStorage.getItem('rain_os_user_lane') || null;
+  });
   const isDemo = apiKey === '__demo__';
 
   function setUserLane(lane) {
@@ -60,6 +67,7 @@ export default function App() {
 
   useEffect(() => {
     async function initAuth() {
+      if (isPreview) { setAuthChecked(true); return; }
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         try {

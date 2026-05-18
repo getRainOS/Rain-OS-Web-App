@@ -76,9 +76,9 @@ function computeTrend(arr, key) {
 
 function scoreColor(s) {
   if (!s && s !== 0) return 'var(--text-dim)';
-  if (s >= 75) return '#22c55e';
-  if (s >= 50) return '#eab308';
-  return '#ef4444';
+  if (s >= 75) return '#94a3b8';
+  if (s >= 50) return '#94a3b8';
+  return '#94a3b8';
 }
 
 function getItemType(item) {
@@ -127,18 +127,17 @@ function GaugeArc({ score = 0, color = '#0ea5e9', size = 120 }) {
         strokeWidth={sw} strokeLinecap="round" />
       {score > 0 && (
         <path d={arc(startDeg, Math.min(fillEnd, endDeg - 0.1))} fill="none" stroke={color}
-          strokeWidth={sw} strokeLinecap="round"
-          style={{ filter: `drop-shadow(0 0 5px ${color}90)` }} />
+          strokeWidth={sw} strokeLinecap="round" />
       )}
     </svg>
   );
 }
 
 /* ── Donut Center Label ── */
-function DonutLabel({ score, color }) {
+function DonutLabel({ score }) {
   return (
     <div className={styles.donutCenter}>
-      <span className={styles.donutScore} style={{ color }}>{score ?? '—'}</span>
+      <span className={styles.donutScore}>{score ?? '—'}</span>
       <span className={styles.donutLabel}>avg score</span>
     </div>
   );
@@ -211,7 +210,6 @@ function Sparkline({ values, color, width = 86, height = 26 }) {
         strokeLinecap="round"
         strokeLinejoin="round"
         points={points}
-        style={{ filter: `drop-shadow(0 0 2px ${color}80)` }}
       />
       <circle cx={lastX} cy={lastY} r="2" fill={color} />
     </svg>
@@ -482,13 +480,6 @@ export default function Dashboard() {
 
   return (
     <div className={`${styles.root} fade-in`}>
-      {/* ── Ambient background ── */}
-      <div className={styles.ambientBg} aria-hidden="true">
-        <div className={styles.orb1} />
-        <div className={styles.orb2} />
-        <div className={styles.orb3} />
-      </div>
-
       {/* ── Header ── */}
       <div className={styles.header}>
         <div>
@@ -517,9 +508,9 @@ export default function Dashboard() {
             if (!lane) return null;
             return (
               <>
-                <div className={styles.laneBadge} style={{ background: `${lane.color}15`, border: `1px solid ${lane.color}25` }}>
-                  <lane.Icon size={13} style={{ color: lane.color }} />
-                  <span className={styles.laneBadgeLabel} style={{ color: lane.color }}>{lane.label}</span>
+                <div className={styles.laneBadge}>
+                  <lane.Icon size={13} style={{ color: '#94a3b8' }} />
+                  <span className={styles.laneBadgeLabel}>{lane.label}</span>
                 </div>
                 <p className={styles.laneBannerSub}>
                   {userLane === 'local_business'
@@ -536,60 +527,34 @@ export default function Dashboard() {
       {/* ── KPI Cards ── */}
       <div className={styles.kpis}>
         {kpis.map((k) => (
-          <div key={k.label} className={`${styles.kpiCard} ${k.isGauge ? styles.kpiGaugeCard : ''}`}
-            style={{ '--kpi-color': k.color }}>
-            {k.isGauge ? (
-              /* Average Score — standard number card (no gauge arc) */
-              <>
-                <div className={styles.kpiTop}>
-                  <span className={styles.kpiLabel}>{k.label}</span>
-                  <div className={styles.kpiIconWrap} style={{ background: `${k.color}15`, border: `1px solid ${k.color}30` }}>
-                    <k.Icon className={styles.kpiIcon} style={{ color: k.color }} />
-                  </div>
+          <div key={k.label} className={`${styles.kpiCard} ${k.isGauge ? styles.kpiGaugeCard : ''}`}>
+            <>
+              <div className={styles.kpiTop}>
+                <span className={styles.kpiLabel}>{k.label}</span>
+                <div className={styles.kpiIconWrap}>
+                  <k.Icon className={styles.kpiIcon} />
                 </div>
-                <div className={styles.kpiValueRow}>
-                  <span className={styles.kpiValue} style={{ color: k.color }}>
-                    {k.value}
-                  </span>
-                  {k.suffix && <span className={styles.kpiSuffix}>{k.suffix}</span>}
-                </div>
-                <div className={styles.kpiBottom}>
-                  <span className={styles.kpiSub}>{k.sub}</span>
-                  {k.trend !== null && <TrendBadge pct={k.trend} />}
-                </div>
-              </>
-            ) : (
-              /* Standard card */
-              <>
-                <div className={styles.kpiTop}>
-                  <span className={styles.kpiLabel}>{k.label}</span>
-                  <div className={styles.kpiIconWrap} style={{ background: `${k.color}15`, border: `1px solid ${k.color}30` }}>
-                    <k.Icon className={styles.kpiIcon} style={{ color: k.color }} />
-                  </div>
-                </div>
-                <div className={styles.kpiValueRow}>
-                  <span className={styles.kpiValue} style={{ color: k.color === '#475569' ? 'var(--text)' : k.color }}>
-                    {k.value}
-                  </span>
-                  {k.suffix && <span className={styles.kpiSuffix}>{k.suffix}</span>}
-                </div>
-                <div className={styles.kpiBottom}>
-                  <span className={styles.kpiSub}>{k.sub}</span>
-                  {k.trend !== null && <TrendBadge pct={k.trend} />}
-                </div>
-              </>
-            )}
+              </div>
+              <div className={styles.kpiValueRow}>
+                <span className={styles.kpiValue}>{k.value}</span>
+                {k.suffix && <span className={styles.kpiSuffix}>{k.suffix}</span>}
+              </div>
+              <div className={styles.kpiBottom}>
+                <span className={styles.kpiSub}>{k.sub}</span>
+                {k.trend !== null && <TrendBadge pct={k.trend} />}
+              </div>
+            </>
           </div>
         ))}
       </div>
 
       {/* ── Insight callout ── */}
       {weakestPillar && weakestPillar.avg < 70 && (
-        <div className={styles.insight} style={{ '--kpi-color': weakestPillar.color }}>
-          <div className={styles.insightDot} style={{ background: weakestPillar.color }} />
+        <div className={styles.insight}>
+          <div className={styles.insightDot} style={{ background: '#94a3b8' }} />
           <span className={styles.insightText}>
-            <strong style={{ color: weakestPillar.color }}>{weakestPillar.label}</strong> is your weakest pillar — averaging{' '}
-            <strong style={{ color: 'var(--text)' }}>{weakestPillar.avg}/100</strong> across recent analyses.
+            <strong>{weakestPillar.label}</strong> is your weakest pillar — averaging{' '}
+            <strong>{weakestPillar.avg}/100</strong> across recent analyses.
           </span>
           <Link to="/analyze" className={styles.insightAction}>Improve it →</Link>
         </div>
@@ -631,26 +596,18 @@ export default function Dashboard() {
               <AreaChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
                 <defs>
                   <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#0ea5e9" stopOpacity={0.3} />
+                    <stop offset="0%" stopColor="#0ea5e9" stopOpacity={0.06} />
                     <stop offset="100%" stopColor="#0ea5e9" stopOpacity={0} />
                   </linearGradient>
-                  <filter id="glow">
-                    <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-                    <feMerge>
-                      <feMergeNode in="coloredBlur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
                 </defs>
                 <XAxis dataKey="idx" stroke="transparent"
-                  tick={{ fill: 'rgba(255,255,255,0.25)', fontSize: 11 }} tickLine={false} axisLine={false} />
+                  tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 11 }} tickLine={false} axisLine={false} />
                 <YAxis domain={[0, 100]} stroke="transparent"
-                  tick={{ fill: 'rgba(255,255,255,0.25)', fontSize: 11 }} tickLine={false} axisLine={false} />
-                <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(14,165,233,0.2)', strokeWidth: 1 }} />
-                <Area type="monotone" dataKey="score" stroke="#0ea5e9" strokeWidth={2}
+                  tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 11 }} tickLine={false} axisLine={false} />
+                <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1 }} />
+                <Area type="monotone" dataKey="score" stroke="#0ea5e9" strokeWidth={1.5}
                   fill="url(#scoreGrad)" dot={false}
-                  activeDot={{ r: 5, fill: '#0ea5e9', strokeWidth: 0 }}
-                  style={{ filter: 'url(#glow)' }} />
+                  activeDot={{ r: 4, fill: '#0ea5e9', strokeWidth: 0 }} />
               </AreaChart>
             </ResponsiveContainer>
           )}
@@ -685,33 +642,32 @@ export default function Dashboard() {
                       paddingAngle={2} dataKey="value" strokeWidth={0}
                       startAngle={90} endAngle={-270}>
                       {donutData.map((entry, i) => (
-                        <Cell key={i} fill={entry.color}
-                          style={{ filter: `drop-shadow(0 0 4px ${entry.color}50)` }} />
+                        <Cell key={i} fill={entry.color} />
                       ))}
                     </Pie>
                     <Tooltip content={<DonutTooltip />} />
                   </PieChart>
                 </ResponsiveContainer>
-                <DonutLabel score={avgScore} color={scoreColor(avgScore)} />
+                <DonutLabel score={avgScore} />
               </div>
 
               <div className={styles.donutLegend}>
                 {pillarAvgs.map(p => (
                   <div key={p.key} className={styles.donutLegendRow}>
-                    <div className={styles.donutLegendDot} style={{ background: p.color, boxShadow: `0 0 5px ${p.color}70` }} />
+                    <div className={styles.donutLegendDot} style={{ background: p.color }} />
                     <span className={styles.donutLegendLabel}>{p.label}</span>
                     <div className={styles.donutLegendBarWrap}>
                       <div className={styles.donutLegendBar}>
                         <div style={{ width: `${p.avg}%`, background: p.color, height: '100%', borderRadius: 2 }} />
                       </div>
                     </div>
-                    <span className={styles.donutLegendScore} style={{ color: p.color }}>{p.avg}</span>
+                    <span className={styles.donutLegendScore}>{p.avg}</span>
                   </div>
                 ))}
                 <div className={styles.contentHealth}>
-                  <Heart style={{ width: 11, height: 11, color: scoreColor(contentHealth) }} />
+                  <Heart style={{ width: 11, height: 11, color: '#94a3b8' }} />
                   <span>Content Health: </span>
-                  <strong style={{ color: scoreColor(contentHealth) }}>{contentHealth}%</strong>
+                  <strong>{contentHealth}%</strong>
                 </div>
               </div>
             </div>
@@ -763,7 +719,7 @@ export default function Dashboard() {
                           title={`${p.label}: ${item[p.key] ?? '—'}`} />
                       ))}
                     </div>
-                    <span className={styles.analysisScore} style={{ color: scoreColor(item.overall_score) }}>
+                    <span className={styles.analysisScore}>
                       {item.overall_score ?? '—'}
                     </span>
                     <span className={styles.analysisDate}>{timeAgo(item.analyzed_at)}</span>
@@ -795,8 +751,8 @@ export default function Dashboard() {
           <div className={styles.actionList}>
             {QUICK_ACTIONS.map(a => (
               <Link key={a.to} to={a.to} className={styles.actionCard}>
-                <div className={styles.actionIconWrap} style={{ background: `${a.color}12`, borderColor: `${a.color}25` }}>
-                  <a.Icon className={styles.actionIcon} style={{ color: a.color }} />
+                <div className={styles.actionIconWrap} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                  <a.Icon className={styles.actionIcon} style={{ color: '#94a3b8' }} />
                 </div>
                 <div className={styles.actionText}>
                   <span className={styles.actionLabel}>{a.label}</span>
@@ -912,7 +868,7 @@ export default function Dashboard() {
         ) : (
           <div className={styles.citationsList}>
             {trackedTopics.map((t) => {
-              const sColor = scoreColor(t.latestScore);
+              const sColor = '#94a3b8';
               const deltaUp = t.delta !== null && t.delta > 0;
               const deltaDown = t.delta !== null && t.delta < 0;
               const deltaColor = deltaUp ? '#22c55e' : deltaDown ? '#ef4444' : 'var(--text-dim)';
@@ -984,9 +940,9 @@ export default function Dashboard() {
             {latestSubs.map(p => (
               <div key={p.key} className={styles.subScorePillar}>
                 <div className={styles.subScorePillarHeader}>
-                  <p.Icon style={{ width: 13, height: 13, color: p.color }} />
-                  <span className={styles.subScorePillarLabel} style={{ color: p.color }}>{p.label}</span>
-                  <span className={styles.subScorePillarScore} style={{ color: p.color }}>{p.pillarScore}</span>
+                  <p.Icon style={{ width: 13, height: 13, color: '#94a3b8' }} />
+                  <span className={styles.subScorePillarLabel}>{p.label}</span>
+                  <span className={styles.subScorePillarScore}>{p.pillarScore}</span>
                 </div>
                 {p.subscores.map(s => (
                   s.value !== null && (
