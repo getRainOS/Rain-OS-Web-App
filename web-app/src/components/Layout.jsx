@@ -128,10 +128,10 @@ export default function Layout({ children }) {
             <div className={styles.laneChip} style={{ borderColor: laneMeta.color + '40', background: laneMeta.color + '0d' }}>
               <span className={styles.laneDot} style={{ background: laneMeta.color }} />
               <span className={styles.laneChipLabel} style={{ color: laneMeta.color }}>{laneMeta.label}</span>
-              <button className={styles.laneChangeBtn} onClick={() => navigate('/settings')}>change</button>
+              <button className={styles.laneChangeBtn} onClick={() => navigate('/dashboard?selectLane=1')}>change</button>
             </div>
           ) : (
-            <button className={styles.lanePrompt} onClick={() => navigate('/settings')}>
+            <button className={styles.lanePrompt} onClick={() => navigate('/dashboard?selectLane=1')}>
               <Wand2 style={{ width: 13, height: 13, opacity: 0.6 }} />
               <span>Choose your lane</span>
             </button>

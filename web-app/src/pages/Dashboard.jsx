@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import { buildCompetitorMap } from '../lib/citationHistory.js';
@@ -262,13 +262,22 @@ function LaneSelector({ onSelect }) {
 export default function Dashboard() {
   const { user, userLane, setUserLane } = useApp();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [chartRange, setChartRange] = useState(14);
   const [citations, setCitations] = useState([]);
   const [citationsLoading, setCitationsLoading] = useState(true);
   const [citationHistory, setCitationHistory] = useState([]);
-  const [showLaneSelector, setShowLaneSelector] = useState(!userLane);
+  const urlWantsLaneSelect = searchParams.get('selectLane') === '1';
+  const [showLaneSelector, setShowLaneSelector] = useState(!userLane || urlWantsLaneSelect);
+
+  useEffect(() => {
+    if (urlWantsLaneSelect) {
+      setSearchParams(prev => { const n = new URLSearchParams(prev); n.delete('selectLane'); return n; }, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     api.history({ limit: 50 })
