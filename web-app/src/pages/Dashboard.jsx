@@ -533,23 +533,23 @@ export default function Dashboard() {
           <div key={k.label} className={`${styles.kpiCard} ${k.isGauge ? styles.kpiGaugeCard : ''}`}
             style={{ '--kpi-color': k.color }}>
             {k.isGauge ? (
-              /* Gauge-style card */
+              /* Average Score — standard number card (no gauge arc) */
               <>
                 <div className={styles.kpiTop}>
                   <span className={styles.kpiLabel}>{k.label}</span>
-                  {k.trend !== null && <TrendBadge pct={k.trend} />}
-                </div>
-                <div className={styles.gaugeWrap}>
-                  <GaugeArc score={typeof k.value === 'number' ? k.value : 0} color={k.color} size={68} />
-                  <div className={styles.gaugeCenter}>
-                    <span className={styles.kpiValue} style={{ color: k.color, fontSize: 16 }}>
-                      {k.value}
-                    </span>
-                    {k.suffix && <span className={styles.kpiSuffix}>{k.suffix}</span>}
+                  <div className={styles.kpiIconWrap} style={{ background: `${k.color}15`, border: `1px solid ${k.color}30` }}>
+                    <k.Icon className={styles.kpiIcon} style={{ color: k.color }} />
                   </div>
+                </div>
+                <div className={styles.kpiValueRow}>
+                  <span className={styles.kpiValue} style={{ color: k.color }}>
+                    {k.value}
+                  </span>
+                  {k.suffix && <span className={styles.kpiSuffix}>{k.suffix}</span>}
                 </div>
                 <div className={styles.kpiBottom}>
                   <span className={styles.kpiSub}>{k.sub}</span>
+                  {k.trend !== null && <TrendBadge pct={k.trend} />}
                 </div>
               </>
             ) : (
@@ -667,7 +667,7 @@ export default function Dashboard() {
                 <ResponsiveContainer width="100%" height={120}>
                   <PieChart>
                     <Pie data={donutData} cx="50%" cy="50%"
-                      innerRadius={38} outerRadius={58}
+                      innerRadius={30} outerRadius={54}
                       paddingAngle={2} dataKey="value" strokeWidth={0}
                       startAngle={90} endAngle={-270}>
                       {donutData.map((entry, i) => (
