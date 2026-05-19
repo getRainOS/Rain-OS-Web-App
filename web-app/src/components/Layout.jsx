@@ -5,7 +5,7 @@ import { api, clearApiKey } from '../api/client.js';
 import { supabase } from '../lib/supabase.js';
 import {
   LayoutDashboard, FileText, Globe, GitBranch, Radar, Eye,
-  BarChart2, Clock, Settings, ArrowUp, LogOut, Wand2,
+  BarChart2, Clock, Settings, ArrowUp, LogOut, Wand2, Menu, X,
 } from 'lucide-react';
 import styles from './Layout.module.css';
 
@@ -20,6 +20,7 @@ const LANE_META = {
   product_sellers: { label: 'Product Sellers',        color: '#f97316' },
   developers:      { label: 'Developers',             color: '#10b981' },
   local_business:  { label: 'Local Service Business', color: '#f43f5e' },
+  vibe_coders:     { label: 'Vibe Coders',            color: '#22c55e' },
 };
 
 const TOOLS = {
@@ -46,12 +47,17 @@ const LANE_GROUPS = {
     { label: 'Measure',   tools: ['sov', 'history'] },
   ],
   developers: [
-    { label: 'Optimize',  tools: ['analyze', 'repo'] },
+    { label: 'Optimize',  tools: ['repo', 'urlScanner'] },
     { label: 'Monitor',   tools: ['citation'] },
     { label: 'Measure',   tools: ['sov', 'history'] },
   ],
   local_business: [
-    { label: 'Optimize',  tools: ['analyze'] },
+    { label: 'Optimize',  tools: ['analyze', 'urlScanner'] },
+    { label: 'Monitor',   tools: ['citation', 'visibility'] },
+    { label: 'Measure',   tools: ['sov', 'history'] },
+  ],
+  vibe_coders: [
+    { label: 'Optimize',  tools: ['repo', 'urlScanner'] },
     { label: 'Monitor',   tools: ['citation', 'visibility'] },
     { label: 'Measure',   tools: ['sov', 'history'] },
   ],
@@ -73,6 +79,7 @@ export default function Layout({ children }) {
   const { user, setUser, onLogout, isDemo, userLane } = useApp();
   const navigate = useNavigate();
   const [usage, setUsage] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     if (isDemo) return;
@@ -110,14 +117,18 @@ export default function Layout({ children }) {
 
   return (
     <div className={styles.root}>
-      <aside className={styles.sidebar}>
+      <button className={styles.mobileMenuBtn} onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
+        {menuOpen ? <X style={{ width: 18, height: 18 }} /> : <Menu style={{ width: 18, height: 18 }} />}
+      </button>
+      <div className={`${styles.overlay} ${menuOpen ? styles.show : ''}`} onClick={() => setMenuOpen(false)} />
+      <aside className={`${styles.sidebar} ${menuOpen ? styles.open : ''}`}>
         <div className={styles.brand}>
           <span className={styles.brandRain}>rain</span>
           <span className={styles.brandOS}> OS</span>
           {isDemo && <span className={styles.demoBadge}>DEMO</span>}
         </div>
 
-        <nav className={styles.nav}>
+        <nav className={styles.nav} onClick={() => setMenuOpen(false)}>
           {/* Overview — always visible */}
           <div className={styles.navGroup}>
             <NavItem {...TOOLS.dashboard} />

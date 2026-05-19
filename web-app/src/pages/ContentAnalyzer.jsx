@@ -32,6 +32,7 @@ export default function ContentAnalyzer() {
   const analysisModule = userLane === 'product_sellers' ? 'product_sellers'
     : userLane === 'developers' ? 'developers'
     : userLane === 'local_business' ? 'local_business'
+    : userLane === 'vibe_coders' ? 'vibe_coders'
     : 'general';
 
   const pageLabel = userLane === 'developers'
@@ -40,6 +41,8 @@ export default function ContentAnalyzer() {
     ? 'Product Content Optimizer'
     : userLane === 'local_business'
     ? 'Local Business Optimizer'
+    : userLane === 'vibe_coders'
+    ? 'Vibe Coder Content Optimizer'
     : 'Content Optimizer';
 
   const pageSub = userLane === 'developers'
@@ -48,6 +51,8 @@ export default function ContentAnalyzer() {
     ? 'Paste your product content to analyze it for AI shopping and discovery signals'
     : userLane === 'local_business'
     ? 'Paste your website content or Google Business Profile description to score it for local AI visibility'
+    : userLane === 'vibe_coders'
+    ? 'Paste your vibe-coded landing page or app copy to audit AI readability and discoverability before launch'
     : 'Paste your content to get a full AEO analysis and rewrite it for AI readability';
 
   async function handleAnalyze(e) {

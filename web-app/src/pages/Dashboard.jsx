@@ -37,15 +37,33 @@ const PILLARS = [
     subLabels: ['Schema Completeness','Answer Layer Quality','Freshness Signals','Query Match'] },
 ];
 
-const QUICK_ACTIONS = [
-  { to: '/analyze',       label: 'Content Analysis', sub: 'Paste and score any text',         Icon: FileText,  color: '#06b6d4' },
-  { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit a live URL for AEO signals', Icon: Globe,     color: '#a855f7' },
-  { to: '/repo-analysis', label: 'Repo Analysis',     sub: 'Connect GitHub and score source',  Icon: GitBranch, color: '#22c55e' },
-];
+const QUICK_ACTIONS_ALL = {
+  general: [
+    { to: '/analyze',       label: 'Content Optimizer', sub: 'Paste and score any text',         Icon: FileText,  color: '#06b6d4' },
+    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit a live URL for AEO signals', Icon: Globe,     color: '#a855f7' },
+  ],
+  product_sellers: [
+    { to: '/analyze',       label: 'Content Optimizer', sub: 'Paste and score product copy',     Icon: FileText,  color: '#06b6d4' },
+    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit product pages for AI signals', Icon: Globe,   color: '#a855f7' },
+  ],
+  vibe_coders: [
+    { to: '/repo-analysis', label: 'Repo Analysis',     sub: 'Connect GitHub and score docs',     Icon: GitBranch, color: '#22c55e' },
+    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit your live app for AI signals', Icon: Globe,     color: '#a855f7' },
+  ],
+  developers: [
+    { to: '/repo-analysis', label: 'Repo Analysis',     sub: 'Connect GitHub and score source',  Icon: GitBranch, color: '#22c55e' },
+    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit docs site for AI signals',   Icon: Globe,     color: '#a855f7' },
+  ],
+  local_business: [
+    { to: '/analyze',       label: 'Content Optimizer', sub: 'Paste and score your page copy',   Icon: FileText,  color: '#06b6d4' },
+    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit your site for local signals', Icon: Globe,     color: '#a855f7' },
+  ],
+};
 
 const LANES = [
   { id: 'general',         label: 'Writers & Marketers',    desc: 'Optimize articles, landing pages, and marketing copy for AI citation.', color: '#06b6d4', Icon: FileText },
   { id: 'product_sellers', label: 'Product Sellers',        desc: 'Maximize AI product discovery with Discoverability scoring at 50% weight.', color: '#f97316', Icon: SearchCheck },
+  { id: 'vibe_coders',     label: 'Vibe Coders',            desc: 'Ship fast with AI-built projects? Audit your content, repo, and discoverability before you launch.', color: '#22c55e', Icon: GitBranch },
   { id: 'developers',      label: 'Developers',             desc: 'Analyze tech docs, READMEs, and API references for AI readability signals.', color: '#10b981', Icon: GitBranch },
   { id: 'local_business',  label: 'Local Service Business', desc: 'Get your professional services business cited by AI when customers search locally.', color: '#f43f5e', Icon: MapIcon },
 ];
@@ -278,10 +296,11 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (urlWantsLaneSelect) {
+      setShowLaneSelector(true);
       setSearchParams(prev => { const n = new URLSearchParams(prev); n.delete('selectLane'); return n; }, { replace: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [urlWantsLaneSelect]);
 
   useEffect(() => {
     api.history({ limit: 50 })
@@ -395,9 +414,15 @@ export default function Dashboard() {
       { ...PILLARS[2], label: 'Technical Clarity', weight: 30 },
     ];
     if (userLane === 'local_business') return [
-      { ...PILLARS[1], label: 'Local Authority', weight: 40 },
-      { ...PILLARS[0], label: 'AI Presence', weight: 30 },
-      { ...PILLARS[2], label: 'Trust & Conversion', weight: 30 },
+      { ...PILLARS[1], label: 'Local Authority', weight: 35 },
+      { ...PILLARS[0], label: 'AI Presence', weight: 25 },
+      { ...PILLARS[2], label: 'Trust & Conversion', weight: 25 },
+      { key: 'google_calling', label: 'Google Calling', color: '#ea4335', Icon: Zap, weight: 15, subs: ['click_to_call','nap_consistency','gbp_signals'], subLabels: ['Click-to-Call','NAP Consistency','GBP Signals'] },
+    ];
+    if (userLane === 'vibe_coders') return [
+      { ...PILLARS[0], label: 'AI Readability', weight: 35 },
+      { ...PILLARS[1], label: 'Discoverability', weight: 35 },
+      { ...PILLARS[2], label: 'Conversion', weight: 30 },
     ];
     return [
       { ...PILLARS[0], weight: 40 },
@@ -542,7 +567,7 @@ export default function Dashboard() {
       hasData: totalAnalyses > 0,
       value: totalAnalyses > 0 ? `${avgScore}` : null,
       suffix: '/100',
-      sub: totalAnalyses > 0 ? `${totalAnalyses} analyses · ${weakestPillar ? `${weakestPillar.label} weakest` : 'all balanced'}` : 'Paste content to score',
+      sub: totalAnalyses > 0 ? `${totalAnalyses} analyses · ${weakestPillar ? `${weakestPillar.label} weakest` : 'all balanced'}` : 'No analysis data yet — paste content to score',
       trend: scoreTrend,
       Icon: FileText,
       spark: chartData.length > 1 ? chartData.map(d => d.score) : null,
@@ -553,7 +578,7 @@ export default function Dashboard() {
       to: '/citation-monitor',
       hasData: citationTotal > 0,
       value: citationTotal > 0 ? `${citationRate}%` : null,
-      sub: citationTotal > 0 ? `${citationCitedCount}/${citationTotal} topics cited · avg alignment ${avgAlignment}` : 'Check if AI cites you',
+      sub: citationTotal > 0 ? `${citationCitedCount}/${citationTotal} topics cited · avg alignment ${avgAlignment}` : 'No citation data yet — run a topic check to see if AI cites you',
       Icon: Radar,
       spark: trackedTopics.length > 0 && trackedTopics[0].spark.length > 1 ? trackedTopics[0].spark : null,
     },
@@ -566,7 +591,7 @@ export default function Dashboard() {
       suffix: '/100',
       sub: brandVisLatest
         ? `${brandVisLatest.brand} — ${brandVisLatest.latestMention.replace('_', ' ')} · ${brandVisLatest.checks} check${brandVisLatest.checks > 1 ? 's' : ''}`
-        : 'Track how AI mentions you',
+        : 'No brand visibility data yet — run a check to see how AI describes you',
       trend: brandVisLatest?.delta,
       Icon: Heart,
       spark: brandVisLatest?.spark && brandVisLatest.spark.length > 1 ? brandVisLatest.spark : null,
@@ -579,7 +604,7 @@ export default function Dashboard() {
       value: sovLatest ? `${sovLatest.latestSov}%` : null,
       sub: sovLatest
         ? `${sovLatest.brand} — ${sovLatest.checks} check${sovLatest.checks > 1 ? 's' : ''} · ${sovHistory.length} total`
-        : 'Track brand citations across AI models',
+        : 'No Share of Voice data yet — run a check to measure your brand presence across AI models',
       trend: sovLatest?.delta,
       Icon: BarChart2,
       spark: sovLatest?.spark && sovLatest.spark.length > 1 ? sovLatest.spark : null,
@@ -714,11 +739,11 @@ export default function Dashboard() {
           <div className={styles.chartHeader}>
             <div>
               <h2 className={styles.chartTitle}>Score Trend</h2>
-              <p className={styles.chartSub}>Overall Rain Score over time</p>
+              <p className={styles.chartSub}>Last {chartRange} analyses</p>
             </div>
             <div className={styles.rangeToggle}>
               {[7, 14, 30].map(r => (
-                <button key={r}
+                <button key={r} type="button"
                   className={`${styles.rangeBtn} ${chartRange === r ? styles.rangeBtnActive : ''}`}
                   onClick={() => setChartRange(r)}>
                   {r}
@@ -738,7 +763,7 @@ export default function Dashboard() {
               </div>
             </div>
           ) : (
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer key={`chart-${chartRange}`} width="100%" height={200}>
               <AreaChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
                 <defs>
                   <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
@@ -895,7 +920,7 @@ export default function Dashboard() {
             </div>
           </div>
           <div className={styles.actionList}>
-            {QUICK_ACTIONS.map(a => (
+            {(QUICK_ACTIONS_ALL[userLane] || QUICK_ACTIONS_ALL.general).map(a => (
               <Link key={a.to} to={a.to} className={styles.actionCard}>
                 <div className={styles.actionIconWrap} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
                   <a.Icon className={styles.actionIcon} style={{ color: '#94a3b8' }} />

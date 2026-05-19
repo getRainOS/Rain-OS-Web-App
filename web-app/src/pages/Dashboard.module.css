@@ -6,6 +6,12 @@
   padding-bottom: 32px;
 }
 
+@media (max-width: 768px) {
+  .root {
+    gap: 14px;
+  }
+}
+
 /* ── Header ── */
 .header {
   display: flex;
@@ -68,6 +74,10 @@
 
 @media (max-width: 640px) {
   .toolCards { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .toolCards { grid-template-columns: 1fr; }
 }
 
 .toolCard {
@@ -187,6 +197,10 @@
 
 @media (max-width: 960px) {
   .kpis { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .kpis { grid-template-columns: 1fr; }
 }
 
 .kpiCard {
