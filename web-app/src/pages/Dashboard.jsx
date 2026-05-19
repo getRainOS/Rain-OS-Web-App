@@ -677,7 +677,7 @@ export default function Dashboard() {
                 <span className={styles.toolCardLabel}>{t.label}</span>
                 {!t.hasData && (
                   <span className={styles.toolCardBadgeEmpty}>
-                    <Lock size={9} /> Not set up
+                    <Lock size={9} /> No data yet
                   </span>
                 )}
               </div>
@@ -693,7 +693,7 @@ export default function Dashboard() {
                   {t.suffix && <span className={styles.kpiSuffix}>{t.suffix}</span>}
                 </>
               ) : (
-                <span className={styles.toolCardPlaceholder}>Set up</span>
+                <span className={styles.toolCardPlaceholder}>No data yet</span>
               )}
             </div>
 
