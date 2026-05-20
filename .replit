@@ -28,7 +28,7 @@ args = "Web App"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Dashboard Preview"
+args = "Marketing Page"
 
 [[workflows.workflow]]
 name = "Build Plugin"
@@ -65,16 +65,16 @@ args = "cd web-app && npm run dev"
 waitForPort = 5000
 
 [[workflows.workflow]]
-name = "Dashboard Preview"
+name = "Marketing Page"
 author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "console"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd \"rain OS AI Readability Optimizer/dashboard-preview\" && npm run dev"
-waitForPort = 5000
-
-[workflows.workflow.metadata]
-outputType = "webview"
+waitForPort = 5173
 
 [[ports]]
 localPort = 3000
@@ -88,16 +88,8 @@ localPort = 5000
 externalPort = 80
 
 [[ports]]
-localPort = 5001
-externalPort = 3002
-
-[[ports]]
 localPort = 5173
 externalPort = 5173
-
-[[ports]]
-localPort = 5174
-externalPort = 3000
 
 [deployment]
 deploymentTarget = "static"

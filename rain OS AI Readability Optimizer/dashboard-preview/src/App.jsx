@@ -162,9 +162,9 @@ function Sidebar({ currentPage, setCurrentPage }) {
         padding: '16px 12px',
         borderBottom: '1px solid var(--border-color)',
       }}>
-        <span style={{ color: 'var(--text-muted)', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>WordPress Admin</span>
+        <span style={{ color: 'var(--text-muted)', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Marketing Preview</span>
       </div>
-      
+
       <nav style={{ padding: '8px', flex: 1, overflowY: 'auto' }}>
         <a
           href="#rain-os"
@@ -179,10 +179,9 @@ function Sidebar({ currentPage, setCurrentPage }) {
             cursor: 'pointer',
           }}
         >
-          <span style={{ fontSize: '24px', fontWeight: 700, letterSpacing: '-0.5px' }}>
-            <span style={{ color: '#ffffff' }}>r</span>
-            <span style={{ color: '#22d3ee' }}>ai</span>
-            <span style={{ color: '#ffffff' }}>n</span>
+          <span style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-0.5px' }}>
+            <span style={{ color: '#0ea5e9' }}>rain</span>
+            <span style={{ color: '#ffffff' }}> OS</span>
           </span>
         </a>
         
