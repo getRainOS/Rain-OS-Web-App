@@ -126,8 +126,14 @@ export default function App() {
 
   if (!authChecked) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#020410' }}>
-        <div className="spinner" />
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#020410', gap: 16 }}>
+        <div style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-0.5px', color: '#fff' }}>
+          <span style={{ color: '#0ea5e9' }}>rain</span> OS
+        </div>
+        <div style={{ width: 120, height: 2, background: 'rgba(255,255,255,0.06)', borderRadius: 1, overflow: 'hidden' }}>
+          <div style={{ width: '40%', height: '100%', background: '#0ea5e9', borderRadius: 1, animation: 'rainLoad 1s ease-in-out infinite' }} />
+        </div>
+        <style>{`@keyframes rainLoad { 0%{transform:translateX(-100%)} 50%{transform:translateX(100%)} 100%{transform:translateX(250%)} }`}</style>
       </div>
     );
   }
