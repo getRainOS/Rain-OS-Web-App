@@ -13,7 +13,7 @@ import {
   FileText, Globe, GitBranch, ArrowRight,
   BrainCircuit, ShieldCheck, MousePointerClick, SearchCheck,
   Activity, Zap, Minus, Heart, Map as MapIcon, Radar,
-  CheckCircle2, AlertCircle, BarChart2, Lock, Clock,
+  CheckCircle2, AlertCircle, BarChart2, Lock, Clock, Sparkles,
 } from 'lucide-react';
 import styles from './Dashboard.module.css';
 
@@ -558,8 +558,25 @@ export default function Dashboard() {
   }, [sovHistory]);
   const sovLatest = sovGroups[0] || null;
 
+  // AI Search Readiness = contentHealth but positioned as the metric for Google's new AI Search ads
+  const aiSearchReady = contentHealth;
+
   // Build tool-specific KPI cards
   const toolCards = [
+    {
+      key: 'ai_search',
+      label: 'AI Search Ready',
+      to: '/analyze',
+      hasData: totalAnalyses > 0,
+      value: totalAnalyses > 0 ? `${aiSearchReady}` : null,
+      suffix: '/100',
+      sub: totalAnalyses > 0
+        ? `From your content health scores · ${weakestPillar ? `${weakestPillar.label} needs work` : 'all pillars strong'}`
+        : 'No data yet — run your first analysis to see your AI Search readiness score',
+      trend: scoreTrend,
+      Icon: Sparkles,
+      spark: chartData.length > 1 ? chartData.map(d => d.score) : null,
+    },
     {
       key: 'content',
       label: 'Content Health',

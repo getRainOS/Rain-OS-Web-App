@@ -33,7 +33,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
                 <span className="text-sky-400">Own the Answer.</span>
               </h1>
               <p className="text-slate-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
-                rain OS scores your content against the exact signals ChatGPT, Perplexity, Gemini, and Google Search use to pick their sources — so you can optimize before your competitors even know what AEO is.
+                Google just launched AI-powered ads inside AI Search — and they cite sources the same way ChatGPT and Perplexity do. rain OS scores your content against those exact signals, so you’re ready for both organic citations and paid AI placements.
               </p>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -54,7 +54,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
               </div>
               <h2 className="text-2xl md:text-3xl font-semibold text-white leading-tight" style={{ letterSpacing: '-0.03em' }}>
                 Your AI built the site.{' '}
-                <span className="text-emerald-400">Now paste the content, scan the URL, or connect the repo.</span>
+                <span className="text-emerald-400">Now audit it for Google’s AI Search ads too — paste, scan, or connect the repo.</span>
               </h2>
             </motion.div>
           </div>

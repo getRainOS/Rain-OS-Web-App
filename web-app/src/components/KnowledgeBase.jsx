@@ -27,6 +27,7 @@ const KB_DATA = {
       'Add schema markup for your key entities and citations.',
       'Re-scan after every major content revision to track progress.',
     ],
+    aiSearchNote: 'Google Marketing Live 2026: AI Search now includes conversational ad placements that cite sources directly in answers. High Rain Scores improve both organic citations and paid AI ad eligibility.',
   },
 
   product_sellers: {
@@ -54,6 +55,7 @@ const KB_DATA = {
       'Include comparison tables AI can easily extract.',
       'Monitor competitor citations to spot gaps.',
     ],
+    aiSearchNote: 'Google\u2019s AI Search ads (launched May 2026) surface product offers directly in AI-generated answers — making Product Discoverability scoring critical. Strong schema and AI-readable product pages increase both organic and paid placement odds.',
   },
 
   vibe_coders: {
@@ -80,6 +82,7 @@ const KB_DATA = {
       'Server-render critical content — AI does not execute JS.',
       'Re-scan after every major feature ship to track AI discoverability.',
     ],
+    aiSearchNote: 'Google Marketing Live 2026: AI Search is now agentic — AI can act on behalf of users (coding, shopping, booking). Well-structured docs with schema and clear entity definitions make your project discoverable to both AI agents and Google\u2019s AI Search ad system.',
   },
 
   developers: {
@@ -104,6 +107,7 @@ const KB_DATA = {
       'Document error cases — AI engines value completeness.',
       'Keep package.json description keyword-rich but natural.',
     ],
+    aiSearchNote: 'Google\u2019s AI Search is now agentic \u2014 AI agents and coding assistants act on behalf of users. Well-structured API docs with schema, entity clarity, and machine-readable endpoints make your library discoverable in both organic AI answers and Google\u2019s AI Search ad placements.',
   },
 
   local_business: {
@@ -130,6 +134,7 @@ const KB_DATA = {
       'Create location-specific content that answers common local queries.',
       'Make phone numbers clickable and prominently displayed.',
     ],
+    aiSearchNote: 'Google Marketing Live 2026: AI Search now shows local business recommendations and "Direct Offers" directly in conversational results. Consistent NAP, LocalBusiness schema, and GBP signals are prerequisites for appearing in both organic AI answers and paid AI ad placements.',
   },
 };
 
@@ -148,6 +153,12 @@ export default function KnowledgeBase() {
 
       {open && (
         <div className={styles.panel}>
+          {data.aiSearchNote && (
+            <div className={styles.aiSearchBanner}>
+              <span className={styles.aiSearchLabel}>Google AI Search</span>
+              <p className={styles.aiSearchText}>{data.aiSearchNote}</p>
+            </div>
+          )}
           <div className={styles.section}>
             <h4 className={styles.sectionTitle}>Pillars</h4>
             {data.pillars.map(p => (

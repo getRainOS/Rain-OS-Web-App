@@ -219,13 +219,13 @@ export default function CitationMonitor() {
           <h1 className={styles.title}>Citation Monitor</h1>
         </div>
         <p className={styles.sub}>
-          Find out whether AI engines recommend your brand for the topics that matter to you.
+          Track whether ChatGPT, Perplexity, Gemini, and Google AI Search recommend your brand for the topics that matter to you.
         </p>
       </div>
 
       <div className={styles.disclaimer}>
         <p className={styles.disclaimerText}>
-          <strong>How this works — and its limits.</strong> We query Google Gemini with live Google Search grounding using your exact topic, then check whether your domain appears among the sources Gemini used to generate its answer. The <em>cited / not cited</em> result is a real, factual snapshot of what Gemini pulled right now. However: it reflects only one AI model (Gemini) and one query phrasing; different phrasings or models may yield different sources. The alignment score and recommendations come from a second AI analysis pass and are directional, not quantitative. Run checks on multiple topic variations and re-run regularly to track trends — a single check is a data point, not a verdict.
+          <strong>How this works — and its limits.</strong> We query Google Gemini with live Google Search grounding using your exact topic, then check whether your domain appears among the sources Gemini used to generate its answer. This matters now more than ever: Google recently launched AI Search ads that cite sources within AI-generated answers (Google Marketing Live 2026). The <em>cited / not cited</em> result is a real, factual snapshot of what Gemini pulled right now. However: it reflects only one AI model (Gemini) and one query phrasing; different phrasings or models may yield different sources. The alignment score and recommendations come from a second AI analysis pass and are directional, not quantitative. Run checks on multiple topic variations and re-run regularly to track trends — a single check is a data point, not a verdict.
         </p>
       </div>
 
