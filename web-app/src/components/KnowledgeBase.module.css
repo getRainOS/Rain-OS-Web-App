@@ -1,0 +1,142 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  margin: 8px 12px 0;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.03);
+  border: 1px dashed rgba(255,255,255,0.12);
+  color: var(--text-dim);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  text-align: left;
+  width: 100%;
+}
+
+.toggle:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--text-muted);
+  border-color: rgba(255,255,255,0.2);
+}
+
+.panel {
+  padding: 12px 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  margin-top: 6px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.section {
+  margin-bottom: 14px;
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.sectionTitle {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+
+.pillarRow {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.pillarRow:last-child {
+  border-bottom: none;
+}
+
+.pillarHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.pillarLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  flex: 1;
+}
+
+.pillarWeight {
+  font-size: 10px;
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+.pillarDesc {
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.toolRow {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.toolRow:last-child {
+  border-bottom: none;
+}
+
+.toolLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.toolDesc {
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.tipList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tipList li {
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.5;
+  padding: 4px 0 4px 14px;
+  position: relative;
+}
+
+.tipList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.5;
+}

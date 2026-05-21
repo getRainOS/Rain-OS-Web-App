@@ -7,6 +7,7 @@ import {
   LayoutDashboard, FileText, Globe, GitBranch, Radar, Eye,
   BarChart2, Clock, Settings, ArrowUp, LogOut, Wand2, Menu, X,
 } from 'lucide-react';
+import KnowledgeBase from './KnowledgeBase.jsx';
 import styles from './Layout.module.css';
 
 const PRICE_TO_PLAN = {
@@ -175,6 +176,8 @@ export default function Layout({ children }) {
             <NavItem {...TOOLS.settings} />
           </div>
         </nav>
+
+        <KnowledgeBase />
 
         <div className={styles.bottom}>
           {usage && (
