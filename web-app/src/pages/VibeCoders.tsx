@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import {
   ArrowRight, Zap, GitBranch, Layers, Search, Shield,
   FileCode, Terminal, CheckCircle2, AlertTriangle, Sparkles, Wand2,
-  Monitor, Code2, Globe, Cpu
+  Monitor, Code2, Globe, Cpu, MapPin
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
@@ -113,24 +113,18 @@ export default function VibeCoders() {
               background: 'radial-gradient(ellipse at center, rgba(139,92,246,0.15) 0%, rgba(14,165,233,0.08) 40%, transparent 70%)',
             }}
           />
+          <div className="absolute top-24 right-4 z-20">
+            <a
+              href="/local-business"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-rose-500 hover:bg-rose-400 px-3 py-1.5 text-xs font-bold text-white transition-all shadow-md shadow-rose-500/20 hover:scale-105 active:scale-95"
+            >
+              <MapPin className="w-3 h-3" />
+              Local Businesses
+            </a>
+          </div>
 
           <div className="max-w-4xl mx-auto text-center space-y-8">
-            <div className="flex justify-end w-full max-w-5xl mx-auto">
-              <LocalBusinessBadge />
-            </div>
             <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-              <div
-                className="inline-flex items-center rounded-full border px-4 py-1.5 text-xs font-bold tracking-[0.2em] uppercase mb-6"
-                style={{
-                  borderColor: 'rgba(167,139,250,0.3)',
-                  background: 'rgba(139,92,246,0.08)',
-                  color: '#c4b5fd',
-                }}
-              >
-                <span className="flex h-2 w-2 rounded-full bg-violet-400 mr-3 animate-pulse" />
-                For Vibe Coders
-              </div>
-
               {/* Rotating subheading */}
               <div className="mb-4">
                 <span className="inline-flex items-baseline gap-2 flex-wrap justify-center text-2xl md:text-3xl font-semibold text-white"
