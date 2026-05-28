@@ -195,9 +195,6 @@ export default function VibeCoders() {
                 Scan my repo free
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </button>
-              <a href="/repo-analysis" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
-                Or try the demo →
-              </a>
             </motion.div>
 
           </div>
