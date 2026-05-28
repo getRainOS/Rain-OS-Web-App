@@ -14,7 +14,7 @@ interface LandingPageProps {
   onGetStartedClick?: () => void;
 }
 
-const ROTATING_WORDS = ['SaaS?', 'Website?', 'Web Application?'];
+const ROTATING_WORDS = ['SaaS?', 'Website?', 'Web App?'];
 
 export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick }: LandingPageProps) {
   const [wordIndex, setWordIndex] = useState(0);
@@ -34,25 +34,28 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] pointer-events-none -z-10" style={{ background: 'radial-gradient(ellipse at center, rgba(14,165,233,0.32) 0%, rgba(14,165,233,0.14) 35%, rgba(14,165,233,0.04) 60%, transparent 80%)' }} />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[260px] pointer-events-none -z-10" style={{ background: 'radial-gradient(ellipse at center, rgba(56,189,248,0.22) 0%, rgba(14,165,233,0.10) 50%, transparent 80%)', filter: 'blur(16px)' }} />
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[150%] h-[500px] bg-arc-glow opacity-60 pointer-events-none -z-10" />
-          <div className="max-w-5xl mx-auto flex flex-col gap-12 items-center">
+          <div className="max-w-7xl mx-auto flex flex-col gap-12 items-center px-4">
             <div className="flex justify-end w-full max-w-5xl">
               <LocalBusinessBadge />
             </div>
             <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: 'easeOut' }} className="text-center space-y-6">
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.15] text-white" style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
-                <div>Vibe Coded Your</div>
-                <div className="relative text-sky-400 h-[1.2em] mt-1">
-                  <span className="invisible">Web Application?</span>
-                  {ROTATING_WORDS.map((word, i) => (
-                    <span
-                      key={word}
-                      className="absolute left-1/2 top-0 -translate-x-1/2 transition-opacity duration-700 ease-in-out"
-                      style={{ opacity: i === wordIndex ? 1 : 0 }}
-                    >
-                      {word}
-                    </span>
-                  ))}
-                </div>
+              <h1 className="text-3xl md:text-4xl lg:text-[2.5rem] font-semibold leading-[1.05] text-white text-center" style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
+                <span className="inline-flex items-baseline gap-2 flex-wrap justify-center">
+                  <span>Vibe Coded Your</span>
+                  <span className="inline-block relative text-sky-400" style={{ minWidth: '5.5ch' }}>
+                    {ROTATING_WORDS.map((word, i) => (
+                      <span
+                        key={word}
+                        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-500 ease-in-out whitespace-nowrap"
+                        style={{ opacity: i === wordIndex ? 1 : 0 }}
+                        aria-hidden={i !== wordIndex}
+                      >
+                        {word}
+                      </span>
+                    ))}
+                    <span className="invisible whitespace-nowrap">Web App?</span>
+                  </span>
+                </span>
               </h1>
               <p className="text-slate-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
                 Find out how ChatGPT, Perplexity, and Gemini read your content — and how likely they are to cite it when someone asks a question you should own.
