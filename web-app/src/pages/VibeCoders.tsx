@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import {
   ArrowRight, Zap, GitBranch, Layers, Search, Shield,
   FileCode, Terminal, CheckCircle2, AlertTriangle, Sparkles, Wand2,
-  Monitor, Code2, Globe, Cpu, MapPin, BrainCircuit, ShieldCheck, MousePointerClick
+  Monitor, Code2, Globe, Cpu, MapPin, BrainCircuit, ShieldCheck, MousePointerClick,
+  Copy, Check, RotateCcw, TrendingUp
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
@@ -18,6 +19,14 @@ const pillars = [
     border: 'rgba(14,165,233,0.25)',
     Icon: BrainCircuit,
     name: 'AI Readability',
+    score: 42,
+    maxScore: 94,
+    subSignals: [
+      { name: 'llms.txt', before: false, after: true },
+      { name: 'Schema markup', before: false, after: true },
+      { name: 'H1/H2 structure', before: true, after: true },
+      { name: 'Meta tags', before: false, after: true },
+    ],
   },
   {
     color: '#34d399',
@@ -25,6 +34,14 @@ const pillars = [
     border: 'rgba(16,185,129,0.25)',
     Icon: ShieldCheck,
     name: 'Digital Authority',
+    score: 58,
+    maxScore: 91,
+    subSignals: [
+      { name: 'README quality', before: true, after: true },
+      { name: 'robots.txt', before: false, after: true },
+      { name: 'Canonical URL', before: true, after: true },
+      { name: 'OG tags', before: false, after: true },
+    ],
   },
   {
     color: '#a78bfa',
@@ -32,6 +49,14 @@ const pillars = [
     border: 'rgba(139,92,246,0.25)',
     Icon: MousePointerClick,
     name: 'Conversion Readiness',
+    score: 35,
+    maxScore: 87,
+    subSignals: [
+      { name: 'FAQ section', before: false, after: true },
+      { name: 'Bullet answers', before: false, after: true },
+      { name: 'CTA clarity', before: true, after: true },
+      { name: 'Lead paragraph', before: false, after: true },
+    ],
   },
 ];
 
@@ -113,9 +138,14 @@ const steps = [
   { num: '03', title: 'Copy the fix prompt', desc: 'Pick your vibe platform (Bolt, Lovable, Cursor, etc.) and get a platform-specific prompt. Paste it into your builder\'s AI and watch the fixes apply automatically.' },
 ];
 
+const FIX_PROMPT = `Add llms.txt to the root of the repo with a concise description of what this app does, how to install it, and where key files live. Then add JSON-LD schema markup to index.html (Organization type with name, url, description). Add meta description and Open Graph tags (og:title, og:description, og:image). Ensure H1/H2 hierarchy is clear and add an FAQ section with 3-5 questions in a <details> block. Update robots.txt to allow GPTBot and ChatGPT-User.`;
+
 export default function VibeCoders() {
   const navigate = useNavigate();
   const [wordIndex, setWordIndex] = useState(0);
+  const [demoFixed, setDemoFixed] = useState(false);
+  const [animScores, setAnimScores] = useState(pillars.map(p => p.score));
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -123,6 +153,25 @@ export default function VibeCoders() {
     }, 3000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (demoFixed) {
+      const targets = pillars.map(p => p.maxScore);
+      let frame = 0;
+      const animate = () => {
+        frame++;
+        setAnimScores(prev => prev.map((s, i) => {
+          const diff = targets[i] - s;
+          if (Math.abs(diff) < 0.5) return targets[i];
+          return s + diff * 0.08;
+        }));
+        if (frame < 60) requestAnimationFrame(animate);
+      };
+      requestAnimationFrame(animate);
+    } else {
+      setAnimScores(pillars.map(p => p.score));
+    }
+  }, [demoFixed]);
 
   return (
     <div className="flex flex-col min-h-screen relative z-10 selection:bg-violet-500/30">
@@ -315,6 +364,203 @@ export default function VibeCoders() {
           </div>
         </section>
 
+        {/* Interactive Demo — Live Score Simulation */}
+        <section className="py-20 px-6 border-t border-white/[0.06]">
+          <div className="max-w-5xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-14"
+            >
+              <span className="text-violet-400 font-bold tracking-wider text-xs uppercase mb-3 block">Live demo</span>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
+                See how rain OS fixes your AI score
+              </h2>
+              <p className="text-slate-400 max-w-xl mx-auto leading-relaxed">
+                This is what a real repo scan looks like. Click "Apply fixes" to watch the score climb as each signal gets corrected.
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Score cards */}
+              <div className="space-y-4">
+                {pillars.map((p, i) => {
+                  const score = Math.round(animScores[i]);
+                  const isFixed = demoFixed && score >= p.maxScore - 2;
+                  return (
+                    <motion.div
+                      key={p.name}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: i * 0.1 }}
+                      className="rounded-2xl border p-5"
+                      style={{
+                        borderColor: isFixed ? p.border : 'rgba(255,255,255,0.08)',
+                        background: isFixed ? p.bg : 'rgba(255,255,255,0.02)',
+                      }}
+                    >
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: p.bg, border: `1px solid ${p.border}` }}>
+                            <p.Icon className="w-4 h-4" style={{ color: p.color }} />
+                          </div>
+                          <span className="text-sm font-semibold text-white">{p.name}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl font-bold tabular-nums" style={{ color: p.color }}>{score}</span>
+                          <span className="text-xs text-slate-500">/ 100</span>
+                          {demoFixed && score > p.score + 20 && (
+                            <motion.span
+                              initial={{ opacity: 0, scale: 0.5 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              className="inline-flex items-center gap-1 text-xs font-semibold"
+                              style={{ color: p.color }}
+                            >
+                              <TrendingUp className="w-3 h-3" />+{p.maxScore - p.score}
+                            </motion.span>
+                          )}
+                        </div>
+                      </div>
+                      {/* Sub-signals */}
+                      <div className="grid grid-cols-2 gap-2">
+                        {p.subSignals.map((sig, j) => {
+                          const isSignalFixed = demoFixed && sig.before === false;
+                          return (
+                            <motion.div
+                              key={sig.name}
+                              initial={false}
+                              animate={isSignalFixed ? { scale: [1, 1.05, 1] } : {}}
+                              transition={{ duration: 0.3, delay: j * 0.15 }}
+                              className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs"
+                              style={{
+                                background: isSignalFixed ? p.bg : 'rgba(255,255,255,0.03)',
+                                border: `1px solid ${isSignalFixed ? p.border : 'rgba(255,255,255,0.06)'}`,
+                              }}
+                            >
+                              <span className="flex items-center justify-center w-4 h-4 rounded-full shrink-0"
+                                style={{
+                                  background: isSignalFixed ? p.bg : 'rgba(255,255,255,0.05)',
+                                  border: `1px solid ${isSignalFixed ? p.border : 'rgba(255,255,255,0.1)'}`,
+                                }}
+                              >
+                                {isSignalFixed ? (
+                                  <CheckCircle2 className="w-3 h-3" style={{ color: p.color }} />
+                                ) : sig.before ? (
+                                  <CheckCircle2 className="w-3 h-3" style={{ color: p.color }} />
+                                ) : (
+                                  <AlertTriangle className="w-3 h-3 text-amber-400" />
+                                )}
+                              </span>
+                              <span className={isSignalFixed ? 'text-white font-medium' : 'text-slate-400'}>
+                                {sig.name}
+                              </span>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
+                      {/* Progress bar */}
+                      <div className="mt-4 h-1.5 rounded-full bg-white/5 overflow-hidden">
+                        <motion.div
+                          className="h-full rounded-full"
+                          style={{
+                            background: `linear-gradient(90deg, ${p.color}, ${p.color}88)`,
+                            width: `${score}%`,
+                          }}
+                          transition={{ duration: 0.3 }}
+                        />
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+
+              {/* Fix prompt panel */}
+              <div className="space-y-4">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="rounded-2xl border border-white/10 bg-white/[0.02] p-5"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs font-bold text-violet-400 uppercase tracking-wider">Fix prompt</span>
+                    <span className="text-xs text-slate-500">Paste into your vibe builder</span>
+                  </div>
+                  <div className="relative">
+                    <div className="rounded-xl bg-[#0d1117] border border-white/[0.08] p-4 text-xs font-mono text-slate-300 leading-relaxed max-h-48 overflow-y-auto">
+                      {FIX_PROMPT}
+                    </div>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(FIX_PROMPT);
+                        setCopied(true);
+                        setTimeout(() => setCopied(false), 2000);
+                      }}
+                      className="absolute top-2 right-2 p-1.5 rounded-md bg-white/10 hover:bg-white/20 transition-colors"
+                    >
+                      {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-slate-400" />}
+                    </button>
+                  </div>
+                </motion.div>
+
+                {/* Action buttons */}
+                <div className="flex flex-col gap-3">
+                  <button
+                    onClick={() => setDemoFixed(true)}
+                    disabled={demoFixed}
+                    className="flex items-center justify-center gap-2 text-white rounded-xl px-6 py-3 text-sm font-bold shadow-lg transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group"
+                    style={{
+                      background: 'linear-gradient(135deg, #8b5cf6, #0ea5e9)',
+                      boxShadow: '0 8px 24px rgba(139,92,246,0.25)',
+                    }}
+                  >
+                    <Wand2 className="w-4 h-4" />
+                    {demoFixed ? 'Fixes applied!' : 'Apply fixes'}
+                    {demoFixed && <Sparkles className="w-4 h-4" />}
+                  </button>
+                  {demoFixed && (
+                    <button
+                      onClick={() => setDemoFixed(false)}
+                      className="flex items-center justify-center gap-2 text-slate-400 rounded-xl px-6 py-3 text-sm font-semibold border border-white/10 hover:border-white/20 hover:text-white transition-all"
+                    >
+                      <RotateCcw className="w-4 h-4" />
+                      Reset demo
+                    </button>
+                  )}
+                </div>
+
+                {/* Overall score */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-center"
+                >
+                  <span className="text-xs text-slate-500 uppercase tracking-wider font-bold">Overall AI Readability</span>
+                  <div className="mt-3 flex items-center justify-center gap-2">
+                    <span className="text-4xl font-bold text-white tabular-nums">
+                      {Math.round(animScores.reduce((a, b) => a + b, 0) / 3)}
+                    </span>
+                    <span className="text-sm text-slate-500">/ 100</span>
+                  </div>
+                  <div className="mt-3 h-2 rounded-full bg-white/5 overflow-hidden">
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{
+                        background: 'linear-gradient(90deg, #8b5cf6, #0ea5e9)',
+                        width: `${Math.round(animScores.reduce((a, b) => a + b, 0) / 3)}%`,
+                      }}
+                    />
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* How It Works */}
         <section className="py-20 px-6 border-t border-white/[0.06]">
           <div className="max-w-5xl mx-auto">
@@ -348,34 +594,83 @@ export default function VibeCoders() {
           </div>
         </section>
 
-        {/* Three Pillars Reminder + URL Scanner */}
-        <section className="py-16 px-6 border-t border-white/[0.06]">
-          <div className="max-w-4xl mx-auto text-center">
+        {/* Three Pillars — Dynamic Scores */}
+        <section className="py-20 px-6 border-t border-white/[0.06]">
+          <div className="max-w-5xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="flex flex-wrap items-center justify-center gap-3"
+              className="text-center mb-14"
             >
-              {pillars.map((p) => (
-                <span
+              <span className="text-violet-400 font-bold tracking-wider text-xs uppercase mb-3 block">Scoring breakdown</span>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Three pillars, granular signals</h2>
+              <p className="text-slate-400 max-w-xl mx-auto leading-relaxed">
+                Every repo scan and URL check breaks down into these three core areas. Click any signal to see what we check.
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {pillars.map((p, i) => (
+                <motion.div
                   key={p.name}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold"
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="rounded-2xl border p-6"
                   style={{
+                    borderColor: p.border,
                     background: p.bg,
-                    border: `1px solid ${p.border}`,
-                    color: p.color,
                   }}
                 >
-                  <p.Icon className="w-4 h-4" />
-                  {p.name}
-                </span>
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${p.border}` }}>
+                      <p.Icon className="w-5 h-5" style={{ color: p.color }} />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-white">{p.name}</h3>
+                      <span className="text-xs text-slate-400">4 signals scored</span>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    {p.subSignals.map((sig, j) => (
+                      <div
+                        key={sig.name}
+                        className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs"
+                        style={{
+                          background: 'rgba(0,0,0,0.15)',
+                          border: `1px solid ${p.border}`,
+                        }}
+                      >
+                        <span className="flex items-center justify-center w-4 h-4 rounded-full shrink-0" style={{ background: 'rgba(0,0,0,0.2)' }}>
+                          <CheckCircle2 className="w-3 h-3" style={{ color: p.color }} />
+                        </span>
+                        <span className="text-slate-300">{sig.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-5 pt-4 border-t" style={{ borderColor: p.border }}>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-slate-400">Weight in overall score</span>
+                      <span className="text-xs font-bold" style={{ color: p.color }}>
+                        {i === 0 ? '40%' : i === 1 ? '30%' : '30%'}
+                      </span>
+                    </div>
+                    <div className="mt-2 h-1.5 rounded-full bg-black/20 overflow-hidden">
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          background: `linear-gradient(90deg, ${p.color}, ${p.color}88)`,
+                          width: `${i === 0 ? 40 : 30}%`,
+                        }}
+                      />
+                    </div>
+                  </div>
+                </motion.div>
               ))}
-            </motion.div>
-            <p className="text-slate-500 text-sm mt-4 max-w-lg mx-auto">
-              Every repo scan scores across these three pillars. Plus, scan any URL to check technical AI-readiness signals.
-            </p>
+            </div>
           </div>
         </section>
 
