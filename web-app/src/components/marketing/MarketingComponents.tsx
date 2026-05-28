@@ -72,9 +72,9 @@ export const LocalBusinessBadge = () => {
   return (
     <a
       href="/local-business"
-      className="inline-flex items-center gap-1.5 rounded-lg bg-rose-500 hover:bg-rose-400 px-3 py-1.5 text-xs font-bold text-white transition-all shadow-md shadow-rose-500/25 hover:scale-105 active:scale-95"
+      className="inline-flex items-center gap-2 rounded-xl bg-rose-500 hover:bg-rose-400 px-5 py-2.5 text-sm font-bold text-white transition-all shadow-lg shadow-rose-500/25 hover:scale-105 active:scale-95"
     >
-      <MapPin className="w-3 h-3" />
+      <MapPin className="w-4 h-4" />
       Local Businesses →
     </a>
   );

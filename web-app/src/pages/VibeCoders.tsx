@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
 import { LocalBusinessBadge } from '@/components/marketing/MarketingComponents';
 
-const ROTATING_WORDS = ['SaaS?', 'Website?', 'Web App?'];
+const ROTATING_WORDS = ['SaaS?', 'Website?', 'Web App?', 'Portfolio?', 'Landing Page?', 'Store?', 'Product?', 'Blog?', 'App?'];
 
 const vibeSignals = [
   {
@@ -120,7 +120,7 @@ export default function VibeCoders() {
             <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
               {/* Rotating subheading */}
               <div className="mb-4">
-                <span className="inline-flex items-baseline gap-2 flex-wrap justify-center text-xl md:text-2xl font-semibold text-white"
+                <span className="inline-flex items-baseline gap-2 flex-wrap justify-center text-xl md:text-2xl lg:text-3xl font-semibold text-white"
                   style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
                   <span>Vibe Coded Your</span>
                   <span className="inline-block relative text-violet-400" style={{ minWidth: '5.5ch' }}>
@@ -134,7 +134,7 @@ export default function VibeCoders() {
                         {word}
                       </span>
                     ))}
-                    <span className="invisible whitespace-nowrap">Web App?</span>
+                    <span className="invisible whitespace-nowrap">Landing Page?</span>
                   </span>
                 </span>
               </div>
