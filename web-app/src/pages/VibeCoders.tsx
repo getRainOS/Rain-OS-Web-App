@@ -7,7 +7,6 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
-import { LocalBusinessBadge } from '@/components/marketing/MarketingComponents';
 
 const ROTATING_WORDS = ['SaaS?', 'Website?', 'Web App?'];
 
@@ -80,7 +79,7 @@ const vibeSignals = [
 
 const platforms = [
   'Bolt', 'Lovable', 'Cursor', 'v0', 'Replit', 'Windsurf',
-  'Base44', 'Tempo', 'lovable.dev', 'Framer', 'Webflow',
+  'Base44', 'lovable.dev', 'Framer', 'Webflow',
 ];
 
 const steps = [
@@ -122,12 +121,11 @@ export default function VibeCoders() {
               Local Businesses
             </a>
           </div>
-
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
               {/* Rotating subheading */}
               <div className="mb-4">
-                <span className="inline-flex items-baseline gap-2 flex-wrap justify-center text-2xl md:text-3xl font-semibold text-white"
+                <span className="inline-flex items-baseline gap-2 flex-wrap justify-center text-xl md:text-2xl font-semibold text-white"
                   style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
                   <span>Vibe Coded Your</span>
                   <span className="inline-block relative text-violet-400" style={{ minWidth: '5.5ch' }}>
@@ -147,7 +145,7 @@ export default function VibeCoders() {
               </div>
 
               <h1
-                className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.08] text-white mb-6"
+                className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.08] text-white mb-6"
                 style={{ letterSpacing: '-0.04em' }}
               >
                 Your vibe-coded site is{' '}

@@ -228,7 +228,7 @@ function AppRoutes({ apiKey, onAuth }) {
           <Route path="/wordpress-plugin" element={<LandingWrapper><WordPressPlugin /></LandingWrapper>} />
           <Route path="/pricing" element={<LandingWrapper><PricingPage /></LandingWrapper>} />
           <Route path="/product-sellers" element={<LandingWrapper><ProductSellers /></LandingWrapper>} />
-          <Route path="/vibe-coders" element={<LandingWrapper><VibeCoders /></LandingWrapper>} />
+          <Route path="/vibe-coders" element={<Navigate to="/" replace />} />
           <Route path="/developers" element={<LandingWrapper><Developers /></LandingWrapper>} />
           <Route path="/docs" element={<LandingWrapper><DocsPage /></LandingWrapper>} />
           <Route path="/privacy" element={<LandingWrapper><PrivacyPolicy /></LandingWrapper>} />
@@ -263,7 +263,7 @@ function AppRoutes({ apiKey, onAuth }) {
         <Route path="/wordpress-plugin" element={<LandingWrapper><WordPressPlugin /></LandingWrapper>} />
         <Route path="/pricing" element={<LandingWrapper><PricingPage /></LandingWrapper>} />
         <Route path="/product-sellers" element={<LandingWrapper><ProductSellers /></LandingWrapper>} />
-        <Route path="/vibe-coders" element={<LandingWrapper><VibeCoders /></LandingWrapper>} />
+        <Route path="/vibe-coders" element={<Navigate to="/" replace />} />
         <Route path="/developers" element={<LandingWrapper><Developers /></LandingWrapper>} />
         <Route path="/docs" element={<LandingWrapper><DocsPage /></LandingWrapper>} />
         <Route path="/privacy" element={<LandingWrapper><PrivacyPolicy /></LandingWrapper>} />

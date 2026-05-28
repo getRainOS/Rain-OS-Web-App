@@ -18,7 +18,7 @@ const SOLUTIONS = [
   },
   {
     label: 'Vibe Coders',
-    href: '/vibe-coders',
+    href: '/',
     desc: 'Bolt, Lovable, Cursor, v0, Replit builders',
     color: '#a78bfa',
   },
@@ -79,7 +79,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick }: Market
           r<span className="text-sky-400">ai</span>n
         </a>
 
-        <nav className="hidden md:flex items-center gap-10 text-sm font-medium text-slate-400">
+        <nav className="hidden md:flex items-center gap-10 text-sm font-medium text-white">
           <div
             className="relative"
             onMouseEnter={() => setSolutionsOpen(true)}
