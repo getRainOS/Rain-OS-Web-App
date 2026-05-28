@@ -29,8 +29,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
             </div>
             <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: 'easeOut' }} className="text-center space-y-6">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.05] text-white" style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
-                Vibe Coded Your SaaS, Web Site Or Web App?{' '}
-                <span className="text-sky-400">Find Out If Anyone Is Able to Find You Online.</span>
+                Vibe Coded Your SaaS, Web Site Or Web App?
               </h1>
               <p className="text-slate-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
                 Find out how ChatGPT, Perplexity, and Gemini read your content — and how likely they are to cite it when someone asks a question you should own.
