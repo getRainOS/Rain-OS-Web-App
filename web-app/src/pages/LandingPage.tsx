@@ -39,20 +39,20 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
               <LocalBusinessBadge />
             </div>
             <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: 'easeOut' }} className="text-center space-y-6">
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.05] text-white" style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
-                Vibe Coded Your{' '}
-                <span className="inline-block relative text-sky-400" style={{ height: '1.2em' }}>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.15] text-white" style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
+                <div>Vibe Coded Your</div>
+                <div className="relative text-sky-400 h-[1.2em] mt-1">
                   <span className="invisible">Web Application?</span>
                   {ROTATING_WORDS.map((word, i) => (
                     <span
                       key={word}
-                      className="absolute left-0 top-0 transition-opacity duration-700 ease-in-out"
+                      className="absolute left-1/2 top-0 -translate-x-1/2 transition-opacity duration-700 ease-in-out"
                       style={{ opacity: i === wordIndex ? 1 : 0 }}
                     >
                       {word}
                     </span>
                   ))}
-                </span>
+                </div>
               </h1>
               <p className="text-slate-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
                 Find out how ChatGPT, Perplexity, and Gemini read your content — and how likely they are to cite it when someone asks a question you should own.
