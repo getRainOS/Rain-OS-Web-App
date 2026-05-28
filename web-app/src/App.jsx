@@ -16,13 +16,12 @@ import History from './pages/History.jsx';
 import Upgrade from './pages/Upgrade.jsx';
 import Settings from './pages/Settings.jsx';
 
-const LandingPage = lazy(() => import('./pages/LandingPage.tsx'));
+const VibeCoders = lazy(() => import('./pages/VibeCoders.tsx'));
 const LocalBusinessPage = lazy(() => import('./pages/LocalBusinessPage.tsx'));
 const ContentWriters = lazy(() => import('./pages/ContentWriters.tsx'));
 const WordPressPlugin = lazy(() => import('./pages/WordPressPlugin.tsx'));
 const PricingPage = lazy(() => import('./pages/PricingPage.tsx'));
 const ProductSellers = lazy(() => import('./pages/ProductSellers.tsx'));
-const VibeCoders = lazy(() => import('./pages/VibeCoders.tsx'));
 const Developers = lazy(() => import('./pages/Developers.tsx'));
 const DocsPage = lazy(() => import('./pages/DocsPage.tsx'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy.tsx'));
@@ -185,10 +184,7 @@ function AuthModalRoute({ onAuth }) {
 
   return (
     <LandingWrapper>
-      <LandingPage
-        onAnalyze={() => {}}
-        onLoginClick={() => {}}
-      />
+      <VibeCoders />
       <AuthModal
         onAuth={(key, userData) => {
           onAuth(key, userData);
@@ -221,11 +217,7 @@ function AppRoutes({ apiKey, onAuth }) {
             path="/"
             element={
               <LandingWrapper>
-                <LandingPage
-                  onAnalyze={(content) => navigate('/login', { state: { pendingContent: content } })}
-                  onLoginClick={() => navigate('/login?mode=login')}
-                  onGetStartedClick={() => navigate('/login')}
-                />
+                <VibeCoders />
               </LandingWrapper>
             }
           />

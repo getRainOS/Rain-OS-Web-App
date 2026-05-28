@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
+import { LocalBusinessBadge } from '@/components/marketing/MarketingComponents';
 
 const ROTATING_WORDS = ['SaaS?', 'Website?', 'Web App?'];
 
@@ -114,6 +115,9 @@ export default function VibeCoders() {
           />
 
           <div className="max-w-4xl mx-auto text-center space-y-8">
+            <div className="flex justify-end w-full max-w-5xl mx-auto">
+              <LocalBusinessBadge />
+            </div>
             <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
               <div
                 className="inline-flex items-center rounded-full border px-4 py-1.5 text-xs font-bold tracking-[0.2em] uppercase mb-6"
