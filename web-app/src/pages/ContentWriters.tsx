@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import {
   ArrowRight, CheckCircle, FileText, Search, Zap,
   TrendingUp, Globe, Bot, BarChart3, BrainCircuit,
-  ShieldCheck, MousePointerClick, Layers
+  ShieldCheck, MousePointerClick, Layers, Plus
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { HybridFuture, FeatureGrid, ReadabilityIntelligence, ComparisonTable, FAQ } from '@/components/marketing/MarketingComponents';
 import MarketingNav from '@/components/marketing/MarketingNav';
+import TypewriterPlaceholder from '@/components/TypewriterPlaceholder';
 
 const pillars = [
   {
@@ -77,6 +78,15 @@ const steps = [
 
 export default function ContentWriters() {
   const navigate = useNavigate();
+  const [content, setContent] = useState('');
+  const [heroFocused, setHeroFocused] = useState(false);
+  const heroInputRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!content.trim()) return;
+    navigate('/login');
+  };
 
   return (
     <div className="flex flex-col min-h-screen relative z-10 selection:bg-sky-500/30">
@@ -84,63 +94,84 @@ export default function ContentWriters() {
 
       <main className="flex-grow">
         {/* Hero */}
-        <section className="pt-44 pb-28 relative z-10 px-6 overflow-hidden">
+        <section className="pt-40 pb-24 md:pt-52 md:pb-40 relative z-10 px-6 overflow-hidden" style={{ paddingTop: '10rem', paddingBottom: '6rem' }}>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] pointer-events-none -z-10"
             style={{ background: 'radial-gradient(ellipse at center, rgba(14,165,233,0.22) 0%, transparent 70%)' }} />
 
-          <div className="max-w-4xl mx-auto text-center space-y-8">
-            <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-              <div className="inline-flex items-center rounded-full border border-sky-400/30 bg-sky-400/10 px-4 py-1.5 text-xs font-bold text-sky-300 tracking-[0.2em] uppercase mb-6">
+          <div className="max-w-5xl mx-auto flex flex-col gap-12 items-center">
+            <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="text-center space-y-6">
+              <div className="inline-flex items-center rounded-full border border-sky-400/30 bg-sky-400/10 px-4 py-1.5 text-xs font-bold text-sky-300 tracking-[0.2em] uppercase mb-4">
                 <span className="flex h-2 w-2 rounded-full bg-sky-400 mr-3 animate-pulse" />
                 For Content Writers & SEO Professionals
               </div>
 
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.08] text-white mb-6"
-                style={{ letterSpacing: '-0.04em' }}>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.05] text-white"
+                style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
                 Write content that{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-200 to-sky-400">
                   AI engines cite
                 </span>
               </h1>
 
-              <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-slate-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
                 rain OS scores your articles, blog posts, and landing pages against the exact signals AI engines use to pick their sources — so you can optimize, then check whether AI cites you right away.
               </p>
             </motion.div>
 
+            {/* Content Box with Typewriter */}
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.25 }}
-              className="flex flex-wrap items-center justify-center gap-3"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="relative w-full max-w-3xl"
             >
-              {['Bloggers', 'SEO Professionals', 'AEO Strategists', 'Content Agencies'].map((label) => (
-                <span key={label} className="px-4 py-1.5 rounded-full text-xs font-semibold"
-                  style={{ background: 'rgba(56,189,248,0.1)', border: '1px solid rgba(56,189,248,0.2)', color: '#7dd3fc' }}>
-                  {label}
-                </span>
-              ))}
-            </motion.div>
+              <div className="absolute -inset-[1px] rounded-[25px] pointer-events-none"
+                style={{ background: 'linear-gradient(135deg, rgba(56,189,248,0.12), rgba(255,255,255,0.04), rgba(56,189,248,0.06))', filter: 'blur(0px)' }} />
+              <form onSubmit={handleSubmit} className="rounded-[24px] p-2 text-left relative group" style={{ background: 'rgba(4,7,20,0.65)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 40px rgba(14,165,233,0.07), 0 20px 60px -12px rgba(0,0,0,0.7)' }}>
+                <div className="relative">
+                  <TypewriterPlaceholder
+                    value={content}
+                    isFocused={heroFocused}
+                    padding="24px"
+                    fontSize="18px"
+                    lineHeight="1.625"
+                    color="rgba(255,255,255,0.28)"
+                  />
+                  <textarea
+                    ref={heroInputRef}
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    onFocus={() => setHeroFocused(true)}
+                    onBlur={() => setHeroFocused(false)}
+                    className="w-full h-40 bg-transparent border-0 resize-none p-6 text-slate-200 focus:ring-0 focus:outline-none text-lg leading-relaxed font-sans relative z-10"
+                    required
+                  />
+                </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.35 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2"
-            >
-              <button
-                onClick={() => navigate('/login')}
-                className="flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white rounded-xl px-8 py-3.5 text-sm font-bold shadow-lg shadow-sky-500/25 transition-all hover:scale-105 active:scale-95 group"
-              >
-                Score your content free
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </button>
-              <a
-                href="/wordpress-plugin"
-                className="text-sm font-medium text-slate-400 hover:text-white transition-colors"
-              >
-                Get the WordPress plugin →
-              </a>
+                <div className="flex items-center justify-between gap-4 px-6 pb-4 relative z-10">
+                  <div className="flex items-center gap-6">
+                    <button
+                      type="button"
+                      className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all active:scale-90"
+                      onClick={() => setContent('')}
+                      title="Clear"
+                    >
+                      <Plus className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <button
+                      type="submit"
+                      className="bg-sky-500 hover:bg-sky-400 text-white rounded-xl px-6 py-2.5 text-sm font-bold transition-all flex items-center gap-2 group/btn"
+                      style={{ boxShadow: '0 0 16px rgba(14,165,233,0.25), 0 2px 8px rgba(0,0,0,0.4)' }}
+                    >
+                      Analyze now
+                      <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                    </button>
+                  </div>
+                </div>
+              </form>
             </motion.div>
           </div>
         </section>

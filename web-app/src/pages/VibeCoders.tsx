@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   ArrowRight, Zap, GitBranch, Layers, Search, Shield,
@@ -7,6 +7,8 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
+
+const ROTATING_WORDS = ['SaaS?', 'Website?', 'Web App?'];
 
 const vibeSignals = [
   {
@@ -88,6 +90,14 @@ const steps = [
 
 export default function VibeCoders() {
   const navigate = useNavigate();
+  const [wordIndex, setWordIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIndex(prev => (prev + 1) % ROTATING_WORDS.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen relative z-10 selection:bg-violet-500/30">
@@ -115,6 +125,27 @@ export default function VibeCoders() {
               >
                 <span className="flex h-2 w-2 rounded-full bg-violet-400 mr-3 animate-pulse" />
                 For Vibe Coders
+              </div>
+
+              {/* Rotating subheading */}
+              <div className="mb-4">
+                <span className="inline-flex items-baseline gap-2 flex-wrap justify-center text-2xl md:text-3xl font-semibold text-white"
+                  style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
+                  <span>Vibe Coded Your</span>
+                  <span className="inline-block relative text-violet-400" style={{ minWidth: '5.5ch' }}>
+                    {ROTATING_WORDS.map((word, i) => (
+                      <span
+                        key={word}
+                        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-500 ease-in-out whitespace-nowrap"
+                        style={{ opacity: i === wordIndex ? 1 : 0 }}
+                        aria-hidden={i !== wordIndex}
+                      >
+                        {word}
+                      </span>
+                    ))}
+                    <span className="invisible whitespace-nowrap">Web App?</span>
+                  </span>
+                </span>
               </div>
 
               <h1
