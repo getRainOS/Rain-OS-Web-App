@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import {
@@ -14,7 +14,18 @@ interface LandingPageProps {
   onGetStartedClick?: () => void;
 }
 
+const ROTATING_WORDS = ['SaaS?', 'Website?', 'Web Application?'];
+
 export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick }: LandingPageProps) {
+  const [wordIndex, setWordIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIndex(prev => (prev + 1) % ROTATING_WORDS.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen relative z-10 selection:bg-rain-500/30">
       <MarketingNav onLoginClick={onLoginClick} onGetStartedClick={onGetStartedClick || onLoginClick} />
@@ -29,7 +40,19 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
             </div>
             <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: 'easeOut' }} className="text-center space-y-6">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.05] text-white" style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
-                Vibe Coded Your SaaS, Web Site Or Web App?
+                Vibe Coded Your{' '}
+                <span className="inline-block relative text-sky-400" style={{ height: '1.2em', verticalAlign: 'bottom' }}>
+                  <span className="invisible">Web Application?</span>
+                  {ROTATING_WORDS.map((word, i) => (
+                    <span
+                      key={word}
+                      className="absolute left-0 top-0 transition-opacity duration-700 ease-in-out"
+                      style={{ opacity: i === wordIndex ? 1 : 0 }}
+                    >
+                      {word}
+                    </span>
+                  ))}
+                </span>
               </h1>
               <p className="text-slate-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
                 Find out how ChatGPT, Perplexity, and Gemini read your content — and how likely they are to cite it when someone asks a question you should own.
