@@ -5,22 +5,16 @@ import { useNavigate } from 'react-router-dom';
 
 const SOLUTIONS = [
   {
-    label: 'Vibe Coders',
-    href: '/vibe-coders',
-    desc: 'Bolt, Lovable, Cursor, v0, Replit builders',
-    color: '#a78bfa',
+    label: 'Content Writers',
+    href: '/content-writers',
+    desc: 'Blog posts, articles, marketing copy',
+    color: '#38bdf8',
   },
   {
     label: 'Product Sellers',
     href: '/product-sellers',
     desc: 'Ecommerce, DTC, product pages',
     color: '#fb923c',
-  },
-  {
-    label: 'Content Writers',
-    href: '/',
-    desc: 'Blog posts, articles, marketing copy',
-    color: '#38bdf8',
   },
   {
     label: 'Developers',
