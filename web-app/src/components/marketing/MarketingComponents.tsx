@@ -130,9 +130,9 @@ export const FourPillars = () => {
     <section id="three-pillars" className="py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <span className="text-rain-400 font-bold tracking-wider text-xs uppercase mb-3 block">The Scoring Framework</span>
-          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Three Pillars. One Score.</h2>
-          <p className="text-slate-400 max-w-2xl mx-auto">Every analysis returns a weighted score across three dimensions. These are the exact signals AI engines use to decide what gets cited and surfaced — and the ones most vibe-coded sites are missing.</p>
+          <span className="text-rain-400 font-bold tracking-wider text-xs uppercase mb-3 block">Your AI Built Your Product Or Website</span>
+          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Now Optimize For AI Search</h2>
+          <p className="text-slate-400 max-w-2xl mx-auto">AI Readability is how easily ChatGPT, Perplexity, and Gemini can extract answers from your raw content. It is the #1 factor in whether AI cites you or skips you. We score it — plus Authority and Conversion — so you own the answers that matter.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

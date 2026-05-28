@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useApp } from '../context/AppContext.jsx';
 import { api } from '../api/client.js';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 const S = {
   page: { padding: '32px 40px', maxWidth: 900, margin: '0 auto' },
@@ -257,6 +258,22 @@ const DEMO_RESULT = {
   summary: 'rain OS is not currently visible when AI answers questions about AI readability optimization. Competitors like Clearscope and Surfer SEO dominate this topic — targeted content and schema markup can change that.',
 };
 
+/* ── Collapsible Disclaimer ─────────────────────────────────────────────── */
+function DisclaimerBox() {
+  const [collapsed, setCollapsed] = useState(false);
+  return (
+    <div style={{ ...S.disclaimer, padding: collapsed ? '8px 16px' : '12px 16px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+        <strong style={{ color: '#94a3b8', fontWeight: 600 }}>How this works — and its limits.</strong>
+        <button onClick={() => setCollapsed(!collapsed)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: '#64748b', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+          {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+        </button>
+      </div>
+      {!collapsed && <p style={{ ...S.disclaimerText, marginTop: 8 }}>We query Google Gemini with live Google Search grounding for your topic, then analyse the real AI-generated answer to see if and how your brand appears. The mention status and sources are drawn from live search data. However: this is a single-model, single-query snapshot — only Gemini, one phrasing, one moment in time. Sentiment scoring and recommendations come from a second AI analysis pass and are interpretive, not empirical. Ask the same question differently ("best project management software" vs "what tool should my team use for task tracking?") and you may get entirely different results. Use this for directional spot-checking and competitor discovery, not as comprehensive brand monitoring.</p>}
+    </div>
+  );
+}
+
 export default function BrandVisibility() {
   const { isDemo } = useApp();
   const [brand, setBrand] = useState('');
@@ -367,11 +384,7 @@ export default function BrandVisibility() {
         <p style={S.sub}>See how AI answers mention your brand — and what to do if they don't.</p>
       </div>
 
-      <div style={S.disclaimer}>
-        <p style={S.disclaimerText}>
-          <strong style={{ color: '#94a3b8', fontWeight: 600 }}>How this works — and its limits.</strong> We query Google Gemini with live Google Search grounding for your topic, then analyse the real AI-generated answer to see if and how your brand appears. The mention status and sources are drawn from live search data. However: this is a single-model, single-query snapshot — only Gemini, one phrasing, one moment in time. Sentiment scoring and recommendations come from a second AI analysis pass and are interpretive, not empirical. Ask the same question differently ("best project management software" vs "what tool should my team use for task tracking?") and you may get entirely different results. Use this for directional spot-checking and competitor discovery, not as comprehensive brand monitoring.
-        </p>
-      </div>
+      <DisclaimerBox />
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>

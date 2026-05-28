@@ -6,7 +6,7 @@ import {
   Radar, Search, ExternalLink, CheckCircle2, AlertCircle,
   Map as MapIcon, Trophy, Trash2, Info,
   History as HistoryIcon, TrendingUp, TrendingDown, Minus,
-  Clock,
+  Clock, ChevronDown, ChevronUp,
 } from 'lucide-react';
 import { buildCompetitorMap } from '../lib/citationHistory.js';
 import styles from './CitationMonitor.module.css';
@@ -16,6 +16,22 @@ const EXAMPLE_TOPICS = [
   'how to improve AEO for a SaaS landing page',
   'what is answer engine optimization',
 ];
+
+/* ── Collapsible Disclaimer ─────────────────────────────────────────────── */
+function DisclaimerBlock() {
+  const [collapsed, setCollapsed] = useState(false);
+  return (
+    <div className={styles.disclaimer} style={{ padding: collapsed ? '8px 16px' : '12px 16px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+        <strong style={{ color: '#94a3b8', fontWeight: 600 }}>How this works — and its limits.</strong>
+        <button onClick={() => setCollapsed(!collapsed)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: '#64748b', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+          {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+        </button>
+      </div>
+      {!collapsed && <p className={styles.disclaimerText} style={{ marginTop: 8 }}>We query Google Gemini with live Google Search grounding using your exact topic, then check whether your domain appears among the sources Gemini used to generate its answer. This matters now more than ever: Google recently launched AI Search ads that cite sources within AI-generated answers (Google Marketing Live 2026). The <em>cited / not cited</em> result is a real, factual snapshot of what Gemini pulled right now. However: it reflects only one AI model (Gemini) and one query phrasing; different phrasings or models may yield different sources. The alignment score and recommendations come from a second AI analysis pass and are directional, not quantitative. Run checks on multiple topic variations and re-run regularly to track trends — a single check is a data point, not a verdict.</p>}
+    </div>
+  );
+}
 
 function getFavicon(domain) {
   if (!domain) return '';
@@ -223,11 +239,7 @@ export default function CitationMonitor() {
         </p>
       </div>
 
-      <div className={styles.disclaimer}>
-        <p className={styles.disclaimerText}>
-          <strong>How this works — and its limits.</strong> We query Google Gemini with live Google Search grounding using your exact topic, then check whether your domain appears among the sources Gemini used to generate its answer. This matters now more than ever: Google recently launched AI Search ads that cite sources within AI-generated answers (Google Marketing Live 2026). The <em>cited / not cited</em> result is a real, factual snapshot of what Gemini pulled right now. However: it reflects only one AI model (Gemini) and one query phrasing; different phrasings or models may yield different sources. The alignment score and recommendations come from a second AI analysis pass and are directional, not quantitative. Run checks on multiple topic variations and re-run regularly to track trends — a single check is a data point, not a verdict.
-        </p>
-      </div>
+      <DisclaimerBlock />
 
       <div className={styles.tabs} role="tablist">
         <button

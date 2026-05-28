@@ -3,7 +3,7 @@ import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import {
   BarChart2, Search, CheckCircle2, AlertCircle, Minus,
-  TrendingUp, TrendingDown, Zap, Clock, Trash2, Info,
+  TrendingUp, TrendingDown, Zap, Clock, Trash2, Info, ChevronDown, ChevronUp,
   ExternalLink,
 } from 'lucide-react';
 
@@ -191,6 +191,25 @@ function timeAgo(str) {
   return new Date(str).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
+/* ── Collapsible Info Box ───────────────────────────────────────────────── */
+function InfoBox() {
+  const [collapsed, setCollapsed] = useState(false);
+  return (
+    <div style={{ ...S.infoBox, display: 'block', padding: collapsed ? '8px 16px' : '12px 16px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+          <Info size={15} style={{ flexShrink: 0, marginTop: 1 }} />
+          <strong>How this works — and its limits.</strong>
+        </div>
+        <button onClick={() => setCollapsed(!collapsed)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: '#64748b', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+          {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+        </button>
+      </div>
+      {!collapsed && <span style={{ display: 'block', marginTop: 8, fontSize: 12, lineHeight: 1.7, color: '#64748b' }}>We simulate three AI answering styles using Google Gemini with grounded search: an <em>informational</em> style (like Gemini), a <em>conversational</em> style (like ChatGPT), and a <em>research</em> style (like Perplexity). For each, we check whether your brand is cited and score visibility, sentiment, and prominence. The cited / not cited results are real snapshots of what Gemini pulled from live web sources. However: we do not call actual ChatGPT or Perplexity APIs — the styles are simulated via prompt engineering. The SOV percentage, AI search volume estimate, and recommendations come from our own scoring formula and are directional, not industry-standard metrics. Run checks on multiple topic variations and track over time — use for trend spotting and competitor discovery, not as ground-truth market share data.</span>}
+    </div>
+  );
+}
+
 /* ══════════════════════════════════════════════════════════════════════════ */
 export default function ShareOfVoice() {
   const { isDemo } = useApp();
@@ -310,12 +329,7 @@ export default function ShareOfVoice() {
       </div>
 
       {/* Info box */}
-      <div style={S.infoBox}>
-        <Info size={15} style={{ flexShrink: 0, marginTop: 1 }} />
-        <span>
-          <strong>How this works — and its limits.</strong> We simulate three AI answering styles using Google Gemini with grounded search: an <em>informational</em> style (like Gemini), a <em>conversational</em> style (like ChatGPT), and a <em>research</em> style (like Perplexity). For each, we check whether your brand is cited and score visibility, sentiment, and prominence. The cited / not cited results are real snapshots of what Gemini pulled from live web sources. However: we do not call actual ChatGPT or Perplexity APIs — the styles are simulated via prompt engineering. The SOV percentage, AI search volume estimate, and recommendations come from our own scoring formula and are directional, not industry-standard metrics. Run checks on multiple topic variations and track over time — use for trend spotting and competitor discovery, not as ground-truth market share data.
-        </span>
-      </div>
+      <InfoBox />
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>

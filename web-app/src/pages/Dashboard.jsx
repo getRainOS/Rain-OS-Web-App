@@ -687,7 +687,7 @@ export default function Dashboard() {
 
       {/* ── Tool Snapshot Cards ── */}
       <div className={styles.toolCards}>
-        {toolCards.map(t => (
+        {toolCards.filter(t => t.key !== 'ai_search' || !['vibe_coders','developers'].includes(userLane)).map(t => (
           <Link key={t.key} to={t.to} className={`${styles.toolCard} ${!t.hasData ? styles.toolCardEmpty : ''}`}>
             <div className={styles.toolCardTop}>
               <div className={styles.toolCardLabelRow}>

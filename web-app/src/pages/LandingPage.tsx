@@ -29,11 +29,11 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
             </div>
             <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: 'easeOut' }} className="text-center space-y-6">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.05] text-white" style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
-                Get Cited by AI.{' '}
-                <span className="text-sky-400">Own the Answer.</span>
+                Vibe Coded Your SaaS, Web Site Or Web App?{' '}
+                <span className="text-sky-400">Find Out How AI Reads It.</span>
               </h1>
               <p className="text-slate-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
-                Google just launched AI-powered ads inside AI Search — and they cite sources the same way ChatGPT and Perplexity do. rain OS scores your content against those exact signals, so you’re ready for both organic citations and paid AI placements.
+                Find out how ChatGPT, Perplexity, and Gemini read your content — and how likely they are to cite it when someone asks a question you should own.
               </p>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -47,15 +47,6 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
               <a href="/content-writers" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
                 See how it works for writers →
               </a>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.35 }} className="flex flex-col items-center text-center gap-5 w-full max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.08] px-4 py-1.5">
-                <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-emerald-400">For vibe coders</span>
-              </div>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white leading-tight" style={{ letterSpacing: '-0.03em' }}>
-                Your AI built the site.{' '}
-                <span className="text-emerald-400">Now audit it for Google’s AI Search ads too — paste, scan, or connect the repo.</span>
-              </h2>
             </motion.div>
           </div>
         </section>
