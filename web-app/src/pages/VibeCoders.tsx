@@ -83,17 +83,6 @@ const platforms = [
   'Base44', 'lovable.dev', 'Framer', 'Webflow',
 ];
 
-const quotes = [
-  { text: "AI systems rely on search, and there is no such thing as GEO or AEO without doing SEO fundamentals.", author: "John Mueller, Google" },
-  { text: "If SEO focused on driving clicks, AEO is focused on driving clarity with enriched, real-time data.", author: "Microsoft AI Search Guide" },
-  { text: "My correlation analysis shows that none of the classic SEO metrics have strong relationships with citations.", author: "Kevin Indig, Growth Memo" },
-  { text: "Vibe coding your way to a production codebase is clearly risky. The quality and understandability of the underlying code is crucial.", author: "Simon Willison" },
-  { text: "I think of Perplexity as a knowledge discovery engine, neither a search engine.", author: "Aravind Srinivas, Perplexity CEO" },
-  { text: "We're still in a pre-Semrush / Moz / Ahrefs era for LLMs.", author: "Kevin Indig, Growth Memo" },
-  { text: "Why don't we just search over the whole web, make the LLM look at the links, and let the LLM do all the reasoning...", author: "Aravind Srinivas, Perplexity CEO" },
-  { text: "If your brand is not cited inside AI-generated answers, you are invisible at the moment of decision.", author: "AEO Industry Report 2026" },
-];
-
 const steps = [
   { num: '01', title: 'Connect your GitHub repo', desc: 'One-click OAuth to grant read access. We scan README, package.json, index.html, llms.txt, robots.txt, and source files.' },
   { num: '02', title: 'Get your AI Readability Score', desc: 'See exactly which signals are missing and how they affect whether ChatGPT, Gemini, and Perplexity can discover and cite your site.' },
@@ -211,42 +200,6 @@ export default function VibeCoders() {
               </a>
             </motion.div>
 
-            {/* Scrolling Quotes Marquee */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="pt-6"
-            >
-              <div className="relative overflow-hidden py-4 rounded-2xl"
-                style={{ background: 'rgba(8, 12, 28, 0.8)', border: '1px solid #3b82f6' }}>
-                {/* Left fade */}
-                <div className="absolute left-0 top-0 bottom-0 w-16 z-10 pointer-events-none"
-                  style={{ background: 'linear-gradient(to right, #080c1c, transparent)' }} />
-                {/* Right fade */}
-                <div className="absolute right-0 top-0 bottom-0 w-16 z-10 pointer-events-none"
-                  style={{ background: 'linear-gradient(to left, #080c1c, transparent)' }} />
-                <div className="flex animate-marquee whitespace-nowrap">
-                  {quotes.map((q, i) => (
-                    <div key={i} className="inline-flex items-center gap-3 mx-3 px-6 py-4 rounded-xl"
-                      style={{ background: '#ffffff', border: '2px solid #bae6fd', minWidth: 'fit-content', boxShadow: '0 4px 20px rgba(0,0,0,0.4)' }}>
-                      <span className="text-xl leading-none shrink-0" style={{ color: '#0ea5e9' }}>"</span>
-                      <span className="text-base font-bold" style={{ color: '#000000' }}>{q.text}</span>
-                      <span className="text-sm shrink-0 font-semibold" style={{ color: '#334155' }}>— {q.author}</span>
-                    </div>
-                  ))}
-                  {/* Duplicate for seamless loop */}
-                  {quotes.map((q, i) => (
-                    <div key={`dup-${i}`} className="inline-flex items-center gap-3 mx-3 px-6 py-4 rounded-xl"
-                      style={{ background: '#ffffff', border: '2px solid #bae6fd', minWidth: 'fit-content', boxShadow: '0 4px 20px rgba(0,0,0,0.4)' }}>
-                      <span className="text-xl leading-none shrink-0" style={{ color: '#0ea5e9' }}>"</span>
-                      <span className="text-base font-bold" style={{ color: '#000000' }}>{q.text}</span>
-                      <span className="text-sm shrink-0 font-semibold" style={{ color: '#334155' }}>— {q.author}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
           </div>
         </section>
 
