@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom';
 
 const SOLUTIONS = [
   {
-    label: 'Writers & Marketers',
-    href: '/content-writers',
-    desc: 'Blogs, articles, marketing copy',
-    color: '#38bdf8',
+    label: 'Vibe Coders',
+    href: '/vibe-coders',
+    desc: 'Bolt, Lovable, Cursor, v0, Replit builders',
+    color: '#a78bfa',
   },
   {
     label: 'Product Sellers',
@@ -17,10 +17,10 @@ const SOLUTIONS = [
     color: '#fb923c',
   },
   {
-    label: 'Vibe Coders',
+    label: 'Content Writers',
     href: '/',
-    desc: 'Bolt, Lovable, Cursor, v0, Replit builders',
-    color: '#a78bfa',
+    desc: 'Blog posts, articles, marketing copy',
+    color: '#38bdf8',
   },
   {
     label: 'Developers',

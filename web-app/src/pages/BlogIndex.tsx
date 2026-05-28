@@ -6,6 +6,10 @@ import { BLOG_POSTS, BlogPost } from '../data/blogPosts';
 export default function BlogIndex() {
   const navigate = useNavigate();
 
+  const sortedPosts = [...BLOG_POSTS].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const featuredPost = sortedPosts[0];
+  const remainingPosts = sortedPosts.slice(1);
+
   return (
     <div style={{ minHeight: '100vh', background: '#020410', color: '#f1f5f9' }}>
       {/* Hero */}
@@ -68,7 +72,7 @@ export default function BlogIndex() {
         gap: '28px',
       }}>
         {/* Featured post */}
-        <FeaturedCard post={BLOG_POSTS[0]} onClick={() => navigate(`/blog/${BLOG_POSTS[0].slug}`)} />
+        <FeaturedCard post={featuredPost} onClick={() => navigate(`/blog/${featuredPost.slug}`)} />
 
         {/* Remaining posts */}
         <div style={{
@@ -76,7 +80,7 @@ export default function BlogIndex() {
           gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
           gap: '24px',
         }}>
-          {BLOG_POSTS.slice(1).map((post) => (
+          {remainingPosts.map((post) => (
             <PostCard key={post.slug} post={post} onClick={() => navigate(`/blog/${post.slug}`)} />
           ))}
         </div>

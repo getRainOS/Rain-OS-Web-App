@@ -6,7 +6,7 @@ import {
   ShieldCheck, MousePointerClick, Layers, Plus
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { HybridFuture, FeatureGrid, ReadabilityIntelligence, ComparisonTable, FAQ } from '@/components/marketing/MarketingComponents';
+import { HybridFuture, FeatureGrid, ReadabilityIntelligence, ComparisonTable, FAQ, LocalBusinessBadge } from '@/components/marketing/MarketingComponents';
 import MarketingNav from '@/components/marketing/MarketingNav';
 import TypewriterPlaceholder from '@/components/TypewriterPlaceholder';
 
@@ -100,6 +100,9 @@ export default function ContentWriters() {
 
           <div className="max-w-5xl mx-auto flex flex-col gap-12 items-center">
             <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="text-center space-y-6">
+              <div className="flex justify-end w-full -mt-2">
+                <LocalBusinessBadge />
+              </div>
               <div className="inline-flex items-center rounded-full border border-sky-400/30 bg-sky-400/10 px-4 py-1.5 text-xs font-bold text-sky-300 tracking-[0.2em] uppercase mb-4">
                 <span className="flex h-2 w-2 rounded-full bg-sky-400 mr-3 animate-pulse" />
                 For Content Writers & SEO Professionals
@@ -340,6 +343,37 @@ export default function ContentWriters() {
         <ComparisonTable />
         <FAQ />
 
+        {/* Three Pillars Reminder */}
+        <section className="py-16 px-6 border-t border-white/[0.06]">
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="flex flex-wrap items-center justify-center gap-3"
+            >
+              {pillars.map((p) => (
+                <span
+                  key={p.name}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold"
+                  style={{
+                    background: p.bg,
+                    border: `1px solid ${p.border}`,
+                    color: p.color,
+                  }}
+                >
+                  <p.Icon className="w-4 h-4" />
+                  {p.name}
+                </span>
+              ))}
+            </motion.div>
+            <p className="text-slate-500 text-sm mt-4 max-w-lg mx-auto">
+              Every analysis scores across these three pillars. Plus, scan any URL to check technical AI-readiness signals.
+            </p>
+          </div>
+        </section>
+
         {/* CTA */}
         <section className="py-28 px-6 border-t border-white/[0.06] relative overflow-hidden">
           <div className="absolute inset-0 pointer-events-none -z-10"
@@ -356,7 +390,7 @@ export default function ContentWriters() {
                 Ready to get your content cited?
               </h2>
               <p className="text-slate-400 text-lg mb-8 leading-relaxed">
-                Paste your first piece of content and get a full AI readability score in seconds. Free to start, no credit card required.
+                Paste your content for a full AI readability score, or scan any URL to check technical signals. Free to start, no credit card required.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button
@@ -366,12 +400,6 @@ export default function ContentWriters() {
                   Score your content free
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
-                <a
-                  href="/wordpress-plugin"
-                  className="text-sm font-medium text-slate-400 hover:text-white transition-colors"
-                >
-                  Get the WordPress plugin →
-                </a>
               </div>
             </motion.div>
           </div>
