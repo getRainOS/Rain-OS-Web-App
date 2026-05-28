@@ -3,13 +3,37 @@ import { motion } from 'framer-motion';
 import {
   ArrowRight, Zap, GitBranch, Layers, Search, Shield,
   FileCode, Terminal, CheckCircle2, AlertTriangle, Sparkles, Wand2,
-  Monitor, Code2, Globe, Cpu, MapPin
+  Monitor, Code2, Globe, Cpu, MapPin, BrainCircuit, ShieldCheck, MousePointerClick
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
 import { LocalBusinessBadge } from '@/components/marketing/MarketingComponents';
 
 const ROTATING_WORDS = ['SaaS?', 'Website?', 'Web App?', 'Portfolio?', 'Landing Page?', 'Store?', 'Product?', 'Blog?', 'App?'];
+
+const pillars = [
+  {
+    color: '#38bdf8',
+    bg: 'rgba(14,165,233,0.1)',
+    border: 'rgba(14,165,233,0.25)',
+    Icon: BrainCircuit,
+    name: 'AI Readability',
+  },
+  {
+    color: '#34d399',
+    bg: 'rgba(16,185,129,0.1)',
+    border: 'rgba(16,185,129,0.25)',
+    Icon: ShieldCheck,
+    name: 'Digital Authority',
+  },
+  {
+    color: '#a78bfa',
+    bg: 'rgba(139,92,246,0.1)',
+    border: 'rgba(139,92,246,0.25)',
+    Icon: MousePointerClick,
+    name: 'Conversion Readiness',
+  },
+];
 
 const vibeSignals = [
   {
@@ -324,6 +348,37 @@ export default function VibeCoders() {
           </div>
         </section>
 
+        {/* Three Pillars Reminder + URL Scanner */}
+        <section className="py-16 px-6 border-t border-white/[0.06]">
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="flex flex-wrap items-center justify-center gap-3"
+            >
+              {pillars.map((p) => (
+                <span
+                  key={p.name}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold"
+                  style={{
+                    background: p.bg,
+                    border: `1px solid ${p.border}`,
+                    color: p.color,
+                  }}
+                >
+                  <p.Icon className="w-4 h-4" />
+                  {p.name}
+                </span>
+              ))}
+            </motion.div>
+            <p className="text-slate-500 text-sm mt-4 max-w-lg mx-auto">
+              Every repo scan scores across these three pillars. Plus, scan any URL to check technical AI-readiness signals.
+            </p>
+          </div>
+        </section>
+
         {/* CTA */}
         <section className="py-20 px-6 border-t border-white/[0.06]">
           <div className="max-w-3xl mx-auto text-center">
@@ -338,7 +393,7 @@ export default function VibeCoders() {
                 Stop building in the dark.
               </h2>
               <p className="text-slate-400 mb-8 max-w-lg mx-auto leading-relaxed">
-                Your vibe-coded project deserves to be found. Scan your repo, see what's blocking AI discoverability, and fix it with a single prompt.
+                Scan your repo for AI discoverability, or check any URL for technical AI-readiness signals. Free to start, no credit card required.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button
@@ -352,9 +407,6 @@ export default function VibeCoders() {
                   Scan my repo free
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
-                <a href="/repo-analysis" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
-                  Try the demo →
-                </a>
               </div>
             </motion.div>
           </div>
