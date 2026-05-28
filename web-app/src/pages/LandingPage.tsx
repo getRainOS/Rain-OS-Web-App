@@ -41,7 +41,7 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
             <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: 'easeOut' }} className="text-center space-y-6">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.05] text-white" style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
                 Vibe Coded Your{' '}
-                <span className="inline-block relative text-sky-400" style={{ height: '1.2em', verticalAlign: 'bottom' }}>
+                <span className="inline-block relative text-sky-400" style={{ height: '1.2em' }}>
                   <span className="invisible">Web Application?</span>
                   {ROTATING_WORDS.map((word, i) => (
                     <span
