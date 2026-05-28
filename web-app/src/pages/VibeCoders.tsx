@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight, Zap, GitBranch, Layers, Search, Shield,
   FileCode, Terminal, CheckCircle2, AlertTriangle, Sparkles, Wand2,
   Monitor, Code2, Globe, Cpu, MapPin, BrainCircuit, ShieldCheck, MousePointerClick,
-  RotateCcw, TrendingUp, Globe2, Link2, ChevronRight, ScanLine, Radar
+  RotateCcw, TrendingUp, Globe2, Link2, ChevronRight, ScanLine, Radar,
+  Copy, Check, ClipboardCopy, GitCommit, Send, RefreshCw
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
@@ -139,7 +140,7 @@ const vibeSignals = [
     border: 'rgba(16,185,129,0.2)',
     Icon: Code2,
     name: 'Schema Markup (JSON-LD)',
-    desc: 'Structured data tells AI exactly what your page represents \u2014 product, article, organization, FAQ. Without it, AI guesses. Most vibe tools don\'t add schema automatically.',
+    desc: 'Structured data tells AI exactly what your page represents — product, article, organization, FAQ. Without it, AI guesses. Most vibe tools don\'t add schema automatically.',
   },
   {
     color: '#fb7185',
@@ -190,6 +191,9 @@ const FIX_PROMPT = `Add llms.txt to the root of the repo with a concise descript
 
 const URL_FIX_PROMPT = `Add llms.txt to the root with a description of what this site does. Add JSON-LD schema markup (Organization type with name, url, description). Add meta description and Open Graph tags (og:title, og:description, og:image). Ensure H1/H2 hierarchy is clear, add an FAQ section with 3-5 questions, and include bullet-point answers for AI extraction. Add a clear lead paragraph in the first sentence of each section.`;
 
+/* ------------------------------------------------------------------ */
+/*  ScoreCard                                                          */
+/* ------------------------------------------------------------------ */
 function ScoreCard({ p, score, isFixed, isScanning, index }: {
   p: typeof repoPillars[0];
   score: number;
@@ -278,12 +282,7 @@ function ScoreCard({ p, score, isFixed, isScanning, index }: {
                       <CheckCircle2 className="w-3 h-3" style={{ color: p.color }} />
                     </motion.div>
                   ) : (
-                    <motion.div
-                      key="warn"
-                      initial={{ scale: 1 }}
-                      animate={{ scale: 1 }}
-                      exit={{ scale: 0 }}
-                    >
+                    <motion.div key="warn">
                       {sig.before ? (
                         <CheckCircle2 className="w-3 h-3" style={{ color: p.color }} />
                       ) : (
@@ -326,6 +325,93 @@ function ScoreCard({ p, score, isFixed, isScanning, index }: {
   );
 }
 
+/* ------------------------------------------------------------------ */
+/*  TerminalLine                                                       */
+/* ------------------------------------------------------------------ */
+function TerminalLine({ type, text, color = 'sky', delay = 0 }: {
+  type: 'cmd' | 'out' | 'ok' | 'warn' | 'prompt' | 'vibe' | 'commit' | 'rescan';
+  text: string;
+  color?: 'sky' | 'emerald' | 'amber' | 'violet' | 'red' | 'slate' | 'white';
+  delay?: number;
+}) {
+  const colorMap: Record<string, string> = {
+    sky: 'text-sky-400',
+    emerald: 'text-emerald-400',
+    amber: 'text-amber-400',
+    violet: 'text-violet-400',
+    red: 'text-red-400',
+    slate: 'text-slate-400',
+    white: 'text-white',
+  };
+
+  const iconMap: Record<string, React.ReactNode> = {
+    cmd: <span className="text-emerald-400 mr-1">$</span>,
+    out: <span className="text-slate-500 mr-1">&gt;</span>,
+    ok: <span className="text-emerald-400 mr-1">&#10003;</span>,
+    warn: <span className="text-amber-400 mr-1">!</span>,
+    prompt: <span className="text-violet-400 mr-1">&#9654;</span>,
+    vibe: <span className="text-violet-400 mr-1">~</span>,
+    commit: <span className="text-sky-400 mr-1">&#9679;</span>,
+    rescan: <span className="text-amber-400 mr-1">&#8635;</span>,
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -10 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.4, delay }}
+      className="text-xs leading-relaxed mb-1"
+    >
+      {iconMap[type]}
+      <span className={colorMap[color]}>{text}</span>
+    </motion.div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  TypewriterLine                                                     */
+/* ------------------------------------------------------------------ */
+function TypewriterLine({ text, color = 'slate', speed = 40, delay = 0, onDone }: {
+  text: string;
+  color?: string;
+  speed?: number;
+  delay?: number;
+  onDone?: () => void;
+}) {
+  const [displayed, setDisplayed] = useState('');
+  const [done, setDone] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const indexRef = useRef(0);
+
+  useEffect(() => {
+    const startDelay = setTimeout(() => {
+      const interval = setInterval(() => {
+        const idx = indexRef.current;
+        if (idx >= text.length) {
+          clearInterval(interval);
+          setDone(true);
+          onDone?.();
+          return;
+        }
+        indexRef.current = idx + 1;
+        setDisplayed(text.slice(0, idx + 1));
+      }, speed);
+      return () => clearInterval(interval);
+    }, delay);
+    return () => clearTimeout(startDelay);
+  }, [text, speed, delay, onDone]);
+
+  return (
+    <span className={`text-${color}-400`}>
+      {displayed}
+      {!done && <span className="animate-pulse">&#9608;</span>}
+    </span>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  ScanningDots                                                       */
+/* ------------------------------------------------------------------ */
 function ScanningDots({ color }: { color: string }) {
   return (
     <span className="inline-flex items-center gap-1 ml-2">
@@ -342,6 +428,9 @@ function ScanningDots({ color }: { color: string }) {
   );
 }
 
+/* ------------------------------------------------------------------ */
+/*  LiveDemo — fully simulated multi-phase flow                      */
+/* ------------------------------------------------------------------ */
 function LiveDemo({
   title,
   subtitle,
@@ -359,81 +448,187 @@ function LiveDemo({
 }) {
   const [demoFixed, setDemoFixed] = useState(false);
   const [animScores, setAnimScores] = useState(pillars.map((p) => p.score));
-  const [phase, setPhase] = useState<'idle' | 'scanning' | 'fixing' | 'done'>('idle');
-  const [stepText, setStepText] = useState('');
+  const [phase, setPhase] = useState<'idle' | 'scanning' | 'analyzed' | 'generating_prompt' | 'prompt_ready' | 'pasting' | 'applying' | 'rescanning' | 'improved' | 'resetting'>('idle');
+  const [terminalLines, setTerminalLines] = useState<{ type: 'cmd' | 'out' | 'ok' | 'warn' | 'prompt' | 'vibe' | 'commit' | 'rescan'; text: string; color: string; }[]>([]);
   const [cursorVisible, setCursorVisible] = useState(true);
-  const typeIndex = useRef(0);
+  const [selectedPlatform] = useState('Bolt');
+  const [showPromptPanel, setShowPromptPanel] = useState(false);
+  const [showVibePanel, setShowVibePanel] = useState(false);
+  const [showRescanPanel, setShowRescanPanel] = useState(false);
+  const [showScorePanel, setShowScorePanel] = useState(false);
+  const [showCommitPanel, setShowCommitPanel] = useState(false);
+  const animRef = useRef<number | null>(null);
 
-  const scanMessages = type === 'repo'
-    ? [
-        'Scanning README...',
-        'Checking package.json...',
-        'Analyzing index.html...',
-        'Looking for llms.txt...',
-        'Checking robots.txt...',
-        'Analyzing source files...',
-      ]
-    : [
-        'Fetching page...',
-        'Analyzing HTML structure...',
-        'Checking meta tags...',
-        'Looking for schema markup...',
-        'Checking robots.txt...',
-        'Analyzing content structure...',
-      ];
+  const addLine = useCallback((type: 'cmd' | 'out' | 'ok' | 'warn' | 'prompt' | 'vibe' | 'commit' | 'rescan', text: string, color: string = 'slate') => {
+    setTerminalLines((prev) => [...prev, { type, text, color }]);
+  }, []);
+
+  const clearLines = useCallback(() => {
+    setTerminalLines([]);
+  }, []);
+
+  const animateScores = useCallback((targetScores: number[]) => {
+    let frame = 0;
+    const animate = () => {
+      frame++;
+      setAnimScores((prev) =>
+        prev.map((s, i) => {
+          const diff = targetScores[i] - s;
+          if (Math.abs(diff) < 0.5) return targetScores[i];
+          return s + diff * 0.04;
+        })
+      );
+      if (frame < 120) {
+        animRef.current = requestAnimationFrame(animate);
+      }
+    };
+    if (animRef.current) cancelAnimationFrame(animRef.current);
+    animRef.current = requestAnimationFrame(animate);
+  }, []);
 
   useEffect(() => {
     if (!isVisible) return;
 
     const cycle = async () => {
-      // Phase 1: Scanning
-      setPhase('scanning');
-      setDemoFixed(false);
-      setAnimScores(pillars.map((p) => p.score));
-
-      // Typewriter scan messages
-      for (const msg of scanMessages) {
-        setStepText(msg);
-        await new Promise((r) => setTimeout(r, 600));
-      }
-
-      // Phase 2: Fixing
-      setPhase('fixing');
-      setDemoFixed(true);
-      const targets = pillars.map((p) => p.maxScore);
-      let frame = 0;
-      const animateUp = () => {
-        frame++;
-        setAnimScores((prev) =>
-          prev.map((s, i) => {
-            const diff = targets[i] - s;
-            if (Math.abs(diff) < 0.5) return targets[i];
-            return s + diff * 0.05;
-          })
-        );
-        if (frame < 100) requestAnimationFrame(animateUp);
-      };
-      requestAnimationFrame(animateUp);
-      setStepText('Applying AI fixes...');
-      await new Promise((r) => setTimeout(r, 3500));
-
-      // Phase 3: Done
-      setPhase('done');
-      setStepText('Done! Score improved.');
-      await new Promise((r) => setTimeout(r, 2500));
-
-      // Reset
+      /* ---- PHASE 1: IDLE ---- */
       setPhase('idle');
       setDemoFixed(false);
       setAnimScores(pillars.map((p) => p.score));
-      setStepText('');
-      await new Promise((r) => setTimeout(r, 500));
+      clearLines();
+      setShowPromptPanel(false);
+      setShowVibePanel(false);
+      setShowRescanPanel(false);
+      setShowScorePanel(false);
+      setShowCommitPanel(false);
+      await wait(800);
+
+      /* ---- PHASE 2: SCANNING ---- */
+      setPhase('scanning');
+      addLine('cmd', type === 'repo' ? 'rain-os scan-repo github.com/acme/webapp' : 'rain-os scan-url https://acme.com', 'emerald');
+      await wait(400);
+      addLine('out', type === 'repo' ? 'Connecting to GitHub...' : 'Fetching page...', 'slate');
+      await wait(600);
+      addLine('out', type === 'repo' ? 'Scanning README.md...' : 'Analyzing HTML structure...', 'slate');
+      await wait(600);
+      addLine('out', type === 'repo' ? 'Checking package.json...' : 'Checking meta tags...', 'slate');
+      await wait(600);
+      addLine('out', type === 'repo' ? 'Analyzing index.html...' : 'Looking for schema markup...', 'slate');
+      await wait(600);
+      addLine('out', type === 'repo' ? 'Looking for llms.txt...' : 'Checking robots.txt...', 'slate');
+      await wait(600);
+      addLine('out', type === 'repo' ? 'Checking robots.txt...' : 'Analyzing content structure...', 'slate');
+      await wait(600);
+      addLine('out', type === 'repo' ? 'Analyzing source files...' : 'Checking page speed...', 'slate');
+      await wait(800);
+
+      /* ---- PHASE 3: ANALYZED (show results) ---- */
+      setPhase('analyzed');
+      addLine('warn', '4 missing signals detected', 'amber');
+      await wait(400);
+      addLine('warn', 'llms.txt not found', 'amber');
+      await wait(300);
+      addLine('warn', 'Schema markup missing', 'amber');
+      await wait(300);
+      addLine('warn', 'robots.txt blocking AI crawlers', 'amber');
+      await wait(300);
+      addLine('warn', 'FAQ section missing', 'amber');
+      await wait(800);
+      addLine('ok', 'Scan complete. Score: 45/100', 'emerald');
+      await wait(1000);
+      setShowScorePanel(true);
+      await wait(1500);
+
+      /* ---- PHASE 4: GENERATING PROMPT ---- */
+      setPhase('generating_prompt');
+      addLine('cmd', 'rain-os generate-prompt --platform Bolt', 'emerald');
+      await wait(400);
+      addLine('out', 'Analyzing missing signals...', 'slate');
+      await wait(600);
+      addLine('out', 'Building platform-specific prompt...', 'slate');
+      await wait(600);
+      addLine('out', 'Optimizing for AI discoverability...', 'slate');
+      await wait(800);
+      addLine('ok', 'Prompt generated successfully', 'emerald');
+      await wait(500);
+      setShowPromptPanel(true);
+      await wait(2000);
+
+      /* ---- PHASE 5: PROMPT READY ---- */
+      setPhase('prompt_ready');
+      await wait(1500);
+
+      /* ---- PHASE 6: PASTING INTO VIBE PLATFORM ---- */
+      setPhase('pasting');
+      setShowVibePanel(true);
+      addLine('vibe', `Copying prompt to ${selectedPlatform}...`, 'violet');
+      await wait(800);
+      addLine('vibe', 'Pasting into builder chat...', 'violet');
+      await wait(800);
+      addLine('vibe', 'AI processing request...', 'violet');
+      await wait(1000);
+      addLine('vibe', 'Changes generated', 'violet');
+      await wait(500);
+
+      /* ---- PHASE 7: APPLYING CHANGES ---- */
+      setPhase('applying');
+      setShowCommitPanel(true);
+      addLine('commit', 'Creating llms.txt...', 'sky');
+      await wait(500);
+      addLine('commit', 'Adding schema markup to index.html...', 'sky');
+      await wait(500);
+      addLine('commit', 'Updating meta tags...', 'sky');
+      await wait(500);
+      addLine('commit', 'Updating robots.txt...', 'sky');
+      await wait(500);
+      addLine('commit', 'Adding FAQ section...', 'sky');
+      await wait(500);
+      addLine('ok', 'All changes applied', 'emerald');
+      await wait(1000);
+
+      /* ---- PHASE 8: RESCANNING ---- */
+      setPhase('rescanning');
+      setShowRescanPanel(true);
+      setDemoFixed(true);
+      addLine('rescan', 'Rescanning repo...', 'amber');
+      await wait(600);
+      addLine('rescan', 'Checking llms.txt... found', 'amber');
+      await wait(500);
+      addLine('rescan', 'Checking schema... found', 'amber');
+      await wait(500);
+      addLine('rescan', 'Checking robots.txt... valid', 'amber');
+      await wait(500);
+      addLine('rescan', 'Checking FAQ... found', 'amber');
+      await wait(800);
+      addLine('ok', 'Rescan complete', 'emerald');
+      await wait(500);
+
+      /* ---- PHASE 9: IMPROVING SCORES ---- */
+      setPhase('improved');
+      animateScores(pillars.map((p) => p.maxScore));
+      await wait(2000);
+      addLine('ok', `Score improved from 45 to ${Math.round(pillars.map((p) => p.maxScore).reduce((a, b) => a + b, 0) / 3)}`, 'emerald');
+      await wait(3000);
+
+      /* ---- PHASE 10: RESETTING ---- */
+      setPhase('resetting');
+      setDemoFixed(false);
+      setAnimScores(pillars.map((p) => p.score));
+      setShowPromptPanel(false);
+      setShowVibePanel(false);
+      setShowRescanPanel(false);
+      setShowScorePanel(false);
+      setShowCommitPanel(false);
+      clearLines();
+      await wait(1000);
     };
 
     cycle();
-    const timer = setInterval(cycle, 10000);
-    return () => clearInterval(timer);
-  }, [isVisible, pillars]);
+    const timer = setInterval(cycle, 25000);
+    return () => {
+      clearInterval(timer);
+      if (animRef.current) cancelAnimationFrame(animRef.current);
+    };
+  }, [isVisible, pillars, type, addLine, clearLines, animateScores, selectedPlatform]);
 
   // Cursor blink
   useEffect(() => {
@@ -442,6 +637,46 @@ function LiveDemo({
   }, []);
 
   const overallScore = Math.round(animScores.reduce((a, b) => a + b, 0) / 3);
+  const initialOverall = Math.round(pillars.map((p) => p.score).reduce((a, b) => a + b, 0) / 3);
+
+  const phaseColor = {
+    idle: 'slate',
+    scanning: 'amber',
+    analyzed: 'red',
+    generating_prompt: 'violet',
+    prompt_ready: 'violet',
+    pasting: 'sky',
+    applying: 'violet',
+    rescanning: 'amber',
+    improved: 'emerald',
+    resetting: 'slate',
+  }[phase];
+
+  const phaseLabel = {
+    idle: 'Idle',
+    scanning: 'Scanning',
+    analyzed: 'Analyzed',
+    generating_prompt: 'Generating',
+    prompt_ready: 'Prompt Ready',
+    pasting: 'Pasting',
+    applying: 'Applying',
+    rescanning: 'Rescanning',
+    improved: 'Improved',
+    resetting: 'Resetting',
+  }[phase];
+
+  const phaseDotColor = {
+    idle: 'bg-slate-400',
+    scanning: 'bg-amber-400',
+    analyzed: 'bg-red-400',
+    generating_prompt: 'bg-violet-400',
+    prompt_ready: 'bg-violet-400',
+    pasting: 'bg-sky-400',
+    applying: 'bg-violet-400',
+    rescanning: 'bg-amber-400',
+    improved: 'bg-emerald-400',
+    resetting: 'bg-slate-400',
+  }[phase];
 
   return (
     <section className="py-20 px-6 border-t border-white/[0.06]">
@@ -473,94 +708,12 @@ function LiveDemo({
                 p={p}
                 score={Math.round(animScores[i])}
                 isFixed={demoFixed}
-                isScanning={phase === 'scanning'}
+                isScanning={phase === 'scanning' || phase === 'rescanning'}
                 index={i}
               />
             ))}
-          </div>
 
-          {/* Terminal panel */}
-          <div className="space-y-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="rounded-2xl border border-white/10 bg-[#0a0f1e] p-5 font-mono"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-bold text-violet-400 uppercase tracking-wider">
-                  {type === 'repo' ? 'rain-os scan' : 'rain-os url-scan'}
-                </span>
-                <span className="flex items-center gap-1.5 text-xs text-slate-500">
-                  {phase === 'scanning' && (
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-400"></span>
-                    </span>
-                  )}
-                  {phase === 'fixing' && (
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-violet-400"></span>
-                    </span>
-                  )}
-                  {phase === 'done' && (
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400"></span>
-                    </span>
-                  )}
-                  <span className={
-                    phase === 'scanning' ? 'text-amber-400' :
-                    phase === 'fixing' ? 'text-violet-400' :
-                    phase === 'done' ? 'text-emerald-400' : 'text-slate-500'
-                  }>
-                    {phase === 'scanning' ? 'Scanning' : phase === 'fixing' ? 'Fixing' : phase === 'done' ? 'Complete' : 'Idle'}
-                  </span>
-                </span>
-              </div>
-
-              {/* Terminal output */}
-              <div className="rounded-lg bg-[#060912] border border-white/[0.06] p-4 text-xs leading-relaxed min-h-[120px]">
-                <div className="text-slate-400 mb-2">
-                  <span className="text-emerald-400">$</span> rain-os {type === 'repo' ? 'scan-repo' : 'scan-url'} {type === 'repo' ? 'github.com/acme/webapp' : 'https://acme.com'}
-                </div>
-                <div className="text-slate-500 mb-2">
-                  {phase === 'idle' ? (
-                    <span className="animate-pulse">Waiting for input...</span>
-                  ) : (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      key={stepText}
-                    >
-                      <span className="text-sky-400">&gt;</span>{' '}
-                      <span className="text-slate-300">{stepText}</span>
-                      <span className={cursorVisible ? 'text-slate-300' : 'text-transparent'}>█</span>
-                    </motion.div>
-                  )}
-                </div>
-                {phase === 'done' && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-emerald-400"
-                  >
-                    <span className="text-emerald-400">&#10003;</span> Score improved from {pillars.map((p) => p.score).reduce((a, b) => a + b, 0) / 3 | 0} to {overallScore}
-                  </motion.div>
-                )}
-              </div>
-
-              {/* Fix prompt */}
-              <div className="mt-4 rounded-lg bg-[#060912] border border-white/[0.06] p-4 max-h-48 overflow-y-auto">
-                <div className="text-xs text-slate-500 mb-2 uppercase tracking-wider font-bold">Fix prompt generated</div>
-                <div className="text-xs text-slate-300 leading-relaxed">
-                  {fixPrompt}
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Overall score */}
+            {/* Overall score card */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -570,6 +723,16 @@ function LiveDemo({
               <div className="mt-3 flex items-center justify-center gap-2">
                 <span className="text-4xl font-bold text-white tabular-nums">{overallScore}</span>
                 <span className="text-sm text-slate-500">/ 100</span>
+                {demoFixed && overallScore > initialOverall + 20 && (
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400"
+                  >
+                    <TrendingUp className="w-3 h-3" />+{overallScore - initialOverall}
+                  </motion.span>
+                )}
               </div>
               <div className="mt-3 h-2 rounded-full bg-white/5 overflow-hidden">
                 <motion.div
@@ -591,9 +754,204 @@ function LiveDemo({
                 </motion.div>
               </div>
               <p className="mt-3 text-xs text-slate-500">
-                {phase === 'scanning' ? 'Scanning signals...' : phase === 'fixing' ? 'Applying fixes...' : phase === 'done' ? 'All fixes applied!' : 'Ready to scan'}
+                {phase === 'scanning' ? 'Scanning signals...' :
+                 phase === 'rescanning' ? 'Rescanning after fixes...' :
+                 phase === 'improved' ? 'All fixes applied! Score improved.' :
+                 phase === 'analyzed' ? '4 missing signals detected' :
+                 'Ready to scan'}
               </p>
             </motion.div>
+          </div>
+
+          {/* Terminal panel */}
+          <div className="space-y-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="rounded-2xl border border-white/10 bg-[#0a0f1e] p-5 font-mono"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs font-bold text-violet-400 uppercase tracking-wider">
+                  {type === 'repo' ? 'rain-os scan' : 'rain-os url-scan'}
+                </span>
+                <span className="flex items-center gap-1.5 text-xs text-slate-500">
+                  <span className={`relative flex h-1.5 w-1.5 ${phase === 'scanning' || phase === 'rescanning' ? 'animate-pulse' : ''}`}>
+                    <span className={`relative inline-flex rounded-full h-1.5 w-1.5 ${phaseDotColor}`}></span>
+                  </span>
+                  <span className={`text-${phaseColor}-400`}>{phaseLabel}</span>
+                </span>
+              </div>
+
+              {/* Terminal output */}
+              <div className="rounded-lg bg-[#060912] border border-white/[0.06] p-4 text-xs leading-relaxed min-h-[180px] max-h-[280px] overflow-y-auto">
+                {terminalLines.map((line, i) => (
+                  <div key={i} className="mb-1">
+                    <span className={
+                      line.type === 'cmd' ? 'text-emerald-400' :
+                      line.type === 'out' ? 'text-slate-500' :
+                      line.type === 'ok' ? 'text-emerald-400' :
+                      line.type === 'warn' ? 'text-amber-400' :
+                      line.type === 'vibe' ? 'text-violet-400' :
+                      line.type === 'commit' ? 'text-sky-400' :
+                      line.type === 'rescan' ? 'text-amber-400' : 'text-slate-400'
+                    }>
+                      {line.type === 'cmd' ? '$ ' : line.type === 'out' ? '> ' : line.type === 'ok' ? '\u2713 ' : line.type === 'warn' ? '! ' : line.type === 'vibe' ? '~ ' : line.type === 'commit' ? '\u25CF ' : line.type === 'rescan' ? '\u21BB ' : '> '}
+                    </span>
+                    <span className={
+                      line.type === 'cmd' ? 'text-slate-300' :
+                      line.type === 'out' ? 'text-slate-400' :
+                      line.type === 'ok' ? 'text-emerald-300' :
+                      line.type === 'warn' ? 'text-amber-300' :
+                      line.type === 'vibe' ? 'text-violet-300' :
+                      line.type === 'commit' ? 'text-sky-300' :
+                      line.type === 'rescan' ? 'text-amber-300' : 'text-slate-400'
+                    }>
+                      {line.text}
+                    </span>
+                  </div>
+                ))}
+                {(phase === 'scanning' || phase === 'rescanning' || phase === 'generating_prompt' || phase === 'applying') && (
+                  <div className="text-slate-500">
+                    <span className="text-slate-500">{'>'} </span>
+                    <span className="animate-pulse">Processing...</span>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+
+            {/* Prompt panel - appears after generation */}
+            <AnimatePresence>
+              {showPromptPanel && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                  transition={{ duration: 0.5 }}
+                  className="rounded-2xl border border-violet-400/20 bg-violet-500/[0.03] p-5"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs font-bold text-violet-400 uppercase tracking-wider flex items-center gap-2">
+                      <Wand2 className="w-3.5 h-3.5" />
+                      Fix Prompt Generated
+                    </span>
+                    <span className="text-xs text-slate-500">for {selectedPlatform}</span>
+                  </div>
+                  <div className="rounded-lg bg-[#060912] border border-white/[0.06] p-4 text-xs text-slate-300 leading-relaxed max-h-48 overflow-y-auto">
+                    {fixPrompt}
+                  </div>
+                  <div className="mt-3 flex items-center gap-2 text-xs text-slate-500">
+                    <ClipboardCopy className="w-3 h-3" />
+                    <span>Copied to clipboard</span>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Vibe platform panel - appears during pasting */}
+            <AnimatePresence>
+              {showVibePanel && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                  transition={{ duration: 0.5 }}
+                  className="rounded-2xl border border-sky-400/20 bg-sky-500/[0.03] p-5"
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-2">
+                      <Send className="w-3.5 h-3.5" />
+                      {selectedPlatform} Builder
+                    </span>
+                  </div>
+                  <div className="rounded-lg bg-[#060912] border border-white/[0.06] p-4 space-y-2">
+                    <div className="flex items-start gap-2">
+                      <div className="w-6 h-6 rounded-full bg-violet-400/20 flex items-center justify-center shrink-0">
+                        <span className="text-xs text-violet-400">AI</span>
+                      </div>
+                      <div className="text-xs text-slate-400 leading-relaxed">
+                        <span className="text-sky-400 font-medium">Prompt pasted. </span>
+                        Processing your request to add llms.txt, schema markup, meta tags, and FAQ section...
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-slate-500">
+                      <span className="w-1 h-1 rounded-full bg-sky-400 animate-pulse"></span>
+                      <span>Generating changes...</span>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Commit panel - appears during applying */}
+            <AnimatePresence>
+              {showCommitPanel && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                  transition={{ duration: 0.5 }}
+                  className="rounded-2xl border border-emerald-400/20 bg-emerald-500/[0.03] p-5"
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+                      <GitCommit className="w-3.5 h-3.5" />
+                      Changes Applied
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    {[
+                      { file: 'llms.txt', action: 'Created', status: 'added' },
+                      { file: 'index.html', action: 'Schema markup added', status: 'modified' },
+                      { file: 'robots.txt', action: 'Updated for AI crawlers', status: 'modified' },
+                      { file: 'src/App.tsx', action: 'FAQ section added', status: 'modified' },
+                    ].map((change, i) => (
+                      <motion.div
+                        key={change.file}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.15 }}
+                        className="flex items-center justify-between rounded-lg bg-[#060912] border border-white/[0.06] px-3 py-2 text-xs"
+                      >
+                        <span className="text-slate-300">{change.file}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-slate-500">{change.action}</span>
+                          <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                            change.status === 'added' ? 'bg-emerald-400/10 text-emerald-400' : 'bg-sky-400/10 text-sky-400'
+                          }`}>
+                            {change.status === 'added' ? 'A' : 'M'}
+                          </span>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Rescan panel - appears during rescanning */}
+            <AnimatePresence>
+              {showRescanPanel && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                  transition={{ duration: 0.5 }}
+                  className="rounded-2xl border border-amber-400/20 bg-amber-500/[0.03] p-5"
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                      Rescanning
+                    </span>
+                  </div>
+                  <div className="text-xs text-slate-400 leading-relaxed">
+                    Verifying that all fixes were applied correctly and checking new AI Readability scores...
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>
@@ -601,6 +959,13 @@ function LiveDemo({
   );
 }
 
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/* ------------------------------------------------------------------ */
+/*  Page                                                               */
+/* ------------------------------------------------------------------ */
 export default function VibeCoders() {
   const navigate = useNavigate();
   const [wordIndex, setWordIndex] = useState(0);
@@ -835,8 +1200,8 @@ export default function VibeCoders() {
           viewport={{ once: true, margin: '-100px' }}
         >
           <LiveDemo
-            title="Repo Scanner — Live in Action"
-            subtitle="Watch a real GitHub repo get scanned and fixed in real time. Scores climb, signals turn green, and the fix prompt generates automatically."
+            title="Repo Scanner — Full Workflow"
+            subtitle="Watch the complete journey: scan a repo, get a fix prompt, paste it into your vibe builder, and watch the score improve after rescanning."
             pillars={repoPillars}
             fixPrompt={FIX_PROMPT}
             type="repo"
