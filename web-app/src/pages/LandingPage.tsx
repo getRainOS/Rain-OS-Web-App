@@ -48,6 +48,24 @@ export default function LandingPage({ onAnalyze, onLoginClick, onGetStartedClick
                 See how it works for writers →
               </a>
             </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.35 }} className="max-w-2xl mx-auto text-center">
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.08] px-4 py-1.5 mb-5">
+                <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-emerald-400">The vibe coder trap</span>
+              </div>
+              <p className="text-slate-300 text-base md:text-lg leading-relaxed mb-5">
+                You built something incredible in a weekend. Bolt shipped the landing page. Cursor wired the backend. Lovable made it look like a million-dollar product. But here is the problem nobody talks about: <strong className="text-white">AI cannot actually read your site.</strong>
+              </p>
+              <p className="text-slate-400 text-base leading-relaxed mb-5">
+                ChatGPT, Perplexity, and Gemini do not see what you see. They strip out your beautiful animations, ignore your visual hierarchy, and extract raw text from the DOM. If your headings are buried in nested divs, your value prop is hidden behind CSS trickery, or your schema markup is missing, AI treats your content as noise. The same thing that makes your site feel premium to humans makes it invisible to the engines that now control search.
+              </p>
+              <p className="text-slate-400 text-base leading-relaxed mb-5">
+                Worse: if someone asks "what is the best tool for X" and your product is exactly that answer, but your site structure is a mess, AI will cite your competitor instead. The code you vibe-coded in three hours is silently costing you customers every single day.
+              </p>
+              <p className="text-slate-300 text-base md:text-lg leading-relaxed">
+                <strong className="text-sky-400">rain OS fixes this in under 60 seconds.</strong> Paste your homepage, scan your URL, or connect your repo. We show you exactly what AI sees, score how readable it is, and tell you what to change so you get cited instead of skipped.
+              </p>
+            </motion.div>
           </div>
         </section>
         <div className="px-6">
