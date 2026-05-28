@@ -4,7 +4,7 @@ import {
   ArrowRight, Zap, GitBranch, Layers, Search, Shield,
   FileCode, Terminal, CheckCircle2, AlertTriangle, Sparkles, Wand2,
   Monitor, Code2, Globe, Cpu, MapPin, BrainCircuit, ShieldCheck, MousePointerClick,
-  Copy, Check, RotateCcw, TrendingUp
+  RotateCcw, TrendingUp
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
@@ -145,7 +145,7 @@ export default function VibeCoders() {
   const [wordIndex, setWordIndex] = useState(0);
   const [demoFixed, setDemoFixed] = useState(false);
   const [animScores, setAnimScores] = useState(pillars.map(p => p.score));
-  const [copied, setCopied] = useState(false);
+  const [demoVisible, setDemoVisible] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -155,23 +155,31 @@ export default function VibeCoders() {
   }, []);
 
   useEffect(() => {
-    if (demoFixed) {
+    if (!demoVisible) return;
+    const cycle = () => {
+      setDemoFixed(true);
       const targets = pillars.map(p => p.maxScore);
       let frame = 0;
-      const animate = () => {
+      const animateUp = () => {
         frame++;
         setAnimScores(prev => prev.map((s, i) => {
           const diff = targets[i] - s;
           if (Math.abs(diff) < 0.5) return targets[i];
-          return s + diff * 0.08;
+          return s + diff * 0.06;
         }));
-        if (frame < 60) requestAnimationFrame(animate);
+        if (frame < 80) requestAnimationFrame(animateUp);
       };
-      requestAnimationFrame(animate);
-    } else {
-      setAnimScores(pillars.map(p => p.score));
-    }
-  }, [demoFixed]);
+      requestAnimationFrame(animateUp);
+
+      setTimeout(() => {
+        setDemoFixed(false);
+        setAnimScores(pillars.map(p => p.score));
+      }, 6000);
+    };
+    cycle();
+    const timer = setInterval(cycle, 10000);
+    return () => clearInterval(timer);
+  }, [demoVisible]);
 
   return (
     <div className="flex flex-col min-h-screen relative z-10 selection:bg-violet-500/30">
@@ -371,15 +379,22 @@ export default function VibeCoders() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
+              onViewportEnter={() => setDemoVisible(true)}
               transition={{ duration: 0.6 }}
               className="text-center mb-14"
             >
-              <span className="text-violet-400 font-bold tracking-wider text-xs uppercase mb-3 block">Live demo</span>
+              <div className="inline-flex items-center gap-2 mb-3">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+                </span>
+                <span className="text-emerald-400 font-bold tracking-wider text-xs uppercase">Live demo</span>
+              </div>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
                 See how rain OS fixes your AI score
               </h2>
               <p className="text-slate-400 max-w-xl mx-auto leading-relaxed">
-                This is what a real repo scan looks like. Click "Apply fixes" to watch the score climb as each signal gets corrected.
+                Watch the scores animate in real time as the fix prompt gets applied. Then try it on your own repo.
               </p>
             </motion.div>
 
@@ -477,7 +492,7 @@ export default function VibeCoders() {
                 })}
               </div>
 
-              {/* Fix prompt panel */}
+              {/* Fix prompt panel — live */}
               <div className="space-y-4">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -488,50 +503,18 @@ export default function VibeCoders() {
                 >
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-xs font-bold text-violet-400 uppercase tracking-wider">Fix prompt</span>
-                    <span className="text-xs text-slate-500">Paste into your vibe builder</span>
+                    <span className="flex items-center gap-1.5 text-xs text-slate-500">
+                      <span className="relative flex h-1.5 w-1.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400"></span>
+                      </span>
+                      {demoFixed ? 'Applying fixes...' : 'Scanning repo...'}
+                    </span>
                   </div>
-                  <div className="relative">
-                    <div className="rounded-xl bg-[#0d1117] border border-white/[0.08] p-4 text-xs font-mono text-slate-300 leading-relaxed max-h-48 overflow-y-auto">
-                      {FIX_PROMPT}
-                    </div>
-                    <button
-                      onClick={() => {
-                        navigator.clipboard.writeText(FIX_PROMPT);
-                        setCopied(true);
-                        setTimeout(() => setCopied(false), 2000);
-                      }}
-                      className="absolute top-2 right-2 p-1.5 rounded-md bg-white/10 hover:bg-white/20 transition-colors"
-                    >
-                      {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-slate-400" />}
-                    </button>
+                  <div className="rounded-xl bg-[#0d1117] border border-white/[0.08] p-4 text-xs font-mono text-slate-300 leading-relaxed max-h-48 overflow-y-auto">
+                    {FIX_PROMPT}
                   </div>
                 </motion.div>
-
-                {/* Action buttons */}
-                <div className="flex flex-col gap-3">
-                  <button
-                    onClick={() => setDemoFixed(true)}
-                    disabled={demoFixed}
-                    className="flex items-center justify-center gap-2 text-white rounded-xl px-6 py-3 text-sm font-bold shadow-lg transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group"
-                    style={{
-                      background: 'linear-gradient(135deg, #8b5cf6, #0ea5e9)',
-                      boxShadow: '0 8px 24px rgba(139,92,246,0.25)',
-                    }}
-                  >
-                    <Wand2 className="w-4 h-4" />
-                    {demoFixed ? 'Fixes applied!' : 'Apply fixes'}
-                    {demoFixed && <Sparkles className="w-4 h-4" />}
-                  </button>
-                  {demoFixed && (
-                    <button
-                      onClick={() => setDemoFixed(false)}
-                      className="flex items-center justify-center gap-2 text-slate-400 rounded-xl px-6 py-3 text-sm font-semibold border border-white/10 hover:border-white/20 hover:text-white transition-all"
-                    >
-                      <RotateCcw className="w-4 h-4" />
-                      Reset demo
-                    </button>
-                  )}
-                </div>
 
                 {/* Overall score */}
                 <motion.div
@@ -555,6 +538,9 @@ export default function VibeCoders() {
                       }}
                     />
                   </div>
+                  <p className="mt-3 text-xs text-slate-500">
+                    {demoFixed ? 'Fixes applied. Score climbing...' : 'Scanning repo...'}
+                  </p>
                 </motion.div>
               </div>
             </div>
