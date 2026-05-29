@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
 import { LocalBusinessBadge } from '@/components/marketing/MarketingComponents';
 
-const ROTATING_WORDS = ['SaaS?', 'Website?', 'Web App?', 'Portfolio?', 'Landing Page?', 'Store?', 'Product?', 'Blog?', 'App?'];
+const ROTATING_WORDS = ['SaaS?', 'MVP?', 'Website?', 'Web App?', 'Portfolio?', 'Landing Page?', 'Store?', 'Product?', 'Blog?', 'App?'];
 
 const repoPillars = [
   {
@@ -1027,7 +1027,7 @@ export default function VibeCoders() {
               <p className="text-slate-400 max-w-xl mx-auto leading-relaxed mb-3">
                 Every repo scan and URL check breaks down into these three core areas.
               </p>
-              <p className="text-xs text-slate-500 max-w-xl mx-auto leading-relaxed">
+              <p className="text-sm text-slate-500 max-w-xl mx-auto leading-relaxed">
                 Hover over any metric in the cards below to see a deeper explanation of what each signal means.
               </p>
             </motion.div>
