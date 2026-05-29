@@ -62,73 +62,6 @@ const repoPillars = [
 ];
 
 
-const vibeSignals = [
-  {
-    color: '#a78bfa',
-    bg: 'rgba(139,92,246,0.1)',
-    border: 'rgba(139,92,246,0.2)',
-    Icon: FileCode,
-    name: 'llms.txt Presence',
-    desc: 'The single most important file for AI discoverability. Tells LLMs what your app does, how to use it, and where key info lives. Most vibe-coded sites skip this entirely.',
-  },
-  {
-    color: '#38bdf8',
-    bg: 'rgba(14,165,233,0.1)',
-    border: 'rgba(14,165,233,0.2)',
-    Icon: Search,
-    name: 'Meta Description & OG Tags',
-    desc: 'AI engines use meta descriptions and Open Graph tags to understand your page before they render it. Missing these means AI has no context to cite you.',
-  },
-  {
-    color: '#fbbf24',
-    bg: 'rgba(251,191,36,0.1)',
-    border: 'rgba(251,191,36,0.2)',
-    Icon: Shield,
-    name: 'robots.txt & Crawler Access',
-    desc: 'Is your robots.txt blocking GPTBot, ChatGPT-User, or other AI crawlers? Many vibe-coded sites inherit restrictive defaults that hide them from AI search.',
-  },
-  {
-    color: '#34d399',
-    bg: 'rgba(16,185,129,0.1)',
-    border: 'rgba(16,185,129,0.2)',
-    Icon: Code2,
-    name: 'Schema Markup (JSON-LD)',
-    desc: 'Structured data tells AI exactly what your page represents — product, article, organization, FAQ. Without it, AI guesses. Most vibe tools don\'t add schema automatically.',
-  },
-  {
-    color: '#fb7185',
-    bg: 'rgba(251,113,133,0.1)',
-    border: 'rgba(251,113,133,0.2)',
-    Icon: Monitor,
-    name: 'SSR vs SPA Detection',
-    desc: 'Vibe-coded SPAs (Vite, CRA) render content in JavaScript. AI crawlers often see a blank page. We detect this and flag it as high-risk for AI discoverability.',
-  },
-  {
-    color: '#a78bfa',
-    bg: 'rgba(139,92,246,0.08)',
-    border: 'rgba(139,92,246,0.18)',
-    Icon: Terminal,
-    name: 'README & Package.json Quality',
-    desc: 'Your README is often the first thing AI reads about your project. Missing install steps, unclear description, or no keywords in package.json hurts discoverability.',
-  },
-  {
-    color: '#38bdf8',
-    bg: 'rgba(14,165,233,0.08)',
-    border: 'rgba(14,165,233,0.18)',
-    Icon: Globe,
-    name: 'Canonical URL & index.html',
-    desc: 'Duplicate content and missing canonical tags confuse AI. We check your index.html for title tags, meta viewport, and proper head structure.',
-  },
-  {
-    color: '#fbbf24',
-    bg: 'rgba(251,191,36,0.08)',
-    border: 'rgba(251,191,36,0.18)',
-    Icon: Cpu,
-    name: 'AI-Ready Content Structure',
-    desc: 'Clear H1/H2 hierarchy, FAQ sections, bullet-point answers. AI extracts the first 1-2 sentences of each section. If your lead is vague, AI moves to a competitor.',
-  },
-];
-
 const platforms = [
   'Bolt', 'Lovable', 'Cursor', 'v0', 'Replit', 'Windsurf',
   'Base44', 'lovable.dev', 'Framer', 'Webflow',
@@ -598,20 +531,28 @@ function RepoDemo({ isVisible }: { isVisible: boolean }) {
       setPhase('scanning');
       addLine('cmd', 'rain-os scan-repo github.com/acme/webapp');
       await wait(400); addLine('out', 'Connecting to GitHub...');
-      await wait(600); addLine('out', 'Scanning README.md...');
-      await wait(600); addLine('out', 'Checking package.json...');
-      await wait(600); addLine('out', 'Analyzing index.html...');
-      await wait(600); addLine('out', 'Looking for llms.txt...');
-      await wait(600); addLine('out', 'Checking robots.txt...');
-      await wait(600); addLine('out', 'Analyzing source files...');
+      await wait(600); addLine('out', 'Scanning AI Readability signals...');
+      await wait(400); addLine('out', '  llms.txt... not found');
+      await wait(300); addLine('out', '  Schema markup... missing');
+      await wait(300); addLine('out', '  H1/H2 structure... present');
+      await wait(300); addLine('out', '  Meta tags... missing');
+      await wait(500); addLine('out', 'Scanning Digital Authority signals...');
+      await wait(300); addLine('out', '  README quality... good');
+      await wait(300); addLine('out', '  robots.txt... blocking AI crawlers');
+      await wait(300); addLine('out', '  Canonical URL... present');
+      await wait(300); addLine('out', '  OG tags... missing');
+      await wait(500); addLine('out', 'Scanning Conversion Readiness signals...');
+      await wait(300); addLine('out', '  FAQ section... missing');
+      await wait(300); addLine('out', '  Bullet answers... missing');
+      await wait(300); addLine('out', '  CTA clarity... present');
+      await wait(300); addLine('out', '  Lead paragraph... missing');
       await wait(800);
 
       setPhase('analyzed');
-      addLine('warn', '4 missing signals detected');
-      await wait(400); addLine('warn', 'llms.txt not found');
-      await wait(300); addLine('warn', 'Schema markup missing');
-      await wait(300); addLine('warn', 'robots.txt blocking AI crawlers');
-      await wait(300); addLine('warn', 'FAQ section missing');
+      addLine('warn', '8 missing signals detected across 3 pillars');
+      await wait(400); addLine('warn', 'AI Readability: llms.txt, Schema markup, Meta tags');
+      await wait(300); addLine('warn', 'Digital Authority: robots.txt, OG tags');
+      await wait(300); addLine('warn', 'Conversion Readiness: FAQ, Bullet answers, Lead paragraph');
       await wait(800); addLine('ok', 'Scan complete. Score: 45/100');
       await wait(2500);
 
@@ -634,21 +575,37 @@ function RepoDemo({ isVisible }: { isVisible: boolean }) {
       await wait(500);
 
       setPhase('applying'); setShowCommitPanel(true);
-      addLine('commit', 'Creating llms.txt...');
-      await wait(500); addLine('commit', 'Adding schema markup to index.html...');
-      await wait(500); addLine('commit', 'Updating meta tags...');
-      await wait(500); addLine('commit', 'Updating robots.txt...');
-      await wait(500); addLine('commit', 'Adding FAQ section...');
-      await wait(500); addLine('ok', 'All changes applied');
-      await wait(1000);
+      addLine('commit', 'AI Readability fixes...');
+      await wait(300); addLine('commit', '  Creating llms.txt...');
+      await wait(300); addLine('commit', '  Adding JSON-LD schema markup...');
+      await wait(300); addLine('commit', '  Updating meta tags...');
+      await wait(400); addLine('commit', 'Digital Authority fixes...');
+      await wait(300); addLine('commit', '  Updating robots.txt for AI crawlers...');
+      await wait(300); addLine('commit', '  Adding Open Graph tags...');
+      await wait(400); addLine('commit', 'Conversion Readiness fixes...');
+      await wait(300); addLine('commit', '  Adding FAQ section...');
+      await wait(300); addLine('commit', '  Adding bullet answer blocks...');
+      await wait(300); addLine('commit', '  Rewriting lead paragraphs...');
+      await wait(500); addLine('ok', 'All 12 signals fixed');
+      await wait(800);
 
       setPhase('rescanning'); setShowRescanPanel(true);
-      addLine('rescan', 'Rescanning repo...');
-      await wait(600); addLine('rescan', 'Checking llms.txt... found');
-      await wait(500); addLine('rescan', 'Checking schema... found');
-      await wait(500); addLine('rescan', 'Checking robots.txt... valid');
-      await wait(500); addLine('rescan', 'Checking FAQ... found');
-      await wait(800); addLine('ok', 'Rescan complete');
+      addLine('rescan', 'Rescanning AI Readability...');
+      await wait(400); addLine('rescan', '  llms.txt... found');
+      await wait(300); addLine('rescan', '  Schema markup... valid');
+      await wait(300); addLine('rescan', '  H1/H2 structure... present');
+      await wait(300); addLine('rescan', '  Meta tags... present');
+      await wait(400); addLine('rescan', 'Rescanning Digital Authority...');
+      await wait(300); addLine('rescan', '  README quality... good');
+      await wait(300); addLine('rescan', '  robots.txt... allows AI');
+      await wait(300); addLine('rescan', '  Canonical URL... present');
+      await wait(300); addLine('rescan', '  OG tags... complete');
+      await wait(400); addLine('rescan', 'Rescanning Conversion Readiness...');
+      await wait(300); addLine('rescan', '  FAQ section... found');
+      await wait(300); addLine('rescan', '  Bullet answers... found');
+      await wait(300); addLine('rescan', '  CTA clarity... present');
+      await wait(300); addLine('rescan', '  Lead paragraph... optimized');
+      await wait(800); addLine('ok', 'Rescan complete — all 12 signals verified');
       await wait(500);
 
       setPhase('improved'); setDemoFixed(true);
@@ -662,7 +619,7 @@ function RepoDemo({ isVisible }: { isVisible: boolean }) {
       clearLines(); await wait(1000);
     };
     cycle();
-    const timer = setInterval(cycle, 25000);
+    const timer = setInterval(cycle, 29000);
     return () => { clearInterval(timer); if (animRef.current) cancelAnimationFrame(animRef.current); };
   }, [isVisible, addLine, clearLines, animateScores, setAnimScores, setDemoFixed, animRef]);
 
@@ -697,7 +654,7 @@ function RepoDemo({ isVisible }: { isVisible: boolean }) {
                   <div className="rounded-lg bg-[#060912] border border-white/[0.06] p-4 space-y-2">
                     <div className="flex items-start gap-2">
                       <div className="w-6 h-6 rounded-full bg-violet-400/20 flex items-center justify-center shrink-0"><span className="text-xs text-violet-400">AI</span></div>
-                      <div className="text-xs text-slate-400 leading-relaxed"><span className="text-sky-400 font-medium">Prompt pasted. </span>Processing your request to add llms.txt, schema markup, meta tags, and FAQ section...</div>
+                      <div className="text-xs text-slate-400 leading-relaxed"><span className="text-sky-400 font-medium">Prompt pasted. </span>Processing your request to fix all 12 missing signals across 3 pillars...</div>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-slate-500"><span className="w-1 h-1 rounded-full bg-sky-400 animate-pulse"></span><span>Generating changes...</span></div>
                   </div>
@@ -709,7 +666,14 @@ function RepoDemo({ isVisible }: { isVisible: boolean }) {
                 <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} transition={{ duration: 0.5 }} className="rounded-2xl border border-emerald-400/20 bg-emerald-500/[0.03] p-5">
                   <div className="flex items-center gap-2 mb-3"><span className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2"><GitCommit className="w-3.5 h-3.5" />Changes Applied</span></div>
                   <div className="space-y-2">
-                    {[{ file: 'llms.txt', action: 'Created', status: 'added' }, { file: 'index.html', action: 'Schema markup added', status: 'modified' }, { file: 'robots.txt', action: 'Updated for AI crawlers', status: 'modified' }, { file: 'src/App.tsx', action: 'FAQ section added', status: 'modified' }].map((change, i) => (
+                    {[
+                      { file: 'llms.txt', action: 'AI Readability', status: 'added' },
+                      { file: 'index.html', action: 'AI Readability', status: 'modified' },
+                      { file: 'robots.txt', action: 'Digital Authority', status: 'modified' },
+                      { file: 'og-tags.html', action: 'Digital Authority', status: 'added' },
+                      { file: 'faq.html', action: 'Conversion Readiness', status: 'added' },
+                      { file: 'src/App.tsx', action: 'Conversion Readiness', status: 'modified' },
+                    ].map((change, i) => (
                       <motion.div key={change.file} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.15 }} className="flex items-center justify-between rounded-lg bg-[#060912] border border-white/[0.06] px-3 py-2 text-xs">
                         <span className="text-slate-300">{change.file}</span>
                         <div className="flex items-center gap-2">
@@ -928,49 +892,6 @@ export default function VibeCoders() {
           </div>
         </section>
 
-        {/* What We Analyze */}
-        <section className="py-20 px-6 border-t border-white/[0.06]">
-          <div className="max-w-5xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="mb-12"
-            >
-              <span className="text-violet-400 font-bold tracking-wider text-xs uppercase mb-3 block">8 signals scored</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">What we analyze in your repo or URL</h2>
-              <p className="text-slate-400 max-w-xl leading-relaxed">
-                Each signal has a direct impact on whether AI search engines can discover, understand, and cite your vibe-coded project.
-              </p>
-            </motion.div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {vibeSignals.map((p, i) => (
-                <motion.div
-                  key={p.name}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.06 }}
-                  className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-6 hover:border-white/20 transition-colors"
-                >
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: p.bg, border: `1px solid ${p.border}` }}
-                  >
-                    <p.Icon className="w-5 h-5" style={{ color: p.color }} />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-semibold text-white mb-1">{p.name}</h3>
-                    <p className="text-sm text-slate-400 leading-relaxed">{p.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* Repo Scanner Demo */}
         <motion.div
           onViewportEnter={() => setRepoDemoVisible(true)}
@@ -1049,7 +970,7 @@ export default function VibeCoders() {
                     </div>
                     <div>
                       <h3 className="text-sm font-semibold text-white">{p.name}</h3>
-                      <span className="text-xs text-slate-400">4 signals scored</span>
+                      <span className="text-xs text-slate-400">{p.subSignals.length} signals scored</span>
                     </div>
                   </div>
                   <div className="space-y-2">
