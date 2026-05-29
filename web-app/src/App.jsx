@@ -52,7 +52,7 @@ export default function App() {
   const isPreview = urlParams.get('preview') === '1';
   const [apiKey, setApiKeyState] = useState(() => isPreview ? '__demo__' : getApiKey());
   const [user, setUser] = useState(null);
-  const [authChecked, setAuthChecked] = useState(false);
+  const [authChecked, setAuthChecked] = useState(true);
   const [userLane, setUserLaneState] = useState(() => {
     if (isPreview) return PREVIEW_LANE;
     return localStorage.getItem('rain_os_user_lane') || null;
@@ -67,7 +67,7 @@ export default function App() {
 
   useEffect(() => {
     async function initAuth() {
-      if (isPreview) { setAuthChecked(true); return; }
+      if (isPreview) { return; }
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         try {
@@ -90,7 +90,7 @@ export default function App() {
           setUser(data);
         } catch (_) {}
       }
-      setAuthChecked(true);
+      // Auth initialization complete
     }
     initAuth();
 
@@ -124,20 +124,6 @@ export default function App() {
       .catch(() => {});
   }
 
-  if (!authChecked) {
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#020410', gap: 16 }}>
-        <div style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-0.5px', color: '#fff' }}>
-          <span style={{ color: '#0ea5e9' }}>rain</span> OS
-        </div>
-        <div style={{ width: 120, height: 2, background: 'rgba(255,255,255,0.06)', borderRadius: 1, overflow: 'hidden' }}>
-          <div style={{ width: '40%', height: '100%', background: '#0ea5e9', borderRadius: 1, animation: 'rainLoad 1s ease-in-out infinite' }} />
-        </div>
-        <style>{`@keyframes rainLoad { 0%{transform:translateX(-100%)} 50%{transform:translateX(100%)} 100%{transform:translateX(250%)} }`}</style>
-      </div>
-    );
-  }
-
   return (
     <AppContext.Provider value={{ apiKey, user, setUser, onLogout, refreshUser, isDemo, userLane, setUserLane }}>
       <BrowserRouter>
@@ -169,11 +155,7 @@ function AuthCallbackRoute({ onAuth }) {
     handleCallback();
   }, []);
 
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#020410' }}>
-      <div className="spinner" />
-    </div>
-  );
+  return <div style={{ minHeight: '100vh', background: '#020410' }} />;
 }
 
 function AuthModalRoute({ onAuth }) {
@@ -208,11 +190,7 @@ function AppRoutes({ apiKey, onAuth }) {
 
   if (!apiKey) {
     return (
-      <Suspense fallback={
-        <div className="flex items-center justify-center min-h-screen" style={{ background: '#020410' }}>
-          <div className="spinner" />
-        </div>
-      }>
+      <Suspense fallback={null}>
         <Routes>
           <Route
             path="/"
