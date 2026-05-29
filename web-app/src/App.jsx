@@ -29,6 +29,7 @@ const TermsOfService = lazy(() => import('./pages/TermsOfService.tsx'));
 const SupportPage = lazy(() => import('./pages/SupportPage.tsx'));
 const BlogIndex = lazy(() => import('./pages/BlogIndex.tsx'));
 const BlogPost = lazy(() => import('./pages/BlogPost.tsx'));
+const AIReadabilityPage = lazy(() => import('./pages/AIReadabilityPage.tsx'));
 
 const BASE_API = 'https://api.getrainos.com';
 
@@ -236,6 +237,7 @@ function AppRoutes({ apiKey, onAuth }) {
           <Route path="/support" element={<LandingWrapper><SupportPage /></LandingWrapper>} />
           <Route path="/blog" element={<LandingWrapper><BlogIndex /></LandingWrapper>} />
           <Route path="/blog/:slug" element={<LandingWrapper><BlogPost /></LandingWrapper>} />
+          <Route path="/ai-readability" element={<LandingWrapper><AIReadabilityPage /></LandingWrapper>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
