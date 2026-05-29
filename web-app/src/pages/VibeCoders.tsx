@@ -23,10 +23,10 @@ const repoPillars = [
     score: 42,
     maxScore: 94,
     subSignals: [
-      { name: 'llms.txt', before: false, after: true },
-      { name: 'Schema markup', before: false, after: true },
-      { name: 'H1/H2 structure', before: true, after: true },
-      { name: 'Meta tags', before: false, after: true },
+      { name: 'llms.txt', before: false, after: true, description: 'A file that tells AI crawlers how to read your site and what each page does.' },
+      { name: 'Schema markup', before: false, after: true, description: 'Structured data (JSON-LD) that helps AI understand your organization, product, or content.' },
+      { name: 'H1/H2 structure', before: true, after: true, description: 'Clear heading hierarchy so AI can quickly grasp the topic and sections of each page.' },
+      { name: 'Meta tags', before: false, after: true, description: 'Title and description tags that show up in AI summaries and search results.' },
     ],
   },
   {
@@ -38,10 +38,10 @@ const repoPillars = [
     score: 58,
     maxScore: 91,
     subSignals: [
-      { name: 'README quality', before: true, after: true },
-      { name: 'robots.txt', before: false, after: true },
-      { name: 'Canonical URL', before: true, after: true },
-      { name: 'OG tags', before: false, after: true },
+      { name: 'README quality', before: true, after: true, description: 'A clear README that explains what your project does, how to install it, and where key files live.' },
+      { name: 'robots.txt', before: false, after: true, description: 'Tells AI crawlers (GPTBot, ChatGPT-User) which pages they are allowed to visit.' },
+      { name: 'Canonical URL', before: true, after: true, description: 'Prevents duplicate content issues so AI always points to the right version of a page.' },
+      { name: 'OG tags', before: false, after: true, description: 'Open Graph tags that control how your links look when shared on social platforms and AI chat interfaces.' },
     ],
   },
   {
@@ -53,10 +53,10 @@ const repoPillars = [
     score: 35,
     maxScore: 87,
     subSignals: [
-      { name: 'FAQ section', before: false, after: true },
-      { name: 'Bullet answers', before: false, after: true },
-      { name: 'CTA clarity', before: true, after: true },
-      { name: 'Lead paragraph', before: false, after: true },
+      { name: 'FAQ section', before: false, after: true, description: 'A dedicated FAQ page that AI can quote directly when answering questions about your product.' },
+      { name: 'Bullet answers', before: false, after: true, description: 'Short, structured bullet points that AI can extract easily for featured answers.' },
+      { name: 'CTA clarity', before: true, after: true, description: 'Clear calls-to-action so AI knows what step you want readers to take next.' },
+      { name: 'Lead paragraph', before: false, after: true, description: 'A strong opening sentence in each section that gives AI the main point immediately.' },
     ],
   },
 ];
@@ -418,14 +418,6 @@ function DemoHeader({ title, subtitle }: { title: string; subtitle: string }) {
       transition={{ duration: 0.6 }}
       className="text-center mb-14"
     >
-      <div className="inline-flex items-center gap-2 mb-3">
-        <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
-        </span>
-        <span className="text-emerald-400 font-bold tracking-wider text-xs uppercase">Live demo</span>
-      </div>
-      <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">{title}</h2>
       <p className="text-slate-400 max-w-xl mx-auto leading-relaxed">{subtitle}</p>
     </motion.div>
   );
@@ -681,7 +673,7 @@ function RepoDemo({ isVisible }: { isVisible: boolean }) {
   return (
     <section className="py-20 px-6 border-t border-white/[0.06]">
       <div className="max-w-5xl mx-auto">
-        <DemoHeader title="Repo Scanner — Full Workflow" subtitle="Watch the complete journey: scan a repo, get a fix prompt, paste it into your vibe builder, and watch the score improve after rescanning." />
+        <DemoHeader title="" subtitle="Scan a repo, get a fix prompt, paste it into your vibe builder, and watch the score improve after rescanning." />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ScoreCards pillars={repoPillars} animScores={animScores} demoFixed={demoFixed} phase={phase} />
           <div className="space-y-4">
@@ -1033,7 +1025,7 @@ export default function VibeCoders() {
               <span className="text-violet-400 font-bold tracking-wider text-xs uppercase mb-3 block">Scoring breakdown</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Three pillars, granular signals</h2>
               <p className="text-slate-400 max-w-xl mx-auto leading-relaxed">
-                Every repo scan and URL check breaks down into these three core areas. Click any signal to see what we check.
+                Every repo scan and URL check breaks down into these three core areas.
               </p>
             </motion.div>
 
@@ -1064,7 +1056,7 @@ export default function VibeCoders() {
                     {p.subSignals.map((sig, j) => (
                       <div
                         key={sig.name}
-                        className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs"
+                        className="group relative flex items-center gap-2 rounded-lg px-3 py-2 text-xs cursor-default"
                         style={{
                           background: 'rgba(0,0,0,0.15)',
                           border: `1px solid ${p.border}`,
@@ -1074,6 +1066,14 @@ export default function VibeCoders() {
                           <CheckCircle2 className="w-3 h-3" style={{ color: p.color }} />
                         </span>
                         <span className="text-slate-300">{sig.name}</span>
+                        {/* Hover tooltip */}
+                        {sig.description && (
+                          <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 z-50 w-64 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                            <div className="rounded-lg bg-[#0a0f1e] border border-white/10 p-3 shadow-xl">
+                              <p className="text-xs text-slate-300 leading-relaxed">{sig.description}</p>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
