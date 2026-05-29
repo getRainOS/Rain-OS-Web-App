@@ -4,7 +4,7 @@ import {
   ArrowRight, Zap, GitBranch, Layers, Search, Shield,
   FileCode, Terminal, CheckCircle2, AlertTriangle, Sparkles, Wand2,
   Monitor, Code2, Globe, Cpu, MapPin, BrainCircuit, ShieldCheck, MousePointerClick,
-  RotateCcw, TrendingUp, Globe2, Link2, ChevronRight, ScanLine, Radar,
+  RotateCcw, TrendingUp, ChevronRight,
   Copy, Check, ClipboardCopy, GitCommit, Send, RefreshCw
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -61,53 +61,6 @@ const repoPillars = [
   },
 ];
 
-const urlSignals = [
-  {
-    color: '#38bdf8',
-    bg: 'rgba(14,165,233,0.1)',
-    border: 'rgba(14,165,233,0.25)',
-    Icon: Globe2,
-    name: 'AI Readability',
-    score: 38,
-    maxScore: 92,
-    subSignals: [
-      { name: 'llms.txt', before: false, after: true },
-      { name: 'Schema markup', before: false, after: true },
-      { name: 'H1/H2 structure', before: true, after: true },
-      { name: 'Content depth', before: false, after: true },
-    ],
-  },
-  {
-    color: '#34d399',
-    bg: 'rgba(16,185,129,0.1)',
-    border: 'rgba(16,185,129,0.25)',
-    Icon: ShieldCheck,
-    name: 'Digital Authority',
-    score: 55,
-    maxScore: 89,
-    subSignals: [
-      { name: 'robots.txt', before: false, after: true },
-      { name: 'HTTPS', before: true, after: true },
-      { name: 'Page speed', before: false, after: true },
-      { name: 'OG tags', before: false, after: true },
-    ],
-  },
-  {
-    color: '#a78bfa',
-    bg: 'rgba(139,92,246,0.1)',
-    border: 'rgba(139,92,246,0.25)',
-    Icon: MousePointerClick,
-    name: 'Conversion Readiness',
-    score: 40,
-    maxScore: 88,
-    subSignals: [
-      { name: 'FAQ section', before: false, after: true },
-      { name: 'Bullet answers', before: false, after: true },
-      { name: 'CTA clarity', before: true, after: true },
-      { name: 'Lead paragraph', before: false, after: true },
-    ],
-  },
-];
 
 const vibeSignals = [
   {
@@ -792,225 +745,6 @@ function RepoDemo({ isVisible }: { isVisible: boolean }) {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  UrlDemo — URL paste, analysis, recommendations, improvements       */
-/* ------------------------------------------------------------------ */
-function UrlDemo({ isVisible }: { isVisible: boolean }) {
-  const { animScores, demoFixed, setDemoFixed, setAnimScores, animateScores, animRef } = useDemoAnimation(urlSignals);
-  const [phase, setPhase] = useState('idle');
-  const [terminalLines, setTerminalLines] = useState<{ type: string; text: string }[]>([]);
-  const [showUrlPanel, setShowUrlPanel] = useState(true);
-  const [showRecPanel, setShowRecPanel] = useState(false);
-  const [showFixPanel, setShowFixPanel] = useState(false);
-  const [showRescanPanel, setShowRescanPanel] = useState(false);
-  const [urlInput, setUrlInput] = useState('https://acme.com');
-  const [isScanning, setIsScanning] = useState(false);
-
-  const addLine = useCallback((type: string, text: string) => {
-    setTerminalLines((prev) => [...prev, { type, text }]);
-  }, []);
-  const clearLines = useCallback(() => setTerminalLines([]), []);
-
-  useEffect(() => {
-    if (!isVisible) return;
-    const cycle = async () => {
-      setPhase('idle'); setDemoFixed(false); setAnimScores(urlSignals.map((p) => p.score));
-      clearLines(); setShowRecPanel(false); setShowFixPanel(false); setShowRescanPanel(false);
-      setShowUrlPanel(true); setUrlInput('https://acme.com'); setIsScanning(false);
-      await wait(800);
-
-      /* ---- PHASE 1: URL PASTED + SCAN CLICKED ---- */
-      setIsScanning(true);
-      await wait(600);
-      setShowUrlPanel(false);
-      setPhase('scanning');
-      addLine('cmd', 'rain-os scan-url https://acme.com');
-      await wait(400); addLine('out', 'Fetching page...');
-      await wait(500); addLine('out', 'Resolving DNS... acme.com');
-      await wait(500); addLine('out', 'HTTPS connection established');
-      await wait(500); addLine('out', 'Downloading HTML (142 KB)...');
-      await wait(600); addLine('out', 'Analyzing DOM structure...');
-      await wait(600); addLine('out', 'Extracting meta tags...');
-      await wait(600); addLine('out', 'Checking page speed...');
-      await wait(800);
-
-      /* ---- PHASE 2: ANALYSIS RESULTS ---- */
-      setPhase('analyzed');
-      addLine('warn', 'llms.txt not found');
-      await wait(300); addLine('warn', 'No JSON-LD schema markup');
-      await wait(300); addLine('warn', 'Meta description missing');
-      await wait(300); addLine('warn', 'OG tags incomplete');
-      await wait(300); addLine('warn', 'No FAQ section detected');
-      await wait(300); addLine('warn', 'Lead paragraph too vague');
-      await wait(300); addLine('warn', 'robots.txt blocks GPTBot');
-      await wait(300); addLine('ok', 'HTTPS active');
-      await wait(300); addLine('ok', 'H1/H2 structure present');
-      await wait(800); addLine('ok', 'Scan complete. Score: 44/100');
-      await wait(1500);
-
-      /* ---- PHASE 3: RECOMMENDATIONS ---- */
-      setPhase('generating_prompt');
-      addLine('cmd', 'rain-os generate-recommendations');
-      await wait(400); addLine('out', 'Analyzing missing AI signals...');
-      await wait(600); addLine('out', 'Prioritizing by impact...');
-      await wait(600); addLine('out', 'Building action plan...');
-      await wait(800); addLine('ok', '7 recommendations generated');
-      await wait(500); setShowRecPanel(true);
-      await wait(2500);
-
-      /* ---- PHASE 4: APPLYING IMPROVEMENTS ---- */
-      setPhase('applying'); setShowFixPanel(true);
-      addLine('rec', 'Adding llms.txt to root...');
-      await wait(500); addLine('fix', 'llms.txt created');
-      await wait(300); addLine('rec', 'Injecting JSON-LD schema...');
-      await wait(500); addLine('fix', 'Schema markup added');
-      await wait(300); addLine('rec', 'Writing meta description...');
-      await wait(500); addLine('fix', 'Meta description updated');
-      await wait(300); addLine('rec', 'Adding OG tags...');
-      await wait(500); addLine('fix', 'OG tags complete');
-      await wait(300); addLine('rec', 'Creating FAQ section...');
-      await wait(500); addLine('fix', 'FAQ section added');
-      await wait(300); addLine('rec', 'Rewriting lead paragraph...');
-      await wait(500); addLine('fix', 'Lead paragraph optimized');
-      await wait(300); addLine('rec', 'Updating robots.txt...');
-      await wait(500); addLine('fix', 'robots.txt updated');
-      await wait(500); addLine('ok', 'All improvements applied');
-      await wait(1000);
-
-      /* ---- PHASE 5: RESCANNING ---- */
-      setPhase('rescanning'); setShowRescanPanel(true); setDemoFixed(true);
-      addLine('rescan', 'Rescanning https://acme.com...');
-      await wait(600); addLine('rescan', 'Fetching updated page...');
-      await wait(600); addLine('rescan', 'Checking llms.txt... found');
-      await wait(500); addLine('rescan', 'Checking schema... valid');
-      await wait(500); addLine('rescan', 'Checking meta tags... present');
-      await wait(500); addLine('rescan', 'Checking OG tags... complete');
-      await wait(500); addLine('rescan', 'Checking FAQ... found');
-      await wait(500); addLine('rescan', 'Checking robots.txt... allows AI');
-      await wait(800); addLine('ok', 'Rescan complete');
-      await wait(500);
-
-      /* ---- PHASE 6: SCORE IMPROVED ---- */
-      setPhase('improved');
-      animateScores(urlSignals.map((p) => p.maxScore));
-      await wait(2000);
-      addLine('ok', `Score improved from 44 to ${Math.round(urlSignals.map((p) => p.maxScore).reduce((a, b) => a + b, 0) / 3)}`);
-      await wait(3000);
-
-      /* ---- PHASE 7: RESET ---- */
-      setPhase('resetting'); setDemoFixed(false); setAnimScores(urlSignals.map((p) => p.score));
-      setShowRecPanel(false); setShowFixPanel(false); setShowRescanPanel(false);
-      clearLines(); setIsScanning(false); await wait(1000);
-    };
-    cycle();
-    const timer = setInterval(cycle, 29000);
-    return () => { clearInterval(timer); if (animRef.current) cancelAnimationFrame(animRef.current); };
-  }, [isVisible, addLine, clearLines, animateScores, setAnimScores, setDemoFixed, animRef]);
-
-  const phaseColor = { idle: 'slate', scanning: 'amber', analyzed: 'red', generating_prompt: 'violet', applying: 'violet', rescanning: 'amber', improved: 'emerald', resetting: 'slate' }[phase];
-  const phaseLabel = { idle: 'Idle', scanning: 'Scanning', analyzed: 'Analyzed', generating_prompt: 'Generating', applying: 'Applying', rescanning: 'Rescanning', improved: 'Improved', resetting: 'Resetting' }[phase];
-  const phaseDotColor = { idle: 'bg-slate-400', scanning: 'bg-amber-400', analyzed: 'bg-red-400', generating_prompt: 'bg-violet-400', applying: 'bg-violet-400', rescanning: 'bg-amber-400', improved: 'bg-emerald-400', resetting: 'bg-slate-400' }[phase];
-
-  return (
-    <section className="py-20 px-6 border-t border-white/[0.06]">
-      <div className="max-w-5xl mx-auto">
-        <DemoHeader title="URL Scanner — Full Workflow" subtitle="Paste any URL, click scan, and watch the complete analysis with recommendations and score improvement." />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <ScoreCards pillars={urlSignals} animScores={animScores} demoFixed={demoFixed} phase={phase} />
-          <div className="space-y-4">
-            {/* URL Input Panel — shown before scanning starts */}
-            <AnimatePresence>
-              {showUrlPanel && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                  transition={{ duration: 0.5 }}
-                  className="rounded-2xl border border-sky-400/20 bg-sky-500/[0.03] p-5"
-                >
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-2">
-                      <Link2 className="w-3.5 h-3.5" />
-                      Enter URL to Scan
-                    </span>
-                  </div>
-                  <div className="flex gap-2">
-                    <div className="flex-1 rounded-lg bg-[#060912] border border-white/[0.06] px-3 py-2 text-sm text-slate-300 flex items-center gap-2">
-                      <Globe className="w-4 h-4 text-slate-500" />
-                      <span className="font-mono">{urlInput}</span>
-                    </div>
-                    <button
-                      className="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-sky-500 hover:bg-sky-400 transition-colors flex items-center gap-1.5"
-                      style={{ background: 'linear-gradient(135deg, #0ea5e9, #0284c7)' }}
-                    >
-                      <ScanLine className="w-4 h-4" />
-                      {isScanning ? (
-                        <span className="flex items-center gap-1.5">
-                          <span className="w-1 h-1 rounded-full bg-white animate-pulse" />
-                          Scanning
-                        </span>
-                      ) : (
-                        'Scan URL'
-                      )}
-                    </button>
-                  </div>
-                  <p className="mt-2 text-[11px] text-slate-500">Scanning any public page for AI discoverability signals</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <TerminalPanel header="rain-os url-scan" phase={phase} phaseColor={phaseColor} phaseLabel={phaseLabel} phaseDotColor={phaseDotColor} lines={terminalLines} processing={phase === 'scanning' || phase === 'rescanning' || phase === 'generating_prompt' || phase === 'applying'} />
-            <AnimatePresence>
-              {showRecPanel && (
-                <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} transition={{ duration: 0.5 }} className="rounded-2xl border border-violet-400/20 bg-violet-500/[0.03] p-5">
-                  <div className="flex items-center gap-2 mb-3"><span className="text-xs font-bold text-violet-400 uppercase tracking-wider flex items-center gap-2"><Wand2 className="w-3.5 h-3.5" />AI Recommendations</span></div>
-                  <div className="space-y-2">
-                    {[{ sig: 'llms.txt', impact: 'High', action: 'Add root-level llms.txt' }, { sig: 'Schema markup', impact: 'High', action: 'Add JSON-LD Organization schema' }, { sig: 'Meta description', impact: 'Medium', action: 'Write descriptive meta tag' }, { sig: 'OG tags', impact: 'Medium', action: 'Add Open Graph tags' }, { sig: 'FAQ section', impact: 'High', action: 'Add structured FAQ with details' }, { sig: 'Lead paragraph', impact: 'Medium', action: 'Clarify first sentence per section' }, { sig: 'robots.txt', impact: 'High', action: 'Allow GPTBot and ChatGPT-User' }].map((rec, i) => (
-                      <motion.div key={rec.sig} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }} className="flex items-center justify-between rounded-lg bg-[#060912] border border-white/[0.06] px-3 py-2 text-xs">
-                        <div className="flex items-center gap-2">
-                          <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${rec.impact === 'High' ? 'bg-red-400/10 text-red-400' : 'bg-amber-400/10 text-amber-400'}`}>{rec.impact}</span>
-                          <span className="text-slate-300">{rec.sig}</span>
-                        </div>
-                        <span className="text-slate-500">{rec.action}</span>
-                      </motion.div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-            <AnimatePresence>
-              {showFixPanel && (
-                <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} transition={{ duration: 0.5 }} className="rounded-2xl border border-emerald-400/20 bg-emerald-500/[0.03] p-5">
-                  <div className="flex items-center gap-2 mb-3"><span className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5" />Improvements Applied</span></div>
-                  <div className="space-y-2">
-                    {[{ file: 'llms.txt', action: 'Created', status: 'added' }, { file: 'index.html', action: 'Schema + meta + OG', status: 'modified' }, { file: 'faq.html', action: 'FAQ section added', status: 'added' }, { file: 'robots.txt', action: 'Allows AI crawlers', status: 'modified' }].map((change, i) => (
-                      <motion.div key={change.file} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.15 }} className="flex items-center justify-between rounded-lg bg-[#060912] border border-white/[0.06] px-3 py-2 text-xs">
-                        <span className="text-slate-300">{change.file}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-slate-500">{change.action}</span>
-                          <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${change.status === 'added' ? 'bg-emerald-400/10 text-emerald-400' : 'bg-sky-400/10 text-sky-400'}`}>{change.status === 'added' ? 'A' : 'M'}</span>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-            <AnimatePresence>
-              {showRescanPanel && (
-                <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} transition={{ duration: 0.5 }} className="rounded-2xl border border-amber-400/20 bg-amber-500/[0.03] p-5">
-                  <div className="flex items-center gap-2 mb-3"><span className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2"><RefreshCw className="w-3.5 h-3.5 animate-spin" />Rescanning</span></div>
-                  <div className="text-xs text-slate-400 leading-relaxed">Verifying improvements on the live URL and recalculating AI Readability scores...</div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -1022,7 +756,6 @@ export default function VibeCoders() {
   const navigate = useNavigate();
   const [wordIndex, setWordIndex] = useState(0);
   const [repoDemoVisible, setRepoDemoVisible] = useState(false);
-  const [urlDemoVisible, setUrlDemoVisible] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -1252,14 +985,6 @@ export default function VibeCoders() {
           viewport={{ once: true, margin: '-100px' }}
         >
           <RepoDemo isVisible={repoDemoVisible} />
-        </motion.div>
-
-        {/* URL Scanner Demo */}
-        <motion.div
-          onViewportEnter={() => setUrlDemoVisible(true)}
-          viewport={{ once: true, margin: '-100px' }}
-        >
-          <UrlDemo isVisible={urlDemoVisible} />
         </motion.div>
 
         {/* How It Works */}
