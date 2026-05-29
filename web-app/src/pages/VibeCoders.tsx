@@ -650,7 +650,7 @@ function RepoDemo({ isVisible }: { isVisible: boolean }) {
       await wait(500); addLine('ok', 'All changes applied');
       await wait(1000);
 
-      setPhase('rescanning'); setShowRescanPanel(true); setDemoFixed(true);
+      setPhase('rescanning'); setShowRescanPanel(true);
       addLine('rescan', 'Rescanning repo...');
       await wait(600); addLine('rescan', 'Checking llms.txt... found');
       await wait(500); addLine('rescan', 'Checking schema... found');
@@ -659,7 +659,7 @@ function RepoDemo({ isVisible }: { isVisible: boolean }) {
       await wait(800); addLine('ok', 'Rescan complete');
       await wait(500);
 
-      setPhase('improved');
+      setPhase('improved'); setDemoFixed(true);
       animateScores(repoPillars.map((p) => p.maxScore));
       await wait(2000);
       addLine('ok', `Score improved from 45 to ${Math.round(repoPillars.map((p) => p.maxScore).reduce((a, b) => a + b, 0) / 3)}`);
