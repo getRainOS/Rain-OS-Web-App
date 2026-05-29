@@ -799,9 +799,12 @@ function UrlDemo({ isVisible }: { isVisible: boolean }) {
   const { animScores, demoFixed, setDemoFixed, setAnimScores, animateScores, animRef } = useDemoAnimation(urlSignals);
   const [phase, setPhase] = useState('idle');
   const [terminalLines, setTerminalLines] = useState<{ type: string; text: string }[]>([]);
+  const [showUrlPanel, setShowUrlPanel] = useState(true);
   const [showRecPanel, setShowRecPanel] = useState(false);
   const [showFixPanel, setShowFixPanel] = useState(false);
   const [showRescanPanel, setShowRescanPanel] = useState(false);
+  const [urlInput, setUrlInput] = useState('https://acme.com');
+  const [isScanning, setIsScanning] = useState(false);
 
   const addLine = useCallback((type: string, text: string) => {
     setTerminalLines((prev) => [...prev, { type, text }]);
@@ -813,9 +816,13 @@ function UrlDemo({ isVisible }: { isVisible: boolean }) {
     const cycle = async () => {
       setPhase('idle'); setDemoFixed(false); setAnimScores(urlSignals.map((p) => p.score));
       clearLines(); setShowRecPanel(false); setShowFixPanel(false); setShowRescanPanel(false);
+      setShowUrlPanel(true); setUrlInput('https://acme.com'); setIsScanning(false);
       await wait(800);
 
-      /* ---- PHASE 1: URL PASTE ---- */
+      /* ---- PHASE 1: URL PASTED + SCAN CLICKED ---- */
+      setIsScanning(true);
+      await wait(600);
+      setShowUrlPanel(false);
       setPhase('scanning');
       addLine('cmd', 'rain-os scan-url https://acme.com');
       await wait(400); addLine('out', 'Fetching page...');
@@ -893,10 +900,10 @@ function UrlDemo({ isVisible }: { isVisible: boolean }) {
       /* ---- PHASE 7: RESET ---- */
       setPhase('resetting'); setDemoFixed(false); setAnimScores(urlSignals.map((p) => p.score));
       setShowRecPanel(false); setShowFixPanel(false); setShowRescanPanel(false);
-      clearLines(); await wait(1000);
+      clearLines(); setIsScanning(false); await wait(1000);
     };
     cycle();
-    const timer = setInterval(cycle, 28000);
+    const timer = setInterval(cycle, 29000);
     return () => { clearInterval(timer); if (animRef.current) cancelAnimationFrame(animRef.current); };
   }, [isVisible, addLine, clearLines, animateScores, setAnimScores, setDemoFixed, animRef]);
 
@@ -907,10 +914,51 @@ function UrlDemo({ isVisible }: { isVisible: boolean }) {
   return (
     <section className="py-20 px-6 border-t border-white/[0.06]">
       <div className="max-w-5xl mx-auto">
-        <DemoHeader title="URL Scanner — Full Workflow" subtitle="Paste any URL, watch it get analyzed in real time, see prioritized recommendations, and watch the score climb after improvements are applied." />
+        <DemoHeader title="URL Scanner — Full Workflow" subtitle="Paste any URL, click scan, and watch the complete analysis with recommendations and score improvement." />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ScoreCards pillars={urlSignals} animScores={animScores} demoFixed={demoFixed} phase={phase} />
           <div className="space-y-4">
+            {/* URL Input Panel — shown before scanning starts */}
+            <AnimatePresence>
+              {showUrlPanel && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                  transition={{ duration: 0.5 }}
+                  className="rounded-2xl border border-sky-400/20 bg-sky-500/[0.03] p-5"
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-2">
+                      <Link2 className="w-3.5 h-3.5" />
+                      Enter URL to Scan
+                    </span>
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="flex-1 rounded-lg bg-[#060912] border border-white/[0.06] px-3 py-2 text-sm text-slate-300 flex items-center gap-2">
+                      <Globe className="w-4 h-4 text-slate-500" />
+                      <span className="font-mono">{urlInput}</span>
+                    </div>
+                    <button
+                      className="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-sky-500 hover:bg-sky-400 transition-colors flex items-center gap-1.5"
+                      style={{ background: 'linear-gradient(135deg, #0ea5e9, #0284c7)' }}
+                    >
+                      <ScanLine className="w-4 h-4" />
+                      {isScanning ? (
+                        <span className="flex items-center gap-1.5">
+                          <span className="w-1 h-1 rounded-full bg-white animate-pulse" />
+                          Scanning
+                        </span>
+                      ) : (
+                        'Scan URL'
+                      )}
+                    </button>
+                  </div>
+                  <p className="mt-2 text-[11px] text-slate-500">Scanning any public page for AI discoverability signals</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             <TerminalPanel header="rain-os url-scan" phase={phase} phaseColor={phaseColor} phaseLabel={phaseLabel} phaseDotColor={phaseDotColor} lines={terminalLines} processing={phase === 'scanning' || phase === 'rescanning' || phase === 'generating_prompt' || phase === 'applying'} />
             <AnimatePresence>
               {showRecPanel && (
