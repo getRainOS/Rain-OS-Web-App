@@ -1024,8 +1024,11 @@ export default function VibeCoders() {
             >
               <span className="text-violet-400 font-bold tracking-wider text-xs uppercase mb-3 block">Scoring breakdown</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Three pillars, granular signals</h2>
-              <p className="text-slate-400 max-w-xl mx-auto leading-relaxed">
+              <p className="text-slate-400 max-w-xl mx-auto leading-relaxed mb-3">
                 Every repo scan and URL check breaks down into these three core areas.
+              </p>
+              <p className="text-xs text-slate-500 max-w-xl mx-auto leading-relaxed">
+                Hover over any metric in the cards below to see a deeper explanation of what each signal means.
               </p>
             </motion.div>
 
