@@ -117,22 +117,14 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick }: Market
                       </a>
                     ))}
                   </div>
-                  <div className="border-t border-white/[0.06] p-1.5">
-                    <a
-                      href="/ai-readability"
-                      className="flex flex-col px-4 py-3 rounded-xl hover:bg-white/[0.05] transition-colors group"
-                    >
-                      <span className="text-white text-sm font-medium group-hover:text-sky-300 transition-colors">
-                        AI Readability
-                      </span>
-                      <span className="text-slate-500 text-xs mt-0.5">What it means and why it matters</span>
-                    </a>
-                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
+          <a href="/ai-readability" className="hover:text-white transition-colors">
+            AI Readability
+          </a>
           <a href="/blog" className="hover:text-white transition-colors">
             Blog
           </a>
