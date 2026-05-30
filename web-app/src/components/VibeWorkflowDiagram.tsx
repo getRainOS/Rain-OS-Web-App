@@ -258,33 +258,26 @@ export default function VibeWorkflowDiagram() {
           </div>
         </div>
 
-        {/* Status message */}
-        <motion.div
-          className="text-center mt-12"
-          initial={false}
-          animate={{ opacity: step > 0 ? 1 : 0 }}
-        >
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={step}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.5, ease: 'easeInOut' }}
-              className="text-sm text-slate-400"
-            >
-              {step === 0 && "Start with an idea..."}
-              {step === 1 && "Build it fast with your favorite vibe tool..."}
-              {step === 2 && "Rain scans your site for AI readiness..."}
-              {step === 3 && "Choose how to scan: repo or live URL..."}
-              {step === 4 && "12 signals checked across 3 pillars..."}
-              {step === 5 && "Get a platform-specific fix prompt..."}
-              {step === 6 && "Paste back into your builder and apply..."}
-              {step === 7 && "Your score climbs. AI can now read you."}
-              {step === 8 && "Published. Cited. Discoverable. Your site is alive."}
-            </motion.p>
-          </AnimatePresence>
-        </motion.div>
+        {/* Step-by-step breakdown */}
+        <div className="mt-12 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              { num: 1, text: "Start with an idea and build fast with your favorite vibe tool" },
+              { num: 2, text: "Rain scans your site for AI readiness — repo or live URL" },
+              { num: 3, text: "12 signals checked across 3 pillars for gaps" },
+              { num: 4, text: "Get a platform-specific fix prompt" },
+              { num: 5, text: "Paste back into your builder and apply" },
+              { num: 6, text: "Your score climbs. AI can now read you." },
+            ].map((item) => (
+              <div key={item.num} className="flex items-start gap-3 text-left">
+                <span className="w-6 h-6 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-bold text-slate-400 shrink-0 mt-0.5">
+                  {item.num}
+                </span>
+                <p className="text-sm text-slate-400 leading-relaxed">{item.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* Replay + CTA */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
