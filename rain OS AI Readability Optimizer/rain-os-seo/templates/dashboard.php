@@ -1,7 +1,7 @@
 <?php
 /**
  * Dashboard Template
- * Main dashboard page with 3-pillar analysis overview
+ * Main dashboard page with 5-pillar analysis overview
  */
 
 if (!defined('ABSPATH')) {
@@ -129,7 +129,7 @@ function rain_os_get_stroke_dasharray($percentage, $radius = 54) {
                 </div>
                 <div class="rain-os-overall-info">
                     <h3><?php esc_html_e('Content Health Score', 'rain-os-seo'); ?></h3>
-                    <p><?php esc_html_e('Your content is performing well across all three pillars. Focus on improving Digital Authority for maximum AI visibility.', 'rain-os-seo'); ?></p>
+                    <p><?php esc_html_e('Your content is performing well across all five pillars. Focus on improving Digital Authority for maximum AI visibility.', 'rain-os-seo'); ?></p>
                     <div class="rain-os-mini-bars">
                         <?php foreach ($pillars as $pillar) : ?>
                         <div class="rain-os-mini-bar-item">
@@ -152,7 +152,7 @@ function rain_os_get_stroke_dasharray($percentage, $radius = 54) {
                     <path d="M2 17l10 5 10-5"/>
                     <path d="M2 12l10 5 10-5"/>
                 </svg>
-                <?php esc_html_e('Three Pillars of AEO', 'rain-os-seo'); ?>
+                <?php esc_html_e('Five Pillars of AEO', 'rain-os-seo'); ?>
             </h2>
 
             <div class="rain-os-pillars-grid">

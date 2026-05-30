@@ -44,7 +44,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             </div>
 
             <div class="rain-os-learn-card rain-os-learn-card-full">
-                <h3><?php esc_html_e( 'The Three Pillars Explained', 'rain-os-ai-readability-optimizer' ); ?></h3>
+                <h3><?php esc_html_e( 'The Five Pillars Explained', 'rain-os-ai-readability-optimizer' ); ?></h3>
                 <div class="rain-os-pillars-grid">
                     <div class="rain-os-pillar-card rain-os-pillar-cyan">
                         <div class="rain-os-pillar-indicator"></div>

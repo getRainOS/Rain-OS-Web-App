@@ -789,7 +789,7 @@ function GutenbergSidebarPage({ pdMuted, setPdMuted }) {
   return (
     <div>
       <h1 style={{ fontSize: '24px', fontWeight: 600, marginBottom: '8px' }}>Analyze Your Content For AI Readability</h1>
-      <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>Your content is analyzed against our Proprietary 4-pillar AI Readability Score, further verified for AI metrics, and Safeguards are monitored</p>
+      <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>Your content is analyzed against our Five-Pillar AI Readability Score, further verified for AI metrics, and Safeguards are monitored</p>
 
       <div style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
         <div style={{ flex: 1, background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', borderRadius: '12px', padding: '24px', border: '1px solid var(--border-color)' }}>
@@ -1722,7 +1722,7 @@ function GettingStartedPage() {
             <li style={{ marginBottom: '8px' }}>Look for the "Rain OS Analysis" panel in the sidebar (Gutenberg) or below the editor (Classic)</li>
             <li style={{ marginBottom: '8px' }}>Click the "Analyze Content" button to run the diagnostic</li>
             <li style={{ marginBottom: '8px' }}>Our AI engine evaluates your content across 12 diagnostic categories</li>
-            <li style={{ marginBottom: '8px' }}>Review your scores across all four pillars: AI Readability, Digital Authority, Conversion Readiness, and Product Discoverability</li>
+            <li style={{ marginBottom: '8px' }}>Review your scores across all five pillars: AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, and RAG Readiness</li>
             <li>Read the recommendations and implement the suggested improvements manually</li>
           </ol>
         </div>
@@ -1734,7 +1734,7 @@ function GettingStartedPage() {
               { term: 'Performance History Chart', desc: 'The gradient area chart shows your average content score over time. The shaded area represents your performance trend, making it easy to visualize improvement.' },
               { term: 'Baseline (70)', desc: 'The dashed horizontal line at 70 represents the minimum recommended score for well-optimized content. Content scoring above this baseline is considered ready for AI-driven answer engines.' },
               { term: 'KPI Cards', desc: 'The four cards at the top show Total Analyses (content pieces analyzed), Average Score (mean across all pillars), Content Health (percentage of content above baseline), and API Usage (your quota consumption).' },
-              { term: 'Pillar Breakdown', desc: 'The donut chart displays your scores across four pillars: AI Readability (cyan), Digital Authority (green), Conversion Readiness (purple), and Product Discoverability (orange).' },
+              { term: 'Pillar Breakdown', desc: 'The donut chart displays your scores across five pillars: AI Readability (cyan), Digital Authority (green), Conversion Readiness (purple), Product Discoverability (orange), and RAG Readiness (pink).' },
               { term: 'Analysis Categories', desc: 'The vertical bar chart breaks down specific metrics like Semantic Clarity, Entity Recognition, and Citation Readiness.' },
               { term: 'Post Performance Indicators', desc: 'Green lights indicate good performance (80+), yellow indicates acceptable (65-79), and red indicates content needing improvement (below 65).' },
             ].map((item, i) => (
@@ -1946,8 +1946,8 @@ function FourPillarsPage() {
   return (
     <>
       <div className="animate-in" style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>The Four Pillars</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Understanding AI Readability, Digital Authority, Conversion Readiness, and Product Discoverability</p>
+        <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px' }}>The Five Pillars</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Understanding AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, and RAG Readiness</p>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -2099,7 +2099,7 @@ function FourPillarsPage() {
         <div className="animate-in-delay-4" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>How Scores Are Calculated</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.7, marginBottom: '16px' }}>
-            Each pillar is scored from 0-100 based on multiple sub-factors. The overall score is a weighted average of all four pillars. Scores are calculated using advanced AI models that simulate how modern search engines and AI systems evaluate content.
+            Each pillar is scored from 0-100 based on multiple sub-factors. The overall score is a weighted average of all five pillars. Scores are calculated using advanced AI models that simulate how modern search engines and AI systems evaluate content.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
             <div style={{ textAlign: 'center', padding: '20px', backgroundColor: 'var(--bg-tertiary)', borderRadius: '8px' }}>
@@ -3409,7 +3409,7 @@ function LearnAIReadabilityPage({ setCurrentPage }) {
           </div>
 
           <div className="animate-in-delay-3" style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '32px' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>The Four Pillars Explained</h2>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '16px', color: 'var(--accent)' }}>The Five Pillars Explained</h2>
             
             <div style={{ marginBottom: '24px' }}>
               <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -4289,7 +4289,7 @@ function App() {
         return <APIReferencePage />
       case 'docs-pro-features':
         return <QuickToolsPage />
-      case 'docs-four-pillars':
+      case 'docs-five-pillars':
         return <FourPillarsPage />
       case 'docs-troubleshooting':
         return <TroubleshootingPage />

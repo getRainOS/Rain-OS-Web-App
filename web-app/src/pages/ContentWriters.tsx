@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import {
   ArrowRight, CheckCircle, FileText, Search, Zap,
   TrendingUp, Globe, Bot, BarChart3, BrainCircuit,
-  ShieldCheck, MousePointerClick, Layers, Plus
+  ShieldCheck, MousePointerClick, SearchCheck, Layers, Plus
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { HybridFuture, FeatureGrid, ReadabilityIntelligence, ComparisonTable, FAQ, LocalBusinessBadge } from '@/components/marketing/MarketingComponents';
@@ -35,13 +35,29 @@ const pillars = [
     name: 'Conversion Readiness',
     desc: 'How effectively your content turns AI-referred readers into customers.',
   },
+  {
+    color: '#f97316',
+    bg: 'rgba(249,115,22,0.1)',
+    border: 'rgba(249,115,22,0.25)',
+    Icon: SearchCheck,
+    name: 'Product Discoverability',
+    desc: 'How easily AI search and recommendation systems can surface your product or service.',
+  },
+  {
+    color: '#ec4899',
+    bg: 'rgba(236,72,153,0.1)',
+    border: 'rgba(236,72,153,0.25)',
+    Icon: Layers,
+    name: 'RAG Readiness',
+    desc: 'How well your content is structured for vector database retrieval and AI embedding systems.',
+  },
 ];
 
 const features = [
   {
     Icon: Bot,
     title: 'AI Engine Scoring',
-    desc: 'See exactly how ChatGPT, Perplexity, and Gemini read your content and score it across three weighted pillars.',
+    desc: 'See exactly how ChatGPT, Perplexity, and Gemini read your content and score it across five weighted pillars.',
   },
   {
     Icon: BarChart3,
@@ -72,7 +88,7 @@ const features = [
 
 const steps = [
   { num: '01', title: 'Paste your content', desc: 'Drop any blog post, article, or landing page copy into the analyzer.' },
-  { num: '02', title: 'Get your Rain Score', desc: 'Receive a weighted score across three pillars with a full signal breakdown.' },
+  { num: '02', title: 'Get your Rain Score', desc: 'Receive a weighted score across five pillars with a full signal breakdown.' },
   { num: '03', title: 'Fix and re-score', desc: 'Apply the recommendations, re-run the analysis, and watch your score climb.' },
 ];
 
@@ -227,7 +243,7 @@ export default function ContentWriters() {
           </div>
         </section>
 
-        {/* Three Pillars */}
+        {/* Five Pillars */}
         <section className="py-20 px-6 border-t border-white/[0.06]">
           <div className="max-w-5xl mx-auto">
             <motion.div
@@ -238,9 +254,9 @@ export default function ContentWriters() {
               className="mb-12"
             >
               <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-3 block">How we score</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Three pillars. One Rain Score.</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Five pillars. One Rain Score.</h2>
               <p className="text-slate-400 max-w-xl leading-relaxed">
-                Every analysis returns a weighted score across the three dimensions that determine whether AI engines cite your content.
+                Every analysis returns a weighted score across the five dimensions that determine whether AI engines cite your content.
               </p>
             </motion.div>
 
@@ -343,7 +359,7 @@ export default function ContentWriters() {
         <ComparisonTable />
         <FAQ />
 
-        {/* Three Pillars Reminder */}
+        {/* Five Pillars Reminder */}
         <section className="py-16 px-6 border-t border-white/[0.06]">
           <div className="max-w-4xl mx-auto text-center">
             <motion.div
@@ -369,7 +385,7 @@ export default function ContentWriters() {
               ))}
             </motion.div>
             <p className="text-slate-500 text-sm mt-4 max-w-lg mx-auto">
-              Every analysis scores across these three pillars. Plus, scan any URL to check technical AI-readiness signals.
+              Every analysis scores across these five pillars. Plus, scan any URL to check technical AI-readiness signals.
             </p>
           </div>
         </section>

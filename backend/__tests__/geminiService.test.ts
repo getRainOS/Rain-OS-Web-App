@@ -157,7 +157,7 @@ describe('computeReadabilityMetrics', () => {
   it('counts question sentences for qaDensity', () => {
     const content =
       'What is AEO? It stands for Answer Engine Optimization. ' +
-      'How does it work? The engine scores content across four pillars.';
+      'How does it work? The engine scores content across five pillars.';
     const m = computeReadabilityMetrics(content);
     expect(m.qaDensity).toBeGreaterThan(0);
   });

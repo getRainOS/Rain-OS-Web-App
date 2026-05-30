@@ -81,6 +81,7 @@ const normalizeAnalyzeResultForWP = (result: any) => {
     ai_readability: typeof pillar?.aiReadability === 'number' ? pillar.aiReadability : (result?.ai_readability ?? 0),
     digital_authority: typeof pillar?.digitalAuthority === 'number' ? pillar.digitalAuthority : (result?.digital_authority ?? 0),
     conversion_readiness: typeof pillar?.conversionReadiness === 'number' ? pillar.conversionReadiness : (result?.conversion_readiness ?? 0),
+    rag_readiness: typeof pillar?.ragReadiness === 'number' ? pillar.ragReadiness : (result?.rag_readiness ?? 0),
     sub_scores,
     recommendations: toWpRecommendationObjects(result?.recommendations),
     authorship: result?.authorship || result?.authorship_data || undefined,

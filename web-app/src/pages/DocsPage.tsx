@@ -3,14 +3,14 @@ import { motion } from 'framer-motion';
 import {
   BookOpen, Key, Zap, BrainCircuit, ShieldCheck, MousePointerClick,
   Target, Globe, GitBranch, FileText, Code2, ChevronRight, Terminal,
-  ArrowRight, Layers, Package, Search
+  ArrowRight, Layers, Package, Search, SearchCheck
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
 
 const sections = [
   { id: 'getting-started', label: 'Getting Started' },
-  { id: 'three-pillars', label: 'The Three Pillars' },
+  { id: 'five-pillars', label: 'The Five Pillars' },
   { id: 'solutions', label: 'Solution Modules' },
   { id: 'analysis-modes', label: 'Analysis Modes' },
   { id: 'api-reference', label: 'API Reference' },
@@ -141,10 +141,10 @@ export default function DocsPage() {
                 </div>
               </Section>
 
-              <Section id="three-pillars" title="The Three Pillars">
+              <Section id="five-pillars" title="The Five Pillars">
                 <div className="space-y-6">
                   <p className="text-slate-400 leading-relaxed">
-                    Every analysis returns a weighted Rain Score built from three core pillars. These are the exact signals
+                    Every analysis returns a weighted Rain Score built from five core pillars. These are the exact signals
                     AI engines use to decide what gets cited and recommended.
                   </p>
 
@@ -156,7 +156,7 @@ export default function DocsPage() {
                         border: 'rgba(14,165,233,0.2)',
                         Icon: BrainCircuit,
                         name: 'AI Readability',
-                        weight: '40%',
+                        weight: '36%',
                         desc: 'How well AI systems can parse, chunk, and extract answers from your content. Covers structural clarity, answer-first formatting, semantic precision, context sufficiency, and section concept isolation.',
                         subScores: ['Structural Clarity', 'Answer-First Formatting', 'Semantic Precision', 'Context Sufficiency', 'Section Concept Isolation'],
                       },
@@ -166,7 +166,7 @@ export default function DocsPage() {
                         border: 'rgba(16,185,129,0.2)',
                         Icon: ShieldCheck,
                         name: 'Digital Authority',
-                        weight: '30%',
+                        weight: '27%',
                         desc: 'Whether your content signals expertise, trustworthiness, and citability to AI. Covers citation signals, entity clarity, topical authority, freshness signals, and social proof markup.',
                         subScores: ['Citation Signals', 'Entity Clarity', 'Topical Authority', 'Freshness Signals', 'Social Proof Markup'],
                       },
@@ -176,9 +176,29 @@ export default function DocsPage() {
                         border: 'rgba(139,92,246,0.2)',
                         Icon: MousePointerClick,
                         name: 'Conversion Readiness',
-                        weight: '30%',
+                        weight: '27%',
                         desc: 'Whether your content guides the reader toward a clear next action. Covers CTA clarity, trust signals, value proposition, and friction reduction.',
                         subScores: ['CTA Clarity', 'Trust Signals', 'Value Proposition', 'Friction Reduction'],
+                      },
+                      {
+                        color: '#f97316',
+                        bg: 'rgba(249,115,22,0.08)',
+                        border: 'rgba(249,115,22,0.2)',
+                        Icon: SearchCheck,
+                        name: 'Product Discoverability',
+                        weight: '0% (general)',
+                        desc: 'For product-focused content: how well AI surfaces products in shopping and discovery contexts. 50% weight in the Product Sellers module.',
+                        subScores: ['Product Variant Coverage', 'Merchant Identity', 'Pricing Transparency', 'Availability Signals', 'Comparative Context'],
+                      },
+                      {
+                        color: '#ec4899',
+                        bg: 'rgba(236,72,153,0.08)',
+                        border: 'rgba(236,72,153,0.2)',
+                        Icon: Layers,
+                        name: 'RAG Readiness',
+                        weight: '10%',
+                        desc: 'How well content is optimized for Retrieval-Augmented Generation (RAG) systems — vector databases, embedding models, and chunk-based retrieval.',
+                        subScores: ['Information Density', 'Semantic Mapping', 'Narrative Nuance', 'Hierarchical Formatting', 'Explicit Q&A', 'Authority Signals'],
                       },
                     ].map((p) => (
                       <div
@@ -212,7 +232,7 @@ export default function DocsPage() {
                     <h3 className="text-sm font-semibold text-white mb-2">Overall Score Calculation</h3>
                     <CodeBlock
                       lang="formula"
-                      code={`Rain Score = (AI Readability × 0.40) + (Digital Authority × 0.30) + (Conversion Readiness × 0.30)`}
+                      code={`Rain Score = (AI Readability × 0.36) + (Digital Authority × 0.27) + (Conversion Readiness × 0.27) + (Product Discoverability × 0.00) + (RAG Readiness × 0.10)`}
                     />
                   </div>
                 </div>
@@ -221,7 +241,7 @@ export default function DocsPage() {
               <Section id="solutions" title="Solution Modules">
                 <div className="space-y-6">
                   <p className="text-slate-400 leading-relaxed">
-                    Beyond the three core pillars, rain OS offers specialized modules for specific use cases. Each module
+                    Beyond the five core pillars, rain OS offers specialized modules for specific use cases. Each module
                     has its own weighted scoring system built for that content type.
                   </p>
 
@@ -232,7 +252,7 @@ export default function DocsPage() {
                         Icon: BrainCircuit,
                         name: 'Writers & Marketers',
                         badge: 'General module',
-                        desc: 'The default module. Optimized for blog posts, articles, landing pages, and marketing copy. Uses the three-pillar scoring framework.',
+                        desc: 'The default module. Optimized for blog posts, articles, landing pages, and marketing copy. Uses the five-pillar scoring framework (AI Readability 36%, Digital Authority 27%, Conversion Readiness 27%, Product Discoverability 0% by default, RAG Readiness 10%).',
                         module: 'general',
                       },
                       {
@@ -358,10 +378,11 @@ export default function DocsPage() {
     "aiReadability": 81,
     "digitalAuthority": 68,
     "conversionReadiness": 71,
-    "productDiscoverability": 62
+    "productDiscoverability": 62,
+    "ragReadiness": 74
   },
   "recommendations": [...],
-  "api_version": "2.3"
+  "api_version": "2.4"
 }`,
                         },
                         {

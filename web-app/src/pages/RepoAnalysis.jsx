@@ -247,7 +247,7 @@ export default function RepoAnalysis() {
           <h2 className={styles.connectTitle}>Connect GitHub to analyze repos</h2>
           <p className={styles.connectDesc}>
             Link your GitHub account to fetch source files (package.json, index.html, llms.txt, robots.txt) and
-            score them against all 4 AEO pillars. This is the only way to analyze JavaScript-rendered apps.
+            score them against all 5 AEO pillars. This is the only way to analyze JavaScript-rendered apps.
           </p>
           <button
             className="btn btn-primary"

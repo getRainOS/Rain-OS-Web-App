@@ -44,13 +44,14 @@ return res.status(402).json({ error: 'payment_required', message: 'Active subscr
 if (user.usage.count >= user.usage.limit) {
 return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Monthly limit reached. Upgrade to continue.' } as ApiError);
 }
-const { content, industry } = req.body as { content?: string; industry?: string
-};
+const { content, industry, module } = req.body as { content?: string; industry?: string; module?: string };
+const analysisModule: 'general' | 'product_sellers' | 'developers' | 'local_business' =
+  module === 'product_sellers' || module === 'developers' || module === 'local_business' ? module : 'general';
 if (!content || typeof content !== 'string' || content.trim().length < 10) {
 return res.status(400).json({ error: 'bad_request', message: 'content is required (minimum 10 characters)' } as ApiError);
 }
 try {
-const result = await analyzeContent(content, industry || 'General / Other');
+const result = await analyzeContent(content, industry || 'General / Other', analysisModule);
 const updatedUser = await incrementUserUsage(user.id);
 if (updatedUser) res.setHeader('X-Usage-Info',
 JSON.stringify(updatedUser.usage));
@@ -65,6 +66,7 @@ try {
     digital_authority: typeof pillar?.digitalAuthority === 'number' ? pillar.digitalAuthority : null,
     conversion_readiness: typeof pillar?.conversionReadiness === 'number' ? pillar.conversionReadiness : null,
     product_discoverability: typeof pillar?.productDiscoverability === 'number' ? pillar.productDiscoverability : null,
+    rag_readiness: typeof pillar?.ragReadiness === 'number' ? pillar.ragReadiness : null,
     result_json: result,
   });
 } catch (saveErr) {
@@ -82,7 +84,7 @@ export function handleCapabilities(_req: express.Request, res: express.Response)
 const capabilities: CapabilitiesResponse = {
 api_version: API_VERSION,
 pillars: ['aiReadability', 'digitalAuthority',
-'conversionReadiness', 'productDiscoverability'],
+'conversionReadiness', 'productDiscoverability', 'ragReadiness'],
 phase2_sub_scores: PHASE2_SUB_SCORES,
 scoring_model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
 };

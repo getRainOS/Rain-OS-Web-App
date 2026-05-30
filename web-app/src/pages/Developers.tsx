@@ -101,9 +101,19 @@ const docPillars = [
     border: 'rgba(139,92,246,0.25)',
     Icon: Cpu,
     name: 'AI Retrievability',
-    weight: '30%',
+    weight: '26%',
     desc: 'Search snippet quality, query alignment, concept isolation, cross-reference quality. How well AI can extract answers.',
     scores: ['Search Snippet Quality', 'Query Alignment', 'Concept Isolation', 'Cross-Reference Quality'],
+  },
+  {
+    color: '#ec4899',
+    bg: 'rgba(236,72,153,0.1)',
+    border: 'rgba(236,72,153,0.25)',
+    Icon: Layers,
+    name: 'RAG Readiness',
+    weight: '10%',
+    desc: 'How well your docs are structured for vector database retrieval: semantic chunks, hierarchical headings, FAQ density, and cross-linking.',
+    scores: ['Semantic Chunking', 'Hierarchical Formatting', 'FAQ Density', 'Cross-Reference Quality'],
   },
 ];
 
@@ -277,10 +287,10 @@ export default function Developers() {
                 Documentation Scoring Framework
               </span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
-                Three pillars built for developer docs.
+                Five pillars built for developer docs.
               </h2>
               <p className="text-slate-400 max-w-xl leading-relaxed">
-                Standard content scoring doesn't work for technical documentation. These three pillars were built from the ground up for docs — inspired by what makes documentation like Stripe, Mintlify, and Linear so AI-citable.
+                Standard content scoring doesn't work for technical documentation. These five pillars were built from the ground up for docs — inspired by what makes documentation like Stripe, Mintlify, and Linear so AI-citable.
               </p>
             </motion.div>
 

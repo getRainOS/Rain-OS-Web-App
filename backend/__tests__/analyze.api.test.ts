@@ -46,6 +46,7 @@ function defaultGeminiResponse() {
       digitalAuthority: 75,
       conversionReadiness: 70,
       productDiscoverability: 65,
+      ragReadiness: 72,
     },
     subScores: [
       { category: 'Semantic Clarity', score: 80 },
@@ -226,6 +227,7 @@ describe('POST /api/analyze — happy path', () => {
     expect(payload.ai_readability).toBe(80);
     expect(payload.digital_authority).toBe(75);
     expect(payload.conversion_readiness).toBe(70);
+    expect(payload.rag_readiness).toBe(72);
     expect(payload.result_json).toBeDefined();
   });
 

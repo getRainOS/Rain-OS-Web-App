@@ -24,11 +24,13 @@ Rain OS SEO Analyzer is a premium WordPress plugin that provides AI-powered cont
 * **Real-time Results** - Instant analysis with animated score displays
 * **Usage Tracking** - Monitor your analysis usage with visual progress indicators
 
-= The Three Pillars of AI Readability =
+= The Five Pillars of AI Readability =
 
 1. **AI Readability** - How well AI systems can understand and process your content structure
 2. **Digital Authority** - Your content's credibility signals that AI engines trust and prioritize
 3. **Conversion Readiness** - How effectively your content drives user action and engagement
+4. **Product Discoverability** - How easily your product or service can be found through AI search
+5. **RAG Readiness** - How well content is optimized for AI retrieval and synthesis systems
 
 = Requirements =
 

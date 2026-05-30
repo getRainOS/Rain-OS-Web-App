@@ -2,7 +2,7 @@
 $sections = [
     'getting-started' => 'Getting Started',
     'what-is-aeo' => 'What is Answer Engine Optimization?',
-    'three-pillars' => 'Understanding the Three Pillars',
+    'five-pillars' => 'Understanding the Five Pillars',
     'improve-scores' => 'How to Improve Your Scores',
     'using-plugin' => 'Using the Plugin',
     'api-setup' => 'API Configuration',
@@ -127,20 +127,22 @@ $current_section = isset($_GET['section']) ? htmlspecialchars($_GET['section']) 
 
                     <div class="rain-os-docs-card">
                         <h2>How rain OS Helps</h2>
-                        <p style="color: #94A3B8; margin-bottom: 16px;">rain OS analyzes your content across three key pillars and provides actionable recommendations to improve your AI visibility:</p>
+                        <p style="color: #94A3B8; margin-bottom: 16px;">rain OS analyzes your content across five key pillars and provides actionable recommendations to improve your AI visibility:</p>
                         <ul class="rain-os-docs-list">
                             <li><strong>AI Readability:</strong> Can AI models parse and understand your content?</li>
                             <li><strong>Digital Authority:</strong> Is your content credible and trustworthy?</li>
                             <li><strong>Conversion Readiness:</strong> Is your content structured to provide direct answers?</li>
+                            <li><strong>Product Discoverability:</strong> Can AI search and recommendation systems surface your product or service?</li>
+                            <li><strong>RAG Readiness:</strong> Is your content structured for AI retrieval and vector database search?</li>
                         </ul>
-                        <p style="color: #94A3B8; margin-top: 16px;"><a href="?tab=documentation&section=three-pillars" style="color: #22D3EE;">Learn more about the Three Pillars →</a></p>
+                        <p style="color: #94A3B8; margin-top: 16px;"><a href="?tab=documentation&section=five-pillars" style="color: #22D3EE;">Learn more about the Five Pillars →</a></p>
                     </div>
                 </div>
 
-                <?php elseif ($current_section === 'three-pillars'): ?>
+                <?php elseif ($current_section === 'five-pillars'): ?>
                 <div class="rain-os-docs-section">
-                    <h1>Understanding the Three Pillars</h1>
-                    <p class="rain-os-docs-intro">rain OS analyzes your content based on three key pillars that determine how well AI systems can understand, trust, and extract information from your content.</p>
+                    <h1>Understanding the Five Pillars</h1>
+                    <p class="rain-os-docs-intro">rain OS analyzes your content based on five key pillars that determine how well AI systems can understand, trust, extract, and retrieve information from your content.</p>
 
                     <div class="rain-os-docs-pillar" style="--pillar-color: #22D3EE;">
                         <div class="rain-os-docs-pillar-header">

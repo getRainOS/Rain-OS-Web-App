@@ -1,7 +1,7 @@
 <?php
 /**
  * Meta Box Template
- * Post editor meta box with 3-pillar analysis display and Pro tools
+ * Post editor meta box with 5-pillar analysis display and Pro tools
  */
 
 if (!defined('ABSPATH')) {

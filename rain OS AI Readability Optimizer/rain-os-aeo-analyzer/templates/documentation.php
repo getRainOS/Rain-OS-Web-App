@@ -7,7 +7,7 @@ $rain_os_current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_u
 
 $rain_os_sections = array(
     'getting-started'   => __( 'Getting Started', 'rain-os-aeo-analyzer' ),
-    'four-pillars'      => __( 'The Four Pillars', 'rain-os-aeo-analyzer' ),
+    'five-pillars'      => __( 'The Five Pillars', 'rain-os-aeo-analyzer' ),
     'url-scanner'       => __( 'URL Scanner', 'rain-os-aeo-analyzer' ),
     'content-analyzer'  => __( 'Gutenberg Sidebar', 'rain-os-aeo-analyzer' ),
     'quick-tools'       => __( 'Quick Tools', 'rain-os-aeo-analyzer' ),
@@ -79,10 +79,10 @@ $rain_os_sections = array(
                 </div>
             </div>
 
-            <?php elseif ( 'four-pillars' === $rain_os_current_section ) : ?>
+            <?php elseif ( 'five-pillars' === $rain_os_current_section ) : ?>
             <div class="rain-os-docs-section">
-                <h1><?php esc_html_e( 'Understanding the Four Pillars', 'rain-os-aeo-analyzer' ); ?></h1>
-                <p class="rain-os-docs-intro"><?php esc_html_e( 'Rain OS analyzes your content based on four key pillars that determine how well AI systems can understand, trust, extract information from, and discover your content.', 'rain-os-aeo-analyzer' ); ?></p>
+                <h1><?php esc_html_e( 'Understanding the Five Pillars', 'rain-os-aeo-analyzer' ); ?></h1>
+                <p class="rain-os-docs-intro"><?php esc_html_e( 'Rain OS analyzes your content based on five key pillars that determine how well AI systems can understand, trust, extract information from, discover, and retrieve your content.', 'rain-os-aeo-analyzer' ); ?></p>
 
                 <div class="rain-os-docs-card rain-os-pillar-doc rain-os-pillar-doc-cyan">
                     <h2><?php esc_html_e( 'AI Readability', 'rain-os-aeo-analyzer' ); ?></h2>
@@ -130,13 +130,13 @@ $rain_os_sections = array(
             <?php elseif ( 'url-scanner' === $rain_os_current_section ) : ?>
             <div class="rain-os-docs-section">
                 <h1><?php esc_html_e( 'URL Scanner', 'rain-os-aeo-analyzer' ); ?></h1>
-                <p class="rain-os-docs-intro"><?php esc_html_e( 'The URL Scanner lets you analyze any publicly accessible web page for AEO readiness — without creating or editing a WordPress post. Enter a URL, run the scan, and receive a full four-pillar score plus a technical HTML signal audit.', 'rain-os-aeo-analyzer' ); ?></p>
+                <p class="rain-os-docs-intro"><?php esc_html_e( 'The URL Scanner lets you analyze any publicly accessible web page for AEO readiness — without creating or editing a WordPress post. Enter a URL, run the scan, and receive a full five-pillar score plus a technical HTML signal audit.', 'rain-os-aeo-analyzer' ); ?></p>
 
                 <div class="rain-os-docs-card">
                     <h2><?php esc_html_e( 'What the URL Scanner Does', 'rain-os-aeo-analyzer' ); ?></h2>
                     <p><?php esc_html_e( 'The scanner fetches the target URL and evaluates it across two dimensions:', 'rain-os-aeo-analyzer' ); ?></p>
                     <ul>
-                        <li><strong><?php esc_html_e( 'AEO Pillar Scores', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'The same four-pillar analysis (AI Readability, Digital Authority, Conversion Readiness, Product Discoverability) that you use for your own posts — applied to any public URL.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'AEO Pillar Scores', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'The same five-pillar analysis (AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, RAG Readiness) that you use for your own posts — applied to any public URL.', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'Technical HTML Signals', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'A set of 9 pass/fail checks that identify the presence or absence of critical technical elements affecting AI discoverability.', 'rain-os-aeo-analyzer' ); ?></li>
                     </ul>
                     <p><?php esc_html_e( 'Common use cases include auditing competitor pages, checking a landing page before publishing, or scanning any page on your own site that lives outside of WordPress.', 'rain-os-aeo-analyzer' ); ?></p>
@@ -166,7 +166,7 @@ $rain_os_sections = array(
                         </li>
                         <li>
                             <strong><?php esc_html_e( 'Review Results', 'rain-os-aeo-analyzer' ); ?></strong>
-                            <p><?php esc_html_e( 'The results area shows your overall AEO score, four pillar scores with color-coded bars, the 9-signal technical audit, and a list of improvement recommendations.', 'rain-os-aeo-analyzer' ); ?></p>
+                            <p><?php esc_html_e( 'The results area shows your overall AEO score, five pillar scores with color-coded bars, the 9-signal technical audit, and a list of improvement recommendations.', 'rain-os-aeo-analyzer' ); ?></p>
                         </li>
                     </ol>
                 </div>
@@ -217,8 +217,8 @@ $rain_os_sections = array(
                 <div class="rain-os-docs-card">
                     <h2><?php esc_html_e( 'Understanding the Results Sections', 'rain-os-aeo-analyzer' ); ?></h2>
                     <ul>
-                        <li><strong><?php esc_html_e( 'Overall AEO Score', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'A composite score (0–100) averaging the four pillar scores. Higher is better. Scores above 70 indicate strong AI readiness; below 40 indicates significant improvement opportunities.', 'rain-os-aeo-analyzer' ); ?></li>
-                        <li><strong><?php esc_html_e( 'Four Pillar Bars', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Color-coded bars showing the individual score for each pillar. Cyan = AI Readability, Green = Digital Authority, Purple = Conversion Readiness, Orange = Product Discoverability.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Overall AEO Score', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'A composite score (0–100) averaging the five pillar scores. Higher is better. Scores above 70 indicate strong AI readiness; below 40 indicates significant improvement opportunities.', 'rain-os-aeo-analyzer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Five Pillar Bars', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'Color-coded bars showing the individual score for each pillar. Cyan = AI Readability, Green = Digital Authority, Purple = Conversion Readiness, Orange = Product Discoverability, Pink = RAG Readiness.', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'Technical Signals Grid', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'A 9-item grid showing pass (green check) or fail (red X) for each technical signal. Failures are the quickest wins — they can usually be fixed with a small technical change.', 'rain-os-aeo-analyzer' ); ?></li>
                         <li><strong><?php esc_html_e( 'Recommendations', 'rain-os-aeo-analyzer' ); ?>:</strong> <?php esc_html_e( 'A prioritized list of improvement actions generated by the Rain OS API, ordered from highest to lowest expected score impact.', 'rain-os-aeo-analyzer' ); ?></li>
                     </ul>

@@ -7,7 +7,7 @@ $current_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( 
 
 $sections = array(
     'getting-started'   => __( 'Getting Started', 'rain-os-ai-readability-optimizer' ),
-    'three-pillars'     => __( 'The Three Pillars', 'rain-os-ai-readability-optimizer' ),
+    'five-pillars'      => __( 'The Five Pillars', 'rain-os-ai-readability-optimizer' ),
     'content-analyzer'  => __( 'Gutenberg Sidebar', 'rain-os-ai-readability-optimizer' ),
     'quick-tools'       => __( 'Quick Tools', 'rain-os-ai-readability-optimizer' ),
     'troubleshooting'   => __( 'Troubleshooting', 'rain-os-ai-readability-optimizer' ),
@@ -72,10 +72,10 @@ $sections = array(
                 </div>
             </div>
 
-            <?php elseif ( 'three-pillars' === $current_section ) : ?>
+            <?php elseif ( 'five-pillars' === $current_section ) : ?>
             <div class="rain-os-docs-section">
-                <h1><?php esc_html_e( 'Understanding the Three Pillars', 'rain-os-ai-readability-optimizer' ); ?></h1>
-                <p class="rain-os-docs-intro"><?php esc_html_e( 'Rain OS analyzes your content based on three key pillars that determine how well AI systems can understand, trust, and extract information from your content.', 'rain-os-ai-readability-optimizer' ); ?></p>
+                <h1><?php esc_html_e( 'Understanding the Five Pillars', 'rain-os-ai-readability-optimizer' ); ?></h1>
+                <p class="rain-os-docs-intro"><?php esc_html_e( 'Rain OS analyzes your content based on five key pillars that determine how well AI systems can understand, trust, extract, and retrieve information from your content.', 'rain-os-ai-readability-optimizer' ); ?></p>
 
                 <div class="rain-os-docs-card rain-os-pillar-doc rain-os-pillar-doc-cyan">
                     <h2><?php esc_html_e( 'AI Readability', 'rain-os-ai-readability-optimizer' ); ?></h2>
@@ -104,6 +104,17 @@ $sections = array(
                         <li><strong><?php esc_html_e( 'AI Alignment', 'rain-os-ai-readability-optimizer' ); ?>:</strong> <?php esc_html_e( 'Content structured to provide direct answers', 'rain-os-ai-readability-optimizer' ); ?></li>
                         <li><strong><?php esc_html_e( 'QA-Format', 'rain-os-ai-readability-optimizer' ); ?>:</strong> <?php esc_html_e( 'Question and answer optimization', 'rain-os-ai-readability-optimizer' ); ?></li>
                         <li><strong><?php esc_html_e( 'Metadata Audit', 'rain-os-ai-readability-optimizer' ); ?>:</strong> <?php esc_html_e( 'Schema and HTML verification', 'rain-os-ai-readability-optimizer' ); ?></li>
+                    </ul>
+                </div>
+                <div class="rain-os-docs-card rain-os-pillar-doc" style="--pillar-color: #ec4899;">
+                    <h2><?php esc_html_e( 'RAG Readiness', 'rain-os-ai-readability-optimizer' ); ?></h2>
+                    <p><?php esc_html_e( 'How well your content is structured for AI retrieval systems, vector databases, and embedding-based search. Includes:', 'rain-os-ai-readability-optimizer' ); ?></p>
+                    <ul>
+                        <li><strong><?php esc_html_e( 'Information Density', 'rain-os-ai-readability-optimizer' ); ?>:</strong> <?php esc_html_e( 'Deep, exhaustive coverage with high information density per chunk', 'rain-os-ai-readability-optimizer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Semantic Mapping', 'rain-os-ai-readability-optimizer' ); ?>:</strong> <?php esc_html_e( 'Rich vocabulary, synonyms, historical context, and entity relationships', 'rain-os-ai-readability-optimizer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Hierarchical Formatting', 'rain-os-ai-readability-optimizer' ); ?>:</strong> <?php esc_html_e( 'Clean markdown, logical header structure, and descriptive titles', 'rain-os-ai-readability-optimizer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Explicit Q&A', 'rain-os-ai-readability-optimizer' ); ?>:</strong> <?php esc_html_e( 'FAQ sections, direct definitions, and problem-solution frameworks', 'rain-os-ai-readability-optimizer' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Authority Signals', 'rain-os-ai-readability-optimizer' ); ?>:</strong> <?php esc_html_e( 'External links to reputable sources, author bios, and verifiable data', 'rain-os-ai-readability-optimizer' ); ?></li>
                     </ul>
                 </div>
             </div>

@@ -381,8 +381,8 @@ function get_score_label($score) {
                             <path d="M5 12h14M12 5l7 7-7 7"/>
                         </svg>
                     </a>
-                    <a href="?tab=documentation&section=three-pillars" class="rain-os-learn-link">
-                        <span>Understanding the Three Pillars</span>
+                    <a href="?tab=documentation&section=five-pillars" class="rain-os-learn-link">
+                        <span>Understanding the Five Pillars</span>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                             <path d="M5 12h14M12 5l7 7-7 7"/>
                         </svg>

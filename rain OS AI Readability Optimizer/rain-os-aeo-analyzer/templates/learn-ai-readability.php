@@ -44,7 +44,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             </div>
 
             <div class="rain-os-learn-card rain-os-learn-card-full">
-                <h3><?php esc_html_e( 'The Four Pillars Explained', 'rain-os-aeo-analyzer' ); ?></h3>
+                <h3><?php esc_html_e( 'The Five Pillars Explained', 'rain-os-aeo-analyzer' ); ?></h3>
                 <div class="rain-os-learn-pillars-grid">
                     <div class="rain-os-pillar-card rain-os-pillar-cyan">
                         <div class="rain-os-pillar-indicator"></div>
@@ -88,6 +88,18 @@ if ( ! defined( 'ABSPATH' ) ) {
                             <li><?php esc_html_e( 'Conversational Query Match', 'rain-os-aeo-analyzer' ); ?></li>
                         </ul>
                     </div>
+                    <div class="rain-os-pillar-card" style="--pillar-color: #ec4899;">
+                        <div class="rain-os-pillar-indicator"></div>
+                        <h4><?php esc_html_e( 'RAG Readiness', 'rain-os-aeo-analyzer' ); ?></h4>
+                        <p><?php esc_html_e( 'How well your content is structured for AI retrieval systems, vector databases, and embedding-based search.', 'rain-os-aeo-analyzer' ); ?></p>
+                        <ul>
+                            <li><?php esc_html_e( 'Information Density', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Semantic Mapping', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Hierarchical Formatting', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Explicit Q&A', 'rain-os-aeo-analyzer' ); ?></li>
+                            <li><?php esc_html_e( 'Authority Signals', 'rain-os-aeo-analyzer' ); ?></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
@@ -129,11 +141,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <h3><?php esc_html_e( 'URL Scanner: Analyze Any Public Page', 'rain-os-aeo-analyzer' ); ?></h3>
                 <p><?php esc_html_e( 'The URL Scanner lets you run a full AEO analysis on any publicly accessible web page — no WordPress post required. This is useful for:', 'rain-os-aeo-analyzer' ); ?></p>
                 <ul>
-                    <li><?php esc_html_e( 'Auditing competitor pages to see where they score across the four pillars', 'rain-os-aeo-analyzer' ); ?></li>
+                    <li><?php esc_html_e( 'Auditing competitor pages to see where they score across the five pillars', 'rain-os-aeo-analyzer' ); ?></li>
                     <li><?php esc_html_e( 'Checking a landing page or microsite that lives outside of WordPress', 'rain-os-aeo-analyzer' ); ?></li>
                     <li><?php esc_html_e( 'Getting a quick snapshot of a page before writing a competing article', 'rain-os-aeo-analyzer' ); ?></li>
                 </ul>
-                <p><?php esc_html_e( 'The scanner returns four pillar scores, 9 technical HTML signal checks (Schema Markup, FAQ Schema, Semantic HTML, Heading Hierarchy, Meta Description, Canonical Tag, Open Graph Tags, llms.txt, JS Rendering risk), and a prioritized list of recommendations.', 'rain-os-aeo-analyzer' ); ?></p>
+                <p><?php esc_html_e( 'The scanner returns five pillar scores, 9 technical HTML signal checks (Schema Markup, FAQ Schema, Semantic HTML, Heading Hierarchy, Meta Description, Canonical Tag, Open Graph Tags, llms.txt, JS Rendering risk), and a prioritized list of recommendations.', 'rain-os-aeo-analyzer' ); ?></p>
                 <p><?php printf( wp_kses( __( 'Find it at <a href="%s">Rain OS &rsaquo; URL Scanner</a>.', 'rain-os-aeo-analyzer' ), array( 'a' => array( 'href' => array() ) ) ), esc_url( admin_url( 'admin.php?page=rain-os-aeo-url-scanner' ) ) ); ?></p>
             </div>
 
@@ -142,7 +154,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <p><?php esc_html_e( 'Product Discoverability is the fourth analysis pillar, measuring how easily AI search and recommendation systems can surface your product or service. It focuses on Schema Completeness, Answer Layer Quality, Freshness Signals, and Conversational Query Match.', 'rain-os-aeo-analyzer' ); ?></p>
                 <p><?php esc_html_e( 'For some content types — such as editorial articles, news posts, or informational guides — product-focused signals are not relevant. The Mute Toggle lets you exclude this pillar from your overall score so it does not drag down the average for non-product content.', 'rain-os-aeo-analyzer' ); ?></p>
                 <div class="rain-os-concept-callout" style="margin: 12px 0;">
-                    <p class="rain-os-callout-quote"><?php esc_html_e( 'When muted, your overall score is calculated as an average of three pillars instead of four. The pillar itself is visually dimmed across all dashboards and score displays.', 'rain-os-aeo-analyzer' ); ?></p>
+                    <p class="rain-os-callout-quote"><?php esc_html_e( 'When muted, your overall score is calculated as an average of the remaining pillars. The pillar itself is visually dimmed across all dashboards and score displays.', 'rain-os-aeo-analyzer' ); ?></p>
                 </div>
                 <p><?php esc_html_e( 'When to mute it:', 'rain-os-aeo-analyzer' ); ?></p>
                 <ul>

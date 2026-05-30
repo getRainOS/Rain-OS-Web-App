@@ -61,10 +61,13 @@ CREATE TABLE IF NOT EXISTS content_analyses (
   digital_authority NUMERIC,
   conversion_readiness NUMERIC,
   product_discoverability NUMERIC,
+  rag_readiness NUMERIC,
   summary TEXT,
   result_json JSONB,
   analyzed_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+-- Additive migration for existing deployments (idempotent)
+ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS rag_readiness NUMERIC;
 
 CREATE INDEX IF NOT EXISTS idx_content_analyses_user_analyzed_at
   ON content_analyses(user_id, analyzed_at DESC);

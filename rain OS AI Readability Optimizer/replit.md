@@ -1,7 +1,7 @@
 # Rain OS AI Readability Analyzer - WordPress Plugin
 
 ## Overview
-A professional, production-ready WordPress plugin called "Rain OS AI Readability Analyzer" that provides AI-powered content analysis for Answer Engine Optimization. The plugin features a billion-dollar SaaS aesthetic with dark mode glassmorphism design, three-pillar analysis hierarchy (AI Readability, Digital Authority, Conversion Readiness), and premium UI elements. All user-facing labels emphasize "AI Readability" terminology for clarity.
+A professional, production-ready WordPress plugin called "Rain OS AI Readability Analyzer" that provides AI-powered content analysis for Answer Engine Optimization. The plugin features a billion-dollar SaaS aesthetic with dark mode glassmorphism design, five-pillar analysis hierarchy (AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, RAG Readiness), and premium UI elements. All user-facing labels emphasize "AI Readability" terminology for clarity.
 
 ## Project Structure
 ```
@@ -38,7 +38,7 @@ dashboard-preview/               # React-based analytics dashboard (current)
 - **WordPress Version**: 5.8+
 - **PHP Extensions**: curl, json, mbstring
 
-## Three Pillars of AEO Analysis
+## Five Pillars of AEO Analysis
 
 ### Pillar 1: AI Readability (Cyan #22D3EE)
 Focus: Can AI models parse and understand your content?
@@ -93,7 +93,7 @@ Focus: Is your content structured to provide answers?
 5. **Content Analyzer Page**
    - Full content editor with toolbar (bold, italic, heading, link, list, image, video)
    - Multi-ring donut chart showing overall AEO score
-   - Donut legend with three pillars breakdown
+   - Donut legend with five pillars breakdown
    - Analysis tabs (Readability, Authority, Conversion) with subcategory scores
    - Content metrics (words, reading time, headings, questions)
    - 13 content type categories dropdown
@@ -163,7 +163,7 @@ Focus: Is your content structured to provide answers?
 - "AI Readability Optimization" branding (not "SEO Analyzer")
 - Rain OS cloud logo throughout
 - "Make Your Content Defensible" tagline from marketing
-- Three-pillar analysis hierarchy with 9 subcategories
+- Five-pillar analysis hierarchy with 5 core pillars + module-specific subcategories
 - Billion-dollar SaaS aesthetic with dark mode
 - Glassmorphism effects and neon accents
 

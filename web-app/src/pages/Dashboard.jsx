@@ -13,7 +13,7 @@ import {
   FileText, Globe, GitBranch, ArrowRight,
   BrainCircuit, ShieldCheck, MousePointerClick, SearchCheck,
   Activity, Zap, Minus, Heart, Map as MapIcon, Radar,
-  CheckCircle2, AlertCircle, BarChart2, Lock, Clock, Sparkles, HelpCircle,
+  CheckCircle2, AlertCircle, BarChart2, Lock, Clock, Sparkles, HelpCircle, Layers,
 } from 'lucide-react';
 import styles from './Dashboard.module.css';
 
@@ -39,6 +39,10 @@ const PILLARS = [
     subs: ['schema_completeness','answer_layer_quality','freshness_signals','conversational_query_match'],
     subLabels: ['Schema Completeness','Answer Layer Quality','Freshness Signals','Query Match'],
     subTooltips: ['Whether Product schema has all required fields for AI shopping engines.','How well your content directly answers common shopper questions.','How recent your content is — AI prefers up-to-date product info.','How well your content matches natural language and voice queries.'] },
+  { key: 'rag_readiness',           label: 'RAG Readiness',        color: '#ec4899', Icon: Layers,
+    subs: ['information_density','semantic_mapping','narrative_nuance','hierarchical_formatting','explicit_qa_structures','authority_signals'],
+    subLabels: ['Information Density','Semantic Mapping','Narrative Nuance','Hierarchical Formatting','Explicit Q&A','Authority Signals'],
+    subTooltips: ['Deep, exhaustive coverage with high information density per chunk.','Rich vocabulary, synonyms, historical context, and entity relationships.','Multi-layered explanations, edge cases, and reasoning.','Clean markdown, logical headers, and descriptive titles.','FAQ sections, direct definitions, and problem-solution frameworks.','External links, author bios, and verifiable data points.'] },
 ];
 
 const QUICK_ACTIONS_ALL = {
@@ -411,27 +415,31 @@ export default function Dashboard() {
       { ...PILLARS[0], weight: 20 },
       { ...PILLARS[1], weight: 15 },
       { ...PILLARS[2], weight: 15 },
+      { ...PILLARS[4], weight: 10 },
     ];
     if (userLane === 'developers') return [
-      { ...PILLARS[0], label: 'Doc Structure', weight: 35 },
-      { ...PILLARS[1], label: 'Tech Completeness', weight: 35 },
-      { ...PILLARS[2], label: 'Technical Clarity', weight: 30 },
+      { ...PILLARS[0], label: 'Doc Structure', weight: 32 },
+      { ...PILLARS[1], label: 'Tech Completeness', weight: 32 },
+      { ...PILLARS[2], label: 'Technical Clarity', weight: 26 },
+      { ...PILLARS[4], label: 'RAG Readiness', weight: 10 },
     ];
     if (userLane === 'local_business') return [
-      { ...PILLARS[1], label: 'Local Authority', weight: 35 },
-      { ...PILLARS[0], label: 'AI Presence', weight: 25 },
-      { ...PILLARS[2], label: 'Trust & Conversion', weight: 25 },
-      { key: 'google_calling', label: 'Ask For Me', color: '#ea4335', Icon: Zap, weight: 15, subs: ['click_to_call','nap_consistency','gbp_signals'], subLabels: ['Click-to-Call','NAP Consistency','GBP Signals'] },
+      { ...PILLARS[1], label: 'Local Authority', weight: 36 },
+      { ...PILLARS[0], label: 'AI Presence', weight: 27 },
+      { ...PILLARS[2], label: 'Trust & Conversion', weight: 27 },
+      { ...PILLARS[4], label: 'RAG Readiness', weight: 10 },
     ];
     if (userLane === 'vibe_coders') return [
-      { ...PILLARS[0], label: 'AI Readability', weight: 35 },
-      { ...PILLARS[1], label: 'Discoverability', weight: 35 },
-      { ...PILLARS[2], label: 'Conversion', weight: 30 },
+      { ...PILLARS[0], label: 'AI Readability', weight: 32 },
+      { ...PILLARS[1], label: 'Discoverability', weight: 32 },
+      { ...PILLARS[2], label: 'Conversion', weight: 26 },
+      { ...PILLARS[4], label: 'RAG Readiness', weight: 10 },
     ];
     return [
-      { ...PILLARS[0], weight: 40 },
-      { ...PILLARS[1], weight: 30 },
-      { ...PILLARS[2], weight: 30 },
+      { ...PILLARS[0], weight: 36 },
+      { ...PILLARS[1], weight: 27 },
+      { ...PILLARS[2], weight: 27 },
+      { ...PILLARS[4], weight: 10 },
     ];
   }, [userLane]);
 
@@ -594,7 +602,7 @@ export default function Dashboard() {
       trend: scoreTrend,
       Icon: FileText,
       spark: chartData.length > 1 ? chartData.map(d => d.score) : null,
-      tooltip: 'Average of your AI Readability, Digital Authority, and Conversion Readiness scores. Think of it as your overall content quality grade.',
+      tooltip: 'Average of your AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, and RAG Readiness scores. Think of it as your overall content quality grade.',
     },
     {
       key: 'citation',
@@ -826,7 +834,7 @@ export default function Dashboard() {
             <div>
               <h2 className={styles.chartTitle}>Pillar Breakdown</h2>
               <p className={styles.chartSub}>Relative score distribution</p>
-              <span className={styles.chartHelp} title="How your scores are distributed across the four pillars: AI Readability, Digital Authority, Conversion Readiness, and Product Discoverability.">
+              <span className={styles.chartHelp} title="How your scores are distributed across the five pillars: AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, and RAG Readiness.">
                 <HelpCircle size={11} />
               </span>
             </div>

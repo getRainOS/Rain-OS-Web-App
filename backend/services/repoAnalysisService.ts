@@ -1,7 +1,7 @@
 // services/repoAnalysisService.ts
 // Fetches key source files from a GitHub repo and scores them against
-// the 4 AEO pillars: AI Readability, Digital Authority,
-// Conversion Readiness, Product Discoverability.
+// the 5 AEO pillars: AI Readability, Digital Authority,
+// Conversion Readiness, Product Discoverability, and RAG Readiness.
 
 export type DetectedFramework =
   | 'Next.js' | 'Nuxt' | 'SvelteKit' | 'Remix' | 'Astro'

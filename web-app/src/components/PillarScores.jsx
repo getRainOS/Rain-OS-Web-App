@@ -33,6 +33,14 @@ const PILLARS = [
     sub: 'Search presence & brand visibility',
     detailKey: 'product_discoverability_detail',
   },
+  {
+    key: 'rag_readiness',
+    camel: 'ragReadiness',
+    label: 'RAG Readiness',
+    color: '#ec4899',
+    sub: 'RAG retrieval & synthesis quality',
+    detailKey: 'rag_readiness_detail',
+  },
 ];
 
 function scoreLabel(s) {

@@ -1,17 +1,19 @@
 import { useState } from 'react';
-import { BookOpen, ChevronDown, ChevronUp, BrainCircuit, ShieldCheck, MousePointerClick, SearchCheck, GitBranch, MapPin, Zap, Phone } from 'lucide-react';
+import { BookOpen, ChevronDown, ChevronUp, BrainCircuit, ShieldCheck, MousePointerClick, SearchCheck, GitBranch, MapPin, Zap, Phone, Layers } from 'lucide-react';
 import { useApp } from '../context/AppContext.jsx';
 import styles from './KnowledgeBase.module.css';
 
 const KB_DATA = {
   general: {
     pillars: [
-      { key: 'ai_readability',    label: 'AI Readability',       weight: '40%', color: '#06b6d4', Icon: BrainCircuit,
+      { key: 'ai_readability',    label: 'AI Readability',       weight: '36%', color: '#06b6d4', Icon: BrainCircuit,
         desc: 'How easily ChatGPT, Gemini, and Perplexity extract answers from your content. Focus on clear headings, answer-first formatting, and semantic structure.' },
-      { key: 'digital_authority', label: 'Digital Authority',      weight: '30%', color: '#22c55e', Icon: ShieldCheck,
+      { key: 'digital_authority', label: 'Digital Authority',      weight: '27%', color: '#22c55e', Icon: ShieldCheck,
         desc: 'Trust signals that make AI engines choose your content over competitors. Schema markup, citations, entity recognition, and topical depth.' },
-      { key: 'conversion',        label: 'Conversion Readiness',   weight: '30%', color: '#a855f7', Icon: MousePointerClick,
+      { key: 'conversion',        label: 'Conversion Readiness',   weight: '27%', color: '#a855f7', Icon: MousePointerClick,
         desc: 'How effectively your content turns AI-referred readers into customers. Strong CTAs, social proof, and clear value propositions.' },
+      { key: 'rag_readiness',     label: 'RAG Readiness',        weight: '10%', color: '#ec4899', Icon: Layers,
+        desc: 'How well your content is optimized for Retrieval-Augmented Generation (RAG) systems — vector databases, embedding models, and chunk-based retrieval. Measures information density, semantic mapping, and structured Q&A.' },
     ],
     tools: [
       { label: 'Content Optimizer', desc: 'Paste any article, landing page, or blog post to get a full AI readability score with specific fix recommendations.' },
@@ -40,6 +42,8 @@ const KB_DATA = {
         desc: 'Brand trust signals — reviews, certifications, and third-party mentions that make AI confident recommending you.' },
       { key: 'conversion',      label: 'Conversion',           weight: '15%', color: '#a855f7', Icon: MousePointerClick,
         desc: 'Purchase intent signals like clear pricing, availability, and compelling calls to action.' },
+      { key: 'rag_readiness',   label: 'RAG Readiness',         weight: '10%', color: '#ec4899', Icon: Layers,
+        desc: 'How well your product descriptions are optimized for AI retrieval and vector database search. Structured Q&A and semantic mapping help AI surface your products for relevant queries.' },
     ],
     tools: [
       { label: 'Content Optimizer', desc: 'Paste product descriptions to score them for AI shopping and discovery signals.' },
@@ -60,12 +64,14 @@ const KB_DATA = {
 
   vibe_coders: {
     pillars: [
-      { key: 'ai_readability',    label: 'AI Readability',       weight: '40%', color: '#06b6d4', Icon: BrainCircuit,
+      { key: 'ai_readability',    label: 'AI Readability',       weight: '32%', color: '#06b6d4', Icon: BrainCircuit,
         desc: 'How well your vibe-coded landing pages and app copy translate into machine-extractable answers. Headings, structure, and semantic HTML matter.' },
-      { key: 'digital_authority', label: 'Digital Authority',      weight: '30%', color: '#22c55e', Icon: ShieldCheck,
+      { key: 'digital_authority', label: 'Digital Authority',      weight: '32%', color: '#22c55e', Icon: ShieldCheck,
         desc: 'Trust signals that make AI engines treat your domain as a quotable source. Schema, entity clarity, and credibility markup.' },
-      { key: 'conversion',        label: 'Conversion Readiness',   weight: '30%', color: '#a855f7', Icon: MousePointerClick,
+      { key: 'conversion',        label: 'Conversion Readiness',   weight: '26%', color: '#a855f7', Icon: MousePointerClick,
         desc: 'How effectively your AI-built site turns visitors into users. CTAs, onboarding clarity, and feature explanations.' },
+      { key: 'rag_readiness',     label: 'RAG Readiness',        weight: '10%', color: '#ec4899', Icon: Layers,
+        desc: 'How well your project docs and README are optimized for AI retrieval and vector database search. Structured Q&A and semantic mapping matter.' },
     ],
     tools: [
       { label: 'Content Optimizer', desc: 'Paste your vibe-coded landing page copy to audit AI readability before launch.' },
@@ -87,12 +93,14 @@ const KB_DATA = {
 
   developers: {
     pillars: [
-      { key: 'doc_structure',    label: 'Doc Structure',       weight: '35%', color: '#0ea5e9', Icon: BrainCircuit,
+      { key: 'doc_structure',    label: 'Doc Structure',       weight: '32%', color: '#0ea5e9', Icon: BrainCircuit,
         desc: 'README and documentation organization. Clear hierarchy, navigation, and heading structure so AI can index your docs properly.' },
-      { key: 'tech_completeness', label: 'Tech Completeness',    weight: '35%', color: '#22c55e', Icon: GitBranch,
+      { key: 'tech_completeness', label: 'Tech Completeness',    weight: '32%', color: '#22c55e', Icon: GitBranch,
         desc: 'Coverage of API endpoints, error handling, code examples, and installation steps. Missing sections cost you visibility.' },
-      { key: 'technical_clarity', label: 'Technical Clarity',  weight: '30%', color: '#f59e0b', Icon: ShieldCheck,
+      { key: 'technical_clarity', label: 'Technical Clarity',  weight: '26%', color: '#f59e0b', Icon: ShieldCheck,
         desc: 'Plain-language explanations alongside technical depth. AI prefers docs that explain the "why" not just the "how".' },
+      { key: 'rag_readiness',     label: 'RAG Readiness',      weight: '10%', color: '#ec4899', Icon: Layers,
+        desc: 'How well your docs are optimized for AI retrieval and vector database search. Structured Q&A and semantic mapping matter.' },
     ],
     tools: [
       { label: 'Content Optimizer', desc: 'Paste documentation sections to score them for AI readability and structure.' },
@@ -112,14 +120,14 @@ const KB_DATA = {
 
   local_business: {
     pillars: [
-      { key: 'local_authority',  label: 'Local Authority',   weight: '40%', color: '#f43f5e', Icon: MapPin,
+      { key: 'local_authority',  label: 'Local Authority',   weight: '36%', color: '#f43f5e', Icon: MapPin,
         desc: 'NAP consistency, LocalBusiness schema, Google Business Profile signals, and local citation strength.' },
-      { key: 'ai_presence',      label: 'AI Presence',        weight: '30%', color: '#06b6d4', Icon: BrainCircuit,
+      { key: 'ai_presence',      label: 'AI Presence',        weight: '27%', color: '#06b6d4', Icon: BrainCircuit,
         desc: 'How often AI engines mention your business for local service queries. Structured data and local content matter.' },
-      { key: 'trust_conversion', label: 'Trust & Conversion', weight: '30%', color: '#22c55e', Icon: ShieldCheck,
+      { key: 'trust_conversion', label: 'Trust & Conversion', weight: '27%', color: '#22c55e', Icon: ShieldCheck,
         desc: 'Reviews, testimonials, and contact intent signals that make AI confident recommending your services.' },
-      { key: 'google_calling',   label: 'Ask For Me',     weight: '15%', color: '#eab308', Icon: Phone,
-        desc: 'Phone number visibility and click-to-call CTAs. AI needs to find and surface your contact info quickly.' },
+      { key: 'rag_readiness',    label: 'RAG Readiness',      weight: '10%', color: '#ec4899', Icon: Layers,
+        desc: 'How well your local business content is optimized for AI retrieval. Structured Q&A, service descriptions, and semantic mapping help AI surface you for local queries.' },
     ],
     tools: [
       { label: 'Content Optimizer', desc: 'Paste your website content or GBP description to score it for local AI visibility.' },

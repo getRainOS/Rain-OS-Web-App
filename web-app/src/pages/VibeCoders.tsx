@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowRight, Zap, GitBranch, Layers, Search, Shield,
+  ArrowRight, Zap, GitBranch, Layers, Search, Shield, SearchCheck,
   FileCode, Terminal, CheckCircle2, AlertTriangle, Sparkles, Wand2,
   Monitor, Code2, Globe, Cpu, MapPin, BrainCircuit, ShieldCheck, MousePointerClick,
   RotateCcw, TrendingUp, ChevronRight,
@@ -58,6 +58,36 @@ const repoPillars = [
       { name: 'Bullet answers', before: false, after: true, description: 'Short, structured bullet points that AI can extract easily for featured answers.' },
       { name: 'CTA clarity', before: true, after: true, description: 'Clear calls-to-action so AI knows what step you want readers to take next.' },
       { name: 'Lead paragraph', before: false, after: true, description: 'A strong opening sentence in each section that gives AI the main point immediately.' },
+    ],
+  },
+  {
+    color: '#f97316',
+    bg: 'rgba(249,115,22,0.1)',
+    border: 'rgba(249,115,22,0.25)',
+    Icon: SearchCheck,
+    name: 'Product Discoverability',
+    score: 38,
+    maxScore: 85,
+    subSignals: [
+      { name: 'Product schema', before: false, after: true, description: 'Structured data that tells AI what your product does, who it is for, and how to find it.' },
+      { name: 'Pricing signals', before: false, after: true, description: 'Clear pricing, plans, or tier information so AI can surface your product in comparison queries.' },
+      { name: 'Review markup', before: false, after: true, description: 'AggregateRating or review schema that makes your product look credible in AI recommendations.' },
+      { name: 'Availability data', before: false, after: true, description: 'Stock status, shipping info, or signup availability that AI can extract for real-time answers.' },
+    ],
+  },
+  {
+    color: '#ec4899',
+    bg: 'rgba(236,72,153,0.1)',
+    border: 'rgba(236,72,153,0.25)',
+    Icon: Layers,
+    name: 'RAG Readiness',
+    score: 40,
+    maxScore: 88,
+    subSignals: [
+      { name: 'llms.txt', before: false, after: true, description: 'AI crawler instructions that help RAG systems chunk and retrieve your content correctly.' },
+      { name: 'H1/H2 structure', before: true, after: true, description: 'Clear heading hierarchy so vector databases can chunk your content semantically.' },
+      { name: 'FAQ section', before: false, after: true, description: 'Structured Q&A content that retrieval systems can match directly to user queries.' },
+      { name: 'Semantic tags', before: false, after: true, description: 'Proper HTML semantic tags that help embedding models understand context.' },
     ],
   },
 ];
@@ -430,8 +460,8 @@ function ScoreCards({ pillars, animScores, demoFixed, phase }: {
   demoFixed: boolean;
   phase: string;
 }) {
-  const overallScore = Math.round(animScores.reduce((a, b) => a + b, 0) / 3);
-  const initialOverall = Math.round(pillars.map((p) => p.score).reduce((a, b) => a + b, 0) / 3);
+  const overallScore = Math.round(animScores.reduce((a, b) => a + b, 0) / 5);
+  const initialOverall = Math.round(pillars.map((p) => p.score).reduce((a, b) => a + b, 0) / 5);
 
   return (
     <div className="space-y-4">
@@ -655,7 +685,7 @@ function RepoDemo({ isVisible }: { isVisible: boolean }) {
       setPhase('improved'); setDemoFixed(true);
       animateScores(repoPillars.map((p) => p.maxScore));
       await wait(2000);
-      addLine('ok', `Score improved from 45 to ${Math.round(repoPillars.map((p) => p.maxScore).reduce((a, b) => a + b, 0) / 3)}`);
+      addLine('ok', `Score improved from 45 to ${Math.round(repoPillars.map((p) => p.maxScore).reduce((a, b) => a + b, 0) / 5)}`);
       await wait(3000);
 
       setPhase('resetting'); setDemoFixed(false); setAnimScores(repoPillars.map((p) => p.score));
@@ -1015,7 +1045,7 @@ export default function VibeCoders() {
           </div>
         </section>
 
-        {/* Three Pillars — Dynamic Scores */}
+        {/* Five Pillars — Dynamic Scores */}
         <section className="py-20 px-6 border-t border-white/[0.06]">
           <div className="max-w-5xl mx-auto">
             <motion.div
@@ -1026,9 +1056,9 @@ export default function VibeCoders() {
               className="text-center mb-14"
             >
               <span className="text-violet-400 font-bold tracking-wider text-xs uppercase mb-3 block">Scoring breakdown</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Three pillars, granular signals</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Five pillars, granular signals</h2>
               <p className="text-slate-400 max-w-xl mx-auto leading-relaxed mb-3">
-                Every repo scan and URL check breaks down into these three core areas.
+                Every repo scan and URL check breaks down into these five core areas.
               </p>
               <p className="text-sm text-slate-500 max-w-xl mx-auto leading-relaxed">
                 Hover over any metric in the cards below to see a deeper explanation of what each signal means.
@@ -1087,7 +1117,7 @@ export default function VibeCoders() {
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-slate-400">Weight in overall score</span>
                       <span className="text-xs font-bold" style={{ color: p.color }}>
-                        {i === 0 ? '40%' : i === 1 ? '30%' : '30%'}
+                        {i === 0 ? '32%' : i === 1 ? '32%' : i === 2 ? '26%' : i === 3 ? '0%' : '10%'}
                       </span>
                     </div>
                     <div className="mt-2 h-1.5 rounded-full bg-black/20 overflow-hidden">
@@ -1095,7 +1125,7 @@ export default function VibeCoders() {
                         className="h-full rounded-full"
                         style={{
                           background: `linear-gradient(90deg, ${p.color}, ${p.color}88)`,
-                          width: `${i === 0 ? 40 : 30}%`,
+                          width: `${i === 0 ? 32 : i === 1 ? 32 : i === 2 ? 26 : i === 3 ? 0 : 10}%`,
                         }}
                       />
                     </div>

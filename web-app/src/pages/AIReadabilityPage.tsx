@@ -67,7 +67,7 @@ export default function AIReadabilityPage() {
           </div>
         </motion.div>
 
-        {/* The Three Pillars */}
+        {/* The Five Pillars */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -79,17 +79,17 @@ export default function AIReadabilityPage() {
             <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center shrink-0">
               <BrainCircuit className="w-5 h-5 text-sky-400" />
             </div>
-            The three pillars of AI Readability
+            The five pillars of AI Readability
           </h2>
           <p className="text-slate-400 leading-relaxed mb-6">
-            Every piece of content we analyze gets scored across three areas. Each one answers a different question about how AI-ready your content is.
+            Every piece of content we analyze gets scored across five areas. Each one answers a different question about how AI-ready your content is.
           </p>
 
           <div className="space-y-6">
             {/* Pillar 1 */}
             <div className="rounded-2xl border border-sky-500/20 bg-sky-500/[0.03] p-6">
               <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-sky-400 mr-2">40%</span>
+                <span className="text-sky-400 mr-2">36%</span>
                 AI Readability
               </h3>
               <p className="text-sm text-slate-400 mb-4 leading-relaxed">
@@ -118,7 +118,7 @@ export default function AIReadabilityPage() {
             {/* Pillar 2 */}
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] p-6">
               <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-emerald-400 mr-2">30%</span>
+                <span className="text-emerald-400 mr-2">27%</span>
                 Digital Authority
               </h3>
               <p className="text-sm text-slate-400 mb-4 leading-relaxed">
@@ -147,7 +147,7 @@ export default function AIReadabilityPage() {
             {/* Pillar 3 */}
             <div className="rounded-2xl border border-violet-500/20 bg-violet-500/[0.03] p-6">
               <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-violet-400 mr-2">30%</span>
+                <span className="text-violet-400 mr-2">27%</span>
                 Conversion Readiness
               </h3>
               <p className="text-sm text-slate-400 mb-4 leading-relaxed">
@@ -169,6 +169,68 @@ export default function AIReadabilityPage() {
                 <li className="flex items-start gap-2 text-sm text-slate-300">
                   <CheckCircle className="w-4 h-4 text-violet-400 shrink-0 mt-0.5" />
                   <span>Lead paragraph quality — the first paragraph says what the page is about and why it matters</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Pillar 4 — Product Discoverability */}
+            <div className="rounded-2xl border border-orange-500/20 bg-orange-500/[0.03] p-6">
+              <h3 className="text-base font-semibold text-white mb-3">
+                <span className="text-orange-400 mr-2">0% (general)</span>
+                Product Discoverability
+              </h3>
+              <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+                For product-focused content, this pillar measures how well AI can surface your products in shopping and discovery contexts. Active only in the Product Sellers module (50% weight).
+              </p>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2 text-sm text-slate-300">
+                  <CheckCircle className="w-4 h-4 text-orange-400 shrink-0 mt-0.5" />
+                  <span>Product schema completeness — all required fields for AI shopping engines</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm text-slate-300">
+                  <CheckCircle className="w-4 h-4 text-orange-400 shrink-0 mt-0.5" />
+                  <span>Pricing transparency — clear, visible pricing that AI can extract</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm text-slate-300">
+                  <CheckCircle className="w-4 h-4 text-orange-400 shrink-0 mt-0.5" />
+                  <span>Variant coverage — sizes, colors, options fully described</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm text-slate-300">
+                  <CheckCircle className="w-4 h-4 text-orange-400 shrink-0 mt-0.5" />
+                  <span>Availability signals — stock status, shipping info, delivery estimates</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Pillar 5 — RAG Readiness */}
+            <div className="rounded-2xl border border-pink-500/20 bg-pink-500/[0.03] p-6">
+              <h3 className="text-base font-semibold text-white mb-3">
+                <span className="text-pink-400 mr-2">10%</span>
+                RAG Readiness
+              </h3>
+              <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+                How well is your content optimized for Retrieval-Augmented Generation (RAG) systems — vector databases, embedding models, and chunk-based retrieval? Distinct from citation scoring.
+              </p>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2 text-sm text-slate-300">
+                  <CheckCircle className="w-4 h-4 text-pink-400 shrink-0 mt-0.5" />
+                  <span>Information density — deep, exhaustive coverage per content chunk</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm text-slate-300">
+                  <CheckCircle className="w-4 h-4 text-pink-400 shrink-0 mt-0.5" />
+                  <span>Semantic mapping — rich vocabulary, synonyms, entity relationships</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm text-slate-300">
+                  <CheckCircle className="w-4 h-4 text-pink-400 shrink-0 mt-0.5" />
+                  <span>Hierarchical formatting — clean markdown, logical headers, descriptive titles</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm text-slate-300">
+                  <CheckCircle className="w-4 h-4 text-pink-400 shrink-0 mt-0.5" />
+                  <span>Explicit Q&A structures — FAQ sections, direct definitions, problem-solution frameworks</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm text-slate-300">
+                  <CheckCircle className="w-4 h-4 text-pink-400 shrink-0 mt-0.5" />
+                  <span>Authority signals — external links, author bios, verifiable data points</span>
                 </li>
               </ul>
             </div>
@@ -218,7 +280,7 @@ export default function AIReadabilityPage() {
           </h2>
           <div className="space-y-4 text-slate-400 leading-relaxed">
             <p>
-              Rain OS scans your content, URL, or repository and scores it across all three pillars. You get a single number — your Rain Score — plus a breakdown of exactly which signals are strong and which are missing.
+              Rain OS scans your content, URL, or repository and scores it across all five pillars. You get a single number — your Rain Score — plus a breakdown of exactly which signals are strong and which are missing.
             </p>
             <p>
               More importantly, you get specific recommendations. Not vague advice like "improve your SEO." Exact, actionable steps like "Add an FAQ section with these questions" or "Your H2 structure is missing — add these three subheadings."

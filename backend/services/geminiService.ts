@@ -1,5 +1,5 @@
-// services/geminiService.ts — Rain OS AEO Scoring Engine v2.3
-// 3-pillar scoring (general) + module-specific scoring (product_sellers, developers)
+// services/geminiService.ts — Rain OS AEO Scoring Engine v2.4
+// 5-pillar scoring (general) + module-specific scoring (product_sellers, developers, local_business)
 // Algorithmic readability pre-analysis grounding.
 // SDK: @google/generative-ai
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
@@ -13,11 +13,12 @@ AiReadabilityDetail,
 DigitalAuthorityDetail,
 ConversionReadinessDetail,
 ProductDiscoverabilityDetail,
+RagReadinessDetail,
 AuthorshipSignals,
 } from '../types';
 // ─── Config ───────────────────────────────────────────────────────────────────
 // api_version is a single source of truth — never hardcoded in return statements
-export const API_VERSION = '2.3';
+export const API_VERSION = '2.4';
 const API_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
 const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 let _client: GoogleGenerativeAI | null = null;
@@ -42,29 +43,45 @@ You will receive:
 Use these as scoring anchors. Do not contradict them.
 2. The content itself.
 3. The industry context.
-Score across 4 pillars (0-100 each):
-PILLAR 1 — AI READABILITY (weight: varies by module — 40% general, 20% product_sellers, 35% developers)
+Score across 5 pillars (0-100 each):
+PILLAR 1 — AI READABILITY (weight: varies by module — 36% general, 20% product_sellers, 32% developers, 27% local_business)
 How well can AI systems parse, chunk, and extract answers from this content?
 Sub-scores: structuralClarity, answerFirstFormatting, semanticPrecision,
 contextSufficiency, sectionConceptIsolation
 Anchors: use avgSentenceLength, longSentenceRatio, passiveVoiceRatio,
 nestedClauseDepth, headingDensity, answerFirstRatio from pre-analysis.
-PILLAR 2 — DIGITAL AUTHORITY (weight: varies by module — 30% general, 15% product_sellers, 35% developers)
+PILLAR 2 — DIGITAL AUTHORITY (weight: varies by module — 27% general, 15% product_sellers, 32% developers, 36% local_business)
 Does the content signal expertise, trustworthiness, and citability to AI?
 Sub-scores: citationSignals, entityClarity, topicalAuthority, freshnessSignals,
 socialProofMarkup
 Anchors: use entityDensity, definitionDensity from pre-analysis.
-PILLAR 3 — CONVERSION READINESS (weight: varies by module — 30% general, 15% product_sellers, 30% developers)
+PILLAR 3 — CONVERSION READINESS (weight: varies by module — 27% general, 15% product_sellers, 26% developers, 27% local_business)
 Does the content guide the reader toward a clear next action?
 Sub-scores: callToActionClarity, trustSignals, valueProposition, frictionReduction
 Anchors: use qaDensity, answerFirstRatio from pre-analysis.
-PILLAR 4 — PRODUCT DISCOVERABILITY (weight: varies by module — 0% general, 50% product_sellers, 0% developers)
+PILLAR 4 — PRODUCT DISCOVERABILITY (weight: varies by module — 0% general, 50% product_sellers, 0% developers, 0% local_business)
 For product/service content: how well will AI surface this in shopping or
 discovery contexts?
 Sub-scores: productVariantCoverage, merchantIdentityClarity, pricingTransparency,
 availabilitySignals, comparativeContext
 If content is not product-focused, score conservatively (40-60 range) based on
 general discoverability signals.
+
+PILLAR 5 — RAG READINESS (weight: 10% all modules)
+How well is this content optimized for Retrieval-Augmented Generation (RAG)
+systems — vector databases, embedding models, and chunk-based retrieval?
+This is distinct from citation scoring. RAG readiness measures whether an AI
+retrieval system can accurately find, chunk, and synthesize your content.
+Sub-scores: informationDensity, semanticMapping, narrativeNuance,
+hierarchicalFormatting, explicitQaStructures, authoritySignals
+Anchors: use sectionConceptIsolation, informationGainScore, queryAlignmentScore,
+contentChunkingQuality from pre-analysis.
+- informationDensity: Deep, exhaustive coverage with high information density per chunk
+- semanticMapping: Rich vocabulary, synonyms, historical context, entity relationships
+- narrativeNuance: Multi-layered explanations, "why" and "how" reasoning, edge cases
+- hierarchicalFormatting: Clean markdown, logical header structure, descriptive titles
+- explicitQaStructures: FAQ sections, direct definitions, problem-solution frameworks
+- authoritySignals: External links to reputable sources, author bios, verifiable data
 PHASE 2 ADDITIONAL SIGNALS (score each 0-100):
 - sectionConceptIsolation: Does each section cover exactly one concept? AI
 chunking quality.
@@ -113,7 +130,7 @@ explanation.
 const RESPONSE_SCHEMA = {
 overallScore: 0,
 pillarScores: { aiReadability: 0, digitalAuthority: 0, conversionReadiness: 0,
-productDiscoverability: 0 },
+productDiscoverability: 0, ragReadiness: 0 },
 ai_readability_detail: { structuralClarity: 0, answerFirstFormatting: 0,
 semanticPrecision: 0, contextSufficiency: 0, sectionConceptIsolation: 0 },
 digital_authority_detail: { citationSignals: 0, entityClarity: 0,
@@ -123,6 +140,9 @@ valueProposition: 0, frictionReduction: 0 },
 product_discoverability_detail: { productVariantCoverage: 0,
 merchantIdentityClarity: 0, pricingTransparency: 0, availabilitySignals: 0,
 comparativeContext: 0 },
+rag_readiness_detail: { informationDensity: 0, semanticMapping: 0,
+narrativeNuance: 0, hierarchicalFormatting: 0, explicitQaStructures: 0,
+authoritySignals: 0 },
 phase2_sub_scores: {
 sectionConceptIsolation: 0, instructionDeterminism: 0, retrievalAnswerability:
 0,
@@ -156,15 +176,15 @@ const groundingBlock = formatMetricsAsGroundingBlock(metrics);
 // Build module-specific weight instruction
 const moduleWeightInstructions = module === 'product_sellers'
   ? `MODULE: product_sellers
-MODULE_WEIGHTS: AI Readability 20%, Digital Authority 15%, Conversion Readiness 15%, Product Discoverability 50%
+MODULE_WEIGHTS: AI Readability 20%, Digital Authority 15%, Conversion Readiness 15%, Product Discoverability 50%, RAG Readiness 10%
 For this module, Product Discoverability is the PRIMARY scoring focus. Score it with maximum precision — pricing transparency, variant coverage, availability, merchant identity, review signals, comparative context.`
   : module === 'developers'
   ? `MODULE: developers
-MODULE_WEIGHTS: AI Readability (Documentation Structure) 35%, Digital Authority (Technical Completeness) 35%, Conversion Readiness (Technical Clarity) 30%, Product Discoverability 0% (not applicable)
+MODULE_WEIGHTS: AI Readability (Documentation Structure) 32%, Digital Authority (Technical Completeness) 32%, Conversion Readiness (Technical Clarity) 26%, Product Discoverability 0% (not applicable), RAG Readiness 10%
 For this module, score AI Readability as Documentation Structure (navigation, TOC, getting started), Digital Authority as Documentation Authority (API completeness, error coverage, versioning), and Conversion Readiness as Technical Clarity (code example quality, step determinism, snippet extractability). Do not score Product Discoverability — set to 0.`
   : module === 'local_business'
   ? `MODULE: local_business
-MODULE_WEIGHTS: AI Readability 30%, Digital Authority 40%, Conversion Readiness 30%, Product Discoverability 0%
+MODULE_WEIGHTS: AI Readability 27%, Digital Authority 36%, Conversion Readiness 27%, Product Discoverability 0%, RAG Readiness 10%
 For this module, Digital Authority is the PRIMARY scoring focus — local businesses live or die on trust and findability signals. Score with maximum precision:
 DIGITAL AUTHORITY signals:
 - LocalBusiness schema presence (name, address, phone, hours, geo coordinates, serviceArea)
@@ -188,8 +208,9 @@ CONVERSION READINESS signals:
 - Trust signals: licenses, insurance, certifications, guarantees
 Do not score Product Discoverability — set to 0.`
   : `MODULE: general
-MODULE_WEIGHTS: AI Readability 40%, Digital Authority 30%, Conversion Readiness 30%, Product Discoverability 0%
-For this module, do not weight Product Discoverability in the overall score. Score it conservatively for WP plugin compatibility (40-60 range) but it does not affect the overall Rain Score.`;
+MODULE_WEIGHTS: AI Readability 36%, Digital Authority 27%, Conversion Readiness 27%, Product Discoverability 0%, RAG Readiness 10%
+For this module, do not weight Product Discoverability in the overall score. Score it conservatively for WP plugin compatibility (40-60 range) but it does not affect the overall Rain Score.
+RAG Readiness is scored at 10% weight and always included. It measures RAG-system retrieval quality.`;
 
 const prompt = [
 groundingBlock,
@@ -240,17 +261,18 @@ parsed.phase2_sub_scores.semanticRedundancyScore = 100 - raw_redundancy;
 const p = parsed.pillarScores || {};
 // Module-specific pillar weights
 const moduleWeights = module === 'product_sellers'
-  ? { ar: 0.20, da: 0.15, cr: 0.15, pd: 0.50 }
+  ? { ar: 0.20, da: 0.15, cr: 0.15, pd: 0.50, rr: 0.10 }
   : module === 'developers'
-  ? { ar: 0.35, da: 0.35, cr: 0.30, pd: 0.00 }
+  ? { ar: 0.32, da: 0.32, cr: 0.26, pd: 0.00, rr: 0.10 }
   : module === 'local_business'
-  ? { ar: 0.30, da: 0.40, cr: 0.30, pd: 0.00 }
-  : { ar: 0.40, da: 0.30, cr: 0.30, pd: 0.00 }; // general (Writers & Marketers)
+  ? { ar: 0.27, da: 0.36, cr: 0.27, pd: 0.00, rr: 0.10 }
+  : { ar: 0.36, da: 0.27, cr: 0.27, pd: 0.00, rr: 0.10 }; // general (Writers & Marketers)
 const computedOverall = Math.round(
 (p.aiReadability || 0) * moduleWeights.ar +
 (p.digitalAuthority || 0) * moduleWeights.da +
 (p.conversionReadiness || 0) * moduleWeights.cr +
-(p.productDiscoverability || 0) * moduleWeights.pd
+(p.productDiscoverability || 0) * moduleWeights.pd +
+(p.ragReadiness || 0) * moduleWeights.rr
 );
 if (Math.abs((parsed.overallScore || 0) - computedOverall) > 10) {
 parsed.overallScore = computedOverall;
@@ -282,7 +304,20 @@ const subScores: SubScore[] = [
     clamp(parsed.conversion_readiness_detail?.valueProposition || 0), label: 'Value Proposition' },
     { category: 'productDiscoverability', score:
     clamp(parsed.pillarScores?.productDiscoverability || 0), label: 'Product Discoverability' },
-    
+    { category: 'ragReadiness', score:
+    clamp(parsed.pillarScores?.ragReadiness || 0), label: 'RAG Readiness' },
+    { category: 'informationDensity', score:
+    clamp(parsed.rag_readiness_detail?.informationDensity || 0), label: 'Information Density' },
+    { category: 'semanticMapping', score:
+    clamp(parsed.rag_readiness_detail?.semanticMapping || 0), label: 'Semantic Mapping' },
+    { category: 'narrativeNuance', score:
+    clamp(parsed.rag_readiness_detail?.narrativeNuance || 0), label: 'Narrative Nuance' },
+    { category: 'hierarchicalFormatting', score:
+    clamp(parsed.rag_readiness_detail?.hierarchicalFormatting || 0), label: 'Hierarchical Formatting' },
+    { category: 'explicitQaStructures', score:
+    clamp(parsed.rag_readiness_detail?.explicitQaStructures || 0), label: 'Explicit Q&A Structures' },
+    { category: 'authoritySignals', score:
+    clamp(parsed.rag_readiness_detail?.authoritySignals || 0), label: 'Authority Signals' },
     ];
 // Step 8: Build authorship — include legacy fields for WP plugin backward compatibility
 const authorshipRaw = parsed.authorship || {};
@@ -300,13 +335,14 @@ return {
 overallScore: clamp(parsed.overallScore || computedOverall),
 pillarScores: parsed.pillarScores || {
 aiReadability: 0, digitalAuthority: 0, conversionReadiness: 0,
-productDiscoverability: 0 },
+productDiscoverability: 0, ragReadiness: 0 },
 subScores,
 phase2_sub_scores: parsed.phase2_sub_scores || ({} as Phase2SubScores),
 ai_readability_detail: parsed.ai_readability_detail || ({} as AiReadabilityDetail),
 digital_authority_detail: parsed.digital_authority_detail || ({} as DigitalAuthorityDetail),
 conversion_readiness_detail: parsed.conversion_readiness_detail || ({} as ConversionReadinessDetail),
 product_discoverability_detail: parsed.product_discoverability_detail || ({} as ProductDiscoverabilityDetail),
+rag_readiness_detail: parsed.rag_readiness_detail || ({} as RagReadinessDetail),
 recommendations: Array.isArray(parsed.recommendations) ?
 parsed.recommendations : [],
 keywords: Array.isArray(parsed.keywords) ?

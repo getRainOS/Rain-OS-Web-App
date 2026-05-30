@@ -15,6 +15,8 @@ const PILLARS = [
   { name: 'AI Readability', color: '#38bdf8', short: 'Readability' },
   { name: 'Digital Authority', color: '#34d399', short: 'Authority' },
   { name: 'Conversion Readiness', color: '#a78bfa', short: 'Conversion' },
+  { name: 'Product Discoverability', color: '#f97316', short: 'Discoverability' },
+  { name: 'RAG Readiness', color: '#ec4899', short: 'RAG' },
 ];
 
 export default function VibeWorkflowDiagram() {
@@ -153,14 +155,14 @@ export default function VibeWorkflowDiagram() {
             </div>
           </div>
 
-          {/* Convergence: 3 Pillars */}
+          {/* Convergence: 5 Pillars */}
           <div className="flex justify-center mt-8">
             <div className="flex flex-col items-center gap-3">
               <FlowArrow visible={step >= 4} />
               <WorkflowNode
                 step={step}
                 targetStep={4}
-                label="3 Pillars"
+                label="5 Pillars"
                 icon={<Globe className="w-5 h-5" />}
                 color="#a78bfa"
                 description="Analyze signals"
@@ -264,7 +266,7 @@ export default function VibeWorkflowDiagram() {
             {[
               { num: 1, text: "Start with an idea and build fast with your favorite vibe tool" },
               { num: 2, text: "Rain scans your site for AI readiness — repo or live URL" },
-              { num: 3, text: "12 signals checked across 3 pillars for gaps" },
+              { num: 3, text: "12 signals checked across 5 pillars for gaps" },
               { num: 4, text: "Get a platform-specific fix prompt" },
               { num: 5, text: "Paste back into your builder and apply" },
               { num: 6, text: "Your score climbs. AI can now read you." },

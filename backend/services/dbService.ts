@@ -545,6 +545,7 @@ export interface AnalysisRecord {
   digital_authority: number | null;
   conversion_readiness: number | null;
   product_discoverability: number | null;
+  rag_readiness: number | null;
   summary: string | null;
   analyzed_at: string;
 }
@@ -558,6 +559,7 @@ const mapAnalysisRow = (row: any): AnalysisRecord => ({
   digital_authority: row.digital_authority !== null ? Number(row.digital_authority) : null,
   conversion_readiness: row.conversion_readiness !== null ? Number(row.conversion_readiness) : null,
   product_discoverability: row.product_discoverability !== null ? Number(row.product_discoverability) : null,
+  rag_readiness: row.rag_readiness !== null ? Number(row.rag_readiness) : null,
   summary: row.summary ?? null,
   analyzed_at: row.analyzed_at instanceof Date ? row.analyzed_at.toISOString() : row.analyzed_at,
 });
@@ -572,6 +574,7 @@ export const saveAnalysis = async (
     digital_authority?: number | null;
     conversion_readiness?: number | null;
     product_discoverability?: number | null;
+    rag_readiness?: number | null;
     summary?: string | null;
     result_json?: any;
   }
@@ -579,8 +582,8 @@ export const saveAnalysis = async (
   const res = await pool.query(
     `INSERT INTO content_analyses
        (user_id, title, url, overall_score, ai_readability, digital_authority,
-        conversion_readiness, product_discoverability, summary, result_json)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        conversion_readiness, product_discoverability, rag_readiness, summary, result_json)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
      RETURNING *`,
     [
       userId,
@@ -591,6 +594,7 @@ export const saveAnalysis = async (
       data.digital_authority ?? null,
       data.conversion_readiness ?? null,
       data.product_discoverability ?? null,
+      data.rag_readiness ?? null,
       data.summary ?? null,
       data.result_json ? JSON.stringify(data.result_json) : null,
     ]
@@ -604,7 +608,7 @@ export const getAnalysesByUser = async (
 ): Promise<AnalysisRecord[]> => {
   const res = await pool.query(
     `SELECT id, title, url, overall_score, ai_readability, digital_authority,
-            conversion_readiness, product_discoverability, summary, analyzed_at
+            conversion_readiness, product_discoverability, rag_readiness, summary, analyzed_at
      FROM content_analyses
      WHERE user_id = $1
      ORDER BY analyzed_at DESC

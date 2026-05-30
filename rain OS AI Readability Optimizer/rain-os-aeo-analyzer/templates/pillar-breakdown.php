@@ -93,7 +93,7 @@ $pd_structured = rain_os_sub( $p4, 'structured_content_quality', $product_discov
     <div class="rain-os-content">
         <header class="rain-os-page-header">
             <h1><?php esc_html_e( 'Pillar Breakdown', 'rain-os-aeo-analyzer' ); ?></h1>
-            <p><?php esc_html_e( 'Detailed analysis of your content across the four core optimization pillars', 'rain-os-aeo-analyzer' ); ?></p>
+            <p><?php esc_html_e( 'Detailed analysis of your content across the five core optimization pillars', 'rain-os-aeo-analyzer' ); ?></p>
         </header>
 
         <div class="rain-os-overall-score-display">

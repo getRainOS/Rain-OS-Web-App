@@ -121,7 +121,7 @@ function rain_os_get_score_class( $score ) {
                         <span class="rain-os-tooltip-trigger">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
                         </span>
-                        <span class="rain-os-tooltip-content"><?php esc_html_e( 'Total number of content analyses performed in the selected time period. Each analysis evaluates your content across all four AEO pillars.', 'rain-os-aeo-analyzer' ); ?></span>
+                        <span class="rain-os-tooltip-content"><?php esc_html_e( 'Total number of content analyses performed in the selected time period. Each analysis evaluates your content across all five AEO pillars.', 'rain-os-aeo-analyzer' ); ?></span>
                     </span>
                 </div>
                 <div class="rain-os-kpi-subtitle"><?php
@@ -175,7 +175,7 @@ function rain_os_get_score_class( $score ) {
                         <span class="rain-os-tooltip-trigger">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
                         </span>
-                        <span class="rain-os-tooltip-content"><?php esc_html_e( 'Overall health score of your content portfolio. Scores above 80% indicate strong AI readiness across all four pillars.', 'rain-os-aeo-analyzer' ); ?></span>
+                        <span class="rain-os-tooltip-content"><?php esc_html_e( 'Overall health score of your content portfolio. Scores above 80% indicate strong AI readiness across all five pillars.', 'rain-os-aeo-analyzer' ); ?></span>
                     </span>
                 </div>
                 <div class="rain-os-kpi-subtitle"><?php

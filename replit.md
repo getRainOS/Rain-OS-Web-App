@@ -1,7 +1,7 @@
 # rain OS AI Readability Optimizer
 
 ## Overview
-rain OS AI Readability Optimizer is a platform for Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO). It provides AI-powered content analysis across three solution lanes: **Writers & Marketers** (3 core pillars: AI Readability 40%, Digital Authority 30%, Conversion Readiness 30%), **Product Sellers** (dedicated Product Discoverability module at 50% weight), and **Developers** (doc-specific 3-pillar analysis). The platform consists of three clients: a WordPress plugin, a standalone web app, and a planned Chrome extension — all backed by the `api.getrainos.com` Rain OS API.
+rain OS AI Readability Optimizer is a platform for Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO). It provides AI-powered content analysis across five pillars: AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, and RAG Readiness — adapted across three solution lanes: Writers & Marketers, Product Sellers, and Developers. The platform consists of three clients: a WordPress plugin, a standalone web app, and a planned Chrome extension — all backed by the `api.getrainos.com` Rain OS API.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
@@ -128,7 +128,7 @@ Standard columns + additive GitHub columns (added via ALTER TABLE IF NOT EXISTS 
 
 ### UI/UX Decisions
 - **Design Language**: Dark theme — bg `#020410`, surface `#040714`, accent `#0EA5E9`, font Inter
-- **Four Pillar Colors**: Cyan (AI Readability), Green (Digital Authority), Purple (Conversion Readiness), Orange (Product Discoverability)
+- **Five Pillar Colors**: Cyan (AI Readability), Green (Digital Authority), Purple (Conversion Readiness), Orange (Product Discoverability), Pink (RAG Readiness)
 - **Product Discoverability Mute Toggle**: Allows users to disable the PD pillar; WordPress option `rain_os_pd_enabled`
 
 ### WordPress Plugin Technical Details

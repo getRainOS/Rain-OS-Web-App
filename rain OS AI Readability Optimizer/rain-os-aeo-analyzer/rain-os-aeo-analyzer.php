@@ -2,7 +2,7 @@
 /**
  * Plugin Name: rain OS AI Readability Optimizer
  * Plugin URI: https://www.getrainos.com/wordpress-plugin
- * Description: AI-powered Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO) for WordPress. Analyze your content across four pillars: AI Readability, Digital Authority, Conversion Readiness, and Product Discoverability.
+ * Description: AI-powered Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO) for WordPress. Analyze your content across five pillars: AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, and RAG Readiness.
  * Version: 2.3.0
  * Author: Rain OS
  * Author URI: https://www.getrainos.com

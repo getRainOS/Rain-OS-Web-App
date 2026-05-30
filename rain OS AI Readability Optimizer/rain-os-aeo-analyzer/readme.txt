@@ -16,7 +16,7 @@ rain OS AI Readability Optimizer helps you optimize your content for AI-powered 
 
 = Features =
 
-* **Four Pillars Analysis** - Analyze your content across AI Readability, Digital Authority, Conversion Readiness, and Product Discoverability
+* **Five Pillars Analysis** - Analyze your content across AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, and RAG Readiness
 * **Content Analyzer** - Full-featured standalone editor with formatting toolbar and real-time analysis
 * **URL Scanner** - Scan any public URL to evaluate its AEO readiness and technical HTML structure without creating a post
 * **Gutenberg Sidebar Panel** - Analyze content directly inside the WordPress block editor with a dedicated sidebar
@@ -29,18 +29,19 @@ rain OS AI Readability Optimizer helps you optimize your content for AI-powered 
 * **Product Discoverability Mute Toggle** - Optionally mute the 4th pillar if it is not relevant to your content type
 * **Dark Theme Dashboard** - Beautiful, modern glassmorphism admin interface
 
-= Four Pillars =
+= Five Pillars =
 
 1. **AI Readability** (Cyan) - Measures how easily AI systems can parse and understand your content: Semantic Clarity, Readability Score, Logical Structure, AEO Alignment
 2. **Digital Authority** (Green) - Assesses credibility, trust signals, and citation readiness: Entity Recognition, Citation Readiness, Descriptive Metadata
 3. **Conversion Readiness** (Purple) - Evaluates content structure for direct answers and engagement: Schema Extraction, QA-Format Detection, Metadata Audit
 4. **Product Discoverability** (Orange) - Measures how easily your product or service can be found through AI search: Schema Completeness, Answer Layer Quality, Freshness Signals, Conversational Query Match
+5. **RAG Readiness** (Pink) - Checks how well content is optimized for AI retrieval systems: Information Density, Semantic Mapping, Hierarchical Formatting, Explicit Q&A, Authority Signals
 
 = URL Scanner =
 
 The URL Scanner lets you analyze any public URL without creating a WordPress post. Enter a URL, optionally select an industry, and receive:
 
-* Overall AEO score and all four pillar scores
+* Overall AEO score and all five pillar scores
 * 9 technical HTML signal checks (Schema Markup, FAQ Schema, Semantic HTML, Heading Hierarchy, Meta Description, Canonical Tag, Open Graph Tags, llms.txt presence, JS Rendering risk)
 * Technical recommendations for improving your page structure
 * Content-level recommendations for improving pillar scores
@@ -63,7 +64,7 @@ All AI-powered analysis is performed by the Rain OS API. The following data is s
 * A URL you provide when using the URL Scanner
 * Your Rain OS API key (sent as a bearer token in the request header)
 
-This service is used for: content scoring across four pillars (AI Readability, Digital Authority, Conversion Readiness, Product Discoverability), URL scanning, Quick Tools (title suggestions, meta descriptions, summarization, rewriting), and subscription/usage tracking.
+This service is used for: content scoring across five pillars (AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, RAG Readiness), URL scanning, Quick Tools (title suggestions, meta descriptions, summarization, rewriting), and subscription/usage tracking.
 
 * Terms of Service: https://getrainos.com/terms
 * Privacy Policy: https://getrainos.com/privacy
@@ -131,7 +132,7 @@ Product Discoverability is the fourth analysis pillar, measuring how easily AI s
 2. Content Analyzer with formatting toolbar
 3. URL Scanner with technical signals grid
 4. Score History with colored indicators
-5. Pillar Breakdown with horizontal bar charts for all four pillars
+5. Pillar Breakdown with horizontal bar charts for all five pillars
 6. Gutenberg Sidebar with real-time analysis
 7. Settings page with API configuration and PD mute toggle
 
@@ -143,15 +144,15 @@ Product Discoverability is the fourth analysis pillar, measuring how easily AI s
 * Added Gutenberg Sidebar panel for analyzing content directly in the WordPress block editor
 * Added Product Discoverability Mute Toggle to optionally exclude the 4th pillar from scoring
 * Added 9 technical HTML signal checks: Schema Markup, FAQ Schema, Semantic HTML, Heading Hierarchy, Meta Description, Canonical Tag, Open Graph Tags, llms.txt, JS Rendering
-* Updated all dashboards and templates to display four pillars
+* Updated all dashboards and templates to display five pillars
 * Updated database schema with product_discoverability column and automatic migration
 * Updated admin menu: Dashboard is now the landing page; Content Analyzer and URL Scanner grouped together
-* Updated documentation with URL Scanner guide and four pillar references
+* Updated documentation with URL Scanner guide and five pillar references
 * Plugin version bumped to 2.3.0
 
 = 1.0.0 =
 * Initial release
-* Three Pillars analysis (AI Readability, Digital Authority, Conversion Readiness)
+* Five Pillars analysis (AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, RAG Readiness)
 * Content Analyzer with rich text editor
 * AI Heatmap visualization
 * Score History tracking

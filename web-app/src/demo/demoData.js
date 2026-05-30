@@ -11,61 +11,61 @@ export const DEMO_HISTORY = [
   {
     id: 'd1', title: 'What Is Answer Engine Optimization?',
     overall_score: 87, ai_readability: 91, digital_authority: 84,
-    conversion_readiness: 88, product_discoverability: 82,
+    conversion_readiness: 88, product_discoverability: 82, rag_readiness: 80,
     analyzed_at: new Date(Date.now() - 1 * 86400000).toISOString(),
   },
   {
     id: 'd2', title: 'How AI Search Engines Rank Content',
     overall_score: 79, ai_readability: 83, digital_authority: 76,
-    conversion_readiness: 74, product_discoverability: 81,
+    conversion_readiness: 74, product_discoverability: 81, rag_readiness: 74,
     analyzed_at: new Date(Date.now() - 2 * 86400000).toISOString(),
   },
   {
     id: 'd3', url: 'https://example.com/blog/seo-guide',
     overall_score: 72, ai_readability: 68, digital_authority: 79,
-    conversion_readiness: 71, product_discoverability: 69,
+    conversion_readiness: 71, product_discoverability: 69, rag_readiness: 65,
     analyzed_at: new Date(Date.now() - 3 * 86400000).toISOString(),
   },
   {
     id: 'd4', title: 'Building E-E-A-T for AI Discovery',
     overall_score: 91, ai_readability: 94, digital_authority: 90,
-    conversion_readiness: 89, product_discoverability: 92,
+    conversion_readiness: 89, product_discoverability: 92, rag_readiness: 88,
     analyzed_at: new Date(Date.now() - 4 * 86400000).toISOString(),
   },
   {
     id: 'd5', title: 'Conversion Rate Optimization in 2025',
     overall_score: 65, ai_readability: 61, digital_authority: 70,
-    conversion_readiness: 63, product_discoverability: 66,
+    conversion_readiness: 63, product_discoverability: 66, rag_readiness: 62,
     analyzed_at: new Date(Date.now() - 5 * 86400000).toISOString(),
   },
   {
     id: 'd6', url: 'https://example.com/products/analytics',
     overall_score: 83, ai_readability: 86, digital_authority: 81,
-    conversion_readiness: 85, product_discoverability: 80,
+    conversion_readiness: 85, product_discoverability: 80, rag_readiness: 78,
     analyzed_at: new Date(Date.now() - 6 * 86400000).toISOString(),
   },
   {
     id: 'd7', title: 'Structured Data Best Practices',
     overall_score: 76, ai_readability: 80, digital_authority: 73,
-    conversion_readiness: 72, product_discoverability: 78,
+    conversion_readiness: 72, product_discoverability: 78, rag_readiness: 75,
     analyzed_at: new Date(Date.now() - 7 * 86400000).toISOString(),
   },
   {
     id: 'd8', title: 'Local SEO for AI Search',
     overall_score: 69, ai_readability: 71, digital_authority: 67,
-    conversion_readiness: 65, product_discoverability: 73,
+    conversion_readiness: 65, product_discoverability: 73, rag_readiness: 68,
     analyzed_at: new Date(Date.now() - 8 * 86400000).toISOString(),
   },
   {
     id: 'd9', title: 'Voice Search Optimization Guide',
     overall_score: 88, ai_readability: 92, digital_authority: 85,
-    conversion_readiness: 87, product_discoverability: 86,
+    conversion_readiness: 87, product_discoverability: 86, rag_readiness: 85,
     analyzed_at: new Date(Date.now() - 9 * 86400000).toISOString(),
   },
   {
     id: 'd10', title: 'Content Freshness & AI Ranking Signals',
     overall_score: 74, ai_readability: 77, digital_authority: 72,
-    conversion_readiness: 70, product_discoverability: 76,
+    conversion_readiness: 70, product_discoverability: 76, rag_readiness: 73,
     analyzed_at: new Date(Date.now() - 10 * 86400000).toISOString(),
   },
 ];
@@ -77,6 +77,7 @@ export const DEMO_ANALYSIS = {
   digital_authority: 82,
   conversion_readiness: 81,
   product_discoverability: 85,
+  rag_readiness: 79,
 
   // ── camelCase shape — matches live API response ────────────────────────────
   overallScore: 84,
@@ -85,6 +86,7 @@ export const DEMO_ANALYSIS = {
     digitalAuthority: 82,
     conversionReadiness: 81,
     productDiscoverability: 85,
+    ragReadiness: 79,
   },
 
   // ── Phase 2 detail breakdowns ──────────────────────────────────────────────
@@ -114,6 +116,14 @@ export const DEMO_ANALYSIS = {
     pricingTransparency: 76,
     availabilitySignals: 88,
     comparativeContext: 71,
+  },
+  rag_readiness_detail: {
+    informationDensity: 82,
+    semanticMapping: 78,
+    narrativeNuance: 76,
+    hierarchicalFormatting: 84,
+    explicitQaStructures: 80,
+    authoritySignals: 74,
   },
 
   // ── Phase 2 flat sub-scores ────────────────────────────────────────────────

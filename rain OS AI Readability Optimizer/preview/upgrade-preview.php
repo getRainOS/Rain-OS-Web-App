@@ -131,7 +131,7 @@ $plans = [
                 </div>
                 <div class="rain-os-faq-item">
                     <h4>How does rain help my content?</h4>
-                    <p>rain analyzes your content across three key pillars: AI Readability, Digital Authority, and Conversion Readiness. Each pillar has specific metrics that help you understand exactly how to improve your content for AI visibility.</p>
+                    <p>rain analyzes your content across five key pillars: AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, and RAG Readiness. Each pillar has specific metrics that help you understand exactly how to improve your content for AI visibility.</p>
                 </div>
                 <div class="rain-os-faq-item">
                     <h4>Can I try before I buy?</h4>

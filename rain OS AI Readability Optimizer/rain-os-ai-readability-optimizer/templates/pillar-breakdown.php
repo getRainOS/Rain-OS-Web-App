@@ -63,7 +63,7 @@ $cr_metadata = max( 0, min( 100, $conversion_readiness + 3 ) );
     <div class="rain-os-content">
         <header class="rain-os-page-header">
             <h1><?php esc_html_e( 'Pillar Breakdown', 'rain-os-ai-readability-optimizer' ); ?></h1>
-            <p><?php esc_html_e( 'Detailed analysis of your content across the three AI Readability pillars', 'rain-os-ai-readability-optimizer' ); ?></p>
+            <p><?php esc_html_e( 'Detailed analysis of your content across the five AI Readability pillars', 'rain-os-ai-readability-optimizer' ); ?></p>
         </header>
 
         <div class="rain-os-overall-score-display">

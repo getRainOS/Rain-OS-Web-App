@@ -15,7 +15,7 @@ const PLANS = [
     limit: '5 checks / month',
     features: [
       { label: '5 content analyses / month', included: true },
-      { label: 'All 3 core scoring pillars', included: true },
+      { label: 'All 5 core scoring pillars', included: true },
       { label: 'Content Analyzer', included: true },
       { label: 'Basic recommendations', included: true },
       { label: 'Product Visibility pillar', included: false },

@@ -1,5 +1,5 @@
-// types.ts — Rain OS API v2.3
-// 4-pillar scoring: AI Readability, Digital Authority, Conversion Readiness,Product Discoverability
+// types.ts — Rain OS API v2.4
+// 5-pillar scoring: AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, RAG Readiness
 // ─── Auth / User types ───────────────────────────────────────────────────────
 // NOTE: Keep ALL fields here — dbService.mapRowToUser returns this full shape.
 // analyzeController, url-scan, etc. only use the subset they need.
@@ -36,6 +36,7 @@ aiReadability: number; // 0-100
 digitalAuthority: number; // 0-100
 conversionReadiness: number; // 0-100
 productDiscoverability: number; // 0-100 — NEW in v2.3
+ragReadiness: number; // 0-100 — NEW in v2.4
 }
 // ─── Sub-scores ───────────────────────────────────────────────────────────────
 export interface SubScore {
@@ -95,6 +96,14 @@ export interface AiReadabilityDetail {
   availabilitySignals: number;
   comparativeContext: number;
   }
+  export interface RagReadinessDetail {
+  informationDensity: number;        // Depth and comprehensiveness of coverage
+  semanticMapping: number;             // Rich vocabulary, entity relationships, synonyms
+  narrativeNuance: number;           // Multi-layered explanations, edge cases, reasoning
+  hierarchicalFormatting: number;      // Clean markdown, logical headers, descriptive titles
+  explicitQaStructures: number;       // FAQ sections, direct definitions, problem-solution frameworks
+  authoritySignals: number;            // External links, author bios, verifiable data points
+  }
   // ─── Authorship signals (v2.3) ────────────────────────────────────────────────
   export interface AuthorshipSignals {
   hasAuthorByline: boolean;
@@ -116,6 +125,7 @@ export interface AiReadabilityDetail {
   digital_authority_detail: DigitalAuthorityDetail;
   conversion_readiness_detail: ConversionReadinessDetail;
   product_discoverability_detail: ProductDiscoverabilityDetail;
+  rag_readiness_detail: RagReadinessDetail;
 recommendations: string[];
 keywords: string[];
 authorship: AuthorshipSignals;

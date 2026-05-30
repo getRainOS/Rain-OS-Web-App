@@ -46,7 +46,7 @@ export default function ContentAnalyzer() {
     : 'Content Optimizer';
 
   const pageSub = userLane === 'developers'
-    ? 'Paste your documentation to score and optimize it for AI discoverability across three pillars'
+    ? 'Paste your documentation to score and optimize it for AI discoverability across five pillars'
     : userLane === 'product_sellers'
     ? 'Paste your product content to analyze it for AI shopping and discovery signals'
     : userLane === 'local_business'

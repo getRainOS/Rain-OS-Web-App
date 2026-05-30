@@ -16,7 +16,7 @@ Rain OS AI Readability Optimizer helps you optimize your content for AI-powered 
 
 = Features =
 
-* **Three Pillars Analysis** - Analyze your content across AI Readability, Digital Authority, and Conversion Readiness
+* **Five Pillars Analysis** - Analyze your content across AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, and RAG Readiness
 * **Content Analyzer** - Full-featured editor with formatting toolbar and real-time analysis
 * **AI Heatmap** - Color-coded highlighting showing keyword relevance by category
 * **Score History** - Track your content performance over time
@@ -25,11 +25,13 @@ Rain OS AI Readability Optimizer helps you optimize your content for AI-powered 
 * **Quick Tools** - AI-powered title suggestions, meta descriptions, summarization, and rewriting
 * **Dark Theme Dashboard** - Beautiful, modern admin interface
 
-= Three Pillars =
+= Five Pillars =
 
 1. **AI Readability** - Measures how easily AI systems can parse and understand your content
 2. **Digital Authority** - Assesses credibility, trust signals, and citation readiness
 3. **Conversion Readiness** - Evaluates content structure for direct answers and engagement
+4. **Product Discoverability** - Measures how well products can be found by AI search engines
+5. **RAG Readiness** - Checks how well content is optimized for AI retrieval systems (RAG)
 
 = Requirements =
 
@@ -41,7 +43,7 @@ Rain OS AI Readability Optimizer helps you optimize your content for AI-powered 
 
 This plugin connects to the Rain OS API service (https://api.getrainos.com) to perform AI-powered content analysis. The service provides:
 
-* Content scoring across three pillars (AI Readability, Digital Authority, Conversion Readiness)
+* Content scoring across five pillars (AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, RAG Readiness)
 * Quick Tools including title suggestions, meta descriptions, summarization, and sentence rewriting
 * Usage tracking and subscription management
 
@@ -86,7 +88,7 @@ Quick Tools are AI-powered features that provide micro-actions like title sugges
 
 = 1.0.0 =
 * Initial release
-* Three Pillars analysis (AI Readability, Digital Authority, Conversion Readiness)
+* Five Pillars analysis (AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, RAG Readiness)
 * Content Analyzer with rich text editor
 * AI Heatmap visualization
 * Score History tracking
