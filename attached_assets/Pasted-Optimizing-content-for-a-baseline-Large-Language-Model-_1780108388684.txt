@@ -1,0 +1,21 @@
+Optimizing content for a baseline Large Language Model (like a standard RAG search or a model's training data) focuses on comprehension, context, and synthesis. The goal is to help a machine read your content like an intelligent human researcher would, rather than a robotic assistant executing an API call.
+
+The core elements required specifically for LLM optimization involve a distinct approach to layout and substance:
+
+1. High Information Density & Depth
+LLMs require substantial context to map meanings. Providing deep, exhaustive coverage of a topic with high information density allows the model to properly synthesize the material. Focus on creating comprehensive, expert-level overviews rather than surface-level summaries.
+
+2. Semantic Mapping and Entity Association
+Models do not look for exact keyword matches; they navigate a web of related concepts. Include a naturally rich vocabulary of relevant terms, historical context, and synonyms. Clearly defining the relationships between different entities allows the model to map your content into its vector space.
+
+3. Explanatory & Narrative Nuance
+LLMs excel at answering "why" and "how." Providing multi-layered explanations, addressing edge cases, and explaining complex logic helps the model extract the deeper nuance it needs to construct a thoughtful response for a human user.
+
+4. Clear Hierarchical Formatting
+Clean Markdown, logical header structures, and descriptive titles are essential. This clear visual and structural hierarchy helps the model understand how different ideas relate to one another, preventing it from losing context as it processes a long document.
+
+5. Explicit Q&A Structures
+Structuring content to directly match potential user queries is highly effective. Including dedicated FAQ sections, direct definitions, and explicit problem-and-solution frameworks makes it easy for an LLM's retrieval system to pinpoint the exact block of text needed to answer a prompt.
+
+6. Strong Authority Signals
+LLMs must evaluate the trustworthiness of information before surfacing it. Including external links to reputable sources, clear author bios with expert credentials, and verifiable data points provides the necessary signals of authority and accuracy.
