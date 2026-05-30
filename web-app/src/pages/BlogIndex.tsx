@@ -1,7 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Clock, Calendar, ChevronRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowLeft, Clock, Calendar, ChevronRight, BookOpen } from 'lucide-react';
 import { BLOG_POSTS, BlogPost } from '../data/blogPosts';
+import MarketingNav from '@/components/marketing/MarketingNav';
 
 export default function BlogIndex() {
   const navigate = useNavigate();
@@ -12,78 +14,78 @@ export default function BlogIndex() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#020410', color: '#f1f5f9' }}>
+      <MarketingNav />
+
       {/* Hero */}
-      <div style={{
-        position: 'relative',
-        padding: '120px 24px 64px',
-        maxWidth: '1100px',
-        margin: '0 auto',
-        textAlign: 'center',
-      }}>
+      <div style={{ padding: '140px 24px 60px', maxWidth: '760px', margin: '0 auto' }}>
         <button
           onClick={() => navigate('/')}
-          style={{
-            position: 'absolute',
-            top: '32px',
-            left: '24px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            fontSize: '13px',
-            color: 'rgba(241,245,249,0.5)',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            transition: 'color 0.15s',
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = '#f1f5f9')}
-          onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(241,245,249,0.5)')}
+          className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors mb-8"
         >
           <ArrowLeft size={14} />
           Back to home
         </button>
 
-        <h1 style={{
-          fontSize: 'clamp(32px, 5vw, 52px)',
-          fontWeight: 700,
-          letterSpacing: '-0.03em',
-          lineHeight: 1.1,
-          marginBottom: '16px',
-        }}>
-          <span style={{ color: '#0EA5E9' }}>Founders</span> Mode
-        </h1>
-        <p style={{
-          fontSize: '17px',
-          color: 'rgba(241,245,249,0.55)',
-          maxWidth: '560px',
-          margin: '0 auto',
-          lineHeight: 1.6,
-        }}>
-          Raw notes on AI search, building in public, and why technology should serve everyone.
-        </p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-4 block">
+            Founders Mode
+          </span>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
+            Notes on AI search, building in public, and why technology should serve everyone.
+          </h1>
+        </motion.div>
       </div>
 
-      {/* Post grid */}
-      <div style={{
-        maxWidth: '1100px',
-        margin: '0 auto',
-        padding: '0 24px 80px',
-        display: 'grid',
-        gap: '28px',
-      }}>
+      {/* Content */}
+      <div className="max-w-3xl mx-auto px-6 pb-24">
         {/* Featured post */}
-        <FeaturedCard post={featuredPost} onClick={() => navigate(`/blog/${featuredPost.slug}`)} />
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-12"
+        >
+          <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center shrink-0">
+              <BookOpen className="w-5 h-5 text-sky-400" />
+            </div>
+            Latest post
+          </h2>
+          <FeaturedCard post={featuredPost} onClick={() => navigate(`/blog/${featuredPost.slug}`)} />
+        </motion.div>
 
-        {/* Remaining posts */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-          gap: '24px',
-        }}>
-          {remainingPosts.map((post) => (
-            <PostCard key={post.slug} post={post} onClick={() => navigate(`/blog/${post.slug}`)} />
-          ))}
-        </div>
+        {/* All posts */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center shrink-0">
+              <BookOpen className="w-5 h-5 text-violet-400" />
+            </div>
+            All posts
+          </h2>
+          <div className="space-y-4">
+            {remainingPosts.map((post, i) => (
+              <motion.div
+                key={post.slug}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.1 }}
+              >
+                <PostRow post={post} onClick={() => navigate(`/blog/${post.slug}`)} />
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </div>
   );
@@ -93,148 +95,71 @@ function FeaturedCard({ post, onClick }: { post: BlogPost; onClick: () => void }
   return (
     <div
       onClick={onClick}
-      style={{
-        cursor: 'pointer',
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: 0,
-        borderRadius: '16px',
-        overflow: 'hidden',
-        background: 'rgba(255,255,255,0.03)',
-        border: '1px solid rgba(255,255,255,0.06)',
-        transition: 'transform 0.2s, box-shadow 0.2s',
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-2px)';
-        e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.4)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = 'none';
-      }}
+      className="cursor-pointer rounded-2xl border border-white/[0.06] bg-white/[0.03] overflow-hidden hover:border-white/[0.12] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/40"
     >
-      <div style={{
-        backgroundImage: `url(${post.image})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        minHeight: '280px',
-      }} />
-      <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <span style={{
-          fontSize: '11px',
-          fontWeight: 600,
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          color: '#0EA5E9',
-          marginBottom: '10px',
-        }}>
-          {post.category}
-        </span>
-        <h2 style={{
-          fontSize: '24px',
-          fontWeight: 700,
-          lineHeight: 1.25,
-          marginBottom: '10px',
-          letterSpacing: '-0.02em',
-        }}>
-          {post.title}
-        </h2>
-        <p style={{
-          fontSize: '14px',
-          color: 'rgba(241,245,249,0.5)',
-          lineHeight: 1.6,
-          marginBottom: '16px',
-        }}>
-          {post.subtitle}
-        </p>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '12px', color: 'rgba(241,245,249,0.35)' }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <Calendar size={12} />
-            {post.date}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+        <div
+          className="min-h-[200px] md:min-h-[280px] bg-cover bg-center"
+          style={{ backgroundImage: `url(${post.image})` }}
+        />
+        <div className="p-6 md:p-8 flex flex-col justify-center">
+          <span className="text-xs font-semibold uppercase tracking-wider text-sky-400 mb-3">
+            {post.category}
           </span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <Clock size={12} />
-            {post.readTime}
-          </span>
+          <h3 className="text-xl md:text-2xl font-bold text-white mb-3 leading-tight">
+            {post.title}
+          </h3>
+          <p className="text-sm text-slate-400 leading-relaxed mb-4">
+            {post.subtitle}
+          </p>
+          <div className="flex items-center gap-4 text-xs text-slate-500 mt-auto">
+            <span className="flex items-center gap-1">
+              <Calendar size={12} />
+              {post.date}
+            </span>
+            <span className="flex items-center gap-1">
+              <Clock size={12} />
+              {post.readTime}
+            </span>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-function PostCard({ post, onClick }: { post: BlogPost; onClick: () => void }) {
+function PostRow({ post, onClick }: { post: BlogPost; onClick: () => void }) {
   return (
     <div
       onClick={onClick}
-      style={{
-        cursor: 'pointer',
-        borderRadius: '14px',
-        overflow: 'hidden',
-        background: 'rgba(255,255,255,0.03)',
-        border: '1px solid rgba(255,255,255,0.06)',
-        transition: 'transform 0.2s, box-shadow 0.2s',
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-3px)';
-        e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.35)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = 'none';
-      }}
+      className="cursor-pointer rounded-xl border border-white/[0.06] bg-white/[0.02] p-5 flex items-center gap-5 hover:border-white/[0.12] hover:bg-white/[0.04] transition-all duration-200"
     >
-      <div style={{
-        height: '180px',
-        backgroundImage: `url(${post.image})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }} />
-      <div style={{ padding: '20px' }}>
-        <span style={{
-          fontSize: '10px',
-          fontWeight: 600,
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          color: '#0EA5E9',
-        }}>
+      <div
+        className="w-20 h-20 rounded-lg bg-cover bg-center shrink-0 hidden sm:block"
+        style={{ backgroundImage: `url(${post.image})` }}
+      />
+      <div className="flex-1 min-w-0">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-sky-400 mb-2 block">
           {post.category}
         </span>
-        <h3 style={{
-          fontSize: '17px',
-          fontWeight: 700,
-          lineHeight: 1.3,
-          marginTop: '8px',
-          marginBottom: '8px',
-          letterSpacing: '-0.01em',
-        }}>
+        <h3 className="text-base font-semibold text-white mb-1 leading-snug truncate">
           {post.title}
         </h3>
-        <p style={{
-          fontSize: '13px',
-          color: 'rgba(241,245,249,0.45)',
-          lineHeight: 1.5,
-          marginBottom: '14px',
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
-        }}>
+        <p className="text-sm text-slate-400 leading-relaxed line-clamp-2 mb-2">
           {post.subtitle}
         </p>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '11px', color: 'rgba(241,245,249,0.3)' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-              <Calendar size={11} />
-              {post.date}
-            </span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-              <Clock size={11} />
-              {post.readTime}
-            </span>
-          </div>
-          <ChevronRight size={14} style={{ color: 'rgba(241,245,249,0.25)' }} />
+        <div className="flex items-center gap-4 text-xs text-slate-500">
+          <span className="flex items-center gap-1">
+            <Calendar size={11} />
+            {post.date}
+          </span>
+          <span className="flex items-center gap-1">
+            <Clock size={11} />
+            {post.readTime}
+          </span>
         </div>
       </div>
+      <ChevronRight size={16} className="text-slate-600 shrink-0" />
     </div>
   );
 }
