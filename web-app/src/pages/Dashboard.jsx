@@ -13,7 +13,7 @@ import {
   FileText, Globe, GitBranch, ArrowRight,
   BrainCircuit, ShieldCheck, MousePointerClick, SearchCheck,
   Activity, Zap, Minus, Heart, Map as MapIcon, Radar,
-  CheckCircle2, AlertCircle, BarChart2, Lock, Clock, Sparkles, Info,
+  CheckCircle2, AlertCircle, BarChart2, Lock, Clock, Sparkles, HelpCircle,
 } from 'lucide-react';
 import styles from './Dashboard.module.css';
 
@@ -421,7 +421,7 @@ export default function Dashboard() {
       { ...PILLARS[1], label: 'Local Authority', weight: 35 },
       { ...PILLARS[0], label: 'AI Presence', weight: 25 },
       { ...PILLARS[2], label: 'Trust & Conversion', weight: 25 },
-      { key: 'google_calling', label: 'Ask or Me', color: '#ea4335', Icon: Zap, weight: 15, subs: ['click_to_call','nap_consistency','gbp_signals'], subLabels: ['Click-to-Call','NAP Consistency','GBP Signals'] },
+      { key: 'google_calling', label: 'Ask For Me', color: '#ea4335', Icon: Zap, weight: 15, subs: ['click_to_call','nap_consistency','gbp_signals'], subLabels: ['Click-to-Call','NAP Consistency','GBP Signals'] },
     ];
     if (userLane === 'vibe_coders') return [
       { ...PILLARS[0], label: 'AI Readability', weight: 35 },
@@ -705,7 +705,7 @@ export default function Dashboard() {
                 <span className={styles.toolCardLabel}>{t.label}</span>
                 {t.tooltip && (
                   <span className={styles.toolCardInfo} data-tooltip={t.tooltip}>
-                    <Info size={11} />
+                    <HelpCircle size={11} />
                   </span>
                 )}
                 {!t.hasData && (
@@ -773,6 +773,9 @@ export default function Dashboard() {
             <div>
               <h2 className={styles.chartTitle}>Score Trend</h2>
               <p className={styles.chartSub}>Last {chartRange} analyses</p>
+              <span className={styles.chartHelp} title="How your overall content scores have changed over time. Higher scores mean AI engines are more likely to cite your content.">
+                <HelpCircle size={11} />
+              </span>
             </div>
             <div className={styles.rangeToggle}>
               {[7, 14, 30].map(r => (
@@ -823,6 +826,9 @@ export default function Dashboard() {
             <div>
               <h2 className={styles.chartTitle}>Pillar Breakdown</h2>
               <p className={styles.chartSub}>Relative score distribution</p>
+              <span className={styles.chartHelp} title="How your scores are distributed across the four pillars: AI Readability, Digital Authority, Conversion Readiness, and Product Discoverability.">
+                <HelpCircle size={11} />
+              </span>
             </div>
           </div>
 
@@ -888,6 +894,9 @@ export default function Dashboard() {
             <div>
               <h2 className={styles.chartTitle}>Recent Analyses</h2>
               <p className={styles.chartSub}>Your latest content scores</p>
+              <span className={styles.chartHelp} title="A quick list of your latest analyses with overall scores and pillar breakdowns. Click to view the full analysis.">
+                <HelpCircle size={11} />
+              </span>
             </div>
             <Link to="/history" className={styles.viewAll}>View all →</Link>
           </div>
@@ -950,6 +959,9 @@ export default function Dashboard() {
             <div>
               <h2 className={styles.chartTitle}>Analyze</h2>
               <p className={styles.chartSub}>Pick your analysis mode</p>
+              <span className={styles.chartHelp} title="Quick shortcuts to run different types of analysis: Content Optimizer, URL Scanner, Repo Analysis, and more.">
+                <HelpCircle size={11} />
+              </span>
             </div>
           </div>
           <div className={styles.actionList}>
@@ -992,6 +1004,9 @@ export default function Dashboard() {
               {competitorMap.totalQueries > 0
                 ? `Use this as a before/after snapshot across your ${competitorMap.totalQueries} tracked ${competitorMap.totalQueries === 1 ? 'query' : 'queries'}`
                 : 'Use Citation Monitor to capture a real-time AI citation snapshot after you optimize'}
+              <span className={styles.chartHelp} title="Lists the domains AI cites most often for your tracked topics. If you are not on this list, your competitors are winning the citation game.">
+                <HelpCircle size={11} />
+              </span>
             </p>
           </div>
           {topCompetitors.length > 0 && (
@@ -1055,6 +1070,9 @@ export default function Dashboard() {
               Citations Being Tracked
             </h2>
             <p className={styles.chartSub}>A live snapshot of how AI engines are citing you after optimization</p>
+            <span className={styles.chartHelp} title="Shows which topics you are tracking and whether AI currently cites you for each. Green = cited, Red = not cited.">
+              <HelpCircle size={11} />
+            </span>
           </div>
           <Link to="/citation-monitor" className={styles.viewAll}>Open Citation Monitor →</Link>
         </div>
@@ -1137,6 +1155,9 @@ export default function Dashboard() {
               <p className={styles.chartSub}>
                 Detailed breakdown from{' '}
                 <span style={{ color: 'var(--accent)' }}>{latest?.title || latest?.url || 'last analysis'}</span>
+                <span className={styles.chartHelp} title="Each pillar breaks down into sub-metrics. Hover over any sub-score label to see what it measures. For example, Semantic Clarity measures how clearly your content conveys meaning beyond just keywords.">
+                  <HelpCircle size={11} />
+                </span>
               </p>
             </div>
           </div>
