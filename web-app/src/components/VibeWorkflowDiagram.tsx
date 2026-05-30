@@ -27,7 +27,7 @@ export default function VibeWorkflowDiagram() {
     if (!isPlaying) return;
     const interval = setInterval(() => {
       setStep((s) => (s + 1) % (totalSteps + 1));
-    }, 2200);
+    }, 300);
     return () => clearInterval(interval);
   }, [isPlaying]);
 
