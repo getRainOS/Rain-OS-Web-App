@@ -10,6 +10,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
 import { LocalBusinessBadge } from '@/components/marketing/MarketingComponents';
+import VibeWorkflowDiagram from '@/components/VibeWorkflowDiagram';
 
 const ROTATING_WORDS = ['SaaS?', 'MVP?', 'Website?', 'Web App?', 'Portfolio?', 'Landing Page?', 'Store?', 'Product?', 'Blog?', 'App?'];
 
@@ -927,6 +928,8 @@ export default function VibeCoders() {
             </div>
           </div>
         </section>
+
+        <VibeWorkflowDiagram />
 
         {/* What We Analyze */}
         <section className="py-20 px-6 border-t border-white/[0.06]">
