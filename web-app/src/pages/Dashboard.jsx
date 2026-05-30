@@ -13,7 +13,7 @@ import {
   FileText, Globe, GitBranch, ArrowRight,
   BrainCircuit, ShieldCheck, MousePointerClick, SearchCheck,
   Activity, Zap, Minus, Heart, Map as MapIcon, Radar,
-  CheckCircle2, AlertCircle, BarChart2, Lock, Clock, Sparkles,
+  CheckCircle2, AlertCircle, BarChart2, Lock, Clock, Sparkles, Info,
 } from 'lucide-react';
 import styles from './Dashboard.module.css';
 
@@ -25,16 +25,20 @@ function getFavicon(domain) {
 const PILLARS = [
   { key: 'ai_readability',          label: 'AI Readability',       color: '#06b6d4', Icon: BrainCircuit,
     subs: ['semantic_clarity','readability_score','logical_structure','aeo_alignment'],
-    subLabels: ['Semantic Clarity','Readability Score','Logical Structure','AEO Alignment'] },
+    subLabels: ['Semantic Clarity','Readability Score','Logical Structure','AEO Alignment'],
+    subTooltips: ['How clearly your content conveys meaning beyond just keywords.','How easy it is for both humans and AI to read your content.','Whether your content follows a logical flow with clear headings.','How well your content matches answer-first formatting AI prefers.'] },
   { key: 'digital_authority',       label: 'Digital Authority',    color: '#22c55e', Icon: ShieldCheck,
     subs: ['entity_recognition','citation_readiness','descriptive_metadata'],
-    subLabels: ['Entity Recognition','Citation Readiness','Descriptive Metadata'] },
+    subLabels: ['Entity Recognition','Citation Readiness','Descriptive Metadata'],
+    subTooltips: ['Whether AI can identify your brand, people, and products as distinct entities.','How likely AI is to cite you as a source when answering related questions.','Quality of your title tags, meta descriptions, and schema markup.'] },
   { key: 'conversion_readiness',    label: 'Conversion Readiness', color: '#a855f7', Icon: MousePointerClick,
     subs: ['schema_extraction','qa_format_detection','metadata_audit'],
-    subLabels: ['Schema Extraction','QA-Format Detection','Metadata Audit'] },
+    subLabels: ['Schema Extraction','QA-Format Detection','Metadata Audit'],
+    subTooltips: ['How well structured data helps AI extract pricing, products, and offers.','Whether your content uses question-answer format AI likes to quote.','Completeness of meta tags, Open Graph, and social sharing data.'] },
   { key: 'product_discoverability', label: 'Discoverability',      color: '#f97316', Icon: SearchCheck,
     subs: ['schema_completeness','answer_layer_quality','freshness_signals','conversational_query_match'],
-    subLabels: ['Schema Completeness','Answer Layer Quality','Freshness Signals','Query Match'] },
+    subLabels: ['Schema Completeness','Answer Layer Quality','Freshness Signals','Query Match'],
+    subTooltips: ['Whether Product schema has all required fields for AI shopping engines.','How well your content directly answers common shopper questions.','How recent your content is — AI prefers up-to-date product info.','How well your content matches natural language and voice queries.'] },
 ];
 
 const QUICK_ACTIONS_ALL = {
@@ -235,9 +239,9 @@ function Sparkline({ values, color, width = 86, height = 26 }) {
 }
 
 /* ── Sub-score bar ── */
-function SubScoreBar({ label, value, color }) {
+function SubScoreBar({ label, value, color, tooltip }) {
   return (
-    <div className={styles.subScoreRow}>
+    <div className={styles.subScoreRow} title={tooltip || label}>
       <span className={styles.subScoreLabel}>{label}</span>
       <div className={styles.subScoreTrack}>
         <div className={styles.subScoreFill} style={{ width: `${value ?? 0}%`, background: color }} />
@@ -417,7 +421,7 @@ export default function Dashboard() {
       { ...PILLARS[1], label: 'Local Authority', weight: 35 },
       { ...PILLARS[0], label: 'AI Presence', weight: 25 },
       { ...PILLARS[2], label: 'Trust & Conversion', weight: 25 },
-      { key: 'google_calling', label: 'Google Calling', color: '#ea4335', Icon: Zap, weight: 15, subs: ['click_to_call','nap_consistency','gbp_signals'], subLabels: ['Click-to-Call','NAP Consistency','GBP Signals'] },
+      { key: 'google_calling', label: 'Ask or Me', color: '#ea4335', Icon: Zap, weight: 15, subs: ['click_to_call','nap_consistency','gbp_signals'], subLabels: ['Click-to-Call','NAP Consistency','GBP Signals'] },
     ];
     if (userLane === 'vibe_coders') return [
       { ...PILLARS[0], label: 'AI Readability', weight: 35 },
@@ -486,6 +490,7 @@ export default function Dashboard() {
           subscores: p.subs.map((sk, si) => ({
             label: p.subLabels[si],
             value: detail[sk] ?? null,
+            tooltip: p.subTooltips ? p.subTooltips[si] : null,
           })),
         };
       })
@@ -576,6 +581,7 @@ export default function Dashboard() {
       trend: scoreTrend,
       Icon: Sparkles,
       spark: chartData.length > 1 ? chartData.map(d => d.score) : null,
+      tooltip: 'How ready your content is for AI-powered search results. Google and others now show AI-generated answers that cite sources directly. Higher scores = better odds of being cited.',
     },
     {
       key: 'content',
@@ -588,6 +594,7 @@ export default function Dashboard() {
       trend: scoreTrend,
       Icon: FileText,
       spark: chartData.length > 1 ? chartData.map(d => d.score) : null,
+      tooltip: 'Average of your AI Readability, Digital Authority, and Conversion Readiness scores. Think of it as your overall content quality grade.',
     },
     {
       key: 'citation',
@@ -598,6 +605,7 @@ export default function Dashboard() {
       sub: citationTotal > 0 ? `${citationCitedCount}/${citationTotal} topics cited · avg alignment ${avgAlignment}` : 'No citation data yet — run a topic check to see if AI cites you',
       Icon: Radar,
       spark: trackedTopics.length > 0 && trackedTopics[0].spark.length > 1 ? trackedTopics[0].spark : null,
+      tooltip: 'Percentage of tracked topics where ChatGPT, Gemini, or Perplexity cite your brand in their answers. The higher, the more AI trusts you as a source.',
     },
     {
       key: 'brand',
@@ -612,6 +620,7 @@ export default function Dashboard() {
       trend: brandVisLatest?.delta,
       Icon: Heart,
       spark: brandVisLatest?.spark && brandVisLatest.spark.length > 1 ? brandVisLatest.spark : null,
+      tooltip: 'How positively AI models describe your brand when asked about your industry. Also tracks whether they mention you at all.',
     },
     {
       key: 'sov',
@@ -625,6 +634,7 @@ export default function Dashboard() {
       trend: sovLatest?.delta,
       Icon: BarChart2,
       spark: sovLatest?.spark && sovLatest.spark.length > 1 ? sovLatest.spark : null,
+      tooltip: 'What percentage of AI-generated answers mention your brand versus competitors. Simulates Gemini, ChatGPT, and Perplexity styles to get a realistic picture.',
     },
     {
       key: 'usage',
@@ -636,6 +646,7 @@ export default function Dashboard() {
       sub: tier ? `${tier} plan` : 'Sign in to track',
       Icon: Zap,
       bar: user ? Math.min(100, Math.round(((user.usage?.count ?? 0) / (user.usage?.limit || 1)) * 100)) : null,
+      tooltip: 'How many AI analyses you have used this month versus your plan limit. Resets monthly.',
     },
   ];
 
@@ -692,6 +703,11 @@ export default function Dashboard() {
             <div className={styles.toolCardTop}>
               <div className={styles.toolCardLabelRow}>
                 <span className={styles.toolCardLabel}>{t.label}</span>
+                {t.tooltip && (
+                  <span className={styles.toolCardInfo} data-tooltip={t.tooltip}>
+                    <Info size={11} />
+                  </span>
+                )}
                 {!t.hasData && (
                   <span className={styles.toolCardBadgeEmpty}>
                     <Lock size={9} /> No data yet
@@ -1134,7 +1150,7 @@ export default function Dashboard() {
                 </div>
                 {p.subscores.map(s => (
                   s.value !== null && (
-                    <SubScoreBar key={s.label} label={s.label} value={s.value} color={p.color} />
+                    <SubScoreBar key={s.label} label={s.label} value={s.value} color={p.color} tooltip={s.tooltip} />
                   )
                 ))}
               </div>

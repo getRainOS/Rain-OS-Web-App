@@ -118,7 +118,7 @@ const KB_DATA = {
         desc: 'How often AI engines mention your business for local service queries. Structured data and local content matter.' },
       { key: 'trust_conversion', label: 'Trust & Conversion', weight: '30%', color: '#22c55e', Icon: ShieldCheck,
         desc: 'Reviews, testimonials, and contact intent signals that make AI confident recommending your services.' },
-      { key: 'google_calling',   label: 'Google Calling',     weight: '15%', color: '#eab308', Icon: Phone,
+      { key: 'google_calling',   label: 'Ask or Me',     weight: '15%', color: '#eab308', Icon: Phone,
         desc: 'Phone number visibility and click-to-call CTAs. AI needs to find and surface your contact info quickly.' },
     ],
     tools: [
