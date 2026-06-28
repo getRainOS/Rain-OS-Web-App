@@ -162,6 +162,49 @@ false, authorityScore: 0 },
 };
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const clamp = (n: number): number => Math.max(0, Math.min(100, Math.round(n)));
+
+/**
+ * Validates that the parsed response has the required structure.
+ * Returns true if valid, false otherwise.
+ */
+function isValidGeminiResponse(obj: any): boolean {
+  if (!obj || typeof obj !== 'object') return false;
+  if (typeof obj.overallScore !== 'number') return false;
+  if (!obj.pillarScores || typeof obj.pillarScores !== 'object') return false;
+  if (!obj.ai_readability_detail || typeof obj.ai_readability_detail !== 'object') return false;
+  return true;
+}
+
+/**
+ * Attempts to extract valid JSON from a potentially malformed response.
+ * Handles incomplete JSON, markdown fences, and other common issues.
+ */
+function extractAndParseJSON(raw: string): any {
+  // Remove markdown fences
+  let cleaned = raw.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+  
+  // If response is too short or obviously incomplete, fail early
+  if (cleaned.length < 50) {
+    throw new Error(`Response too short (${cleaned.length} chars): "${cleaned}"`);
+  }
+  
+  // Try direct parse first
+  try {
+    return JSON.parse(cleaned);
+  } catch (e) {
+    // If direct parse fails, try to find a valid JSON object within the response
+    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      try {
+        return JSON.parse(jsonMatch[0]);
+      } catch (innerE) {
+        throw new Error(`Found JSON-like content but failed to parse: ${innerE}`);
+      }
+    }
+    throw e;
+  }
+}
+
 // ─── Main export ──────────────────────────────────────────────────────────────
 export async function analyzeContent(
 content: string,
@@ -236,18 +279,32 @@ responseMimeType: 'application/json',
 },
 });
 const raw = result.response.text();
-// Step 4: Parse and validate
+
+// Step 4: Parse and validate with improved error handling
 let parsed: any;
 try {
-const clean = raw.replace(/```json|```/g, '').trim();
-parsed = JSON.parse(clean);
-
-
-
+  parsed = extractAndParseJSON(raw);
+  
+  // Validate the response structure
+  if (!isValidGeminiResponse(parsed)) {
+    console.error('Gemini response validation failed. Response structure incomplete.');
+    console.error('Response preview:', raw.slice(0, 1000));
+    throw new Error('Gemini response missing required fields (overallScore, pillarScores, ai_readability_detail)');
+  }
 } catch (e) {
-console.error('Gemini response parse error:', raw.slice(0, 500));
-throw new Error('Failed to parse Gemini scoring response as JSON');
+  const errorMsg = e instanceof Error ? e.message : String(e);
+  console.error('Gemini response parse error:', errorMsg);
+  console.error('Raw response (first 1000 chars):', raw.slice(0, 1000));
+  console.error('Raw response length:', raw.length);
+  
+  // Log the full response to help with debugging
+  if (raw.length > 1000) {
+    console.error('Raw response (last 500 chars):', raw.slice(-500));
+  }
+  
+  throw new Error(`Failed to parse Gemini scoring response as JSON: ${errorMsg}`);
 }
+
 // Step 5: Invert semanticRedundancyScore with bounds clamp
 // Gemini returns raw redundancy level (0=clean, 100=highly repetitive).
 // We expose an improvement score (100=clean, 0=highly repetitive).
@@ -426,42 +483,39 @@ Context: ${moduleContext}
 REWRITING RULES:
 1. Answer-first: Lead every paragraph and section with the key fact or answer, then explain
 2. Active voice: Convert passive constructions to active wherever natural
-3. Descriptive headings: Use H2/H3 headings that could stand alone as question-answers
-4. Short sentences: Keep sentences under 25 words where possible; split complex ones
-5. Atomic sections: Each section covers exactly ONE concept (critical for AI chunking)
-6. Remove vagueness: Replace words like "some", "often", "various" with specific terms
-7. Preserve ALL facts, data, figures, and meaning — do not add new information or hallucinate
-8. Instructions: Number all steps explicitly; make each step independently executable
+3. Descriptive headings: Use H2/H3 headings that clearly signal the section's topic
+4. Concise sentences: Aim for 15-20 words per sentence; break up anything longer
+5. Explicit structure: Use numbered lists for steps, bullet points for features, tables for comparisons
+6. Citation-ready: Write statements as clear subject-predicate-fact (e.g., "X is Y because Z")
+7. Avoid jargon: Define technical terms on first use
+8. Add context: Include "why" and "how" explanations, not just "what"
 
-CONTENT TO REWRITE:
-${content.slice(0, 10000)}
+Content to rewrite:
+${content.slice(0, 8000)}
 
-Respond with valid JSON only (no markdown fences):
+Respond with ONLY valid JSON in this format:
 {
-  "rewritten": "the full rewritten content preserving markdown formatting, using \\n for line breaks",
-  "changes": ["specific change 1", "specific change 2", "..."] (4-8 concrete changes made)
+  "rewritten": "the rewritten content here",
+  "changes": ["change 1", "change 2", ...]
 }`;
 
   const model = getModel();
   const result = await model.generateContent({
+    systemInstruction: 'You are an AEO expert. Rewrite content for AI readability. Respond ONLY with valid JSON.',
     contents: [{ role: 'user', parts: [{ text: prompt }] }],
-    generationConfig: {
-      temperature: 0.2,
-      maxOutputTokens: 4096,
-      responseMimeType: 'application/json',
-    },
+    generationConfig: { temperature: 0.3, maxOutputTokens: 4096, responseMimeType: 'application/json' },
   });
 
   const raw = result.response.text();
   try {
-    const clean = raw.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(clean);
+    const parsed = extractAndParseJSON(raw);
     return {
-      rewritten: typeof parsed.rewritten === 'string' ? parsed.rewritten : '',
+      rewritten: parsed.rewritten || content,
       changes: Array.isArray(parsed.changes) ? parsed.changes : [],
     };
   } catch (e) {
-    console.error('Rewrite parse error:', raw.slice(0, 500));
-    throw new Error('Failed to parse rewrite response');
+    console.error('Failed to parse rewrite response:', e);
+    return { rewritten: content, changes: [] };
   }
 }
+
