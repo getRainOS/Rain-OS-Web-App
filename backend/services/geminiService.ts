@@ -124,7 +124,7 @@ content.
 - Do not give round numbers (avoid 50, 60, 70 exactly) — scores should reflect
 genuine measurement.
 OUTPUT FORMAT: Respond with valid JSON only. No markdown fences, no preamble, no
-explanation.
+explanation. CRITICAL: All property names MUST be double-quoted. All string values MUST be double-quoted.
 `;
 // ─── Response schema template (shape hint for Gemini) ────────────────────────
 const RESPONSE_SCHEMA = {
@@ -164,6 +164,24 @@ false, authorityScore: 0 },
 const clamp = (n: number): number => Math.max(0, Math.min(100, Math.round(n)));
 
 /**
+ * Repairs common JSON malformations from Gemini responses.
+ * Handles: unquoted property names, trailing commas, single quotes, etc.
+ */
+function repairJSON(str: string): string {
+  // Fix unquoted property names: word: -> "word":
+  // Match word characters followed by colon, but not already quoted
+  str = str.replace(/([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)(\s*:)/g, '$1"$2"$3');
+  
+  // Fix single quotes to double quotes for string values
+  str = str.replace(/:\s*'([^']*)'/g, ': "$1"');
+  
+  // Remove trailing commas before } or ]
+  str = str.replace(/,(\s*[}\]])/g, '$1');
+  
+  return str;
+}
+
+/**
  * Validates that the parsed response has the required structure.
  * Returns true if valid, false otherwise.
  */
@@ -177,7 +195,7 @@ function isValidGeminiResponse(obj: any): boolean {
 
 /**
  * Attempts to extract valid JSON from a potentially malformed response.
- * Handles incomplete JSON, markdown fences, and other common issues.
+ * Handles incomplete JSON, markdown fences, unquoted properties, and other issues.
  */
 function extractAndParseJSON(raw: string): any {
   // Remove markdown fences
@@ -192,16 +210,23 @@ function extractAndParseJSON(raw: string): any {
   try {
     return JSON.parse(cleaned);
   } catch (e) {
-    // If direct parse fails, try to find a valid JSON object within the response
-    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      try {
-        return JSON.parse(jsonMatch[0]);
-      } catch (innerE) {
-        throw new Error(`Found JSON-like content but failed to parse: ${innerE}`);
+    // Try repairing common JSON malformations
+    try {
+      const repaired = repairJSON(cleaned);
+      return JSON.parse(repaired);
+    } catch (repairError) {
+      // If repair fails, try to find a valid JSON object within the response
+      const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        try {
+          const repaired = repairJSON(jsonMatch[0]);
+          return JSON.parse(repaired);
+        } catch (innerE) {
+          throw new Error(`Found JSON-like content but failed to parse after repair: ${innerE}`);
+        }
       }
+      throw e;
     }
-    throw e;
   }
 }
 
@@ -268,14 +293,13 @@ content.slice(0, 12000), // cap at ~12k chars to manage token cost
 JSON.stringify(RESPONSE_SCHEMA, null, 2),
 ].join('\n');
 const model = getModel();
-// Step 3: Call Gemini with system instruction
+// Step 3: Call Gemini with system instruction (NO responseMimeType — it doesn't work reliably)
 const result = await model.generateContent({
 systemInstruction: SYSTEM_INSTRUCTION,
 contents: [{ role: 'user', parts: [{ text: prompt }] }],
 generationConfig: {
 temperature: 0.1, // low temp for consistent scoring
 maxOutputTokens: 2048,
-responseMimeType: 'application/json',
 },
 });
 const raw = result.response.text();
@@ -419,8 +443,7 @@ const model = client.getGenerativeModel({ model: MODEL });
 const result = await model.generateContent({
 systemInstruction,
 contents: [{ role: 'user', parts: [{ text: prompt }] }],
-generationConfig: { temperature: 0.5, maxOutputTokens: 512, responseMimeType:
-'application/json' },
+generationConfig: { temperature: 0.5, maxOutputTokens: 512 },
 });
 
 
@@ -432,7 +455,7 @@ const raw = await callGeminiSimple(
 content,
 `You are a creative copywriter. Based on the provided content, generate 3-5 compelling and SEO-friendly titles. Respond ONLY with valid JSON: { "titles": ["string", ...] }`
 );
-try { return JSON.parse(raw.replace(/```json|```/g, '').trim()); } catch {
+try { return JSON.parse(repairJSON(raw.replace(/```json|```/g, '').trim())); } catch {
 return { titles: [] }; }
 };
 export const generateDescription = async (content: string): Promise<{ description:
@@ -441,7 +464,7 @@ const raw = await callGeminiSimple(
 content,
 `You are an expert SEO copywriter. Write a concise meta description of no more than 160 characters. Respond ONLY with valid JSON: { "description": "string" }`
 );
-try { return JSON.parse(raw.replace(/```json|```/g, '').trim()); } catch {
+try { return JSON.parse(repairJSON(raw.replace(/```json|```/g, '').trim())); } catch {
 return { description: '' }; }
 };
 export const summarizeContent = async (content: string): Promise<{ summary: string
@@ -450,7 +473,7 @@ const raw = await callGeminiSimple(
 content,
 `You are an expert summarizer. Generate a concise summary that captures key points. Respond ONLY with valid JSON: { "summary": "string" }`
 );
-try { return JSON.parse(raw.replace(/```json|```/g, '').trim()); } catch {
+try { return JSON.parse(repairJSON(raw.replace(/```json|```/g, '').trim())); } catch {
 return { summary: '' }; }
 };
 export const rewriteSentence = async (sentence: string): Promise<{ rewritten:
@@ -459,7 +482,7 @@ const raw = await callGeminiSimple(
 sentence,
 `You are an expert editor. Rewrite the sentence for clarity and conciseness while preserving its meaning. Respond ONLY with valid JSON: { "rewritten": "string" }`
 );
-try { return JSON.parse(raw.replace(/```json|```/g, '').trim()); } catch {
+try { return JSON.parse(repairJSON(raw.replace(/```json|```/g, '').trim())); } catch {
 return { rewritten: sentence }; }
 };
 
@@ -503,7 +526,7 @@ Respond with ONLY valid JSON in this format:
   const result = await model.generateContent({
     systemInstruction: 'You are an AEO expert. Rewrite content for AI readability. Respond ONLY with valid JSON.',
     contents: [{ role: 'user', parts: [{ text: prompt }] }],
-    generationConfig: { temperature: 0.3, maxOutputTokens: 4096, responseMimeType: 'application/json' },
+    generationConfig: { temperature: 0.3, maxOutputTokens: 4096 },
   });
 
   const raw = result.response.text();
