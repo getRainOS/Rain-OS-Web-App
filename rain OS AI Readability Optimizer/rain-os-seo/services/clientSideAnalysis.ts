@@ -161,7 +161,7 @@ export class ClientSideAnalysis {
     };
   }
 
-  generateContentHash(content: string): string {
+  generateContentCustomHash(content: string): string {
     let hash = 0;
     for (let i = 0; i < content.length; i++) {
       const char = content.charCodeAt(i);
