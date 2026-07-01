@@ -153,7 +153,7 @@ export default function ProductSellers() {
               transition={{ duration: 0.6, delay: 0.25 }}
               className="flex flex-wrap items-center justify-center gap-3"
             >
-              {['Ecommerce Brands', 'DTC Companies', 'Product Marketers', 'WooCommerce Stores', 'Shopify Sellers'].map(
+              {['Ecommerce Brands', 'DTC Companies', 'Product Marketers', 'Shopify Sellers'].map(
                 (label) => (
                   <span
                     key={label}
@@ -190,7 +190,7 @@ export default function ProductSellers() {
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </button>
               <a href="/wordpress-plugin" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
-                WooCommerce plugin →
+                WordPress plugin →
               </a>
             </motion.div>
           </div>
@@ -390,7 +390,7 @@ export default function ProductSellers() {
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
                 <a href="/wordpress-plugin" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
-                  WooCommerce plugin →
+                  WordPress plugin →
                 </a>
               </div>
             </motion.div>

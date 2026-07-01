@@ -93,8 +93,8 @@ const faqGroups = [
         a: 'Yes. If the Gutenberg block editor is not active, rain OS adds a meta box to the Classic Editor below your post content. You will see the Rain Score panel with Analyze and URL Scan buttons in the post edit screen.',
       },
       {
-        q: 'Does the plugin work with WooCommerce products?',
-        a: 'Yes — it works on any public post type including WooCommerce products. Product Discoverability scoring is especially useful for e-commerce: it checks whether AI shopping assistants can surface your products when users ask for recommendations in natural language.',
+        q: 'Does the plugin work with product pages?',
+        a: 'Yes — it works on any public post type including product pages and custom post types. Product Discoverability scoring is especially useful for e-commerce: it checks whether AI shopping assistants can surface your products when users ask for recommendations in natural language.',
       },
     ],
   },

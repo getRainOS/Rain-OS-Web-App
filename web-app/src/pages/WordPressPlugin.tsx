@@ -150,8 +150,8 @@ const faqs = [
     a: 'Not at all. rain OS analysis runs asynchronously in the cloud. The plugin sends your content to our API only when you explicitly click Analyze — it never runs in the background, never hooks into page rendering, and never affects your site\'s frontend performance or page load time.',
   },
   {
-    q: 'Can I use the plugin with WooCommerce product pages?',
-    a: 'Yes. The plugin works on any post type including WooCommerce products and custom post types. Product Discoverability scoring is particularly valuable for e-commerce — it checks whether AI shopping assistants can surface your products when users ask for recommendations in natural language.',
+    q: 'Can I use the plugin with product pages?',
+    a: 'Yes. The plugin works on any post type including product pages and custom post types. Product Discoverability scoring is particularly valuable for e-commerce — it checks whether AI shopping assistants can surface your products when users ask for recommendations in natural language.',
   },
   {
     q: 'Does it work with page builders like Elementor or Divi?',
