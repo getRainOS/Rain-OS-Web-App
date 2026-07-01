@@ -54,14 +54,11 @@ export const HybridFuture = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="card-gradient rounded-3xl p-8 hover:border-white/20 transition-all relative overflow-hidden">
             <AlertTriangle className="w-8 h-8 text-rose-400 mb-6" />
             <h3 className="text-2xl font-bold text-white mb-4">The Hybrid Gap</h3>
-            <p className="text-slate-400 leading-relaxed relative z-10">AI-generated and vibe-coded sites built on Bolt, Lovable, or Cursor look great — but they're often invisible to AI crawlers. Missing schema, no llms.txt, JS-rendered content: if LLMs can't parse your page, you won't be cited.</p>
+            <p className="text-slate-400 leading-relaxed relative z-10">Content that reads well to humans often falls apart when AI crawlers parse it. Long sentences, buried answers, missing structure, no clear entities — if LLMs can't extract your key points, they won't cite your article or recommend your landing page. Meanwhile, marketing agencies are churning out content that never gets found.</p>
           </motion.div>
           
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }} className="card-gradient rounded-3xl p-8 hover:border-rain-400/30 transition-all">
-            <div className="flex items-center justify-between mb-6">
-              <Shield className="w-8 h-8 text-rain-400" />
-              <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-full">Insurance</span>
-            </div>
+            <Shield className="w-8 h-8 text-rain-400 mb-6" />
             <h3 className="text-2xl font-bold text-white mb-4">The rain OS Standard</h3>
             <p className="text-slate-400 leading-relaxed">We bridge the gap. We ensure your content is perfectly structured for AI extraction while maintaining all traditional SEO benefits.</p>
           </motion.div>
