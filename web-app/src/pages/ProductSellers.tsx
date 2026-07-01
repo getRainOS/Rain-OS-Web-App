@@ -189,9 +189,6 @@ export default function ProductSellers() {
                 Score your product page free
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </button>
-              <a href="/wordpress-plugin" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
-                WordPress plugin →
-              </a>
             </motion.div>
           </div>
         </section>
@@ -389,9 +386,6 @@ export default function ProductSellers() {
                   Score your product page free
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
-                <a href="/wordpress-plugin" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
-                  WordPress plugin →
-                </a>
               </div>
             </motion.div>
           </div>
