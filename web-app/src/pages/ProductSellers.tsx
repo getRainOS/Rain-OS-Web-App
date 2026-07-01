@@ -129,21 +129,6 @@ export default function ProductSellers() {
 
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-              <div
-                className="inline-flex items-center rounded-full border px-4 py-1.5 text-xs font-bold tracking-[0.2em] uppercase mb-6"
-                style={{
-                  borderColor: 'rgba(249,115,22,0.3)',
-                  background: 'rgba(249,115,22,0.08)',
-                  color: '#fdba74',
-                }}
-              >
-                <span
-                  className="flex h-2 w-2 rounded-full mr-3 animate-pulse"
-                  style={{ background: '#fb923c' }}
-                />
-                For Product Sellers
-              </div>
-
               <h1
                 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.08] text-white mb-6"
                 style={{ letterSpacing: '-0.04em' }}
