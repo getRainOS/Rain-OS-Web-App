@@ -6,7 +6,7 @@ import {
   ShieldCheck, MousePointerClick, SearchCheck, Layers, Plus
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { HybridFuture, FeatureGrid, ReadabilityIntelligence, ComparisonTable, FAQ, LocalBusinessBadge } from '@/components/marketing/MarketingComponents';
+import { HybridFuture, FeatureGrid, ReadabilityIntelligence, ComparisonTable, FAQ } from '@/components/marketing/MarketingComponents';
 import MarketingNav from '@/components/marketing/MarketingNav';
 import TypewriterPlaceholder from '@/components/TypewriterPlaceholder';
 
@@ -116,14 +116,6 @@ export default function ContentWriters() {
 
           <div className="max-w-5xl mx-auto flex flex-col gap-12 items-center">
             <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="text-center space-y-6">
-              <div className="flex justify-end w-full -mt-2">
-                <LocalBusinessBadge />
-              </div>
-              <div className="inline-flex items-center rounded-full border border-sky-400/30 bg-sky-400/10 px-4 py-1.5 text-xs font-bold text-sky-300 tracking-[0.2em] uppercase mb-4">
-                <span className="flex h-2 w-2 rounded-full bg-sky-400 mr-3 animate-pulse" />
-                For Content Writers & SEO Professionals
-              </div>
-
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.05] text-white"
                 style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
                 Write content that{' '}
