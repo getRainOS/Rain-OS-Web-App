@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const SOLUTIONS = [
   {
-    label: 'Content Writers',
+    label: 'Content Writers and Agencies',
     href: '/content-writers',
     desc: 'Blog posts, articles, marketing copy',
     color: '#38bdf8',
