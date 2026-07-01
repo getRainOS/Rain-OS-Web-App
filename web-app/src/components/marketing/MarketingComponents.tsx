@@ -33,10 +33,13 @@ export const HybridFuture = () => {
               </div>
             </div>
             
-            <div className="z-20 flex flex-col items-center bg-midnight/80 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10">
-              <span className="font-bold text-white">rain OS</span>
-              <div className="w-full h-px bg-gradient-to-r from-transparent via-white/50 to-transparent my-1" />
-              <Sparkles className="w-4 h-4 text-rain-400" />
+            <div className="z-20 flex flex-col items-center justify-center w-24 h-24 rounded-full bg-gradient-to-b from-[#0B1D35] to-[#040714] border border-sky-400/40 shadow-[0_0_30px_rgba(14,165,233,0.25)] backdrop-blur-sm">
+              <span className="text-sm font-bold leading-none">
+                <span className="text-white">rain</span>
+                <span className="text-sky-400"> OS</span>
+              </span>
+              <div className="w-10 h-px bg-gradient-to-r from-transparent via-sky-400/60 to-transparent my-1.5" />
+              <Sparkles className="w-3.5 h-3.5 text-sky-400" />
             </div>
           </div>
         </motion.div>
