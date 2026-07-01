@@ -20,17 +20,17 @@ export const HybridFuture = () => {
           
           <div className="relative flex items-center justify-center w-full max-w-2xl mx-auto">
             <div className="w-48 h-48 rounded-full border border-sky-300/40 bg-sky-400/10 flex items-center justify-center absolute -translate-x-16 z-10">
-              <div className="flex flex-col items-center gap-2">
-                <Users className="w-8 h-8 text-sky-300" style={{ filter: 'drop-shadow(0 0 6px rgba(14,165,233,0.6))' }} />
-                <span className="text-white font-bold tracking-wider text-sm uppercase" style={{ textShadow: '0 0 10px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.7), 0 0 4px rgba(0,0,0,1)' }}>Humans</span>
-              </div>
+              <Users className="w-8 h-8 text-sky-300" style={{ filter: 'drop-shadow(0 0 6px rgba(14,165,233,0.6))' }} />
+            </div>
+            <div className="absolute -translate-x-16 -translate-y-28 z-20 flex flex-col items-center">
+              <span className="text-white font-bold tracking-wider text-sm uppercase" style={{ textShadow: '0 0 10px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.7)' }}>Humans</span>
             </div>
 
             <div className="w-48 h-48 rounded-full border border-emerald-300/40 bg-emerald-400/10 flex items-center justify-center absolute translate-x-16 z-10">
-              <div className="flex flex-col items-center gap-2">
-                <Cpu className="w-8 h-8 text-emerald-300" style={{ filter: 'drop-shadow(0 0 6px rgba(52,211,153,0.6))' }} />
-                <span className="text-white font-bold tracking-wider text-sm uppercase" style={{ textShadow: '0 0 10px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.7), 0 0 4px rgba(0,0,0,1)' }}>Machines</span>
-              </div>
+              <Cpu className="w-8 h-8 text-emerald-300" style={{ filter: 'drop-shadow(0 0 6px rgba(52,211,153,0.6))' }} />
+            </div>
+            <div className="absolute translate-x-16 -translate-y-28 z-20 flex flex-col items-center">
+              <span className="text-white font-bold tracking-wider text-sm uppercase" style={{ textShadow: '0 0 10px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.7)' }}>Machines</span>
             </div>
             
             <div className="z-20 flex flex-col items-center justify-center w-24 h-24 rounded-full bg-gradient-to-b from-[#0B1D35] to-[#040714] border border-sky-400/40 shadow-[0_0_30px_rgba(14,165,233,0.25)] backdrop-blur-sm">
