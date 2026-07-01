@@ -19,17 +19,17 @@ export const HybridFuture = () => {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-rain-500/10 blur-[100px] rounded-full pointer-events-none" />
           
           <div className="relative flex items-center justify-center w-full max-w-2xl mx-auto">
-            <div className="w-48 h-48 rounded-full border border-sky-300/40 bg-sky-400/10 flex items-center absolute -translate-x-20 z-10">
-              <div className="flex flex-col items-center gap-2 pl-6">
-                <Users className="w-8 h-8 text-sky-300 drop-shadow-[0_0_8px_rgba(14,165,233,0.5)]" />
-                <span className="text-white font-bold tracking-wider text-sm uppercase drop-shadow-[0_0_6px_rgba(14,165,233,0.6)]">Humans</span>
+            <div className="w-48 h-48 rounded-full border border-sky-300/40 bg-sky-400/10 flex items-center justify-center absolute -translate-x-16 z-10">
+              <div className="flex flex-col items-center gap-2">
+                <Users className="w-8 h-8 text-sky-300" style={{ filter: 'drop-shadow(0 0 6px rgba(14,165,233,0.6))' }} />
+                <span className="text-white font-bold tracking-wider text-sm uppercase" style={{ textShadow: '0 0 10px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.7), 0 0 4px rgba(0,0,0,1)' }}>Humans</span>
               </div>
             </div>
 
-            <div className="w-48 h-48 rounded-full border border-emerald-300/40 bg-emerald-400/10 flex items-center justify-end absolute translate-x-20 z-10">
-              <div className="flex flex-col items-center gap-2 pr-6">
-                <Cpu className="w-8 h-8 text-emerald-300 drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]" />
-                <span className="text-white font-bold tracking-wider text-sm uppercase drop-shadow-[0_0_6px_rgba(52,211,153,0.6)]">Machines</span>
+            <div className="w-48 h-48 rounded-full border border-emerald-300/40 bg-emerald-400/10 flex items-center justify-center absolute translate-x-16 z-10">
+              <div className="flex flex-col items-center gap-2">
+                <Cpu className="w-8 h-8 text-emerald-300" style={{ filter: 'drop-shadow(0 0 6px rgba(52,211,153,0.6))' }} />
+                <span className="text-white font-bold tracking-wider text-sm uppercase" style={{ textShadow: '0 0 10px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.7), 0 0 4px rgba(0,0,0,1)' }}>Machines</span>
               </div>
             </div>
             
