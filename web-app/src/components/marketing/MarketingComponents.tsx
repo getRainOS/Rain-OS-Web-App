@@ -19,17 +19,17 @@ export const HybridFuture = () => {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-rain-500/10 blur-[100px] rounded-full pointer-events-none" />
           
           <div className="relative flex items-center justify-center w-full max-w-2xl mx-auto">
-            <div className="w-48 h-48 rounded-full border border-rain-400 bg-rain-500/10 flex items-center justify-center absolute -translate-x-16 z-10">
+            <div className="w-48 h-48 rounded-full border border-sky-300/40 bg-sky-400/10 flex items-center justify-center absolute -translate-x-16 z-10">
               <div className="flex flex-col items-center gap-2">
-                <Users className="w-8 h-8 text-rain-400" />
-                <span className="text-rain-400 font-bold tracking-wider text-sm uppercase">Humans</span>
+                <Users className="w-8 h-8 text-sky-300 drop-shadow-[0_0_8px_rgba(14,165,233,0.5)]" />
+                <span className="text-white font-bold tracking-wider text-sm uppercase drop-shadow-[0_0_6px_rgba(14,165,233,0.6)]">Humans</span>
               </div>
             </div>
-            
-            <div className="w-48 h-48 rounded-full border border-emerald-400 bg-emerald-500/10 mix-blend-screen flex items-center justify-center absolute translate-x-16 z-10">
+
+            <div className="w-48 h-48 rounded-full border border-emerald-300/40 bg-emerald-400/10 flex items-center justify-center absolute translate-x-16 z-10">
               <div className="flex flex-col items-center gap-2">
-                <Cpu className="w-8 h-8 text-emerald-400" />
-                <span className="text-emerald-400 font-bold tracking-wider text-sm uppercase">Machines</span>
+                <Cpu className="w-8 h-8 text-emerald-300 drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]" />
+                <span className="text-white font-bold tracking-wider text-sm uppercase drop-shadow-[0_0_6px_rgba(52,211,153,0.6)]">Machines</span>
               </div>
             </div>
             
