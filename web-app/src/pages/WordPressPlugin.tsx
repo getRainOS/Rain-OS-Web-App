@@ -215,7 +215,7 @@ export default function WordPressPlugin() {
       <main className="flex-grow">
 
         {/* Hero */}
-        <section className="pt-44 pb-24 relative z-10 px-6 overflow-hidden">
+        <section className="pt-32 md:pt-44 pb-16 md:pb-24 relative z-10 px-4 md:px-6 overflow-hidden">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] pointer-events-none -z-10"
             style={{ background: 'radial-gradient(ellipse at top, rgba(14,165,233,0.18) 0%, transparent 65%)' }} />
 
@@ -540,7 +540,7 @@ export default function WordPressPlugin() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <div className="bg-white/[0.02] border border-white/10 rounded-2xl overflow-hidden">
+              <div className="bg-white/[0.02] border border-white/10 rounded-2xl overflow-hidden md:block hidden">
                 <div className="grid grid-cols-4 bg-white/5 border-b border-white/10 text-xs font-bold uppercase tracking-wider">
                   <div className="p-4 text-slate-400">Feature</div>
                   <div className="p-4 text-slate-500 text-center">Yoast SEO</div>
@@ -564,6 +564,34 @@ export default function WordPressPlugin() {
                       {row.rain
                         ? <CheckCircle className="w-4 h-4 text-sky-400" />
                         : <span className="text-slate-700 text-lg">—</span>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Mobile comparison cards */}
+              <div className="md:hidden space-y-3">
+                {vsComparison.map((row, i) => (
+                  <div key={i} className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
+                    <div className="text-sm font-medium text-white mb-3">{row.feature}</div>
+                    <div className="grid grid-cols-3 gap-2">
+                      {[
+                        { label: 'Yoast', val: row.yoast },
+                        { label: 'RankMath', val: row.rankmath },
+                        { label: 'rain OS', val: row.rain, accent: true },
+                      ].map(({ label, val, accent }) => (
+                        <div
+                          key={label}
+                          className={`flex flex-col items-center gap-1.5 rounded-lg py-2 ${accent ? 'bg-sky-500/[0.05] border border-sky-500/10' : 'bg-white/[0.03]'}`}
+                        >
+                          <span className={`text-[10px] font-bold uppercase tracking-wider ${accent ? 'text-sky-400' : 'text-slate-500'}`}>
+                            {label}
+                          </span>
+                          {val
+                            ? <CheckCircle className={`w-4 h-4 ${accent ? 'text-sky-400' : 'text-slate-500'}`} />
+                            : <span className="text-slate-700 text-sm">—</span>}
+                        </div>
+                      ))}
                     </div>
                   </div>
                 ))}

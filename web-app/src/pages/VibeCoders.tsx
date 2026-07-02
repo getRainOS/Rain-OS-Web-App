@@ -795,7 +795,7 @@ export default function VibeCoders() {
 
       <main className="flex-grow">
         {/* Hero */}
-        <section className="pt-44 pb-28 relative z-10 px-6 overflow-hidden">
+        <section className="pt-32 md:pt-44 pb-20 md:pb-28 relative z-10 px-4 md:px-6 overflow-hidden">
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] pointer-events-none -z-10"
             style={{
@@ -811,11 +811,11 @@ export default function VibeCoders() {
               {/* Rotating subheading */}
               <div className="mb-4">
                 <span
-                  className="inline-flex items-center gap-1 flex-wrap justify-center text-xl md:text-2xl lg:text-3xl font-semibold text-white"
+                  className="inline-flex items-center gap-1 flex-wrap justify-center text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold text-white"
                   style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}
                 >
                   <span>Vibe Coded Your</span>
-                  <span className="inline-block relative text-violet-400">
+                  <span className="inline-block relative text-violet-400 min-w-[6rem] sm:min-w-[8rem] md:min-w-[10rem]">
                     {ROTATING_WORDS.map((word, i) => (
                       <span
                         key={word}
