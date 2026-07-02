@@ -17,6 +17,33 @@ if (!ENCRYPTION_SECRET || ENCRYPTION_SECRET.length !== 32) {
 }
 const secretKey = Buffer.from(ENCRYPTION_SECRET, 'utf8');
 
+// ─── In-Memory Decryption Cache ───────────────────────────────────────────────
+// Stores decrypted API keys to avoid expensive synchronous crypto on every lookup.
+// Key: hashed_api_key (from DB); Value: { plainApiKey, cachedAt }
+// TTL: 1 hour (3,600,000 ms) to balance security and performance.
+interface CacheEntry {
+  plainApiKey: string;
+  cachedAt: number;
+}
+const CACHE_TTL_MS = 3600000; // 1 hour
+const decryptionCache = new Map<string, CacheEntry>();
+
+// Clear expired cache entries periodically (every 30 minutes)
+const CACHE_CLEANUP_INTERVAL = 1800000; // 30 minutes
+setInterval(() => {
+  const now = Date.now();
+  let cleared = 0;
+  for (const [key, entry] of decryptionCache.entries()) {
+    if (now - entry.cachedAt > CACHE_TTL_MS) {
+      decryptionCache.delete(key);
+      cleared++;
+    }
+  }
+  if (cleared > 0) {
+    console.log(`[Cache] Cleared ${cleared} expired decryption entries`);
+  }
+}, CACHE_CLEANUP_INTERVAL);
+
 const encrypt = (text: string): string => {
     const iv = randomBytes(IV_LENGTH);
     const cipher = createCipheriv(ALGORITHM, secretKey, iv);
@@ -25,7 +52,35 @@ const encrypt = (text: string): string => {
     return iv.toString('hex') + ':' + encrypted;
 };
 
-const decrypt = (text: string): string => {
+// Decrypt with in-memory caching to avoid repeated synchronous crypto
+const decryptWithCache = (encryptedText: string, hashedKey?: string): string => {
+    // If we have a hashed key and it's in cache, return cached value
+    if (hashedKey && decryptionCache.has(hashedKey)) {
+      const cached = decryptionCache.get(hashedKey)!;
+      // Validate cache TTL
+      if (Date.now() - cached.cachedAt < CACHE_TTL_MS) {
+        return cached.plainApiKey;
+      } else {
+        // Expired — remove from cache
+        decryptionCache.delete(hashedKey);
+      }
+    }
+
+    // Cache miss or no hashed key — perform decryption
+    const plainKey = decryptSync(encryptedText);
+
+    // If we have a hashed key, cache the result
+    if (hashedKey) {
+      decryptionCache.set(hashedKey, {
+        plainApiKey: plainKey,
+        cachedAt: Date.now(),
+      });
+    }
+
+    return plainKey;
+};
+
+const decryptSync = (text: string): string => {
     const textParts = text.split(':');
     const iv = Buffer.from(textParts.shift()!, 'hex');
     const encryptedText = Buffer.from(textParts.join(':'), 'hex');
@@ -38,7 +93,7 @@ const decrypt = (text: string): string => {
 export const hash = (data: string) => createHash('sha256').update(data).digest('hex');
 
 // --- DB to Application Mapper ---
-const mapRowToUser = (row: any): User => {
+const mapRowToUser = (row: any, hashedApiKey?: string): User => {
     if (!row) return null as any;
     return {
         id: row.id,
@@ -49,7 +104,7 @@ const mapRowToUser = (row: any): User => {
         hashedPassword: row.hashed_password,
         passwordResetToken: row.password_reset_token,
         passwordResetExpires: row.password_reset_expires,
-        apiKey: decrypt(row.encrypted_api_key),
+        apiKey: decryptWithCache(row.encrypted_api_key, hashedApiKey),
         hashedApiKey: row.hashed_api_key,
         stripeCustomerId: row.stripe_customer_id,
         stripePriceId: row.stripe_price_id,
@@ -75,7 +130,7 @@ export const findUserById = async (id: string): Promise<User | null> => {
 export const findUserByApiKey = async (apiKey: string): Promise<User | null> => {
     const apiKeyHash = hash(apiKey);
     const res = await pool.query('SELECT * FROM users WHERE hashed_api_key = $1', [apiKeyHash]);
-    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+    return res.rows[0] ? mapRowToUser(res.rows[0], apiKeyHash) : null;
 };
 
 export const findUserByStripeCustomerId = async (stripeCustomerId: string): Promise<User | null> => {
@@ -105,7 +160,7 @@ export const saveGithubAuth = async (userId: string, githubId: string, githubLog
 export const getUserGithubToken = async (userId: string): Promise<string | null> => {
     const res = await pool.query('SELECT encrypted_github_token FROM users WHERE id = $1', [userId]);
     if (!res.rows[0]?.encrypted_github_token) return null;
-    return decrypt(res.rows[0].encrypted_github_token);
+    return decryptWithCache(res.rows[0].encrypted_github_token);
 };
 
 export const disconnectGithub = async (userId: string): Promise<void> => {
@@ -158,7 +213,7 @@ export const createUser = async (email: string, password?: string, googleId?: st
     ];
 
     const res = await pool.query(query, values);
-    return mapRowToUser(res.rows[0]);
+    return mapRowToUser(res.rows[0], hashedApiKey);
 };
 
 export const updateUser = async (userId: string, updates: Partial<Pick<User, 'googleId' | 'hashedPassword' | 'passwordResetToken' | 'passwordResetExpires'>>): Promise<User | null> => {
@@ -205,8 +260,12 @@ export const regenerateUserApiKey = async (userId: string): Promise<User | null>
     `;
     const res = await pool.query(query, [newHashedApiKey, newEncryptedApiKey, userId]);
     
+    // Invalidate cache for old hashed key and return new key
+    // (We don't have the old hash here, so full cache clear is safest)
+    decryptionCache.clear();
+    
     // mapRowToUser will decrypt the key correctly, returning the new raw key.
-    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+    return res.rows[0] ? mapRowToUser(res.rows[0], newHashedApiKey) : null;
 };
 
 // --- Subscription Management ---
@@ -274,6 +333,72 @@ export const resetAllUsersUsage = async (): Promise<number> => {
     const count = res.rowCount || 0;
     console.log(`Reset usage for all ${count} users.`);
     return count;
+};
+
+// --- Batched Analysis Write (Analysis + Usage Increment) ───────────────────────
+// Consolidates two N+1 queries (incrementUserUsage + saveAnalysis) into a single
+// transaction for better performance and consistency.
+export interface AnalysisData {
+    overall_score?: number | null;
+    ai_readability?: number | null;
+    digital_authority?: number | null;
+    conversion_readiness?: number | null;
+    product_discoverability?: number | null;
+    rag_readiness?: number | null;
+    result_json?: any;
+}
+
+export const incrementUsageAndSaveAnalysis = async (
+    userId: string,
+    analysisData: AnalysisData
+): Promise<{ updatedUser: User | null; analysisId: number | null }> => {
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+
+        // Increment usage
+        const usageRes = await client.query(
+            `UPDATE users
+             SET usage = jsonb_set(usage, '{count}', ((usage->>'count')::int + 1)::text::jsonb)
+             WHERE id = $1
+             RETURNING *`,
+            [userId]
+        );
+        const updatedUser = usageRes.rows[0] ? mapRowToUser(usageRes.rows[0]) : null;
+
+        // Save analysis in the same transaction
+        const analysisRes = await client.query(
+            `INSERT INTO content_analyses
+               (user_id, title, url, overall_score, ai_readability, digital_authority,
+                conversion_readiness, product_discoverability, rag_readiness, summary, result_json)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+             RETURNING id`,
+            [
+                userId,
+                null, // title
+                null, // url
+                analysisData.overall_score ?? null,
+                analysisData.ai_readability ?? null,
+                analysisData.digital_authority ?? null,
+                analysisData.conversion_readiness ?? null,
+                analysisData.product_discoverability ?? null,
+                analysisData.rag_readiness ?? null,
+                null, // summary
+                analysisData.result_json ? JSON.stringify(analysisData.result_json) : null,
+            ]
+        );
+        const analysisId = analysisRes.rows[0]?.id ?? null;
+
+        await client.query('COMMIT');
+
+        return { updatedUser, analysisId };
+    } catch (err) {
+        await client.query('ROLLBACK');
+        console.error('Transaction error in incrementUsageAndSaveAnalysis:', err);
+        throw err;
+    } finally {
+        client.release();
+    }
 };
 
 // --------------------------
