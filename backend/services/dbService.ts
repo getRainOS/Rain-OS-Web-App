@@ -1,3 +1,11 @@
+const tokenCache = new Map();
+const cachedMapRowToUser = (row: any) => {
+    if (!row) return null;
+    if (tokenCache.has(row.id)) return tokenCache.get(row.id);
+    const result = cachedMapRowToUser(row);
+    tokenCache.set(row.id, result);
+    return result;
+};
 // services/dbService.ts
 // This service interacts with the PostgreSQL database.
 
@@ -64,33 +72,33 @@ const mapRowToUser = (row: any): User => {
 
 export const findUserByEmail = async (email: string): Promise<User | null> => {
     const res = await pool.query('SELECT * FROM users WHERE email = $1', [email.toLowerCase()]);
-    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+    return res.rows[0] ? cachedMapRowToUser(res.rows[0]) : null;
 };
 
 export const findUserById = async (id: string): Promise<User | null> => {
     const res = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
-    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+    return res.rows[0] ? cachedMapRowToUser(res.rows[0]) : null;
 };
 
 export const findUserByApiKey = async (apiKey: string): Promise<User | null> => {
     const apiKeyHash = hash(apiKey);
     const res = await pool.query('SELECT * FROM users WHERE hashed_api_key = $1', [apiKeyHash]);
-    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+    return res.rows[0] ? cachedMapRowToUser(res.rows[0]) : null;
 };
 
 export const findUserByStripeCustomerId = async (stripeCustomerId: string): Promise<User | null> => {
     const res = await pool.query('SELECT * FROM users WHERE stripe_customer_id = $1', [stripeCustomerId]);
-    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+    return res.rows[0] ? cachedMapRowToUser(res.rows[0]) : null;
 };
 
 export const findUserByGoogleId = async (googleId: string): Promise<User | null> => {
     const res = await pool.query('SELECT * FROM users WHERE google_id = $1', [googleId]);
-    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+    return res.rows[0] ? cachedMapRowToUser(res.rows[0]) : null;
 };
 
 export const findUserByGithubId = async (githubId: string): Promise<User | null> => {
     const res = await pool.query('SELECT * FROM users WHERE github_id = $1', [githubId]);
-    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+    return res.rows[0] ? cachedMapRowToUser(res.rows[0]) : null;
 };
 
 export const saveGithubAuth = async (userId: string, githubId: string, githubLogin: string, plainToken: string): Promise<User | null> => {
@@ -99,7 +107,7 @@ export const saveGithubAuth = async (userId: string, githubId: string, githubLog
         'UPDATE users SET github_id = $1, github_login = $2, encrypted_github_token = $3 WHERE id = $4 RETURNING *',
         [githubId, githubLogin, encryptedToken, userId]
     );
-    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+    return res.rows[0] ? cachedMapRowToUser(res.rows[0]) : null;
 };
 
 export const getUserGithubToken = async (userId: string): Promise<string | null> => {
@@ -120,7 +128,7 @@ export const findUserByPasswordResetToken = async (hashedToken: string): Promise
         'SELECT * FROM users WHERE password_reset_token = $1 AND password_reset_expires > NOW()',
         [hashedToken]
     );
-    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+    return res.rows[0] ? cachedMapRowToUser(res.rows[0]) : null;
 };
 
 export const createUser = async (email: string, password?: string, googleId?: string): Promise<User> => {
@@ -158,7 +166,7 @@ export const createUser = async (email: string, password?: string, googleId?: st
     ];
 
     const res = await pool.query(query, values);
-    return mapRowToUser(res.rows[0]);
+    return cachedMapRowToUser(res.rows[0]);
 };
 
 export const updateUser = async (userId: string, updates: Partial<Pick<User, 'googleId' | 'hashedPassword' | 'passwordResetToken' | 'passwordResetExpires'>>): Promise<User | null> => {
@@ -188,7 +196,7 @@ export const updateUser = async (userId: string, updates: Partial<Pick<User, 'go
 
     const query = `UPDATE users SET ${setClauses.join(', ')} WHERE id = $1 RETURNING *`;
     const res = await pool.query(query, values);
-    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+    return res.rows[0] ? cachedMapRowToUser(res.rows[0]) : null;
 };
 
 
@@ -206,7 +214,7 @@ export const regenerateUserApiKey = async (userId: string): Promise<User | null>
     const res = await pool.query(query, [newHashedApiKey, newEncryptedApiKey, userId]);
     
     // mapRowToUser will decrypt the key correctly, returning the new raw key.
-    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+    return res.rows[0] ? cachedMapRowToUser(res.rows[0]) : null;
 };
 
 // --- Subscription Management ---
@@ -248,7 +256,7 @@ export const updateUserSubscription = async (
     const query = `UPDATE users SET ${setClauses.join(', ')} WHERE id = $1 RETURNING *`;
     const res = await pool.query(query, values);
     console.log(`Updated user ${userId} subscription. Status: ${res.rows[0]?.subscription_status}, Limit: ${res.rows[0]?.usage.limit}`);
-    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+    return res.rows[0] ? cachedMapRowToUser(res.rows[0]) : null;
 };
 
 // --- Usage Management ---
@@ -261,7 +269,7 @@ export const incrementUserUsage = async (userId: string): Promise<User | null> =
         RETURNING *
     `;
     const res = await pool.query(query, [userId]);
-    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+    return res.rows[0] ? cachedMapRowToUser(res.rows[0]) : null;
 };
 
 export const resetUserUsage = async (userId: string): Promise<void> => {
