@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import {
   BookOpen, Key, Zap, BrainCircuit, ShieldCheck, MousePointerClick,
   Target, Globe, GitBranch, FileText, Code2, ChevronRight, Terminal,
-  ArrowRight, Layers, Package, Search, SearchCheck
+  ArrowRight, Layers, Package, Search, SearchCheck, MapPin
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
