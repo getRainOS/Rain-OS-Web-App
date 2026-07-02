@@ -23,6 +23,12 @@ const SOLUTIONS = [
     color: '#34d399',
   },
   {
+    label: 'Vibe Coders',
+    href: '/vibe-coders',
+    desc: 'Bolt, Lovable, Cursor, v0 builders',
+    color: '#10b981',
+  },
+  {
     label: 'Local Businesses',
     href: '/local-business',
     desc: 'SEO + AEO for local & service businesses',

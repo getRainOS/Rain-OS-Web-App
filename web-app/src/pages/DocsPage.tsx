@@ -260,7 +260,7 @@ export default function DocsPage() {
                         Icon: Package,
                         name: 'Product Sellers',
                         badge: 'Product Discoverability module',
-                        desc: 'Dedicated scoring for ecommerce and product pages. Adds Product Discoverability scoring (50% weight) covering pricing transparency, variant coverage, availability signals, merchant identity, review quality, and comparative context.',
+                        desc: 'Dedicated scoring for ecommerce and product pages. Product Discoverability jumps to 50% weight, covering pricing transparency, variant coverage, availability signals, merchant identity, and comparative context. AI Readability 20%, Digital Authority 15%, Conversion Readiness 15%, RAG Readiness 10%.',
                         module: 'product_sellers',
                       },
                       {
@@ -268,8 +268,24 @@ export default function DocsPage() {
                         Icon: BookOpen,
                         name: 'Developers',
                         badge: 'Documentation module',
-                        desc: 'Specialized scoring for technical documentation. Reweights the five-pillar engine so Doc Structure (32%), Tech Completeness (32%), and Technical Clarity (26%) matter most, with RAG Readiness at 10% — built for READMEs, API references, guides, and developer docs.',
+                        desc: 'Specialized scoring for technical documentation. Reweights the five-pillar engine so AI Readability (32%), Digital Authority (32%), and Conversion Readiness (26%) matter most, with RAG Readiness at 10% — built for READMEs, API references, guides, and developer docs.',
                         module: 'developers',
+                      },
+                      {
+                        color: '#10b981',
+                        Icon: Zap,
+                        name: 'Vibe Coders',
+                        badge: 'Vibe builder module',
+                        desc: 'Same scoring weights as the Developers module (32/32/26/10), but positioned for builders using Bolt, Lovable, Cursor, v0, and Replit. Scans GitHub repos to catch gaps that URL scanning misses — missing llms.txt, JS-only rendering, no schema, and incomplete meta tags.',
+                        module: 'vibe_coders',
+                      },
+                      {
+                        color: '#fb7185',
+                        Icon: MapPin,
+                        name: 'Local Businesses',
+                        badge: 'Local SEO module',
+                        desc: 'Built for service businesses and local shops. Digital Authority rises to 36% because local trust signals are primary. AI Readability 27%, Conversion Readiness 27%, RAG Readiness 10%. Checks NAP consistency, LocalBusiness schema, review signals, Google Business Profile mentions, and click-to-call CTAs.',
+                        module: 'local_business',
                       },
                     ].map((s) => (
                       <div key={s.name} className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
