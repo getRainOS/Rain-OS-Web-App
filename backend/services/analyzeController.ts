@@ -3,7 +3,7 @@
 // Auth, usage-check, and incrementing all live here — keeping api/index.ts thin.
 import express from 'express';
 import { analyzeContent, API_VERSION } from './geminiService';
-import { findUserByApiKey, incrementUserUsage, saveAnalysis } from './dbService';
+import { findUserByApiKey, incrementUsageAndSaveAnalysis } from './dbService';
 import type { ApiError, CapabilitiesResponse, AnalysisResponse } from '../types';
 const PHASE2_SUB_SCORES = [
 'sectionConceptIsolation',
@@ -52,25 +52,29 @@ return res.status(400).json({ error: 'bad_request', message: 'content is require
 }
 try {
 const result = await analyzeContent(content, industry || 'General / Other', analysisModule);
-const updatedUser = await incrementUserUsage(user.id);
-if (updatedUser) res.setHeader('X-Usage-Info',
-JSON.stringify(updatedUser.usage));
 
-// Persist to analysis history (best-effort — never block the response)
-try {
-  const typedResult = result as AnalysisResponse;
-  const pillar = typedResult.pillarScores;
-  await saveAnalysis(user.id, {
-    overall_score: typeof typedResult.overallScore === 'number' ? typedResult.overallScore : null,
-    ai_readability: typeof pillar?.aiReadability === 'number' ? pillar.aiReadability : null,
-    digital_authority: typeof pillar?.digitalAuthority === 'number' ? pillar.digitalAuthority : null,
-    conversion_readiness: typeof pillar?.conversionReadiness === 'number' ? pillar.conversionReadiness : null,
-    product_discoverability: typeof pillar?.productDiscoverability === 'number' ? pillar.productDiscoverability : null,
-    rag_readiness: typeof pillar?.ragReadiness === 'number' ? pillar.ragReadiness : null,
-    result_json: result,
-  });
-} catch (saveErr) {
-  console.error('Analysis save error:', saveErr);
+// ─── Batched Transaction: Increment Usage + Save Analysis ─────────────────────
+// Consolidate N+1 queries into a single transaction for better performance.
+// This replaces separate incrementUserUsage() and saveAnalysis() calls.
+const typedResult = result as AnalysisResponse;
+const pillar = typedResult.pillarScores;
+
+const { updatedUser, analysisId } = await incrementUsageAndSaveAnalysis(user.id, {
+  overall_score: typeof typedResult.overallScore === 'number' ? typedResult.overallScore : null,
+  ai_readability: typeof pillar?.aiReadability === 'number' ? pillar.aiReadability : null,
+  digital_authority: typeof pillar?.digitalAuthority === 'number' ? pillar.digitalAuthority : null,
+  conversion_readiness: typeof pillar?.conversionReadiness === 'number' ? pillar.conversionReadiness : null,
+  product_discoverability: typeof pillar?.productDiscoverability === 'number' ? pillar.productDiscoverability : null,
+  rag_readiness: typeof pillar?.ragReadiness === 'number' ? pillar.ragReadiness : null,
+  result_json: result,
+});
+
+if (updatedUser) {
+  res.setHeader('X-Usage-Info', JSON.stringify(updatedUser.usage));
+}
+
+if (!analysisId) {
+  console.warn(`Analysis saved but ID not returned for user ${user.id}`);
 }
 
 return res.status(200).json({ success: true, data: result, ...result });
