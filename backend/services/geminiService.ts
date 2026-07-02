@@ -16,24 +16,26 @@ ProductDiscoverabilityDetail,
 RagReadinessDetail,
 AuthorshipSignals,
 } from '../types';
-// ─── Config ───────────────────────────────────────────────────────────────────
+// ─── Config ────────────────────────────────────────────────────────────[...]
 // api_version is a single source of truth — never hardcoded in return statements
 export const API_VERSION = '2.4';
 const API_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
 const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+
+// ─── Content Truncation Constant ───────────────────────────────────────
+const MAX_CONTENT_LENGTH = 12000; // Maximum characters to send to Gemini
+const READABILITY_CONTENT_LENGTH = 10000; // For readability analysis
+
 let _client: GoogleGenerativeAI | null = null;
 let _model: GenerativeModel | null = null;
 function getModel(): GenerativeModel {
-
-
-
 if (!_model) {
 _client = new GoogleGenerativeAI(API_KEY);
 _model = _client.getGenerativeModel({ model: MODEL });
 }
 return _model;
 }
-// ─── System instruction ───────────────────────────────────────────────────────
+// ─── System instruction ────────────────────────────────────────────────────────[...]
 const SYSTEM_INSTRUCTION = `You are an AEO (Answer Engine Optimization) and GEO
 (Generative Engine Optimization) scoring engine.
 You score content for how well it will be cited, quoted, and surfaced by AI
@@ -152,36 +154,46 @@ topicalDepthScore: 0, queryAlignmentScore: 0, multimodalReadiness: 0,
 productVariantCoverage: 0, merchantIdentityClarity: 0,
 },
 subScores: [],
-
-
-
 recommendations: [],
 keywords: [],
 authorship: { hasAuthorByline: false, hasPublishDate: false, hasOrganization:
 false, authorityScore: 0 },
 };
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────[...]
 const clamp = (n: number): number => Math.max(0, Math.min(100, Math.round(n)));
-// ─── Main export ──────────────────────────────────────────────────────────────
+
+// ─── UPFRONT CONTENT TRUNCATION ────────────────────────────────────────────────
+// Truncate content at service entry point to avoid OOM bloat.
+// This is called FIRST before any analysis is performed.
+const truncateContentUpfront = (content: string, maxLength: number = MAX_CONTENT_LENGTH): string => {
+  if (!content) return '';
+  return content.length > maxLength ? content.slice(0, maxLength) : content;
+};
+
+// ─── Main export ──────────────────────────────────────────────────────────[...]
 export async function analyzeContent(
 content: string,
 industry: string = 'General / Other',
 module: 'general' | 'product_sellers' | 'developers' | 'local_business' = 'general'
 ): Promise<AnalysisResponse> {
 if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
+
+// STEP 0: Upfront content truncation — prevent OOM bloat
+const truncatedContent = truncateContentUpfront(content);
+
 // Step 1: Algorithmic pre-analysis — hard metrics, no API cost
-const metrics = computeReadabilityMetrics(content);
+const metrics = computeReadabilityMetrics(truncatedContent);
 const groundingBlock = formatMetricsAsGroundingBlock(metrics);
 // Step 2: Build the prompt with grounding anchors injected
 // Build module-specific weight instruction
 const moduleWeightInstructions = module === 'product_sellers'
   ? `MODULE: product_sellers
 MODULE_WEIGHTS: AI Readability 20%, Digital Authority 15%, Conversion Readiness 15%, Product Discoverability 50%, RAG Readiness 10%
-For this module, Product Discoverability is the PRIMARY scoring focus. Score it with maximum precision — pricing transparency, variant coverage, availability, merchant identity, review signals, comparative context.`
+For this module, Product Discoverability is the PRIMARY scoring focus. Score it with maximum precision — pricing transparency, variant coverage, availability, merchant identity, review signals,[...]
   : module === 'developers'
   ? `MODULE: developers
-MODULE_WEIGHTS: AI Readability (Documentation Structure) 32%, Digital Authority (Technical Completeness) 32%, Conversion Readiness (Technical Clarity) 26%, Product Discoverability 0% (not applicable), RAG Readiness 10%
-For this module, score AI Readability as Documentation Structure (navigation, TOC, getting started), Digital Authority as Documentation Authority (API completeness, error coverage, versioning), and Conversion Readiness as Technical Clarity (code example quality, step determinism, snippet extractability). Do not score Product Discoverability — set to 0.`
+MODULE_WEIGHTS: AI Readability (Documentation Structure) 32%, Digital Authority (Technical Completeness) 32%, Conversion Readiness (Technical Clarity) 26%, Product Discoverability 0% (not applica[...]
+For this module, score AI Readability as Documentation Structure (navigation, TOC, getting started), Digital Authority as Documentation Authority (API completeness, error coverage, versioning), a[...]
   : module === 'local_business'
   ? `MODULE: local_business
 MODULE_WEIGHTS: AI Readability 27%, Digital Authority 36%, Conversion Readiness 27%, Product Discoverability 0%, RAG Readiness 10%
@@ -218,7 +230,7 @@ moduleWeightInstructions,
 `INDUSTRY: ${industry}`,
 '',
 '=== CONTENT TO SCORE ===',
-content.slice(0, 12000), // cap at ~12k chars to manage token cost
+truncatedContent,
 '=== END CONTENT ===',
 '',
 'Return your scores as a single JSON object matching this exact shape (all fields required):',
@@ -241,9 +253,6 @@ let parsed: any;
 try {
 const clean = raw.replace(/```json|```/g, '').trim();
 parsed = JSON.parse(clean);
-
-
-
 } catch (e) {
 console.error('Gemini response parse error:', raw.slice(0, 500));
 throw new Error('Failed to parse Gemini scoring response as JSON');
@@ -327,7 +336,7 @@ hasPublishDate: Boolean(authorshipRaw.hasPublishDate),
 hasOrganization: Boolean(authorshipRaw.hasOrganization),
 authorityScore: clamp(authorshipRaw.authorityScore || 0),
 // Legacy fields — WP plugin reads these; keep until plugin is updated
-hash: createHash('sha256').update(content.slice(0, 5000)).digest('hex'),
+hash: createHash('sha256').update(truncatedContent.slice(0, 5000)).digest('hex'),
 timestamp: new Date().toISOString(),
 status: 'Analyzed',
 };
@@ -365,14 +374,12 @@ contents: [{ role: 'user', parts: [{ text: prompt }] }],
 generationConfig: { temperature: 0.5, maxOutputTokens: 512, responseMimeType:
 'application/json' },
 });
-
-
-
 return result.response.text();
 }
 export const generateTitles = async (content: string): Promise<{ titles: string[] }> => {
+const truncated = truncateContentUpfront(content);
 const raw = await callGeminiSimple(
-content,
+truncated,
 `You are a creative copywriter. Based on the provided content, generate 3-5 compelling and SEO-friendly titles. Respond ONLY with valid JSON: { "titles": ["string", ...] }`
 );
 try { return JSON.parse(raw.replace(/```json|```/g, '').trim()); } catch {
@@ -380,8 +387,9 @@ return { titles: [] }; }
 };
 export const generateDescription = async (content: string): Promise<{ description:
 string }> => {
+const truncated = truncateContentUpfront(content);
 const raw = await callGeminiSimple(
-content,
+truncated,
 `You are an expert SEO copywriter. Write a concise meta description of no more than 160 characters. Respond ONLY with valid JSON: { "description": "string" }`
 );
 try { return JSON.parse(raw.replace(/```json|```/g, '').trim()); } catch {
@@ -389,8 +397,9 @@ return { description: '' }; }
 };
 export const summarizeContent = async (content: string): Promise<{ summary: string
 }> => {
+const truncated = truncateContentUpfront(content);
 const raw = await callGeminiSimple(
-content,
+truncated,
 `You are an expert summarizer. Generate a concise summary that captures key points. Respond ONLY with valid JSON: { "summary": "string" }`
 );
 try { return JSON.parse(raw.replace(/```json|```/g, '').trim()); } catch {
@@ -398,8 +407,9 @@ return { summary: '' }; }
 };
 export const rewriteSentence = async (sentence: string): Promise<{ rewritten:
 string }> => {
+const truncated = truncateContentUpfront(sentence);
 const raw = await callGeminiSimple(
-sentence,
+truncated,
 `You are an expert editor. Rewrite the sentence for clarity and conciseness while preserving its meaning. Respond ONLY with valid JSON: { "rewritten": "string" }`
 );
 try { return JSON.parse(raw.replace(/```json|```/g, '').trim()); } catch {
@@ -413,11 +423,14 @@ export async function rewriteDocumentForAI(
 ): Promise<{ rewritten: string; changes: string[] }> {
   if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
 
+  // STEP 0: Upfront truncation for rewrite content
+  const truncatedContent = truncateContentUpfront(content, READABILITY_CONTENT_LENGTH);
+
   const moduleContext = module === 'developers'
-    ? `This is technical documentation. Priorities: clear getting-started section, unambiguous numbered steps (copy-paste ready), code examples clearly framed with context, error scenarios covered, each function/API defined answer-first (what it does before how it works).`
+    ? `This is technical documentation. Priorities: clear getting-started section, unambiguous numbered steps (copy-paste ready), code examples clearly framed with context, error scenarios covered[...]
     : module === 'product_sellers'
-    ? `This is product content. Priorities: lead with the primary benefit, make pricing/variants/availability explicit, add comparison context, ensure strong purchase CTAs, use specific claims over vague descriptions.`
-    : `This is content marketing or editorial content. Priorities: answer-first paragraphs, scannable headings, concise active sentences, strong CTA placement, citation-ready statements (clear subject-predicate-fact structure).`;
+    ? `This is product content. Priorities: lead with the primary benefit, make pricing/variants/availability explicit, add comparison context, ensure strong purchase CTAs, use specific claims ov[...]
+    : `This is content marketing or editorial content. Priorities: answer-first paragraphs, scannable headings, concise active sentences, strong CTA placement, citation-ready statements (clear su[...]
 
   const prompt = `You are an AEO (Answer Engine Optimization) expert rewriting content so AI systems (ChatGPT, Perplexity, Google AI Overviews, Claude) can better extract, quote, and cite it.
 
@@ -434,7 +447,7 @@ REWRITING RULES:
 8. Instructions: Number all steps explicitly; make each step independently executable
 
 CONTENT TO REWRITE:
-${content.slice(0, 10000)}
+${truncatedContent}
 
 Respond with valid JSON only (no markdown fences):
 {
