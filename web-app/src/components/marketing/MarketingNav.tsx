@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const SOLUTIONS = [
   {
@@ -45,6 +45,13 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick }: Market
   const [isScrolled, setIsScrolled] = useState(false);
   const [solutionsOpen, setSolutionsOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const filteredSolutions = SOLUTIONS.filter((s) => {
+    if (location.pathname === s.href) return false;
+    if (location.pathname === '/' && s.href === '/vibe-coders') return false;
+    return true;
+  });
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -110,7 +117,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick }: Market
                   }}
                 >
                   <div className="p-1.5">
-                    {SOLUTIONS.map((s) => (
+                    {filteredSolutions.map((s) => (
                       <a
                         key={s.label}
                         href={s.href}
