@@ -45,6 +45,8 @@ if (user.usage.count >= user.usage.limit) {
 return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Monthly limit reached. Upgrade to continue.' } as ApiError);
 }
 const { content, industry, module } = req.body as { content?: string; industry?: string; module?: string };
+  // Safeguard backend memory
+  const safeContent = content ? content.slice(0, 12000) : "";
 const analysisModule: 'general' | 'product_sellers' | 'developers' | 'local_business' =
   module === 'product_sellers' || module === 'developers' || module === 'local_business' ? module : 'general';
 if (!content || typeof content !== 'string' || content.trim().length < 10) {
