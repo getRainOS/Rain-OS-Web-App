@@ -49,30 +49,6 @@ const pdSignals = [
     name: 'Comparative Context',
     desc: 'Content that explains why your product is different — and better — gives AI the context to recommend you over a competitor.',
   },
-  {
-    color: '#facc15',
-    bg: 'rgba(250,204,21,0.1)',
-    border: 'rgba(250,204,21,0.2)',
-    Icon: Star,
-    name: 'Review Signal Quality',
-    desc: 'Structured ratings and reviews are one of the strongest product discoverability signals. Unstructured testimonials don\'t count.',
-  },
-  {
-    color: '#fb923c',
-    bg: 'rgba(249,115,22,0.08)',
-    border: 'rgba(249,115,22,0.18)',
-    Icon: Search,
-    name: 'Category & Taxonomy',
-    desc: 'Schema.org Product markup tells AI exactly what category your product belongs to. Without it, classification is guesswork.',
-  },
-  {
-    color: '#34d399',
-    bg: 'rgba(16,185,129,0.08)',
-    border: 'rgba(16,185,129,0.18)',
-    Icon: TrendingUp,
-    name: 'Purchase Intent Signals',
-    desc: 'Clear CTAs, easy purchase paths, and unambiguous next steps are scored — because AI recommends products it can confidently send users to buy.',
-  },
 ];
 
 const problems = [
@@ -88,7 +64,7 @@ const problems = [
   },
   {
     label: 'The rain OS approach',
-    body: 'Score your product pages against 8 AI shopping signals. Fix what\'s missing. Get recommended.',
+    body: 'Score your product pages against the 5 AI shopping signals Gemini actually checks. Fix what\'s missing. Get recommended.',
     dim: false,
   },
 ];
@@ -100,14 +76,15 @@ const steps = [
 ];
 
 const comparisons = [
-  { signal: 'Schema.org Product/Offer markup', standard: false, rain: true },
   { signal: 'Pricing transparency scoring', standard: false, rain: true },
   { signal: 'Product variant coverage analysis', standard: false, rain: true },
   { signal: 'Availability signal detection', standard: false, rain: true },
   { signal: 'Merchant identity clarity', standard: false, rain: true },
-  { signal: 'Review signal quality scoring', standard: false, rain: true },
-  { signal: 'AI shopping recommendation readiness', standard: false, rain: true },
   { signal: 'Comparative context analysis', standard: false, rain: true },
+  { signal: 'AI Readability scoring', standard: false, rain: true },
+  { signal: 'Digital Authority scoring', standard: false, rain: true },
+  { signal: 'Conversion Readiness scoring', standard: false, rain: true },
+  { signal: 'RAG Readiness scoring', standard: false, rain: true },
   { signal: 'Traditional SEO scoring', standard: true, rain: true },
 ];
 
@@ -252,7 +229,7 @@ export default function ProductSellers() {
                 Product Discoverability Module
               </span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
-                8 signals. One Product Score.
+                5 signals. One Product Score.
               </h2>
               <p className="text-slate-400 max-w-xl leading-relaxed">
                 Every product page analysis returns a weighted score across the signals AI shopping assistants actually use when deciding what to recommend.
