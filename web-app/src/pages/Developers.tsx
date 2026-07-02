@@ -80,30 +80,30 @@ const docPillars = [
     bg: 'rgba(14,165,233,0.1)',
     border: 'rgba(14,165,233,0.25)',
     Icon: Layers,
-    name: 'Documentation Structure',
-    weight: '35%',
-    desc: 'Navigation hierarchy, TOC quality, getting started path, and logical flow. Mintlify-style structure that AI can traverse.',
-    scores: ['Navigation Clarity', 'Section Hierarchy', 'Getting Started Path', 'Version & Freshness Signals'],
+    name: 'Doc Structure',
+    weight: '32%',
+    desc: 'How well AI can parse, chunk, and extract answers from your docs. Structural clarity, semantic precision, and section isolation.',
+    scores: ['Structural Clarity', 'Answer-First Formatting', 'Semantic Precision', 'Context Sufficiency', 'Section Isolation'],
   },
   {
     color: '#34d399',
     bg: 'rgba(16,185,129,0.1)',
     border: 'rgba(16,185,129,0.25)',
     Icon: Code2,
-    name: 'Technical Clarity',
-    weight: '35%',
-    desc: 'Code example completeness, step determinism, API reference coverage, error documentation. The technical accuracy layer.',
-    scores: ['Code Example Quality', 'Step Determinism', 'API Reference Completeness', 'Error Recovery Coverage'],
+    name: 'Tech Completeness',
+    weight: '32%',
+    desc: 'Does your content signal expertise and trustworthiness to AI? Citation signals, entity clarity, topical authority, and freshness.',
+    scores: ['Citation Signals', 'Entity Clarity', 'Topical Authority', 'Freshness Signals', 'Social Proof'],
   },
   {
     color: '#a78bfa',
     bg: 'rgba(139,92,246,0.1)',
     border: 'rgba(139,92,246,0.25)',
     Icon: Cpu,
-    name: 'AI Retrievability',
+    name: 'Technical Clarity',
     weight: '26%',
-    desc: 'Search snippet quality, query alignment, concept isolation, cross-reference quality. How well AI can extract answers.',
-    scores: ['Search Snippet Quality', 'Query Alignment', 'Concept Isolation', 'Cross-Reference Quality'],
+    desc: 'Does your content guide the reader toward a clear next action? CTA clarity, trust signals, value proposition, and friction reduction.',
+    scores: ['CTA Clarity', 'Trust Signals', 'Value Proposition', 'Friction Reduction'],
   },
   {
     color: '#ec4899',
@@ -112,8 +112,8 @@ const docPillars = [
     Icon: Layers,
     name: 'RAG Readiness',
     weight: '10%',
-    desc: 'How well your docs are structured for vector database retrieval: semantic chunks, hierarchical headings, FAQ density, and cross-linking.',
-    scores: ['Semantic Chunking', 'Hierarchical Formatting', 'FAQ Density', 'Cross-Reference Quality'],
+    desc: 'How well your docs work with vector database retrieval: semantic mapping, chunking quality, hierarchical formatting, and explicit Q&A structures.',
+    scores: ['Semantic Mapping', 'Chunking Quality', 'Hierarchical Formatting', 'Explicit Q&A', 'Authority Signals'],
   },
 ];
 
@@ -275,10 +275,10 @@ export default function Developers() {
                 Documentation Scoring Framework
               </span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
-                Five pillars built for developer docs.
+                Four pillars, reweighted for developer docs.
               </h2>
               <p className="text-slate-400 max-w-xl leading-relaxed">
-                Standard content scoring doesn't work for technical documentation. These five pillars were built from the ground up for docs — inspired by what makes documentation like Stripe, Mintlify, and Linear so AI-citable.
+                rain OS scores your docs using the same 5-pillar engine that powers all our analyses. For developer content, we reweight the pillars so structure and authority matter most — exactly what AI needs to cite your README, API docs, and guides.
               </p>
             </motion.div>
 

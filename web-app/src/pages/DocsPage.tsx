@@ -268,7 +268,7 @@ export default function DocsPage() {
                         Icon: BookOpen,
                         name: 'Developers',
                         badge: 'Documentation module',
-                        desc: 'Specialized scoring for technical documentation. Covers Documentation Structure (35%), Technical Clarity (35%), and AI Retrievability (30%) — built for READMEs, API references, guides, and developer docs.',
+                        desc: 'Specialized scoring for technical documentation. Reweights the five-pillar engine so Doc Structure (32%), Tech Completeness (32%), and Technical Clarity (26%) matter most, with RAG Readiness at 10% — built for READMEs, API references, guides, and developer docs.',
                         module: 'developers',
                       },
                     ].map((s) => (
