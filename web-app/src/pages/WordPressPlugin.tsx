@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowRight, CheckCircle, Download, Zap, BrainCircuit, ShieldCheck,
+  ArrowRight, CheckCircle, Zap, BrainCircuit, ShieldCheck,
   MousePointerClick, Target, Layers, Search, Globe, FileText,
-  BarChart3, Settings, Lock, Plus, Minus, GitBranch, ExternalLink
+  BarChart3, Settings, Lock, Plus, Minus
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
@@ -90,7 +90,7 @@ const steps = [
   {
     num: '01',
     title: 'Install the plugin',
-    desc: 'Download from WordPress.org or upload the .zip file directly in your WordPress admin. Activate in one click.',
+    desc: 'Search for "rain OS" in the WordPress plugin directory, or upload the plugin file in your WordPress admin. Activate in one click.',
     detail: 'Compatible with all major WordPress hosts including WP Engine, Kinsta, SiteGround, and Cloudways.',
   },
   {
@@ -123,7 +123,7 @@ const vsComparison = [
 const faqs = [
   {
     q: 'How do I install the rain OS plugin?',
-    a: 'Download the plugin ZIP from your rain OS account or the plugin page. In your WordPress admin, go to Plugins → Add New → Upload Plugin, select the ZIP, and click Install Now. After activation, go to rain OS → Settings, paste your API key, and click Save. The plugin will verify the connection and display your plan status.',
+    a: 'In your WordPress admin, go to Plugins → Add New and search for "rain OS." Install and activate, then go to rain OS → Settings, paste your API key, and click Save. The plugin will verify the connection and display your plan status.',
   },
   {
     q: 'Where do I find my API key?',
@@ -172,10 +172,6 @@ const faqs = [
   {
     q: 'How is my content handled? Is it stored by rain OS?',
     a: 'Your content is sent to the rain OS API over HTTPS for analysis. We store your Rain Score and pillar breakdown in your WordPress database for history tracking — not the raw content itself. We do not permanently store your post text on rain OS servers after the analysis request completes. See our Privacy Policy for full details.',
-  },
-  {
-    q: 'Does the plugin include Repo Analysis for GitHub repositories?',
-    a: 'No — Repo Analysis is a web-app-only feature at getrainos.com. If you built your site or theme with Bolt, Lovable, Cursor, v0, or another AI coding tool, connect your GitHub repo on the web app to analyze your actual source files for AEO signals. The WordPress plugin covers Content Analysis and URL Scanner; the web app adds Repo Analysis on top of those.',
   },
 ];
 
@@ -257,20 +253,12 @@ export default function WordPressPlugin() {
                   </div>
 
                   <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-                    <a
-                      href="/rain-os-aeo-analyzer.zip"
-                      download="rain-os-aeo-analyzer.zip"
-                      className="flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white rounded-xl px-7 py-3.5 text-sm font-bold shadow-lg shadow-sky-500/25 transition-all hover:scale-105 active:scale-95 group"
-                    >
-                      <Download className="w-4 h-4" />
-                      Download Free Plugin
-                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                    </a>
                     <button
                       onClick={() => navigate('/login')}
-                      className="text-sm font-medium text-slate-400 hover:text-white transition-colors border border-white/10 hover:border-white/20 rounded-xl px-6 py-3.5"
+                      className="flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white rounded-xl px-7 py-3.5 text-sm font-bold shadow-lg shadow-sky-500/25 transition-all hover:scale-105 active:scale-95 group"
                     >
-                      Sign up for rain OS →
+                      Get Started Free
+                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                     </button>
                   </div>
                 </motion.div>
@@ -446,36 +434,6 @@ export default function WordPressPlugin() {
               </motion.div>
             </div>
 
-            {/* Repo Analysis callout */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.04] p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5"
-            >
-              <div className="w-10 h-10 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center shrink-0">
-                <GitBranch className="w-5 h-5 text-emerald-400" />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-sm font-bold text-white">Repo Analysis — Web App only</h3>
-                  <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest px-2 py-0.5 rounded-full border border-emerald-400/25 bg-emerald-400/8">For vibe coders</span>
-                </div>
-                <p className="text-sm text-slate-400 leading-relaxed">
-                  Built with Bolt, Lovable, Cursor, or v0? The third analysis mode — Repo Analysis — connects to your GitHub repository and scores your actual source files. This runs on the rain OS web app, not the plugin. It's the deepest analysis we offer, and it's free on any plan.
-                </p>
-              </div>
-              <a
-                href="https://www.getrainos.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-emerald-400/30 text-emerald-300 text-xs font-bold hover:bg-emerald-400/10 transition-all whitespace-nowrap"
-              >
-                Try Repo Analysis
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            </motion.div>
           </div>
         </section>
 
@@ -718,20 +676,12 @@ export default function WordPressPlugin() {
                 Install the free plugin, connect your rain OS account, and run your first analysis in under five minutes.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a
-                  href="/rain-os-aeo-analyzer.zip"
-                  download="rain-os-aeo-analyzer.zip"
-                  className="flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white rounded-xl px-8 py-4 text-sm font-bold shadow-xl shadow-sky-500/25 transition-all hover:scale-105 active:scale-95 group"
-                >
-                  <Download className="w-4 h-4" />
-                  Download Free Plugin
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </a>
                 <button
                   onClick={() => navigate('/login')}
-                  className="text-sm font-medium text-slate-400 hover:text-white transition-colors"
+                  className="flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white rounded-xl px-8 py-4 text-sm font-bold shadow-xl shadow-sky-500/25 transition-all hover:scale-105 active:scale-95 group"
                 >
-                  Sign up for rain OS →
+                  Get Started Free
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
               </div>
             </motion.div>
