@@ -30,10 +30,10 @@ export default function AIReadabilityPage() {
             What we measure
           </span>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
-            AI Readability — Explained Simply
+            How rain OS Scores Content for AI Citation
           </h1>
           <p className="text-lg text-slate-400 leading-relaxed mb-6">
-            AI Readability is how easy it is for AI systems like ChatGPT, Gemini, and Perplexity to read, understand, and accurately represent your content when someone asks them a question.
+            Every piece of content you create — blog posts, product pages, docs, or landing pages — gets scored across five pillars. The weights change based on what you are optimizing for, but the goal is the same: make sure AI can read, trust, and cite your content.
           </p>
         </motion.div>
       </div>
@@ -79,21 +79,21 @@ export default function AIReadabilityPage() {
             <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center shrink-0">
               <BrainCircuit className="w-5 h-5 text-sky-400" />
             </div>
-            The five pillars of AI Readability
+            The five pillars of scoring
           </h2>
           <p className="text-slate-400 leading-relaxed mb-6">
-            Every piece of content we analyze gets scored across five areas. Each one answers a different question about how AI-ready your content is.
+            Every analysis returns a 0–100 Rain Score built from five pillars. The exact weights depend on your content type — writers, product sellers, developers, and vibe coders each get a different blend. Here is how they work.
           </p>
 
           <div className="space-y-6">
             {/* Pillar 1 */}
             <div className="rounded-2xl border border-sky-500/20 bg-sky-500/[0.03] p-6">
               <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-sky-400 mr-2">36%</span>
+                <span className="text-sky-400 mr-2">36% (general)</span>
                 AI Readability
               </h3>
               <p className="text-sm text-slate-400 mb-4 leading-relaxed">
-                Can the AI read and understand your content clearly? This pillar checks the structural basics that make content machine-readable.
+                Can the AI read and understand your content clearly? This pillar checks the structural basics that make content machine-readable. Weight varies by lane — 36% for writers, 20% for product sellers, 32% for developers and vibe coders, 27% for local business.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-slate-300">
@@ -118,11 +118,11 @@ export default function AIReadabilityPage() {
             {/* Pillar 2 */}
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] p-6">
               <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-emerald-400 mr-2">27%</span>
+                <span className="text-emerald-400 mr-2">27% (general)</span>
                 Digital Authority
               </h3>
               <p className="text-sm text-slate-400 mb-4 leading-relaxed">
-                Does the AI trust your content? This pillar checks the signals that make an AI confident your content is reliable.
+                Does the AI trust your content? This pillar checks the signals that make an AI confident your content is reliable. Weight varies by lane — 27% for writers, 15% for product sellers, 32% for developers, 36% for local business.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-slate-300">
@@ -147,11 +147,11 @@ export default function AIReadabilityPage() {
             {/* Pillar 3 */}
             <div className="rounded-2xl border border-violet-500/20 bg-violet-500/[0.03] p-6">
               <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-violet-400 mr-2">27%</span>
+                <span className="text-violet-400 mr-2">27% (general)</span>
                 Conversion Readiness
               </h3>
               <p className="text-sm text-slate-400 mb-4 leading-relaxed">
-                Is your content organized so that AI can extract the answer and point the user to the next step?
+                Is your content organized so that AI can extract the answer and point the user to the next step? Weight varies by lane — 27% for writers, 15% for product sellers, 26% for developers, 27% for local business.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-slate-300">
@@ -176,11 +176,11 @@ export default function AIReadabilityPage() {
             {/* Pillar 4 — Product Discoverability */}
             <div className="rounded-2xl border border-orange-500/20 bg-orange-500/[0.03] p-6">
               <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-orange-400 mr-2">0% (general)</span>
+                <span className="text-orange-400 mr-2">0% (general) → 50% (product sellers)</span>
                 Product Discoverability
               </h3>
               <p className="text-sm text-slate-400 mb-4 leading-relaxed">
-                For product-focused content, this pillar measures how well AI can surface your products in shopping and discovery contexts. Active only in the Product Sellers module (50% weight).
+                For product-focused content, this pillar measures how well AI can surface your products in shopping and discovery contexts. It is 0% for writers, developers, and local business — but jumps to 50% for product sellers, where it becomes the most important pillar.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-slate-300">
@@ -205,11 +205,11 @@ export default function AIReadabilityPage() {
             {/* Pillar 5 — RAG Readiness */}
             <div className="rounded-2xl border border-pink-500/20 bg-pink-500/[0.03] p-6">
               <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-pink-400 mr-2">10%</span>
+                <span className="text-pink-400 mr-2">10% (all lanes)</span>
                 RAG Readiness
               </h3>
               <p className="text-sm text-slate-400 mb-4 leading-relaxed">
-                How well is your content optimized for Retrieval-Augmented Generation (RAG) systems — vector databases, embedding models, and chunk-based retrieval? Distinct from citation scoring.
+                How well is your content optimized for Retrieval-Augmented Generation (RAG) systems — vector databases, embedding models, and chunk-based retrieval? This stays at 10% across every lane. It is distinct from citation scoring: RAG readiness measures whether an AI retrieval system can accurately find, chunk, and synthesize your content.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-slate-300">
@@ -259,7 +259,7 @@ export default function AIReadabilityPage() {
               If your content is not AI-readable, you are invisible in the most important search channel of the next decade. Not because your content is bad, but because the AI cannot read it well enough to use it.
             </p>
             <p>
-              AI Readability is not a technical upgrade for large companies. It is a basic requirement for anyone who wants their ideas, products, or services to be discoverable when people ask AI for help.
+              This is not a technical upgrade for large companies. It is a basic requirement for anyone who wants their content, products, or docs to be discoverable when people ask AI for help — whether you are a writer, a developer shipping with Cursor, or a store owner on Shopify.
             </p>
           </div>
         </motion.div>
@@ -280,7 +280,7 @@ export default function AIReadabilityPage() {
           </h2>
           <div className="space-y-4 text-slate-400 leading-relaxed">
             <p>
-              Rain OS scans your content, URL, or repository and scores it across all five pillars. You get a single number — your Rain Score — plus a breakdown of exactly which signals are strong and which are missing.
+              Rain OS scans your content, URL, or repository and scores it across all five pillars — using the right weights for your lane. You get a single number — your Rain Score — plus a breakdown of exactly which signals are strong and which are missing.
             </p>
             <p>
               More importantly, you get specific recommendations. Not vague advice like "improve your SEO." Exact, actionable steps like "Add an FAQ section with these questions" or "Your H2 structure is missing — add these three subheadings."
