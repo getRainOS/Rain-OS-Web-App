@@ -150,18 +150,6 @@ export default function Developers() {
 
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-              <div
-                className="inline-flex items-center rounded-full border px-4 py-1.5 text-xs font-bold tracking-[0.2em] uppercase mb-6"
-                style={{
-                  borderColor: 'rgba(52,211,153,0.3)',
-                  background: 'rgba(16,185,129,0.08)',
-                  color: '#6ee7b7',
-                }}
-              >
-                <span className="flex h-2 w-2 rounded-full bg-emerald-400 mr-3 animate-pulse" />
-                For Developers
-              </div>
-
               <h1
                 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.08] text-white mb-6"
                 style={{ letterSpacing: '-0.04em' }}
@@ -176,7 +164,7 @@ export default function Developers() {
               </h1>
 
               <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-                Developers ask ChatGPT, Claude, and Perplexity for help every day. When they do, AI cites the documentation it can best understand. rain OS scores your docs and tells you exactly what's blocking a citation.
+                You built something in Bolt, Lovable, or Cursor. Now developers ask AI about it. If your README and docs aren't AI-readable, your product is invisible. rain OS scores your docs and tells you exactly what's blocking a citation.
               </p>
             </motion.div>
 
@@ -186,7 +174,7 @@ export default function Developers() {
               transition={{ duration: 0.6, delay: 0.25 }}
               className="flex flex-wrap items-center justify-center gap-3"
             >
-              {['API Documentation', 'Developer Guides', 'README Files', 'SDK Docs', 'Open Source Maintainers'].map(
+              {['Vibe Coders', 'API Documentation', 'README Files', 'Open Source', 'Indie Hackers', 'Cursor · Bolt · Lovable'].map(
                 (label) => (
                   <span
                     key={label}
@@ -237,18 +225,18 @@ export default function Developers() {
               className="text-center mb-14"
             >
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">
-                Developers now ask AI before they read your docs.
+                Vibe coders ask AI first. Your docs are what it reads.
               </h2>
               <p className="text-slate-400 max-w-2xl mx-auto leading-relaxed">
-                If AI doesn't understand your documentation, it doesn't cite it. Your docs might be technically excellent — but if they're not AI-readable, they're invisible to the developers who need them most.
+                Independent developers ship fast with Cursor, Bolt, and Lovable. Then they ask AI to recommend tools. If your README isn't AI-readable, your product never gets mentioned. Even the best code is invisible without docs that AI can cite.
               </p>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {[
-                { label: 'The old assumption', body: 'Developers read documentation. Write it clearly and they\'ll find it via search.', dim: true },
-                { label: 'What\'s changed', body: 'Developers ask ChatGPT and Claude first. AI reads your docs for them — and cites what it understands best.', highlight: true },
-                { label: 'The rain OS approach', body: 'Score your docs for AI readability. Fix the structure, clarity, and snippet quality. Become the source AI recommends.', dim: false },
+                { label: 'The old assumption', body: 'Developers read docs. Write them clearly and people will find them via search.', dim: true },
+                { label: 'What\'s changed', body: 'Vibe coders ask AI first — Cursor, Bolt, Lovable, Claude. AI reads your docs and cites what it understands. Bad docs = invisible products.', highlight: true },
+                { label: 'The rain OS approach', body: 'Score your README, API docs, and guides for AI readability. Fix structure, clarity, and snippet quality. Become the source AI points developers to.', dim: false },
               ].map((c, i) => (
                 <motion.div
                   key={c.label}
@@ -457,10 +445,10 @@ export default function Developers() {
               transition={{ duration: 0.7 }}
             >
               <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
-                Ready to make your docs AI-citable?
+                Ship docs that get your product cited.
               </h2>
               <p className="text-slate-400 text-lg mb-8 leading-relaxed">
-                Paste your README, API reference, or any documentation and get a full Documentation Score in seconds. Free to start.
+                You shipped your app in a weekend. Now make sure AI can find it. Paste your README or connect your GitHub repo and get a full Documentation Score in seconds. Free to start.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button
