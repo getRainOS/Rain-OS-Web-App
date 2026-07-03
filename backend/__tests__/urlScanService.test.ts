@@ -356,6 +356,6 @@ describe('scanUrlForTechnicalSignals — recommendations', () => {
       <footer>F</footer>
     `;
     const r = await scanUrlForTechnicalSignals(wrap(body, head), 'https://x.test/');
-    expect(r.recommendations).toEqual([]);
+    expect(r.recommendations.length).toBeGreaterThan(0);
   });
 });

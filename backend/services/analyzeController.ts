@@ -59,7 +59,7 @@ const result = await analyzeContent(content, industry || 'General / Other', anal
 // Consolidate N+1 queries into a single transaction for better performance.
 // This replaces separate incrementUserUsage() and saveAnalysis() calls.
 const typedResult = result as AnalysisResponse;
-const pillar = typedResult.pillarScores;
+const pillar = typedResult.pillarScores || { aiReadability: 0, digitalAuthority: 0, contentQuality: 0, technicalSymmetry: 0 };
 
 const { updatedUser, analysisId } = await incrementUsageAndSaveAnalysis(user.id, {
   overall_score: typeof typedResult.overallScore === 'number' ? typedResult.overallScore : null,

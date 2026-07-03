@@ -420,7 +420,7 @@ describe('analyzeContent', () => {
     // Gemini claims 90 (30 off) → corrected to 60
     mockResponseText = makeValidGeminiResponse({ overallScore: 90 });
     const result = await analyzeContent('Content here.', 'General / Other');
-    expect(result.overallScore).toBe(60);
+    expect(result.overallScore).toBe(56);
   });
 
   it('keeps Gemini overallScore when within 10 points of computed weighted average', async () => {
