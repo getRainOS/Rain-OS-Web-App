@@ -1,4 +1,5 @@
 import helmet from "helmet";
+import rateLimit from 'express-rate-limit';
 // api/index.ts
 import express from 'express';
 import cors from 'cors';
@@ -34,9 +35,7 @@ import createPortalSessionHandler from './stripe/create-portal-session';
 import stripeWebhookHandler from './stripe/webhook';
 // Cron
 import cronResetUsageHandler from './cron/reset-usage';
-// Plugin / AI readiness
-import pluginHealthHandler from './plugin/health';
-import pluginContentAnalysisHandler from './plugin/content-analysis';
+// AI readiness
 import aiSiteLlmsHandler from './ai/site-llms';
 import aiNormalizeHandler from './ai/normalize';
 import aiContentHandler from './ai/content';
@@ -69,7 +68,17 @@ app.set('trust proxy', 1);
 app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }),
 stripeWebhookHandler);
 app.use(cors(corsOptions));
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again shortly.' },
+});
+app.use('/api', apiLimiter);
+app.use('/v1/api', apiLimiter);
 // ─── Health ────────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => res.status(200).json({ status: 'ok',
 timestamp: new Date().toISOString() }));
@@ -146,12 +155,6 @@ app.delete('/api/github/disconnect', disconnectGithubHandler);
 app.post('/api/github/preview-fixes', githubPreviewFixesHandler);
 app.post('/api/github/push-fixes', githubPushFixesHandler);
 // ─── Plugin-facing endpoints ───────────────────────────────────────────────
-app.get('/api/plugin/health', pluginHealthHandler);
-app.get('/api/plugin/content/:contentId/analysis',
-pluginContentAnalysisHandler);
-app.get('/v1/api/plugin/health', pluginHealthHandler);
-app.get('/v1/api/plugin/content/:contentId/analysis',
-pluginContentAnalysisHandler);
 // ─── AI Readiness endpoints ────────────────────────────────────────────────
 app.get( '/ai/site/llms', aiSiteLlmsHandler);
 app.post('/ai/normalize', aiNormalizeHandler);

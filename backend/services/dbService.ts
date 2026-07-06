@@ -256,6 +256,8 @@ export const updateUser = async (userId: string, updates: Partial<Pick<User, 'go
 
 
 export const regenerateUserApiKey = async (userId: string): Promise<User | null> => {
+    const oldKeyRes = await pool.query('SELECT hashed_api_key FROM users WHERE id = $1', [userId]);
+    const oldHashedApiKey = oldKeyRes.rows[0]?.hashed_api_key;
     const newApiKey = `rain_os_key_${randomBytes(24).toString('hex')}`;
     const newHashedApiKey = hash(newApiKey);
     const newEncryptedApiKey = encrypt(newApiKey);
@@ -270,7 +272,9 @@ export const regenerateUserApiKey = async (userId: string): Promise<User | null>
     
     // Invalidate cache for old hashed key and return new key
     // (We don't have the old hash here, so full cache clear is safest)
-    decryptionCache.clear();
+    if (oldHashedApiKey) {
+      decryptionCache.delete(oldHashedApiKey);
+    }
     
     // mapRowToUser will decrypt the key correctly, returning the new raw key.
     return res.rows[0] ? cachedMapRowToUser(res.rows[0], newHashedApiKey) : null;

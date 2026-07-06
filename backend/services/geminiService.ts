@@ -4,7 +4,6 @@
 // SDK: @google/generative-ai
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
 import { computeReadabilityMetrics, formatMetricsAsGroundingBlock } from './readability'
-import { createHash } from 'crypto';
 import type {
 AnalysisResponse,
 Phase2SubScores,
@@ -32,6 +31,30 @@ _client = new GoogleGenerativeAI(API_KEY);
 _model = _client.getGenerativeModel({ model: MODEL });
 }
 return _model;
+}
+
+async function generateContentWithRetry(model: GenerativeModel, request: any) {
+  const MAX_RETRIES = 2;
+  const TIMEOUT_MS = 30000;
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      return await Promise.race([
+        model.generateContent(request),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Gemini request timed out')), TIMEOUT_MS)
+        ),
+      ]) as Awaited<ReturnType<typeof model.generateContent>>;
+    } catch (err: any) {
+      const status = err?.status ?? err?.response?.status;
+      const isRetryable = status === 429 || status === 503 || /timed out/i.test(err?.message ?? '');
+      if (attempt < MAX_RETRIES && isRetryable) {
+        await new Promise((r) => setTimeout(r, 500 * 2 ** attempt));
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw new Error('Gemini request failed after retries');
 }
 // ─── System instruction ───────────────────────────────────────────────────────
 const SYSTEM_INSTRUCTION = `You are an AEO (Answer Engine Optimization) and GEO
@@ -209,7 +232,7 @@ CONVERSION READINESS signals:
 Do not score Product Discoverability — set to 0.`
   : `MODULE: general
 MODULE_WEIGHTS: AI Readability 36%, Digital Authority 27%, Conversion Readiness 27%, Product Discoverability 0%, RAG Readiness 10%
-For this module, do not weight Product Discoverability in the overall score. Score it conservatively for WP plugin compatibility (40-60 range) but it does not affect the overall Rain Score.
+For this module, do not weight Product Discoverability in the overall score. Score it conservatively (40-60 range) but it does not affect the overall Rain Score.
 RAG Readiness is scored at 10% weight and always included. It measures RAG-system retrieval quality.`;
 
 const prompt = [
@@ -226,7 +249,7 @@ JSON.stringify(RESPONSE_SCHEMA, null, 2),
 ].join('\n');
 const model = getModel();
 // Step 3: Call Gemini with system instruction
-const result = await model.generateContent({
+const result = await generateContentWithRetry(model, {
 systemInstruction: SYSTEM_INSTRUCTION,
 contents: [{ role: 'user', parts: [{ text: prompt }] }],
 generationConfig: {
@@ -319,47 +342,42 @@ const subScores: SubScore[] = [
     { category: 'authoritySignals', score:
     clamp(parsed.rag_readiness_detail?.authoritySignals || 0), label: 'Authority Signals' },
     ];
-// Step 8: Build authorship — include legacy fields for WP plugin backward compatibility
+// Step 8: Build authorship signals
 const authorshipRaw = parsed.authorship || {};
 const authorshipSignals: AuthorshipSignals = {
 hasAuthorByline: Boolean(authorshipRaw.hasAuthorByline),
 hasPublishDate: Boolean(authorshipRaw.hasPublishDate),
 hasOrganization: Boolean(authorshipRaw.hasOrganization),
 authorityScore: clamp(authorshipRaw.authorityScore || 0),
-// Legacy fields — WP plugin reads these; keep until plugin is updated
-hash: createHash('sha256').update(content.slice(0, 5000)).digest('hex'),
-timestamp: new Date().toISOString(),
-status: 'Analyzed',
-};
-return {
-overallScore: clamp(parsed.overallScore || computedOverall),
-pillarScores: parsed.pillarScores || {
-aiReadability: 0, digitalAuthority: 0, conversionReadiness: 0,
-productDiscoverability: 0, ragReadiness: 0 },
-subScores,
-phase2_sub_scores: parsed.phase2_sub_scores || ({} as Phase2SubScores),
-ai_readability_detail: parsed.ai_readability_detail || ({} as AiReadabilityDetail),
-digital_authority_detail: parsed.digital_authority_detail || ({} as DigitalAuthorityDetail),
-conversion_readiness_detail: parsed.conversion_readiness_detail || ({} as ConversionReadinessDetail),
-product_discoverability_detail: parsed.product_discoverability_detail || ({} as ProductDiscoverabilityDetail),
-rag_readiness_detail: parsed.rag_readiness_detail || ({} as RagReadinessDetail),
-recommendations: Array.isArray(parsed.recommendations) ?
-parsed.recommendations : [],
-keywords: Array.isArray(parsed.keywords) ?
-parsed.keywords : [],
-authorship: authorshipSignals,
-api_version: API_VERSION, // single source of truth — never hardcoded
-};
-}
+    };
+    return {
+      overallScore: clamp(parsed.overallScore || computedOverall),
+      pillarScores: parsed.pillarScores || {
+        aiReadability: 0, digitalAuthority: 0, conversionReadiness: 0,
+        productDiscoverability: 0, ragReadiness: 0 },
+      subScores,
+      phase2_sub_scores: parsed.phase2_sub_scores || ({} as Phase2SubScores),
+      ai_readability_detail: parsed.ai_readability_detail || ({} as AiReadabilityDetail),
+      digital_authority_detail: parsed.digital_authority_detail || ({} as DigitalAuthorityDetail),
+      conversion_readiness_detail: parsed.conversion_readiness_detail || ({} as ConversionReadinessDetail),
+      product_discoverability_detail: parsed.product_discoverability_detail || ({} as ProductDiscoverabilityDetail),
+      rag_readiness_detail: parsed.rag_readiness_detail || ({} as RagReadinessDetail),
+      recommendations: Array.isArray(parsed.recommendations) ? parsed.recommendations : [],
+      keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],
+      authorship: authorshipSignals,
+      api_version: API_VERSION, // single source of truth, never hardcoded
+    };
+  }
+
 // ─── Legacy action helpers (still called by api/analyze.ts) ──────────────────
-// These remain so the existing WP plugin quick-actions keep working.
+// Used by the analyze API's quick-action helpers (generate_description, summarize_content, rewrite_sentence).
 import { GoogleGenerativeAI as GGA } from '@google/generative-ai';
 async function callGeminiSimple(prompt: string, systemInstruction: string):
 Promise<string> {
 if (!API_KEY) throw new Error('GEMINI_API_KEY not set');
 const client = new GGA(API_KEY);
 const model = client.getGenerativeModel({ model: MODEL });
-const result = await model.generateContent({
+const result = await generateContentWithRetry(model, {
 systemInstruction,
 contents: [{ role: 'user', parts: [{ text: prompt }] }],
 generationConfig: { temperature: 0.5, maxOutputTokens: 512, responseMimeType:
@@ -443,7 +461,7 @@ Respond with valid JSON only (no markdown fences):
 }`;
 
   const model = getModel();
-  const result = await model.generateContent({
+  const result = await generateContentWithRetry(model, {
     contents: [{ role: 'user', parts: [{ text: prompt }] }],
     generationConfig: {
       temperature: 0.2,
