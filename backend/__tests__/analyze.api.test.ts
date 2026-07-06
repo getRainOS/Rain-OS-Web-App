@@ -7,10 +7,12 @@ import type { User } from '../types';
 const findUserByApiKey = vi.fn();
 const incrementUserUsage = vi.fn();
 const saveAnalysis = vi.fn();
+const incrementUsageAndSaveAnalysis = vi.fn().mockResolvedValue({ updatedUser: null, analysisId: 'mock-analysis-id' });
 vi.mock('../services/dbService', () => ({
   findUserByApiKey: (...args: unknown[]) => findUserByApiKey(...args),
   incrementUserUsage: (...args: unknown[]) => incrementUserUsage(...args),
   saveAnalysis: (...args: unknown[]) => saveAnalysis(...args),
+  incrementUsageAndSaveAnalysis: (...args: unknown[]) => incrementUsageAndSaveAnalysis(...args),
 }));
 
 // ─── Mock geminiService so analyzeContent is deterministic ───────────────────
@@ -172,10 +174,15 @@ describe('POST /api/analyze — input validation', () => {
 // ─── Happy Path ───────────────────────────────────────────────────────────────
 describe('POST /api/analyze — happy path', () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     findUserByApiKey.mockResolvedValue(baseUser);
     incrementUserUsage.mockResolvedValue({
       ...baseUser,
       usage: { count: 1, limit: 100 },
+    });
+    incrementUsageAndSaveAnalysis.mockResolvedValue({
+      updatedUser: { ...baseUser, usage: { count: 1, limit: 100 } },
+      analysisId: 'mock-analysis-id',
     });
   });
 
@@ -192,8 +199,9 @@ describe('POST /api/analyze — happy path', () => {
     expect(typeof contentArg).toBe('string');
     expect(industryArg).toBe('SaaS');
 
-    expect(incrementUserUsage).toHaveBeenCalledTimes(1);
-    expect(incrementUserUsage).toHaveBeenCalledWith('user-1');
+    expect(incrementUsageAndSaveAnalysis).toHaveBeenCalledTimes(1);
+    const [usageUserId] = incrementUsageAndSaveAnalysis.mock.calls[0];
+    expect(usageUserId).toBe('user-1');
 
     const usageHeader = res.headers['x-usage-info'];
     expect(usageHeader).toBeTruthy();
@@ -220,8 +228,8 @@ describe('POST /api/analyze — happy path', () => {
       .set('Authorization', 'Bearer k')
       .send({ content: 'This is a sufficiently long piece of content for analysis.', industry: 'Healthcare' });
 
-    expect(saveAnalysis).toHaveBeenCalledTimes(1);
-    const [userId, payload] = saveAnalysis.mock.calls[0];
+    expect(incrementUsageAndSaveAnalysis).toHaveBeenCalledTimes(1);
+    const [userId, payload] = incrementUsageAndSaveAnalysis.mock.calls[0];
     expect(userId).toBe('user-1');
     expect(payload.overall_score).toBe(78);
     expect(payload.ai_readability).toBe(80);
@@ -246,7 +254,7 @@ describe('POST /api/analyze — happy path', () => {
   });
 
   it('does not set X-Usage-Info when incrementUserUsage returns null', async () => {
-    incrementUserUsage.mockResolvedValueOnce(null);
+    incrementUsageAndSaveAnalysis.mockResolvedValueOnce({ updatedUser: null, analysisId: 'mock-analysis-id' });
 
     const res = await request(app)
       .post('/api/analyze')
@@ -277,10 +285,15 @@ describe('POST /api/analyze — happy path', () => {
 // ─── Unit tests for normalizeAnalyzeResultForWP helpers (via controller) ─────
 describe('handleAnalyze — response shape', () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     findUserByApiKey.mockResolvedValue(baseUser);
     incrementUserUsage.mockResolvedValue({
       ...baseUser,
       usage: { count: 1, limit: 100 },
+    });
+    incrementUsageAndSaveAnalysis.mockResolvedValue({
+      updatedUser: { ...baseUser, usage: { count: 1, limit: 100 } },
+      analysisId: 'mock-analysis-id',
     });
   });
 

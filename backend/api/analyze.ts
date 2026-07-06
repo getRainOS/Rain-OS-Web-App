@@ -16,79 +16,6 @@ const getApiKey = (req: express.Request): string | null => {
   return token || null;
 };
 
-/**
- * WordPress plugin expects:
- * {
- *   success: true,
- *   data: {
- *     overall_score, ai_readability, digital_authority, conversion_readiness,
- *     sub_scores: { semanticClarity, readabilityScore, ... },
- *     recommendations: [{ title, description, icon, color }]
- *   }
- * }
- *
- * We keep backward-compatibility by ALSO returning the original "result" at top-level,
- * so any existing consumers reading raw fields still work.
- */
-const SUBSCORE_KEY_MAP: Record<string, string> = {
-  'Semantic Clarity': 'semanticClarity',
-  'Readability': 'readabilityScore',
-  'Readability Score': 'readabilityScore',
-  'Logical Structure': 'logicalStructure',
-  'Entity Recognition': 'entityRecognition',
-  'Citation Readiness': 'citationReadiness',
-  'Schema Extraction': 'schemaExtraction',
-  'AEO Alignment': 'aeoAlignment',
-  'QA-format Detection': 'qaFormat',
-  'QA Format Detection': 'qaFormat',
-  'Descriptive Metadata': 'metadataAudit',
-  'Metadata Audit': 'metadataAudit',
-};
-
-const toWpRecommendationObjects = (recs: unknown): Array<{ title: string; description: string; icon: string; color: string }> => {
-  if (!Array.isArray(recs)) return [];
-  const first = recs[0] as any;
-  if (first && typeof first === 'object' && ('title' in first || 'description' in first)) {
-    return recs as any;
-  }
-  return (recs as any[]).map((r) => ({
-    title: 'Recommendation',
-    description: String(r),
-    icon: '💡',
-    color: '#22d3ee',
-  }));
-};
-
-const normalizeAnalyzeResultForWP = (result: any) => {
-  const overallScore = typeof result?.overallScore === 'number' ? result.overallScore : (result?.overall_score ?? 0);
-  const pillar = result?.pillarScores || result?.pillar_scores || {};
-  const subScoresArr: Array<{ category: string; score: number }> = Array.isArray(result?.subScores) ? result.subScores : [];
-
-  const sub_scores: Record<string, number> = {};
-  for (const s of subScoresArr) {
-    const key = SUBSCORE_KEY_MAP[s.category] || null;
-    if (key) sub_scores[key] = typeof s.score === 'number' ? s.score : 0;
-  }
-
-  const defaults = [
-    'semanticClarity', 'readabilityScore', 'logicalStructure', 'entityRecognition', 'citationReadiness',
-    'schemaExtraction', 'aeoAlignment', 'qaFormat', 'metadataAudit',
-  ];
-  for (const k of defaults) if (typeof sub_scores[k] !== 'number') sub_scores[k] = 0;
-
-  const wp = {
-    overall_score: overallScore,
-    ai_readability: typeof pillar?.aiReadability === 'number' ? pillar.aiReadability : (result?.ai_readability ?? 0),
-    digital_authority: typeof pillar?.digitalAuthority === 'number' ? pillar.digitalAuthority : (result?.digital_authority ?? 0),
-    conversion_readiness: typeof pillar?.conversionReadiness === 'number' ? pillar.conversionReadiness : (result?.conversion_readiness ?? 0),
-    rag_readiness: typeof pillar?.ragReadiness === 'number' ? pillar.ragReadiness : (result?.rag_readiness ?? 0),
-    sub_scores,
-    recommendations: toWpRecommendationObjects(result?.recommendations),
-    authorship: result?.authorship || result?.authorship_data || undefined,
-  };
-  return wp;
-};
-
 export default async function handler(req: express.Request, res: express.Response) {
   const apiKey = getApiKey(req);
   if (!apiKey) {
@@ -116,7 +43,7 @@ export default async function handler(req: express.Request, res: express.Respons
 
     switch (action) {
       case 'full_analysis':
-        // WP plugin does NOT send "industry". Default it without breaking other clients.
+        // industry is optional; default it
         if (!content) {
           return res.status(400).json({ error: 'bad_request', message: 'content required' } as ApiError);
         }
@@ -127,8 +54,7 @@ export default async function handler(req: express.Request, res: express.Respons
         if (!content) {
           return res.status(400).json({ error: 'bad_request', message: 'content required' } as ApiError);
         }
-        // WP plugin expects: { titles: [{ text, score }] }
-        {
+                {
           const out = await generateTitles(content);
           const titles = Array.isArray((out as any)?.titles) ? (out as any).titles : [];
           result = {
@@ -141,8 +67,7 @@ export default async function handler(req: express.Request, res: express.Respons
         break;
 
       case 'generate_description': // existing clients
-      case 'generate_meta': // WP plugin quick-action alias
-        if (!content) {
+            if (!content) {
           return res.status(400).json({ error: 'bad_request', message: 'content required' } as ApiError);
         }
         {
@@ -152,8 +77,7 @@ export default async function handler(req: express.Request, res: express.Respons
         break;
 
       case 'summarize_content': // existing clients
-      case 'summarize': // WP plugin quick-action alias
-        if (!content) {
+            if (!content) {
           return res.status(400).json({ error: 'bad_request', message: 'content required' } as ApiError);
         }
         {
@@ -163,10 +87,8 @@ export default async function handler(req: express.Request, res: express.Respons
         break;
 
       case 'rewrite_sentence': // existing clients
-      case 'rewrite': // WP plugin quick-action alias
-        if (!sentence) {
-          // WP plugin may send "content" for rewrite selection fallback.
-          const fallback = typeof content === 'string' ? content : '';
+            if (!sentence) {
+              const fallback = typeof content === 'string' ? content : '';
           if (!fallback) {
             return res.status(400).json({ error: 'bad_request', message: 'sentence required' } as ApiError);
           }
@@ -189,11 +111,6 @@ export default async function handler(req: express.Request, res: express.Respons
       res.setHeader('X-Usage-Info', JSON.stringify(updatedUser.usage));
     }
 
-    // WordPress expects { success, data }. We provide BOTH wrapped + raw fields (backward compatible).
-    if (action === 'full_analysis') {
-      const wp = normalizeAnalyzeResultForWP(result);
-      return res.status(200).json({ success: true, data: wp, ...wp, raw: result });
-    }
     return res.status(200).json({ success: true, data: result, ...result });
 
   } catch (error) {

@@ -110,10 +110,6 @@ export interface AiReadabilityDetail {
   hasPublishDate: boolean;
   hasOrganization: boolean;
   authorityScore: number;
-  // Legacy fields preserved for backward compatibility with WP plugin
-  hash?: string;
-  timestamp?: string;
-  status?: string;
   }
   // ─── Main analysis response (v2.3) ────────────────────────────────────────────
   export interface AnalysisResponse {

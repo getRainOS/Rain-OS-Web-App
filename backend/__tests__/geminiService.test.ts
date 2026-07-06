@@ -349,9 +349,6 @@ describe('analyzeContent', () => {
     expect(typeof result.authorship.hasPublishDate).toBe('boolean');
     expect(typeof result.authorship.hasOrganization).toBe('boolean');
     expect(typeof result.authorship.authorityScore).toBe('number');
-    expect(result.authorship.hash).toBeTruthy();
-    expect(result.authorship.timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T/);
-    expect(result.authorship.status).toBe('Analyzed');
   });
 
   it('includes recommendations and keywords as arrays', async () => {
