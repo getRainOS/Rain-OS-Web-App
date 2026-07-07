@@ -360,7 +360,7 @@ export interface AnalysisData {
     result_json?: any;
 }
 
-export const incrementUsageAndSaveAnalysis = async (
+const incrementUsageAndSaveAnalysisAttempt = async (
     userId: string,
     analysisData: AnalysisData
 ): Promise<{ updatedUser: User | null; analysisId: number | null }> => {
@@ -411,6 +411,28 @@ export const incrementUsageAndSaveAnalysis = async (
     } finally {
         client.release();
     }
+};
+
+export const incrementUsageAndSaveAnalysis = async (
+    userId: string,
+    analysisData: AnalysisData
+): Promise<{ updatedUser: User | null; analysisId: number | null }> => {
+    const MAX_RETRIES = 2;
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+        try {
+            return await incrementUsageAndSaveAnalysisAttempt(userId, analysisData);
+        } catch (err: any) {
+            const isTransient =
+                ['ECONNRESET', 'ETIMEDOUT', '57P01', '08006', '08003'].includes(err?.code) ||
+                /connection|timeout/i.test(err?.message ?? '');
+            if (attempt < MAX_RETRIES && isTransient) {
+                await new Promise((r) => setTimeout(r, 300 * 2 ** attempt));
+                continue;
+            }
+            throw err;
+        }
+    }
+    throw new Error('incrementUsageAndSaveAnalysis failed after retries');
 };
 
 // --------------------------
