@@ -1,4 +1,4 @@
-import helmet from "helmet";
+import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 // api/index.ts
 import express from 'express';
@@ -64,6 +64,7 @@ await setupDatabase();
 const app = express();
 const port = process.env.PORT || 3001;
 app.set('trust proxy', 1);
+app.use(helmet());
 // Stripe webhook needs raw body — register before the JSON parser
 app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }),
 stripeWebhookHandler);
