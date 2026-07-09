@@ -3,7 +3,7 @@
 // All routes require a valid Rain OS API key (Authorization: Bearer).
 
 import express from 'express';
-import { findUserByApiKey, getUserGithubToken, disconnectGithub } from '../../services/dbService';
+import { findUserByApiKey, getUserGithubToken, disconnectGithub, incrementUserUsage } from '../../services/dbService';
 import { analyzeRepo } from '../../services/repoAnalysisService';
 import type { ApiError } from '../../types';
 
@@ -131,8 +131,18 @@ export async function analyzeRepoHandler(req: express.Request, res: express.Resp
     return res.status(400).json({ error: 'not_connected', message: 'GitHub token not found. Reconnect GitHub in Settings.' });
   }
 
+  // Free tier gets 5 scans total (usage.limit defaults to 5 at signup — see
+  // createUser in dbService.ts); Pro/Business get their higher plan limits.
+  if (user.usage.count >= user.usage.limit) {
+    return res.status(429).json({
+      error: 'rate_limit_exceeded',
+      message: 'You have used all of your free repo scans. Upgrade to keep scanning.',
+    } as ApiError);
+  }
+
   try {
     const result = await analyzeRepo(owner, repo, token);
+    await incrementUserUsage(user.id);
     return res.status(200).json(result);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Analysis failed';

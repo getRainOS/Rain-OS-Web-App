@@ -80,6 +80,9 @@ export interface RepoAnalysisResult {
   };
   overallScore: number;
   recommendations: RepoRecommendation[];
+  /** Ready-to-paste instructions for AI coding assistants (Bolt, Lovable, Cursor, v0, etc.)
+   *  that don't have direct repo/git access — lets the vibe-coding platform apply the fixes itself. */
+  vibeCodePrompt: string;
 }
 
 // ─── Types for third-party payloads ───────────────────────────────────────
@@ -416,6 +419,41 @@ function buildRecommendations(signals: RepoSignals, owner: string, repo: string)
   return recs;
 }
 
+// ─── Vibe-coding prompt builder ────────────────────────────────────────────
+// Turns the recommendations list into one copy-pasteable prompt a user can
+// drop directly into an AI coding assistant's chat (Bolt, Lovable, Cursor, v0,
+// Replit Agent, Windsurf, etc.) so the platform can apply the fixes itself —
+// this matters most for repos that don't have a git-pushable target, and
+// as a lower-friction alternative to the GitHub push-fixes PR flow.
+
+function buildVibeCodePrompt(recs: RepoRecommendation[], owner: string, repo: string): string {
+  if (recs.length === 0) {
+    return `Nice — ${owner}/${repo} already passes Rain OS's AI-readability checks. No fixes needed right now.`;
+  }
+
+  const lines: string[] = [
+    `I'm improving AI discoverability (AEO) for this project so AI assistants like ChatGPT, Perplexity, and Gemini can find, read, and recommend it. Please make the following changes:`,
+    ``,
+  ];
+
+  recs.forEach((rec, i) => {
+    lines.push(`${i + 1}. **${rec.issue}** (${rec.severity} priority)`);
+    lines.push(`   ${rec.recommendation}`);
+    if (rec.artifact) {
+      const fname = rec.artifact.filename || rec.artifact.type;
+      lines.push(`   Create or update \`${fname}\`:`);
+      lines.push('   ```');
+      lines.push('   ' + rec.artifact.content.split('\n').join('\n   '));
+      lines.push('   ```');
+    }
+    lines.push('');
+  });
+
+  lines.push(`After making these changes, this project should score higher on AI Readability, Digital Authority, and Product Discoverability in Rain OS.`);
+
+  return lines.join('\n');
+}
+
 // ─── Main export ───────────────────────────────────────────────────────────
 
 export async function analyzeRepo(owner: string, repo: string, token: string): Promise<RepoAnalysisResult> {
@@ -566,6 +604,7 @@ export async function analyzeRepo(owner: string, repo: string, token: string): P
   );
 
   const recommendations = buildRecommendations(signals, owner, repo);
+  const vibeCodePrompt = buildVibeCodePrompt(recommendations, owner, repo);
 
   return {
     repoUrl: `https://github.com/${owner}/${repo}`,
@@ -578,5 +617,6 @@ export async function analyzeRepo(owner: string, repo: string, token: string): P
     pillarScores,
     overallScore,
     recommendations,
+    vibeCodePrompt,
   };
 }
