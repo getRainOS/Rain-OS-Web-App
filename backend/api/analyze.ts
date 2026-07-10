@@ -1,5 +1,5 @@
 import express from 'express';
-import { findUserByApiKey, incrementUserUsage } from '../services/dbService';
+import { findUserByApiKey, incrementUserUsage, incrementUsageAndSaveAnalysis } from '../services/dbService';
 import {
   analyzeContent,
   generateDescription,
@@ -106,7 +106,21 @@ export default async function handler(req: express.Request, res: express.Respons
         return res.status(400).json({ error: 'bad_request', message: `Invalid action: ${action}` } as ApiError);
     }
 
-    const updatedUser = await incrementUserUsage(user.id);
+    let updatedUser;
+    if (action === 'full_analysis' && result) {
+      const saveResult = await incrementUsageAndSaveAnalysis(user.id, {
+        overall_score: result.overallScore ?? null,
+        ai_readability: result.pillarScores?.aiReadability ?? null,
+        digital_authority: result.pillarScores?.digitalAuthority ?? null,
+        conversion_readiness: result.pillarScores?.conversionReadiness ?? null,
+        product_discoverability: result.pillarScores?.productDiscoverability ?? null,
+        rag_readiness: result.pillarScores?.ragReadiness ?? null,
+        result_json: result,
+      });
+      updatedUser = saveResult.updatedUser;
+    } else {
+      updatedUser = await incrementUserUsage(user.id);
+    }
     if (updatedUser) {
       res.setHeader('X-Usage-Info', JSON.stringify(updatedUser.usage));
     }
