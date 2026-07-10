@@ -3,12 +3,11 @@ content = open(path).read()
 
 old = """generationConfig: {
 temperature: 0.1, // low temp for consistent scoring
-// 8192 — first bumped 2048→4096 was still truncating on long, footnote-
-// heavy articles (large recommendations/keywords arrays on top of the
-// 46+ numeric fields). gemini-2.5-flash supports up to 65,536 output
-// tokens and the cap only limits length, not cost, so there's real
-// headroom to raise this further if truncation ever recurs.
-maxOutputTokens: 8192,
+// 4096 (not 2048) — this schema has 46+ numeric fields plus free-text
+// recommendations/keywords arrays, and was getting silently truncated
+// mid-JSON on longer content, which surfaced as a generic parse error
+// with no indication that MAX_TOKENS was the actual cause.
+maxOutputTokens: 4096,
 responseMimeType: 'application/json',
 },
 });
@@ -25,8 +24,9 @@ temperature: 0.1, // low temp for consistent scoring
 // maxOutputTokens cap as the visible JSON response. thinkingBudget: 0
 // disables thinking entirely for this call — it's a pure structured
 // scoring task with no need for chain-of-thought, so this also cuts
-// latency. Kept maxOutputTokens at 8192 as a belt-and-suspenders
-// safety margin for the schema itself.
+// latency. Kept maxOutputTokens generous as a belt-and-suspenders
+// safety margin for the schema itself (46+ numeric fields plus
+// free-text recommendations/keywords arrays).
 thinkingConfig: { thinkingBudget: 0 },
 maxOutputTokens: 8192,
 responseMimeType: 'application/json',
