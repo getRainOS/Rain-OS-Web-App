@@ -68,9 +68,13 @@ CREATE TABLE IF NOT EXISTS content_analyses (
 );
 -- Additive migration for existing deployments (idempotent)
 ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS rag_readiness NUMERIC;
+ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS lane TEXT;
 
 CREATE INDEX IF NOT EXISTS idx_content_analyses_user_analyzed_at
   ON content_analyses(user_id, analyzed_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_content_analyses_user_lane
+  ON content_analyses(user_id, lane);
 
 -- Share of Voice history (additive)
 CREATE TABLE IF NOT EXISTS sov_checks (

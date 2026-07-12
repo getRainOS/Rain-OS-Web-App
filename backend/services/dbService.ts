@@ -350,6 +350,7 @@ export interface AnalysisData {
     product_discoverability?: number | null;
     rag_readiness?: number | null;
     result_json?: any;
+    lane?: string | null;
 }
 
 const incrementUsageAndSaveAnalysisAttempt = async (
@@ -374,8 +375,8 @@ const incrementUsageAndSaveAnalysisAttempt = async (
         const analysisRes = await client.query(
             `INSERT INTO content_analyses
                (user_id, title, url, overall_score, ai_readability, digital_authority,
-                conversion_readiness, product_discoverability, rag_readiness, summary, result_json)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+                conversion_readiness, product_discoverability, rag_readiness, summary, result_json, lane)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
              RETURNING id`,
             [
                 userId,
@@ -389,6 +390,7 @@ const incrementUsageAndSaveAnalysisAttempt = async (
                 analysisData.rag_readiness ?? null,
                 null, // summary
                 analysisData.result_json ? JSON.stringify(analysisData.result_json) : null,
+                analysisData.lane ?? null,
             ]
         );
         const analysisId = analysisRes.rows[0]?.id ?? null;
@@ -699,6 +701,7 @@ export interface AnalysisRecord {
   rag_readiness: number | null;
   summary: string | null;
   analyzed_at: string;
+  lane: string | null;
 }
 
 const mapAnalysisRow = (row: any): AnalysisRecord => ({
@@ -713,6 +716,7 @@ const mapAnalysisRow = (row: any): AnalysisRecord => ({
   rag_readiness: row.rag_readiness !== null ? Number(row.rag_readiness) : null,
   summary: row.summary ?? null,
   analyzed_at: row.analyzed_at instanceof Date ? row.analyzed_at.toISOString() : row.analyzed_at,
+  lane: row.lane ?? null,
 });
 
 export const saveAnalysis = async (
@@ -755,16 +759,19 @@ export const saveAnalysis = async (
 
 export const getAnalysesByUser = async (
   userId: string,
-  limit = 50
+  limit = 50,
+  lane?: string | null
 ): Promise<AnalysisRecord[]> => {
+  const laneFilter = lane ? 'AND lane = $3' : '';
+  const params = lane ? [userId, limit, lane] : [userId, limit];
   const res = await pool.query(
     `SELECT id, title, url, overall_score, ai_readability, digital_authority,
-            conversion_readiness, product_discoverability, rag_readiness, summary, analyzed_at
+            conversion_readiness, product_discoverability, rag_readiness, summary, analyzed_at, lane
      FROM content_analyses
-     WHERE user_id = $1
+     WHERE user_id = $1 ${laneFilter}
      ORDER BY analyzed_at DESC
      LIMIT $2`,
-    [userId, limit]
+    params
   );
   return res.rows.map(mapAnalysisRow);
 };

@@ -36,7 +36,7 @@ export default async function handler(req: express.Request, res: express.Respons
       return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Monthly analysis limit exceeded' } as ApiError);
     }
 
-    const { action = 'full_analysis', content, industry, sentence, title, module } = req.body as any;
+    const { action = 'full_analysis', content, industry, sentence, title, module, lane } = req.body as any;
     const analysisModule: 'general' | 'product_sellers' | 'developers' | 'local_business' =
       module === 'product_sellers' || module === 'developers' || module === 'local_business' ? module : 'general';
     let result: any;
@@ -116,6 +116,7 @@ export default async function handler(req: express.Request, res: express.Respons
         product_discoverability: result.pillarScores?.productDiscoverability ?? null,
         rag_readiness: result.pillarScores?.ragReadiness ?? null,
         result_json: result,
+        lane: typeof lane === 'string' ? lane : null,
       });
       updatedUser = saveResult.updatedUser;
     } else {

@@ -25,9 +25,10 @@ export async function listHandler(req: express.Request, res: express.Response) {
 
   const limitRaw = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : NaN;
   const limit = Number.isFinite(limitRaw) ? Math.max(1, Math.min(100, limitRaw)) : undefined;
+  const lane = typeof req.query.lane === 'string' ? req.query.lane : undefined;
 
   try {
-    const items = await getAnalysesByUser(user.id, limit ?? 50);
+    const items = await getAnalysesByUser(user.id, limit ?? 50, lane);
     return res.status(200).json({ success: true, data: items, items });
   } catch (error) {
     console.error('History list error:', error);
