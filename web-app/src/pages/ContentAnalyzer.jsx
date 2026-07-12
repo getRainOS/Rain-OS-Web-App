@@ -63,7 +63,7 @@ export default function ContentAnalyzer() {
     setResult(null);
     setRewriteResult(null);
     try {
-      const { data } = await api.analyze({ title, content, url, module: analysisModule });
+      const { data } = await api.analyze({ title, content, url, module: analysisModule, lane: userLane });
       setResult(data);
       refreshUser();
     } catch (err) {

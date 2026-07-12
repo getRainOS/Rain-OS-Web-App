@@ -311,11 +311,11 @@ export default function Dashboard() {
   }, [urlWantsLaneSelect]);
 
   useEffect(() => {
-    api.history({ limit: 50 })
+    api.history({ limit: 50, lane: userLane })
       .then(({ data }) => setHistory(Array.isArray(data) ? data : data?.items ?? []))
       .catch(() => setHistory([]))
       .finally(() => setLoading(false));
-  }, []);
+  }, [userLane]);
 
   useEffect(() => {
     let cancelled = false;
