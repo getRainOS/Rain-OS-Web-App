@@ -702,6 +702,7 @@ export interface AnalysisRecord {
   summary: string | null;
   analyzed_at: string;
   lane: string | null;
+  recommendations: string[];
 }
 
 const mapAnalysisRow = (row: any): AnalysisRecord => ({
@@ -717,6 +718,14 @@ const mapAnalysisRow = (row: any): AnalysisRecord => ({
   summary: row.summary ?? null,
   analyzed_at: row.analyzed_at instanceof Date ? row.analyzed_at.toISOString() : row.analyzed_at,
   lane: row.lane ?? null,
+  recommendations: (() => {
+    try {
+      const parsed = typeof row.result_json === 'string' ? JSON.parse(row.result_json) : row.result_json;
+      return Array.isArray(parsed?.recommendations) ? parsed.recommendations : [];
+    } catch {
+      return [];
+    }
+  })(),
 });
 
 export const saveAnalysis = async (
@@ -766,7 +775,7 @@ export const getAnalysesByUser = async (
   const params = lane ? [userId, limit, lane] : [userId, limit];
   const res = await pool.query(
     `SELECT id, title, url, overall_score, ai_readability, digital_authority,
-            conversion_readiness, product_discoverability, rag_readiness, summary, analyzed_at, lane
+            conversion_readiness, product_discoverability, rag_readiness, summary, analyzed_at, lane, result_json
      FROM content_analyses
      WHERE user_id = $1 ${laneFilter}
      ORDER BY analyzed_at DESC
