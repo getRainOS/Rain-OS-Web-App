@@ -244,7 +244,8 @@ moduleWeightInstructions,
 content.slice(0, 12000), // cap at ~12k chars to manage token cost
 '=== END CONTENT ===',
 '',
-'Return your scores as a single JSON object matching this exact shape (all fields required):',
+'IMPORTANT: The "recommendations" array must contain 3-5 specific, actionable fixes tied to the lowest-scoring subcategories above (e.g. "Add a bulleted FAQ answering the top 3 buyer questions" rather than generic advice like "improve clarity"). Never return an empty array — every piece of content has room for at least one concrete improvement.',
+  'Return your scores as a single JSON object matching this exact shape (all fields required):',
 JSON.stringify(RESPONSE_SCHEMA, null, 2),
 ].join('\n');
 const model = getModel();
