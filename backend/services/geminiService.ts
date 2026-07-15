@@ -179,6 +179,7 @@ subScores: [],
 
 
 recommendations: [],
+  summary: '',
 keywords: [],
 authorship: { hasAuthorByline: false, hasPublishDate: false, hasOrganization:
 false, authorityScore: 0 },
@@ -245,6 +246,7 @@ content.slice(0, 12000), // cap at ~12k chars to manage token cost
 '=== END CONTENT ===',
 '',
 'IMPORTANT: The "recommendations" array must contain 3-5 specific, actionable fixes tied to the lowest-scoring subcategories above (e.g. "Add a bulleted FAQ answering the top 3 buyer questions" rather than generic advice like "improve clarity"). Never return an empty array — every piece of content has room for at least one concrete improvement.',
+  'IMPORTANT: The "summary" field must be a concise 1-2 sentence overview of what this content is about and its overall AEO readiness, written in plain language for a non-technical reader.',
   'Return your scores as a single JSON object matching this exact shape (all fields required):',
 JSON.stringify(RESPONSE_SCHEMA, null, 2),
 ].join('\n');
@@ -383,6 +385,7 @@ authorityScore: clamp(authorshipRaw.authorityScore || 0),
       product_discoverability_detail: parsed.product_discoverability_detail || ({} as ProductDiscoverabilityDetail),
       rag_readiness_detail: parsed.rag_readiness_detail || ({} as RagReadinessDetail),
       recommendations: Array.isArray(parsed.recommendations) ? parsed.recommendations : [],
+      summary: typeof parsed.summary === 'string' ? parsed.summary : '',
       keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],
       authorship: authorshipSignals,
       api_version: API_VERSION, // single source of truth, never hardcoded

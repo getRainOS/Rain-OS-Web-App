@@ -123,6 +123,7 @@ export interface AiReadabilityDetail {
   product_discoverability_detail: ProductDiscoverabilityDetail;
   rag_readiness_detail: RagReadinessDetail;
 recommendations: string[];
+  summary: string;
 keywords: string[];
 authorship: AuthorshipSignals;
 api_version: string;

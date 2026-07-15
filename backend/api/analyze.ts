@@ -115,6 +115,7 @@ export default async function handler(req: express.Request, res: express.Respons
         conversion_readiness: result.pillarScores?.conversionReadiness ?? null,
         product_discoverability: result.pillarScores?.productDiscoverability ?? null,
         rag_readiness: result.pillarScores?.ragReadiness ?? null,
+        summary: result.summary ?? null,
         result_json: result,
         lane: typeof lane === 'string' ? lane : null,
       });

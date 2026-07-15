@@ -351,6 +351,7 @@ export interface AnalysisData {
     rag_readiness?: number | null;
     result_json?: any;
     lane?: string | null;
+  summary?: string | null;
 }
 
 const incrementUsageAndSaveAnalysisAttempt = async (
