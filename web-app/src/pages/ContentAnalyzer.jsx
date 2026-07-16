@@ -124,7 +124,7 @@ export default function ContentAnalyzer() {
         </div>
       )}
 
-      {!result ? (
+      {
         <form onSubmit={handleAnalyze} className={styles.form}>
           <div className={styles.formRow}>
             <div className={styles.field}>
@@ -179,7 +179,7 @@ export default function ContentAnalyzer() {
               className="btn btn-primary"
               disabled={loading || isAtLimit || (!content.trim() && !url.trim())}
             >
-              {loading ? <><span className="spinner" /> Analyzing…</> : '✦ Analyze Content'}
+              {loading ? <><span className="spinner" /> {result ? 'Re-analyzing…' : 'Analyzing…'}</> : (result ? '↻ Re-analyze' : '✦ Analyze Content')}
             </button>
             <button
               type="button"
@@ -201,7 +201,8 @@ export default function ContentAnalyzer() {
             />
           )}
         </form>
-      ) : (
+      }
+      {result && (
         <div className={styles.results}>
           <div className={styles.resultsHeader}>
             <div>
