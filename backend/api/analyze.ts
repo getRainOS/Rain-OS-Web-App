@@ -107,6 +107,7 @@ export default async function handler(req: express.Request, res: express.Respons
     }
 
     let updatedUser;
+  let analysisId: number | null = null;
     if (action === 'full_analysis' && result) {
       const saveResult = await incrementUsageAndSaveAnalysis(user.id, {
         overall_score: result.overallScore ?? null,
@@ -120,6 +121,7 @@ export default async function handler(req: express.Request, res: express.Respons
         lane: typeof lane === 'string' ? lane : null,
       });
       updatedUser = saveResult.updatedUser;
+      analysisId = saveResult.analysisId;
     } else {
       updatedUser = await incrementUserUsage(user.id);
     }
@@ -127,7 +129,7 @@ export default async function handler(req: express.Request, res: express.Respons
       res.setHeader('X-Usage-Info', JSON.stringify(updatedUser.usage));
     }
 
-    return res.status(200).json({ success: true, data: result, ...result });
+    return res.status(200).json({ success: true, data: result, ...result, analysisId });
 
   } catch (error) {
     console.error(`Analyze Error [${(req.body as any)?.action}]:`, error);
