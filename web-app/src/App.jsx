@@ -230,6 +230,7 @@ function AppRoutes({ apiKey, onAuth }) {
         <Route path="/auth/callback" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/analyze" element={<ContentAnalyzer />} />
+          <Route path="/analyze/:id" element={<ContentAnalyzer />} />
         <Route path="/url-scanner" element={<UrlScanner />} />
         <Route path="/repo-analysis" element={<RepoAnalysis />} />
         <Route path="/citation-monitor" element={<CitationMonitor />} />

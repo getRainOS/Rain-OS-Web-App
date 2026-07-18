@@ -65,6 +65,10 @@ export const api = {
     const qs = params ? '?' + new URLSearchParams(params).toString() : '';
     return request('GET', `/api/history${qs}`);
   },
+  getAnalysisById: (id) => {
+    if (isDemo()) return demoDelay(DEMO_ANALYSIS);
+    return request('GET', `/api/history/${id}`);
+  },
   scanUrl: (url, opts = {}) => isDemo() ? demoDelay(DEMO_SCAN) : request('POST', '/api/url-scan', { url, ...opts }),
   citationCheck: ({ topic, url }) => isDemo()
     ? demoDelay({

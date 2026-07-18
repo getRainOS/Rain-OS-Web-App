@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
@@ -11,6 +11,7 @@ import styles from './ContentAnalyzer.module.css';
 export default function ContentAnalyzer() {
   const { refreshUser, user, isDemo, userLane } = useApp();
   const navigate = useNavigate();
+  const { id } = useParams();
   const location = useLocation();
   const prefill = location.state || {};
   const [title, setTitle] = useState('');
@@ -19,6 +20,24 @@ export default function ContentAnalyzer() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
+
+  useEffect(() => {
+    if (!id) return;
+    let cancelled = false;
+    setLoading(true);
+    setError('');
+    api.getAnalysisById(id)
+      .then(({ data }) => {
+        if (!cancelled) setResult(data);
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err.message || 'Could not load that analysis.');
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [id]);
   const [textareaFocused, setTextareaFocused] = useState(false);
 
   const [rewriteLoading, setRewriteLoading] = useState(false);
@@ -66,6 +85,9 @@ export default function ContentAnalyzer() {
       const { data } = await api.analyze({ title, content, url, module: analysisModule, lane: userLane });
       setResult(data);
       refreshUser();
+      if (data?.analysisId) {
+        navigate(`/analyze/${data.analysisId}`, { replace: true });
+      }
     } catch (err) {
       setError(err.message || 'Analysis failed. Please try again.');
     } finally {
