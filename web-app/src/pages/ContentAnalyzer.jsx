@@ -28,7 +28,7 @@ export default function ContentAnalyzer() {
     setError('');
     api.getAnalysisById(id)
       .then(({ data }) => {
-        if (!cancelled) setResult(data);
+        if (!cancelled) setResult(data?.data ?? null);
       })
       .catch((err) => {
         if (!cancelled) setError(err.message || 'Could not load that analysis.');
