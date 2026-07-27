@@ -79,7 +79,7 @@ if (!analysisId) {
   console.warn(`Analysis saved but ID not returned for user ${user.id}`);
 }
 
-return res.status(200).json({ success: true, data: result, ...result });
+return res.status(200).json({ success: true, data: result, ...result, analysisId });
 } catch (error) {
 console.error('Analysis error:', error);
 const msg = error instanceof Error ? error.message : 'Analysis failed';
