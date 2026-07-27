@@ -1,8 +1,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(2, 4, 16, 0.85);
-  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.75);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11,13 +10,13 @@
 }
 
 .modal {
-  background: #040714;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 16px;
   padding: 2.5rem;
   width: 100%;
   max-width: 420px;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(14, 165, 233, 0.05);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
   animation: modalIn 0.2s ease;
 }
 
@@ -35,7 +34,7 @@
 }
 
 .logoRain { color: #ffffff; }
-.logoOS { color: #0ea5e9; }
+.logoOS { color: #3b82f6; }
 
 .title {
   font-size: 1.4rem;
@@ -130,8 +129,8 @@
 }
 
 .input:focus {
-  border-color: #0ea5e9;
-  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246, 0.12);
 }
 
 .input::placeholder { color: #475569; }
@@ -159,7 +158,7 @@
 .submitBtn {
   width: 100%;
   padding: 0.75rem 1rem;
-  background: #0ea5e9;
+  background: #3b82f6;
   border: none;
   border-radius: 10px;
   color: #fff;
@@ -176,8 +175,7 @@
 }
 
 .submitBtn:hover:not(:disabled) {
-  background: #0284c7;
-  box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+  background: #2563eb;
 }
 
 .submitBtn:disabled {
@@ -201,7 +199,7 @@
 .switchLink {
   background: none;
   border: none;
-  color: #0ea5e9;
+  color: #3b82f6;
   font-size: 0.8125rem;
   cursor: pointer;
   font-family: inherit;
@@ -262,8 +260,8 @@
 .demoBtn {
   width: 100%;
   padding: 0.7rem 1rem;
-  background: rgba(14, 165, 233, 0.06);
-  border: 1px solid rgba(14, 165, 233, 0.2);
+  background: rgba(59,130,246, 0.06);
+  border: 1px solid rgba(59,130,246, 0.2);
   border-radius: 10px;
   color: #7dd3fc;
   font-size: 0.875rem;
@@ -274,8 +272,8 @@
 }
 
 .demoBtn:hover:not(:disabled) {
-  background: rgba(14, 165, 233, 0.1);
-  border-color: rgba(14, 165, 233, 0.35);
+  background: rgba(59,130,246, 0.1);
+  border-color: rgba(59,130,246, 0.35);
   color: #bae6fd;
 }
 

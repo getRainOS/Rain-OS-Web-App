@@ -144,8 +144,8 @@
 .aiSearchBanner {
   padding: 10px 12px;
   border-radius: var(--radius-sm);
-  background: rgba(6, 182, 212, 0.06);
-  border: 1px solid rgba(6, 182, 212, 0.18);
+  background: rgba(59,130,246,0.06);
+  border: 1px solid rgba(59,130,246,0.15);
   margin-bottom: 14px;
 }
 
@@ -155,9 +155,9 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #06b6d4;
+  color: var(--accent);
   margin-bottom: 5px;
-  background: rgba(6, 182, 212, 0.12);
+  background: rgba(59,130,246,0.10);
   padding: 2px 7px;
   border-radius: 3px;
 }

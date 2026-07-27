@@ -37,14 +37,14 @@
 }
 
 .toolBtn:hover:not(:disabled) {
-  background: rgba(14,165,233,0.1);
-  border-color: rgba(14,165,233,0.3);
+  background: rgba(59,130,246,0.1);
+  border-color: rgba(59,130,246,0.3);
   color: var(--accent);
 }
 
 .toolBtnActive {
-  background: rgba(14,165,233,0.12) !important;
-  border-color: rgba(14,165,233,0.35) !important;
+  background: rgba(59,130,246,0.12) !important;
+  border-color: rgba(59,130,246,0.35) !important;
   color: var(--accent) !important;
 }
 
@@ -110,7 +110,7 @@
 
 .result {
   background: var(--surface-3);
-  border: 1px solid rgba(14,165,233,0.15);
+  border: 1px solid rgba(59,130,246,0.15);
   border-radius: var(--radius-sm);
   padding: 14px;
 }
