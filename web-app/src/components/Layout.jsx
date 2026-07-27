@@ -17,11 +17,11 @@ const PRICE_TO_PLAN = {
 };
 
 const LANE_META = {
-  general:         { label: 'Writers & Marketers',    color: '#06b6d4' },
-  product_sellers: { label: 'Product Sellers',        color: '#f97316' },
-  developers:      { label: 'Developers',             color: '#10b981' },
-  local_business:  { label: 'Local Service Business', color: '#f43f5e' },
-  vibe_coders:     { label: 'Vibe Coders',            color: '#22c55e' },
+  general:         { label: 'Writers & Marketers',    color: '#3b82f6' },
+  product_sellers: { label: 'Product Sellers',        color: '#3b82f6' },
+  developers:      { label: 'Developers',             color: '#818cf8' },
+  local_business:  { label: 'Local Service Business', color: '#3b82f6' },
+  vibe_coders:     { label: 'Vibe Coders',            color: '#818cf8' },
 };
 
 const TOOLS = {
@@ -124,8 +124,10 @@ export default function Layout({ children }) {
       <div className={`${styles.overlay} ${menuOpen ? styles.show : ''}`} onClick={() => setMenuOpen(false)} />
       <aside className={`${styles.sidebar} ${menuOpen ? styles.open : ''}`}>
         <div className={styles.brand}>
-          <span className={styles.brandRain}>rain</span>
-          <span className={styles.brandOS}> OS</span>
+          <span className={styles.brandWordmark}>
+            r<span className={styles.brandAi}>ai</span>n
+            <span className={styles.brandOs}>OS</span>
+          </span>
           {isDemo && <span className={styles.demoBadge}>DEMO</span>}
         </div>
 

@@ -69,11 +69,11 @@ const QUICK_ACTIONS_ALL = {
 };
 
 const LANES = [
-  { id: 'general',         label: 'Writers & Marketers',    desc: 'Optimize articles, landing pages, and marketing copy for AI citation.', color: '#38bdf8', Icon: FileText },
-  { id: 'product_sellers', label: 'Product Sellers',        desc: 'Maximize AI product discovery with Discoverability scoring at 50% weight.', color: '#fb923c', Icon: SearchCheck },
-  { id: 'vibe_coders',     label: 'Vibe Coders',            desc: 'Ship fast with AI-built projects? Audit your content, repo, and discoverability before you launch.', color: '#4ade80', Icon: GitBranch },
-  { id: 'developers',      label: 'Developers',             desc: 'Analyze tech docs, READMEs, and API references for AI readability signals.', color: '#10b981', Icon: GitBranch },
-  { id: 'local_business',  label: 'Local Service Business', desc: 'Get your professional services business cited by AI when customers search locally.', color: '#f43f5e', Icon: MapIcon },
+  { id: 'general',         label: 'Writers & Marketers',    desc: 'Optimize articles, landing pages, and marketing copy for AI citation.', color: '#3b82f6', Icon: FileText },
+  { id: 'product_sellers', label: 'Product Sellers',        desc: 'Maximize AI product discovery with Discoverability scoring at 50% weight.', color: '#3b82f6', Icon: SearchCheck },
+  { id: 'vibe_coders',     label: 'Vibe Coders',            desc: 'Ship fast with AI-built projects? Audit your content, repo, and discoverability before you launch.', color: '#818cf8', Icon: GitBranch },
+  { id: 'developers',      label: 'Developers',             desc: 'Analyze tech docs, READMEs, and API references for AI readability signals.', color: '#818cf8', Icon: GitBranch },
+  { id: 'local_business',  label: 'Local Service Business', desc: 'Get your professional services business cited by AI when customers search locally.', color: '#3b82f6', Icon: MapIcon },
 ];
 
 function timeAgo(dateStr) {
@@ -268,15 +268,14 @@ function LaneSelector({ onSelect }) {
           <button
             key={lane.id}
             className={styles.laneCard}
-            style={{ '--lane-color': lane.color }}
             onClick={() => onSelect(lane.id)}
           >
-            <div className={styles.laneCardIcon} style={{ background: `${lane.color}15`, border: `1px solid ${lane.color}30` }}>
-              <lane.Icon size={20} style={{ color: lane.color }} />
+            <div className={styles.laneCardIcon}>
+              <lane.Icon size={15} style={{ color: 'var(--accent)' }} />
             </div>
             <div className={styles.laneCardLabel}>{lane.label}</div>
             <div className={styles.laneCardDesc}>{lane.desc}</div>
-            <div className={styles.laneCardCta} style={{ color: lane.color }}>Select this lane →</div>
+            <div className={styles.laneCardCta}>Select →</div>
           </button>
         ))}
       </div>
@@ -811,18 +810,18 @@ export default function Dashboard() {
               <AreaChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
                 <defs>
                   <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#0ea5e9" stopOpacity={0.06} />
-                    <stop offset="100%" stopColor="#0ea5e9" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.08} />
+                    <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="idx" stroke="transparent"
-                  tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 11 }} tickLine={false} axisLine={false} />
+                  tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
                 <YAxis domain={[0, 100]} stroke="transparent"
-                  tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 11 }} tickLine={false} axisLine={false} />
-                <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1 }} />
-                <Area type="monotone" dataKey="score" stroke="#0ea5e9" strokeWidth={1.5}
+                  tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
+                <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
+                <Area type="monotone" dataKey="score" stroke="#3b82f6" strokeWidth={1.5}
                   fill="url(#scoreGrad)" dot={false}
-                  activeDot={{ r: 4, fill: '#0ea5e9', strokeWidth: 0 }} />
+                  activeDot={{ r: 4, fill: '#3b82f6', strokeWidth: 0 }} />
               </AreaChart>
             </ResponsiveContainer>
           )}
@@ -1074,7 +1073,7 @@ export default function Dashboard() {
         <div className={styles.chartHeader}>
           <div>
             <h2 className={styles.chartTitle}>
-              <Radar style={{ width: 14, height: 14, marginRight: 6, verticalAlign: '-2px', color: '#0EA5E9' }} />
+              <Radar style={{ width: 14, height: 14, marginRight: 6, verticalAlign: '-2px', color: 'var(--accent)' }} />
               Citations Being Tracked
             </h2>
             <p className={styles.chartSub}>A live snapshot of how AI engines are citing you after optimization</p>

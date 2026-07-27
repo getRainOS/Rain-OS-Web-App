@@ -64,15 +64,15 @@
 /* ── Tool Snapshot Cards ── */
 .toolCards {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 
-@media (max-width: 1100px) {
-  .toolCards { grid-template-columns: repeat(3, 1fr); }
+@media (min-width: 1280px) {
+  .toolCards { grid-template-columns: repeat(6, 1fr); }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 900px) {
   .toolCards { grid-template-columns: repeat(2, 1fr); }
 }
 
@@ -90,22 +90,23 @@
   gap: 10px;
   text-decoration: none;
   color: inherit;
-  transition: background 0.12s, border-color 0.12s, transform 0.12s;
+  transition: background 0.12s, border-color 0.12s;
 }
 
 .toolCard:hover {
-  background: #060a18;
-  border-color: rgba(255,255,255,0.12);
+  background: var(--surface-2);
+  border-color: var(--border-strong);
 }
 
+/* Empty cards — same border, dimmer content */
 .toolCardEmpty {
-  background: transparent;
-  border: 1px dashed rgba(255,255,255,0.12);
+  background: var(--surface);
+  border: 1px solid var(--border);
 }
 
 .toolCardEmpty:hover {
-  background: rgba(255,255,255,0.02);
-  border-color: rgba(255,255,255,0.18);
+  background: var(--surface-2);
+  border-color: var(--border-strong);
 }
 
 .toolCardTop {
@@ -121,26 +122,14 @@
 }
 
 .toolCardLabel {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0;
 }
 
 .toolCardBadgeEmpty {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 9.5px;
-  font-weight: 600;
-  color: var(--text-dim);
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 4px;
-  padding: 1px 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  display: none; /* removed — empty state is implied by dimmed values */
 }
 
 .toolCardInfo {
@@ -215,10 +204,10 @@
 }
 
 .toolCardPlaceholder {
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 400;
   color: var(--text-dim);
-  opacity: 0.5;
+  letter-spacing: 0;
 }
 
 .toolCardBottom {
@@ -1300,7 +1289,7 @@
 .laneCards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 8px;
 }
 
 @media (max-width: 720px) {
@@ -1310,34 +1299,39 @@
 .laneCard {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 14px;
-  background: rgba(255,255,255,0.02);
+  gap: 6px;
+  padding: 14px 16px;
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  transition: all 0.15s;
+  border-radius: 10px;
+  transition: border-color 0.15s, background 0.15s;
   cursor: pointer;
   text-align: left;
 }
 
 .laneCard:hover {
-  border-color: var(--lane-color, var(--accent));
-  background: color-mix(in srgb, var(--lane-color, var(--accent)) 4%, transparent);
+  border-color: rgba(59,130,246,0.35);
+  background: var(--surface-2);
 }
 
 .laneCardIcon {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(59,130,246,0.08);
+  border: 1px solid rgba(59,130,246,0.14);
+  margin-bottom: 4px;
+  flex-shrink: 0;
 }
 
 .laneCardLabel {
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text);
+  letter-spacing: -0.1px;
 }
 
 .laneCardDesc {
@@ -1350,7 +1344,14 @@
 .laneCardCta {
   font-size: 11px;
   font-weight: 600;
-  margin-top: 2px;
+  color: var(--accent);
+  margin-top: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.laneCard:hover .laneCardCta {
+  opacity: 1;
 }
 
 /* ── Lane Banner ── */
