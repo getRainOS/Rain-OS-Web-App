@@ -352,6 +352,7 @@ export interface AnalysisData {
     result_json?: any;
     lane?: string | null;
   summary?: string | null;
+  content?: string | null;
 }
 
 const incrementUsageAndSaveAnalysisAttempt = async (
@@ -375,10 +376,10 @@ const incrementUsageAndSaveAnalysisAttempt = async (
         // Save analysis in the same transaction
         const analysisRes = await client.query(
             `INSERT INTO content_analyses
-               (user_id, title, url, overall_score, ai_readability, digital_authority,
-                conversion_readiness, product_discoverability, rag_readiness, summary, result_json, lane)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-             RETURNING id`,
+          (user_id, title, url, overall_score, ai_readability, digital_authority,
+          conversion_readiness, product_discoverability, rag_readiness, summary, result_json, lane, content)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+          RETURNING id`,
             [
                 userId,
                 null, // title
@@ -392,6 +393,7 @@ const incrementUsageAndSaveAnalysisAttempt = async (
                 null, // summary
                 analysisData.result_json ? JSON.stringify(analysisData.result_json) : null,
                 analysisData.lane ?? null,
+          analysisData.content ?? null,
             ]
         );
         const analysisId = analysisRes.rows[0]?.id ?? null;
@@ -703,6 +705,7 @@ export interface AnalysisRecord {
   summary: string | null;
   analyzed_at: string;
   lane: string | null;
+  content: string | null;
   recommendations: string[];
 }
 
@@ -719,6 +722,7 @@ const mapAnalysisRow = (row: any): AnalysisRecord => ({
   summary: row.summary ?? null,
   analyzed_at: row.analyzed_at instanceof Date ? row.analyzed_at.toISOString() : row.analyzed_at,
   lane: row.lane ?? null,
+  content: row.content ?? null,
   recommendations: (() => {
     try {
       const parsed = typeof row.result_json === 'string' ? JSON.parse(row.result_json) : row.result_json;
@@ -793,9 +797,9 @@ export const getAnalysisById = async (
   const res = await pool.query(
     `SELECT id, title, url, overall_score, ai_readability, digital_authority,
       conversion_readiness, product_discoverability, rag_readiness,
-      summary, analyzed_at, lane, result_json
-     FROM content_analyses
-     WHERE id = $1 AND user_id = $2`,
+      summary, analyzed_at, lane, result_json, content
+      FROM content_analyses
+      WHERE id = $1 AND user_id = $2`,
     [id, userId]
   );
   return res.rows[0] ? mapAnalysisRow(res.rows[0]) : null;

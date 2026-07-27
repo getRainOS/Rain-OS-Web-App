@@ -119,6 +119,7 @@ export default async function handler(req: express.Request, res: express.Respons
         summary: result.summary ?? null,
         result_json: result,
         lane: typeof lane === 'string' ? lane : null,
+      content: typeof content === 'string' ? content : null,
       });
       updatedUser = saveResult.updatedUser;
       analysisId = saveResult.analysisId;
