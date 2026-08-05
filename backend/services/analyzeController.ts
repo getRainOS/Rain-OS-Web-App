@@ -69,6 +69,7 @@ const { updatedUser, analysisId } = await incrementUsageAndSaveAnalysis(user.id,
   product_discoverability: typeof pillar?.productDiscoverability === 'number' ? pillar.productDiscoverability : null,
   rag_readiness: typeof pillar?.ragReadiness === 'number' ? pillar.ragReadiness : null,
   result_json: result,
+  content: safeContent,
 });
 
 if (updatedUser) {

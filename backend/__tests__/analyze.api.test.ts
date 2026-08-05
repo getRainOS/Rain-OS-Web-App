@@ -237,6 +237,7 @@ describe('POST /api/analyze — happy path', () => {
     expect(payload.conversion_readiness).toBe(70);
     expect(payload.rag_readiness).toBe(72);
     expect(payload.result_json).toBeDefined();
+    expect(payload.content).toBe('This is a sufficiently long piece of content for analysis.');
   });
 
   it('still returns 200 even when saveAnalysis throws (best-effort persistence)', async () => {

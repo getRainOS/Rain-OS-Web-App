@@ -8,18 +8,57 @@ import ArtifactBlock from '../components/ArtifactBlock.jsx';
 import TypewriterPlaceholder from '../components/TypewriterPlaceholder.jsx';
 import styles from './ContentAnalyzer.module.css';
 
+const DRAFT_STORAGE_KEY = 'rain_os_content_analyzer_draft';
+
+function readSavedDraft() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(DRAFT_STORAGE_KEY) || 'null');
+    if (!saved || typeof saved !== 'object') return {};
+    return {
+      title: typeof saved.title === 'string' ? saved.title : '',
+      content: typeof saved.content === 'string' ? saved.content : '',
+      url: typeof saved.url === 'string' ? saved.url : '',
+      analysisId: saved.analysisId != null ? String(saved.analysisId) : null,
+    };
+  } catch {
+    return {};
+  }
+}
+
+function saveDraft(draft) {
+  try {
+    localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify({
+      title: draft.title || '',
+      content: draft.content || '',
+      url: draft.url || '',
+      analysisId: draft.analysisId != null ? String(draft.analysisId) : null,
+      savedAt: new Date().toISOString(),
+    }));
+  } catch {
+    // Draft persistence is best-effort; never interrupt editing if storage is unavailable.
+  }
+}
+
 export default function ContentAnalyzer() {
   const { refreshUser, user, isDemo, userLane } = useApp();
   const navigate = useNavigate();
   const { id } = useParams();
   const location = useLocation();
   const prefill = location.state || {};
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState(prefill.pendingContent || '');
-  const [url, setUrl] = useState('');
+  const savedDraft = readSavedDraft();
+  const savedDraftMatchesAnalysis = !id || !savedDraft.analysisId || savedDraft.analysisId === String(id);
+  const [title, setTitle] = useState(prefill.pendingTitle || (savedDraftMatchesAnalysis ? savedDraft.title : '') || '');
+  const [content, setContent] = useState(prefill.pendingContent || (savedDraftMatchesAnalysis ? savedDraft.content : '') || '');
+  const [url, setUrl] = useState(prefill.pendingUrl || (savedDraftMatchesAnalysis ? savedDraft.url : '') || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
+
+  // Keep the editor draft across refreshes and route changes. This is intentionally
+  // separate from analysis history so an in-progress edit is never lost.
+  useEffect(() => {
+    saveDraft({ title, content, url, analysisId: id || null });
+  }, [title, content, url, id]);
 
   useEffect(() => {
     if (!id) return;
@@ -30,7 +69,12 @@ export default function ContentAnalyzer() {
       .then(({ data }) => {
         if (!cancelled) {
           setResult(data?.data ?? null);
-          setContent(data?.data?.content ?? '');
+          // Older analyses, or deployments where the content column is still
+          // empty, must not erase the text that is already in the editor.
+          const persistedContent = data?.data?.content;
+          if (typeof persistedContent === 'string' && persistedContent.trim()) {
+            setContent(persistedContent);
+          }
         }
       })
       .catch((err) => {
@@ -89,7 +133,12 @@ export default function ContentAnalyzer() {
       setResult(data);
       refreshUser();
       if (data?.analysisId) {
-        navigate(`/analyze/${data.analysisId}`, { replace: true });
+        // Carry the submitted draft through the route transition as a second
+        // safeguard in addition to localStorage.
+        navigate(`/analyze/${data.analysisId}`, {
+          replace: true,
+          state: { pendingTitle: title, pendingContent: content, pendingUrl: url },
+        });
       }
     } catch (err) {
       setError(err.message || 'Analysis failed. Please try again.');

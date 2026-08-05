@@ -1,0 +1,1 @@
+- [Analyzer draft persistence](content-analyzer-drafts.md) — preserve editor drafts locally and never replace non-empty user text with an empty server response.
