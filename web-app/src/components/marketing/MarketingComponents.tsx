@@ -473,7 +473,7 @@ export const Pricing = () => {
                 </div>
                 <p className="text-slate-400 text-sm mb-6">{p.description}</p>
                 
-                <a href="/dashboard" className={`block w-full text-center py-3 rounded-lg font-medium transition-colors mb-8 ${p.isPopular ? 'bg-rain-500 hover:bg-rain-400 text-white shadow-[0_0_20px_rgba(14,165,233,0.3)]' : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'}`}>
+                <a href="/login" className={`block w-full text-center py-3 rounded-lg font-medium transition-colors mb-8 ${p.isPopular ? 'bg-rain-500 hover:bg-rain-400 text-white shadow-[0_0_20px_rgba(14,165,233,0.3)]' : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'}`}>
                   {p.buttonText}
                 </a>
                 
@@ -572,7 +572,7 @@ export const CTA = () => {
             <p className="text-lg text-slate-400 max-w-2xl mx-auto mb-10">
               Start optimizing for the future of search today. Join thousands of creators ensuring their content survives the AI shift.
             </p>
-            <a href="/dashboard" className="bg-rain-500 hover:bg-rain-400 text-white px-8 py-4 rounded-xl font-medium shadow-[0_0_20px_rgba(14,165,233,0.3)] transition-all hover:scale-105">
+            <a href="/login" className="bg-rain-500 hover:bg-rain-400 text-white px-8 py-4 rounded-xl font-medium shadow-[0_0_20px_rgba(14,165,233,0.3)] transition-all hover:scale-105">
               Get Started for Free
             </a>
           </div>
