@@ -6,8 +6,8 @@ import { supabase } from '../lib/supabase.js';
 import styles from './Settings.module.css';
 
 const PRICE_TO_PLAN = {
-  'price_1SeCJH3NMjs4uYdgpi0xB0XN': 'Business',
-  'price_1SeCKM3NMjs4uYdgcBRhgIhD': 'Pro',
+  'price_1SeCJH3NMjs4uYdgpi0xB0XN': 'Pro',
+  'price_1SeCKM3NMjs4uYdgcBRhgIhD': 'Business',
   'price_1SeCHg3NMjs4uYdguOgkr3SQ': 'Free',
 };
 
