@@ -456,7 +456,7 @@ export default function Dashboard() {
   const usagePct = user ? Math.round(((user.usage?.count ?? 0) / (user.usage?.limit ?? 100)) * 100) : 0;
 
   const tier = (user?.subscriptionStatus === 'active' && user?.stripePriceId)
-    ? ({ 'price_1SeCJH3NMjs4uYdgpi0xB0XN': 'Business', 'price_1SeCKM3NMjs4uYdgcBRhgIhD': 'Pro', 'price_1SeCHg3NMjs4uYdguOgkr3SQ': 'Free' }[user.stripePriceId] ?? 'Pro')
+    ? ({ 'price_1SeCJH3NMjs4uYdgpi0xB0XN': 'Pro', 'price_1SeCKM3NMjs4uYdgcBRhgIhD': 'Business', 'price_1SeCHg3NMjs4uYdguOgkr3SQ': 'Free' }[user.stripePriceId] ?? 'Pro')
     : 'Free';
 
   const pillarAvgs = activePillars.map(p => ({
