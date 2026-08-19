@@ -11,8 +11,8 @@ import KnowledgeBase from './KnowledgeBase.jsx';
 import styles from './Layout.module.css';
 
 const PRICE_TO_PLAN = {
-  'price_1SeCJH3NMjs4uYdgpi0xB0XN': 'Business',
-  'price_1SeCKM3NMjs4uYdgcBRhgIhD': 'Pro',
+  'price_1SeCJH3NMjs4uYdgpi0xB0XN': 'Pro',
+  'price_1SeCKM3NMjs4uYdgcBRhgIhD': 'Business',
   'price_1SeCHg3NMjs4uYdguOgkr3SQ': 'Free',
 };
 
