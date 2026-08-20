@@ -71,6 +71,7 @@ const { updatedUser, analysisId } = await incrementUsageAndSaveAnalysis(user.id,
   rag_readiness: typeof pillar?.ragReadiness === 'number' ? pillar.ragReadiness : null,
   result_json: result,
   content: safeContent,
+  lane: lane ?? null,
 });
 
 if (updatedUser) {
