@@ -44,7 +44,7 @@ return res.status(402).json({ error: 'payment_required', message: 'Active subscr
 if (user.usage.count >= user.usage.limit) {
 return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Monthly limit reached. Upgrade to continue.' } as ApiError);
 }
-const { content, industry, module } = req.body as { content?: string; industry?: string; module?: string };
+const { content, industry, module, lane } = req.body as { content?: string; industry?: string; module?: string; lane?: string };
   // Safeguard backend memory
   const safeContent = typeof content === "string" ? content.slice(0, 12000) : "";
   console.log(`[SAVE DEBUG] safeContent: type=${typeof safeContent}, length=${safeContent.length}, preview=${JSON.stringify(safeContent.slice(0, 40))}`);
