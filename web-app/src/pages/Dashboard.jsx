@@ -668,7 +668,7 @@ export default function Dashboard() {
           <p className={styles.headerSub}>
             {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
             {' · '}
-            <span style={{ color: 'var(--accent)' }}>{totalAnalyses} total analyses</span>
+            <span style={{ color: 'var(--accent)' }} title="Rows in the analysis history table (includes all saved analyses). 'API Usage' shows counted API calls against your plan and may exclude imports or manual inserts.">{totalAnalyses} analyses (history)</span>
           </p>
         </div>
         <button onClick={() => navigate('/analyze')} className={styles.newBtn}>
