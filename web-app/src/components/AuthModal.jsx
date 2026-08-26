@@ -30,10 +30,6 @@ export default function AuthModal({ onAuth, onBack, initialMode = 'signup', pend
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
-  function handleDemo() {
-    setApiKey(DEMO_KEY);
-    onAuth(DEMO_KEY, DEMO_USER);
-  }
 
   async function handleEmailAuth(e) {
     e.preventDefault();
@@ -215,18 +211,6 @@ export default function AuthModal({ onAuth, onBack, initialMode = 'signup', pend
           )}
         </div>
 
-        <div className={styles.demoDivider}>
-          <span>or</span>
-        </div>
-
-        <button
-          type="button"
-          className={styles.demoBtn}
-          onClick={handleDemo}
-          disabled={loading || googleLoading}
-        >
-          Try Demo — no account needed
-        </button>
 
         {onBack && (
           <button type="button" className={styles.backBtn} onClick={onBack}>
