@@ -289,6 +289,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [history, setHistory] = useState([]);
+  const [totalCount, setTotalCount] = useState(null);
   const [loading, setLoading] = useState(true);
   const [chartRange, setChartRange] = useState(14);
   const [citations, setCitations] = useState([]);
@@ -311,7 +312,10 @@ export default function Dashboard() {
 
   useEffect(() => {
     api.history({ limit: 50, lane: userLane })
-      .then(({ data }) => setHistory(Array.isArray(data) ? data : data?.items ?? []))
+      .then(({ data, totalCount: tc }) => {
+        setHistory(Array.isArray(data) ? data : data?.items ?? []);
+        setTotalCount(typeof tc === 'number' ? tc : null);
+      })
       .catch(() => setHistory([]))
       .finally(() => setLoading(false));
   }, [userLane]);
@@ -447,7 +451,7 @@ export default function Dashboard() {
   const rawName = user?.email?.split('@')[0]?.replace(/[._]/g, ' ');
   const displayName = rawName ? rawName.charAt(0).toUpperCase() + rawName.slice(1) : '';
 
-  const totalAnalyses = history.length;
+  const totalAnalyses = totalCount ?? history.length;
   const avgScore = totalAnalyses > 0
     ? Math.round(history.reduce((s, h) => s + (h.overall_score ?? 0), 0) / totalAnalyses)
     : 0;

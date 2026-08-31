@@ -2,7 +2,7 @@
 import express from 'express';
 import {
   findUserByApiKey,
-  getAnalysesByUser, getAnalysisById,
+  getAnalysesByUser, getAnalysesCountByUser, getAnalysisById,
   deleteAnalysis,
 } from '../services/dbService';
 import type { ApiError } from '../types';
@@ -29,7 +29,8 @@ export async function listHandler(req: express.Request, res: express.Response) {
 
   try {
     const items = await getAnalysesByUser(user.id, limit ?? 50, lane);
-    return res.status(200).json({ success: true, data: items, items });
+    const totalCount = await getAnalysesCountByUser(user.id, lane);
+    return res.status(200).json({ success: true, data: items, items, totalCount });
   } catch (error) {
     console.error('History list error:', error);
     const msg = error instanceof Error ? error.message : 'Internal error';

@@ -771,6 +771,19 @@ export const saveAnalysis = async (
   return res.rows[0] ? mapAnalysisRow(res.rows[0]) : null;
 };
 
+export const getAnalysesCountByUser = async (
+  userId: string,
+  lane?: string | null
+): Promise<number> => {
+  const laneFilter = lane ? 'AND lane = $2' : '';
+  const params = lane ? [userId, lane] : [userId];
+  const res = await pool.query(
+    `SELECT COUNT(*) FROM content_analyses WHERE user_id = $1 ${laneFilter}`,
+    params
+  );
+  return parseInt(res.rows[0].count, 10);
+};
+
 export const getAnalysesByUser = async (
   userId: string,
   limit = 50,
