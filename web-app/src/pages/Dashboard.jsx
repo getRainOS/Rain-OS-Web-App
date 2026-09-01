@@ -312,9 +312,9 @@ export default function Dashboard() {
 
   useEffect(() => {
     api.history({ limit: 50, lane: userLane })
-      .then(({ data, totalCount: tc }) => {
+      .then(({ data }) => {
         setHistory(Array.isArray(data) ? data : data?.items ?? []);
-        setTotalCount(typeof tc === 'number' ? tc : null);
+        setTotalCount(typeof data?.totalCount === 'number' ? data.totalCount : null);
       })
       .catch(() => setHistory([]))
       .finally(() => setLoading(false));
