@@ -672,7 +672,7 @@ export default function Dashboard() {
           <p className={styles.headerSub}>
             {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
             {' · '}
-            <span style={{ color: 'var(--accent)' }}>{totalAnalyses} total analyses</span>
+            <Link to="/history" style={{ color: 'var(--accent)' }}>You have a library of {totalAnalyses} pieces analyzed</Link>
           </p>
         </div>
         <button onClick={() => navigate('/analyze')} className={styles.newBtn}>
