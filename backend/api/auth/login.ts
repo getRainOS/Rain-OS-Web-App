@@ -27,6 +27,10 @@ export default async function handler(req: express.Request, res: express.Respons
       return res.status(401).json({ error: 'unauthorized', message: 'Invalid credentials.' } as ApiError);
     }
 
+    if (!user.emailConfirmed) {
+      return res.status(403).json({ error: 'email_not_confirmed', message: 'Please confirm your email before logging in. Check your inbox for the confirmation link.' } as ApiError);
+    }
+
     // This is the only time the raw API key is sent to the client besides signup.
     // The client is responsible for storing it securely.
     const clientSafeUser: Partial<User> & { apiKey: string } = {

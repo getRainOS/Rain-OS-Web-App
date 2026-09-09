@@ -2,6 +2,7 @@
 import express from 'express';
 import { createClient } from '@supabase/supabase-js';
 import { findUserByEmail, createUser, updateUser } from '../../services/dbService';
+import { sendWelcomeEmail } from '../../services/emailService';
 import type { User, ApiError } from '../../types';
 
 // Initialize Supabase Client
@@ -42,8 +43,8 @@ export default async function handler(req: express.Request, res: express.Respons
 
     if (!user) {
       try {
-        // Create new user
-        user = await createUser(email, undefined, googleId);
+        // Create new user. Google already verified this email, so it's confirmed immediately.
+        user = await createUser(email, undefined, googleId, { emailConfirmed: true });
         isNewUser = true;
 
       } catch (createError: any) {
@@ -57,6 +58,10 @@ export default async function handler(req: express.Request, res: express.Respons
           throw createError;
         }
       }
+    }
+
+    if (isNewUser) {
+      sendWelcomeEmail(user.email).catch((err) => console.error('Welcome email failed:', err));
     }
 
     // Return the API Key in the same format as the legacy login

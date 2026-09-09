@@ -18,6 +18,8 @@ hashedApiKey?: string;
 stripeCustomerId?: string;
 stripePriceId?: string;
 subscriptionStatus: SubscriptionStatus;
+emailConfirmed: boolean;
+confirmationToken?: string;
 usage: {
 count: number;
 limit: number;

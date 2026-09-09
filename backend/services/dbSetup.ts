@@ -126,6 +126,13 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS github_login TEXT;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS encrypted_github_token TEXT;
 `;
 
+// Email confirmation (additive). DEFAULT true so existing users aren't retroactively
+// locked out — createUser() explicitly sets false for new email/password signups only.
+const addEmailConfirmationColumnsQuery = `
+ALTER TABLE users ADD COLUMN IF NOT EXISTS email_confirmed BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS confirmation_token TEXT;
+`;
+
 // Durable OAuth state store — shared across all instances, TTL enforced via expires_at.
 const createOAuthStatesQuery = `
 CREATE TABLE IF NOT EXISTS oauth_states (
@@ -141,6 +148,7 @@ export const setupDatabase = async () => {
   try {
     await pool.query(createTableQuery);
     await pool.query(addGithubColumnsQuery);
+    await pool.query(addEmailConfirmationColumnsQuery);
     await pool.query(createOAuthStatesQuery);
     console.log('Database table "users" is ready.');
   } catch (error) {

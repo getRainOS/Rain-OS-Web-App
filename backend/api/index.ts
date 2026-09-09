@@ -25,6 +25,7 @@ import loginHandler from './auth/login';
 import passwordResetRequestHandler from './auth/password-reset/request';
 import passwordResetSubmitHandler from './auth/password-reset/submit';
 import signupHandler from './auth/signup';
+import confirmHandler from './auth/confirm';
 import syncHandler from './auth/sync';
 // Users
 import usersMeHandler from './users/me';
@@ -139,6 +140,7 @@ app.post('/api/auth/login', loginHandler);
 app.post('/api/auth/password-reset/request', passwordResetRequestHandler);
 app.post('/api/auth/password-reset/submit', passwordResetSubmitHandler);
 app.post('/api/auth/signup', signupHandler);
+app.post('/api/auth/confirm', confirmHandler);
 app.post('/api/auth/sync', syncHandler);
 // ─── Users ─────────────────────────────────────────────────────────────────
 app.get( '/api/users/me', usersMeHandler);

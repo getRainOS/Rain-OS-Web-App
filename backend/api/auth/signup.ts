@@ -1,8 +1,10 @@
 // api/auth/signup.ts
 // FIX: Use express.Request and express.Response to avoid conflicts with global types.
 import express from 'express';
-import { createUser, findUserByEmail } from '../../services/dbService';
-import type { User, ApiError } from '../../types';
+import { randomBytes } from 'crypto';
+import { createUser, findUserByEmail, hash } from '../../services/dbService';
+import { sendConfirmationEmail } from '../../services/emailService';
+import type { ApiError } from '../../types';
 
 export default async function handler(req: express.Request, res: express.Response) {
   try {
@@ -21,20 +23,20 @@ export default async function handler(req: express.Request, res: express.Respons
       return res.status(409).json({ error: 'conflict', message: 'A user with this email already exists.' } as ApiError);
     }
 
-    const newUser = await createUser(email, password);
+    const confirmationToken = randomBytes(32).toString('hex');
+    const hashedConfirmationToken = hash(confirmationToken);
 
-    // This is the only time the raw API key is sent to the client.
-    // The client is responsible for storing it securely.
-    const clientSafeUser: Partial<User> & { apiKey: string } = {
-      id: newUser.id,
+    const newUser = await createUser(email, password, undefined, {
+      emailConfirmed: false,
+      confirmationToken: hashedConfirmationToken,
+    });
+
+    await sendConfirmationEmail(newUser.email, confirmationToken);
+
+    return res.status(201).json({
+      message: 'Account created. Check your email to confirm your account before logging in.',
       email: newUser.email,
-      apiKey: newUser.apiKey,
-      subscriptionStatus: newUser.subscriptionStatus,
-      usage: newUser.usage,
-      createdAt: newUser.createdAt,
-    };
-    
-    return res.status(201).json(clientSafeUser);
+    });
 
   } catch (error) {
     console.error('Signup Error:', error);

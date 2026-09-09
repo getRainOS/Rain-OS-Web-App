@@ -109,6 +109,8 @@ const mapRowToUser = (row: any, hashedApiKey?: string): User => {
         stripeCustomerId: row.stripe_customer_id,
         stripePriceId: row.stripe_price_id,
         subscriptionStatus: row.subscription_status,
+        emailConfirmed: row.email_confirmed,
+        confirmationToken: row.confirmation_token,
         usage: row.usage,
         createdAt: row.created_at,
     };
@@ -178,7 +180,20 @@ export const findUserByPasswordResetToken = async (hashedToken: string): Promise
     return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
 };
 
-export const createUser = async (email: string, password?: string, googleId?: string): Promise<User> => {
+export const findUserByConfirmationToken = async (hashedToken: string): Promise<User | null> => {
+    const res = await pool.query(
+        'SELECT * FROM users WHERE confirmation_token = $1',
+        [hashedToken]
+    );
+    return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
+};
+
+export const createUser = async (
+    email: string,
+    password?: string,
+    googleId?: string,
+    options?: { emailConfirmed?: boolean; confirmationToken?: string }
+): Promise<User> => {
     if (await findUserByEmail(email)) {
         throw new Error('User already exists');
     }
@@ -188,6 +203,9 @@ export const createUser = async (email: string, password?: string, googleId?: st
     const hashedApiKey = hash(apiKey);
     const encryptedApiKey = encrypt(apiKey);
 
+    const emailConfirmed = options?.emailConfirmed ?? (password ? false : true);
+    const confirmationToken = options?.confirmationToken;
+
     const newUser: Omit<User, 'apiKey' | 'createdAt'> & { encryptedApiKey: string, hashedPassword?: string } = {
         id,
         email: email.toLowerCase(),
@@ -195,6 +213,8 @@ export const createUser = async (email: string, password?: string, googleId?: st
         hashedApiKey,
         encryptedApiKey,
         subscriptionStatus: 'active',
+        emailConfirmed,
+        confirmationToken,
         usage: { count: 0, limit: 5 },
     };
     if (password) {
@@ -202,13 +222,14 @@ export const createUser = async (email: string, password?: string, googleId?: st
     }
 
     const query = `
-        INSERT INTO users (id, email, google_id, hashed_password, hashed_api_key, encrypted_api_key, subscription_status, usage)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        INSERT INTO users (id, email, google_id, hashed_password, hashed_api_key, encrypted_api_key, subscription_status, email_confirmed, confirmation_token, usage)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         RETURNING *
     `;
     const values = [
         newUser.id, newUser.email, newUser.googleId, newUser.hashedPassword,
         newUser.hashedApiKey, newUser.encryptedApiKey, newUser.subscriptionStatus,
+        newUser.emailConfirmed, newUser.confirmationToken,
         JSON.stringify(newUser.usage)
     ];
 
@@ -216,7 +237,7 @@ export const createUser = async (email: string, password?: string, googleId?: st
     return mapRowToUser(res.rows[0], hashedApiKey);
 };
 
-export const updateUser = async (userId: string, updates: Partial<Pick<User, 'googleId' | 'hashedPassword' | 'passwordResetToken' | 'passwordResetExpires'>>): Promise<User | null> => {
+export const updateUser = async (userId: string, updates: Partial<Pick<User, 'googleId' | 'hashedPassword' | 'passwordResetToken' | 'passwordResetExpires' | 'emailConfirmed'>> & { confirmationToken?: string | null }): Promise<User | null> => {
     const setClauses: string[] = [];
     const values: any[] = [userId];
 
@@ -235,6 +256,14 @@ export const updateUser = async (userId: string, updates: Partial<Pick<User, 'go
     if (updates.passwordResetExpires !== undefined) {
         values.push(updates.passwordResetExpires);
         setClauses.push(`password_reset_expires = $${values.length}`);
+    }
+    if (updates.emailConfirmed !== undefined) {
+        values.push(updates.emailConfirmed);
+        setClauses.push(`email_confirmed = $${values.length}`);
+    }
+    if (updates.confirmationToken !== undefined) {
+        values.push(updates.confirmationToken);
+        setClauses.push(`confirmation_token = $${values.length}`);
     }
     
     if (setClauses.length === 0) {
