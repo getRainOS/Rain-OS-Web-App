@@ -15,6 +15,7 @@ import ShareOfVoice from './pages/ShareOfVoice.jsx';
 import History from './pages/History.jsx';
 import Upgrade from './pages/Upgrade.jsx';
 import Settings from './pages/Settings.jsx';
+import ConfirmEmail from './pages/ConfirmEmail.jsx';
 
 const LocalBusinessPage = lazy(() => import('./pages/LocalBusinessPage.tsx'));
 const ContentWriters = lazy(() => import('./pages/ContentWriters.tsx'));
@@ -202,6 +203,7 @@ function AppRoutes({ apiKey, onAuth }) {
           />
           <Route path="/local-business" element={<LandingWrapper><LocalBusinessPage onBack={() => navigate('/')} /></LandingWrapper>} />
           <Route path="/login" element={<AuthModalRoute onAuth={onAuth} />} />
+            <Route path="/confirm" element={<ConfirmEmail />} />
           <Route path="/auth/callback" element={<AuthCallbackRoute onAuth={onAuth} />} />
           <Route path="/content-writers" element={<LandingWrapper><ContentWriters /></LandingWrapper>} />
           <Route path="/wordpress-plugin" element={<LandingWrapper><WordPressPlugin /></LandingWrapper>} />
