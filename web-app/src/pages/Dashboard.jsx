@@ -475,6 +475,20 @@ export default function Dashboard() {
     ? Math.round(pillarAvgs.reduce((s, p) => s + p.avg, 0) / pillarAvgs.length)
     : 0;
 
+  const quickWins = useMemo(() => {
+    const seen = new Set();
+    const wins = [];
+    for (const item of history.slice(0, 5)) {
+      for (const rec of item.recommendations || []) {
+        if (!rec || seen.has(rec)) continue;
+        seen.add(rec);
+        wins.push(rec);
+        if (wins.length >= 3) return wins;
+      }
+    }
+    return wins;
+  }, [history]);
+
   const weakestPillar = totalAnalyses >= 3
     ? [...pillarAvgs].sort((a, b) => a.avg - b.avg)[0]
     : null;
@@ -772,6 +786,30 @@ export default function Dashboard() {
             <strong>{weakestPillar.avg}/100</strong> across recent analyses.
           </span>
           <Link to="/analyze" className={styles.insightAction}>Improve it →</Link>
+        </div>
+      )}
+
+      {/* ── Quick Wins ── */}
+      {quickWins.length > 0 && (
+        <div className={styles.chartCard} style={{ marginBottom: 12 }}>
+          <div className={styles.chartHeader}>
+            <div>
+              <h2 className={styles.chartTitle}>Quick wins</h2>
+              <p className={styles.chartSub}>Top fixes from your recent analyses</p>
+              <span className={styles.chartHelp} title="The highest-impact recommendations pulled from your most recent analyses.">
+                <HelpCircle size={11} />
+              </span>
+            </div>
+          </div>
+          <div className={styles.quickWinsList}>
+            {quickWins.map((rec, i) => (
+              <div key={i} className={styles.quickWinRow}>
+                <span className={styles.quickWinIndex}>{i + 1}</span>
+                <span className={styles.quickWinText}>{rec}</span>
+                <Link to="/analyze" className={styles.insightAction}>Fix this →</Link>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
