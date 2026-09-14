@@ -23,23 +23,23 @@ function getFavicon(domain) {
 }
 
 const PILLARS = [
-  { key: 'ai_readability',          label: 'AI Readability',       color: '#38bdf8', Icon: BrainCircuit,
+  { key: 'ai_readability',          label: 'AI Readability',       color: '#6b9bc4', Icon: BrainCircuit,
     subs: ['semantic_clarity','readability_score','logical_structure','aeo_alignment'],
     subLabels: ['Semantic Clarity','Readability Score','Logical Structure','AEO Alignment'],
     subTooltips: ['How clearly your content conveys meaning beyond just keywords.','How easy it is for both humans and AI to read your content.','Whether your content follows a logical flow with clear headings.','How well your content matches answer-first formatting AI prefers.'] },
-  { key: 'digital_authority',       label: 'Digital Authority',    color: '#4ade80', Icon: ShieldCheck,
+  { key: 'digital_authority',       label: 'Digital Authority',    color: '#7cae8f', Icon: ShieldCheck,
     subs: ['entity_recognition','citation_readiness','descriptive_metadata'],
     subLabels: ['Entity Recognition','Citation Readiness','Descriptive Metadata'],
     subTooltips: ['Whether AI can identify your brand, people, and products as distinct entities.','How likely AI is to cite you as a source when answering related questions.','Quality of your title tags, meta descriptions, and schema markup.'] },
-  { key: 'conversion_readiness',    label: 'Conversion Readiness', color: '#818cf8', Icon: MousePointerClick,
+  { key: 'conversion_readiness',    label: 'Conversion Readiness', color: '#8f93c7', Icon: MousePointerClick,
     subs: ['schema_extraction','qa_format_detection','metadata_audit'],
     subLabels: ['Schema Extraction','QA-Format Detection','Metadata Audit'],
     subTooltips: ['How well structured data helps AI extract pricing, products, and offers.','Whether your content uses question-answer format AI likes to quote.','Completeness of meta tags, Open Graph, and social sharing data.'] },
-  { key: 'product_discoverability', label: 'Discoverability',      color: '#fb923c', Icon: SearchCheck,
+  { key: 'product_discoverability', label: 'Discoverability',      color: '#c99b6e', Icon: SearchCheck,
     subs: ['schema_completeness','answer_layer_quality','freshness_signals','conversational_query_match'],
     subLabels: ['Schema Completeness','Answer Layer Quality','Freshness Signals','Query Match'],
     subTooltips: ['Whether Product schema has all required fields for AI shopping engines.','How well your content directly answers common shopper questions.','How recent your content is — AI prefers up-to-date product info.','How well your content matches natural language and voice queries.'] },
-  { key: 'rag_readiness',           label: 'RAG Readiness',        color: '#ec4899', Icon: Layers,
+  { key: 'rag_readiness',           label: 'RAG Readiness',        color: '#b97e97', Icon: Layers,
     subs: ['information_density','semantic_mapping','narrative_nuance','hierarchical_formatting','explicit_qa_structures','authority_signals'],
     subLabels: ['Information Density','Semantic Mapping','Narrative Nuance','Hierarchical Formatting','Explicit Q&A','Authority Signals'],
     subTooltips: ['Deep, exhaustive coverage with high information density per chunk.','Rich vocabulary, synonyms, historical context, and entity relationships.','Multi-layered explanations, edge cases, and reasoning.','Clean markdown, logical headers, and descriptive titles.','FAQ sections, direct definitions, and problem-solution frameworks.','External links, author bios, and verifiable data points.'] },
@@ -47,32 +47,32 @@ const PILLARS = [
 
 const QUICK_ACTIONS_ALL = {
   general: [
-    { to: '/analyze',       label: 'Content Optimizer', sub: 'Paste and score any text',         Icon: FileText,  color: '#38bdf8' },
-    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit a live URL for AEO signals', Icon: Globe,     color: '#818cf8' },
+    { to: '/analyze',       label: 'Content Optimizer', sub: 'Paste and score any text',         Icon: FileText,  color: '#6b9bc4' },
+    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit a live URL for AEO signals', Icon: Globe,     color: '#8f93c7' },
   ],
   product_sellers: [
-    { to: '/analyze',       label: 'Content Optimizer', sub: 'Paste and score product copy',     Icon: FileText,  color: '#38bdf8' },
-    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit product pages for AI signals', Icon: Globe,   color: '#818cf8' },
+    { to: '/analyze',       label: 'Content Optimizer', sub: 'Paste and score product copy',     Icon: FileText,  color: '#6b9bc4' },
+    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit product pages for AI signals', Icon: Globe,   color: '#8f93c7' },
   ],
   vibe_coders: [
-    { to: '/repo-analysis', label: 'Repo Analysis',     sub: 'Connect GitHub and score docs',     Icon: GitBranch, color: '#4ade80' },
-    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit your live app for AI signals', Icon: Globe,     color: '#818cf8' },
+    { to: '/repo-analysis', label: 'Repo Analysis',     sub: 'Connect GitHub and score docs',     Icon: GitBranch, color: '#7cae8f' },
+    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit your live app for AI signals', Icon: Globe,     color: '#8f93c7' },
   ],
   developers: [
-    { to: '/repo-analysis', label: 'Repo Analysis',     sub: 'Connect GitHub and score source',  Icon: GitBranch, color: '#4ade80' },
-    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit docs site for AI signals',   Icon: Globe,     color: '#818cf8' },
+    { to: '/repo-analysis', label: 'Repo Analysis',     sub: 'Connect GitHub and score source',  Icon: GitBranch, color: '#7cae8f' },
+    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit docs site for AI signals',   Icon: Globe,     color: '#8f93c7' },
   ],
   local_business: [
-    { to: '/analyze',       label: 'Content Optimizer', sub: 'Paste and score your page copy',   Icon: FileText,  color: '#38bdf8' },
-    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit your site for local signals', Icon: Globe,     color: '#818cf8' },
+    { to: '/analyze',       label: 'Content Optimizer', sub: 'Paste and score your page copy',   Icon: FileText,  color: '#6b9bc4' },
+    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit your site for local signals', Icon: Globe,     color: '#8f93c7' },
   ],
 };
 
 const LANES = [
   { id: 'general',         label: 'Writers & Marketers',    desc: 'Optimize articles, landing pages, and marketing copy for AI citation.', color: '#3b82f6', Icon: FileText },
   { id: 'product_sellers', label: 'Product Sellers',        desc: 'Maximize AI product discovery with Discoverability scoring at 50% weight.', color: '#3b82f6', Icon: SearchCheck },
-  { id: 'vibe_coders',     label: 'Vibe Coders',            desc: 'Ship fast with AI-built projects? Audit your content, repo, and discoverability before you launch.', color: '#818cf8', Icon: GitBranch },
-  { id: 'developers',      label: 'Developers',             desc: 'Analyze tech docs, READMEs, and API references for AI readability signals.', color: '#818cf8', Icon: GitBranch },
+  { id: 'vibe_coders',     label: 'Vibe Coders',            desc: 'Ship fast with AI-built projects? Audit your content, repo, and discoverability before you launch.', color: '#8f93c7', Icon: GitBranch },
+  { id: 'developers',      label: 'Developers',             desc: 'Analyze tech docs, READMEs, and API references for AI readability signals.', color: '#8f93c7', Icon: GitBranch },
   { id: 'local_business',  label: 'Local Service Business', desc: 'Get your professional services business cited by AI when customers search locally.', color: '#3b82f6', Icon: MapIcon },
 ];
 
@@ -175,7 +175,7 @@ function TrendBadge({ pct }) {
   const up = pct > 0, flat = pct === 0;
   return (
     <span className={styles.trendBadge} style={{
-      color: flat ? 'var(--text-muted)' : up ? '#4ade80' : '#f87171',
+      color: flat ? 'var(--text-muted)' : up ? '#7cae8f' : '#c47a7a',
       background: flat ? 'rgba(255,255,255,0.05)' : up ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)',
       borderColor: flat ? 'rgba(255,255,255,0.08)' : up ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.25)',
     }}>
@@ -964,7 +964,7 @@ export default function Dashboard() {
             <div className={styles.analysesList}>
               {history.slice(0, 7).map((item, i) => {
                 const type = getItemType(item);
-                const typeColor = type === 'URL' ? '#818cf8' : type === 'Repo' ? '#4ade80' : '#38bdf8';
+                const typeColor = type === 'URL' ? '#8f93c7' : type === 'Repo' ? '#7cae8f' : '#6b9bc4';
                 const TypeIcon = type === 'URL' ? Globe : type === 'Repo' ? GitBranch : FileText;
                 return (
                   <div key={i} className={styles.analysisRow}>
@@ -1046,7 +1046,7 @@ export default function Dashboard() {
         <div className={styles.chartHeader}>
           <div>
             <h2 className={styles.chartTitle}>
-              <MapIcon style={{ width: 13, height: 13, marginRight: 6, verticalAlign: '-2px', color: '#818cf8' }} />
+              <MapIcon style={{ width: 13, height: 13, marginRight: 6, verticalAlign: '-2px', color: '#8f93c7' }} />
               Top cited competitors
             </h2>
             <p className={styles.chartSub}>
@@ -1142,7 +1142,7 @@ export default function Dashboard() {
               const sColor = '#94a3b8';
               const deltaUp = t.delta !== null && t.delta > 0;
               const deltaDown = t.delta !== null && t.delta < 0;
-              const deltaColor = deltaUp ? '#4ade80' : deltaDown ? '#f87171' : 'var(--text-dim)';
+              const deltaColor = deltaUp ? '#7cae8f' : deltaDown ? '#c47a7a' : 'var(--text-dim)';
               const DeltaIcon = deltaUp ? TrendingUp : deltaDown ? TrendingDown : Minus;
               return (
                 <Link
@@ -1153,7 +1153,7 @@ export default function Dashboard() {
                   <div
                     className={styles.citationStatus}
                     style={{
-                      color: t.cited ? '#4ade80' : '#f87171',
+                      color: t.cited ? '#7cae8f' : '#c47a7a',
                       background: t.cited ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.08)',
                       borderColor: t.cited ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.25)',
                     }}
