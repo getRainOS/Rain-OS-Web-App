@@ -76,6 +76,29 @@ const LANES = [
   { id: 'local_business',  label: 'Local Service Business', desc: 'Get your professional services business cited by AI when customers search locally.', color: '#3b82f6', Icon: MapIcon },
 ];
 
+const SAMPLE_TREND = [42, 48, 45, 55, 60, 58, 67, 71, 68, 75].map((score, i) => ({ idx: i + 1, score }));
+
+const SAMPLE_DONUT = [
+  { name: 'AI Readability', value: 30, color: '#6b9bc4' },
+  { name: 'Digital Authority', value: 25, color: '#7cae8f' },
+  { name: 'Conversion Readiness', value: 20, color: '#8f93c7' },
+  { name: 'RAG Readiness', value: 25, color: '#b97e97' },
+];
+
+const DATE_FILTERS = [
+  { id: 'all', label: 'All time' },
+  { id: '7', label: '7d' },
+  { id: '30', label: '30d' },
+  { id: '90', label: '90d' },
+];
+
+const TYPE_FILTERS = [
+  { id: 'all', label: 'All types' },
+  { id: 'content', label: 'Content' },
+  { id: 'url', label: 'URL' },
+  { id: 'repo', label: 'Repo' },
+];
+
 function timeAgo(dateStr) {
   if (!dateStr) return '—';
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -301,6 +324,8 @@ export default function Dashboard() {
   const [sovLoading, setSovLoading] = useState(true);
   const urlWantsLaneSelect = searchParams.get('selectLane') === '1';
   const [showLaneSelector, setShowLaneSelector] = useState(!userLane || urlWantsLaneSelect);
+  const [dateFilter, setDateFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all');
 
   useEffect(() => {
     if (urlWantsLaneSelect) {
@@ -319,6 +344,21 @@ export default function Dashboard() {
       .catch(() => setHistory([]))
       .finally(() => setLoading(false));
   }, [userLane]);
+
+  const filteredHistory = useMemo(() => {
+    let out = history;
+    if (dateFilter !== 'all') {
+      const cutoff = Date.now() - Number(dateFilter) * 86400000;
+      out = out.filter(h => h.analyzed_at && new Date(h.analyzed_at).getTime() >= cutoff);
+    }
+    if (typeFilter !== 'all') {
+      out = out.filter(h => getItemType(h).toLowerCase() === typeFilter);
+    }
+    return out;
+  }, [history, dateFilter, typeFilter]);
+
+  const filtersActive = dateFilter !== 'all' || typeFilter !== 'all';
+  const clearFilters = () => { setDateFilter('all'); setTypeFilter('all'); };
 
   useEffect(() => {
     let cancelled = false;
@@ -451,12 +491,12 @@ export default function Dashboard() {
   const rawName = user?.email?.split('@')[0]?.replace(/[._]/g, ' ');
   const displayName = rawName ? rawName.charAt(0).toUpperCase() + rawName.slice(1) : '';
 
-  const totalAnalyses = totalCount ?? history.length;
-  const avgScore = totalAnalyses > 0
-    ? Math.round(history.reduce((s, h) => s + (h.overall_score ?? 0), 0) / totalAnalyses)
+  const totalAnalyses = filtersActive ? filteredHistory.length : (totalCount ?? history.length);
+  const avgScore = filteredHistory.length > 0
+    ? Math.round(filteredHistory.reduce((s, h) => s + (h.overall_score ?? 0), 0) / filteredHistory.length)
     : 0;
 
-  const scoreTrend = computeTrend(history, 'overall_score');
+  const scoreTrend = computeTrend(filteredHistory, 'overall_score');
   const usagePct = user ? Math.round(((user.usage?.count ?? 0) / (user.usage?.limit ?? 100)) * 100) : 0;
 
   const tier = (user?.subscriptionStatus === 'active' && user?.stripePriceId)
@@ -465,10 +505,10 @@ export default function Dashboard() {
 
   const pillarAvgs = activePillars.map(p => ({
     ...p,
-    avg: totalAnalyses > 0
-      ? Math.round(history.reduce((s, h) => s + (h[p.key] ?? 0), 0) / totalAnalyses)
+    avg: filteredHistory.length > 0
+      ? Math.round(filteredHistory.reduce((s, h) => s + (h[p.key] ?? 0), 0) / filteredHistory.length)
       : 0,
-    trend: computeTrend(history, p.key),
+    trend: computeTrend(filteredHistory, p.key),
   }));
 
   const contentHealth = pillarAvgs.some(p => p.avg > 0)
@@ -478,7 +518,7 @@ export default function Dashboard() {
   const quickWins = useMemo(() => {
     const seen = new Set();
     const wins = [];
-    for (const item of history.slice(0, 5)) {
+    for (const item of filteredHistory.slice(0, 5)) {
       for (const rec of item.recommendations || []) {
         if (!rec || seen.has(rec)) continue;
         seen.add(rec);
@@ -487,13 +527,13 @@ export default function Dashboard() {
       }
     }
     return wins;
-  }, [history]);
+  }, [filteredHistory]);
 
   const weakestPillar = totalAnalyses >= 3
     ? [...pillarAvgs].sort((a, b) => a.avg - b.avg)[0]
     : null;
 
-  const chartData = [...history]
+  const chartData = [...filteredHistory]
     .slice(0, chartRange)
     .reverse()
     .map((h, i) => ({
@@ -505,7 +545,7 @@ export default function Dashboard() {
   const donutData = pillarAvgs.map(p => ({ name: p.label, value: p.avg || 1, color: p.color, real: p.avg }));
 
   /* ── sub-scores from most recent analysis ── */
-  const latest = history[0];
+  const latest = filteredHistory[0];
   const latestSubs = latest
     ? activePillars.map(p => {
         const detail = latest[`${p.key}_detail`] ?? {};
@@ -777,6 +817,36 @@ export default function Dashboard() {
         ))}
       </div>
 
+      {/* ── Filters ── */}
+      {!loading && history.length > 0 && (
+        <div className={styles.filterBar}>
+          <div className={styles.filterGroup}>
+            {DATE_FILTERS.map(f => (
+              <button key={f.id} type="button"
+                className={`${styles.filterBtn} ${dateFilter === f.id ? styles.filterBtnActive : ''}`}
+                onClick={() => setDateFilter(f.id)}>
+                {f.label}
+              </button>
+            ))}
+          </div>
+          <div className={styles.filterGroup}>
+            {TYPE_FILTERS.map(f => (
+              <button key={f.id} type="button"
+                className={`${styles.filterBtn} ${typeFilter === f.id ? styles.filterBtnActive : ''}`}
+                onClick={() => setTypeFilter(f.id)}>
+                {f.label}
+              </button>
+            ))}
+          </div>
+          {filtersActive && (
+            <span className={styles.filterSummary}>
+              {filteredHistory.length} of {history.length}
+              <button type="button" className={styles.filterClear} onClick={clearFilters}>Clear</button>
+            </span>
+          )}
+        </div>
+      )}
+
       {/* ── Insight callout ── */}
       {weakestPillar && weakestPillar.avg < 70 && (
         <div className={styles.insight}>
@@ -840,11 +910,29 @@ export default function Dashboard() {
           {loading ? (
             <div className={styles.chartEmpty}><span className="spinner" /></div>
           ) : chartData.length < 2 ? (
-            <div className={styles.chartEmpty}>
-              <div className={styles.emptyState}>
+            <div className={styles.chartEmptyRich}>
+              <div className={styles.sampleBackdrop}>
+                <ResponsiveContainer width="100%" height={200}>
+                  <AreaChart data={SAMPLE_TREND} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
+                    <defs>
+                      <linearGradient id="scoreGradSample" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.08} />
+                        <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <Area type="monotone" dataKey="score" stroke="#3b82f6" strokeWidth={1.5}
+                      fill="url(#scoreGradSample)" dot={false} />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+              <div className={styles.emptyStateOverlay}>
                 <Activity className={styles.emptyIcon} />
-                <p>Run your first analysis to see trends here</p>
-                <Link to="/analyze" className={styles.emptyLink}>Get started →</Link>
+                <p>{filtersActive && history.length > 0 ? 'No analyses match these filters' : 'Run your first analysis to see trends here'}</p>
+                {filtersActive && history.length > 0 ? (
+                  <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
+                ) : (
+                  <Link to="/analyze" className={styles.emptyLink}>Get started →</Link>
+                )}
               </div>
             </div>
           ) : (
@@ -884,11 +972,29 @@ export default function Dashboard() {
           {loading ? (
             <div className={styles.chartEmpty}><span className="spinner" /></div>
           ) : !pillarAvgs.some(p => p.avg > 0) ? (
-            <div className={styles.chartEmpty}>
-              <div className={styles.emptyState}>
+            <div className={styles.chartEmptyRich}>
+              <div className={styles.sampleBackdrop}>
+                <ResponsiveContainer width="100%" height={120}>
+                  <PieChart>
+                    <Pie data={SAMPLE_DONUT} cx="50%" cy="50%"
+                      innerRadius={30} outerRadius={54}
+                      paddingAngle={2} dataKey="value" strokeWidth={0}
+                      startAngle={90} endAngle={-270}>
+                      {SAMPLE_DONUT.map((entry, i) => (
+                        <Cell key={i} fill={entry.color} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className={styles.emptyStateOverlay}>
                 <Activity className={styles.emptyIcon} />
-                <p>No pillar data yet</p>
-                <Link to="/analyze" className={styles.emptyLink}>Run analysis →</Link>
+                <p>{filtersActive && history.length > 0 ? 'No analyses match these filters' : 'No pillar data yet'}</p>
+                {filtersActive && history.length > 0 ? (
+                  <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
+                ) : (
+                  <Link to="/analyze" className={styles.emptyLink}>Run analysis →</Link>
+                )}
               </div>
             </div>
           ) : (
@@ -952,17 +1058,21 @@ export default function Dashboard() {
 
           {loading ? (
             <div className={styles.chartEmpty}><span className="spinner" /></div>
-          ) : history.length === 0 ? (
+          ) : filteredHistory.length === 0 ? (
             <div className={styles.chartEmpty}>
               <div className={styles.emptyState}>
                 <FileText className={styles.emptyIcon} />
-                <p>No analyses yet</p>
-                <Link to="/analyze" className={styles.emptyLink}>Run your first →</Link>
+                <p>{filtersActive && history.length > 0 ? 'No analyses match these filters' : 'No analyses yet'}</p>
+                {filtersActive && history.length > 0 ? (
+                  <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
+                ) : (
+                  <Link to="/analyze" className={styles.emptyLink}>Run your first →</Link>
+                )}
               </div>
             </div>
           ) : (
             <div className={styles.analysesList}>
-              {history.slice(0, 7).map((item, i) => {
+              {filteredHistory.slice(0, 7).map((item, i) => {
                 const type = getItemType(item);
                 const typeColor = type === 'URL' ? '#8f93c7' : type === 'Repo' ? '#7cae8f' : '#6b9bc4';
                 const TypeIcon = type === 'URL' ? Globe : type === 'Repo' ? GitBranch : FileText;
