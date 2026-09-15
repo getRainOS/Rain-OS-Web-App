@@ -265,6 +265,32 @@ function Sparkline({ values, color, width = 86, height = 26 }) {
   );
 }
 
+/* ── Pillar mini bar chart ── */
+function PillarBars({ pillars, width = 120, height = 28 }) {
+  if (!pillars || pillars.length === 0) {
+    return <span className={styles.sparkPlaceholder}>—</span>;
+  }
+  const gap = 3;
+  const barW = (width - gap * (pillars.length - 1)) / pillars.length;
+  return (
+    <div className={styles.pillarBars} style={{ width, height }}>
+      {pillars.map((p) => (
+        <div
+          key={p.key}
+          className={styles.pillarBarTrack}
+          style={{ width: barW }}
+          title={`${p.label}: ${p.avg}/100`}
+        >
+          <div
+            className={styles.pillarBarFill}
+            style={{ height: `${Math.max(p.avg, 3)}%`, background: p.color }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /* ── Sub-score bar ── */
 function SubScoreBar({ label, value, color, tooltip }) {
   return (
@@ -628,26 +654,8 @@ export default function Dashboard() {
   }, [sovHistory]);
   const sovLatest = sovGroups[0] || null;
 
-  // AI Search Readiness = contentHealth but positioned as the metric for Google's new AI Search ads
-  const aiSearchReady = contentHealth;
-
   // Build tool-specific KPI cards
   const toolCards = [
-    {
-      key: 'ai_search',
-      label: 'AI Search Ready',
-      to: '/analyze',
-      hasData: totalAnalyses > 0,
-      value: totalAnalyses > 0 ? `${aiSearchReady}` : null,
-      suffix: '/100',
-      sub: totalAnalyses > 0
-        ? `From your content health scores · ${weakestPillar ? `${weakestPillar.label} needs work` : 'all pillars strong'}`
-        : 'No data yet — run your first analysis to see your AI Search readiness score',
-      trend: scoreTrend,
-      Icon: Sparkles,
-      spark: chartData.length > 1 ? chartData.map(d => d.score) : null,
-      tooltip: 'How ready your content is for AI-powered search results. Google and others now show AI-generated answers that cite sources directly. Higher scores = better odds of being cited.',
-    },
     {
       key: 'content',
       label: 'Content Health',
@@ -658,8 +666,8 @@ export default function Dashboard() {
       sub: totalAnalyses > 0 ? `${totalAnalyses} analyses · ${weakestPillar ? `${weakestPillar.label} weakest` : 'all balanced'}` : 'No analysis data yet — paste content to score',
       trend: scoreTrend,
       Icon: FileText,
-      spark: chartData.length > 1 ? chartData.map(d => d.score) : null,
-      tooltip: 'Average of your AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, and RAG Readiness scores. Think of it as your overall content quality grade.',
+      pillars: totalAnalyses > 0 ? pillarAvgs : null,
+      tooltip: 'Average of your AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, and RAG Readiness scores — the same signals that make AI search engines more likely to cite you. Bars below show each pillar.',
     },
     {
       key: 'citation',
@@ -726,7 +734,7 @@ export default function Dashboard() {
           <p className={styles.headerSub}>
             {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
             {' · '}
-            <Link to="/history" style={{ color: 'var(--accent)' }} title="Rows in the analysis history table (includes all saved analyses). 'API Usage' shows counted API calls against your plan and may exclude imports or manual inserts.">You have a library of {totalAnalyses} pieces analyzed</Link>
+            <Link to="/history" style={{ color: 'var(--accent)' }} title="Rows in the analysis history table (includes all saved analyses). 'API Usage' shows counted API calls against your plan and may exclude imports or manual inserts.">You have a library of {totalCount ?? history.length} pieces analyzed</Link>
           </p>
         </div>
         <button onClick={() => navigate('/analyze')} className={styles.newBtn}>
@@ -763,7 +771,7 @@ export default function Dashboard() {
 
       {/* ── Tool Snapshot Cards ── */}
       <div className={styles.toolCards}>
-        {toolCards.filter(t => t.key !== 'ai_search' || !['vibe_coders','developers'].includes(userLane)).map(t => (
+        {toolCards.map(t => (
           <Link key={t.key} to={t.to} className={`${styles.toolCard} ${!t.hasData ? styles.toolCardEmpty : ''}`}>
             <div className={styles.toolCardTop}>
               <div className={styles.toolCardLabelRow}>
@@ -800,7 +808,11 @@ export default function Dashboard() {
               {t.trend !== null && t.trend !== undefined && <TrendBadge pct={t.trend} />}
             </div>
 
-            {t.spark && t.spark.length > 1 && (
+            {t.pillars && t.pillars.length > 0 ? (
+              <div className={styles.toolCardSpark}>
+                <PillarBars pillars={t.pillars} />
+              </div>
+            ) : t.spark && t.spark.length > 1 && (
               <div className={styles.toolCardSpark}>
                 <Sparkline values={t.spark} color="#94a3b8" width={120} height={24} />
               </div>

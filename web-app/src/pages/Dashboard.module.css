@@ -1137,6 +1137,29 @@ button.emptyLink {
   color: var(--text-dim);
 }
 
+/* ── Pillar mini bar chart ── */
+.pillarBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.pillarBarTrack {
+  height: 100%;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.05);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  cursor: default;
+}
+
+.pillarBarFill {
+  width: 100%;
+  border-radius: 2px;
+  transition: height 0.2s ease;
+}
+
 .citationScore {
   font-size: 15px;
   font-weight: 500;
