@@ -769,6 +769,77 @@ export default function Dashboard() {
         </div>
       ) : null}
 
+      {/* ── Score Trend (above the fold) ── */}
+      <div className={styles.chartCard} style={{ marginBottom: 12 }}>
+        <div className={styles.chartHeader}>
+          <div>
+            <h2 className={styles.chartTitle}>Score Trend</h2>
+            <p className={styles.chartSub}>Last {chartRange} analyses</p>
+            <span className={styles.chartHelp} title="How your overall content scores have changed over time. Higher scores mean AI engines are more likely to cite your content.">
+              <HelpCircle size={11} />
+            </span>
+          </div>
+          <div className={styles.rangeToggle}>
+            {[7, 14, 30].map(r => (
+              <button key={r} type="button"
+                className={`${styles.rangeBtn} ${chartRange === r ? styles.rangeBtnActive : ''}`}
+                onClick={() => setChartRange(r)}>
+                {r}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {loading ? (
+          <div className={styles.chartEmpty}><span className="spinner" /></div>
+        ) : chartData.length < 2 ? (
+          <div className={styles.chartEmptyRich}>
+            <div className={styles.sampleBackdrop}>
+              <ResponsiveContainer width="100%" height={200}>
+                <AreaChart data={SAMPLE_TREND} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
+                  <defs>
+                    <linearGradient id="scoreGradSample" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#5b5fc7" stopOpacity={0.08} />
+                      <stop offset="100%" stopColor="#5b5fc7" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <Area type="monotone" dataKey="score" stroke="#5b5fc7" strokeWidth={1.5}
+                    fill="url(#scoreGradSample)" dot={false} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+            <div className={styles.emptyStateOverlay}>
+              <Activity className={styles.emptyIcon} />
+              <p>{filtersActive && history.length > 0 ? 'No analyses match these filters' : 'Run your first analysis to see trends here'}</p>
+              {filtersActive && history.length > 0 ? (
+                <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
+              ) : (
+                <Link to="/analyze" className={styles.emptyLink}>Get started →</Link>
+              )}
+            </div>
+          </div>
+        ) : (
+          <ResponsiveContainer key={`chart-${chartRange}`} width="100%" height={200}>
+            <AreaChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
+              <defs>
+                <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#5b5fc7" stopOpacity={0.08} />
+                  <stop offset="100%" stopColor="#5b5fc7" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <XAxis dataKey="idx" stroke="transparent"
+                tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
+              <YAxis domain={[0, 100]} stroke="transparent"
+                tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
+              <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
+              <Area type="monotone" dataKey="score" stroke="#5b5fc7" strokeWidth={1.5}
+                fill="url(#scoreGrad)" dot={false}
+                activeDot={{ r: 4, fill: '#5b5fc7', strokeWidth: 0 }} />
+            </AreaChart>
+          </ResponsiveContainer>
+        )}
+      </div>
+
       {/* ── Tool Snapshot Cards ── */}
       <div className={styles.toolCards}>
         {toolCards.map(t => (
@@ -895,79 +966,8 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* ── Charts row ── */}
+      {/* ── Pillar Breakdown ── */}
       <div className={styles.chartsRow}>
-
-        {/* Score Trend */}
-        <div className={styles.chartCard}>
-          <div className={styles.chartHeader}>
-            <div>
-              <h2 className={styles.chartTitle}>Score Trend</h2>
-              <p className={styles.chartSub}>Last {chartRange} analyses</p>
-              <span className={styles.chartHelp} title="How your overall content scores have changed over time. Higher scores mean AI engines are more likely to cite your content.">
-                <HelpCircle size={11} />
-              </span>
-            </div>
-            <div className={styles.rangeToggle}>
-              {[7, 14, 30].map(r => (
-                <button key={r} type="button"
-                  className={`${styles.rangeBtn} ${chartRange === r ? styles.rangeBtnActive : ''}`}
-                  onClick={() => setChartRange(r)}>
-                  {r}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {loading ? (
-            <div className={styles.chartEmpty}><span className="spinner" /></div>
-          ) : chartData.length < 2 ? (
-            <div className={styles.chartEmptyRich}>
-              <div className={styles.sampleBackdrop}>
-                <ResponsiveContainer width="100%" height={200}>
-                  <AreaChart data={SAMPLE_TREND} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
-                    <defs>
-                      <linearGradient id="scoreGradSample" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#5b5fc7" stopOpacity={0.08} />
-                        <stop offset="100%" stopColor="#5b5fc7" stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <Area type="monotone" dataKey="score" stroke="#5b5fc7" strokeWidth={1.5}
-                      fill="url(#scoreGradSample)" dot={false} />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-              <div className={styles.emptyStateOverlay}>
-                <Activity className={styles.emptyIcon} />
-                <p>{filtersActive && history.length > 0 ? 'No analyses match these filters' : 'Run your first analysis to see trends here'}</p>
-                {filtersActive && history.length > 0 ? (
-                  <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
-                ) : (
-                  <Link to="/analyze" className={styles.emptyLink}>Get started →</Link>
-                )}
-              </div>
-            </div>
-          ) : (
-            <ResponsiveContainer key={`chart-${chartRange}`} width="100%" height={200}>
-              <AreaChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
-                <defs>
-                  <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#5b5fc7" stopOpacity={0.08} />
-                    <stop offset="100%" stopColor="#5b5fc7" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <XAxis dataKey="idx" stroke="transparent"
-                  tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
-                <YAxis domain={[0, 100]} stroke="transparent"
-                  tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
-                <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
-                <Area type="monotone" dataKey="score" stroke="#5b5fc7" strokeWidth={1.5}
-                  fill="url(#scoreGrad)" dot={false}
-                  activeDot={{ r: 4, fill: '#5b5fc7', strokeWidth: 0 }} />
-              </AreaChart>
-            </ResponsiveContainer>
-          )}
-        </div>
 
         {/* Pillar Donut */}
         <div className={styles.chartCard}>
