@@ -156,7 +156,7 @@
 }
 
 .copyBtn:hover:not(:disabled) {
-  background: #2563eb;
+  background: #4c4fa5;
 }
 
 .copyBtn:disabled {

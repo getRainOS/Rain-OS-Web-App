@@ -69,11 +69,11 @@ const QUICK_ACTIONS_ALL = {
 };
 
 const LANES = [
-  { id: 'general',         label: 'Writers & Marketers',    desc: 'Optimize articles, landing pages, and marketing copy for AI citation.', color: '#3b82f6', Icon: FileText },
-  { id: 'product_sellers', label: 'Product Sellers',        desc: 'Maximize AI product discovery with Discoverability scoring at 50% weight.', color: '#3b82f6', Icon: SearchCheck },
+  { id: 'general',         label: 'Writers & Marketers',    desc: 'Optimize articles, landing pages, and marketing copy for AI citation.', color: '#5b5fc7', Icon: FileText },
+  { id: 'product_sellers', label: 'Product Sellers',        desc: 'Maximize AI product discovery with Discoverability scoring at 50% weight.', color: '#5b5fc7', Icon: SearchCheck },
   { id: 'vibe_coders',     label: 'Vibe Coders',            desc: 'Ship fast with AI-built projects? Audit your content, repo, and discoverability before you launch.', color: '#8f93c7', Icon: GitBranch },
   { id: 'developers',      label: 'Developers',             desc: 'Analyze tech docs, READMEs, and API references for AI readability signals.', color: '#8f93c7', Icon: GitBranch },
-  { id: 'local_business',  label: 'Local Service Business', desc: 'Get your professional services business cited by AI when customers search locally.', color: '#3b82f6', Icon: MapIcon },
+  { id: 'local_business',  label: 'Local Service Business', desc: 'Get your professional services business cited by AI when customers search locally.', color: '#5b5fc7', Icon: MapIcon },
 ];
 
 const SAMPLE_TREND = [42, 48, 45, 55, 60, 58, 67, 71, 68, 75].map((score, i) => ({ idx: i + 1, score }));
@@ -928,11 +928,11 @@ export default function Dashboard() {
                   <AreaChart data={SAMPLE_TREND} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
                     <defs>
                       <linearGradient id="scoreGradSample" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.08} />
-                        <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
+                        <stop offset="0%" stopColor="#5b5fc7" stopOpacity={0.08} />
+                        <stop offset="100%" stopColor="#5b5fc7" stopOpacity={0} />
                       </linearGradient>
                     </defs>
-                    <Area type="monotone" dataKey="score" stroke="#3b82f6" strokeWidth={1.5}
+                    <Area type="monotone" dataKey="score" stroke="#5b5fc7" strokeWidth={1.5}
                       fill="url(#scoreGradSample)" dot={false} />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -952,8 +952,8 @@ export default function Dashboard() {
               <AreaChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
                 <defs>
                   <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.08} />
-                    <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#5b5fc7" stopOpacity={0.08} />
+                    <stop offset="100%" stopColor="#5b5fc7" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="idx" stroke="transparent"
@@ -961,9 +961,9 @@ export default function Dashboard() {
                 <YAxis domain={[0, 100]} stroke="transparent"
                   tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
                 <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
-                <Area type="monotone" dataKey="score" stroke="#3b82f6" strokeWidth={1.5}
+                <Area type="monotone" dataKey="score" stroke="#5b5fc7" strokeWidth={1.5}
                   fill="url(#scoreGrad)" dot={false}
-                  activeDot={{ r: 4, fill: '#3b82f6', strokeWidth: 0 }} />
+                  activeDot={{ r: 4, fill: '#5b5fc7', strokeWidth: 0 }} />
               </AreaChart>
             </ResponsiveContainer>
           )}

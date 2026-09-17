@@ -53,7 +53,7 @@
 }
 
 .newBtn:hover {
-  background: #2563eb;
+  background: #4c4fa5;
 }
 
 .newBtnIcon {
@@ -1237,8 +1237,8 @@ button.emptyLink {
 
 .competitorCardClickable:focus-visible {
   outline: none;
-  border-color: rgba(59,130,246,0.35);
-  box-shadow: 0 0 0 2px rgba(59,130,246,0.10);
+  border-color: rgba(91,95,199,0.35);
+  box-shadow: 0 0 0 2px rgba(91,95,199,0.10);
 }
 
 .competitorList {
@@ -1471,7 +1471,7 @@ button.emptyLink {
 }
 
 .laneCard:hover {
-  border-color: rgba(59,130,246,0.35);
+  border-color: rgba(91,95,199,0.35);
   background: var(--surface-2);
 }
 
@@ -1482,8 +1482,8 @@ button.emptyLink {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(59,130,246,0.08);
-  border: 1px solid rgba(59,130,246,0.14);
+  background: rgba(91,95,199,0.08);
+  border: 1px solid rgba(91,95,199,0.14);
   margin-bottom: 4px;
   flex-shrink: 0;
 }

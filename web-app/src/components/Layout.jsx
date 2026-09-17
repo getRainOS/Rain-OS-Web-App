@@ -17,10 +17,10 @@ const PRICE_TO_PLAN = {
 };
 
 const LANE_META = {
-  general:         { label: 'Writers & Marketers',    color: '#3b82f6' },
-  product_sellers: { label: 'Product Sellers',        color: '#3b82f6' },
+  general:         { label: 'Writers & Marketers',    color: '#5b5fc7' },
+  product_sellers: { label: 'Product Sellers',        color: '#5b5fc7' },
   developers:      { label: 'Developers',             color: '#818cf8' },
-  local_business:  { label: 'Local Service Business', color: '#3b82f6' },
+  local_business:  { label: 'Local Service Business', color: '#5b5fc7' },
   vibe_coders:     { label: 'Vibe Coders',            color: '#818cf8' },
 };
 
