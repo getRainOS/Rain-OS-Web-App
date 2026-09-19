@@ -18,7 +18,7 @@ const KB_DATA = {
     tools: [
       { label: 'Content Optimizer', desc: 'Paste any article, landing page, or blog post to get a full AI readability score with specific fix recommendations.' },
       { label: 'URL Scanner',       desc: 'Enter a live website URL to audit how well AI crawlers can read and understand your pages.' },
-      { label: 'Citation Monitor',  desc: 'Track whether ChatGPT, Perplexity, and Gemini are mentioning your brand when people ask relevant questions.' },
+      { label: 'Citation Monitor',  desc: 'Track whether Gemini cites your brand for the topics you care about, using live Google Search grounding.' },
       { label: 'Brand Sentiment',   desc: 'See how AI describes your brand — is the sentiment positive, negative, or neutral?' },
       { label: 'Share of Voice',    desc: 'Measure what percentage of AI answers include your brand versus your competitors.' },
       { label: 'Score History',     desc: 'Browse every past analysis to track improvement trends and identify what moves the needle.' },
