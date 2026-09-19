@@ -386,7 +386,7 @@ export default function BrandVisibility() {
         <div style={S.titleRow}>
           <h1 style={S.title}>Brand Sentiment</h1>
         </div>
-        <p style={S.sub}>See how AI answers mention your brand — and what to do if they don't.</p>
+        <p style={S.sub}>See how Gemini describes your brand, using live Google Search grounding — and what to do if it does not mention you.</p>
       </div>
 
       <DisclaimerBox />
@@ -419,7 +419,7 @@ export default function BrandVisibility() {
           <div>
             <div style={{ fontSize: 15, fontWeight: 600, color: '#c084fc', marginBottom: 6 }}>Business plan required</div>
             <div style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.6 }}>
-              Brand Sentiment tracks how AI models mention your brand across live answers. It runs multiple Gemini calls per check and is available on the Business plan.
+              Brand Sentiment tracks how Gemini describes your brand across live, Google Search-grounded answers. It runs multiple Gemini calls per check and is available on the Business plan.
             </div>
           </div>
           <a href="/upgrade" style={{

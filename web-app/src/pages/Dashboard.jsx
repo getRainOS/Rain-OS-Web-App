@@ -692,7 +692,7 @@ export default function Dashboard() {
       suffix: '/100',
       sub: brandVisLatest
         ? `${brandVisLatest.brand} — ${brandVisLatest.latestMention.replace('_', ' ')} · ${brandVisLatest.checks} check${brandVisLatest.checks > 1 ? 's' : ''}`
-        : 'No brand visibility data yet — run a check to see how AI describes you',
+        : 'No brand sentiment data yet — run a check to see how Gemini describes you',
       trend: brandVisLatest?.delta,
       Icon: Heart,
       spark: brandVisLatest?.spark && brandVisLatest.spark.length > 1 ? brandVisLatest.spark : null,
