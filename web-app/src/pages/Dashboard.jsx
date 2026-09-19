@@ -681,7 +681,7 @@ export default function Dashboard() {
       sub: citationTotal > 0 ? `${citationCitedCount}/${citationTotal} topics cited · avg alignment ${avgAlignment}` : 'No citation data yet — run a topic check to see if AI cites you',
       Icon: Radar,
       spark: trackedTopics.length > 0 && trackedTopics[0].spark.length > 1 ? trackedTopics[0].spark : null,
-      tooltip: 'Percentage of tracked topics where ChatGPT, Gemini, or Perplexity cite your brand in their answers. The higher, the more AI trusts you as a source.',
+      tooltip: 'Percentage of tracked topics where Gemini cites your brand, using live Google Search grounding. The higher the number, the more often Gemini treats you as a source.',
     },
     {
       key: 'brand',

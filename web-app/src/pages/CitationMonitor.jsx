@@ -33,7 +33,7 @@ function DisclaimerBlock() {
           {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
       </div>
-      {!collapsed && <p className={styles.disclaimerText} style={{ marginTop: 8 }}>We query Google Gemini with live Google Search grounding using your exact topic, then check whether your domain appears among the sources Gemini used to generate its answer. This matters now more than ever: Google recently launched AI Search ads that cite sources within AI-generated answers (Google Marketing Live 2026). The <em>cited / not cited</em> result is a real, factual snapshot of what Gemini pulled right now. However: it reflects only one AI model (Gemini) and one query phrasing; different phrasings or models may yield different sources. The alignment score and recommendations come from a second AI analysis pass and are directional, not quantitative. Run checks on multiple topic variations and re-run regularly to track trends — a single check is a data point, not a verdict.</p>}
+      {!collapsed && <p className={styles.disclaimerText} style={{ marginTop: 8 }}>We check real Google Search grounding — live data from the search engine that still handles the vast majority of how people (and increasingly, AI systems) find businesses like yours. Not a simulation, not a guess: this is what Google's AI can actually find and say about you right now. We query Google Gemini with live Google Search grounding using your exact topic, then check whether your domain appears among the sources Gemini used to generate its answer. This matters now more than ever: Google recently launched AI Search ads that cite sources within AI-generated answers (Google Marketing Live 2026). The <em>cited / not cited</em> result is a real, factual snapshot of what Gemini pulled right now. However: it reflects only one AI model (Gemini) and one query phrasing; different phrasings or models may yield different sources. The alignment score and recommendations come from a second AI analysis pass and are directional, not quantitative. Run checks on multiple topic variations and re-run regularly to track trends — a single check is a data point, not a verdict.</p>}
     </div>
   );
 }
@@ -240,7 +240,7 @@ export default function CitationMonitor() {
           <h1 className={styles.title}>Citation Monitor</h1>
         </div>
         <p className={styles.sub}>
-          Track whether ChatGPT, Perplexity, Gemini, and Google AI Search recommend your brand for the topics that matter to you.
+          See whether Gemini cites your brand for the topics that matter to you — powered by real Google Search grounding, not a simulation.
         </p>
       </div>
 
