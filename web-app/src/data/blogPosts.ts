@@ -13,6 +13,44 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: 'what-is-google-search-grounding',
+    title: 'What Is Google Search Grounding? (And Why rain OS Is Built Around It)',
+    subtitle: 'Grounding is how Gemini checks live Google Search before it answers. Here is what that means for anyone trying to be found.',
+    date: '2026-09-19',
+    readTime: '4 min read',
+    category: 'AI Search',
+    image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&h=630&fit=crop&q=80',
+    author: 'rain OS Team',
+    authorRole: 'Founders',
+    body: `Ask Gemini a question about a business and it does not always answer from memory. Often it goes and checks Google Search first, then writes its answer from what it finds. That step is called Google Search grounding.
+
+**What grounding means, simply**
+
+A language model on its own answers from what it learned in training. That knowledge has a cutoff date and can be wrong. Grounding connects the model to a live source, in this case Google Search, so its answer is based on current pages instead of a stale memory.
+
+**Why it matters for your business**
+
+If Gemini is grounded in Google Search, then the pages Google can find, read and trust are the pages Gemini can cite. Google AI Overviews are built on closely related technology, though there is no public tool that lets anyone check that exact product directly. The practical takeaway is the same either way: a page that is clear, well structured and easy for Google to index gives AI answers something solid to work with.
+
+**Why rain OS is built around it**
+
+We check real Google Search grounding, not a simulation. Citation Monitor asks Gemini about the topics you care about and shows whether it cites your brand, using live search data.
+
+See whether Gemini cites your brand for the topics that matter to you — powered by real Google Search grounding, not a simulation.
+
+We check real Google Search grounding — live data from the search engine that still handles the vast majority of how people (and increasingly, AI systems) find businesses like yours. Not a simulation, not a guess: this is what Google's AI can actually find and say about you right now.
+
+**What grounding does and does not cover**
+
+It covers Gemini's own answers directly. It treats Google Search relevance and indexation as a real signal, though it is not a literal rank tracker. It relates to Google AI Overviews without verifying them.
+
+It does not cover ChatGPT, Perplexity, Claude, Bing or voice assistants. It also does not cover Google Maps or the local pack, which is a separate ranking system with its own rules.
+
+**Where to start**
+
+Run your most important page through the Content Optimizer, then use Citation Monitor to see how Gemini talks about your brand today. Fix what is unclear, publish, and check again.`
+  },
+  {
     slug: 'ai-readability-for-everyone',
     title: 'Why AI Readability Matters for Everyone',
     subtitle: 'The internet was built to democratize information. AI search is the next frontier — and it should work for all voices, not just the loud ones.',
