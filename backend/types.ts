@@ -114,6 +114,10 @@ export interface AiReadabilityDetail {
   authorityScore: number;
   }
   // ─── Main analysis response (v2.3) ────────────────────────────────────────────
+  export interface PillarRecommendation {
+  pillar: 'ai_readability' | 'digital_authority' | 'conversion_readiness' | 'product_discoverability' | 'rag_readiness' | null;
+  text: string;
+  }
   export interface AnalysisResponse {
   overallScore: number;
   pillarScores: PillarScores;
@@ -124,7 +128,7 @@ export interface AiReadabilityDetail {
   conversion_readiness_detail: ConversionReadinessDetail;
   product_discoverability_detail: ProductDiscoverabilityDetail;
   rag_readiness_detail: RagReadinessDetail;
-recommendations: string[];
+recommendations: PillarRecommendation[];
   summary: string;
 keywords: string[];
 authorship: AuthorshipSignals;

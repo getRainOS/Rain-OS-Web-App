@@ -417,6 +417,15 @@
   line-height: 1.4;
 }
 
+.quickWinTag {
+  flex-shrink: 0;
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 /* ── Charts Row ── */
 .chartsRow {
   display: grid;

@@ -546,9 +546,12 @@ export default function Dashboard() {
     const wins = [];
     for (const item of filteredHistory.slice(0, 5)) {
       for (const rec of item.recommendations || []) {
-        if (!rec || seen.has(rec)) continue;
-        seen.add(rec);
-        wins.push(rec);
+        if (!rec) continue;
+        const text = typeof rec === 'string' ? rec : rec.text;
+        const pillar = typeof rec === 'string' ? null : (rec.pillar ?? null);
+        if (!text || seen.has(text)) continue;
+        seen.add(text);
+        wins.push({ text, pillar });
         if (wins.length >= 3) return wins;
       }
     }
@@ -955,13 +958,24 @@ export default function Dashboard() {
             </div>
           </div>
           <div className={styles.quickWinsList}>
-            {quickWins.map((rec, i) => (
-              <div key={i} className={styles.quickWinRow}>
-                <span className={styles.quickWinIndex}>{i + 1}</span>
-                <span className={styles.quickWinText}>{rec}</span>
-                <Link to="/analyze" className={styles.insightAction}>Fix this →</Link>
-              </div>
-            ))}
+            {quickWins.map((rec, i) => {
+              const pillarInfo = rec.pillar ? PILLARS.find(p => p.key === rec.pillar) : null;
+              return (
+                <div key={i} className={styles.quickWinRow}>
+                  <span className={styles.quickWinIndex}>{i + 1}</span>
+                  {pillarInfo && (
+                    <span
+                      className={styles.quickWinTag}
+                      style={{ background: `${pillarInfo.color}26`, color: pillarInfo.color }}
+                    >
+                      {pillarInfo.label}
+                    </span>
+                  )}
+                  <span className={styles.quickWinText}>{rec.text}</span>
+                  <Link to="/analyze" className={styles.insightAction}>Fix this →</Link>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

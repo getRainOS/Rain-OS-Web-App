@@ -178,7 +178,7 @@ subScores: [],
 
 
 
-recommendations: [],
+recommendations: [{ pillar: '', text: '' }],
   summary: '',
 keywords: [],
 authorship: { hasAuthorByline: false, hasPublishDate: false, hasOrganization:
@@ -186,6 +186,25 @@ false, authorityScore: 0 },
 };
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const clamp = (n: number): number => Math.max(0, Math.min(100, Math.round(n)));
+const VALID_PILLARS = new Set([
+  'ai_readability', 'digital_authority', 'conversion_readiness',
+  'product_discoverability', 'rag_readiness',
+]);
+function normalizeRecommendations(raw: unknown): import('../types').PillarRecommendation[] {
+  if (!Array.isArray(raw)) return [];
+  const out: import('../types').PillarRecommendation[] = [];
+  for (const item of raw) {
+    if (typeof item === 'string' && item.trim()) {
+      out.push({ pillar: null, text: item.trim() });
+    } else if (item && typeof item === 'object' && typeof (item as any).text === 'string' && (item as any).text.trim()) {
+      const pillar = typeof (item as any).pillar === 'string' && VALID_PILLARS.has((item as any).pillar)
+        ? (item as any).pillar as import('../types').PillarRecommendation['pillar']
+        : null;
+      out.push({ pillar, text: (item as any).text.trim() });
+    }
+  }
+  return out;
+}
 // ─── Main export ──────────────────────────────────────────────────────────────
 export async function analyzeContent(
 content: string,
@@ -245,7 +264,7 @@ moduleWeightInstructions,
 content.slice(0, 12000), // cap at ~12k chars to manage token cost
 '=== END CONTENT ===',
 '',
-'IMPORTANT: The "recommendations" array must contain 3-5 specific, actionable fixes tied to the lowest-scoring subcategories above (e.g. "Add a bulleted FAQ answering the top 3 buyer questions" rather than generic advice like "improve clarity"). Never return an empty array — every piece of content has room for at least one concrete improvement.',
+'IMPORTANT: The "recommendations" array must contain 3-5 specific, actionable fixes tied to the lowest-scoring subcategories above (e.g. "Add a bulleted FAQ answering the top 3 buyer questions" rather than generic advice like "improve clarity"). Never return an empty array — every piece of content has room for at least one concrete improvement. Each recommendation must be an object of the shape { "pillar": "<key>", "text": "<fix>" }, where "pillar" is exactly one of: "ai_readability", "digital_authority", "conversion_readiness", "product_discoverability", "rag_readiness" — whichever pillar that specific fix most directly improves.',
   'IMPORTANT: The "summary" field must be a concise 1-2 sentence overview of what this content is about and its overall AEO readiness, written in plain language for a non-technical reader.',
   'Return your scores as a single JSON object matching this exact shape (all fields required):',
 JSON.stringify(RESPONSE_SCHEMA, null, 2),
@@ -384,7 +403,7 @@ authorityScore: clamp(authorshipRaw.authorityScore || 0),
       conversion_readiness_detail: parsed.conversion_readiness_detail || ({} as ConversionReadinessDetail),
       product_discoverability_detail: parsed.product_discoverability_detail || ({} as ProductDiscoverabilityDetail),
       rag_readiness_detail: parsed.rag_readiness_detail || ({} as RagReadinessDetail),
-      recommendations: Array.isArray(parsed.recommendations) ? parsed.recommendations : [],
+      recommendations: normalizeRecommendations(parsed.recommendations),
       summary: typeof parsed.summary === 'string' ? parsed.summary : '',
       keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],
       authorship: authorshipSignals,

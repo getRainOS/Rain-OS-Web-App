@@ -3,7 +3,7 @@
 
 // Fix: Import Buffer to make it available in this module.
 import { Buffer } from 'buffer';
-import type { User, SubscriptionStatus } from '../types';
+import type { User, SubscriptionStatus, PillarRecommendation } from '../types';
 import { randomBytes, createHash, createCipheriv, createDecipheriv } from 'crypto';
 import { pool } from './db';
 
@@ -735,7 +735,7 @@ export interface AnalysisRecord {
   analyzed_at: string;
   lane: string | null;
   content: string | null;
-  recommendations: string[];
+  recommendations: PillarRecommendation[];
 }
 
 const mapAnalysisRow = (row: any): AnalysisRecord => ({
@@ -755,7 +755,16 @@ const mapAnalysisRow = (row: any): AnalysisRecord => ({
   recommendations: (() => {
     try {
       const parsed = typeof row.result_json === 'string' ? JSON.parse(row.result_json) : row.result_json;
-      return Array.isArray(parsed?.recommendations) ? parsed.recommendations : [];
+      const arr = Array.isArray(parsed?.recommendations) ? parsed.recommendations : [];
+      return arr
+        .map((item: any) => {
+          if (typeof item === 'string' && item.trim()) return { pillar: null, text: item.trim() };
+          if (item && typeof item === 'object' && typeof item.text === 'string' && item.text.trim()) {
+            return { pillar: typeof item.pillar === 'string' ? item.pillar : null, text: item.text.trim() };
+          }
+          return null;
+        })
+        .filter(Boolean);
     } catch {
       return [];
     }
