@@ -58,8 +58,6 @@ export interface SovResult {
   modelResults:    ModelResult[];
   topCompetitors:  string[];     // union of competitor domains across models
   recommendations: string[];
-  aiVolumeLabel:   'Low' | 'Medium' | 'High' | 'Very High';
-  aiVolumeEstimate: string;      // e.g. "10k – 50k queries/month"
   summary:         string;
 }
 
@@ -95,23 +93,6 @@ function extractSources(
   }
   void supports; // used by caller for snippets if needed
   return sources;
-}
-
-function estimateAiVolume(topic: string): { label: SovResult['aiVolumeLabel']; estimate: string } {
-  const words = topic.trim().toLowerCase().split(/\s+/);
-  const len   = words.length;
-
-  // Broad head terms → higher volume
-  const headTerms = ['ai', 'best', 'how to', 'what is', 'top', 'compare', 'vs', 'review'];
-  const isHead    = words.some(w => headTerms.includes(w));
-  const isBroad   = len <= 4;
-  const isNiche   = len >= 7;
-
-  if (isHead && isBroad) return { label: 'Very High', estimate: '100k – 500k queries/mo (est.)' };
-  if (isHead && !isNiche) return { label: 'High',      estimate: '50k – 200k queries/mo (est.)' };
-  if (isBroad)            return { label: 'Medium',    estimate: '10k – 50k queries/mo (est.)' };
-  if (isNiche)            return { label: 'Low',       estimate: '1k – 10k queries/mo (est.)' };
-  return                         { label: 'Medium',    estimate: '10k – 50k queries/mo (est.)' };
 }
 
 /* ─────────────────────────────────────────────────────────────────────────── *
@@ -295,8 +276,6 @@ export async function runShareOfVoice(
     );
   }
 
-  const volume = estimateAiVolume(t);
-
   const summary = citedCount === 0
     ? `${b} is not currently cited by any of the three query phrasings for "${t}" — significant visibility gap.`
     : citedCount === 3
@@ -312,8 +291,6 @@ export async function runShareOfVoice(
     modelResults,
     topCompetitors,
     recommendations,
-    aiVolumeLabel:    volume.label,
-    aiVolumeEstimate: volume.estimate,
     summary,
   };
 }

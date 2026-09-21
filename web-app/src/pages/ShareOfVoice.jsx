@@ -200,8 +200,6 @@ export default function ShareOfVoice() {
     url: url || null,
     overallSov: 34,
     citedCount: 1,
-    aiVolumeLabel: 'High',
-    aiVolumeEstimate: '50k – 200k queries/mo (est.)',
     summary: 'Rain OS is cited by 1/3 query phrasings for this topic with a visibility score of 34/100.',
     topCompetitors: ['clearscope.io', 'surferseo.com', 'frase.io', 'semrush.com'],
     recommendations: [
