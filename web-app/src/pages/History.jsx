@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { api, isDemo } from '../api/client.js';
 import PillarScores from '../components/PillarScores.jsx';
+import { PILLAR_COLORS } from '../lib/pillarColors.js';
 import { CheckCircle2, AlertCircle, ExternalLink, Trash2 } from 'lucide-react';
 import styles from './History.module.css';
 
@@ -309,10 +310,10 @@ export default function History() {
                       <div className={styles.itemRight}>
                         <div className={styles.itemPillars}>
                           {[
-                            { key: 'ai_readability', color: 'var(--cyan)' },
-                            { key: 'digital_authority', color: 'var(--green)' },
-                            { key: 'conversion_readiness', color: 'var(--purple)' },
-                            { key: 'product_discoverability', color: 'var(--orange)' },
+                            { key: 'ai_readability', color: PILLAR_COLORS.ai_readability },
+                            { key: 'digital_authority', color: PILLAR_COLORS.digital_authority },
+                            { key: 'conversion_readiness', color: PILLAR_COLORS.conversion_readiness },
+                            { key: 'product_discoverability', color: PILLAR_COLORS.product_discoverability },
                           ].map(p => (
                             <span key={p.key} className={styles.miniScore} style={{ color: p.color }}>
                               {item[p.key] !== undefined && item[p.key] !== null ? Math.round(item[p.key]) : '—'}

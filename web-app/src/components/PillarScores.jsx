@@ -1,11 +1,12 @@
 import styles from './PillarScores.module.css';
+import { PILLAR_COLORS } from '../lib/pillarColors.js';
 
 const PILLARS = [
   {
     key: 'ai_readability',
     camel: 'aiReadability',
     label: 'AI Readability',
-    color: '#06b6d4',
+    color: PILLAR_COLORS.ai_readability,
     sub: 'Semantic clarity & AEO alignment',
     detailKey: 'ai_readability_detail',
   },
@@ -13,7 +14,7 @@ const PILLARS = [
     key: 'digital_authority',
     camel: 'digitalAuthority',
     label: 'Digital Authority',
-    color: '#22c55e',
+    color: PILLAR_COLORS.digital_authority,
     sub: 'Credibility & citation readiness',
     detailKey: 'digital_authority_detail',
   },
@@ -21,7 +22,7 @@ const PILLARS = [
     key: 'conversion_readiness',
     camel: 'conversionReadiness',
     label: 'Conversion Readiness',
-    color: '#a855f7',
+    color: PILLAR_COLORS.conversion_readiness,
     sub: 'Engagement & calls to action',
     detailKey: 'conversion_readiness_detail',
   },
@@ -29,7 +30,7 @@ const PILLARS = [
     key: 'product_discoverability',
     camel: 'productDiscoverability',
     label: 'Product Discoverability',
-    color: '#f97316',
+    color: PILLAR_COLORS.product_discoverability,
     sub: 'Search presence & brand visibility',
     detailKey: 'product_discoverability_detail',
   },
@@ -37,7 +38,7 @@ const PILLARS = [
     key: 'rag_readiness',
     camel: 'ragReadiness',
     label: 'RAG Readiness',
-    color: '#ec4899',
+    color: PILLAR_COLORS.rag_readiness,
     sub: 'RAG retrieval & synthesis quality',
     detailKey: 'rag_readiness_detail',
   },

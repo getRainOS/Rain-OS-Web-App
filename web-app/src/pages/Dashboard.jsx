@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import { buildCompetitorMap } from '../lib/citationHistory.js';
+import { PILLAR_COLORS } from '../lib/pillarColors.js';
 import {
   AreaChart, Area, XAxis, YAxis,
   Tooltip, ResponsiveContainer,
@@ -23,23 +24,23 @@ function getFavicon(domain) {
 }
 
 const PILLARS = [
-  { key: 'ai_readability',          label: 'AI Readability',       color: '#6b9bc4', Icon: BrainCircuit,
+  { key: 'ai_readability',          label: 'AI Readability',       color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
     subs: ['semantic_clarity','readability_score','logical_structure','aeo_alignment'],
     subLabels: ['Semantic Clarity','Readability Score','Logical Structure','AEO Alignment'],
     subTooltips: ['How clearly your content conveys meaning beyond just keywords.','How easy it is for both humans and AI to read your content.','Whether your content follows a logical flow with clear headings.','How well your content matches answer-first formatting AI prefers.'] },
-  { key: 'digital_authority',       label: 'Digital Authority',    color: '#7cae8f', Icon: ShieldCheck,
+  { key: 'digital_authority',       label: 'Digital Authority',    color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck,
     subs: ['entity_recognition','citation_readiness','descriptive_metadata'],
     subLabels: ['Entity Recognition','Citation Readiness','Descriptive Metadata'],
     subTooltips: ['Whether AI can identify your brand, people, and products as distinct entities.','How likely AI is to cite you as a source when answering related questions.','Quality of your title tags, meta descriptions, and schema markup.'] },
-  { key: 'conversion_readiness',    label: 'Conversion Readiness', color: '#8f93c7', Icon: MousePointerClick,
+  { key: 'conversion_readiness',    label: 'Conversion Readiness', color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick,
     subs: ['schema_extraction','qa_format_detection','metadata_audit'],
     subLabels: ['Schema Extraction','QA-Format Detection','Metadata Audit'],
     subTooltips: ['How well structured data helps AI extract pricing, products, and offers.','Whether your content uses question-answer format AI likes to quote.','Completeness of meta tags, Open Graph, and social sharing data.'] },
-  { key: 'product_discoverability', label: 'Discoverability',      color: '#c99b6e', Icon: SearchCheck,
+  { key: 'product_discoverability', label: 'Discoverability',      color: PILLAR_COLORS.product_discoverability, Icon: SearchCheck,
     subs: ['schema_completeness','answer_layer_quality','freshness_signals','conversational_query_match'],
     subLabels: ['Schema Completeness','Answer Layer Quality','Freshness Signals','Query Match'],
     subTooltips: ['Whether Product schema has all required fields for AI shopping engines.','How well your content directly answers common shopper questions.','How recent your content is — AI prefers up-to-date product info.','How well your content matches natural language and voice queries.'] },
-  { key: 'rag_readiness',           label: 'RAG Readiness',        color: '#b97e97', Icon: Layers,
+  { key: 'rag_readiness',           label: 'RAG Readiness',        color: PILLAR_COLORS.rag_readiness, Icon: Layers,
     subs: ['information_density','semantic_mapping','narrative_nuance','hierarchical_formatting','explicit_qa_structures','authority_signals'],
     subLabels: ['Information Density','Semantic Mapping','Narrative Nuance','Hierarchical Formatting','Explicit Q&A','Authority Signals'],
     subTooltips: ['Deep, exhaustive coverage with high information density per chunk.','Rich vocabulary, synonyms, historical context, and entity relationships.','Multi-layered explanations, edge cases, and reasoning.','Clean markdown, logical headers, and descriptive titles.','FAQ sections, direct definitions, and problem-solution frameworks.','External links, author bios, and verifiable data points.'] },
