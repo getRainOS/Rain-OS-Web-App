@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BrainCircuit, ShieldCheck, MousePointerClick, Target, ArrowRight, GitBranch, Globe, FileText, AlertTriangle, CheckCircle2, Sparkles, Zap } from 'lucide-react';
+import { PILLAR_COLORS } from '../../lib/pillarColors.js';
 
 const STATES = [
   {
@@ -16,10 +17,10 @@ const STATES = [
     status: 'Critical gaps found',
     statusColor: '#f87171',
     pillars: [
-      { name: 'AI Readability', score: 22, color: '#38bdf8', Icon: BrainCircuit },
-      { name: 'Digital Authority', score: 29, color: '#34d399', Icon: ShieldCheck },
-      { name: 'Conversion', score: 38, color: '#a78bfa', Icon: MousePointerClick },
-      { name: 'Discoverability', score: 35, color: '#fb923c', Icon: Target },
+      { name: 'AI Readability', score: 22, color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit },
+      { name: 'Digital Authority', score: 29, color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck },
+      { name: 'Conversion', score: 38, color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick },
+      { name: 'Discoverability', score: 35, color: PILLAR_COLORS.product_discoverability, Icon: Target },
     ],
     signals: [
       { label: 'llms.txt missing', ok: false },
@@ -40,10 +41,10 @@ const STATES = [
     status: 'AI-ready',
     statusColor: '#34d399',
     pillars: [
-      { name: 'AI Readability', score: 91, color: '#38bdf8', Icon: BrainCircuit },
-      { name: 'Digital Authority', score: 87, color: '#34d399', Icon: ShieldCheck },
-      { name: 'Conversion', score: 88, color: '#a78bfa', Icon: MousePointerClick },
-      { name: 'Discoverability', score: 90, color: '#fb923c', Icon: Target },
+      { name: 'AI Readability', score: 91, color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit },
+      { name: 'Digital Authority', score: 87, color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck },
+      { name: 'Conversion', score: 88, color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick },
+      { name: 'Discoverability', score: 90, color: PILLAR_COLORS.product_discoverability, Icon: Target },
     ],
     signals: [
       { label: 'llms.txt present', ok: true },
@@ -64,10 +65,10 @@ const STATES = [
     status: 'Needs improvement',
     statusColor: '#fbbf24',
     pillars: [
-      { name: 'AI Readability', score: 61, color: '#38bdf8', Icon: BrainCircuit },
-      { name: 'Digital Authority', score: 72, color: '#34d399', Icon: ShieldCheck },
-      { name: 'Conversion', score: 69, color: '#a78bfa', Icon: MousePointerClick },
-      { name: 'Discoverability', score: 66, color: '#fb923c', Icon: Target },
+      { name: 'AI Readability', score: 61, color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit },
+      { name: 'Digital Authority', score: 72, color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck },
+      { name: 'Conversion', score: 69, color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick },
+      { name: 'Discoverability', score: 66, color: PILLAR_COLORS.product_discoverability, Icon: Target },
     ],
     signals: [
       { label: 'Open Graph present', ok: true },
@@ -88,10 +89,10 @@ const STATES = [
     status: 'Highly citable',
     statusColor: '#38bdf8',
     pillars: [
-      { name: 'AI Readability', score: 96, color: '#38bdf8', Icon: BrainCircuit },
-      { name: 'Digital Authority', score: 91, color: '#34d399', Icon: ShieldCheck },
-      { name: 'Conversion', score: 95, color: '#a78bfa', Icon: MousePointerClick },
-      { name: 'Discoverability', score: 94, color: '#fb923c', Icon: Target },
+      { name: 'AI Readability', score: 96, color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit },
+      { name: 'Digital Authority', score: 91, color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck },
+      { name: 'Conversion', score: 95, color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick },
+      { name: 'Discoverability', score: 94, color: PILLAR_COLORS.product_discoverability, Icon: Target },
     ],
     signals: [
       { label: 'Answer-first format', ok: true },

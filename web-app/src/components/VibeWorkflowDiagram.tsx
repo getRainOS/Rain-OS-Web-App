@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, GitBranch, Search, Code2, Globe, TrendingUp, Rocket, ArrowRight, Layers, CheckCircle2 } from 'lucide-react';
+import { PILLAR_COLORS } from '../lib/pillarColors.js';
 
 const VIBE_TOOLS = [
   { name: 'Bolt', color: '#f59e0b' },
@@ -12,11 +13,11 @@ const VIBE_TOOLS = [
 ];
 
 const PILLARS = [
-  { name: 'AI Readability', color: '#38bdf8', short: 'Readability' },
-  { name: 'Digital Authority', color: '#34d399', short: 'Authority' },
-  { name: 'Conversion Readiness', color: '#a78bfa', short: 'Conversion' },
-  { name: 'Product Discoverability', color: '#f97316', short: 'Discoverability' },
-  { name: 'RAG Readiness', color: '#ec4899', short: 'RAG' },
+  { name: 'AI Readability', color: PILLAR_COLORS.ai_readability, short: 'Readability' },
+  { name: 'Digital Authority', color: PILLAR_COLORS.digital_authority, short: 'Authority' },
+  { name: 'Conversion Readiness', color: PILLAR_COLORS.conversion_readiness, short: 'Conversion' },
+  { name: 'Product Discoverability', color: PILLAR_COLORS.product_discoverability, short: 'Discoverability' },
+  { name: 'RAG Readiness', color: PILLAR_COLORS.rag_readiness, short: 'RAG' },
 ];
 
 export default function VibeWorkflowDiagram() {
