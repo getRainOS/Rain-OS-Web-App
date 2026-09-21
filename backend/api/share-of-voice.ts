@@ -24,7 +24,11 @@ export async function sovHandler(req: express.Request, res: express.Response) {
   const user = await authUser(req, res);
   if (!user) return;
 
-  const businessPriceId = process.env.STRIPE_PRICE_ID_BUSINESS || 'price_1SeCJH3NMjs4uYdgpi0xB0XN';
+  const businessPriceId = process.env.STRIPE_PRICE_ID_BUSINESS;
+  if (!businessPriceId) {
+    console.error('STRIPE_PRICE_ID_BUSINESS is not set; refusing plan-gated request');
+    return res.status(500).json({ error: 'server_misconfigured', message: 'Plan check is temporarily unavailable. Please try again later.' } as ApiError);
+  }
   if (user.stripePriceId !== businessPriceId) {
     return res.status(403).json({ error: 'plan_required', message: 'Share of Voice requires a Business plan. Upgrade to track how often Gemini cites your brand.' } as ApiError);
   }
