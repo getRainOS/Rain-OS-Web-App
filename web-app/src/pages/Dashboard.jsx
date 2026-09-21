@@ -704,14 +704,15 @@ export default function Dashboard() {
       label: 'Share of Voice',
       to: '/share-of-voice',
       hasData: !!sovLatest,
-      value: sovLatest ? `${sovLatest.latestSov}%` : null,
+      value: sovLatest ? `${sovLatest.latestSov}` : null,
+      suffix: '/100',
       sub: sovLatest
         ? `${sovLatest.brand} — ${sovLatest.checks} check${sovLatest.checks > 1 ? 's' : ''} · ${sovHistory.length} total`
-        : 'No Share of Voice data yet — run a check to measure your brand presence across AI models',
+        : 'No Share of Voice data yet — run a check to see how often Gemini cites your brand',
       trend: sovLatest?.delta,
       Icon: BarChart2,
       spark: sovLatest?.spark && sovLatest.spark.length > 1 ? sovLatest.spark : null,
-      tooltip: 'What percentage of AI-generated answers mention your brand versus competitors. Simulates Gemini, ChatGPT, and Perplexity styles to get a realistic picture.',
+      tooltip: 'How visible your brand is when Gemini answers your topic three different ways, using live Google Search grounding. Scored 0-100.',
     },
     {
       key: 'usage',

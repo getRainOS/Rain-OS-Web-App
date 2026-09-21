@@ -1,5 +1,5 @@
 // services/shareOfVoiceService.ts — Rain OS AI Share of Voice
-// Runs 3 prompt styles through Gemini to simulate Gemini / ChatGPT / Perplexity
+// Runs 3 prompt phrasings through Google Search-grounded Gemini
 // answering behaviour and measures brand visibility across each.
 import {
   GoogleGenerativeAI,
@@ -233,23 +233,23 @@ export async function runShareOfVoice(
 
   const modelConfigs = [
     {
-      modelLabel:  'Gemini',
+      modelLabel:  'Informational question',
       modelKey:    'gemini',
-      promptStyle: 'Informational — "What are the best tools for…?"',
+      promptStyle: '"What are the best tools for…?"',
       userPrompt:  `What are the best tools, products, or services for: "${t}"? Name specific brands and products, not generic categories. Be specific and helpful.`,
       grounded:    true,
     },
     {
-      modelLabel:  'ChatGPT-style',
+      modelLabel:  'Conversational request',
       modelKey:    'chatgpt_style',
-      promptStyle: 'Conversational — "I need help with… what do you recommend?"',
+      promptStyle: '"I need help with… what do you recommend?"',
       userPrompt:  `I need help with "${t}". What would you personally recommend? Give me your top picks with reasons, naming specific products or companies.`,
-      grounded:    false,
+      grounded:    true,
     },
     {
-      modelLabel:  'Perplexity-style',
+      modelLabel:  'Research comparison',
       modelKey:    'perplexity_style',
-      promptStyle: 'Research — "Compare the top solutions for… with sources"',
+      promptStyle: '"Compare the top solutions for… with sources"',
       userPrompt:  `Research and compare the leading solutions for "${t}". Which brands or tools dominate this space? Include any notable mentions, market leaders, and emerging players.`,
       grounded:    true,
     },
@@ -277,19 +277,19 @@ export async function runShareOfVoice(
   const recommendations: string[] = [];
   if (citedCount === 0) {
     recommendations.push(
-      `None of the three AI models cited ${b} for this topic — start by publishing answer-first content that directly addresses "${t}".`,
+      `None of the three query phrasings cited ${b} for this topic — start by publishing answer-first content that directly addresses "${t}".`,
       `Earn backlinks from domains already being cited (${topCompetitors.slice(0,3).join(', ')}).`,
       `Add FAQ and HowTo structured data so AI engines can extract and attribute your expertise.`,
     );
   } else if (citedCount < 3) {
     recommendations.push(
-      `${b} is cited by ${citedCount}/3 AI models — expand your content to address conversational and research-style queries, not just informational ones.`,
-      `Target the ${3 - citedCount} AI model style(s) that did not cite you with dedicated content formats.`,
+      `${b} is cited by ${citedCount}/3 query phrasings — expand your content to address conversational and research-style queries, not just informational ones.`,
+      `Target the ${3 - citedCount} query phrasing(s) that did not cite you with dedicated content formats.`,
       `Consistently publish updated comparisons and case studies to reinforce authority.`,
     );
   } else {
     recommendations.push(
-      `${b} appears in all 3 AI model styles — protect this by keeping content fresh and updated.`,
+      `${b} appears in all 3 query phrasings — protect this by keeping content fresh and updated.`,
       `Improve mention position by being the first brand named; use strong answer-first headlines.`,
       `Monitor this topic regularly to catch any ranking drops early.`,
     );
@@ -298,10 +298,10 @@ export async function runShareOfVoice(
   const volume = estimateAiVolume(t);
 
   const summary = citedCount === 0
-    ? `${b} is not currently cited by any AI model for "${t}" — significant visibility gap.`
+    ? `${b} is not currently cited by any of the three query phrasings for "${t}" — significant visibility gap.`
     : citedCount === 3
-    ? `${b} achieves full AI visibility across all 3 model styles for "${t}" with a share of voice of ${overallSov}/100.`
-    : `${b} is cited by ${citedCount}/3 AI models for "${t}" with an overall share of voice of ${overallSov}/100.`;
+    ? `${b} is cited in all 3 query phrasings for "${t}" with a visibility score of ${overallSov}/100.`
+    : `${b} is cited by ${citedCount}/3 query phrasings for "${t}" with a visibility score of ${overallSov}/100.`;
 
   return {
     brand:  b,

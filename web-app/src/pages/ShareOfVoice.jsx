@@ -59,49 +59,11 @@ function sovColor(score) {
   return '#ef4444';
 }
 
-function volumeColor(label) {
-  if (label === 'Very High') return '#22c55e';
-  if (label === 'High')      return '#6366f1';
-  if (label === 'Medium')    return '#0ea5e9';
-  return '#64748b';
-}
-
-/* ── Big SOV ring ─────────────────────────────────────────────────────────── */
-function SovRing({ score, citedCount }) {
-  const color = sovColor(score);
-  const r = 52, cx = 68, cy = 68, sw = 8;
-  const circ = 2 * Math.PI * r;
-  const dash = (score / 100) * circ;
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
-      <svg width={136} height={136} viewBox="0 0 136 136">
-        <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={sw} />
-        <circle cx={cx} cy={cy} r={r} fill="none" stroke={color} strokeWidth={sw}
-          strokeDasharray={`${dash.toFixed(2)} ${circ.toFixed(2)}`}
-          strokeLinecap="round" transform="rotate(-90 68 68)"
-          style={{ filter: `drop-shadow(0 0 6px ${color}80)` }} />
-        <text x={cx} y={cy - 6} textAnchor="middle" fill={color} fontSize={28} fontWeight={800} fontFamily="Inter,sans-serif">{score}</text>
-        <text x={cx} y={cy + 16} textAnchor="middle" fill="rgba(255,255,255,0.35)" fontSize={11} fontFamily="Inter,sans-serif">Share of Voice</text>
-      </svg>
-      <div>
-        <div style={{ fontSize: 32, fontWeight: 800, color, lineHeight: 1 }}>{citedCount}<span style={{ fontSize: 18, color: '#64748b' }}>/3</span></div>
-        <div style={{ fontSize: 13, color: '#64748b', marginTop: 4 }}>AI models cited you</div>
-        <div style={{ marginTop: 12, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-          {['Gemini', 'ChatGPT', 'Perplexity'].map((m, i) => {
-            const wasCited = i < citedCount; // simplified — will be overridden below
-            return null;
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 /* ── Per-model card ───────────────────────────────────────────────────────── */
 const MODEL_META = {
-  gemini:          { label: 'Gemini',          color: '#06b6d4', bg: 'rgba(6,182,212,0.08)',  border: 'rgba(6,182,212,0.2)' },
-  chatgpt_style:   { label: 'ChatGPT',         color: '#22c55e', bg: 'rgba(34,197,94,0.08)',  border: 'rgba(34,197,94,0.2)' },
-  perplexity_style:{ label: 'Perplexity',      color: '#a855f7', bg: 'rgba(168,85,247,0.08)', border: 'rgba(168,85,247,0.2)' },
+  gemini:          { label: 'Informational question',          color: '#06b6d4', bg: 'rgba(6,182,212,0.08)',  border: 'rgba(6,182,212,0.2)' },
+  chatgpt_style:   { label: 'Conversational request',         color: '#22c55e', bg: 'rgba(34,197,94,0.08)',  border: 'rgba(34,197,94,0.2)' },
+  perplexity_style:{ label: 'Research comparison',      color: '#a855f7', bg: 'rgba(168,85,247,0.08)', border: 'rgba(168,85,247,0.2)' },
 };
 
 function ModelCard({ m }) {
@@ -210,7 +172,7 @@ function InfoBox() {
           {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
       </div>
-      {!collapsed && <span style={{ display: 'block', marginTop: 8, fontSize: 12, lineHeight: 1.7, color: '#64748b' }}>We simulate three AI answering styles using Google Gemini with grounded search: an <em>informational</em> style (like Gemini), a <em>conversational</em> style (like ChatGPT), and a <em>research</em> style (like Perplexity). For each, we check whether your brand is cited and score visibility, sentiment, and prominence. The cited / not cited results are real snapshots of what Gemini pulled from live web sources. However: we do not call actual ChatGPT or Perplexity APIs — the styles are simulated via prompt engineering. The SOV percentage, AI search volume estimate, and recommendations come from our own scoring formula and are directional, not industry-standard metrics. Run checks on multiple topic variations and track over time — use for trend spotting and competitor discovery, not as ground-truth market share data.</span>}
+      {!collapsed && <span style={{ display: 'block', marginTop: 8, fontSize: 12, lineHeight: 1.7, color: '#64748b' }}>We ask Google Gemini about your topic three different ways — an <em>informational</em> question, a <em>conversational</em> request, and a <em>research</em>-style comparison — each grounded in live Google Search. For each, we check whether your brand is cited and score visibility, sentiment, and prominence. The cited / not cited results are real snapshots of what Gemini pulled from live web sources. However: this covers Gemini only, three phrasings, one moment in time. Visibility scores and recommendations come from a second AI analysis pass and our own scoring formula, so they are directional, not industry-standard metrics. Run checks on multiple topic variations and track over time — use for trend spotting and competitor discovery, not as ground-truth market share data.</span>}
     </div>
   );
 }
@@ -240,17 +202,17 @@ export default function ShareOfVoice() {
     citedCount: 1,
     aiVolumeLabel: 'High',
     aiVolumeEstimate: '50k – 200k queries/mo (est.)',
-    summary: 'Rain OS is cited by 1/3 AI models for this topic with a share of voice of 34/100.',
+    summary: 'Rain OS is cited by 1/3 query phrasings for this topic with a visibility score of 34/100.',
     topCompetitors: ['clearscope.io', 'surferseo.com', 'frase.io', 'semrush.com'],
     recommendations: [
       'Expand content to address conversational and research-style queries, not just informational ones.',
-      'Target the 2 AI model styles that did not cite you with dedicated content formats.',
+      'Target the 2 query phrasings that did not cite you with dedicated content formats.',
       'Consistently publish updated comparisons and case studies to reinforce authority.',
     ],
     modelResults: [
-      { modelKey: 'gemini',          modelLabel: 'Gemini',     promptStyle: 'Informational — "What are the best tools for…?"',                      cited: true,  mentionPosition: 4, visibilityScore: 62, answerExcerpt: 'Rain OS is a newer entrant in the AEO optimization space, offering multi-pillar scoring and AI readability analysis alongside established tools like Clearscope and Surfer SEO…', sources: [{ title:'Clearscope Blog', url:'https://clearscope.io', domain:'clearscope.io' }, { title:'Surfer SEO', url:'https://surferseo.com', domain:'surferseo.com' }], competitorDomains: ['clearscope.io','surferseo.com','frase.io'] },
-      { modelKey: 'chatgpt_style',   modelLabel: 'ChatGPT',    promptStyle: 'Conversational — "I need help with… what do you recommend?"',            cited: false, mentionPosition: null, visibilityScore: 18, answerExcerpt: 'For AI content optimization I\'d recommend Clearscope for keyword research depth, Surfer SEO for on-page optimization, or Frase for AI-assisted drafting. Each has a free trial.', sources: [], competitorDomains: ['clearscope.io','surferseo.com','frase.io','jasper.ai'] },
-      { modelKey: 'perplexity_style', modelLabel: 'Perplexity', promptStyle: 'Research — "Compare the top solutions for… with sources"',              cited: false, mentionPosition: null, visibilityScore: 22, answerExcerpt: 'The leading AI content optimization tools are Clearscope (enterprise), Surfer SEO (mid-market), and Frase (SMB). Semrush and Ahrefs also offer AI writing assistance. Emerging players include…', sources: [{ title:'G2 Reviews', url:'https://g2.com', domain:'g2.com' }], competitorDomains: ['clearscope.io','surferseo.com','ahrefs.com','semrush.com'] },
+      { modelKey: 'gemini',          modelLabel: 'Informational question',     promptStyle: '"What are the best tools for…?"',                      cited: true,  mentionPosition: 4, visibilityScore: 62, answerExcerpt: 'Rain OS is a newer entrant in the AEO optimization space, offering multi-pillar scoring and AI readability analysis alongside established tools like Clearscope and Surfer SEO…', sources: [{ title:'Clearscope Blog', url:'https://clearscope.io', domain:'clearscope.io' }, { title:'Surfer SEO', url:'https://surferseo.com', domain:'surferseo.com' }], competitorDomains: ['clearscope.io','surferseo.com','frase.io'] },
+      { modelKey: 'chatgpt_style',   modelLabel: 'Conversational request',    promptStyle: '"I need help with… what do you recommend?"',            cited: false, mentionPosition: null, visibilityScore: 18, answerExcerpt: 'For AI content optimization I\'d recommend Clearscope for keyword research depth, Surfer SEO for on-page optimization, or Frase for AI-assisted drafting. Each has a free trial.', sources: [], competitorDomains: ['clearscope.io','surferseo.com','frase.io','jasper.ai'] },
+      { modelKey: 'perplexity_style', modelLabel: 'Research comparison', promptStyle: '"Compare the top solutions for… with sources"',              cited: false, mentionPosition: null, visibilityScore: 22, answerExcerpt: 'The leading AI content optimization tools are Clearscope (enterprise), Surfer SEO (mid-market), and Frase (SMB). Semrush and Ahrefs also offer AI writing assistance. Emerging players include…', sources: [{ title:'G2 Reviews', url:'https://g2.com', domain:'g2.com' }], competitorDomains: ['clearscope.io','surferseo.com','ahrefs.com','semrush.com'] },
     ],
   }), [brand, topic, url]);
 
@@ -328,8 +290,8 @@ export default function ShareOfVoice() {
           <h1 style={S.title}>Share of Voice</h1>
         </div>
         <p style={S.sub}>
-          See how often your brand gets cited across Gemini, ChatGPT-style, and Perplexity-style AI answers for any topic.
-          Track your share of voice over time and see who's winning the AI conversation in your space.
+          See whether Gemini cites your brand for any topic — checked three ways, powered by real Google Search grounding.
+          Track your visibility over time and see which competitors show up in the answers instead.
         </p>
       </div>
 
@@ -364,7 +326,7 @@ export default function ShareOfVoice() {
               <div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: '#818cf8', marginBottom: 6 }}>Business plan required</div>
                 <div style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.6 }}>
-                  Share of Voice runs 3 AI model simulations per check — measuring your citation rate across Gemini, ChatGPT-style, and Perplexity-style answers. Available on Business plan.
+                  Share of Voice runs 3 Google Search-grounded Gemini checks per topic — an informational question, a conversational request, and a research-style comparison. Available on Business plan.
                 </div>
               </div>
               <a href="/upgrade" style={{
@@ -401,9 +363,9 @@ export default function ShareOfVoice() {
 
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <button type="submit" style={{ ...S.btn, opacity: loading ? 0.6 : 1 }} disabled={loading}>
-                  {loading ? <><span className="spinner" style={{ width: 14, height: 14, borderWidth: 2 }} /> Checking 3 AI models…</> : <><BarChart2 size={14} /> Check Share of Voice</>}
+                  {loading ? <><span className="spinner" style={{ width: 14, height: 14, borderWidth: 2 }} /> Checking 3 query phrasings…</> : <><BarChart2 size={14} /> Check Share of Voice</>}
                 </button>
-                {loading && <span style={{ fontSize: 12, color: '#64748b' }}>This takes ~30 seconds — we run three separate AI checks.</span>}
+                {loading && <span style={{ fontSize: 12, color: '#64748b' }}>This takes ~30 seconds — we run three separate grounded Gemini checks.</span>}
               </div>
             </form>
           ) : (
@@ -428,7 +390,7 @@ export default function ShareOfVoice() {
                             strokeLinecap="round" transform="rotate(-90 68 68)"
                             style={{ filter: `drop-shadow(0 0 6px ${color}80)` }} />
                           <text x={cx} y={cy - 6} textAnchor="middle" fill={color} fontSize={28} fontWeight={800} fontFamily="Inter,sans-serif">{score}</text>
-                          <text x={cx} y={cy + 16} textAnchor="middle" fill="rgba(255,255,255,0.35)" fontSize={11} fontFamily="Inter,sans-serif">Share of Voice</text>
+                          <text x={cx} y={cy + 16} textAnchor="middle" fill="rgba(255,255,255,0.35)" fontSize={11} fontFamily="Inter,sans-serif">Visibility</text>
                         </svg>
                       );
                     })()}
@@ -453,19 +415,13 @@ export default function ShareOfVoice() {
                     </div>
                   </div>
 
-                  {/* AI Volume badge */}
-                  <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: '16px 20px', minWidth: 160 }}>
-                    <div style={{ fontSize: 11, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>AI Search Volume</div>
-                    <div style={{ fontSize: 22, fontWeight: 800, color: volumeColor(result.aiVolumeLabel), marginBottom: 4 }}>{result.aiVolumeLabel}</div>
-                    <div style={{ fontSize: 11, color: '#64748b' }}>{result.aiVolumeEstimate}</div>
-                  </div>
                 </div>
 
                 <button onClick={handleReset} style={S.btnSecondary}>← Run another check</button>
               </div>
 
               {/* Per-model cards */}
-              <h3 style={{ ...S.sectionTitle, marginBottom: 16 }}>Results by AI model</h3>
+              <h3 style={{ ...S.sectionTitle, marginBottom: 16 }}>Results by query phrasing</h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 24 }}>
                 {result.modelResults.map(m => <ModelCard key={m.modelKey} m={m} />)}
               </div>
@@ -473,7 +429,7 @@ export default function ShareOfVoice() {
               {/* Competitors */}
               {result.topCompetitors?.length > 0 && (
                 <div style={{ ...S.card, marginBottom: 20 }}>
-                  <p style={S.sectionTitle}>Top competitors across all models</p>
+                  <p style={S.sectionTitle}>Top competitors across all phrasings</p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                     {result.topCompetitors.map((d, i) => (
                       <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#94a3b8', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: '4px 12px' }}>
@@ -488,7 +444,7 @@ export default function ShareOfVoice() {
               {/* Recommendations */}
               {result.recommendations?.length > 0 && (
                 <div style={S.card}>
-                  <p style={S.sectionTitle}>How to grow your share of voice</p>
+                  <p style={S.sectionTitle}>How to improve your visibility</p>
                   {result.recommendations.map((r, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 14px', background: 'rgba(99,102,241,0.05)', border: '1px solid rgba(99,102,241,0.12)', borderRadius: 10, marginBottom: 8 }}>
                       <Zap size={13} style={{ color: '#6366f1', flexShrink: 0, marginTop: 2 }} />
@@ -531,7 +487,7 @@ export default function ShareOfVoice() {
                   <div key={i} style={{ ...S.card, display: 'flex', alignItems: 'center', gap: 20, padding: '16px 20px' }}>
                     <div style={{ flexShrink: 0, textAlign: 'center', minWidth: 60 }}>
                       <div style={{ fontSize: 26, fontWeight: 800, color, lineHeight: 1 }}>{g.latestSov}</div>
-                      <div style={{ fontSize: 10, color: '#64748b' }}>SOV</div>
+                      <div style={{ fontSize: 10, color: '#64748b' }}>score</div>
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: 14, fontWeight: 700, color: '#f1f5f9', marginBottom: 2 }}>{g.brand}</div>

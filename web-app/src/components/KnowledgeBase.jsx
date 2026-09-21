@@ -21,7 +21,7 @@ const KB_DATA = {
       { label: 'URL Scanner',       desc: 'Enter a live website URL to audit how well AI crawlers can read and understand your pages.' },
       { label: 'Citation Monitor',  desc: 'Track whether Gemini cites your brand for the topics you care about, using live Google Search grounding.' },
       { label: 'Brand Sentiment',   desc: 'See how Gemini describes your brand, using live Google Search grounding — is the sentiment positive, negative, or neutral?' },
-      { label: 'Share of Voice',    desc: 'Measure what percentage of AI answers include your brand versus your competitors.' },
+      { label: 'Share of Voice',    desc: 'See how visible your brand is when Gemini answers your topic three different ways, using live Google Search grounding.' },
       { label: 'Score History',     desc: 'Browse every past analysis to track improvement trends and identify what moves the needle.' },
     ],
     tips: [
@@ -51,7 +51,7 @@ const KB_DATA = {
       { label: 'URL Scanner',       desc: 'Audit live product pages for schema markup, meta tags, and AI readability.' },
       { label: 'Citation Monitor',  desc: 'Track if AI engines recommend your products when shoppers ask for comparisons.' },
       { label: 'Brand Sentiment',   desc: 'Check how Gemini describes your brand and products when shoppers ask, using live Google Search grounding.' },
-      { label: 'Share of Voice',    desc: 'Compare your product visibility against competitors in AI-generated answers.' },
+      { label: 'Share of Voice',    desc: 'See how visible your products are versus competitors when Gemini answers shopper questions, using live Google Search grounding.' },
       { label: 'Score History',     desc: 'Track every product analysis and see which changes improved discoverability.' },
     ],
     tips: [
@@ -80,7 +80,7 @@ const KB_DATA = {
       { label: 'Repo Analysis',     desc: 'Connect your GitHub repo to score README, package.json, and docs for AI discoverability.' },
       { label: 'Citation Monitor',  desc: 'Track if AI tools mention your project when developers ask for solutions like yours.' },
       { label: 'Brand Sentiment',   desc: 'See how Gemini describes your vibe-coded product when developers ask, using live Google Search grounding.' },
-      { label: 'Share of Voice',    desc: 'Measure your visibility against competing tools in AI-generated developer answers.' },
+      { label: 'Share of Voice',    desc: 'See how visible your tool is versus competitors when Gemini answers developer questions, using live Google Search grounding.' },
       { label: 'Score History',     desc: 'Track every repo scan and URL check as you iterate on your project.' },
     ],
     tips: [
