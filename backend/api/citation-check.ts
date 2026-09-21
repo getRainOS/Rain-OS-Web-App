@@ -12,6 +12,7 @@ import {
   deleteCitationChecksByUser,
 } from '../services/dbService';
 import { runCitationCheck } from '../services/citationCheckService';
+import { classifyGeminiError } from '../services/geminiErrors';
 import type { ApiError } from '../types';
 
 function getApiKey(req: express.Request): string | null {
@@ -169,8 +170,7 @@ export default async function handler(req: express.Request, res: express.Respons
 
     return res.status(200).json({ success: true, data: result, history, ...result });
   } catch (error) {
-    console.error('Citation check error:', error);
-    const msg = error instanceof Error ? error.message : 'Internal error';
-    return res.status(500).json({ error: 'internal_server_error', message: msg } as ApiError);
+    const { status, body } = classifyGeminiError(error, 'citation-check');
+    return res.status(status).json(body as ApiError);
   }
 }

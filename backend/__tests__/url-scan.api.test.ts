@@ -293,16 +293,29 @@ describe('POST /api/url-scan — happy path', () => {
     expect(res.body.overallScore).toBeGreaterThanOrEqual(0);
   });
 
-  it('returns 500 when Gemini analyzeContent throws', async () => {
+  it('returns 502 ai_provider_error (not the raw upstream message) when Gemini analyzeContent throws', async () => {
     analyzeContent.mockRejectedValueOnce(new Error('gemini boom'));
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     const res = await request(app)
       .post('/api/url-scan')
       .set('Authorization', 'Bearer k')
       .send({ url: 'https://target.test/' });
-    expect(res.status).toBe(500);
-    expect(res.body.error).toBe('internal_server_error');
-    expect(res.body.message).toMatch(/gemini boom/);
+    expect(res.status).toBe(502);
+    expect(res.body.error).toBe('ai_provider_error');
+    expect(res.body.message).not.toMatch(/gemini boom/);
+    expect(incrementUserUsage).not.toHaveBeenCalled();
+    errSpy.mockRestore();
+  });
+
+  it('returns 503 ai_provider_busy when Gemini analyzeContent throws a quota error', async () => {
+    analyzeContent.mockRejectedValueOnce(Object.assign(new Error('Too Many Requests'), { status: 429 }));
+    const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const res = await request(app)
+      .post('/api/url-scan')
+      .set('Authorization', 'Bearer k')
+      .send({ url: 'https://target.test/' });
+    expect(res.status).toBe(503);
+    expect(res.body.error).toBe('ai_provider_busy');
     expect(incrementUserUsage).not.toHaveBeenCalled();
     errSpy.mockRestore();
   });

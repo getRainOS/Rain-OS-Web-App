@@ -2,6 +2,7 @@
 import express from 'express';
 import { findUserByApiKey, incrementUserUsage } from '../services/dbService';
 import { runShareOfVoice } from '../services/shareOfVoiceService';
+import { classifyGeminiError } from '../services/geminiErrors';
 import { pool } from '../services/db';
 import type { ApiError } from '../types';
 
@@ -85,9 +86,8 @@ export async function sovHandler(req: express.Request, res: express.Response) {
 
     return res.status(200).json({ success: true, data: result });
   } catch (err) {
-    console.error('SOV error:', err);
-    const msg = err instanceof Error ? err.message : 'Internal error';
-    return res.status(500).json({ error: 'internal_server_error', message: msg } as ApiError);
+    const { status, body } = classifyGeminiError(err, 'share-of-voice');
+    return res.status(status).json(body as ApiError);
   }
 }
 
