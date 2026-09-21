@@ -4,6 +4,7 @@
 import express from 'express';
 import { analyzeContent, API_VERSION } from './geminiService';
 import { findUserByApiKey, incrementUsageAndSaveAnalysis } from './dbService';
+import { classifyGeminiError } from './geminiErrors';
 import type { ApiError, CapabilitiesResponse, AnalysisResponse } from '../types';
 const PHASE2_SUB_SCORES = [
 'sectionConceptIsolation',
@@ -84,9 +85,8 @@ if (!analysisId) {
 
 return res.status(200).json({ success: true, data: result, ...result, analysisId });
 } catch (error) {
-console.error('Analysis error:', error);
-const msg = error instanceof Error ? error.message : 'Analysis failed';
-return res.status(500).json({ error: 'internal_server_error', message: msg } as ApiError);
+const { status, body } = classifyGeminiError(error, 'analyze');
+return res.status(status).json(body as ApiError);
 }
 }
 export function handleCapabilities(_req: express.Request, res: express.Response) {

@@ -7,6 +7,7 @@ import {
   rewriteSentence,
   summarizeContent,
 } from '../services/geminiService';
+import { classifyGeminiError } from '../services/geminiErrors';
 import type { User, ApiError } from '../types';
 
 const getApiKey = (req: express.Request): string | null => {
@@ -133,8 +134,8 @@ export default async function handler(req: express.Request, res: express.Respons
     return res.status(200).json({ success: true, data: result, ...result, analysisId });
 
   } catch (error) {
-    console.error(`Analyze Error [${(req.body as any)?.action}]:`, error);
-    const errorMessage = error instanceof Error ? error.message : 'Internal error';
-    return res.status(500).json({ error: 'internal_server_error', message: errorMessage } as ApiError);
+    const action = (req.body as any)?.action || 'unknown_action';
+    const { status, body } = classifyGeminiError(error, `analyze:${action}`);
+    return res.status(status).json(body as ApiError);
   }
 }

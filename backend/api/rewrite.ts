@@ -1,6 +1,7 @@
 import express from 'express';
 import { findUserByApiKey, incrementUserUsage } from '../services/dbService';
 import { rewriteDocumentForAI } from '../services/geminiService';
+import { classifyGeminiError } from '../services/geminiErrors';
 import type { ApiError } from '../types';
 
 const getApiKey = (req: express.Request): string | null => {
@@ -43,8 +44,7 @@ export default async function rewriteHandler(req: express.Request, res: express.
     if (updatedUser) res.setHeader('X-Usage-Info', JSON.stringify(updatedUser.usage));
     return res.status(200).json({ success: true, ...result });
   } catch (error) {
-    console.error('Rewrite Error:', error);
-    const msg = error instanceof Error ? error.message : 'Internal error';
-    return res.status(500).json({ error: 'internal_server_error', message: msg } as ApiError);
+    const { status, body } = classifyGeminiError(error, 'rewrite');
+    return res.status(status).json(body as ApiError);
   }
 }
