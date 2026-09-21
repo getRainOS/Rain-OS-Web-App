@@ -64,8 +64,8 @@ export async function sovHandler(req: express.Request, res: express.Response) {
 
     // Persist to DB
     await pool.query(
-      `INSERT INTO sov_checks (user_id, brand, topic, url, overall_sov, cited_count, model_results, top_competitors, recommendations, ai_volume_label, ai_volume_estimate, summary)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
+      `INSERT INTO sov_checks (user_id, brand, topic, url, overall_sov, cited_count, model_results, top_competitors, recommendations, summary)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
       [
         user.id,
         result.brand,
@@ -76,8 +76,6 @@ export async function sovHandler(req: express.Request, res: express.Response) {
         JSON.stringify(result.modelResults),
         JSON.stringify(result.topCompetitors),
         JSON.stringify(result.recommendations),
-        result.aiVolumeLabel,
-        result.aiVolumeEstimate,
         result.summary,
       ]
     );
@@ -114,8 +112,6 @@ export async function sovHistoryHandler(req: express.Request, res: express.Respo
     modelResults:     typeof r.model_results === 'string' ? JSON.parse(r.model_results) : r.model_results,
     topCompetitors:   typeof r.top_competitors === 'string' ? JSON.parse(r.top_competitors) : r.top_competitors,
     recommendations:  typeof r.recommendations === 'string' ? JSON.parse(r.recommendations) : r.recommendations,
-    aiVolumeLabel:    r.ai_volume_label,
-    aiVolumeEstimate: r.ai_volume_estimate,
     summary:          r.summary,
     checkedAt:        r.checked_at instanceof Date ? r.checked_at.toISOString() : r.checked_at,
   }));
