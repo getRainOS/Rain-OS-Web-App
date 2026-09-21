@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
+import { PILLAR_COLORS } from '@/lib/pillarColors.js';
 
 const docSignals = [
   {
@@ -76,7 +77,7 @@ const docSignals = [
 
 const docPillars = [
   {
-    color: '#38bdf8',
+    color: PILLAR_COLORS.ai_readability,
     bg: 'rgba(14,165,233,0.1)',
     border: 'rgba(14,165,233,0.25)',
     Icon: Layers,
@@ -86,7 +87,7 @@ const docPillars = [
     scores: ['Structural Clarity', 'Answer-First Formatting', 'Semantic Precision', 'Context Sufficiency', 'Section Isolation'],
   },
   {
-    color: '#34d399',
+    color: PILLAR_COLORS.digital_authority,
     bg: 'rgba(16,185,129,0.1)',
     border: 'rgba(16,185,129,0.25)',
     Icon: Code2,
@@ -96,7 +97,7 @@ const docPillars = [
     scores: ['Citation Signals', 'Entity Clarity', 'Topical Authority', 'Freshness Signals', 'Social Proof'],
   },
   {
-    color: '#a78bfa',
+    color: PILLAR_COLORS.conversion_readiness,
     bg: 'rgba(139,92,246,0.1)',
     border: 'rgba(139,92,246,0.25)',
     Icon: Cpu,
@@ -106,7 +107,7 @@ const docPillars = [
     scores: ['CTA Clarity', 'Trust Signals', 'Value Proposition', 'Friction Reduction'],
   },
   {
-    color: '#ec4899',
+    color: PILLAR_COLORS.rag_readiness,
     bg: 'rgba(236,72,153,0.1)',
     border: 'rgba(236,72,153,0.25)',
     Icon: Layers,

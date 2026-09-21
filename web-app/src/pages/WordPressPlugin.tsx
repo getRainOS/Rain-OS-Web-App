@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
+import { PILLAR_COLORS } from '@/lib/pillarColors.js';
 
 const coreFeatures = [
   {
@@ -300,10 +301,10 @@ export default function WordPressPlugin() {
                         </div>
                         <div className="flex-1 space-y-2">
                           {[
-                            { name: 'AI Readability', score: 88, color: '#38bdf8' },
-                            { name: 'Authority', score: 79, color: '#34d399' },
-                            { name: 'Conversion', score: 84, color: '#a78bfa' },
-                            { name: 'Discoverability', score: 72, color: '#fb923c' },
+                            { name: 'AI Readability', score: 88, color: PILLAR_COLORS.ai_readability },
+                            { name: 'Authority', score: 79, color: PILLAR_COLORS.digital_authority },
+                            { name: 'Conversion', score: 84, color: PILLAR_COLORS.conversion_readiness },
+                            { name: 'Discoverability', score: 72, color: PILLAR_COLORS.product_discoverability },
                           ].map(p => (
                             <div key={p.name}>
                               <div className="flex justify-between mb-0.5">

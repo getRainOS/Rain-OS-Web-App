@@ -10,12 +10,13 @@ import {
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
 import VibeWorkflowDiagram from '@/components/VibeWorkflowDiagram';
+import { PILLAR_COLORS } from '@/lib/pillarColors.js';
 
 const ROTATING_WORDS = ['SaaS?', 'MVP?', 'Website?', 'Web App?', 'Portfolio?', 'Landing Page?', 'Store?', 'Product?', 'Blog?', 'App?'];
 
 const repoPillars = [
   {
-    color: '#38bdf8',
+    color: PILLAR_COLORS.ai_readability,
     bg: 'rgba(14,165,233,0.1)',
     border: 'rgba(14,165,233,0.25)',
     Icon: BrainCircuit,
@@ -30,7 +31,7 @@ const repoPillars = [
     ],
   },
   {
-    color: '#34d399',
+    color: PILLAR_COLORS.digital_authority,
     bg: 'rgba(16,185,129,0.1)',
     border: 'rgba(16,185,129,0.25)',
     Icon: ShieldCheck,
@@ -45,7 +46,7 @@ const repoPillars = [
     ],
   },
   {
-    color: '#a78bfa',
+    color: PILLAR_COLORS.conversion_readiness,
     bg: 'rgba(139,92,246,0.1)',
     border: 'rgba(139,92,246,0.25)',
     Icon: MousePointerClick,
@@ -60,7 +61,7 @@ const repoPillars = [
     ],
   },
   {
-    color: '#f97316',
+    color: PILLAR_COLORS.product_discoverability,
     bg: 'rgba(249,115,22,0.1)',
     border: 'rgba(249,115,22,0.25)',
     Icon: SearchCheck,
@@ -75,7 +76,7 @@ const repoPillars = [
     ],
   },
   {
-    color: '#ec4899',
+    color: PILLAR_COLORS.rag_readiness,
     bg: 'rgba(236,72,153,0.1)',
     border: 'rgba(236,72,153,0.25)',
     Icon: Layers,

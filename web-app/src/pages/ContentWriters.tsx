@@ -8,11 +8,12 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { HybridFuture, FeatureGrid, ReadabilityIntelligence, ComparisonTable, FAQ } from '@/components/marketing/MarketingComponents';
 import MarketingNav from '@/components/marketing/MarketingNav';
+import { PILLAR_COLORS } from '@/lib/pillarColors.js';
 import TypewriterPlaceholder from '@/components/TypewriterPlaceholder';
 
 const pillars = [
   {
-    color: '#38bdf8',
+    color: PILLAR_COLORS.ai_readability,
     bg: 'rgba(14,165,233,0.1)',
     border: 'rgba(14,165,233,0.25)',
     Icon: BrainCircuit,
@@ -20,7 +21,7 @@ const pillars = [
     desc: 'How easily ChatGPT, Gemini, and Perplexity can extract answers from your content.',
   },
   {
-    color: '#34d399',
+    color: PILLAR_COLORS.digital_authority,
     bg: 'rgba(16,185,129,0.1)',
     border: 'rgba(16,185,129,0.25)',
     Icon: ShieldCheck,
@@ -28,7 +29,7 @@ const pillars = [
     desc: 'The trust signals that make AI engines choose your content over a competitor\'s.',
   },
   {
-    color: '#a78bfa',
+    color: PILLAR_COLORS.conversion_readiness,
     bg: 'rgba(139,92,246,0.1)',
     border: 'rgba(139,92,246,0.25)',
     Icon: MousePointerClick,
@@ -36,7 +37,7 @@ const pillars = [
     desc: 'How effectively your content turns AI-referred readers into customers.',
   },
   {
-    color: '#f97316',
+    color: PILLAR_COLORS.product_discoverability,
     bg: 'rgba(249,115,22,0.1)',
     border: 'rgba(249,115,22,0.25)',
     Icon: SearchCheck,
@@ -44,7 +45,7 @@ const pillars = [
     desc: 'How easily AI search and recommendation systems can surface your product or service.',
   },
   {
-    color: '#ec4899',
+    color: PILLAR_COLORS.rag_readiness,
     bg: 'rgba(236,72,153,0.1)',
     border: 'rgba(236,72,153,0.25)',
     Icon: Layers,

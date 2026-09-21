@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
+import { PILLAR_COLORS } from '@/lib/pillarColors.js';
 
 const sections = [
   { id: 'getting-started', label: 'Getting Started' },
@@ -151,7 +152,7 @@ export default function DocsPage() {
                   <div className="space-y-4">
                     {[
                       {
-                        color: '#38bdf8',
+                        color: PILLAR_COLORS.ai_readability,
                         bg: 'rgba(14,165,233,0.08)',
                         border: 'rgba(14,165,233,0.2)',
                         Icon: BrainCircuit,
@@ -161,7 +162,7 @@ export default function DocsPage() {
                         subScores: ['Structural Clarity', 'Answer-First Formatting', 'Semantic Precision', 'Context Sufficiency', 'Section Concept Isolation'],
                       },
                       {
-                        color: '#34d399',
+                        color: PILLAR_COLORS.digital_authority,
                         bg: 'rgba(16,185,129,0.08)',
                         border: 'rgba(16,185,129,0.2)',
                         Icon: ShieldCheck,
@@ -171,7 +172,7 @@ export default function DocsPage() {
                         subScores: ['Citation Signals', 'Entity Clarity', 'Topical Authority', 'Freshness Signals', 'Social Proof Markup'],
                       },
                       {
-                        color: '#a78bfa',
+                        color: PILLAR_COLORS.conversion_readiness,
                         bg: 'rgba(139,92,246,0.08)',
                         border: 'rgba(139,92,246,0.2)',
                         Icon: MousePointerClick,
@@ -181,7 +182,7 @@ export default function DocsPage() {
                         subScores: ['CTA Clarity', 'Trust Signals', 'Value Proposition', 'Friction Reduction'],
                       },
                       {
-                        color: '#f97316',
+                        color: PILLAR_COLORS.product_discoverability,
                         bg: 'rgba(249,115,22,0.08)',
                         border: 'rgba(249,115,22,0.2)',
                         Icon: SearchCheck,
@@ -191,7 +192,7 @@ export default function DocsPage() {
                         subScores: ['Product Variant Coverage', 'Merchant Identity', 'Pricing Transparency', 'Availability Signals', 'Comparative Context'],
                       },
                       {
-                        color: '#ec4899',
+                        color: PILLAR_COLORS.rag_readiness,
                         bg: 'rgba(236,72,153,0.08)',
                         border: 'rgba(236,72,153,0.2)',
                         Icon: Layers,
