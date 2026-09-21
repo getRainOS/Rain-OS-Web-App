@@ -26,7 +26,7 @@ export default async function rewriteHandler(req: express.Request, res: express.
   }
 
   if (user.usage.count >= user.usage.limit) {
-    return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Monthly limit reached. Upgrade to continue.' } as ApiError);
+    return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Usage limit reached. Upgrade to continue.' } as ApiError);
   }
 
   const { content, module: mod } = req.body as { content?: string; module?: string };

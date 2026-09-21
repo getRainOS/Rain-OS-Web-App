@@ -8,13 +8,13 @@ const PLANS = [
   {
     name: 'Free',
     price: '$0',
-    period: '/ month',
+    period: '',
     priceId: 'price_1SeCHg3NMjs4uYdguOgkr3SQ',
     description: 'Try Rain OS and see how AI reads your content.',
     color: 'var(--text-muted)',
-    limit: '5 checks / month',
+    limit: '5 checks total',
     features: [
-      { label: '5 content analyses / month', included: true },
+      { label: '5 content analyses (one-time)', included: true },
       { label: 'All 5 core scoring pillars', included: true },
       { label: 'Content Analyzer', included: true },
       { label: 'Basic recommendations', included: true },
