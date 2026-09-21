@@ -74,6 +74,7 @@ export default function AuthModal({ onAuth, onBack, initialMode = 'signup', pend
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
+          queryParams: { prompt: 'select_account' },
           redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
