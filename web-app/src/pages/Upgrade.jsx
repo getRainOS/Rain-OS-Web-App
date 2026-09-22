@@ -92,7 +92,12 @@ export default function Upgrade() {
     try {
       const { data } = await api.createCheckoutSession(priceId, successUrl, cancelUrl);
       if (data?.url) {
+        // New subscriber — no active subscription yet, redirect to Checkout.
         window.location.href = data.url;
+      } else if (data?.updated) {
+        // Existing subscription was changed in place (upgrade/downgrade) —
+        // no payment step needed, just head to the dashboard.
+        window.location.href = window.location.origin + '/dashboard';
       } else {
         throw new Error('No checkout URL returned');
       }
