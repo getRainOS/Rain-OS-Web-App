@@ -43,7 +43,7 @@ if (user.subscriptionStatus !== 'active') {
 return res.status(402).json({ error: 'payment_required', message: 'Active subscription required' } as ApiError);
 }
 if (user.usage.count >= user.usage.limit) {
-return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Monthly limit reached. Upgrade to continue.' } as ApiError);
+return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Usage limit reached. Upgrade to continue.' } as ApiError);
 }
 const { content, industry, module, lane } = req.body as { content?: string; industry?: string; module?: string; lane?: string };
   // Safeguard backend memory

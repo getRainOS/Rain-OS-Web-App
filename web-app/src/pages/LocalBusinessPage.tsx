@@ -390,7 +390,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
               Analyze my business free
               <ArrowRight className="w-5 h-5" />
             </a>
-            <p className="text-slate-600 text-xs mt-4">Free plan includes 5 analyses per month. No credit card required.</p>
+            <p className="text-slate-600 text-xs mt-4">Free plan includes 5 analyses in total. No credit card required.</p>
           </motion.div>
         </div>
       </section>

@@ -724,7 +724,7 @@ export default function Dashboard() {
       sub: tier ? `${tier} plan` : 'Sign in to track',
       Icon: Zap,
       bar: user ? Math.min(100, Math.round(((user.usage?.count ?? 0) / (user.usage?.limit || 1)) * 100)) : null,
-      tooltip: 'How many AI analyses you have used this month versus your plan limit. Resets monthly.',
+      tooltip: 'How many AI analyses you have used versus your plan limit. The Free plan includes 5 in total; paid plans reset each billing period.',
     },
   ];
 

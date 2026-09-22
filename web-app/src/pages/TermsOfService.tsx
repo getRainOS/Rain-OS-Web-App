@@ -56,7 +56,7 @@ const sections = [
     title: 'Plans, Billing, and Cancellation',
     body: [
       'Paid plans are billed monthly or annually in advance via Stripe. Prices are shown at the time of purchase and may change with 30 days notice.',
-      'Free plans include a limited number of analyses per month. Paid plans unlock higher limits and additional features as described on the pricing page.',
+      'Free plans include a limited number of analyses. Paid plans unlock higher limits and additional features as described on the pricing page.',
       'You may cancel your subscription at any time from the Settings page. Cancellation takes effect at the end of your current billing period. We do not offer prorated refunds for unused time, except where required by law.',
       'We reserve the right to modify or discontinue any plan at any time. We will provide reasonable notice before doing so.',
     ],

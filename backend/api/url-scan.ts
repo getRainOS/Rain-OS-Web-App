@@ -49,7 +49,7 @@ export default async function handler(req: express.Request, res: express.Respons
     return res.status(402).json({ error: 'payment_required', message: 'Active subscription required' } as ApiError);
   }
   if (user.usage.count >= user.usage.limit) {
-    return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Monthly limit reached. Upgrade to continue.' } as ApiError);
+    return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Usage limit reached. Upgrade to continue.' } as ApiError);
   }
 
   // ─── Input validation ─────────────────────────────────────────────────────

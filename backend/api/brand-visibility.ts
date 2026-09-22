@@ -33,7 +33,7 @@ export default async function handler(req: express.Request, res: express.Respons
     return res.status(403).json({ error: 'plan_required', message: 'AI Visibility requires a Business plan. Upgrade to unlock multi-model brand tracking.' } as ApiError);
   }
   if (user.usage.count >= user.usage.limit) {
-    return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Monthly limit reached. Upgrade to continue.' } as ApiError);
+    return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Usage limit reached. Upgrade to continue.' } as ApiError);
   }
 
   const { brand, topic, url } = req.body as { brand?: string; topic?: string; url?: string };
