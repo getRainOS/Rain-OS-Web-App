@@ -16,12 +16,14 @@ vi.mock('../services/dbService', () => ({
 // dynamically imported inside beforeAll (matches the pattern used in
 // analyze.api.test.ts for services that construct clients at module load).
 let handleWebhookEvent: typeof import('../services/stripeService').handleWebhookEvent;
+let createCheckoutSession: typeof import('../services/stripeService').createCheckoutSession;
 let stripe: typeof import('../services/stripeService').stripe;
 
 beforeAll(async () => {
   process.env.STRIPE_SECRET_KEY = 'sk_test_mock_key_for_unit_tests';
   const mod = await import('../services/stripeService');
   handleWebhookEvent = mod.handleWebhookEvent;
+  createCheckoutSession = mod.createCheckoutSession;
   stripe = mod.stripe;
 });
 
@@ -172,6 +174,100 @@ describe('handleWebhookEvent — invoice.paid renewal', () => {
       data: { object: { customer: 'cus_123', billing_reason: 'subscription_create' } },
     } as unknown as Stripe.Event);
 
+    expect(resetUserUsage).not.toHaveBeenCalled();
+  });
+});
+
+describe('createCheckoutSession — plan changes must not create a second subscription', () => {
+  beforeEach(() => {
+    findUserByStripeCustomerId.mockReset();
+    updateUserSubscription.mockReset();
+    resetUserUsage.mockReset();
+    vi.spyOn(stripe.customers, 'retrieve').mockResolvedValue({ id: 'cus_123', deleted: false } as any);
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('existing subscriber changing plans: updates the existing subscription in place, does not create a new Checkout session or subscription', async () => {
+    const listSpy = vi.spyOn(stripe.subscriptions, 'list').mockResolvedValue({
+      data: [
+        makeSubscription({
+          id: 'sub_existing',
+          status: 'active',
+          items: { data: [{ id: 'si_existing', price: { id: 'price_pro' } }] } as any,
+        }),
+      ],
+    } as any);
+    const updateSpy = vi.spyOn(stripe.subscriptions, 'update').mockResolvedValue({ id: 'sub_existing' } as any);
+    const checkoutCreateSpy = vi.spyOn(stripe.checkout.sessions, 'create');
+
+    const user = makeUser();
+    const result = await createCheckoutSession(user, 'price_business');
+
+    expect(listSpy).toHaveBeenCalledWith(expect.objectContaining({ customer: 'cus_123', status: 'active' }));
+    expect(updateSpy).toHaveBeenCalledWith('sub_existing', {
+      items: [{ id: 'si_existing', price: 'price_business' }],
+      proration_behavior: 'create_prorations',
+    });
+    // The regression this fixes: no second subscription must ever be created.
+    expect(checkoutCreateSpy).not.toHaveBeenCalled();
+    expect(result).toEqual({ kind: 'updated', subscriptionId: 'sub_existing', priceId: 'price_business' });
+
+    // The limit/reset side effects belong to the customer.subscription.updated
+    // webhook handler (already covered above), not to this code path.
+    expect(updateUserSubscription).not.toHaveBeenCalled();
+    expect(resetUserUsage).not.toHaveBeenCalled();
+  });
+
+  it('Free user (no active subscription): still gets a normal new Checkout session', async () => {
+    vi.spyOn(stripe.subscriptions, 'list').mockResolvedValue({ data: [] } as any);
+    const checkoutCreateSpy = vi.spyOn(stripe.checkout.sessions, 'create').mockResolvedValue({
+      url: 'https://checkout.stripe.com/session_abc',
+    } as any);
+    const updateSpy = vi.spyOn(stripe.subscriptions, 'update');
+
+    const user = makeUser();
+    const result = await createCheckoutSession(
+      user,
+      'price_pro',
+      'https://app.test/success',
+      'https://app.test/cancel',
+    );
+
+    expect(checkoutCreateSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        mode: 'subscription',
+        customer: 'cus_123',
+        line_items: [{ price: 'price_pro', quantity: 1 }],
+        success_url: 'https://app.test/success',
+        cancel_url: 'https://app.test/cancel',
+      })
+    );
+    expect(updateSpy).not.toHaveBeenCalled();
+    expect(result).toEqual({ kind: 'checkout', url: 'https://checkout.stripe.com/session_abc' });
+  });
+
+  it('clicking the plan you are already on: rejected cleanly, no Stripe subscription mutation', async () => {
+    vi.spyOn(stripe.subscriptions, 'list').mockResolvedValue({
+      data: [
+        makeSubscription({
+          id: 'sub_existing',
+          status: 'active',
+          items: { data: [{ id: 'si_existing', price: { id: 'price_pro' } }] } as any,
+        }),
+      ],
+    } as any);
+    const updateSpy = vi.spyOn(stripe.subscriptions, 'update');
+    const checkoutCreateSpy = vi.spyOn(stripe.checkout.sessions, 'create');
+
+    const user = makeUser();
+    const result = await createCheckoutSession(user, 'price_pro');
+
+    expect(result).toEqual({ kind: 'unchanged' });
+    expect(updateSpy).not.toHaveBeenCalled();
+    expect(checkoutCreateSpy).not.toHaveBeenCalled();
+    expect(updateUserSubscription).not.toHaveBeenCalled();
     expect(resetUserUsage).not.toHaveBeenCalled();
   });
 });

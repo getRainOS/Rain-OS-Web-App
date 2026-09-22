@@ -25,24 +25,40 @@ const deriveUsageLimit = (price: Stripe.Price, priceId: string): number => {
 };
 
 /**
- * Creates a Stripe Checkout session for a new or changed subscription.
- * successUrl and cancelUrl override APP_URL-based defaults when provided.
+ * Result of createCheckoutSession — one of three outcomes depending on
+ * whether the user already has an active Stripe subscription:
+ *   - 'checkout':  no active subscription — a new Checkout session was
+ *                  created; the caller should redirect the browser to `url`.
+ *   - 'updated':   an active subscription exists and the requested price
+ *                  differs from the current one — it was updated in place
+ *                  via stripe.subscriptions.update(), no new subscription
+ *                  or Checkout session was created, and no payment-method
+ *                  entry is needed. The DB (usage limit, count reset) is
+ *                  NOT touched here — that's the job of the existing
+ *                  customer.subscription.updated webhook handler
+ *                  (handleSubscriptionChange, above), which Stripe fires
+ *                  for a subscriptions.update() call the same as for any
+ *                  other subscription change.
+ *   - 'unchanged': the requested price is the same as the user's current
+ *                  plan — nothing was done.
+ */
+export type ChangePlanResult =
+  | { kind: 'checkout'; url: string }
+  | { kind: 'updated'; subscriptionId: string; priceId: string }
+  | { kind: 'unchanged' };
+
+/**
+ * Starts or changes a subscription for the given price.
+ * successUrl and cancelUrl override APP_URL-based defaults when provided
+ * (only used for the 'checkout' outcome, i.e. when there's no active
+ * subscription yet to update in place).
  */
 export const createCheckoutSession = async (
   user: User,
   priceId: string,
   successUrl?: string,
   cancelUrl?: string,
-): Promise<Stripe.Checkout.Session> => {
-  const appUrl = process.env.APP_URL || '';
-
-  const finalSuccessUrl = successUrl || (appUrl ? `${appUrl}/#/dashboard` : undefined);
-  const finalCancelUrl = cancelUrl || (appUrl ? `${appUrl}/#/upgrade` : undefined);
-
-  if (!finalSuccessUrl || !finalCancelUrl) {
-    throw new Error('Cannot determine redirect URLs — set APP_URL env var or pass explicit successUrl/cancelUrl.');
-  }
-
+): Promise<ChangePlanResult> => {
   let customerId = user.stripeCustomerId;
 
   if (customerId) {
@@ -63,8 +79,45 @@ export const createCheckoutSession = async (
     await updateUserSubscription(user.id, { stripeCustomerId: customerId });
   }
 
-  // If the user already has an active subscription, create a Checkout session
-  // in subscription_update mode so they can switch plans cleanly.
+  // We don't persist the active subscription ID on the user record, so look
+  // it up from Stripe each time. This is one extra read call on an
+  // infrequent, non-hot-path endpoint — cheap, but if this becomes a
+  // bottleneck, storing stripeSubscriptionId (set from the webhook, same as
+  // stripePriceId) would let us skip this lookup.
+  const activeSubs = await stripe.subscriptions.list({
+    customer: customerId,
+    status: 'active',
+    limit: 1,
+  });
+  const existingSubscription = activeSubs.data[0];
+
+  if (existingSubscription) {
+    const currentItem = existingSubscription.items.data[0];
+    const currentPriceId = currentItem?.price.id;
+
+    if (currentPriceId === priceId) {
+      return { kind: 'unchanged' };
+    }
+
+    await stripe.subscriptions.update(existingSubscription.id, {
+      items: [{ id: currentItem.id, price: priceId }],
+      proration_behavior: 'create_prorations',
+    });
+
+    return { kind: 'updated', subscriptionId: existingSubscription.id, priceId };
+  }
+
+  // No active subscription — new subscriber (or resubscribing after
+  // cancellation). Behaviour unchanged from before this fix: create a
+  // Checkout session so they can enter payment details.
+  const appUrl = process.env.APP_URL || '';
+  const finalSuccessUrl = successUrl || (appUrl ? `${appUrl}/#/dashboard` : undefined);
+  const finalCancelUrl = cancelUrl || (appUrl ? `${appUrl}/#/upgrade` : undefined);
+
+  if (!finalSuccessUrl || !finalCancelUrl) {
+    throw new Error('Cannot determine redirect URLs — set APP_URL env var or pass explicit successUrl/cancelUrl.');
+  }
+
   const sessionParams: Stripe.Checkout.SessionCreateParams = {
     payment_method_types: ['card'],
     mode: 'subscription',
@@ -76,7 +129,10 @@ export const createCheckoutSession = async (
   };
 
   const session = await stripe.checkout.sessions.create(sessionParams);
-  return session;
+  if (!session.url) {
+    throw new Error('Failed to create checkout session URL.');
+  }
+  return { kind: 'checkout', url: session.url };
 };
 
 /**

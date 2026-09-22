@@ -29,16 +29,26 @@ export default async function handler(req: express.Request, res: express.Respons
   }
 
   try {
-    const session = await createCheckoutSession(
+    const result = await createCheckoutSession(
       user,
       priceId,
       successUrl || undefined,
       cancelUrl || undefined,
     );
-    if (!session.url) {
-      throw new Error('Failed to create checkout session URL.');
+
+    switch (result.kind) {
+      case 'checkout':
+        return res.status(200).json({ url: result.url });
+      case 'updated':
+        return res.status(200).json({
+          updated: true,
+          subscriptionId: result.subscriptionId,
+          priceId: result.priceId,
+          message: 'Your plan has been updated.',
+        });
+      case 'unchanged':
+        return res.status(409).json({ error: 'already_subscribed', message: 'You are already on this plan.' } as ApiError);
     }
-    return res.status(200).json({ url: session.url });
   } catch (error) {
     console.error('Stripe Checkout Error:', error);
     const msg = error instanceof Error ? error.message : 'Internal server error.';
