@@ -124,6 +124,12 @@ export const createPortalSession = async (
 
 /**
  * Centralised subscription state handler — called by webhook events.
+ *
+ * Reset rule: usage count is reset to 0 only on an upgrade (new plan's
+ * analysis_limit is strictly higher than the user's current limit). A
+ * downgrade, cancellation, or any other status change updates the limit
+ * (and status/priceId) but never touches the count — renewal resets are
+ * handled separately, by invoice.paid (see handleInvoicePaid below).
  */
 const handleSubscriptionChange = async (subscription: Stripe.Subscription) => {
   const stripeCustomerId = typeof subscription.customer === 'string'
@@ -140,21 +146,52 @@ const handleSubscriptionChange = async (subscription: Stripe.Subscription) => {
 
   if (subscription.status === 'active' && priceId) {
     const price = await stripe.prices.retrieve(priceId);
-    const analysisLimit = deriveUsageLimit(price, priceId);
+    const newLimit = deriveUsageLimit(price, priceId);
+    const isUpgrade = newLimit > user.usage.limit;
+
     await updateUserSubscription(user.id, {
       subscriptionStatus: 'active',
       stripePriceId: priceId,
-      usageLimit: analysisLimit,
+      usageLimit: newLimit,
     });
-    await resetUserUsage(user.id);
+
+    if (isUpgrade) {
+      await resetUserUsage(user.id, 'upgrade');
+    }
   } else {
+    // Downgrade to no active subscription (cancellation, incomplete, etc.):
+    // the limit falls back to Free, but the count is left untouched.
     await updateUserSubscription(user.id, {
       subscriptionStatus: subscription.status === 'canceled' ? 'cancelled' : 'active',
       stripePriceId: null,
       usageLimit: 5,
     });
-    await resetUserUsage(user.id);
   }
+};
+
+/**
+ * Renewal handler — called on invoice.paid. Only a subscription_cycle
+ * invoice (a normal recurring renewal, not a proration or plan-change
+ * invoice) resets the usage count.
+ */
+const handleInvoicePaid = async (invoice: Stripe.Invoice) => {
+  if (invoice.billing_reason !== 'subscription_cycle') return;
+
+  const stripeCustomerId = typeof invoice.customer === 'string'
+    ? invoice.customer
+    : invoice.customer?.id;
+  if (!stripeCustomerId) {
+    console.error('Webhook: invoice.paid event missing a customer ID');
+    return;
+  }
+
+  const user = await findUserByStripeCustomerId(stripeCustomerId);
+  if (!user) {
+    console.error(`Webhook: user not found for stripeCustomerId ${stripeCustomerId} (invoice.paid)`);
+    return;
+  }
+
+  await resetUserUsage(user.id, 'renewal');
 };
 
 export const handleWebhookEvent = async (event: Stripe.Event) => {
@@ -175,6 +212,11 @@ export const handleWebhookEvent = async (event: Stripe.Event) => {
     case 'customer.subscription.deleted': {
       const subscription = event.data.object as Stripe.Subscription;
       await handleSubscriptionChange(subscription);
+      break;
+    }
+    case 'invoice.paid': {
+      const invoice = event.data.object as Stripe.Invoice;
+      await handleInvoicePaid(invoice);
       break;
     }
     default:
