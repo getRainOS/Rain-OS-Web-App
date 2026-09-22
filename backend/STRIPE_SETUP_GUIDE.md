@@ -69,6 +69,7 @@ This guide will walk you through setting up Stripe to enable user payments in yo
      - `checkout.session.completed`
      - `customer.subscription.updated`
      - `customer.subscription.deleted`
+     - `invoice.paid` (required for monthly usage-count renewal resets — without this, paid plans will never reset)
 4. After creating, reveal and copy the **Signing secret** (starts with `whsec_`)
 
 ### 4. Configure Customer Portal

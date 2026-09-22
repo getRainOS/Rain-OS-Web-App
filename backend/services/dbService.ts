@@ -356,9 +356,9 @@ export const incrementUserUsage = async (userId: string): Promise<User | null> =
     return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
 };
 
-export const resetUserUsage = async (userId: string): Promise<void> => {
+export const resetUserUsage = async (userId: string, reason: string = 'unspecified'): Promise<void> => {
     await pool.query("UPDATE users SET usage = jsonb_set(usage, '{count}', '0') WHERE id = $1", [userId]);
-    console.log(`Reset usage for user ${userId}.`);
+    console.log(`Reset usage for user ${userId} — reason: ${reason}.`);
 };
 
 export const resetAllUsersUsage = async (): Promise<number> => {

@@ -34,8 +34,6 @@ import regenerateKeyHandler from './users/me/regenerate-key';
 import createCheckoutSessionHandler from './stripe/create-checkout-session';
 import createPortalSessionHandler from './stripe/create-portal-session';
 import stripeWebhookHandler from './stripe/webhook';
-// Cron
-import cronResetUsageHandler from './cron/reset-usage';
 // AI readiness
 import aiSiteLlmsHandler from './ai/site-llms';
 import aiNormalizeHandler from './ai/normalize';
@@ -148,8 +146,6 @@ app.post('/api/users/me/regenerate-key', regenerateKeyHandler);
 // ─── Stripe ────────────────────────────────────────────────────────────────
 app.post('/api/stripe/create-checkout-session', createCheckoutSessionHandler);
 app.post('/api/stripe/create-portal-session', createPortalSessionHandler);
-// ─── Cron ──────────────────────────────────────────────────────────────────
-app.post('/api/cron/reset-usage', cronResetUsageHandler);
 // ─── GitHub OAuth + Repo Analysis ─────────────────────────────────────────
 app.post('/api/github/oauth/init', githubOauthHandler);
 app.get('/api/github/oauth/callback', githubCallbackHandler);
