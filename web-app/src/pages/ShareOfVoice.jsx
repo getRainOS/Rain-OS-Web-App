@@ -155,7 +155,7 @@ function timeAgo(str) {
 
 /* ── Collapsible Info Box ───────────────────────────────────────────────── */
 function InfoBox() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   return (
     <div style={{ ...S.infoBox, display: 'block', padding: collapsed ? '8px 16px' : '12px 16px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>

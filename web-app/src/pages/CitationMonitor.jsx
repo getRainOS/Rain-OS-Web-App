@@ -19,7 +19,7 @@ const EXAMPLE_TOPICS = [
 
 /* ── Collapsible Disclaimer ─────────────────────────────────────────────── */
 function DisclaimerBlock() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   return (
     <div className={styles.disclaimer} style={{ padding: collapsed ? '8px 16px' : '12px 16px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
