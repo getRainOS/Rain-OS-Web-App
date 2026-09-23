@@ -117,7 +117,7 @@ function ModelCard({ m }) {
               <a key={i} href={s.url} target="_blank" rel="noopener noreferrer"
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, color: color, background: `${color}12`, border: `1px solid ${color}25`, borderRadius: 6, padding: '3px 8px', textDecoration: 'none' }}>
                 <img src={`https://www.google.com/s2/favicons?domain=${s.domain}&sz=16`} alt="" style={{ width: 12, height: 12, borderRadius: 2 }} onError={e => e.currentTarget.style.display='none'} />
-                {s.domain}
+                {s.title || s.domain}
                 <ExternalLink size={9} />
               </a>
             ))}

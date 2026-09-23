@@ -428,7 +428,7 @@ export default function CitationMonitor() {
                     />
                     <div className={styles.sourceBody}>
                       <span className={styles.sourceTitle}>{s.title || s.domain}</span>
-                      <span className={styles.sourceDomain}>{s.domain}</span>
+                      <span className={styles.sourceDomain}>{s.title || s.domain}</span>
                     </div>
                     <ExternalLink style={{ width: 12, height: 12, opacity: 0.5, flexShrink: 0 }} />
                   </a>
