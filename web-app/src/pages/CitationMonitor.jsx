@@ -19,7 +19,7 @@ const EXAMPLE_TOPICS = [
 
 /* ── Collapsible Disclaimer ─────────────────────────────────────────────── */
 function DisclaimerBlock() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   return (
     <div className={styles.disclaimer} style={{ padding: collapsed ? '8px 16px' : '12px 16px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
@@ -428,7 +428,7 @@ export default function CitationMonitor() {
                     />
                     <div className={styles.sourceBody}>
                       <span className={styles.sourceTitle}>{s.title || s.domain}</span>
-                      <span className={styles.sourceDomain}>{s.domain}</span>
+                      <span className={styles.sourceDomain}>{s.title || s.domain}</span>
                     </div>
                     <ExternalLink style={{ width: 12, height: 12, opacity: 0.5, flexShrink: 0 }} />
                   </a>

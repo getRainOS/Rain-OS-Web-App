@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext.jsx';
 import { api } from '../api/client.js';
 import styles from './Upgrade.module.css';
@@ -69,9 +70,11 @@ const PLANS = [
 
 export default function Upgrade() {
   const { user, isDemo } = useApp();
+  const navigate = useNavigate();
   const [loadingPlan, setLoadingPlan] = useState(null);
   const [portalLoading, setPortalLoading] = useState(false);
   const [error, setError] = useState('');
+  const [updateSuccess, setUpdateSuccess] = useState(false);
 
   const currentPriceId = user?.stripePriceId ?? null;
 
@@ -86,6 +89,7 @@ export default function Upgrade() {
 
   async function handleUpgrade(priceId) {
     setError('');
+    setUpdateSuccess(false);
     setLoadingPlan(priceId);
     const successUrl = window.location.origin + '/dashboard';
     const cancelUrl = window.location.origin + '/upgrade';
@@ -96,8 +100,8 @@ export default function Upgrade() {
         window.location.href = data.url;
       } else if (data?.updated) {
         // Existing subscription was changed in place (upgrade/downgrade) —
-        // no payment step needed, just head to the dashboard.
-        window.location.href = window.location.origin + '/dashboard';
+        // no payment step needed. Confirm on this page instead of a silent redirect.
+        setUpdateSuccess(true);
       } else {
         throw new Error('No checkout URL returned');
       }
@@ -140,6 +144,15 @@ export default function Upgrade() {
       )}
 
       {error && <p className={styles.error}>{error}</p>}
+
+      {updateSuccess && (
+        <div className={styles.updateSuccess}>
+          <span>Your plan has been updated.</span>
+          <button type="button" className={styles.backToDashboardBtn} onClick={() => navigate('/dashboard')}>
+            Back to dashboard
+          </button>
+        </div>
+      )}
 
       <div className={styles.plans}>
         {PLANS.map(plan => {

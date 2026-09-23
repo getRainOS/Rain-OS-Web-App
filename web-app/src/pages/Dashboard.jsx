@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
@@ -353,6 +353,7 @@ export default function Dashboard() {
   const [showLaneSelector, setShowLaneSelector] = useState(!userLane || urlWantsLaneSelect);
   const [dateFilter, setDateFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
+  const laneSectionRef = useRef(null);
 
   useEffect(() => {
     if (urlWantsLaneSelect) {
@@ -361,6 +362,12 @@ export default function Dashboard() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlWantsLaneSelect]);
+
+  useEffect(() => {
+    if (showLaneSelector) {
+      laneSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [showLaneSelector]);
 
   useEffect(() => {
     api.history({ limit: 50, lane: userLane })
@@ -749,30 +756,32 @@ export default function Dashboard() {
       </div>
 
       {/* ── Lane Banner / Selector ── */}
-      {showLaneSelector ? (
-        <LaneSelector onSelect={(id) => { setUserLane(id); setShowLaneSelector(false); }} />
-      ) : userLane ? (
-        <div className={styles.laneBanner}>
-          {(() => {
-            const lane = LANES.find(l => l.id === userLane);
-            if (!lane) return null;
-            return (
-              <>
-                <div className={styles.laneBadge}>
-                  <lane.Icon size={13} style={{ color: '#94a3b8' }} />
-                  <span className={styles.laneBadgeLabel}>{lane.label}</span>
-                </div>
-                <p className={styles.laneBannerSub}>
-                  {userLane === 'local_business'
-                    ? 'Scoring tuned for local trust signals, AI findability, and getting customers to call or book.'
-                    : 'Your scoring weights and KPIs are optimized for this lane.'}
-                </p>
-                <button className={styles.laneChangeBtn} onClick={() => setShowLaneSelector(true)}>Change lane</button>
-              </>
-            );
-          })()}
-        </div>
-      ) : null}
+      <div ref={laneSectionRef}>
+        {showLaneSelector ? (
+          <LaneSelector onSelect={(id) => { setUserLane(id); setShowLaneSelector(false); }} />
+        ) : userLane ? (
+          <div className={styles.laneBanner}>
+            {(() => {
+              const lane = LANES.find(l => l.id === userLane);
+              if (!lane) return null;
+              return (
+                <>
+                  <div className={styles.laneBadge}>
+                    <lane.Icon size={13} style={{ color: '#94a3b8' }} />
+                    <span className={styles.laneBadgeLabel}>{lane.label}</span>
+                  </div>
+                  <p className={styles.laneBannerSub}>
+                    {userLane === 'local_business'
+                      ? 'Scoring tuned for local trust signals, AI findability, and getting customers to call or book.'
+                      : 'Your scoring weights and KPIs are optimized for this lane.'}
+                  </p>
+                  <button className={styles.laneChangeBtn} onClick={() => setShowLaneSelector(true)}>Change lane</button>
+                </>
+              );
+            })()}
+          </div>
+        ) : null}
+      </div>
 
       {/* ── Score Trend (above the fold) ── */}
       <div className={styles.chartCard} style={{ marginBottom: 12 }}>
