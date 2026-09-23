@@ -257,7 +257,6 @@ export default function Settings() {
               className="btn btn-primary"
               onClick={handleConnectGithub}
               disabled={isDemo}
-              style={{ marginTop: 12 }}
             >
               Connect GitHub
             </button>
