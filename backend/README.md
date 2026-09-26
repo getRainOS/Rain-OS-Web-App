@@ -45,7 +45,6 @@ STRIPE_WEBHOOK_SECRET="whsec_..."
 
 # Application Security
 ENCRYPTION_SECRET="a_random_32_character_string_for_db_encryption"
-CRON_SECRET="a_secure_random_string_for_cron_job_authentication"
 
 # (Optional) Google OAuth Client ID
 GOOGLE_CLIENT_ID="your_google_client_id.apps.googleusercontent.com"
@@ -82,4 +81,3 @@ All API endpoints are prefixed with `/api`. An `Authorization: Bearer <your_rain
 *   `POST /api/stripe/create-checkout-session`: Get a URL to the Stripe checkout page.
 *   `POST /api/stripe/create-portal-session`: Get a URL to the Stripe customer portal to manage subscriptions.
 *   `POST /api/stripe/webhook`: Endpoint for Stripe to send subscription events.
-*   `POST /api/cron/reset-usage`: A secure endpoint to reset all user usage counts (e.g., at the start of a month).

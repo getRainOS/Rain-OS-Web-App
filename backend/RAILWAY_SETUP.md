@@ -63,7 +63,6 @@ Set these in Railway → your service → **Variables**:
 |---|---|
 | `ENCRYPTION_SECRET` | AES-256 encryption key for GitHub tokens |
 | `API_KEY` | Internal API key (if used) |
-| `CRON_SECRET` | Secret for cron job endpoints |
 
 ---
 
