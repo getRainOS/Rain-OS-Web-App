@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { getApiKey, setApiKey, clearApiKey, api } from './api/client.js';
 import { supabase } from './lib/supabase.js';
@@ -125,8 +125,43 @@ export default function App() {
       .catch(() => {});
   }
 
+  // After a plan change the Stripe webhook may land after the user returns, so
+  // refetch now and, if the plan still matches the old one, poll every 2s for
+  // up to 10s. Runs in the background; a newer call cancels the previous one.
+  const planPollRef = useRef(null);
+  function refreshUserUntilPlanChanges(prevPriceId) {
+    if (isDemo) return;
+    clearTimeout(planPollRef.current);
+    let attempts = 0;
+    const tick = () => {
+      api.me()
+        .then(({ data }) => {
+          setUser(data);
+          if ((data?.stripePriceId ?? null) === (prevPriceId ?? null) && attempts < 5) {
+            attempts += 1;
+            planPollRef.current = setTimeout(tick, 2000);
+          }
+        })
+        .catch(() => {});
+    };
+    tick();
+  }
+
+  useEffect(() => () => clearTimeout(planPollRef.current), []);
+
+  // Returning from Stripe Checkout: Upgrade.jsx stashes the pre-checkout price
+  // before redirecting, so poll for the new plan once the user is loaded.
+  useEffect(() => {
+    if (!user || isDemo) return;
+    let prev;
+    try { prev = sessionStorage.getItem('rain_os_prev_price'); } catch (_) { return; }
+    if (prev === null) return;
+    try { sessionStorage.removeItem('rain_os_prev_price'); } catch (_) {}
+    refreshUserUntilPlanChanges(prev === '' ? null : prev);
+  }, [!!user]);
+
   return (
-    <AppContext.Provider value={{ apiKey, user, setUser, onLogout, refreshUser, isDemo, userLane, setUserLane }}>
+    <AppContext.Provider value={{ apiKey, user, setUser, onLogout, refreshUser, refreshUserUntilPlanChanges, isDemo, userLane, setUserLane }}>
       <BrowserRouter>
         <AppRoutes apiKey={apiKey} onAuth={onAuth} onLogout={onLogout} refreshUser={refreshUser} />
       </BrowserRouter>
