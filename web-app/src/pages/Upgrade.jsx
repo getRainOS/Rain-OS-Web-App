@@ -69,7 +69,7 @@ const PLANS = [
 ];
 
 export default function Upgrade() {
-  const { user, isDemo } = useApp();
+  const { user, isDemo, refreshUserUntilPlanChanges } = useApp();
   const navigate = useNavigate();
   const [loadingPlan, setLoadingPlan] = useState(null);
   const [portalLoading, setPortalLoading] = useState(false);
@@ -97,11 +97,14 @@ export default function Upgrade() {
       const { data } = await api.createCheckoutSession(priceId, successUrl, cancelUrl);
       if (data?.url) {
         // New subscriber — no active subscription yet, redirect to Checkout.
+        // Remember the current plan so the app can poll for the change on return.
+        try { sessionStorage.setItem('rain_os_prev_price', currentPriceId ?? ''); } catch (_) {}
         window.location.href = data.url;
       } else if (data?.updated) {
         // Existing subscription was changed in place (upgrade/downgrade) —
         // no payment step needed. Confirm on this page instead of a silent redirect.
         setUpdateSuccess(true);
+        refreshUserUntilPlanChanges(currentPriceId);
       } else {
         throw new Error('No checkout URL returned');
       }
