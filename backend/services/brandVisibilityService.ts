@@ -7,6 +7,7 @@ import {
   type Tool,
   type GroundingChunk,
 } from '@google/generative-ai';
+import { resolveSourceDomain } from './groundingSources';
 
 const API_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
 const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
@@ -132,12 +133,7 @@ export async function runBrandVisibilityCheck(
     const rawUrl = web?.uri || '';
     if (!rawUrl || seen.has(rawUrl)) continue;
     seen.add(rawUrl);
-    let domain = '';
-    try {
-      domain = new URL(rawUrl).hostname.replace(/^www\./i, '').toLowerCase();
-    } catch {
-      domain = rawUrl.replace(/^https?:\/\//, '').replace(/^www\./i, '').split('/')[0].toLowerCase();
-    }
+    const domain = resolveSourceDomain(web?.title, rawUrl);
     sources.push({ title: web?.title || domain, url: rawUrl, domain, snippet: '' });
   }
 
