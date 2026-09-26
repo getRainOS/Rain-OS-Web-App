@@ -8,6 +8,7 @@ import {
   type Tool,
   type GroundingChunk,
 } from '@google/generative-ai';
+import { resolveSourceDomain } from './groundingSources';
 
 const API_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
 const MODEL   = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
@@ -86,9 +87,7 @@ function extractSources(
     const rawUrl = c.web?.uri || '';
     if (!rawUrl || seen.has(rawUrl)) continue;
     seen.add(rawUrl);
-    let domain = '';
-    try { domain = new URL(rawUrl).hostname.replace(/^www\./i, '').toLowerCase(); }
-    catch { domain = rawUrl.replace(/^https?:\/\//, '').replace(/^www\./i, '').split('/')[0].toLowerCase(); }
+    const domain = resolveSourceDomain(c.web?.title, rawUrl);
     sources.push({ title: c.web?.title || domain, url: rawUrl, domain });
   }
   void supports; // used by caller for snippets if needed

@@ -8,6 +8,7 @@ import {
   type Tool,
   type GroundingChunk,
 } from '@google/generative-ai';
+import { resolveSourceDomain } from './groundingSources';
 
 const API_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
 const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
@@ -159,7 +160,7 @@ export async function runCitationCheck(
     const web = chunk.web;
     const rawUrl = web?.uri || '';
     if (!rawUrl) continue;
-    const domain = extractDomain(rawUrl);
+    const domain = resolveSourceDomain(web?.title, rawUrl);
     if (seen.has(rawUrl)) continue;
     seen.add(rawUrl);
     sources.push({
