@@ -39,41 +39,34 @@ const TOOLS = {
 const LANE_GROUPS = {
   general: [
     { label: 'Optimize',  tools: ['analyze', 'urlScanner'] },
-    { label: 'Monitor',   tools: ['citation', 'visibility'] },
-    { label: 'Measure',   tools: ['sov', 'history'] },
+    { label: 'Monitor',   tools: ['citation', 'visibility', 'sov', 'history'] },
   ],
   product_sellers: [
     { label: 'Optimize',  tools: ['analyze', 'urlScanner'] },
-    { label: 'Monitor',   tools: ['citation', 'visibility'] },
-    { label: 'Measure',   tools: ['sov', 'history'] },
+    { label: 'Monitor',   tools: ['citation', 'visibility', 'sov', 'history'] },
   ],
   developers: [
     { label: 'Optimize',  tools: ['repo', 'urlScanner'] },
-    { label: 'Monitor',   tools: ['citation'] },
-    { label: 'Measure',   tools: ['sov', 'history'] },
+    { label: 'Monitor',   tools: ['citation', 'sov', 'history'] },
   ],
   local_business: [
     { label: 'Optimize',  tools: ['analyze', 'urlScanner'] },
-    { label: 'Monitor',   tools: ['citation', 'visibility'] },
-    { label: 'Measure',   tools: ['sov', 'history'] },
+    { label: 'Monitor',   tools: ['citation', 'visibility', 'sov', 'history'] },
   ],
   vibe_coders: [
     { label: 'Optimize',  tools: ['repo', 'urlScanner'] },
-    { label: 'Monitor',   tools: ['citation', 'visibility'] },
-    { label: 'Measure',   tools: ['sov', 'history'] },
+    { label: 'Monitor',   tools: ['citation', 'visibility', 'sov', 'history'] },
   ],
 };
 
 const GROUP_TOOLTIPS = {
   Optimize:  'Tools to improve how AI reads and presents your content.',
   Monitor:   'Track where and how you appear in AI-generated answers.',
-  Measure:   'Compare your performance and see progress over time.',
 };
 
 const LOCAL_GROUP_TOOLTIPS = {
   Optimize:  'Paste your website content to score it for local AI visibility and get plain-English fixes.',
   Monitor:   'Check if AI tools are recommending your business when local customers ask questions.',
-  Measure:   'Track how often your business comes up in AI answers and see your scores improve.',
 };
 
 export default function Layout({ children }) {
