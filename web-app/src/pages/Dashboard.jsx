@@ -18,6 +18,12 @@ import {
 } from 'lucide-react';
 import styles from './Dashboard.module.css';
 
+function joinWithAnd(items) {
+  if (items.length <= 1) return items.join('');
+  if (items.length === 2) return `${items[0]} and ${items[1]}`;
+  return `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`;
+}
+
 function getFavicon(domain) {
   if (!domain) return '';
   return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
@@ -678,7 +684,7 @@ export default function Dashboard() {
       trend: scoreTrend,
       Icon: FileText,
       pillars: totalAnalyses > 0 ? pillarAvgs : null,
-      tooltip: 'Average of your AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, and RAG Readiness scores — the same signals that make AI search engines more likely to cite you. Bars below show each pillar.',
+      tooltip: `Average of your ${joinWithAnd(activePillars.map(p => p.label))} scores — the same signals that make AI search engines more likely to cite you. Bars below show each pillar.`,
     },
     {
       key: 'citation',
@@ -1000,7 +1006,7 @@ export default function Dashboard() {
             <div>
               <h2 className={styles.chartTitle}>Pillar Breakdown</h2>
               <p className={styles.chartSub}>Relative score distribution</p>
-              <span className={styles.chartHelp} title="How your scores are distributed across the five pillars: AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, and RAG Readiness.">
+              <span className={styles.chartHelp} title={`How your scores are distributed across your ${activePillars.length} pillars: ${joinWithAnd(activePillars.map(p => p.label))}.`}>
                 <HelpCircle size={11} />
               </span>
             </div>

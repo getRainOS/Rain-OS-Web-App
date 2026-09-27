@@ -318,7 +318,7 @@ export default function ContentAnalyzer() {
             />
           )}
 
-          <PillarScores result={result} />
+          <PillarScores result={result} lane={userLane} />
 
           {result.authorship && (
             <div className={`card ${styles.authorshipCard}`}>

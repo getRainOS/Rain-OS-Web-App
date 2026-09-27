@@ -635,7 +635,7 @@ export default function UrlScanner() {
             </div>
           )}
 
-          <PillarScores result={result} />
+          <PillarScores result={result} lane={userLane} />
 
           {(result.signals ?? result.technical_signals)?.length > 0 && (
             <div className={`card ${styles.signalsCard}`}>
