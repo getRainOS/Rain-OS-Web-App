@@ -426,7 +426,7 @@ export const Pricing = () => {
         { label: "Content Analyzer", included: true },
         { label: "URL Scanner", included: true },
         { label: "Repo Analysis (GitHub)", included: true },
-        { label: "Citation Monitor — 20 checks / mo", included: true },
+        { label: "Citation Monitor", included: true },
         { label: "Quick Tools — titles, meta, summarize", included: true },
         { label: "Score History", included: true },
         { label: "Brand Sentiment", included: false },
@@ -440,9 +440,9 @@ export const Pricing = () => {
       buttonText: "Get Started",
       features: [
         { label: "Everything in Pro", included: true },
-        { label: "Citation Monitor — 100 checks / mo", included: true },
-        { label: "Brand Sentiment — 50 checks / mo", included: true },
-        { label: "Share of Voice — 20 checks / mo", included: true },
+        { label: "Citation Monitor", included: true },
+        { label: "Brand Sentiment", included: true },
+        { label: "Share of Voice", included: true },
         { label: "Priority support", included: true },
       ]
     }
