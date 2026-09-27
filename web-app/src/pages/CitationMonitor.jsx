@@ -300,8 +300,8 @@ export default function CitationMonitor() {
       {!result && (
         <form onSubmit={handleCheck} className={`card ${styles.formCard}`}>
           <label className={styles.label} htmlFor="cm-topic">
-            Topic or question
-            <span className={styles.labelHint}>What you want AI to recommend you for</span>
+            Question or Prompt to Be Cited For
+            <span className={styles.labelHint}>The exact question or prompt you want AI to cite your site for when answering.</span>
           </label>
           <input
             id="cm-topic"
