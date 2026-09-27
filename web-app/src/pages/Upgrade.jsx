@@ -63,7 +63,6 @@ const PLANS = [
       { label: 'Citation Monitor', included: true },
       { label: 'Brand Sentiment', included: true },
       { label: 'Share of Voice', included: true },
-      { label: 'Priority support', included: true },
     ],
   },
 ];
