@@ -363,7 +363,7 @@ export default function History() {
 
                     {isOpen && (
                       <div className={styles.itemBody}>
-                        <PillarScores result={item} />
+                        <PillarScores result={item} lane={item.lane} />
                         {item.summary && (
                           <div className={styles.summary}>
                             <h4 className={styles.summaryLabel}>Summary</h4>

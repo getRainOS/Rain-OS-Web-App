@@ -72,7 +72,14 @@ function resolveScore(result, key, camel) {
   return null;
 }
 
-export default function PillarScores({ result }) {
+const PRODUCT_DISCOVERABILITY_NOTE =
+  "Product Discoverability applies specifically to product and e-commerce listings — it's part of scoring for the Product Seller lane only.";
+
+export default function PillarScores({ result, lane }) {
+  const visiblePillars = PILLARS.filter(
+    p => p.key !== 'product_discoverability' || lane === 'product_sellers'
+  );
+
   const overall =
     result?.overall_score ??
     result?.overallScore ??
@@ -103,7 +110,7 @@ export default function PillarScores({ result }) {
       )}
 
       <div className={styles.pillars}>
-        {PILLARS.map(p => {
+        {visiblePillars.map(p => {
           const score = resolveScore(result, p.key, p.camel);
           const pct = score !== null ? Math.min(Math.round(score), 100) : null;
 
@@ -118,6 +125,9 @@ export default function PillarScores({ result }) {
                 <div>
                   <div className={styles.pillarLabel}>{p.label}</div>
                   <div className={styles.pillarSub}>{p.sub}</div>
+                  {p.key === 'product_discoverability' && (
+                    <div className={styles.pillarNote}>{PRODUCT_DISCOVERABILITY_NOTE}</div>
+                  )}
                 </div>
                 <div className={styles.pillarRight}>
                   {pct !== null ? (

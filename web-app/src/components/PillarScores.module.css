@@ -72,6 +72,13 @@
   color: var(--text-muted);
 }
 
+.pillarNote {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  font-style: italic;
+}
+
 .pillarRight {
   margin-left: auto;
   display: flex;
