@@ -8,6 +8,9 @@ import {
   History as HistoryIcon, TrendingUp, TrendingDown, Minus,
   Clock, ChevronDown, ChevronUp,
 } from 'lucide-react';
+import {
+  ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+} from 'recharts';
 import { buildCompetitorMap } from '../lib/citationHistory.js';
 import styles from './CitationMonitor.module.css';
 
@@ -373,7 +376,12 @@ export default function CitationMonitor() {
           <div className={`card ${styles.resultCard}`}>
             <div className={styles.resultMain}>
               <div className={styles.resultCite}>
-                {result.cited ? (
+                {!result.url ? (
+                  <div className={styles.resultCiteNeutral}>
+                    <Info style={{ width: 18, height: 18 }} />
+                    <span>Enter your website above to check citation status</span>
+                  </div>
+                ) : result.cited ? (
                   <div className={styles.resultCiteGood}>
                     <CheckCircle2 style={{ width: 18, height: 18 }} />
                     <span>Cited</span>
@@ -428,7 +436,6 @@ export default function CitationMonitor() {
                     />
                     <div className={styles.sourceBody}>
                       <span className={styles.sourceTitle}>{s.title || s.domain}</span>
-                      <span className={styles.sourceDomain}>{s.title || s.domain}</span>
                     </div>
                     <ExternalLink style={{ width: 12, height: 12, opacity: 0.5, flexShrink: 0 }} />
                   </a>
@@ -618,6 +625,21 @@ function TrendHistoryView({ groups, loading, onRunCheck, onClearHistory, onTopic
   );
 }
 
+/* ── Competitor scatter tooltip ──────────────────────────────────────────── */
+function ScatterTooltip({ active, payload }) {
+  if (!active || !payload?.length) return null;
+  const d = payload[0].payload;
+  return (
+    <div className={styles.scatterTooltip}>
+      <div className={styles.scatterTooltipDomain}>
+        {d.domain}{d.isOwn ? ' (you)' : ''}
+      </div>
+      <div className={styles.scatterTooltipStat}>{d.x}% of tracked queries</div>
+      <div className={styles.scatterTooltipStat}>avg rank {d.y}</div>
+    </div>
+  );
+}
+
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  Competitor Map View                                                        */
 /* ══════════════════════════════════════════════════════════════════════════ */
@@ -648,9 +670,18 @@ function CompetitorMapView({ map, history, ownDomain, loading, onRunCheck, onCle
     );
   }
 
-  const { totalQueries, domains } = map;
+  const { totalQueries, domains, ownPoint } = map;
   const topDomain = domains[0];
   const maxCount = topDomain?.queryCount || 1;
+
+  const scatterData = domains.map(d => ({
+    domain: d.domain,
+    x: Math.round(d.coverage * 1000) / 10,
+    y: d.avgRank,
+  }));
+  const ownScatterData = ownPoint
+    ? [{ domain: ownPoint.domain, x: Math.round(ownPoint.coverage * 1000) / 10, y: ownPoint.avgRank, isOwn: true }]
+    : [];
 
   return (
     <div className={`${styles.mapWrap} fade-in`}>
@@ -706,6 +737,49 @@ function CompetitorMapView({ map, history, ownDomain, loading, onRunCheck, onCle
           appears in. Earning a mention or guest post on the top domains is the highest-leverage path to
           AI citations in your niche.
         </p>
+
+        {(domains.length > 0 || ownScatterData.length > 0) && (
+          <div className={styles.scatterWrap}>
+            <ResponsiveContainer width="100%" height={320}>
+              <ScatterChart margin={{ top: 16, right: 24, bottom: 24, left: 8 }}>
+                <CartesianGrid stroke="rgba(255,255,255,0.06)" />
+                <XAxis
+                  type="number"
+                  dataKey="x"
+                  domain={[0, 100]}
+                  stroke="transparent"
+                  tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }}
+                  tickLine={false}
+                  axisLine={false}
+                  label={{ value: '% of tracked queries', position: 'insideBottom', offset: -16, fill: 'rgba(255,255,255,0.4)', fontSize: 11 }}
+                />
+                <YAxis
+                  type="number"
+                  dataKey="y"
+                  reversed
+                  stroke="transparent"
+                  tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }}
+                  tickLine={false}
+                  axisLine={false}
+                  label={{ value: 'Avg rank (lower = better)', angle: -90, position: 'insideLeft', fill: 'rgba(255,255,255,0.4)', fontSize: 11 }}
+                />
+                <Tooltip content={<ScatterTooltip />} cursor={{ strokeDasharray: '3 3', stroke: 'rgba(255,255,255,0.15)' }} />
+                <Scatter name="Competitors" data={scatterData} fill="#5b5fc7" />
+                {ownScatterData.length > 0 && (
+                  <Scatter name="You" data={ownScatterData} fill="#22c55e" shape="star" />
+                )}
+              </ScatterChart>
+            </ResponsiveContainer>
+            {ownScatterData.length > 0 && (
+              <div className={styles.scatterLegend}>
+                <span className={styles.scatterLegendDot} style={{ background: '#5b5fc7' }} />
+                Competitors
+                <span className={styles.scatterLegendDot} style={{ background: '#22c55e', marginLeft: 14 }} />
+                You
+              </div>
+            )}
+          </div>
+        )}
 
         {domains.length === 0 ? (
           <p className={styles.mapEmptyInner}>

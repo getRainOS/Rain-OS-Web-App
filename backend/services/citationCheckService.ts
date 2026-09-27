@@ -200,7 +200,13 @@ export async function runCitationCheck(
     `USER QUERY: ${trimmedTopic}`,
     `USER WEBSITE: ${userUrl || '(not provided)'}`,
     `USER DOMAIN: ${userDomain || '(none)'}`,
-    `CURRENTLY CITED BY AI: ${cited ? 'YES — user domain appears in sources' : 'NO — user domain not in cited sources'}`,
+    `CURRENTLY CITED BY AI: ${
+      !userUrl
+        ? 'N/A — no URL was provided, so no domain-specific citation check was performed'
+        : cited
+        ? 'YES — user domain appears in sources'
+        : 'NO — user domain not in cited sources'
+    }`,
     ``,
     `SOURCES AI ACTUALLY CITED FOR THIS QUERY:`,
     sources.length === 0
@@ -227,7 +233,7 @@ export async function runCitationCheck(
     `Rules:`,
     `- If the user's domain IS cited, score 70-95 and recommend protecting/extending the position.`,
     `- If NOT cited but the domain is reasonable for the topic, score 30-60 and give specific gap-closing recommendations referencing the actual cited competitors.`,
-    `- If no URL was provided, score the citation field's competitiveness and recommend generic AEO best practices for the topic.`,
+    `- If no URL was provided, score the citation field's competitiveness and recommend generic AEO best practices for the topic. The summary must describe the citation field itself (e.g. who dominates it) — never claim "your site" does or doesn't appear, since no domain was checked.`,
     `- Recommendations must be concrete (mention schema markup, content structure, citation patterns, freshness, etc.) — no vague advice.`,
     `- Respond with valid JSON only. No markdown fences, no preamble.`,
   ].join('\n');
@@ -249,8 +255,10 @@ export async function runCitationCheck(
   } catch (err) {
     console.error('Citation analysis parse error:', rawAnalysis.slice(0, 400));
     analysis = {
-      alignmentScore: cited ? 75 : 40,
-      summary: cited
+      alignmentScore: !userUrl ? 50 : cited ? 75 : 40,
+      summary: !userUrl
+        ? `Here's the current citation field for "${trimmedTopic}" — add your website URL to check whether you appear in it.`
+        : cited
         ? `Your site appears among the sources AI cites for "${trimmedTopic}".`
         : `Your site does not currently appear in AI citations for "${trimmedTopic}".`,
       recommendations: [
