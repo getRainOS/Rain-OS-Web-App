@@ -373,7 +373,12 @@ export default function CitationMonitor() {
           <div className={`card ${styles.resultCard}`}>
             <div className={styles.resultMain}>
               <div className={styles.resultCite}>
-                {result.cited ? (
+                {!result.url ? (
+                  <div className={styles.resultCiteNeutral}>
+                    <Info style={{ width: 18, height: 18 }} />
+                    <span>Enter your website above to check citation status</span>
+                  </div>
+                ) : result.cited ? (
                   <div className={styles.resultCiteGood}>
                     <CheckCircle2 style={{ width: 18, height: 18 }} />
                     <span>Cited</span>
