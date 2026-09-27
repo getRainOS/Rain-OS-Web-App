@@ -116,7 +116,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick }: Market
               onMouseLeave={() => setSolutionsOpen(false)}
             >
               <button className="flex items-center gap-1.5 hover:text-white transition-colors py-1">
-                Other Solutions
+                Solutions
                 <ChevronDown
                   className={`w-3.5 h-3.5 transition-transform duration-200 ${
                     solutionsOpen ? 'rotate-180 text-sky-400' : ''
