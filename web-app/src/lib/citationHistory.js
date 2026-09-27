@@ -23,12 +23,35 @@ function insightFor({ queryCount, totalQueries, avgRank, citedAsTop }) {
   return 'Cited once so far — lower priority, but worth tracking as you add more checks.';
 }
 
+function finalizeDomain(d, totalQueries) {
+  const avgRank = d.rankSum / Math.max(d.queryCount, 1);
+  return {
+    domain: d.domain,
+    queryCount: d.queryCount,
+    coverage: d.queryCount / totalQueries,
+    avgRank: Math.round(avgRank * 10) / 10,
+    bestRank: d.bestRank === Infinity ? null : d.bestRank,
+    topics: d.topics,
+    sampleUrl: d.sampleUrl || `https://${d.domain}`,
+    insight: insightFor({
+      queryCount: d.queryCount,
+      totalQueries,
+      avgRank,
+      citedAsTop: d.bestRank <= 2,
+    }),
+  };
+}
+
 export function buildCompetitorMap(history, ownDomain) {
   const totalQueries = history.length;
-  if (!totalQueries) return { totalQueries: 0, domains: [] };
+  if (!totalQueries) return { totalQueries: 0, domains: [], ownPoint: null };
 
   const ownNormalized = ownDomain ? ownDomain.toLowerCase().replace(/^www\./, '') : null;
   const byDomain = new Map();
+  // Mirrors an entry in `byDomain`, but for the user's own domain — tracked
+  // separately (not excluded) so the scatter plot can place "your" point
+  // alongside competitors.
+  let ownAgg = null;
 
   for (const entry of history) {
     const seenInQuery = new Set();
@@ -38,21 +61,29 @@ export function buildCompetitorMap(history, ownDomain) {
     const upsert = (rawDomain, rank, url) => {
       const domain = (rawDomain || '').toLowerCase().replace(/^www\./, '');
       if (!domain) return;
-      if (ownNormalized && domain === ownNormalized) return;
       if (seenInQuery.has(domain)) return;
       seenInQuery.add(domain);
 
-      let agg = byDomain.get(domain);
-      if (!agg) {
-        agg = {
-          domain,
-          queryCount: 0,
-          rankSum: 0,
-          bestRank: Infinity,
-          topics: [],
-          sampleUrl: null,
-        };
-        byDomain.set(domain, agg);
+      const isOwn = ownNormalized && domain === ownNormalized;
+      let agg;
+      if (isOwn) {
+        if (!ownAgg) {
+          ownAgg = { domain, queryCount: 0, rankSum: 0, bestRank: Infinity, topics: [], sampleUrl: null };
+        }
+        agg = ownAgg;
+      } else {
+        agg = byDomain.get(domain);
+        if (!agg) {
+          agg = {
+            domain,
+            queryCount: 0,
+            rankSum: 0,
+            bestRank: Infinity,
+            topics: [],
+            sampleUrl: null,
+          };
+          byDomain.set(domain, agg);
+        }
       }
       const effectiveRank = rank || fallbackRank;
       agg.queryCount += 1;
@@ -78,28 +109,13 @@ export function buildCompetitorMap(history, ownDomain) {
   }
 
   const domains = Array.from(byDomain.values())
-    .map(d => {
-      const avgRank = d.rankSum / Math.max(d.queryCount, 1);
-      return {
-        domain: d.domain,
-        queryCount: d.queryCount,
-        coverage: d.queryCount / totalQueries,
-        avgRank: Math.round(avgRank * 10) / 10,
-        bestRank: d.bestRank === Infinity ? null : d.bestRank,
-        topics: d.topics,
-        sampleUrl: d.sampleUrl || `https://${d.domain}`,
-        insight: insightFor({
-          queryCount: d.queryCount,
-          totalQueries,
-          avgRank,
-          citedAsTop: d.bestRank <= 2,
-        }),
-      };
-    })
+    .map(d => finalizeDomain(d, totalQueries))
     .sort((a, b) => {
       if (b.queryCount !== a.queryCount) return b.queryCount - a.queryCount;
       return a.avgRank - b.avgRank;
     });
 
-  return { totalQueries, domains };
+  const ownPoint = ownAgg ? finalizeDomain(ownAgg, totalQueries) : null;
+
+  return { totalQueries, domains, ownPoint };
 }
