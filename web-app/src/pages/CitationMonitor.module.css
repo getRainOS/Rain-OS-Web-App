@@ -374,7 +374,7 @@
 }
 
 .sourceTitle {
-  font-size: 13.5px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--text);
   line-height: 1.35;
@@ -388,12 +388,6 @@
   border-radius: 4px;
   background: rgba(34,197,94,0.18);
   color: #22c55e;
-}
-
-.sourceDomain {
-  font-size: 11.5px;
-  color: var(--accent);
-  margin-top: 2px;
 }
 
 .sourceSnippet {
