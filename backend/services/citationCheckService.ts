@@ -72,6 +72,31 @@ export function extractDomain(rawUrl: string): string {
 }
 
 /**
+ * Build a plain-English summary from facts we actually have — no LLM guess.
+ * Only ever references cited, how many sources were returned, and (when
+ * relevant) which domains compete for the citation.
+ */
+function buildSummary(
+  hasUrl: boolean,
+  cited: boolean,
+  sourcesCount: number,
+  competitorDomains: string[]
+): string {
+  if (sourcesCount === 0) {
+    return 'Gemini returned no grounded sources for this query.';
+  }
+  const plural = sourcesCount === 1 ? '' : 's';
+  const leaders = competitorDomains.slice(0, 3).join(', ');
+  if (!hasUrl) {
+    return `Gemini cited ${sourcesCount} source${plural} for this query${leaders ? ` — currently led by ${leaders}` : ''}.`;
+  }
+  if (cited) {
+    return `Your site is among the ${sourcesCount} source${plural} Gemini cited for this query.`;
+  }
+  return `Your site was not among the ${sourcesCount} source${plural} Gemini cited for this query${leaders ? ` — currently led by ${leaders}` : ''}.`;
+}
+
+/**
  * Find the index of the first source whose domain matches the user's domain.
  * Matches on:
  *  - exact host match (after stripping www.)
@@ -189,8 +214,7 @@ export async function runCitationCheck(
     citedSourceIndex,
     sources,
     competitorDomains: dedupedCompetitors,
-    // TODO: replaced with a deterministic summary in the next commit.
-    summary: '',
+    summary: buildSummary(!!userUrl, cited, sources.length, dedupedCompetitors),
     answerExcerpt: answerText.slice(0, 600),
   };
 }

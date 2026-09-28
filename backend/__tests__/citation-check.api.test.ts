@@ -184,6 +184,7 @@ describe('POST /api/citation-check — happy path', () => {
     expect(res.body.citedSourceIndex).toBe(0);
     expect(res.body.sources).toHaveLength(2);
     expect(res.body.competitorDomains).toEqual(['competitor.com']);
+    expect(res.body.summary).toBe('Your site is among the 2 sources Gemini cited for this query.');
   });
 
   it('marks cited=false and includes all domains as competitors when user domain is not in sources', async () => {
