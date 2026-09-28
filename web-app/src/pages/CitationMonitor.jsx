@@ -362,7 +362,7 @@ export default function CitationMonitor() {
                   </div>
                 )}
                 {result.url && !result.cited && (
-                  <Link to="/url-scanner" className={styles.urlScannerCta}>
+                  <Link to={`/url-scanner?url=${encodeURIComponent(result.url)}`} className={styles.urlScannerCta}>
                     Check what your page needs in URL Scanner →
                   </Link>
                 )}
