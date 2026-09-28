@@ -15,39 +15,25 @@ vi.mock('../services/dbService', () => ({
 }));
 
 // ─── Mock the @google/generative-ai SDK ──────────────────────────────────────
-// Each test can override `groundedResponseText`, `analysisResponseText`, and
-// `groundingChunks` to drive the citation logic.
+// Each test can override `groundedResponseText` and `groundingChunks` to
+// drive the citation logic. There is only one Gemini call now (the grounded
+// query) — the second "analysis" call was removed.
 let groundedResponseText = '';
-let analysisResponseText = '';
 let groundingChunks: Array<{ web: { uri: string; title: string } }> = [];
 
-const generateContent = vi.fn(async (req: { contents: Array<{ parts: Array<{ text: string }> }> }) => {
-  const promptText = req.contents?.[0]?.parts?.[0]?.text || '';
-  // The analysis prompt always begins "You are an AEO" — use that to decide
-  // which canned response to return.
-  const isAnalysis = promptText.startsWith('You are an AEO');
-  if (isAnalysis) {
-    return {
-      response: {
-        text: () => analysisResponseText,
-        candidates: [{}],
-      },
-    };
-  }
-  return {
-    response: {
-      text: () => groundedResponseText,
-      candidates: [
-        {
-          groundingMetadata: {
-            groundingChunks,
-            groundingSupports: [],
-          },
+const generateContent = vi.fn(async () => ({
+  response: {
+    text: () => groundedResponseText,
+    candidates: [
+      {
+        groundingMetadata: {
+          groundingChunks,
+          groundingSupports: [],
         },
-      ],
-    },
-  };
-});
+      },
+    ],
+  },
+}));
 
 vi.mock('@google/generative-ai', () => ({
   GoogleGenerativeAI: class {
@@ -80,11 +66,6 @@ beforeEach(() => {
   incrementUserUsage.mockReset();
   generateContent.mockClear();
   groundedResponseText = 'AI-generated answer about widgets.';
-  analysisResponseText = JSON.stringify({
-    alignmentScore: 82,
-    summary: 'Your site is cited for this query.',
-    recommendations: ['Add FAQ schema', 'Improve freshness', 'Internal linking'],
-  });
   groundingChunks = [
     { web: { uri: 'https://example.com/widgets', title: 'Widgets Guide' } },
     { web: { uri: 'https://competitor.com/widgets', title: 'Competitor' } },
@@ -201,11 +182,8 @@ describe('POST /api/citation-check — happy path', () => {
     expect(res.body.success).toBe(true);
     expect(res.body.cited).toBe(true);
     expect(res.body.citedSourceIndex).toBe(0);
-    expect(res.body.alignmentScore).toBe(82);
     expect(res.body.sources).toHaveLength(2);
     expect(res.body.competitorDomains).toEqual(['competitor.com']);
-    expect(res.body.recommendations).toHaveLength(3);
-    expect(res.body.summary).toBe('Your site is cited for this query.');
   });
 
   it('marks cited=false and includes all domains as competitors when user domain is not in sources', async () => {
@@ -218,25 +196,5 @@ describe('POST /api/citation-check — happy path', () => {
     expect(res.body.cited).toBe(false);
     expect(res.body.citedSourceIndex).toBeNull();
     expect(res.body.competitorDomains).toEqual(['example.com', 'competitor.com']);
-  });
-
-  it('falls back to default analysis values when Gemini returns malformed JSON', async () => {
-    analysisResponseText = 'not-valid-json {{{';
-    // Suppress the expected console.error from the parse-fallback path
-    const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-
-    const res = await request(app)
-      .post('/api/citation-check')
-      .set('Authorization', 'Bearer k')
-      .send({ topic: 'best widgets 2026', url: 'https://example.com' });
-
-    expect(res.status).toBe(200);
-    expect(res.body.cited).toBe(true);
-    // Fallback for cited=true is alignmentScore 75 and a topic-aware summary.
-    expect(res.body.alignmentScore).toBe(75);
-    expect(res.body.summary).toMatch(/best widgets 2026/);
-    expect(res.body.recommendations.length).toBeGreaterThanOrEqual(3);
-
-    errSpy.mockRestore();
   });
 });

@@ -56,18 +56,10 @@ export interface CitationCheckResult {
   url: string | null;
   cited: boolean;
   citedSourceIndex: number | null;
-  alignmentScore: number;
   sources: CitationSource[];
   competitorDomains: string[];
-  recommendations: string[];
   summary: string;
   answerExcerpt: string;
-}
-
-interface AnalysisJson {
-  alignmentScore?: number;
-  summary?: string;
-  recommendations?: string[];
 }
 
 export function extractDomain(rawUrl: string): string {
@@ -77,10 +69,6 @@ export function extractDomain(rawUrl: string): string {
   } catch {
     return rawUrl.replace(/^https?:\/\//, '').replace(/^www\./i, '').split('/')[0].toLowerCase();
   }
-}
-
-function clamp(n: number): number {
-  return Math.max(0, Math.min(100, Math.round(n)));
 }
 
 /**
@@ -188,99 +176,21 @@ export async function runCitationCheck(
   const citedSourceIndex: number | null = matchIdx >= 0 ? matchIdx : null;
   const cited = citedSourceIndex !== null;
 
-  const competitorDomains = sources
-    .filter((_, i) => i !== citedSourceIndex)
-    .map(s => s.domain);
-
-  // ─── Step 2: Structured analysis call (no grounding, JSON only) ──────────
-  const analysisModel: GenerativeModel = client.getGenerativeModel({ model: MODEL });
-  const analysisPrompt = [
-    `You are an AEO (Answer Engine Optimization) strategist analysing whether a user's website would be cited by AI engines for a given query.`,
-    ``,
-    `USER QUERY: ${trimmedTopic}`,
-    `USER WEBSITE: ${userUrl || '(not provided)'}`,
-    `USER DOMAIN: ${userDomain || '(none)'}`,
-    `CURRENTLY CITED BY AI: ${
-      !userUrl
-        ? 'N/A — no URL was provided, so no domain-specific citation check was performed'
-        : cited
-        ? 'YES — user domain appears in sources'
-        : 'NO — user domain not in cited sources'
-    }`,
-    ``,
-    `SOURCES AI ACTUALLY CITED FOR THIS QUERY:`,
-    sources.length === 0
-      ? '(No grounded sources returned)'
-      : sources
-          .map(
-            (s, i) =>
-              `${i + 1}. ${s.title} — ${s.domain}${
-                s.snippet ? `\n   "${s.snippet.slice(0, 160)}"` : ''
-              }`
-          )
-          .join('\n'),
-    ``,
-    `AI ANSWER GIVEN TO USER QUERY:`,
-    answerText.slice(0, 1500),
-    ``,
-    `Return a single JSON object with this exact shape:`,
-    `{`,
-    `  "alignmentScore": 0,         // 0-100 — how well the user's site (if provided) is aligned with what AI cites, OR (if no URL) how strong the citation field is overall`,
-    `  "summary": "string",         // ONE sentence explaining the citation situation in plain English`,
-    `  "recommendations": ["string", "string", "string"]   // 3-4 specific, actionable AEO improvements`,
-    `}`,
-    ``,
-    `Rules:`,
-    `- If the user's domain IS cited, score 70-95 and recommend protecting/extending the position.`,
-    `- If NOT cited but the domain is reasonable for the topic, score 30-60 and give specific gap-closing recommendations referencing the actual cited competitors.`,
-    `- If no URL was provided, score the citation field's competitiveness and recommend generic AEO best practices for the topic. The summary must describe the citation field itself (e.g. who dominates it) — never claim "your site" does or doesn't appear, since no domain was checked.`,
-    `- Recommendations must be concrete (mention schema markup, content structure, citation patterns, freshness, etc.) — no vague advice.`,
-    `- Respond with valid JSON only. No markdown fences, no preamble.`,
-  ].join('\n');
-
-  const analysisRequest: GenerateContentRequest = {
-    contents: [{ role: 'user', parts: [{ text: analysisPrompt }] }],
-    generationConfig: {
-      temperature: 0.3,
-      maxOutputTokens: 768,
-      responseMimeType: 'application/json',
-    },
-  };
-  const analysisResult = await analysisModel.generateContent(analysisRequest);
-
-  const rawAnalysis = analysisResult.response.text();
-  let analysis: AnalysisJson = {};
-  try {
-    analysis = JSON.parse(rawAnalysis.replace(/```json|```/g, '').trim()) as AnalysisJson;
-  } catch (err) {
-    console.error('Citation analysis parse error:', rawAnalysis.slice(0, 400));
-    analysis = {
-      alignmentScore: !userUrl ? 50 : cited ? 75 : 40,
-      summary: !userUrl
-        ? `Here's the current citation field for "${trimmedTopic}" — add your website URL to check whether you appear in it.`
-        : cited
-        ? `Your site appears among the sources AI cites for "${trimmedTopic}".`
-        : `Your site does not currently appear in AI citations for "${trimmedTopic}".`,
-      recommendations: [
-        'Improve answer-first formatting — lead each section with a direct one-sentence answer.',
-        'Add citation-friendly structured data (Article + FAQPage schema).',
-        'Build authoritative inbound links from sources AI already trusts on this topic.',
-      ],
-    };
-  }
+  const dedupedCompetitors = Array.from(new Set(
+    sources
+      .filter((_, i) => i !== citedSourceIndex)
+      .map(s => s.domain)
+  ));
 
   return {
     topic: trimmedTopic,
     url: userUrl || null,
     cited,
     citedSourceIndex,
-    alignmentScore: clamp(analysis.alignmentScore ?? (cited ? 75 : 40)),
     sources,
-    competitorDomains: Array.from(new Set(competitorDomains)),
-    recommendations: Array.isArray(analysis.recommendations)
-      ? analysis.recommendations.slice(0, 4).map(r => String(r))
-      : [],
-    summary: typeof analysis.summary === 'string' ? analysis.summary : '',
+    competitorDomains: dedupedCompetitors,
+    // TODO: replaced with a deterministic summary in the next commit.
+    summary: '',
     answerExcerpt: answerText.slice(0, 600),
   };
 }
