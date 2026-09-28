@@ -66,20 +66,19 @@ export default async function handler(req: express.Request, res: express.Respons
   try {
     const result = await runBrandVisibilityCheck(brand.trim(), topic.trim(), normalisedUrl);
 
-    // Persist to DB
+    // Persist to DB. visibility_score, mention_position, and recommendations
+    // are no longer computed (they were LLM guesses) — omitted here so they
+    // fall back to their DB defaults (0 / null / []).
     await saveBrandVisibilityCheck(user.id, {
       brand: result.brand,
       topic: result.topic,
       url: result.url,
-      visibility_score: result.visibilityScore,
       mention_status: result.mentionStatus,
-      mention_position: result.mentionPosition,
       sentiment: result.sentiment,
       sentiment_explanation: result.sentimentExplanation,
       answer_excerpt: result.answerExcerpt,
       sources: result.sources,
       competitors: result.competitors,
-      recommendations: result.recommendations,
       summary: result.summary,
     });
 
