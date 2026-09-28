@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import {
   Radar, Search, ExternalLink, CheckCircle2, AlertCircle,
   Map as MapIcon, Trophy, Trash2, Info,
-  History as HistoryIcon, TrendingUp, TrendingDown, Minus,
+  History as HistoryIcon,
   Clock, ChevronDown, ChevronUp,
 } from 'lucide-react';
 import {
@@ -36,7 +36,7 @@ function DisclaimerBlock() {
           {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
       </div>
-      {!collapsed && <p className={styles.disclaimerText} style={{ marginTop: 8 }}>We check real Google Search grounding — live data from the search engine that still handles the vast majority of how people (and increasingly, AI systems) find businesses like yours. Not a simulation, not a guess: this is what Google's AI can actually find and say about you right now. We query Google Gemini with live Google Search grounding using your exact topic, then check whether your domain appears among the sources Gemini used to generate its answer. This matters now more than ever: Google recently launched AI Search ads that cite sources within AI-generated answers (Google Marketing Live 2026). The <em>cited / not cited</em> result is a real, factual snapshot of what Gemini pulled right now. However: it reflects only one AI model (Gemini) and one query phrasing; different phrasings or models may yield different sources. The alignment score and recommendations come from a second AI analysis pass and are directional, not quantitative. Run checks on multiple topic variations and re-run regularly to track trends — a single check is a data point, not a verdict.</p>}
+      {!collapsed && <p className={styles.disclaimerText} style={{ marginTop: 8 }}>We check real Google Search grounding — live data from the search engine that still handles the vast majority of how people (and increasingly, AI systems) find businesses like yours. Not a simulation, not a guess: this is what Google's AI can actually find and say about you right now. We query Google Gemini with live Google Search grounding using your exact topic, then check whether your domain appears among the sources Gemini used to generate its answer. This matters now more than ever: Google recently launched AI Search ads that cite sources within AI-generated answers (Google Marketing Live 2026). The <em>cited / not cited</em> result is a real, factual snapshot of what Gemini pulled right now. However: it reflects only one AI model (Gemini) and one query phrasing; different phrasings or models may yield different sources. Run checks on multiple topic variations and re-run regularly to track trends — a single check is a data point, not a verdict.</p>}
     </div>
   );
 }
@@ -44,13 +44,6 @@ function DisclaimerBlock() {
 function getFavicon(domain) {
   if (!domain) return '';
   return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-}
-
-function scoreColor(score) {
-  if (score >= 75) return '#22c55e';
-  if (score >= 50) return '#0EA5E9';
-  if (score >= 30) return '#f59e0b';
-  return '#ef4444';
 }
 
 function normalizeDomain(input) {
@@ -64,23 +57,6 @@ function normalizeDomain(input) {
   } catch {
     return null;
   }
-}
-
-/* ── Trend sparkline (SVG mini-chart) ────────────────────────────────────── */
-function Spark({ values, color = '#6366f1', width = 80, height = 28 }) {
-  if (!values || values.length < 2) return <span style={{ color: '#475569' }}>—</span>;
-  const pad = 2, w = width - pad * 2, h = height - pad * 2;
-  const step = w / (values.length - 1);
-  const pts = values.map((v, i) => {
-    const x = pad + i * step;
-    const y = pad + h - (Math.min(Math.max(v, 0), 100) / 100) * h;
-    return `${x.toFixed(1)},${y.toFixed(1)}`;
-  }).join(' ');
-  return (
-    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ display: 'block' }}>
-      <polyline fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" points={pts} />
-    </svg>
-  );
 }
 
 function timeAgo(str) {
@@ -217,16 +193,9 @@ export default function CitationMonitor() {
     for (const [, arr] of map) {
       arr.sort((a, b) => new Date(a.checkedAt || a.checked_at) - new Date(b.checkedAt || b.checked_at));
       const latest = arr[arr.length - 1];
-      const prev   = arr[arr.length - 2];
-      const scoreLatest = latest.alignmentScore ?? latest.alignment_score ?? 0;
-      const scorePrev   = prev ? (prev.alignmentScore ?? prev.alignment_score ?? 0) : null;
-      const delta  = scorePrev !== null ? scoreLatest - scorePrev : null;
       out.push({
         topic: latest.topic || key,
-        latestScore: scoreLatest,
         cited: latest.cited,
-        delta,
-        spark: arr.map(h => h.alignmentScore ?? h.alignment_score ?? 0),
         checkedAt: latest.checkedAt || latest.checked_at,
         checks: arr.length,
       });
@@ -392,22 +361,15 @@ export default function CitationMonitor() {
                     <span>Not cited</span>
                   </div>
                 )}
+                {result.url && !result.cited && (
+                  <Link to="/url-scanner" className={styles.urlScannerCta}>
+                    Check what your page needs in URL Scanner →
+                  </Link>
+                )}
                 <div className={styles.resultTopic}>
                   {result.topic || topic}
                 </div>
                 <div className={styles.resultSummary}>{result.summary}</div>
-              </div>
-              <div
-                className={styles.resultScore}
-                style={{ borderColor: scoreColor(result.alignmentScore) }}
-              >
-                <span
-                  className={styles.resultScoreNum}
-                  style={{ color: scoreColor(result.alignmentScore) }}
-                >
-                  {result.alignmentScore}
-                </span>
-                <span className={styles.resultScoreLabel}>Alignment</span>
               </div>
             </div>
           </div>
@@ -472,63 +434,30 @@ export default function CitationMonitor() {
                 <span className={styles.sectionCount}>{topicHistory.length}</span>
               </h3>
               <p className={styles.sectionSub}>
-                Track how your alignment score and citation status have changed over time for this query.
+                Track how your citation status has changed over time for this query.
               </p>
               <ol className={styles.timelineList}>
-                {topicHistory.map((h, i) => {
-                  const next = topicHistory[i + 1];
-                  const delta = next ? h.alignmentScore - next.alignmentScore : 0;
-                  const TrendIcon = delta > 0 ? TrendingUp : delta < 0 ? TrendingDown : Minus;
-                  const trendColor = delta > 0 ? '#22c55e' : delta < 0 ? '#ef4444' : 'var(--text-dim)';
-                  return (
-                    <li key={h.id ?? i} className={styles.timelineItem}>
-                      <div className={styles.timelineDot} style={{ background: scoreColor(h.alignmentScore) }} />
-                      <div className={styles.timelineMain}>
-                        <div className={styles.timelineRow}>
-                          <span className={styles.timelineDate}>
-                            {new Date(h.checkedAt).toLocaleDateString(undefined, {
-                              year: 'numeric', month: 'short', day: 'numeric',
-                            })}
-                          </span>
-                          <span
-                            className={styles.timelineStatus}
-                            style={{ color: h.cited ? '#22c55e' : 'var(--text-dim)' }}
-                          >
-                            {h.cited ? 'Cited' : 'Not cited'}
-                          </span>
-                        </div>
+                {topicHistory.map((h, i) => (
+                  <li key={h.id ?? i} className={styles.timelineItem}>
+                    <div className={styles.timelineDot} style={{ background: h.cited ? '#22c55e' : 'var(--text-dim)' }} />
+                    <div className={styles.timelineMain}>
+                      <div className={styles.timelineRow}>
+                        <span className={styles.timelineDate}>
+                          {new Date(h.checkedAt).toLocaleDateString(undefined, {
+                            year: 'numeric', month: 'short', day: 'numeric',
+                          })}
+                        </span>
+                        <span
+                          className={styles.timelineStatus}
+                          style={{ color: h.cited ? '#22c55e' : 'var(--text-dim)' }}
+                        >
+                          {h.cited ? 'Cited' : 'Not cited'}
+                        </span>
                       </div>
-                      <div className={styles.timelineScore} style={{ color: scoreColor(h.alignmentScore) }}>
-                        {h.alignmentScore}
-                      </div>
-                      {next && (
-                        <div className={styles.timelineDelta} style={{ color: trendColor }}>
-                          <TrendIcon style={{ width: 12, height: 12 }} />
-                          {delta > 0 ? `+${delta}` : delta}
-                        </div>
-                      )}
-                    </li>
-                  );
-                })}
-              </ol>
-            </div>
-          )}
-
-          {/* Recommendations */}
-          {result.recommendations?.length > 0 && (
-            <div className={`card ${styles.recoCard}`}>
-              <h3 className={styles.sectionTitle}>Recommendations</h3>
-              <p className={styles.sectionSub}>
-                Specific actions to {result.cited ? 'protect and extend' : 'earn'} your citation position.
-              </p>
-              <ul className={styles.recoList}>
-                {result.recommendations.map((r, i) => (
-                  <li key={i} className={styles.recoItem}>
-                    <span className={styles.recoNum}>{i + 1}</span>
-                    <span className={styles.recoText}>{r}</span>
+                    </div>
                   </li>
                 ))}
-              </ul>
+              </ol>
             </div>
           )}
         </div>
@@ -559,7 +488,7 @@ function TrendHistoryView({ groups, loading, onRunCheck, onClearHistory, onTopic
         <HistoryIcon className={styles.emptyMapIcon} />
         <h3 className={styles.emptyMapTitle}>No citation checks yet</h3>
         <p className={styles.emptyMapDesc}>
-          Run checks on the topics you care about to track how your citation status and alignment score trend over time.
+          Run checks on the topics you care about to track how your citation status changes over time.
         </p>
         <button type="button" className="btn btn-primary" onClick={onRunCheck}>
           <Search style={{ width: 14, height: 14 }} /> Run your first check
@@ -581,46 +510,29 @@ function TrendHistoryView({ groups, loading, onRunCheck, onClearHistory, onTopic
         </button>
       </div>
 
-      {groups.map((g, i) => {
-        const dUp   = g.delta !== null && g.delta > 0;
-        const dDown = g.delta !== null && g.delta < 0;
-        const color = scoreColor(g.latestScore);
-        return (
-          <div key={i} className={`card ${styles.trendRow}`} style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '16px 20px', marginBottom: 12, cursor: 'pointer' }}
-            onClick={() => onTopicClick(g.topic)}
-            onMouseEnter={e => e.currentTarget.style.background = '#060a18'}
-            onMouseLeave={e => e.currentTarget.style.background = ''}
-          >
-            <div style={{ flexShrink: 0, textAlign: 'center', minWidth: 60 }}>
-              <div style={{ fontSize: 26, fontWeight: 600, color, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{g.latestScore}</div>
-              <div style={{ fontSize: 10, color: '#64748b' }}>Alignment</div>
+      {groups.map((g, i) => (
+        <div key={i} className={`card ${styles.trendRow}`} style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '16px 20px', marginBottom: 12, cursor: 'pointer' }}
+          onClick={() => onTopicClick(g.topic)}
+          onMouseEnter={e => e.currentTarget.style.background = '#060a18'}
+          onMouseLeave={e => e.currentTarget.style.background = ''}
+        >
+          <div style={{ flexShrink: 0, textAlign: 'center', minWidth: 60 }}>
+            {g.cited
+              ? <CheckCircle2 style={{ width: 22, height: 22, color: '#22c55e' }} />
+              : <AlertCircle style={{ width: 22, height: 22, color: 'var(--text-dim)' }} />}
+            <div style={{ fontSize: 10, color: '#64748b', marginTop: 4 }}>{g.cited ? 'Cited' : 'Not cited'}</div>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 14, fontWeight: 600, color: '#f1f5f9', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {g.topic}
             </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 14, fontWeight: 600, color: '#f1f5f9', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {g.topic}
-              </div>
-              <div style={{ fontSize: 12, color: '#64748b' }}>
-                {g.cited ? 'Cited' : 'Not cited'} · {g.checks} check{g.checks > 1 ? 's' : ''}
-              </div>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-              <Spark values={g.spark} color={color} width={80} height={28} />
-              <div style={{ fontSize: 10, color: '#475569' }}>{g.checks} check{g.checks > 1 ? 's' : ''}</div>
-            </div>
-            <div style={{ flexShrink: 0, textAlign: 'right' }}>
-              {g.delta !== null && (
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 600, padding: '3px 8px', borderRadius: 6,
-                  color: dUp ? '#4ade80' : dDown ? '#f87171' : '#64748b',
-                  background: dUp ? 'rgba(34,197,94,0.1)' : dDown ? 'rgba(239,68,68,0.1)' : 'rgba(255,255,255,0.05)' }}>
-                  {dUp ? <TrendingUp size={11} /> : dDown ? <TrendingDown size={11} /> : <Minus size={11} />}
-                  {dUp ? '+' : ''}{g.delta}
-                </div>
-              )}
-              <div style={{ fontSize: 11, color: '#475569', marginTop: 4 }}>{timeAgo(g.checkedAt)}</div>
+            <div style={{ fontSize: 12, color: '#64748b' }}>
+              {g.checks} check{g.checks > 1 ? 's' : ''}
             </div>
           </div>
-        );
-      })}
+          <div style={{ fontSize: 11, color: '#475569' }}>{timeAgo(g.checkedAt)}</div>
+        </div>
+      ))}
     </div>
   );
 }

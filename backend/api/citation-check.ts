@@ -154,9 +154,14 @@ export default async function handler(req: express.Request, res: express.Respons
         topic: result.topic,
         url: result.url,
         cited: result.cited,
-        alignmentScore: result.alignmentScore,
+        // alignment_score/recommendations are NOT NULL columns left over from
+        // the removed second Gemini "analysis" call (unreliable LLM guesses
+        // with no real basis — see citationCheckService.ts). Write inert
+        // placeholders for new rows; old rows keep their real historical
+        // values untouched and simply go unused going forward.
+        alignmentScore: 0,
         sources: result.sources,
-        recommendations: result.recommendations,
+        recommendations: [],
         summary: result.summary,
       });
       history = await getCitationChecksByTopic(user.id, result.topic, 20);

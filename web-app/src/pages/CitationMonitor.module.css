@@ -468,43 +468,6 @@
   font-style: italic;
 }
 
-/* Recommendations */
-.recoList {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin: 0;
-  padding: 0;
-}
-
-.recoItem {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-}
-
-.recoNum {
-  flex-shrink: 0;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: rgba(91,95,199,0.15);
-  color: var(--accent);
-  font-size: 11px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 1px;
-}
-
-.recoText {
-  font-size: 13px;
-  color: var(--text-muted);
-  line-height: 1.55;
-}
-
 /* Tabs */
 .tabs {
   display: flex;
@@ -564,6 +527,20 @@
 }
 
 .viewMapLink:hover { text-decoration: underline; }
+
+/* "Check what your page needs" CTA under a not-cited result */
+.urlScannerCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  color: var(--accent);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.urlScannerCta:hover { text-decoration: underline; }
 
 /* Competitor Map empty state */
 .emptyMap {
@@ -965,21 +942,4 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-}
-
-.timelineScore {
-  font-size: 16px;
-  font-weight: 700;
-  min-width: 32px;
-  text-align: right;
-}
-
-.timelineDelta {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 11.5px;
-  font-weight: 600;
-  min-width: 38px;
-  justify-content: flex-end;
 }

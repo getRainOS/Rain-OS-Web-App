@@ -11,13 +11,6 @@ function normaliseTopicKey(topic) {
   return topic.trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
-function citationScoreColor(score) {
-  if (score >= 75) return 'var(--green)';
-  if (score >= 50) return 'var(--cyan)';
-  if (score >= 30) return 'var(--yellow)';
-  return 'var(--red)';
-}
-
 export default function History() {
   const [tab, setTab] = useState('analyses');
   const [history, setHistory] = useState([]);
@@ -437,8 +430,6 @@ export default function History() {
 
               <div className={styles.list}>
                 {citations.map((c, i) => {
-                  const score = c.alignmentScore ?? null;
-                  const color = score === null ? 'var(--text-dim)' : citationScoreColor(score);
                   const isConfirming = confirmDeleteId === c.id;
                   const isDeleting = deletingId === c.id;
                   const isConfirmingTopic = confirmClearTopic === c.topic;
@@ -479,10 +470,6 @@ export default function History() {
                           </div>
                         </div>
                         <div className={styles.itemRight}>
-                          <div className={styles.overallScore} style={{ color }}>
-                            {score !== null ? Math.round(score) : '—'}
-                          </div>
-
                           {isConfirmingTopic ? (
                             <div className={styles.deleteConfirm}>
                               <span className={styles.deleteConfirmText}>Clear all &quot;{c.topic}&quot;?</span>
