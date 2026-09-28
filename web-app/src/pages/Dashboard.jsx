@@ -467,23 +467,12 @@ export default function Dashboard() {
     for (const [key, arr] of groups) {
       arr.sort((a, b) => new Date(b.checkedAt).getTime() - new Date(a.checkedAt).getTime());
       const latest = arr[0];
-      const previous = arr[1];
-      const delta = previous
-        ? (latest.alignmentScore ?? 0) - (previous.alignmentScore ?? 0)
-        : null;
-      const spark = arr
-        .slice(0, 8)
-        .reverse()
-        .map((h) => h.alignmentScore ?? 0);
       out.push({
         key,
         topic: latest.topic,
-        latestScore: latest.alignmentScore ?? 0,
         cited: !!latest.cited,
         checkedAt: latest.checkedAt,
-        delta,
         checkCount: arr.length,
-        spark,
       });
     }
     out.sort(
@@ -607,7 +596,6 @@ export default function Dashboard() {
   const citationTotal = citations.length;
   const citationCitedCount = citations.filter(c => c.cited).length;
   const citationRate = citationTotal > 0 ? Math.round((citationCitedCount / citationTotal) * 100) : null;
-  const avgAlignment = citationTotal > 0 ? Math.round(citations.reduce((s, c) => s + (c.alignmentScore ?? 0), 0) / citationTotal) : null;
 
   // Brand Sentiment latest + groups
   const brandVisGroups = useMemo(() => {
@@ -692,9 +680,9 @@ export default function Dashboard() {
       to: '/citation-monitor',
       hasData: citationTotal > 0,
       value: citationTotal > 0 ? `${citationRate}%` : null,
-      sub: citationTotal > 0 ? `${citationCitedCount}/${citationTotal} topics cited · avg alignment ${avgAlignment}` : 'No citation data yet — run a topic check to see if AI cites you',
+      sub: citationTotal > 0 ? `${citationCitedCount}/${citationTotal} topics cited` : 'No citation data yet — run a topic check to see if AI cites you',
       Icon: Radar,
-      spark: trackedTopics.length > 0 && trackedTopics[0].spark.length > 1 ? trackedTopics[0].spark : null,
+      spark: null,
       tooltip: 'Percentage of tracked topics where Gemini cites your brand, using live Google Search grounding. The higher the number, the more often Gemini treats you as a source.',
     },
     {
@@ -1291,59 +1279,35 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className={styles.citationsList}>
-            {trackedTopics.map((t) => {
-              const sColor = '#94a3b8';
-              const deltaUp = t.delta !== null && t.delta > 0;
-              const deltaDown = t.delta !== null && t.delta < 0;
-              const deltaColor = deltaUp ? '#7cae8f' : deltaDown ? '#c47a7a' : 'var(--text-dim)';
-              const DeltaIcon = deltaUp ? TrendingUp : deltaDown ? TrendingDown : Minus;
-              return (
-                <Link
-                  key={t.key}
-                  to={`/citation-monitor?topic=${encodeURIComponent(t.topic)}`}
-                  className={styles.citationRow}
+            {trackedTopics.map((t) => (
+              <Link
+                key={t.key}
+                to={`/citation-monitor?topic=${encodeURIComponent(t.topic)}`}
+                className={styles.citationRow}
+              >
+                <div
+                  className={styles.citationStatus}
+                  style={{
+                    color: t.cited ? '#7cae8f' : '#c47a7a',
+                    background: t.cited ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.08)',
+                    borderColor: t.cited ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.25)',
+                  }}
+                  title={t.cited ? 'Your domain is being cited' : 'Your domain is not currently cited'}
                 >
-                  <div
-                    className={styles.citationStatus}
-                    style={{
-                      color: t.cited ? '#7cae8f' : '#c47a7a',
-                      background: t.cited ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.08)',
-                      borderColor: t.cited ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.25)',
-                    }}
-                    title={t.cited ? 'Your domain is being cited' : 'Your domain is not currently cited'}
-                  >
-                    {t.cited
-                      ? <CheckCircle2 className={styles.citationStatusIcon} />
-                      : <AlertCircle className={styles.citationStatusIcon} />}
-                    {t.cited ? 'Cited' : 'Not cited'}
-                  </div>
-                  <div className={styles.citationMain}>
-                    <span className={styles.citationTopic}>{t.topic}</span>
-                    <span className={styles.citationMeta}>
-                      {t.checkCount} check{t.checkCount === 1 ? '' : 's'} · {timeAgo(t.checkedAt)}
-                    </span>
-                  </div>
-                  <div className={styles.citationSpark}>
-                    <Sparkline values={t.spark} color={sColor} />
-                  </div>
-                  <span className={styles.citationScore} style={{ color: sColor }}>
-                    {t.latestScore}
-                    <span className={styles.citationScoreSuffix}>/100</span>
+                  {t.cited
+                    ? <CheckCircle2 className={styles.citationStatusIcon} />
+                    : <AlertCircle className={styles.citationStatusIcon} />}
+                  {t.cited ? 'Cited' : 'Not cited'}
+                </div>
+                <div className={styles.citationMain}>
+                  <span className={styles.citationTopic}>{t.topic}</span>
+                  <span className={styles.citationMeta}>
+                    {t.checkCount} check{t.checkCount === 1 ? '' : 's'} · {timeAgo(t.checkedAt)}
                   </span>
-                  <div className={styles.citationDelta} style={{ color: deltaColor }}>
-                    {t.delta === null ? (
-                      <span className={styles.citationDeltaNone}>new</span>
-                    ) : (
-                      <>
-                        <DeltaIcon style={{ width: 11, height: 11 }} />
-                        {t.delta === 0 ? '0' : `${t.delta > 0 ? '+' : ''}${t.delta}`}
-                      </>
-                    )}
-                  </div>
-                  <ArrowRight className={styles.citationArrow} />
-                </Link>
-              );
-            })}
+                </div>
+                <ArrowRight className={styles.citationArrow} />
+              </Link>
+            ))}
           </div>
         )}
       </div>
