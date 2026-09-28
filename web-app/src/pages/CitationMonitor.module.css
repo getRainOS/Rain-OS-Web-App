@@ -528,6 +528,20 @@
 
 .viewMapLink:hover { text-decoration: underline; }
 
+/* "Check what your page needs" CTA under a not-cited result */
+.urlScannerCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  color: var(--accent);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.urlScannerCta:hover { text-decoration: underline; }
+
 /* Competitor Map empty state */
 .emptyMap {
   display: flex;

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import {
@@ -360,6 +360,11 @@ export default function CitationMonitor() {
                     <AlertCircle style={{ width: 18, height: 18 }} />
                     <span>Not cited</span>
                   </div>
+                )}
+                {result.url && !result.cited && (
+                  <Link to="/url-scanner" className={styles.urlScannerCta}>
+                    Check what your page needs in URL Scanner →
+                  </Link>
                 )}
                 <div className={styles.resultTopic}>
                   {result.topic || topic}
