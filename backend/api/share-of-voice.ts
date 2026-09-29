@@ -63,20 +63,24 @@ export async function sovHandler(req: express.Request, res: express.Response) {
   try {
     const result = await runShareOfVoice(brand.trim(), topic.trim(), normalisedUrl);
 
-    // Persist to DB
+    // Persist to DB. overall_sov is no longer computed (it was an LLM
+    // guess) — written as 0 with this comment, same placeholder pattern as
+    // Citation Monitor's alignment_score, since the column is NOT NULL with
+    // no default. cited_count is repurposed to hold the (now deterministic)
+    // count of prompts that mentioned the brand. recommendations is no
+    // longer computed and is omitted so it falls back to its DB default ([]).
     await pool.query(
-      `INSERT INTO sov_checks (user_id, brand, topic, url, overall_sov, cited_count, model_results, top_competitors, recommendations, summary)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+      `INSERT INTO sov_checks (user_id, brand, topic, url, overall_sov, cited_count, model_results, top_competitors, summary)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
       [
         user.id,
         result.brand,
         result.topic,
         result.url,
-        result.overallSov,
-        result.citedCount,
+        0,
+        result.mentionedCount,
         JSON.stringify(result.modelResults),
-        JSON.stringify(result.topCompetitors),
-        JSON.stringify(result.recommendations),
+        JSON.stringify(result.competitors),
         result.summary,
       ]
     );

@@ -9,6 +9,8 @@ import {
   type GroundingChunk,
 } from '@google/generative-ai';
 import { resolveSourceDomain } from './groundingSources';
+import { brandInText } from './brandMatch';
+import { extractDomain, isSameDomain } from './citationCheckService';
 
 const API_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
 const MODEL   = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
@@ -17,17 +19,9 @@ const MODEL   = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 interface GoogleSearchTool { googleSearch: Record<string, never>; }
 type GroundedTool = Tool | GoogleSearchTool;
 
-interface GroundingSupportSegment { text?: string; startIndex?: number; endIndex?: number; }
-interface GroundingSupport {
-  segment?: GroundingSupportSegment;
-  groundingChunkIndices?: number[];
-  confidenceScores?: number[];
-}
 interface CandidateGroundingMetadata {
   groundingChunks?: GroundingChunk[];
   groundingChuncks?: GroundingChunk[];
-  groundingSupports?: GroundingSupport[];
-  groundingSupport?: GroundingSupport[];
 }
 interface CandidateWithGrounding { groundingMetadata?: CandidateGroundingMetadata; }
 
@@ -39,48 +33,28 @@ export interface SovSource {
 }
 
 export interface ModelResult {
-  modelLabel: string;            // e.g. "Gemini (Informational)"
+  modelLabel: string;            // e.g. "Informational question"
   modelKey:   string;            // "gemini" | "chatgpt_style" | "perplexity_style"
   promptStyle: string;           // human-readable query style used
-  cited:           boolean;
-  mentionPosition: number | null;
-  visibilityScore: number;       // 0-100
-  answerExcerpt:   string;
-  sources:         SovSource[];
-  competitorDomains: string[];
+  mentioned:   boolean;          // brand found in this prompt's answer text
+  answerExcerpt: string;
+  sources:     SovSource[];
 }
 
 export interface SovResult {
   brand:   string;
   topic:   string;
   url:     string | null;
-  overallSov:      number;       // avg visibility score across models, 0-100
-  citedCount:      number;       // how many of the 3 models cited the brand
-  modelResults:    ModelResult[];
-  topCompetitors:  string[];     // union of competitor domains across models
-  recommendations: string[];
-  summary:         string;
+  mentionedCount: number;          // how many of the 3 prompts mentioned the brand
+  modelResults:   ModelResult[];
+  domainCitedCount:   number | null;  // N — sources (across all 3 prompts) matching the user's domain; null without a url
+  domainSourceCount:  number | null;  // M — total sources across all 3 prompts; null without a url
+  domainSharePercent: number | null;  // round(N/M*100); null without a url or when M is 0
+  competitors: string[];              // source domains, ranked by frequency across the 3 prompts
+  summary:     string;
 }
 
-/* ── Internal ─────────────────────────────────────────────────────────────── */
-interface AnalysisJson {
-  visibilityScore?:    number;
-  cited?:              boolean;
-  mentionPosition?:    number | null;
-  competitorDomains?:  string[];
-  summary?:            string;
-  recommendations?:    string[];
-}
-
-function clamp(n: number): number { return Math.max(0, Math.min(100, Math.round(n))); }
-function brandInText(brand: string, text: string): boolean {
-  return text.toLowerCase().includes(brand.trim().toLowerCase());
-}
-
-function extractSources(
-  chunks: GroundingChunk[],
-  supports: GroundingSupport[]
-): SovSource[] {
+function extractSources(chunks: GroundingChunk[]): SovSource[] {
   const seen = new Set<string>();
   const sources: SovSource[] = [];
   for (const c of chunks) {
@@ -90,110 +64,95 @@ function extractSources(
     const domain = resolveSourceDomain(c.web?.title, rawUrl);
     sources.push({ title: c.web?.title || domain, url: rawUrl, domain });
   }
-  void supports; // used by caller for snippets if needed
   return sources;
 }
 
+/**
+ * Rank source domains by how often they appear across all 3 prompts'
+ * source lists (counting each prompt's sources once each, not deduped
+ * across prompts — a domain cited by all 3 prompts ranks above one cited
+ * by just 1). Excludes the user's own domain, if given.
+ */
+export function rankCompetitorDomains(
+  modelResults: Array<{ sources: SovSource[] }>,
+  userDomain: string | null,
+  limit = 8
+): string[] {
+  const counts = new Map<string, number>();
+  for (const m of modelResults) {
+    for (const s of m.sources) {
+      if (userDomain && isSameDomain(s.domain, userDomain)) continue;
+      counts.set(s.domain, (counts.get(s.domain) || 0) + 1);
+    }
+  }
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([domain]) => domain);
+}
+
+/**
+ * Build a plain-English summary from facts we actually have — no LLM guess.
+ */
+function buildSummary(
+  brand: string,
+  topic: string,
+  mentionedCount: number,
+  domainSharePercent: number | null,
+  domainCitedCount: number | null,
+  domainSourceCount: number | null
+): string {
+  const mentionPart =
+    mentionedCount === 0
+      ? `${brand} was not mentioned in any of the 3 query phrasings for "${topic}"`
+      : mentionedCount === 3
+      ? `${brand} was mentioned in all 3 query phrasings for "${topic}"`
+      : `${brand} was mentioned in ${mentionedCount} of 3 query phrasings for "${topic}"`;
+
+  if (domainSharePercent === null || domainSourceCount === null || domainCitedCount === null) {
+    return `${mentionPart}.`;
+  }
+  if (domainSourceCount === 0) {
+    return `${mentionPart}. Gemini returned no grounded sources across the 3 prompts.`;
+  }
+  return `${mentionPart}. Your domain is ${domainCitedCount} of ${domainSourceCount} cited sources (${domainSharePercent}%).`;
+}
+
 /* ─────────────────────────────────────────────────────────────────────────── *
- *  Core runner — executes one prompt style, returns structured result         *
+ *  Core runner — executes one grounded prompt, returns structured result      *
  * ─────────────────────────────────────────────────────────────────────────── */
 async function runOneModel(
   client: GoogleGenerativeAI,
   brand: string,
-  topic: string,
   modelConfig: {
     modelLabel: string;
     modelKey:   string;
     promptStyle: string;
     userPrompt:  string;
-    grounded:    boolean;
   }
 ): Promise<ModelResult> {
-  const { modelLabel, modelKey, promptStyle, userPrompt, grounded } = modelConfig;
+  const { modelLabel, modelKey, promptStyle, userPrompt } = modelConfig;
 
-  let answerText = '';
-  let sources:    SovSource[] = [];
-
-  if (grounded) {
-    const tools: GroundedTool[]    = [{ googleSearch: {} }];
-    const gModel: GenerativeModel  = client.getGenerativeModel({ model: MODEL, tools: tools as Tool[] });
-    const req: GenerateContentRequest = {
-      contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
-      generationConfig: { temperature: 0.2, maxOutputTokens: 1024 },
-    };
-    const res = await gModel.generateContent(req);
-    answerText = res.response.text();
-    const cand = (res.response.candidates?.[0] || {}) as CandidateWithGrounding;
-    const gm   = cand.groundingMetadata || {};
-    const chunks: GroundingChunk[]   = gm.groundingChunks || gm.groundingChuncks || [];
-    const supports: GroundingSupport[] = gm.groundingSupports || gm.groundingSupport || [];
-    sources = extractSources(chunks, supports);
-  } else {
-    const model: GenerativeModel = client.getGenerativeModel({ model: MODEL });
-    const req: GenerateContentRequest = {
-      contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
-      generationConfig: { temperature: 0.4, maxOutputTokens: 800 },
-    };
-    const res = await model.generateContent(req);
-    answerText = res.response.text();
-  }
-
-  const localMentioned = brandInText(brand, answerText);
-
-  // Structured analysis
-  const analysisModel: GenerativeModel = client.getGenerativeModel({ model: MODEL });
-  const analysisPrompt = [
-    `You are an AI citation analyst. Assess how visible the brand "${brand}" is in the following AI-generated answer for the topic "${topic}".`,
-    ``,
-    `AI ANSWER:`,
-    answerText.slice(0, 2000),
-    ``,
-    `SOURCES CITED:`,
-    sources.length === 0 ? '(none)' : sources.map((s, i) => `${i+1}. ${s.domain}`).join('\n'),
-    ``,
-    `LOCAL MENTION CHECK: The brand "${brand}" ${localMentioned ? 'IS' : 'is NOT'} found verbatim.`,
-    ``,
-    `Return a single JSON object:`,
-    `{`,
-    `  "visibilityScore": 0,`,
-    `  "cited": false,`,
-    `  "mentionPosition": null,`,
-    `  "competitorDomains": [],`,
-    `  "summary": "string",`,
-    `  "recommendations": ["string","string","string"]`,
-    `}`,
-    ``,
-    `Rules:`,
-    `- visibilityScore: 0-100. Clearly mentioned+praised: 70-95. Brief/ambiguous: 30-65. Not mentioned: 5-30.`,
-    `- cited: true if brand clearly appears; false otherwise.`,
-    `- mentionPosition: 1-based rank (1=first brand named), null if not mentioned.`,
-    `- competitorDomains: up to 5 domains/brands mentioned INSTEAD of or alongside the brand.`,
-    `- summary: 1 sentence plain-English.`,
-    `- recommendations: 2-3 specific actions.`,
-    `- Respond with valid JSON only. No markdown fences.`,
-  ].join('\n');
-
-  const aRes = await analysisModel.generateContent({
-    contents: [{ role: 'user', parts: [{ text: analysisPrompt }] }],
-    generationConfig: { temperature: 0.2, maxOutputTokens: 600, responseMimeType: 'application/json' },
-  });
-
-  let a: AnalysisJson = {};
-  try { a = JSON.parse(aRes.response.text().replace(/```json|```/g, '').trim()) as AnalysisJson; }
-  catch { a = { visibilityScore: localMentioned ? 50 : 15, cited: localMentioned }; }
+  const tools: GroundedTool[]   = [{ googleSearch: {} }];
+  const gModel: GenerativeModel = client.getGenerativeModel({ model: MODEL, tools: tools as Tool[] });
+  const req: GenerateContentRequest = {
+    contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
+    generationConfig: { temperature: 0.2, maxOutputTokens: 1024 },
+  };
+  const res = await gModel.generateContent(req);
+  const answerText = res.response.text();
+  const cand = (res.response.candidates?.[0] || {}) as CandidateWithGrounding;
+  const gm   = cand.groundingMetadata || {};
+  const chunks: GroundingChunk[] = gm.groundingChunks || gm.groundingChuncks || [];
+  const sources = extractSources(chunks);
 
   return {
     modelLabel,
     modelKey,
     promptStyle,
-    cited:            a.cited ?? localMentioned,
-    mentionPosition:  typeof a.mentionPosition === 'number' ? a.mentionPosition : null,
-    visibilityScore:  clamp(a.visibilityScore ?? (localMentioned ? 50 : 15)),
-    answerExcerpt:    answerText.slice(0, 500),
-    sources:          sources.slice(0, 6),
-    competitorDomains: Array.isArray(a.competitorDomains)
-      ? a.competitorDomains.slice(0, 5).map(d => String(d))
-      : [],
+    mentioned: brandInText(brand, answerText),
+    answerExcerpt: answerText.slice(0, 500),
+    sources: sources.slice(0, 6),
   };
 }
 
@@ -210,6 +169,7 @@ export async function runShareOfVoice(
   const client = new GoogleGenerativeAI(API_KEY);
   const b = brand.trim();
   const t = topic.trim();
+  const userDomain = url ? extractDomain(url) : null;
 
   const modelConfigs = [
     {
@@ -217,79 +177,52 @@ export async function runShareOfVoice(
       modelKey:    'gemini',
       promptStyle: '"What are the best tools for…?"',
       userPrompt:  `What are the best tools, products, or services for: "${t}"? Name specific brands and products, not generic categories. Be specific and helpful.`,
-      grounded:    true,
     },
     {
       modelLabel:  'Conversational request',
       modelKey:    'chatgpt_style',
       promptStyle: '"I need help with… what do you recommend?"',
       userPrompt:  `I need help with "${t}". What would you personally recommend? Give me your top picks with reasons, naming specific products or companies.`,
-      grounded:    true,
     },
     {
       modelLabel:  'Research comparison',
       modelKey:    'perplexity_style',
       promptStyle: '"Compare the top solutions for… with sources"',
       userPrompt:  `Research and compare the leading solutions for "${t}". Which brands or tools dominate this space? Include any notable mentions, market leaders, and emerging players.`,
-      grounded:    true,
     },
   ];
 
-  // Run all 3 in parallel
+  // Run all 3 grounded prompts in parallel — one Gemini call each, no
+  // second "analysis" call.
   const modelResults = await Promise.all(
-    modelConfigs.map(cfg => runOneModel(client, b, t, cfg))
+    modelConfigs.map(cfg => runOneModel(client, b, cfg))
   );
 
-  const overallSov  = Math.round(
-    modelResults.reduce((s, m) => s + m.visibilityScore, 0) / modelResults.length
-  );
-  const citedCount  = modelResults.filter(m => m.cited).length;
+  const mentionedCount = modelResults.filter(m => m.mentioned).length;
 
-  // Union of competitor domains
-  const competitorSet = new Set<string>();
-  for (const m of modelResults) {
-    for (const d of m.competitorDomains) competitorSet.add(d);
-  }
-  const topCompetitors = [...competitorSet].slice(0, 8);
+  // Domain share: how many of all the sources cited across the 3 prompts
+  // are the user's own domain, using the same domain matching as Citation
+  // Monitor. Only meaningful when a URL was given.
+  const allSources = modelResults.flatMap(m => m.sources);
+  const domainSourceCount  = userDomain ? allSources.length : null;
+  const domainCitedCount   = userDomain
+    ? allSources.filter(s => isSameDomain(s.domain, userDomain)).length
+    : null;
+  const domainSharePercent =
+    userDomain && domainSourceCount ? Math.round((domainCitedCount! / domainSourceCount) * 100) : (userDomain ? 0 : null);
 
-  // Aggregate recommendations from the model that scored lowest (most to improve)
-  const weakest      = [...modelResults].sort((a, b) => a.visibilityScore - b.visibilityScore)[0];
-  const recommendations: string[] = [];
-  if (citedCount === 0) {
-    recommendations.push(
-      `None of the three query phrasings cited ${b} for this topic — start by publishing answer-first content that directly addresses "${t}".`,
-      `Earn backlinks from domains already being cited (${topCompetitors.slice(0,3).join(', ')}).`,
-      `Add FAQ and HowTo structured data so AI engines can extract and attribute your expertise.`,
-    );
-  } else if (citedCount < 3) {
-    recommendations.push(
-      `${b} is cited by ${citedCount}/3 query phrasings — expand your content to address conversational and research-style queries, not just informational ones.`,
-      `Target the ${3 - citedCount} query phrasing(s) that did not cite you with dedicated content formats.`,
-      `Consistently publish updated comparisons and case studies to reinforce authority.`,
-    );
-  } else {
-    recommendations.push(
-      `${b} appears in all 3 query phrasings — protect this by keeping content fresh and updated.`,
-      `Improve mention position by being the first brand named; use strong answer-first headlines.`,
-      `Monitor this topic regularly to catch any ranking drops early.`,
-    );
-  }
-
-  const summary = citedCount === 0
-    ? `${b} is not currently cited by any of the three query phrasings for "${t}" — significant visibility gap.`
-    : citedCount === 3
-    ? `${b} is cited in all 3 query phrasings for "${t}" with a visibility score of ${overallSov}/100.`
-    : `${b} is cited by ${citedCount}/3 query phrasings for "${t}" with a visibility score of ${overallSov}/100.`;
+  const competitors = rankCompetitorDomains(modelResults, userDomain);
 
   return {
-    brand:  b,
-    topic:  t,
+    brand: b,
+    topic: t,
     url,
-    overallSov,
-    citedCount,
+    mentionedCount,
     modelResults,
-    topCompetitors,
-    recommendations,
-    summary,
+    domainCitedCount,
+    domainSourceCount,
+    domainSharePercent,
+    competitors,
+    summary: buildSummary(b, t, mentionedCount, domainSharePercent, domainCitedCount, domainSourceCount),
   };
 }
