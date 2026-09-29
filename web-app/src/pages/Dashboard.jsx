@@ -597,37 +597,25 @@ export default function Dashboard() {
   const citationCitedCount = citations.filter(c => c.cited).length;
   const citationRate = citationTotal > 0 ? Math.round((citationCitedCount / citationTotal) * 100) : null;
 
-  // Brand Sentiment latest + groups
-  const brandVisGroups = useMemo(() => {
-    const map = new Map();
-    for (const h of brandVisHistory) {
-      const key = `${(h.brand || '').toLowerCase()}::${(h.topic || '').toLowerCase()}`;
-      if (!map.has(key)) map.set(key, []);
-      map.get(key).push(h);
-    }
-    const out = [];
-    for (const [, arr] of map) {
-      arr.sort((a, b) => new Date(a.checked_at || a.checkedAt) - new Date(b.checked_at || b.checkedAt));
-      const latest = arr[arr.length - 1];
-      const prev = arr[arr.length - 2];
-      const scoreLatest = latest.visibility_score ?? latest.visibilityScore ?? 0;
-      const scorePrev = prev ? (prev.visibility_score ?? prev.visibilityScore ?? 0) : null;
-      out.push({
-        brand: latest.brand,
-        topic: latest.topic,
-        latestScore: scoreLatest,
-        latestMention: latest.mention_status || latest.mentionStatus || 'not_mentioned',
-        latestSentiment: latest.sentiment || 'not_applicable',
-        delta: scorePrev !== null ? scoreLatest - scorePrev : null,
-        spark: arr.map(h => h.visibility_score ?? h.visibilityScore ?? 0),
-        checkedAt: latest.checked_at || latest.checkedAt,
-        checks: arr.length,
-      });
-    }
-    out.sort((a, b) => new Date(b.checkedAt) - new Date(a.checkedAt));
-    return out;
-  }, [brandVisHistory]);
-  const brandVisLatest = brandVisGroups[0] || null;
+  // Brand Sentiment: mention rate scoped to the most recently checked brand
+  // (case-insensitive match), capped at its last 10 checks. mention_status
+  // is read directly off each row so old rows (saved before this was
+  // deterministic) still count correctly; only 'mentioned' counts as a hit
+  // — 'ambiguous' and 'not_mentioned' both count as not mentioned.
+  const brandVisSorted = [...brandVisHistory].sort(
+    (a, b) => new Date(b.checked_at || b.checkedAt) - new Date(a.checked_at || a.checkedAt)
+  );
+  const brandVisLatestBrand = brandVisSorted[0]?.brand || null;
+  const brandVisScoped = brandVisLatestBrand
+    ? brandVisSorted
+        .filter(h => (h.brand || '').toLowerCase() === brandVisLatestBrand.toLowerCase())
+        .slice(0, 10)
+    : [];
+  const brandVisTotal = brandVisScoped.length;
+  const brandVisMentionedCount = brandVisScoped.filter(
+    h => (h.mention_status || h.mentionStatus) === 'mentioned'
+  ).length;
+  const brandVisRate = brandVisTotal > 0 ? Math.round((brandVisMentionedCount / brandVisTotal) * 100) : null;
 
   // SOV latest + groups
   const sovGroups = useMemo(() => {
@@ -689,16 +677,14 @@ export default function Dashboard() {
       key: 'brand',
       label: 'Brand Sentiment',
       to: '/brand-visibility',
-      hasData: !!brandVisLatest,
-      value: brandVisLatest ? `${brandVisLatest.latestScore}` : null,
-      suffix: '/100',
-      sub: brandVisLatest
-        ? `${brandVisLatest.brand} — ${brandVisLatest.latestMention.replace('_', ' ')} · ${brandVisLatest.checks} check${brandVisLatest.checks > 1 ? 's' : ''}`
+      hasData: brandVisTotal > 0,
+      value: brandVisTotal > 0 ? `${brandVisRate}%` : null,
+      sub: brandVisTotal > 0
+        ? `${brandVisLatestBrand} — mentioned in ${brandVisMentionedCount} of your last ${brandVisTotal} check${brandVisTotal > 1 ? 's' : ''}`
         : 'No brand sentiment data yet — run a check to see how Gemini describes you',
-      trend: brandVisLatest?.delta,
       Icon: Heart,
-      spark: brandVisLatest?.spark && brandVisLatest.spark.length > 1 ? brandVisLatest.spark : null,
-      tooltip: 'How positively AI models describe your brand when asked about your industry. Also tracks whether they mention you at all.',
+      spark: null,
+      tooltip: 'Percentage of your recent checks where Gemini mentioned your brand by name when answering your topic.',
     },
     {
       key: 'sov',

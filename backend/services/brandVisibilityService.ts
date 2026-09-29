@@ -8,6 +8,8 @@ import {
   type GroundingChunk,
 } from '@google/generative-ai';
 import { resolveSourceDomain } from './groundingSources';
+import { brandInText } from './brandMatch';
+import { extractDomain, findCitedSourceIndex } from './citationCheckService';
 
 const API_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
 const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
@@ -44,43 +46,94 @@ export interface BrandVisibilitySource {
   snippet: string;
 }
 
-export type VisibilityMentionStatus = 'mentioned' | 'not_mentioned' | 'ambiguous';
+export type VisibilityMentionStatus = 'mentioned' | 'not_mentioned';
 export type VisibilitySentiment = 'positive' | 'neutral' | 'negative' | 'not_applicable';
 
 export interface BrandVisibilityResult {
   brand: string;
   topic: string;
   url: string | null;
-  visibilityScore: number;
   mentionStatus: VisibilityMentionStatus;
-  mentionPosition: number | null;
+  mentionCount: number;
+  cited: boolean;
+  citedSourceIndex: number | null;
   sentiment: VisibilitySentiment;
   sentimentExplanation: string;
   answerExcerpt: string;
   sources: BrandVisibilitySource[];
   competitors: string[];
-  recommendations: string[];
   summary: string;
 }
 
-interface AnalysisJson {
-  visibilityScore?: number;
-  mentionStatus?: string;
-  mentionPosition?: number | null;
+interface SentimentJson {
   sentiment?: string;
-  sentimentExplanation?: string;
-  summary?: string;
-  competitors?: string[];
-  recommendations?: string[];
+  explanation?: string;
 }
 
-function clamp(n: number): number {
-  return Math.max(0, Math.min(100, Math.round(n)));
+// Word-form abbreviations that end in a period but aren't sentence
+// boundaries. Single-letter-dot chains (e.g. "U.S.", "e.g.") are handled
+// separately below rather than listed here.
+const SENTENCE_ABBREVIATIONS = new Set([
+  'mr', 'mrs', 'ms', 'dr', 'prof', 'sr', 'jr', 'st', 'ave', 'blvd',
+  'inc', 'ltd', 'co', 'corp', 'vs', 'etc', 'approx', 'no', 'fig',
+]);
+
+// Splits text into sentences without breaking on common abbreviations
+// ("Acme Inc.", "U.S.") that end in a period but aren't real sentence
+// boundaries.
+export function splitSentences(text: string): string[] {
+  const sentences: string[] = [];
+  const boundary = /[.!?]+(?=\s|$)/g;
+  let start = 0;
+  let match: RegExpExecArray | null;
+  while ((match = boundary.exec(text))) {
+    const endIdx = match.index + match[0].length;
+    const candidate = text.slice(start, endIdx).trim();
+    const words = candidate.split(/\s+/);
+    const lastWord = (words[words.length - 1] || '').replace(/[.!?]+$/, '').toLowerCase();
+    const isAbbreviation =
+      SENTENCE_ABBREVIATIONS.has(lastWord) ||
+      /^[a-z]$/.test(lastWord) ||
+      /^[a-z](\.[a-z])+$/.test(lastWord);
+    if (isAbbreviation) continue;
+    if (candidate) sentences.push(candidate);
+    start = endIdx;
+  }
+  const rest = text.slice(start).trim();
+  if (rest) sentences.push(rest);
+  return sentences;
 }
 
-function brandInText(brand: string, text: string): boolean {
-  const needle = brand.trim().toLowerCase();
-  return text.toLowerCase().includes(needle);
+// Isolates the (at most 3) sentences that mention the brand, so the
+// sentiment call only ever sees a small, real quote — never the full answer.
+export function extractMentionSentences(brand: string, text: string): string[] {
+  return splitSentences(text)
+    .filter(s => brandInText(brand, s))
+    .slice(0, 3);
+}
+
+/**
+ * Build a plain-English summary from facts we actually have — no LLM guess.
+ * Only ever references the deterministic mention/citation facts and real
+ * competitor domains from the grounding sources.
+ */
+export function buildSummary(
+  brand: string,
+  mentioned: boolean,
+  cited: boolean,
+  competitors: string[]
+): string {
+  const leaders = competitors.slice(0, 3).join(', ');
+  if (mentioned && cited) {
+    return `Gemini mentioned ${brand} in its answer, and your site is among the sources it cited.`;
+  }
+  if (mentioned) {
+    return `Gemini mentioned ${brand} in its answer for this topic.`;
+  }
+  if (cited) {
+    return `Gemini didn't mention ${brand} by name, but your site is among the sources it cited.`;
+  }
+  return `Gemini did not mention ${brand}${leaders ? ` — it favored ${leaders} instead` : ''} when answering this topic.`;
 }
 
 export async function runBrandVisibilityCheck(
@@ -147,120 +200,85 @@ export async function runBrandVisibilityCheck(
     }
   }
 
-  // ─── Quick local mention check ───────────────────────────────────────────
-  const localMentioned = brandInText(trimmedBrand, answerText);
+  // ─── Deterministic mention + citation checks ───────────────────────────────
+  // "Mentioned" = the brand's name literally appears in the answer text.
+  // "Cited" = the user's own domain shows up among the sources Gemini
+  // grounded on. These are two different signals — a domain match in the
+  // sources counts as a citation, not as a text mention.
+  const mentionSentences = extractMentionSentences(trimmedBrand, answerText);
+  const mentionCount = mentionSentences.length;
+  const mentioned = mentionCount > 0;
+  const mentionStatus: VisibilityMentionStatus = mentioned ? 'mentioned' : 'not_mentioned';
 
-  // ─── Step 2: Structured analysis call ────────────────────────────────────
-  const analysisModel: GenerativeModel = client.getGenerativeModel({ model: MODEL });
+  const userDomain = url ? extractDomain(url) : null;
+  const matchIdx = findCitedSourceIndex(sources, userDomain);
+  const citedSourceIndex: number | null = matchIdx >= 0 ? matchIdx : null;
+  const cited = citedSourceIndex !== null;
 
-  const analysisPrompt = [
-    `You are an AI Brand Visibility analyst. Your job is to assess how visible and well-represented a brand is in AI-generated answers.`,
-    ``,
-    `BRAND NAME: ${trimmedBrand}`,
-    `TOPIC / QUERY: ${trimmedTopic}`,
-    `BRAND WEBSITE: ${url || '(not provided)'}`,
-    ``,
-    `AI ANSWER FOR THIS TOPIC:`,
-    answerText.slice(0, 2000),
-    ``,
-    `SOURCES AI CITED:`,
-    sources.length === 0
-      ? '(none)'
-      : sources.map((s, i) => `${i + 1}. ${s.title} — ${s.domain}`).join('\n'),
-    ``,
-    `LOCAL MENTION CHECK: The brand "${trimmedBrand}" ${localMentioned ? 'IS' : 'is NOT'} found in the answer text above.`,
-    ``,
-    `Analyse the above and return a single JSON object with this exact shape:`,
-    `{`,
-    `  "visibilityScore": 0,`,
-    `  "mentionStatus": "mentioned",`,
-    `  "mentionPosition": null,`,
-    `  "sentiment": "neutral",`,
-    `  "sentimentExplanation": "string",`,
-    `  "summary": "string",`,
-    `  "competitors": ["domain1", "domain2"],`,
-    `  "recommendations": ["string", "string", "string"]`,
-    `}`,
-    ``,
-    `Rules:`,
-    `- visibilityScore: 0-100. If brand is clearly mentioned and praised: 70-95. If mentioned briefly or ambiguously: 40-65. If not mentioned at all: 5-35.`,
-    `- mentionStatus: "mentioned" if the brand clearly appears, "not_mentioned" if absent, "ambiguous" if unclear.`,
-    `- mentionPosition: the approximate rank/position (1 = first brand mentioned, null if not mentioned). Integer or null.`,
-    `- sentiment: "positive" / "neutral" / "negative" / "not_applicable" (use not_applicable if brand is not mentioned).`,
-    `- sentimentExplanation: 1 sentence describing how AI portrays the brand, or why it's absent.`,
-    `- summary: 1-2 sentences plain-English summary of the brand's visibility situation.`,
-    `- competitors: list of brand names or domains that were mentioned instead of / alongside this brand (max 6).`,
-    `- recommendations: 3-4 specific, actionable steps to improve AI visibility for this brand and topic.`,
-    `- Respond with valid JSON only. No markdown fences, no preamble.`,
-  ].join('\n');
+  const competitors = Array.from(new Set(
+    sources
+      .filter((_, i) => i !== citedSourceIndex)
+      .map(s => s.domain)
+  )).slice(0, 6);
 
-  const analysisRequest: GenerateContentRequest = {
-    contents: [{ role: 'user', parts: [{ text: analysisPrompt }] }],
-    generationConfig: {
-      temperature: 0.3,
-      maxOutputTokens: 900,
-      responseMimeType: 'application/json',
-    },
-  };
-  const analysisResult = await analysisModel.generateContent(analysisRequest);
+  // ─── Step 2: Sentiment call — only when the brand was actually mentioned ──
+  // Skipped entirely when the mention count is 0 (nothing to classify).
+  // When it runs, it only sees the up-to-3 quoted sentences that mention
+  // the brand — never the full answer or any score/ranking prompt.
+  let sentiment: VisibilitySentiment = 'not_applicable';
+  let sentimentExplanation = '';
 
-  const rawAnalysis = analysisResult.response.text();
-  let analysis: AnalysisJson = {};
-  try {
-    analysis = JSON.parse(rawAnalysis.replace(/```json|```/g, '').trim()) as AnalysisJson;
-  } catch {
-    console.error('Brand visibility parse error:', rawAnalysis.slice(0, 400));
-    analysis = {
-      visibilityScore: localMentioned ? 55 : 20,
-      mentionStatus: localMentioned ? 'mentioned' : 'not_mentioned',
-      mentionPosition: null,
-      sentiment: 'not_applicable',
-      sentimentExplanation: localMentioned
-        ? `${trimmedBrand} appears in the AI answer for this topic.`
-        : `${trimmedBrand} was not found in AI answers for "${trimmedTopic}".`,
-      summary: localMentioned
-        ? `${trimmedBrand} is mentioned when AI answers questions about ${trimmedTopic}.`
-        : `${trimmedBrand} is not currently visible in AI answers about ${trimmedTopic}.`,
-      competitors: sources.slice(0, 4).map(s => s.domain),
-      recommendations: [
-        'Create comprehensive, answer-first content that directly addresses common questions about your topic.',
-        'Build authoritative backlinks from sources that AI already cites for this topic.',
-        'Add structured data (FAQ, HowTo, Product schema) to help AI engines extract and cite your brand.',
-        'Publish case studies and comparison pages that include your brand alongside established competitors.',
-      ],
+  if (mentioned) {
+    const sentimentModel: GenerativeModel = client.getGenerativeModel({ model: MODEL });
+
+    const sentimentPrompt = [
+      `Here are the only sentence(s) that mention "${trimmedBrand}" in an AI-generated answer:`,
+      ``,
+      ...mentionSentences.map((s, i) => `${i + 1}. "${s}"`),
+      ``,
+      `Classify the tone toward "${trimmedBrand}" in these sentences only. Return a single JSON object:`,
+      `{ "sentiment": "positive" | "neutral" | "negative", "explanation": "one short sentence" }`,
+      ``,
+      `Base your answer only on the quoted sentences above. Respond with valid JSON only, no markdown fences.`,
+    ].join('\n');
+
+    const sentimentRequest: GenerateContentRequest = {
+      contents: [{ role: 'user', parts: [{ text: sentimentPrompt }] }],
+      generationConfig: {
+        temperature: 0.2,
+        maxOutputTokens: 200,
+        responseMimeType: 'application/json',
+      },
     };
+    const sentimentResult = await sentimentModel.generateContent(sentimentRequest);
+    const raw = sentimentResult.response.text();
+    try {
+      const parsed = JSON.parse(raw.replace(/```json|```/g, '').trim()) as SentimentJson;
+      sentiment =
+        parsed.sentiment === 'positive' ? 'positive'
+        : parsed.sentiment === 'negative' ? 'negative'
+        : 'neutral';
+      sentimentExplanation = typeof parsed.explanation === 'string' ? parsed.explanation : '';
+    } catch {
+      console.error('Brand sentiment parse error:', raw.slice(0, 300));
+      sentiment = 'neutral';
+      sentimentExplanation = '';
+    }
   }
-
-  const mentionStatus: VisibilityMentionStatus =
-    analysis.mentionStatus === 'mentioned' ? 'mentioned'
-    : analysis.mentionStatus === 'ambiguous' ? 'ambiguous'
-    : 'not_mentioned';
-
-  const sentiment: VisibilitySentiment =
-    analysis.sentiment === 'positive' ? 'positive'
-    : analysis.sentiment === 'negative' ? 'negative'
-    : analysis.sentiment === 'neutral' ? 'neutral'
-    : 'not_applicable';
 
   return {
     brand: trimmedBrand,
     topic: trimmedTopic,
     url,
-    visibilityScore: clamp(analysis.visibilityScore ?? (localMentioned ? 55 : 20)),
     mentionStatus,
-    mentionPosition: typeof analysis.mentionPosition === 'number' ? analysis.mentionPosition : null,
+    mentionCount,
+    cited,
+    citedSourceIndex,
     sentiment,
-    sentimentExplanation: typeof analysis.sentimentExplanation === 'string'
-      ? analysis.sentimentExplanation
-      : '',
+    sentimentExplanation,
     answerExcerpt: answerText.slice(0, 800),
     sources,
-    competitors: Array.isArray(analysis.competitors)
-      ? analysis.competitors.slice(0, 6).map(c => String(c))
-      : [],
-    recommendations: Array.isArray(analysis.recommendations)
-      ? analysis.recommendations.slice(0, 4).map(r => String(r))
-      : [],
-    summary: typeof analysis.summary === 'string' ? analysis.summary : '',
+    competitors,
+    summary: buildSummary(trimmedBrand, mentioned, cited, competitors),
   };
 }

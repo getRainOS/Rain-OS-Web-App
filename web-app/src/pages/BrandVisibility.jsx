@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext.jsx';
 import { api } from '../api/client.js';
 import { ChevronDown, ChevronUp } from 'lucide-react';
@@ -31,6 +32,11 @@ const S = {
     outline: 'none', boxSizing: 'border-box',
     transition: 'border-color 0.15s',
   },
+  hint: { fontSize: 11, color: '#475569', marginTop: 6 },
+  urlScannerCta: {
+    display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 10,
+    color: '#0ea5e9', fontSize: 12.5, fontWeight: 600, textDecoration: 'none',
+  },
   grid2: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 },
   grid3: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, marginBottom: 16 },
 
@@ -49,15 +55,6 @@ const S = {
     display: 'inline-flex', alignItems: 'center', gap: 6,
   },
 
-  scoreRing: {
-    width: 80, height: 80, borderRadius: '50%',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    flexShrink: 0,
-  },
-  scoreNum: { fontSize: 26, fontWeight: 600, lineHeight: 1, fontVariantNumeric: 'tabular-nums' },
-  scoreLabel: { fontSize: 10, fontWeight: 600, color: '#64748b', marginTop: 2 },
-
-  resultRow: { display: 'flex', alignItems: 'flex-start', gap: 24 },
   resultMeta: { flex: 1 },
   resultTitle: { fontSize: 18, fontWeight: 600, color: '#f1f5f9', marginBottom: 6 },
   resultSub: { fontSize: 14, color: '#94a3b8', lineHeight: 1.6 },
@@ -75,14 +72,6 @@ const S = {
   favicon: { width: 16, height: 16, borderRadius: 2, marginTop: 2, flexShrink: 0, background: 'rgba(255,255,255,0.1)' },
   sourceDomain: { fontSize: 13, fontWeight: 600, color: '#e2e8f0' },
   sourceSnippet: { fontSize: 12, color: '#64748b', marginTop: 2, lineHeight: 1.5 },
-
-  rec: {
-    display: 'flex', alignItems: 'flex-start', gap: 10,
-    padding: '10px 14px', background: 'rgba(14,165,233,0.05)',
-    border: '1px solid rgba(14,165,233,0.15)', borderRadius: 10, marginBottom: 8,
-  },
-  recDot: { width: 6, height: 6, borderRadius: '50%', background: '#0ea5e9', marginTop: 6, flexShrink: 0 },
-  recText: { fontSize: 13, color: '#cbd5e1', lineHeight: 1.6 },
 
   competitorGrid: { display: 'flex', flexWrap: 'wrap', gap: 8 },
   competitorChip: {
@@ -111,12 +100,6 @@ const S = {
     display: 'inline-block', marginRight: 8, verticalAlign: 'middle',
   },
 };
-
-function scoreColor(score) {
-  if (score >= 70) return { text: '#4ade80', bg: 'rgba(74,222,128,0.12)', border: 'rgba(74,222,128,0.3)' };
-  if (score >= 40) return { text: '#fbbf24', bg: 'rgba(251,191,36,0.12)', border: 'rgba(251,191,36,0.3)' };
-  return { text: '#f87171', bg: 'rgba(248,113,113,0.12)', border: 'rgba(248,113,113,0.3)' };
-}
 
 function MentionBadge({ status }) {
   if (status === 'mentioned') return (
@@ -154,20 +137,12 @@ function SentimentBadge({ sentiment }) {
   );
 }
 
-/* ── Trend sparkline ──────────────────────────────────────────── */
-function Spark({ values, color = '#6366f1', width = 80, height = 28 }) {
-  if (!values || values.length < 2) return <span style={{ color: '#475569' }}>—</span>;
-  const pad = 2, w = width - pad * 2, h = height - pad * 2;
-  const step = w / (values.length - 1);
-  const pts = values.map((v, i) => {
-    const x = pad + i * step;
-    const y = pad + h - (Math.min(Math.max(v, 0), 100) / 100) * h;
-    return `${x.toFixed(1)},${y.toFixed(1)}`;
-  }).join(' ');
+function CitedBadge() {
   return (
-    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ display: 'block' }}>
-      <polyline fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" points={pts} />
-    </svg>
+    <span style={{ ...S.pill, background: 'rgba(99,102,241,0.1)', color: '#818cf8', border: '1px solid rgba(99,102,241,0.25)' }}>
+      <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#818cf8', display: 'inline-block' }} />
+      Your site was cited as a source
+    </span>
   );
 }
 
@@ -205,27 +180,6 @@ function TrashIcon({ size = 12 }) {
     </svg>
   );
 }
-function TrendUpIcon({ size = 11 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
-    </svg>
-  );
-}
-function TrendDownIcon({ size = 11 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/>
-    </svg>
-  );
-}
-function MinusIcon({ size = 11 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="5" y1="12" x2="19" y2="12"/>
-    </svg>
-  );
-}
 function AlertIcon({ size = 14 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -238,24 +192,19 @@ const DEMO_RESULT = {
   brand: 'rain OS',
   topic: 'AI readability optimization tools',
   url: 'https://getrainos.com',
-  visibilityScore: 34,
   mentionStatus: 'not_mentioned',
-  mentionPosition: null,
+  mentionCount: 0,
+  cited: false,
+  citedSourceIndex: null,
   sentiment: 'not_applicable',
-  sentimentExplanation: 'rain OS was not found in AI answers for this topic — an opportunity to build content that gets cited.',
+  sentimentExplanation: '',
   answerExcerpt: 'AI readability optimization involves structuring content so that large language models can parse, understand, and cite it accurately. Tools in this space include Clearscope for content grading, Surfer SEO for on-page optimization, and Frase for answer-engine targeting. Structured data, FAQ schema, and clear heading hierarchies are all important signals...',
   sources: [
     { title: 'Clearscope Blog', url: 'https://clearscope.io', domain: 'clearscope.io', snippet: 'How to optimize content for AI readability and search engines.' },
     { title: 'Surfer SEO Guide', url: 'https://surferseo.com', domain: 'surferseo.com', snippet: 'On-page optimization for AI-first search.' },
   ],
   competitors: ['clearscope.io', 'surferseo.com', 'frase.io', 'marketmuse.com'],
-  recommendations: [
-    'Publish a definitive guide titled "What is AI Readability?" — this is the top question AI answers for your topic.',
-    'Add FAQ schema to your homepage and key landing pages so AI engines can extract your brand as an authoritative source.',
-    'Build comparison content: "rain OS vs Clearscope" and "rain OS vs Surfer SEO" — these pages signal competitive relevance to AI.',
-    'Get cited on authoritative marketing and SEO blogs; backlinks from sources AI already trusts will lift your visibility score.',
-  ],
-  summary: 'rain OS is not currently visible when AI answers questions about AI readability optimization. Competitors like Clearscope and Surfer SEO dominate this topic — targeted content and schema markup can change that.',
+  summary: 'Gemini did not mention rain OS — it favored clearscope.io, surferseo.com, frase.io instead when answering this topic.',
 };
 
 /* ── Collapsible Disclaimer ─────────────────────────────────────────────── */
@@ -274,7 +223,7 @@ function DisclaimerBox() {
           {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
       </div>
-      {!collapsed && <p style={{ ...S.disclaimerText, marginTop: 8 }}>We query Google Gemini with live Google Search grounding for your topic, then analyse the real AI-generated answer to see if and how your brand appears. The mention status and sources are drawn from live search data. However: this is a single-model, single-query snapshot — only Gemini, one phrasing, one moment in time. Sentiment scoring and recommendations come from a second AI analysis pass and are interpretive, not empirical. Ask the same question differently ("best project management software" vs "what tool should my team use for task tracking?") and you may get entirely different results. Use this for directional spot-checking and competitor discovery, not as comprehensive brand monitoring.</p>}
+      {!collapsed && <p style={{ ...S.disclaimerText, marginTop: 8 }}>We query Google Gemini with live Google Search grounding for your topic, then check the real AI-generated answer for your brand name and, if you gave a URL, your domain among the cited sources. The mention status, citation, and sources are all drawn directly from that live data — nothing is scored or guessed. When your brand is mentioned, we ask Gemini a second, much smaller question — classifying tone only from the exact sentences that mention it — and label that "AI's read." However: this is a single-model, single-query snapshot — only Gemini, one phrasing, one moment in time. Ask the same question differently ("best project management software" vs "what tool should my team use for task tracking?") and you may get entirely different results. Use this for directional spot-checking and competitor discovery, not as comprehensive brand monitoring.</p>}
     </div>
   );
 }
@@ -341,7 +290,9 @@ export default function BrandVisibility() {
     }
   }
 
-  // Group history by brand+topic for trend sparklines
+  // Group history by brand+topic. Old rows still render: mention status
+  // comes from the stored mention_status field, and there is no score to
+  // display or chart for any row, old or new.
   const trendGroups = useMemo(() => {
     const map = new Map();
     for (const h of history) {
@@ -356,18 +307,11 @@ export default function BrandVisibility() {
     for (const [, arr] of map) {
       arr.sort((a, b) => new Date(a.checked_at || a.checkedAt) - new Date(b.checked_at || b.checkedAt));
       const latest = arr[arr.length - 1];
-      const prev   = arr[arr.length - 2];
-      const scoreLatest = latest.visibility_score ?? latest.visibilityScore ?? 0;
-      const scorePrev   = prev ? (prev.visibility_score ?? prev.visibilityScore ?? 0) : null;
-      const delta  = scorePrev !== null ? scoreLatest - scorePrev : null;
       out.push({
         brand: latest.brand,
         topic: latest.topic,
-        latestScore: scoreLatest,
         latestSentiment: latest.sentiment || 'not_applicable',
         latestMention: latest.mention_status || latest.mentionStatus || 'not_mentioned',
-        delta,
-        spark: arr.map(h => h.visibility_score ?? h.visibilityScore ?? 0),
         checkedAt: latest.checked_at || latest.checkedAt,
         checks: arr.length,
       });
@@ -375,8 +319,6 @@ export default function BrandVisibility() {
     out.sort((a, b) => new Date(b.checkedAt) - new Date(a.checkedAt));
     return out;
   }, [history]);
-
-  const colors = result ? scoreColor(result.visibilityScore) : null;
 
   return (
     <div style={S.page}>
@@ -446,6 +388,7 @@ export default function BrandVisibility() {
                 required
                 maxLength={200}
               />
+              <div style={S.hint}>Use your name as people write it publicly.</div>
             </div>
             <div>
               <label style={S.label}>Topic or keyword</label>
@@ -486,33 +429,25 @@ export default function BrandVisibility() {
       {result && (
         <div>
           <div style={S.card}>
-            <div style={S.resultRow}>
-              <div style={{
-                ...S.scoreRing,
-                background: colors.bg,
-                border: `2px solid ${colors.border}`,
-              }}>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ ...S.scoreNum, color: colors.text }}>{result.visibilityScore}</div>
-                  <div style={S.scoreLabel}>SCORE</div>
-                </div>
+            <div style={S.resultMeta}>
+              <div style={S.resultTitle}>{result.brand}</div>
+              <p style={S.resultSub}>{result.summary}</p>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
+                <MentionBadge status={result.mentionStatus} />
+                {result.mentionStatus === 'mentioned' && <SentimentBadge sentiment={result.sentiment} />}
+                {result.cited && <CitedBadge />}
               </div>
-              <div style={S.resultMeta}>
-                <div style={S.resultTitle}>
-                  {result.brand}
-                  {result.mentionPosition ? ` — mentioned #${result.mentionPosition}` : ''}
-                </div>
-                <p style={S.resultSub}>{result.summary}</p>
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
-                  <MentionBadge status={result.mentionStatus} />
-                  <SentimentBadge sentiment={result.sentiment} />
-                </div>
-              </div>
+              {result.url && result.mentionStatus === 'not_mentioned' && (
+                <Link to={`/url-scanner?url=${encodeURIComponent(result.url)}`} style={S.urlScannerCta}>
+                  Check what your page needs in URL Scanner →
+                </Link>
+              )}
             </div>
             {result.sentimentExplanation && (
-              <p style={{ ...S.resultSub, marginTop: 16, paddingTop: 16, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                {result.sentimentExplanation}
-              </p>
+              <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                <div style={S.sectionTitle}>AI's read</div>
+                <p style={S.resultSub}>{result.sentimentExplanation}</p>
+              </div>
             )}
           </div>
 
@@ -525,7 +460,7 @@ export default function BrandVisibility() {
 
           {result.competitors && result.competitors.length > 0 && (
             <div style={S.card}>
-              <div style={S.sectionTitle}>Brands AI mentioned instead</div>
+              <div style={S.sectionTitle}>Sites Gemini cited</div>
               <div style={S.competitorGrid}>
                 {result.competitors.map((c, i) => (
                   <span key={i} style={S.competitorChip}>{c}</span>
@@ -548,21 +483,12 @@ export default function BrandVisibility() {
                   <div>
                     <div style={S.sourceDomain}>
                       <a href={s.url} target="_blank" rel="noopener noreferrer" style={{ color: '#e2e8f0', textDecoration: 'none' }}>{s.title || s.domain}</a>
+                      {i === result.citedSourceIndex && (
+                        <span style={{ marginLeft: 8, fontSize: 11, fontWeight: 600, color: '#818cf8' }}>Your site</span>
+                      )}
                     </div>
                     {s.snippet && <div style={S.sourceSnippet}>{s.snippet}</div>}
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {result.recommendations && result.recommendations.length > 0 && (
-            <div style={S.card}>
-              <div style={S.sectionTitle}>How to improve AI visibility</div>
-              {result.recommendations.map((r, i) => (
-                <div key={i} style={S.rec}>
-                  <div style={S.recDot} />
-                  <div style={S.recText}>{r}</div>
                 </div>
               ))}
             </div>
@@ -593,46 +519,26 @@ export default function BrandVisibility() {
                 </button>
               </div>
 
-              {trendGroups.map((g, i) => {
-                const color = scoreColor(g.latestScore);
-                const dUp   = g.delta !== null && g.delta > 0;
-                const dDown = g.delta !== null && g.delta < 0;
-                return (
-                  <div key={i} style={{ ...S.card, display: 'flex', alignItems: 'center', gap: 20, padding: '16px 20px', cursor: 'pointer' }}
-                    onClick={() => { setBrand(g.brand); setTopic(g.topic); setTab('check'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#060a18'}
-                    onMouseLeave={e => e.currentTarget.style.background = ''}
-                  >
-                    <div style={{ flexShrink: 0, textAlign: 'center', minWidth: 60 }}>
-                      <div style={{ fontSize: 26, fontWeight: 600, color: color.text, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{g.latestScore}</div>
-                      <div style={{ fontSize: 10, color: '#64748b' }}>Score</div>
+              {trendGroups.map((g, i) => (
+                <div key={i} style={{ ...S.card, display: 'flex', alignItems: 'center', gap: 20, padding: '16px 20px', cursor: 'pointer' }}
+                  onClick={() => { setBrand(g.brand); setTopic(g.topic); setTab('check'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  onMouseEnter={e => e.currentTarget.style.background = '#060a18'}
+                  onMouseLeave={e => e.currentTarget.style.background = ''}
+                >
+                  <div style={{ flexShrink: 0 }}>
+                    <MentionBadge status={g.latestMention} />
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: '#f1f5f9', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {g.brand} — {g.topic}
                     </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 14, fontWeight: 600, color: '#f1f5f9', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {g.brand} — {g.topic}
-                      </div>
-                      <div style={{ fontSize: 12, color: '#64748b' }}>
-                        {g.latestMention.replace('_', ' ')} · {g.latestSentiment.replace('_', ' ')} · {g.checks} check{g.checks > 1 ? 's' : ''}
-                      </div>
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-                      <Spark values={g.spark} color={color.text} width={80} height={28} />
-                      <div style={{ fontSize: 10, color: '#475569' }}>{g.checks} check{g.checks > 1 ? 's' : ''}</div>
-                    </div>
-                    <div style={{ flexShrink: 0, textAlign: 'right' }}>
-                      {g.delta !== null && (
-                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 600, padding: '3px 8px', borderRadius: 6,
-                          color: dUp ? '#4ade80' : dDown ? '#f87171' : '#64748b',
-                          background: dUp ? 'rgba(34,197,94,0.1)' : dDown ? 'rgba(239,68,68,0.1)' : 'rgba(255,255,255,0.05)' }}>
-                          {dUp ? <TrendUpIcon size={11} /> : dDown ? <TrendDownIcon size={11} /> : <MinusIcon size={11} />}
-                          {dUp ? '+' : ''}{g.delta}
-                        </div>
-                      )}
-                      <div style={{ fontSize: 11, color: '#475569', marginTop: 4 }}>{timeAgo(g.checkedAt)}</div>
+                    <div style={{ fontSize: 12, color: '#64748b' }}>
+                      {g.latestSentiment.replace('_', ' ')} sentiment · {g.checks} check{g.checks > 1 ? 's' : ''}
                     </div>
                   </div>
-                );
-              })}
+                  <div style={{ flexShrink: 0, fontSize: 11, color: '#475569' }}>{timeAgo(g.checkedAt)}</div>
+                </div>
+              ))}
             </>
           )}
         </>
