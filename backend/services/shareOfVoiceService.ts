@@ -91,10 +91,36 @@ export function rankCompetitorDomains(
     .map(([domain]) => domain);
 }
 
+export function countMentioned(modelResults: Array<{ mentioned: boolean }>): number {
+  return modelResults.filter(m => m.mentioned).length;
+}
+
+export interface DomainShare {
+  domainCitedCount: number | null;
+  domainSourceCount: number | null;
+  domainSharePercent: number | null;
+}
+
+/**
+ * How many of the given sources are the user's own domain, using the same
+ * domain matching as Citation Monitor. Only meaningful when a URL was
+ * given — all three fields are null without one. Guarded against dividing
+ * by zero when there are no sources at all.
+ */
+export function computeDomainShare(sources: SovSource[], userDomain: string | null): DomainShare {
+  if (!userDomain) {
+    return { domainCitedCount: null, domainSourceCount: null, domainSharePercent: null };
+  }
+  const domainSourceCount = sources.length;
+  const domainCitedCount = sources.filter(s => isSameDomain(s.domain, userDomain)).length;
+  const domainSharePercent = domainSourceCount > 0 ? Math.round((domainCitedCount / domainSourceCount) * 100) : 0;
+  return { domainCitedCount, domainSourceCount, domainSharePercent };
+}
+
 /**
  * Build a plain-English summary from facts we actually have — no LLM guess.
  */
-function buildSummary(
+export function buildSummary(
   brand: string,
   topic: string,
   mentionedCount: number,
@@ -198,18 +224,11 @@ export async function runShareOfVoice(
     modelConfigs.map(cfg => runOneModel(client, b, cfg))
   );
 
-  const mentionedCount = modelResults.filter(m => m.mentioned).length;
+  const mentionedCount = countMentioned(modelResults);
 
-  // Domain share: how many of all the sources cited across the 3 prompts
-  // are the user's own domain, using the same domain matching as Citation
-  // Monitor. Only meaningful when a URL was given.
+  // Domain share across all sources cited by the 3 prompts combined.
   const allSources = modelResults.flatMap(m => m.sources);
-  const domainSourceCount  = userDomain ? allSources.length : null;
-  const domainCitedCount   = userDomain
-    ? allSources.filter(s => isSameDomain(s.domain, userDomain)).length
-    : null;
-  const domainSharePercent =
-    userDomain && domainSourceCount ? Math.round((domainCitedCount! / domainSourceCount) * 100) : (userDomain ? 0 : null);
+  const { domainCitedCount, domainSourceCount, domainSharePercent } = computeDomainShare(allSources, userDomain);
 
   const competitors = rankCompetitorDomains(modelResults, userDomain);
 
