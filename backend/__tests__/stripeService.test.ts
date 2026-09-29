@@ -134,6 +134,143 @@ describe('handleWebhookEvent — subscription changes (upgrade/downgrade/cancel)
   });
 });
 
+describe('handleWebhookEvent — all 8 Stripe subscription statuses', () => {
+  beforeEach(() => {
+    findUserByStripeCustomerId.mockReset();
+    updateUserSubscription.mockReset();
+    resetUserUsage.mockReset();
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('active: grants access — sets the derived price and limit', async () => {
+    findUserByStripeCustomerId.mockResolvedValue(makeUser({ count: 10, limit: 5 }));
+    mockPriceLimit(200);
+
+    await handleWebhookEvent({
+      type: 'customer.subscription.updated',
+      data: { object: makeSubscription({ status: 'active' }) },
+    } as unknown as Stripe.Event);
+
+    expect(updateUserSubscription).toHaveBeenCalledWith('user-1', {
+      subscriptionStatus: 'active',
+      stripePriceId: 'price_x',
+      usageLimit: 200,
+    });
+  });
+
+  it('canceled: an ending — resets stripePriceId and usageLimit to Free defaults', async () => {
+    findUserByStripeCustomerId.mockResolvedValue(makeUser({ count: 10, limit: 200 }));
+
+    await handleWebhookEvent({
+      type: 'customer.subscription.deleted',
+      data: { object: makeSubscription({ status: 'canceled', items: { data: [] } as any }) },
+    } as unknown as Stripe.Event);
+
+    expect(updateUserSubscription).toHaveBeenCalledWith('user-1', {
+      subscriptionStatus: 'cancelled',
+      stripePriceId: null,
+      usageLimit: 5,
+    });
+  });
+
+  it('unpaid: an ending — resets stripePriceId and usageLimit to Free defaults', async () => {
+    findUserByStripeCustomerId.mockResolvedValue(makeUser({ count: 10, limit: 200 }));
+
+    await handleWebhookEvent({
+      type: 'customer.subscription.updated',
+      data: { object: makeSubscription({ status: 'unpaid' }) },
+    } as unknown as Stripe.Event);
+
+    expect(updateUserSubscription).toHaveBeenCalledWith('user-1', {
+      subscriptionStatus: 'unpaid',
+      stripePriceId: null,
+      usageLimit: 5,
+    });
+  });
+
+  it('incomplete_expired: an ending — resets stripePriceId and usageLimit to Free defaults', async () => {
+    findUserByStripeCustomerId.mockResolvedValue(makeUser({ count: 10, limit: 200 }));
+
+    await handleWebhookEvent({
+      type: 'customer.subscription.updated',
+      data: { object: makeSubscription({ status: 'incomplete_expired' }) },
+    } as unknown as Stripe.Event);
+
+    expect(updateUserSubscription).toHaveBeenCalledWith('user-1', {
+      subscriptionStatus: 'incomplete_expired',
+      stripePriceId: null,
+      usageLimit: 5,
+    });
+  });
+
+  it('past_due: not an ending — records the status, leaves stripePriceId/usageLimit untouched', async () => {
+    findUserByStripeCustomerId.mockResolvedValue(makeUser({ count: 10, limit: 200 }));
+
+    await handleWebhookEvent({
+      type: 'customer.subscription.updated',
+      data: { object: makeSubscription({ status: 'past_due' }) },
+    } as unknown as Stripe.Event);
+
+    expect(updateUserSubscription).toHaveBeenCalledWith('user-1', {
+      subscriptionStatus: 'past_due',
+    });
+  });
+
+  it('incomplete: not an ending — records the status, leaves stripePriceId/usageLimit untouched', async () => {
+    findUserByStripeCustomerId.mockResolvedValue(makeUser({ count: 10, limit: 200 }));
+
+    await handleWebhookEvent({
+      type: 'customer.subscription.updated',
+      data: { object: makeSubscription({ status: 'incomplete' }) },
+    } as unknown as Stripe.Event);
+
+    expect(updateUserSubscription).toHaveBeenCalledWith('user-1', {
+      subscriptionStatus: 'incomplete',
+    });
+  });
+
+  it('paused: not an ending — records the status, leaves stripePriceId/usageLimit untouched', async () => {
+    findUserByStripeCustomerId.mockResolvedValue(makeUser({ count: 10, limit: 200 }));
+
+    await handleWebhookEvent({
+      type: 'customer.subscription.updated',
+      data: { object: makeSubscription({ status: 'paused' }) },
+    } as unknown as Stripe.Event);
+
+    expect(updateUserSubscription).toHaveBeenCalledWith('user-1', {
+      subscriptionStatus: 'paused',
+    });
+  });
+
+  it('trialing: not an ending — records the status, leaves stripePriceId/usageLimit untouched', async () => {
+    findUserByStripeCustomerId.mockResolvedValue(makeUser({ count: 10, limit: 200 }));
+
+    await handleWebhookEvent({
+      type: 'customer.subscription.updated',
+      data: { object: makeSubscription({ status: 'trialing' }) },
+    } as unknown as Stripe.Event);
+
+    expect(updateUserSubscription).toHaveBeenCalledWith('user-1', {
+      subscriptionStatus: 'trialing',
+    });
+  });
+
+  it('none of the not-ending statuses (past_due/incomplete/paused/trialing) ever reset the usage count', async () => {
+    findUserByStripeCustomerId.mockResolvedValue(makeUser({ count: 10, limit: 200 }));
+
+    for (const status of ['past_due', 'incomplete', 'paused', 'trialing'] as const) {
+      resetUserUsage.mockClear();
+      await handleWebhookEvent({
+        type: 'customer.subscription.updated',
+        data: { object: makeSubscription({ status }) },
+      } as unknown as Stripe.Event);
+      expect(resetUserUsage).not.toHaveBeenCalled();
+    }
+  });
+});
+
 describe('handleWebhookEvent — invoice.paid renewal', () => {
   beforeEach(() => {
     findUserByStripeCustomerId.mockReset();

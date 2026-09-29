@@ -3,7 +3,21 @@
 // ─── Auth / User types ───────────────────────────────────────────────────────
 // NOTE: Keep ALL fields here — dbService.mapRowToUser returns this full shape.
 // analyzeController, url-scan, etc. only use the subset they need.
-export type SubscriptionStatus = 'pending' | 'active' | 'cancelled' | 'inactive';
+// 'pending' and 'inactive' predate Stripe integration (pre-payment /
+// legacy states); the rest mirror Stripe's own Subscription.status values
+// (https://stripe.com/docs/api/subscriptions/object#subscription_object-status),
+// stored honestly so a payment issue isn't reported as 'active'.
+export type SubscriptionStatus =
+  | 'pending'
+  | 'active'
+  | 'cancelled'
+  | 'inactive'
+  | 'past_due'
+  | 'incomplete'
+  | 'incomplete_expired'
+  | 'unpaid'
+  | 'paused'
+  | 'trialing';
 export interface User {
 id: string;
 email: string;

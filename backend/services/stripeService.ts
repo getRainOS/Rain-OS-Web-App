@@ -186,6 +186,18 @@ export const createPortalSession = async (
  * downgrade, cancellation, or any other status change updates the limit
  * (and status/priceId) but never touches the count — renewal resets are
  * handled separately, by invoice.paid (see handleInvoicePaid below).
+ *
+ * Status handling: only 'active' grants access. Of the rest, 'canceled',
+ * 'unpaid', and 'incomplete_expired' are real endings — the subscription is
+ * not coming back on its own, so we fall back to the Free defaults, same as
+ * before. 'past_due', 'incomplete', 'paused', and 'trialing' are not
+ * endings — the subscription may still recover (or, for 'trialing', hasn't
+ * started billing yet) — so stripePriceId/usageLimit are left untouched;
+ * only the honest status is recorded. This does mean these users now fail
+ * the `subscriptionStatus !== 'active'` gate on paid endpoints until the
+ * subscription resolves — intentional, since granting continued access on
+ * a failed payment was never the intent, just a side effect of previously
+ * mislabeling every non-active status as 'active'.
  */
 const handleSubscriptionChange = async (subscription: Stripe.Subscription) => {
   const stripeCustomerId = typeof subscription.customer === 'string'
@@ -214,13 +226,24 @@ const handleSubscriptionChange = async (subscription: Stripe.Subscription) => {
     if (isUpgrade) {
       await resetUserUsage(user.id, 'upgrade');
     }
-  } else {
-    // Downgrade to no active subscription (cancellation, incomplete, etc.):
-    // the limit falls back to Free, but the count is left untouched.
+  } else if (
+    subscription.status === 'canceled' ||
+    subscription.status === 'unpaid' ||
+    subscription.status === 'incomplete_expired'
+  ) {
+    // Real ending: the subscription will not recover on its own. Fall back
+    // to the Free defaults; the usage count is left untouched.
     await updateUserSubscription(user.id, {
-      subscriptionStatus: subscription.status === 'canceled' ? 'cancelled' : 'active',
+      subscriptionStatus: subscription.status === 'canceled' ? 'cancelled' : subscription.status,
       stripePriceId: null,
       usageLimit: 5,
+    });
+  } else {
+    // past_due, incomplete, paused, trialing (and the defensive case of
+    // 'active' with no price item) — not an ending. Record the honest
+    // status only; stripePriceId/usageLimit are left exactly as they are.
+    await updateUserSubscription(user.id, {
+      subscriptionStatus: subscription.status,
     });
   }
 };
