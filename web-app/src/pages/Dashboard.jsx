@@ -617,35 +617,24 @@ export default function Dashboard() {
   ).length;
   const brandVisRate = brandVisTotal > 0 ? Math.round((brandVisMentionedCount / brandVisTotal) * 100) : null;
 
-  // SOV latest + groups
-  const sovGroups = useMemo(() => {
-    const map = new Map();
-    for (const h of sovHistory) {
-      const key = `${(h.brand || '').toLowerCase()}::${(h.topic || '').toLowerCase()}`;
-      if (!map.has(key)) map.set(key, []);
-      map.get(key).push(h);
-    }
-    const out = [];
-    for (const [, arr] of map) {
-      arr.sort((a, b) => new Date(a.checkedAt || a.checked_at) - new Date(b.checkedAt || b.checked_at));
-      const latest = arr[arr.length - 1];
-      const prev = arr[arr.length - 2];
-      const scoreLatest = latest.overall_sov ?? latest.overallSov ?? 0;
-      const scorePrev = prev ? (prev.overall_sov ?? prev.overallSov ?? 0) : null;
-      out.push({
-        brand: latest.brand,
-        topic: latest.topic,
-        latestSov: scoreLatest,
-        delta: scorePrev !== null ? scoreLatest - scorePrev : null,
-        spark: arr.map(h => h.overall_sov ?? h.overallSov ?? 0),
-        checkedAt: latest.checkedAt || latest.checked_at,
-        checks: arr.length,
-      });
-    }
-    out.sort((a, b) => new Date(b.checkedAt) - new Date(a.checkedAt));
-    return out;
-  }, [sovHistory]);
-  const sovLatest = sovGroups[0] || null;
+  // Share of Voice: mention rate scoped to the most recently checked brand
+  // (case-insensitive match), capped at its last 10 checks — same pattern
+  // as the Brand Sentiment tile. mentionedCount/cited_count is read
+  // directly off each row so old rows still count correctly.
+  const sovSorted = [...sovHistory].sort(
+    (a, b) => new Date(b.checkedAt || b.checked_at) - new Date(a.checkedAt || a.checked_at)
+  );
+  const sovLatestBrand = sovSorted[0]?.brand || null;
+  const sovScoped = sovLatestBrand
+    ? sovSorted
+        .filter(h => (h.brand || '').toLowerCase() === sovLatestBrand.toLowerCase())
+        .slice(0, 10)
+    : [];
+  const sovTotal = sovScoped.length;
+  const sovMentionedCount = sovScoped.filter(
+    h => (h.mentionedCount ?? h.citedCount ?? h.cited_count ?? 0) > 0
+  ).length;
+  const sovRate = sovTotal > 0 ? Math.round((sovMentionedCount / sovTotal) * 100) : null;
 
   // Build tool-specific KPI cards
   const toolCards = [
@@ -690,16 +679,14 @@ export default function Dashboard() {
       key: 'sov',
       label: 'Share of Voice',
       to: '/share-of-voice',
-      hasData: !!sovLatest,
-      value: sovLatest ? `${sovLatest.latestSov}` : null,
-      suffix: '/100',
-      sub: sovLatest
-        ? `${sovLatest.brand} — ${sovLatest.checks} check${sovLatest.checks > 1 ? 's' : ''} · ${sovHistory.length} total`
+      hasData: sovTotal > 0,
+      value: sovTotal > 0 ? `${sovRate}%` : null,
+      sub: sovTotal > 0
+        ? `${sovLatestBrand} — mentioned in ${sovMentionedCount} of your last ${sovTotal} check${sovTotal > 1 ? 's' : ''}`
         : 'No Share of Voice data yet — run a check to see how often Gemini cites your brand',
-      trend: sovLatest?.delta,
       Icon: BarChart2,
-      spark: sovLatest?.spark && sovLatest.spark.length > 1 ? sovLatest.spark : null,
-      tooltip: 'How visible your brand is when Gemini answers your topic three different ways, using live Google Search grounding. Scored 0-100.',
+      spark: null,
+      tooltip: 'How many of your recent checks had Gemini mention your brand in at least one of the three query phrasings.',
     },
     {
       key: 'usage',
