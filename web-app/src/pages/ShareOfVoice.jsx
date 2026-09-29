@@ -1,9 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import {
-  BarChart2, Search, CheckCircle2, AlertCircle, Minus,
-  TrendingUp, TrendingDown, Zap, Clock, Trash2, Info, ChevronDown, ChevronUp,
+  BarChart2, Search, CheckCircle2, AlertCircle,
+  Clock, Trash2, Info, ChevronDown, ChevronUp,
   ExternalLink,
 } from 'lucide-react';
 
@@ -27,6 +28,11 @@ const S = {
     outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.15s',
   },
   grid2: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 },
+  hint: { fontSize: 11, color: '#475569', marginTop: 6 },
+  urlScannerCta: {
+    display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 12,
+    color: '#0ea5e9', fontSize: 12.5, fontWeight: 600, textDecoration: 'none',
+  },
   btn: {
     background: 'linear-gradient(135deg, #6366f1, #0ea5e9)',
     color: '#fff', border: 'none', borderRadius: 10,
@@ -51,15 +57,7 @@ const S = {
   },
 };
 
-/* ── Score colour ─────────────────────────────────────────────────────────── */
-function sovColor(score) {
-  if (score >= 70) return '#22c55e';
-  if (score >= 45) return '#eab308';
-  if (score >= 20) return '#f97316';
-  return '#ef4444';
-}
-
-/* ── Per-model card ───────────────────────────────────────────────────────── */
+/* ── Per-prompt card ──────────────────────────────────────────────────────── */
 const MODEL_META = {
   gemini:          { label: 'Informational question',          color: '#06b6d4', bg: 'rgba(6,182,212,0.08)',  border: 'rgba(6,182,212,0.2)' },
   chatgpt_style:   { label: 'Conversational request',         color: '#22c55e', bg: 'rgba(34,197,94,0.08)',  border: 'rgba(34,197,94,0.2)' },
@@ -69,36 +67,25 @@ const MODEL_META = {
 function ModelCard({ m }) {
   const meta  = MODEL_META[m.modelKey] || MODEL_META.gemini;
   const color = meta.color;
-  const sc    = sovColor(m.visibilityScore);
+  const mentioned = m.mentioned ?? m.cited ?? false;
   return (
     <div style={{ background: meta.bg, border: `1px solid ${meta.border}`, borderRadius: 14, padding: 20 }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-        <div>
-          <div style={{ fontSize: 15, fontWeight: 700, color: '#f1f5f9' }}>{meta.label}</div>
-          <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>{m.promptStyle}</div>
-        </div>
-        <div style={{ textAlign: 'right' }}>
-          <div style={{ fontSize: 24, fontWeight: 800, color: sc, lineHeight: 1 }}>{m.visibilityScore}</div>
-          <div style={{ fontSize: 10, color: '#64748b' }}>visibility</div>
-        </div>
+      <div style={{ marginBottom: 12 }}>
+        <div style={{ fontSize: 15, fontWeight: 700, color: '#f1f5f9' }}>{meta.label}</div>
+        <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>{m.promptStyle}</div>
       </div>
 
-      {/* Cited pill */}
+      {/* Mentioned pill */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-        {m.cited ? (
+        {mentioned ? (
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(34,197,94,0.12)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.25)', borderRadius: 20, padding: '3px 10px', fontSize: 12, fontWeight: 600 }}>
-            <CheckCircle2 size={11} /> Cited{m.mentionPosition ? ` #${m.mentionPosition}` : ''}
+            <CheckCircle2 size={11} /> Mentioned
           </span>
         ) : (
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(239,68,68,0.1)', color: '#f87171', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 20, padding: '3px 10px', fontSize: 12, fontWeight: 600 }}>
-            <AlertCircle size={11} /> Not cited
+            <AlertCircle size={11} /> Not mentioned
           </span>
         )}
-      </div>
-
-      {/* Score bar */}
-      <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 4, height: 4, marginBottom: 14, overflow: 'hidden' }}>
-        <div style={{ width: `${m.visibilityScore}%`, height: '100%', background: color, borderRadius: 4, transition: 'width 0.6s ease', boxShadow: `0 0 6px ${color}60` }} />
       </div>
 
       {/* Answer excerpt */}
@@ -128,16 +115,16 @@ function ModelCard({ m }) {
   );
 }
 
-/* ── Trend sparkline ──────────────────────────────────────────────────────── */
-function Spark({ values, color = '#6366f1', width = 80, height = 28 }) {
-  if (!values || values.length < 2) return <span style={{ color: '#475569' }}>—</span>;
-  const pad = 2, w = width - pad * 2, h = height - pad * 2;
-  const step = w / (values.length - 1);
-  const pts = values.map((v, i) => `${(pad + i * step).toFixed(1)},${(pad + h - (Math.min(Math.max(v, 0), 100) / 100) * h).toFixed(1)}`).join(' ');
+function MentionCountBadge({ count }) {
+  const allGood = count === 3;
+  const none    = count === 0;
+  const color  = allGood ? '#4ade80' : none ? '#f87171' : '#fbbf24';
+  const bg     = allGood ? 'rgba(74,222,128,0.12)' : none ? 'rgba(248,113,113,0.1)' : 'rgba(251,191,36,0.12)';
+  const border = allGood ? 'rgba(74,222,128,0.3)' : none ? 'rgba(248,113,113,0.25)' : 'rgba(251,191,36,0.3)';
   return (
-    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ display: 'block' }}>
-      <polyline fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" points={pts} style={{ filter: `drop-shadow(0 0 2px ${color}80)` }} />
-    </svg>
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, borderRadius: 20, padding: '4px 12px', fontSize: 12, fontWeight: 600, background: bg, color, border: `1px solid ${border}`, whiteSpace: 'nowrap' }}>
+      {count} of 3
+    </span>
   );
 }
 
@@ -172,7 +159,7 @@ function InfoBox() {
           {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
       </div>
-      {!collapsed && <span style={{ display: 'block', marginTop: 8, fontSize: 12, lineHeight: 1.7, color: '#64748b' }}>We ask Google Gemini about your topic three different ways — an <em>informational</em> question, a <em>conversational</em> request, and a <em>research</em>-style comparison — each grounded in live Google Search. For each, we check whether your brand is cited and score visibility, sentiment, and prominence. The cited / not cited results are real snapshots of what Gemini pulled from live web sources. However: this covers Gemini only, three phrasings, one moment in time. Visibility scores and recommendations come from a second AI analysis pass and our own scoring formula, so they are directional, not industry-standard metrics. Run checks on multiple topic variations and track over time — use for trend spotting and competitor discovery, not as ground-truth market share data.</span>}
+      {!collapsed && <span style={{ display: 'block', marginTop: 8, fontSize: 12, lineHeight: 1.7, color: '#64748b' }}>We ask Google Gemini about your topic three different ways — an <em>informational</em> question, a <em>conversational</em> request, and a <em>research</em>-style comparison — each grounded in live Google Search. For each, we check whether your brand's name appears in the answer. If you gave a URL, we also check what share of all the sources cited across the three prompts is your own domain. Every number here — the mention count, the domain share, and the competitor list — comes directly from that live data; nothing is scored or guessed. However: this covers Gemini only, three phrasings, one moment in time. Run checks on multiple topic variations and track over time — use for trend spotting and competitor discovery, not as ground-truth market share data.</span>}
     </div>
   );
 }
@@ -198,19 +185,18 @@ export default function ShareOfVoice() {
     brand: brand || 'Rain OS',
     topic: topic || 'AI content optimization tools',
     url: url || null,
-    overallSov: 34,
-    citedCount: 1,
-    summary: 'Rain OS is cited by 1/3 query phrasings for this topic with a visibility score of 34/100.',
-    topCompetitors: ['clearscope.io', 'surferseo.com', 'frase.io', 'semrush.com'],
-    recommendations: [
-      'Expand content to address conversational and research-style queries, not just informational ones.',
-      'Target the 2 query phrasings that did not cite you with dedicated content formats.',
-      'Consistently publish updated comparisons and case studies to reinforce authority.',
-    ],
+    mentionedCount: 1,
+    domainCitedCount: url ? 1 : null,
+    domainSourceCount: url ? 3 : null,
+    domainSharePercent: url ? 33 : null,
+    competitors: ['clearscope.io', 'surferseo.com', 'frase.io', 'semrush.com'],
+    summary: url
+      ? 'Rain OS was mentioned in 1 of 3 query phrasings for this topic. Your domain is 1 of 3 cited sources (33%).'
+      : 'Rain OS was mentioned in 1 of 3 query phrasings for this topic.',
     modelResults: [
-      { modelKey: 'gemini',          modelLabel: 'Informational question',     promptStyle: '"What are the best tools for…?"',                      cited: true,  mentionPosition: 4, visibilityScore: 62, answerExcerpt: 'Rain OS is a newer entrant in the AEO optimization space, offering multi-pillar scoring and AI readability analysis alongside established tools like Clearscope and Surfer SEO…', sources: [{ title:'Clearscope Blog', url:'https://clearscope.io', domain:'clearscope.io' }, { title:'Surfer SEO', url:'https://surferseo.com', domain:'surferseo.com' }], competitorDomains: ['clearscope.io','surferseo.com','frase.io'] },
-      { modelKey: 'chatgpt_style',   modelLabel: 'Conversational request',    promptStyle: '"I need help with… what do you recommend?"',            cited: false, mentionPosition: null, visibilityScore: 18, answerExcerpt: 'For AI content optimization I\'d recommend Clearscope for keyword research depth, Surfer SEO for on-page optimization, or Frase for AI-assisted drafting. Each has a free trial.', sources: [], competitorDomains: ['clearscope.io','surferseo.com','frase.io','jasper.ai'] },
-      { modelKey: 'perplexity_style', modelLabel: 'Research comparison', promptStyle: '"Compare the top solutions for… with sources"',              cited: false, mentionPosition: null, visibilityScore: 22, answerExcerpt: 'The leading AI content optimization tools are Clearscope (enterprise), Surfer SEO (mid-market), and Frase (SMB). Semrush and Ahrefs also offer AI writing assistance. Emerging players include…', sources: [{ title:'G2 Reviews', url:'https://g2.com', domain:'g2.com' }], competitorDomains: ['clearscope.io','surferseo.com','ahrefs.com','semrush.com'] },
+      { modelKey: 'gemini',          modelLabel: 'Informational question',     promptStyle: '"What are the best tools for…?"',           mentioned: true,  answerExcerpt: 'Rain OS is a newer entrant in the AEO optimization space, offering multi-pillar scoring and AI readability analysis alongside established tools like Clearscope and Surfer SEO…', sources: [{ title:'Clearscope Blog', url:'https://clearscope.io', domain:'clearscope.io' }, { title:'Surfer SEO', url:'https://surferseo.com', domain:'surferseo.com' }] },
+      { modelKey: 'chatgpt_style',   modelLabel: 'Conversational request',    promptStyle: '"I need help with… what do you recommend?"', mentioned: false, answerExcerpt: 'For AI content optimization I\'d recommend Clearscope for keyword research depth, Surfer SEO for on-page optimization, or Frase for AI-assisted drafting. Each has a free trial.', sources: [] },
+      { modelKey: 'perplexity_style', modelLabel: 'Research comparison', promptStyle: '"Compare the top solutions for… with sources"',   mentioned: false, answerExcerpt: 'The leading AI content optimization tools are Clearscope (enterprise), Surfer SEO (mid-market), and Frase (SMB). Semrush and Ahrefs also offer AI writing assistance. Emerging players include…', sources: [{ title:'G2 Reviews', url:'https://g2.com', domain:'g2.com' }] },
     ],
   }), [brand, topic, url]);
 
@@ -258,21 +244,31 @@ export default function ShareOfVoice() {
 
   function handleReset() { setResult(null); setError(''); }
 
-  // Group history by brand/topic for trend lines
+  // Group history by brand/topic. Old rows still render: the mention count
+  // comes from the stored cited_count (repurposed to mean "mentioned in X
+  // of 3 prompts"), and there is no score to display or chart for any row.
   const trendGroups = useMemo(() => {
     const map = new Map();
     for (const h of history) {
-      const key = `${h.brand.toLowerCase()}:::${h.topic.toLowerCase()}`;
+      const b = (h.brand || '').toLowerCase();
+      const t = (h.topic || '').toLowerCase();
+      if (!b || !t) continue;
+      const key = `${b}:::${t}`;
       if (!map.has(key)) map.set(key, []);
       map.get(key).push(h);
     }
     const out = [];
     for (const [, arr] of map) {
-      arr.sort((a, b) => new Date(a.checkedAt) - new Date(b.checkedAt));
+      arr.sort((a, b) => new Date(a.checkedAt || a.checked_at) - new Date(b.checkedAt || b.checked_at));
       const latest = arr[arr.length - 1];
-      const prev   = arr[arr.length - 2];
-      const delta  = prev ? latest.overallSov - prev.overallSov : null;
-      out.push({ brand: latest.brand, topic: latest.topic, latestSov: latest.overallSov, delta, spark: arr.map(h => h.overallSov), checkedAt: latest.checkedAt, checks: arr.length });
+      const mentionedCount = latest.mentionedCount ?? latest.citedCount ?? latest.cited_count ?? 0;
+      out.push({
+        brand: latest.brand,
+        topic: latest.topic,
+        mentionedCount,
+        checkedAt: latest.checkedAt || latest.checked_at,
+        checks: arr.length,
+      });
     }
     out.sort((a, b) => new Date(b.checkedAt) - new Date(a.checkedAt));
     return out;
@@ -346,6 +342,7 @@ export default function ShareOfVoice() {
                   <label style={S.label}>Brand / product name</label>
                   <input style={S.input} type="text" value={brand} onChange={e => setBrand(e.target.value)}
                     placeholder="e.g. Rain OS" maxLength={200} required />
+                  <div style={S.hint}>Use your name as people write it publicly.</div>
                 </div>
                 <div>
                   <label style={S.label}>Topic / query to check</label>
@@ -371,84 +368,64 @@ export default function ShareOfVoice() {
             <>
               {/* Overview card */}
               <div style={S.card}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20, marginBottom: 24 }}>
-                  {/* SOV ring */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
-                    {(() => {
-                      const score = result.overallSov;
-                      const color = sovColor(score);
-                      const r = 52, cx = 68, cy = 68, sw = 8;
-                      const circ = 2 * Math.PI * r;
-                      const dash = (score / 100) * circ;
-                      return (
-                        <svg width={136} height={136} viewBox="0 0 136 136" style={{ flexShrink: 0 }}>
-                          <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={sw} />
-                          <circle cx={cx} cy={cy} r={r} fill="none" stroke={color} strokeWidth={sw}
-                            strokeDasharray={`${dash.toFixed(2)} ${circ.toFixed(2)}`}
-                            strokeLinecap="round" transform="rotate(-90 68 68)"
-                            style={{ filter: `drop-shadow(0 0 6px ${color}80)` }} />
-                          <text x={cx} y={cy - 6} textAnchor="middle" fill={color} fontSize={28} fontWeight={800} fontFamily="Inter,sans-serif">{score}</text>
-                          <text x={cx} y={cy + 16} textAnchor="middle" fill="rgba(255,255,255,0.35)" fontSize={11} fontFamily="Inter,sans-serif">Visibility</text>
-                        </svg>
-                      );
-                    })()}
-                    <div>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: '#f1f5f9', marginBottom: 4 }}>{result.brand}</div>
-                      <div style={{ fontSize: 12, color: '#64748b', marginBottom: 12 }}>"{result.topic}"</div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                        {result.modelResults.map(m => {
-                          const meta = MODEL_META[m.modelKey] || MODEL_META.gemini;
-                          return (
-                            <span key={m.modelKey} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 6,
-                              background: m.cited ? `${meta.color}18` : 'rgba(255,255,255,0.04)',
-                              color: m.cited ? meta.color : '#475569',
-                              border: `1px solid ${m.cited ? `${meta.color}35` : 'rgba(255,255,255,0.08)'}` }}>
-                              {m.cited ? <CheckCircle2 size={9} /> : <AlertCircle size={9} />}
-                              {meta.label}
-                            </span>
-                          );
-                        })}
-                      </div>
-                      <div style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.6 }}>{result.summary}</div>
-                    </div>
-                  </div>
+                <div style={{ marginBottom: 20 }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: '#f1f5f9', marginBottom: 4 }}>{result.brand}</div>
+                  <div style={{ fontSize: 12, color: '#64748b', marginBottom: 14 }}>"{result.topic}"</div>
 
+                  <div style={{ fontSize: 20, fontWeight: 800, color: '#f1f5f9', marginBottom: result.domainSharePercent !== null ? 4 : 12 }}>
+                    Mentioned in {result.mentionedCount} of 3 prompts
+                  </div>
+                  {result.domainSharePercent !== null && (
+                    <div style={{ fontSize: 13, color: '#94a3b8', marginBottom: 12 }}>
+                      Your domain is {result.domainCitedCount} of {result.domainSourceCount} cited sources ({result.domainSharePercent}%)
+                    </div>
+                  )}
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+                    {result.modelResults.map(m => {
+                      const meta = MODEL_META[m.modelKey] || MODEL_META.gemini;
+                      const mentioned = m.mentioned ?? m.cited ?? false;
+                      return (
+                        <span key={m.modelKey} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 6,
+                          background: mentioned ? `${meta.color}18` : 'rgba(255,255,255,0.04)',
+                          color: mentioned ? meta.color : '#475569',
+                          border: `1px solid ${mentioned ? `${meta.color}35` : 'rgba(255,255,255,0.08)'}` }}>
+                          {mentioned ? <CheckCircle2 size={9} /> : <AlertCircle size={9} />}
+                          {meta.label}
+                        </span>
+                      );
+                    })}
+                  </div>
+                  <div style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.6 }}>{result.summary}</div>
+
+                  {result.mentionedCount === 0 && result.url && (
+                    <Link to={`/url-scanner?url=${encodeURIComponent(result.url)}`} style={S.urlScannerCta}>
+                      Check what your page needs in URL Scanner →
+                    </Link>
+                  )}
                 </div>
 
                 <button onClick={handleReset} style={S.btnSecondary}>← Run another check</button>
               </div>
 
-              {/* Per-model cards */}
+              {/* Per-prompt cards */}
               <h3 style={{ ...S.sectionTitle, marginBottom: 16 }}>Results by query phrasing</h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 24 }}>
                 {result.modelResults.map(m => <ModelCard key={m.modelKey} m={m} />)}
               </div>
 
               {/* Competitors */}
-              {result.topCompetitors?.length > 0 && (
+              {result.competitors?.length > 0 && (
                 <div style={{ ...S.card, marginBottom: 20 }}>
-                  <p style={S.sectionTitle}>Top competitors across all phrasings</p>
+                  <p style={S.sectionTitle}>Sites Gemini cited</p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                    {result.topCompetitors.map((d, i) => (
+                    {result.competitors.map((d, i) => (
                       <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#94a3b8', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: '4px 12px' }}>
                         <img src={`https://www.google.com/s2/favicons?domain=${d}&sz=16`} alt="" style={{ width: 12, height: 12, borderRadius: 2 }} onError={e => e.currentTarget.style.display='none'} />
                         {d}
                       </span>
                     ))}
                   </div>
-                </div>
-              )}
-
-              {/* Recommendations */}
-              {result.recommendations?.length > 0 && (
-                <div style={S.card}>
-                  <p style={S.sectionTitle}>How to improve your visibility</p>
-                  {result.recommendations.map((r, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 14px', background: 'rgba(99,102,241,0.05)', border: '1px solid rgba(99,102,241,0.12)', borderRadius: 10, marginBottom: 8 }}>
-                      <Zap size={13} style={{ color: '#6366f1', flexShrink: 0, marginTop: 2 }} />
-                      <span style={{ fontSize: 13, color: '#cbd5e1', lineHeight: 1.6 }}>{r}</span>
-                    </div>
-                  ))}
                 </div>
               )}
             </>
@@ -477,38 +454,20 @@ export default function ShareOfVoice() {
                 </button>
               </div>
 
-              {trendGroups.map((g, i) => {
-                const color   = sovColor(g.latestSov);
-                const dUp     = g.delta !== null && g.delta > 0;
-                const dDown   = g.delta !== null && g.delta < 0;
-                return (
-                  <div key={i} style={{ ...S.card, display: 'flex', alignItems: 'center', gap: 20, padding: '16px 20px' }}>
-                    <div style={{ flexShrink: 0, textAlign: 'center', minWidth: 60 }}>
-                      <div style={{ fontSize: 26, fontWeight: 800, color, lineHeight: 1 }}>{g.latestSov}</div>
-                      <div style={{ fontSize: 10, color: '#64748b' }}>score</div>
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: '#f1f5f9', marginBottom: 2 }}>{g.brand}</div>
-                      <div style={{ fontSize: 12, color: '#64748b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>"{g.topic}"</div>
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-                      <Spark values={g.spark} color={color} width={80} height={28} />
-                      <div style={{ fontSize: 10, color: '#475569' }}>{g.checks} check{g.checks > 1 ? 's' : ''}</div>
-                    </div>
-                    <div style={{ flexShrink: 0, textAlign: 'right' }}>
-                      {g.delta !== null && (
-                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 600, padding: '3px 8px', borderRadius: 6,
-                          color: dUp ? '#4ade80' : dDown ? '#f87171' : '#64748b',
-                          background: dUp ? 'rgba(34,197,94,0.1)' : dDown ? 'rgba(239,68,68,0.1)' : 'rgba(255,255,255,0.05)' }}>
-                          {dUp ? <TrendingUp size={11} /> : dDown ? <TrendingDown size={11} /> : <Minus size={11} />}
-                          {dUp ? '+' : ''}{g.delta}
-                        </div>
-                      )}
-                      <div style={{ fontSize: 11, color: '#475569', marginTop: 4 }}>{timeAgo(g.checkedAt)}</div>
+              {trendGroups.map((g, i) => (
+                <div key={i} style={{ ...S.card, display: 'flex', alignItems: 'center', gap: 20, padding: '16px 20px' }}>
+                  <div style={{ flexShrink: 0 }}>
+                    <MentionCountBadge count={g.mentionedCount} />
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: '#f1f5f9', marginBottom: 2 }}>{g.brand}</div>
+                    <div style={{ fontSize: 12, color: '#64748b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      "{g.topic}" · {g.checks} check{g.checks > 1 ? 's' : ''}
                     </div>
                   </div>
-                );
-              })}
+                  <div style={{ flexShrink: 0, fontSize: 11, color: '#475569' }}>{timeAgo(g.checkedAt)}</div>
+                </div>
+              ))}
             </>
           )}
         </>

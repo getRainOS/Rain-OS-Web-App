@@ -97,11 +97,21 @@ function buildSummary(
 }
 
 /**
- * Find the index of the first source whose domain matches the user's domain.
- * Matches on:
+ * Whether two domains should be treated as the same site. Matches on:
  *  - exact host match (after stripping www.)
- *  - source domain is a subdomain of the user domain (s.domain endsWith "." + userDomain)
- *  - user domain is a subdomain of the source domain (userDomain endsWith "." + s.domain)
+ *  - `domain` is a subdomain of `userDomain` (domain endsWith "." + userDomain)
+ *  - `userDomain` is a subdomain of `domain` (userDomain endsWith "." + domain)
+ */
+export function isSameDomain(domain: string, userDomain: string): boolean {
+  return (
+    domain === userDomain ||
+    domain.endsWith('.' + userDomain) ||
+    userDomain.endsWith('.' + domain)
+  );
+}
+
+/**
+ * Find the index of the first source whose domain matches the user's domain.
  * Returns -1 when there is no user domain or no match.
  */
 export function findCitedSourceIndex(
@@ -109,12 +119,7 @@ export function findCitedSourceIndex(
   userDomain: string | null
 ): number {
   if (!userDomain) return -1;
-  return sources.findIndex(
-    s =>
-      s.domain === userDomain ||
-      s.domain.endsWith('.' + userDomain) ||
-      userDomain.endsWith('.' + s.domain)
-  );
+  return sources.findIndex(s => isSameDomain(s.domain, userDomain));
 }
 
 export async function runCitationCheck(
