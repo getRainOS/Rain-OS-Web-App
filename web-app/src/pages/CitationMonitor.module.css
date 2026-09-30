@@ -54,6 +54,13 @@
   margin: 0;
 }
 
+.tagline {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 6px;
+}
+
 /* Form */
 .formCard {
   display: flex;
