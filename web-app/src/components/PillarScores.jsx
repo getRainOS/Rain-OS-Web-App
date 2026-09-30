@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import styles from './PillarScores.module.css';
 import { PILLAR_COLORS } from '../lib/pillarColors.js';
 
@@ -75,6 +77,30 @@ function resolveScore(result, key, camel) {
 const PRODUCT_DISCOVERABILITY_NOTE =
   "Product Discoverability applies specifically to product and e-commerce listings — it's part of scoring for the Product Seller lane only.";
 
+/* ── Collapsible "What does this mean?" ──────────────────────────────────── */
+function WhatDoesThisMean({ tagline, children }) {
+  const [collapsed, setCollapsed] = useState(true);
+  return (
+    <div>
+      <p className={styles.tagline}>{tagline}</p>
+      <div className={styles.disclaimer} style={{ padding: collapsed ? '8px 16px' : '12px 16px' }}>
+        <div className={styles.disclaimerHeader}>
+          <strong className={styles.disclaimerTitle}>What does this mean?</strong>
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            aria-expanded={!collapsed}
+            aria-label={collapsed ? 'Expand explanation' : 'Collapse explanation'}
+            className={styles.disclaimerToggle}
+          >
+            {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+          </button>
+        </div>
+        {!collapsed && <p className={styles.disclaimerText}>{children}</p>}
+      </div>
+    </div>
+  );
+}
+
 export default function PillarScores({ result, lane }) {
   const visiblePillars = PILLARS.filter(
     p => p.key !== 'product_discoverability' || lane === 'product_sellers'
@@ -108,6 +134,10 @@ export default function PillarScores({ result, lane }) {
           <span className={styles.overallMax}>/100</span>
         </div>
       )}
+
+      <WhatDoesThisMean tagline="AI's structured read of your content — not a raw measurement.">
+        Gemini reads your content and scores it against a fixed set of criteria for this pillar, the same way each time. It's not counting anything concrete, like word count or load speed — it's a graded read of how well your content works for an AI trying to understand and use it. Because the criteria stay fixed, the score is meaningful to compare across your own pages, or the same page over time, even though it's a judgment rather than a fact.
+      </WhatDoesThisMean>
 
       <div className={styles.pillars}>
         {visiblePillars.map(p => {
@@ -175,6 +205,12 @@ export default function PillarScores({ result, lane }) {
           );
         })}
       </div>
+
+      {lane === 'product_sellers' && (
+        <WhatDoesThisMean tagline="AI's read on how shoppable your page looks — specific to product sellers.">
+          This pillar checks something the other four don't: whether an AI could confidently describe, compare, and recommend your product from your page alone — things like clear pricing, specs, and availability. It's graded the same way as your other pillar scores, an AI's structured read rather than a technical measurement, but scored specifically for how AI tools use product pages when answering shopping questions.
+        </WhatDoesThisMean>
+      )}
     </div>
   );
 }

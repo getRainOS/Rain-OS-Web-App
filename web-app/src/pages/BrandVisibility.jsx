@@ -10,6 +10,7 @@ const S = {
   titleRow: { display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 },
   title: { fontSize: 22, fontWeight: 600, color: '#f1f5f9', margin: 0 },
   sub: { color: '#64748b', fontSize: 14, margin: 0 },
+  tagline: { color: '#f1f5f9', fontSize: 14, fontWeight: 600, margin: '0 0 6px' },
 
   disclaimer: {
     background: 'rgba(255,255,255,0.02)',
@@ -228,6 +229,27 @@ function DisclaimerBox() {
   );
 }
 
+/* ── Collapsible "What does this mean?" ──────────────────────────────────── */
+function WhatDoesThisMeanBox() {
+  const [collapsed, setCollapsed] = useState(true);
+  return (
+    <div style={{ ...S.disclaimer, padding: collapsed ? '8px 16px' : '12px 16px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+        <strong style={{ color: '#94a3b8', fontWeight: 600 }}>What does this mean?</strong>
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          aria-expanded={!collapsed}
+          aria-label={collapsed ? 'Expand explanation' : 'Collapse explanation'}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: '#64748b', display: 'flex', alignItems: 'center', flexShrink: 0 }}
+        >
+          {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+        </button>
+      </div>
+      {!collapsed && <p style={{ ...S.disclaimerText, marginTop: 8 }}>Whether you're mentioned comes from a direct check of Gemini's answer, not a guess. The sentiment label (positive, neutral, negative) is AI's judgment of the specific sentences that mention you; showing you those sentences lets you judge the tone yourself too.</p>}
+    </div>
+  );
+}
+
 export default function BrandVisibility() {
   const { isDemo } = useApp();
   const [brand, setBrand] = useState('');
@@ -328,9 +350,11 @@ export default function BrandVisibility() {
         <div style={S.titleRow}>
           <h1 style={S.title}>Brand Sentiment</h1>
         </div>
+        <p style={S.tagline}>A real mention check, plus AI's read on tone.</p>
         <p style={S.sub}>See how Gemini describes your brand, using live Google Search grounding — and what to do if it does not mention you.</p>
       </div>
 
+      <WhatDoesThisMeanBox />
       <DisclaimerBox />
 
       {/* Tabs */}

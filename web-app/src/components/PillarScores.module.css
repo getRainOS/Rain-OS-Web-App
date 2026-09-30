@@ -157,3 +157,47 @@
   font-size: 12px;
   font-weight: 600;
 }
+
+.tagline {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 8px;
+}
+
+.disclaimer {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px;
+}
+
+.disclaimerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.disclaimerTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.disclaimerToggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.disclaimerText {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--text-dim);
+  margin: 8px 0 0;
+}

@@ -41,6 +41,27 @@ function DisclaimerBlock() {
   );
 }
 
+/* ── Collapsible "What does this mean?" ──────────────────────────────────── */
+function WhatDoesThisMeanBlock() {
+  const [collapsed, setCollapsed] = useState(true);
+  return (
+    <div className={styles.disclaimer} style={{ padding: collapsed ? '8px 16px' : '12px 16px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+        <strong style={{ color: '#94a3b8', fontWeight: 600 }}>What does this mean?</strong>
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          aria-expanded={!collapsed}
+          aria-label={collapsed ? 'Expand explanation' : 'Collapse explanation'}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: '#64748b', display: 'flex', alignItems: 'center', flexShrink: 0 }}
+        >
+          {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+        </button>
+      </div>
+      {!collapsed && <p className={styles.disclaimerText} style={{ marginTop: 8 }}>We ask Gemini your exact question and look at the sources it actually cites in its answer. "Cited" or "Not cited" reflects that one real answer, at that moment — not a guess, and not a lasting rank. AI answers can shift from one search to the next, so think of each check as a snapshot of how you're showing up right now, worth tracking over time rather than judging on a single result.</p>}
+    </div>
+  );
+}
+
 function getFavicon(domain) {
   if (!domain) return '';
   return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
@@ -211,11 +232,13 @@ export default function CitationMonitor() {
           <Radar className={styles.iconTitle} />
           <h1 className={styles.title}>Citation Monitor</h1>
         </div>
+        <p className={styles.tagline}>A real check against live AI answers — not a prediction.</p>
         <p className={styles.sub}>
           See whether Gemini cites your brand for the topics that matter to you — powered by real Google Search grounding, not a simulation.
         </p>
       </div>
 
+      <WhatDoesThisMeanBlock />
       <DisclaimerBlock />
 
       <div className={styles.tabs} role="tablist">

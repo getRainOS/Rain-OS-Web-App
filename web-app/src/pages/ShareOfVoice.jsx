@@ -15,6 +15,7 @@ const S = {
   titleRow: { display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 },
   title: { fontSize: 22, fontWeight: 700, color: '#f1f5f9', margin: 0 },
   sub: { color: '#64748b', fontSize: 14, margin: 0, lineHeight: 1.6 },
+  tagline: { color: '#f1f5f9', fontSize: 14, fontWeight: 600, margin: '0 0 6px' },
 
   card: {
     background: '#040714', border: '1px solid rgba(255,255,255,0.07)',
@@ -164,6 +165,30 @@ function InfoBox() {
   );
 }
 
+/* ── Collapsible "What does this mean?" ──────────────────────────────────── */
+function WhatDoesThisMeanBox() {
+  const [collapsed, setCollapsed] = useState(true);
+  return (
+    <div style={{ ...S.infoBox, display: 'block', padding: collapsed ? '8px 16px' : '12px 16px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+          <Info size={15} style={{ flexShrink: 0, marginTop: 1 }} />
+          <strong>What does this mean?</strong>
+        </div>
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          aria-expanded={!collapsed}
+          aria-label={collapsed ? 'Expand explanation' : 'Collapse explanation'}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: '#64748b', display: 'flex', alignItems: 'center', flexShrink: 0 }}
+        >
+          {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+        </button>
+      </div>
+      {!collapsed && <span style={{ display: 'block', marginTop: 8, fontSize: 12, lineHeight: 1.7, color: '#64748b' }}>We send your topic as three differently-worded prompts and check each real answer for your brand and your domain. "Mentioned in 2 of 3" and your citation share are exact counts from those three checks, not a market-wide statistic. Run it again later to see whether your presence is growing.</span>}
+    </div>
+  );
+}
+
 /* ══════════════════════════════════════════════════════════════════════════ */
 export default function ShareOfVoice() {
   const { isDemo } = useApp();
@@ -283,12 +308,15 @@ export default function ShareOfVoice() {
           <BarChart2 size={22} style={{ color: '#6366f1' }} />
           <h1 style={S.title}>Share of Voice</h1>
         </div>
+        <p style={S.tagline}>Real counts across 3 real prompts — not an estimate.</p>
         <p style={S.sub}>
           See whether Gemini cites your brand for any topic — checked three ways, powered by real Google Search grounding.
           Track your visibility over time and see which competitors show up in the answers instead.
         </p>
       </div>
 
+      {/* What does this mean? */}
+      <WhatDoesThisMeanBox />
       {/* Info box */}
       <InfoBox />
 
