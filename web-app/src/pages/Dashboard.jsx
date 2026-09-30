@@ -15,6 +15,7 @@ import {
   BrainCircuit, ShieldCheck, MousePointerClick, SearchCheck,
   Activity, Zap, Minus, Heart, Map as MapIcon, Radar,
   CheckCircle2, AlertCircle, BarChart2, Lock, Clock, Sparkles, HelpCircle, Layers,
+  ChevronDown, ChevronUp,
 } from 'lucide-react';
 import styles from './Dashboard.module.css';
 
@@ -294,6 +295,30 @@ function PillarBars({ pillars, width = 120, height = 28 }) {
           />
         </div>
       ))}
+    </div>
+  );
+}
+
+/* ── Collapsible "What does this mean?" ── */
+function WhatDoesThisMean({ tagline, children }) {
+  const [collapsed, setCollapsed] = useState(true);
+  return (
+    <div>
+      <p className={styles.pillarTagline}>{tagline}</p>
+      <div className={styles.pillarDisclaimer} style={{ padding: collapsed ? '8px 16px' : '12px 16px' }}>
+        <div className={styles.pillarDisclaimerHeader}>
+          <strong className={styles.pillarDisclaimerTitle}>What does this mean?</strong>
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            aria-expanded={!collapsed}
+            aria-label={collapsed ? 'Expand explanation' : 'Collapse explanation'}
+            className={styles.pillarDisclaimerToggle}
+          >
+            {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+          </button>
+        </div>
+        {!collapsed && <p className={styles.pillarDisclaimerText}>{children}</p>}
+      </div>
     </div>
   );
 }
@@ -972,6 +997,15 @@ export default function Dashboard() {
               </span>
             </div>
           </div>
+
+          <WhatDoesThisMean tagline="AI's structured read of your content — not a raw measurement.">
+            Gemini reads your content and scores it against a fixed set of criteria for this pillar, the same way each time. It's not counting anything concrete, like word count or load speed — it's a graded read of how well your content works for an AI trying to understand and use it. Because the criteria stay fixed, the score is meaningful to compare across your own pages, or the same page over time, even though it's a judgment rather than a fact.
+          </WhatDoesThisMean>
+          {userLane === 'product_sellers' && (
+            <WhatDoesThisMean tagline="AI's read on how shoppable your page looks — specific to product sellers.">
+              This pillar checks something the other four don't: whether an AI could confidently describe, compare, and recommend your product from your page alone — things like clear pricing, specs, and availability. It's graded the same way as your other pillar scores, an AI's structured read rather than a technical measurement, but scored specifically for how AI tools use product pages when answering shopping questions.
+            </WhatDoesThisMean>
+          )}
 
           {loading ? (
             <div className={styles.chartEmpty}><span className="spinner" /></div>
