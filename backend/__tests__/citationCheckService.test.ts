@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { extractDomain, findCitedSourceIndex } from '../services/citationCheckService';
+import { buildAnswerExcerpt, ANSWER_EXCERPT_LIMIT } from '../services/textExcerpt';
 
 describe('extractDomain', () => {
   it('strips a leading www.', () => {
@@ -82,5 +83,46 @@ describe('findCitedSourceIndex', () => {
 
     const reversed = [{ domain: 'example.com' }];
     expect(findCitedSourceIndex(reversed, 'notexample.com')).toBe(-1);
+  });
+});
+
+// citationCheckService builds its answerExcerpt with the shared
+// buildAnswerExcerpt() (services/textExcerpt.ts, fully covered by
+// textExcerpt.test.ts) instead of a blind character slice. These confirm
+// this service gets the same sentence/word-boundary behavior.
+describe('answerExcerpt (via the shared buildAnswerExcerpt helper)', () => {
+  it('leaves a normal answer under the limit completely unchanged', () => {
+    const text = 'Gemini cited your page. It is a strong source.';
+    expect(buildAnswerExcerpt(text)).toBe(text);
+  });
+
+  it('cuts a long answer at a sentence boundary and appends an indicator', () => {
+    const sentence = 'Gemini cited several sources for this topic today.';
+    const sentences = Array(100).fill(sentence);
+    const text = sentences.join(' ');
+    expect(text.length).toBeGreaterThan(ANSWER_EXCERPT_LIMIT);
+
+    const result = buildAnswerExcerpt(text);
+
+    expect(result.length).toBeLessThanOrEqual(ANSWER_EXCERPT_LIMIT + 1);
+    expect(result.endsWith('…')).toBe(true);
+    const withoutEllipsis = result.slice(0, -1);
+    const parts = withoutEllipsis.split(/(?<=\.) /);
+    expect(parts.length).toBeLessThan(sentences.length);
+    for (const part of parts) {
+      expect(part).toBe(sentence);
+    }
+  });
+
+  it('falls back to the nearest word boundary when there is no sentence boundary before the limit', () => {
+    const text = Array(500).fill('sourcesource').join(' ');
+    expect(text.length).toBeGreaterThan(ANSWER_EXCERPT_LIMIT);
+
+    const result = buildAnswerExcerpt(text);
+
+    expect(result.endsWith('…')).toBe(true);
+    const withoutEllipsis = result.slice(0, -1);
+    expect(withoutEllipsis.length).toBeLessThanOrEqual(ANSWER_EXCERPT_LIMIT);
+    expect(text[withoutEllipsis.length]).toBe(' ');
   });
 });

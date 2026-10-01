@@ -9,6 +9,7 @@ import {
   type GroundingChunk,
 } from '@google/generative-ai';
 import { resolveSourceDomain } from './groundingSources';
+import { buildAnswerExcerpt } from './textExcerpt';
 
 const API_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
 const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
@@ -220,6 +221,6 @@ export async function runCitationCheck(
     sources,
     competitorDomains: dedupedCompetitors,
     summary: buildSummary(!!userUrl, cited, sources.length, dedupedCompetitors),
-    answerExcerpt: answerText.slice(0, 600),
+    answerExcerpt: buildAnswerExcerpt(answerText),
   };
 }

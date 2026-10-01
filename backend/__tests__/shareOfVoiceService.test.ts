@@ -5,6 +5,7 @@ import {
   rankCompetitorDomains,
   buildSummary,
 } from '../services/shareOfVoiceService';
+import { buildAnswerExcerpt, ANSWER_EXCERPT_LIMIT } from '../services/textExcerpt';
 
 function mention(mentioned: boolean) {
   return { mentioned };
@@ -135,5 +136,47 @@ describe('buildSummary', () => {
     expect(buildSummary('Acme', 'best widgets', 0, 0, 0, 0)).toBe(
       'Acme was not mentioned in any of the 3 query phrasings for "best widgets". Gemini returned no grounded sources across the 3 prompts.'
     );
+  });
+});
+
+// Each ModelResult's answerExcerpt is built with the shared
+// buildAnswerExcerpt() (services/textExcerpt.ts, fully covered by
+// textExcerpt.test.ts) instead of a blind character slice, and the frontend
+// no longer re-slices it a second time. These confirm this service gets the
+// same sentence/word-boundary behavior.
+describe('answerExcerpt (via the shared buildAnswerExcerpt helper)', () => {
+  it('leaves a normal answer under the limit completely unchanged', () => {
+    const text = 'Acme is a strong pick for this topic. It ships fast.';
+    expect(buildAnswerExcerpt(text)).toBe(text);
+  });
+
+  it('cuts a long answer at a sentence boundary and appends an indicator', () => {
+    const sentence = 'Acme is a strong pick for this query every time.';
+    const sentences = Array(100).fill(sentence);
+    const text = sentences.join(' ');
+    expect(text.length).toBeGreaterThan(ANSWER_EXCERPT_LIMIT);
+
+    const result = buildAnswerExcerpt(text);
+
+    expect(result.length).toBeLessThanOrEqual(ANSWER_EXCERPT_LIMIT + 1);
+    expect(result.endsWith('…')).toBe(true);
+    const withoutEllipsis = result.slice(0, -1);
+    const parts = withoutEllipsis.split(/(?<=\.) /);
+    expect(parts.length).toBeLessThan(sentences.length);
+    for (const part of parts) {
+      expect(part).toBe(sentence);
+    }
+  });
+
+  it('falls back to the nearest word boundary when there is no sentence boundary before the limit', () => {
+    const text = Array(500).fill('pickpick').join(' ');
+    expect(text.length).toBeGreaterThan(ANSWER_EXCERPT_LIMIT);
+
+    const result = buildAnswerExcerpt(text);
+
+    expect(result.endsWith('…')).toBe(true);
+    const withoutEllipsis = result.slice(0, -1);
+    expect(withoutEllipsis.length).toBeLessThanOrEqual(ANSWER_EXCERPT_LIMIT);
+    expect(text[withoutEllipsis.length]).toBe(' ');
   });
 });
