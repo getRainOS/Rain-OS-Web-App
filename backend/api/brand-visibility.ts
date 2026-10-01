@@ -2,7 +2,7 @@
 // Check how visible a brand is in AI-generated answers for a given topic.
 import express from 'express';
 import { findUserByApiKey, incrementUserUsage, saveBrandVisibilityCheck, getBrandVisibilityChecksByUser, deleteBrandVisibilityChecksByUser } from '../services/dbService';
-import { runBrandVisibilityCheck } from '../services/brandVisibilityService';
+import { runBrandVisibilityCheck, GenerationIncompleteError } from '../services/brandVisibilityService';
 import { classifyGeminiError } from '../services/geminiErrors';
 import type { ApiError } from '../types';
 
@@ -87,6 +87,12 @@ export default async function handler(req: express.Request, res: express.Respons
 
     return res.status(200).json({ success: true, data: result, ...result });
   } catch (error) {
+    if (error instanceof GenerationIncompleteError) {
+      return res.status(422).json({
+        error: 'generation_incomplete',
+        message: "Gemini's answer was cut short before it could be evaluated — try running this check again.",
+      } as ApiError);
+    }
     const { status, body } = classifyGeminiError(error, 'brand-visibility');
     return res.status(status).json(body as ApiError);
   }
