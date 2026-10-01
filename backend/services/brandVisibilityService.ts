@@ -126,6 +126,36 @@ export function extractMentionSentences(brand: string, text: string): string[] {
     .slice(0, 3);
 }
 
+export const ANSWER_EXCERPT_LIMIT = 2000;
+
+/**
+ * Build a display excerpt that doesn't cut off mid-sentence or mid-word.
+ * Accumulates whole sentences (via splitSentences) up to `limit` characters.
+ * If even the first sentence alone exceeds the limit (one long run-on with
+ * no sentence boundary), falls back to the last whole word before the
+ * limit. Appends "…" whenever the excerpt is shorter than the full text,
+ * so a truncated excerpt is never visually indistinguishable from an
+ * answer that just ended naturally.
+ */
+export function buildAnswerExcerpt(text: string, limit = ANSWER_EXCERPT_LIMIT): string {
+  if (text.length <= limit) return text;
+
+  let excerpt = '';
+  for (const sentence of splitSentences(text)) {
+    const next = excerpt ? `${excerpt} ${sentence}` : sentence;
+    if (next.length > limit) break;
+    excerpt = next;
+  }
+
+  if (!excerpt) {
+    const slice = text.slice(0, limit);
+    const lastSpace = slice.lastIndexOf(' ');
+    excerpt = lastSpace > 0 ? slice.slice(0, lastSpace) : slice;
+  }
+
+  return `${excerpt}…`;
+}
+
 /**
  * Build a plain-English summary from facts we actually have — no LLM guess.
  * Only ever references the deterministic mention/citation facts and real
@@ -300,7 +330,7 @@ export async function runBrandVisibilityCheck(
     citedSourceIndex,
     sentiment,
     sentimentExplanation,
-    answerExcerpt: answerText.slice(0, 800),
+    answerExcerpt: buildAnswerExcerpt(answerText),
     sources,
     competitors,
     summary: buildSummary(trimmedBrand, mentioned, cited, competitors),
