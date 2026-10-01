@@ -92,7 +92,7 @@ function ModelCard({ m }) {
       {/* Answer excerpt */}
       {m.answerExcerpt && (
         <p style={{ fontSize: 12, color: '#64748b', lineHeight: 1.6, fontStyle: 'italic', margin: '0 0 12px', borderLeft: `2px solid ${color}40`, paddingLeft: 10 }}>
-          "{m.answerExcerpt.slice(0, 220)}{m.answerExcerpt.length > 220 ? '…' : ''}"
+          "{m.answerExcerpt}"
         </p>
       )}
 

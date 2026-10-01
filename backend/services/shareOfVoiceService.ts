@@ -11,6 +11,7 @@ import {
 import { resolveSourceDomain } from './groundingSources';
 import { brandInText } from './brandMatch';
 import { extractDomain, isSameDomain } from './citationCheckService';
+import { buildAnswerExcerpt } from './textExcerpt';
 
 const API_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
 const MODEL   = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
@@ -177,7 +178,7 @@ async function runOneModel(
     modelKey,
     promptStyle,
     mentioned: brandInText(brand, answerText),
-    answerExcerpt: answerText.slice(0, 500),
+    answerExcerpt: buildAnswerExcerpt(answerText),
     sources: sources.slice(0, 6),
   };
 }
