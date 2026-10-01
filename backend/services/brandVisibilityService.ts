@@ -9,7 +9,7 @@ import {
   type GroundingChunk,
 } from '@google/generative-ai';
 import { resolveSourceDomain } from './groundingSources';
-import { brandInText } from './brandMatch';
+import { brandInText, tokenizeBrand } from './brandMatch';
 import { extractDomain, findCitedSourceIndex } from './citationCheckService';
 
 const API_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
@@ -77,6 +77,7 @@ export interface BrandVisibilityResult {
   sources: BrandVisibilitySource[];
   competitors: string[];
   summary: string;
+  notMentionedHint: string | null;
 }
 
 interface SentimentJson {
@@ -180,6 +181,39 @@ export function buildSummary(
   return `Gemini did not mention ${brand}${leaders ? ` — it favored ${leaders} instead` : ''} when answering this topic.`;
 }
 
+// Generic/corporate-suffix words that are never worth surfacing as "the
+// brand name that actually matched" — a hint naming "Coffee" or "Inc" would
+// be useless even if that word happens to appear in the answer too.
+const GENERIC_HINT_WORDS = new Set([
+  'coffee', 'inc', 'co', 'company', 'software', 'app', 'llc', 'ltd', 'corp',
+  'corporation', 'group', 'store', 'shop', 'bank', 'airlines', 'insurance',
+  'technologies', 'tech', 'solutions', 'systems', 'the', 'and', 'of',
+]);
+const MIN_HINT_TOKEN_LENGTH = 3;
+
+/**
+ * When the full brand name wasn't matched, check whether a more distinctive
+ * single word from it was — e.g. the user entered "Starbucks coffee" but
+ * the answer only ever says "Starbucks". Never loosens the real match: this
+ * only ever produces a hint string for the UI, shown alongside an honest
+ * "not mentioned" result, never changes mentionStatus itself. Only
+ * meaningful for multi-word brand names — a single-word name has no
+ * "simpler version" to suggest.
+ */
+export function buildNotMentionedHint(brand: string, answerText: string): string | null {
+  const tokens = tokenizeBrand(brand);
+  if (tokens.length <= 1) return null;
+
+  const candidates = tokens.filter(
+    t => t.length >= MIN_HINT_TOKEN_LENGTH && !GENERIC_HINT_WORDS.has(t.toLowerCase())
+  );
+  const matching = candidates.filter(t => brandInText(t, answerText));
+  if (matching.length === 0) return null;
+
+  const longest = matching.reduce((a, b) => (b.length > a.length ? b : a));
+  return `"${longest}" appears in the answer — try searching with just that name instead of the fuller version.`;
+}
+
 export async function runBrandVisibilityCheck(
   brand: string,
   topic: string,
@@ -263,6 +297,7 @@ export async function runBrandVisibilityCheck(
   const mentionCount = mentionSentences.length;
   const mentioned = mentionCount > 0;
   const mentionStatus: VisibilityMentionStatus = mentioned ? 'mentioned' : 'not_mentioned';
+  const notMentionedHint = mentioned ? null : buildNotMentionedHint(trimmedBrand, answerText);
 
   const userDomain = url ? extractDomain(url) : null;
   const matchIdx = findCitedSourceIndex(sources, userDomain);
@@ -334,5 +369,6 @@ export async function runBrandVisibilityCheck(
     sources,
     competitors,
     summary: buildSummary(trimmedBrand, mentioned, cited, competitors),
+    notMentionedHint,
   };
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { extractMentionSentences, splitSentences, buildSummary, buildAnswerExcerpt, ANSWER_EXCERPT_LIMIT } from '../services/brandVisibilityService';
+import { extractMentionSentences, splitSentences, buildSummary, buildAnswerExcerpt, ANSWER_EXCERPT_LIMIT, buildNotMentionedHint } from '../services/brandVisibilityService';
 
 describe('splitSentences', () => {
   it('splits ordinary sentences on terminal punctuation', () => {
@@ -126,5 +126,24 @@ describe('buildAnswerExcerpt', () => {
     expect(text.startsWith(withoutEllipsis)).toBe(true);
     expect(text[withoutEllipsis.length]).toBe(' ');
     expect(withoutEllipsis.endsWith(' ')).toBe(false);
+  });
+});
+
+describe('buildNotMentionedHint', () => {
+  it('suggests the distinctive word when a multi-word brand has a generic suffix', () => {
+    const text = 'Starbucks is one of the most recognizable coffeehouse chains in the world.';
+    expect(buildNotMentionedHint('Starbucks coffee', text)).toBe(
+      '"Starbucks" appears in the answer — try searching with just that name instead of the fuller version.'
+    );
+  });
+
+  it('returns null when no individual word of the brand appears at all', () => {
+    const text = 'Peet\'s and Dunkin\' are popular alternatives in this space.';
+    expect(buildNotMentionedHint('Starbucks coffee', text)).toBeNull();
+  });
+
+  it('never triggers for a single-word brand name', () => {
+    const text = 'Starbucks is one of the most recognizable coffeehouse chains in the world.';
+    expect(buildNotMentionedHint('Starbucks', text)).toBeNull();
   });
 });
