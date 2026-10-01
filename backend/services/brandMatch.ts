@@ -12,12 +12,16 @@ function escapeRegex(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+// Splits a brand name into its alphanumeric tokens — the same tokenization
+// buildBrandPattern uses internally, exposed for callers that need to
+// reason about individual words of a multi-word brand name (e.g. deciding
+// whether a single token of it appears in some text).
+export function tokenizeBrand(brand: string): string[] {
+  return brand.trim().split(/[^a-z0-9]+/i).filter(Boolean);
+}
+
 function buildBrandPattern(brand: string): RegExp | null {
-  const tokens = brand
-    .trim()
-    .split(/[^a-z0-9]+/i)
-    .filter(Boolean)
-    .map(escapeRegex);
+  const tokens = tokenizeBrand(brand).map(escapeRegex);
   if (tokens.length === 0) return null;
   const pattern = tokens.join('[^a-z0-9]*');
   return new RegExp(`\\b${pattern}\\b`, 'i');

@@ -34,6 +34,7 @@ const S = {
     transition: 'border-color 0.15s',
   },
   hint: { fontSize: 11, color: '#475569', marginTop: 6 },
+  notMentionedHint: { fontSize: 12.5, color: '#0ea5e9', marginTop: 8, lineHeight: 1.5 },
   urlScannerCta: {
     display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 10,
     color: '#0ea5e9', fontSize: 12.5, fontWeight: 600, textDecoration: 'none',
@@ -206,6 +207,7 @@ const DEMO_RESULT = {
   ],
   competitors: ['clearscope.io', 'surferseo.com', 'frase.io', 'marketmuse.com'],
   summary: 'Gemini did not mention rain OS — it favored clearscope.io, surferseo.com, frase.io instead when answering this topic.',
+  notMentionedHint: null,
 };
 
 /* ── Collapsible Disclaimer ─────────────────────────────────────────────── */
@@ -461,6 +463,9 @@ export default function BrandVisibility() {
                 {result.mentionStatus === 'mentioned' && <SentimentBadge sentiment={result.sentiment} />}
                 {result.cited && <CitedBadge />}
               </div>
+              {result.notMentionedHint && (
+                <p style={S.notMentionedHint}>{result.notMentionedHint}</p>
+              )}
               {result.url && result.mentionStatus === 'not_mentioned' && (
                 <Link to={`/url-scanner?url=${encodeURIComponent(result.url)}`} style={S.urlScannerCta}>
                   Check what your page needs in URL Scanner →
