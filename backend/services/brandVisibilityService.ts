@@ -2,6 +2,7 @@
 // Uses Gemini with Google Search grounding to check how AI engines see a brand.
 import {
   GoogleGenerativeAI,
+  FinishReason,
   type GenerativeModel,
   type GenerateContentRequest,
   type Tool,
@@ -37,6 +38,19 @@ interface CandidateGroundingMetadata {
 }
 interface CandidateWithGrounding {
   groundingMetadata?: CandidateGroundingMetadata;
+  finishReason?: FinishReason;
+}
+
+/**
+ * Thrown when the grounded call's candidate finished for any reason other
+ * than STOP (e.g. RECITATION, SAFETY, MAX_TOKENS) — the answer is partial
+ * or policy-truncated and must not be evaluated as a normal check.
+ */
+export class GenerationIncompleteError extends Error {
+  constructor(public finishReason: FinishReason) {
+    super(`Gemini generation did not complete normally (finishReason=${finishReason})`);
+    this.name = 'GenerationIncompleteError';
+  }
 }
 
 export interface BrandVisibilitySource {
@@ -172,6 +186,16 @@ export async function runBrandVisibilityCheck(
 
   const answerText = groundedResult.response.text();
   const candidate = (groundedResult.response.candidates?.[0] || {}) as CandidateWithGrounding;
+
+  // A candidate that didn't finish with STOP (e.g. RECITATION, SAFETY,
+  // MAX_TOKENS) produced a partial or policy-truncated answer — evaluating
+  // it as a normal check would risk a false "not mentioned". Bail out
+  // before any mention/source/sentiment processing.
+  if (candidate.finishReason && candidate.finishReason !== FinishReason.STOP) {
+    console.error(`[gemini-finish-reason] brand-visibility finishReason=${candidate.finishReason} brand="${trimmedBrand}" topic="${trimmedTopic}"`);
+    throw new GenerationIncompleteError(candidate.finishReason);
+  }
+
   const groundingMetadata = candidate.groundingMetadata || {};
   const chunks: GroundingChunk[] =
     groundingMetadata.groundingChunks || groundingMetadata.groundingChuncks || [];
