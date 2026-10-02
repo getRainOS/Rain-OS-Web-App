@@ -254,7 +254,7 @@ function GithubPushPanel({ result, scannedUrl }) {
               ← Change repo
             </button>
             <button
-              className={`btn btn-primary ${styles.ghOpenPrBtn}`}
+              className="btn btn-primary"
               disabled={numSelected === 0}
               onClick={handlePush}
             >
@@ -441,7 +441,7 @@ function FixPromptGenerator({ recommendations, url, overallScore }) {
             padding: '8px 12px',
             borderRadius: 'var(--radius-sm)',
             border: '1px solid var(--border)',
-            background: 'var(--bg-elevated, #111)',
+            background: 'var(--surface-2)',
             color: 'inherit',
           }}
         >
@@ -696,8 +696,8 @@ export default function UrlScanner() {
           <div style={{
             marginTop: 16,
             padding: '16px 20px',
-            background: 'rgba(14,165,233,0.06)',
-            border: '1px solid rgba(14,165,233,0.2)',
+            background: 'rgba(91,95,199,0.06)',
+            border: '1px solid rgba(91,95,199,0.2)',
             borderRadius: 12,
             display: 'flex',
             alignItems: 'center',
@@ -706,10 +706,10 @@ export default function UrlScanner() {
             flexWrap: 'wrap',
           }}>
             <div>
-              <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#e2e8f0' }}>
+              <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text)' }}>
                 Scan done? Now check if AI actually cites this URL.
               </p>
-              <p style={{ margin: '4px 0 0', fontSize: 12, color: '#64748b', lineHeight: 1.5 }}>
+              <p style={{ margin: '4px 0 0', fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.5 }}>
                 Citation Monitor gives you a real-time snapshot — run it before and after making fixes to track whether AI citations improve.
               </p>
             </div>
@@ -717,9 +717,9 @@ export default function UrlScanner() {
               to="/citation-monitor"
               style={{
                 flexShrink: 0,
-                background: 'rgba(14,165,233,0.15)',
-                border: '1px solid rgba(14,165,233,0.35)',
-                color: '#38bdf8',
+                background: 'rgba(91,95,199,0.15)',
+                border: '1px solid rgba(91,95,199,0.35)',
+                color: 'var(--accent)',
                 borderRadius: 8,
                 padding: '8px 16px',
                 fontSize: 13,
