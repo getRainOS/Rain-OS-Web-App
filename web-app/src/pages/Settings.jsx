@@ -122,7 +122,7 @@ export default function Settings() {
               </div>
               <div className={styles.accountRow}>
                 <span className={styles.accountLabel}>Plan</span>
-                <span className={styles.accountValue} style={{ color: isFree ? '#94a3b8' : 'var(--accent)' }}>
+                <span className={styles.accountValue} style={{ color: isFree ? 'var(--text-muted)' : 'var(--accent)' }}>
                   {plan}
                 </span>
               </div>
@@ -274,10 +274,10 @@ export default function Settings() {
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 16 }}>
             {[
-              { id: 'general',         label: 'Writers & Marketers',     desc: 'AI Readability 40% · Digital Authority 30% · Conversion Readiness 30%', color: '#06b6d4' },
-              { id: 'product_sellers', label: 'Product Sellers',         desc: 'Discoverability 50% · AI Readability 20% · Authority 15% · Conversion 15%', color: '#f97316' },
-              { id: 'developers',      label: 'Developers',              desc: 'Doc Structure 35% · Tech Completeness 35% · Technical Clarity 30%', color: '#10b981' },
-              { id: 'local_business',  label: 'Local Service Business',  desc: 'Local Authority 40% · AI Presence 30% · Trust & Conversion 30%', color: '#f43f5e' },
+              { id: 'general',         label: 'Writers & Marketers',     desc: 'AI Readability 40% · Digital Authority 30% · Conversion Readiness 30%' },
+              { id: 'product_sellers', label: 'Product Sellers',         desc: 'Discoverability 50% · AI Readability 20% · Authority 15% · Conversion 15%' },
+              { id: 'developers',      label: 'Developers',              desc: 'Doc Structure 35% · Tech Completeness 35% · Technical Clarity 30%' },
+              { id: 'local_business',  label: 'Local Service Business',  desc: 'Local Authority 40% · AI Presence 30% · Trust & Conversion 30%' },
             ].map(lane => (
               <button
                 key={lane.id}
@@ -287,8 +287,8 @@ export default function Settings() {
                   flexDirection: 'column',
                   gap: 4,
                   padding: '12px 16px',
-                  background: userLane === lane.id ? `${lane.color}10` : 'rgba(255,255,255,0.02)',
-                  border: `1px solid ${userLane === lane.id ? lane.color + '50' : 'var(--border)'}`,
+                  background: userLane === lane.id ? 'rgba(91,95,199,0.1)' : 'rgba(255,255,255,0.02)',
+                  border: `1px solid ${userLane === lane.id ? 'rgba(91,95,199,0.5)' : 'var(--border)'}`,
                   borderRadius: 10,
                   cursor: 'pointer',
                   textAlign: 'left',
@@ -296,7 +296,7 @@ export default function Settings() {
                   transition: 'border-color 0.15s, background 0.15s',
                 }}
               >
-                <span style={{ fontSize: 13.5, fontWeight: 700, color: userLane === lane.id ? lane.color : 'var(--text)' }}>{lane.label}</span>
+                <span style={{ fontSize: 13.5, fontWeight: 700, color: userLane === lane.id ? 'var(--accent)' : 'var(--text)' }}>{lane.label}</span>
                 <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{lane.desc}</span>
               </button>
             ))}
