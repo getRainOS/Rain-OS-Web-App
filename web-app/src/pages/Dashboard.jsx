@@ -7,7 +7,7 @@ import { PILLAR_COLORS } from '../lib/pillarColors.js';
 import {
   AreaChart, Area, XAxis, YAxis,
   Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell,
+  LineChart, Line,
 } from 'recharts';
 import {
   Plus, TrendingUp, TrendingDown,
@@ -86,11 +86,20 @@ const LANES = [
 
 const SAMPLE_TREND = [42, 48, 45, 55, 60, 58, 67, 71, 68, 75].map((score, i) => ({ idx: i + 1, score }));
 
-const SAMPLE_DONUT = [
-  { name: 'AI Readability', value: 30, color: '#6b9bc4' },
-  { name: 'Digital Authority', value: 25, color: '#7cae8f' },
-  { name: 'Conversion Readiness', value: 20, color: '#8f93c7' },
-  { name: 'RAG Readiness', value: 25, color: '#b97e97' },
+const SAMPLE_PILLAR_LINES = [
+  { key: 'ai_readability', color: PILLAR_COLORS.ai_readability },
+  { key: 'digital_authority', color: PILLAR_COLORS.digital_authority },
+  { key: 'conversion_readiness', color: PILLAR_COLORS.conversion_readiness },
+  { key: 'rag_readiness', color: PILLAR_COLORS.rag_readiness },
+];
+
+const SAMPLE_PILLAR_TREND = [
+  { idx: 1, ai_readability: 40, digital_authority: 35, conversion_readiness: 45, rag_readiness: 30 },
+  { idx: 2, ai_readability: 48, digital_authority: 40, conversion_readiness: 50, rag_readiness: 38 },
+  { idx: 3, ai_readability: 45, digital_authority: 46, conversion_readiness: 52, rag_readiness: 42 },
+  { idx: 4, ai_readability: 58, digital_authority: 50, conversion_readiness: 60, rag_readiness: 50 },
+  { idx: 5, ai_readability: 65, digital_authority: 58, conversion_readiness: 62, rag_readiness: 55 },
+  { idx: 6, ai_readability: 71, digital_authority: 63, conversion_readiness: 68, rag_readiness: 60 },
 ];
 
 const DATE_FILTERS = [
@@ -144,6 +153,12 @@ function getItemType(item) {
   return 'Content';
 }
 
+function statusLabel(score) {
+  if (score >= 75) return 'Good';
+  if (score >= 50) return 'Fair';
+  return 'Needs Work';
+}
+
 /* ── Gas Gauge Arc ── */
 function GaugeArc({ score = 0, color = '#0ea5e9', size = 120 }) {
   const cx = size / 2;
@@ -190,26 +205,12 @@ function GaugeArc({ score = 0, color = '#0ea5e9', size = 120 }) {
   );
 }
 
-/* ── Donut Center Label ── */
-function DonutLabel({ score }) {
-  return (
-    <div className={styles.donutCenter}>
-      <span className={styles.donutScore}>{score ?? '—'}</span>
-      <span className={styles.donutLabel}>avg score</span>
-    </div>
-  );
-}
-
-/* ── Trend Badge ── */
+/* ── Trend indicator — plain text, no colored pill (retired per redesign) ── */
 function TrendBadge({ pct }) {
   if (pct === null || pct === undefined) return null;
   const up = pct > 0, flat = pct === 0;
   return (
-    <span className={styles.trendBadge} style={{
-      color: flat ? 'var(--text-muted)' : up ? '#7cae8f' : '#c47a7a',
-      background: flat ? 'rgba(255,255,255,0.05)' : up ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)',
-      borderColor: flat ? 'rgba(255,255,255,0.08)' : up ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.25)',
-    }}>
+    <span className={styles.trendBadge}>
       {flat ? <Minus className={styles.trendIcon} /> : up ? <TrendingUp className={styles.trendIcon} /> : <TrendingDown className={styles.trendIcon} />}
       {flat ? 'Flat' : `${up ? '+' : ''}${pct}%`}
     </span>
@@ -229,15 +230,21 @@ function CustomTooltip({ active, payload }) {
   );
 }
 
-/* ── Donut tooltip ── */
-function DonutTooltip({ active, payload }) {
+/* ── Pillar line chart tooltip — one row per pillar at the hovered point ── */
+function PillarLineTooltip({ active, payload, pillars }) {
   if (!active || !payload?.length) return null;
-  const d = payload[0].payload;
   return (
-    <div className={styles.chartTooltip} style={{ minWidth: 140 }}>
-      <div className={styles.tooltipDate} style={{ color: d.color }}>{d.name}</div>
-      <div className={styles.tooltipScore} style={{ color: d.color }}>{d.value}</div>
-      <div className={styles.tooltipLabel}>avg pillar score</div>
+    <div className={styles.chartTooltip} style={{ minWidth: 150 }}>
+      {pillars.map(p => {
+        const entry = payload.find(pl => pl.dataKey === p.key);
+        if (!entry) return null;
+        return (
+          <div key={p.key} className={styles.pillarTooltipRow}>
+            <span style={{ color: p.color }}>{p.label}</span>
+            <span style={{ color: p.color }} className={styles.pillarTooltipValue}>{entry.value}</span>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -599,7 +606,14 @@ export default function Dashboard() {
       date: h.analyzed_at ? timeAgo(h.analyzed_at) : '',
     }));
 
-  const donutData = pillarAvgs.map(p => ({ name: p.label, value: p.avg || 1, color: p.color, real: p.avg }));
+  const pillarChartData = [...filteredHistory]
+    .slice(0, chartRange)
+    .reverse()
+    .map((h, i) => {
+      const point = { idx: i + 1, date: h.analyzed_at ? timeAgo(h.analyzed_at) : '' };
+      activePillars.forEach(p => { point[p.key] = h[p.key] ?? 0; });
+      return point;
+    });
 
   /* ── sub-scores from most recent analysis ── */
   const latest = filteredHistory[0];
@@ -986,12 +1000,11 @@ export default function Dashboard() {
       {/* ── Pillar Breakdown ── */}
       <div className={styles.chartsRow}>
 
-        {/* Pillar Donut */}
         <div className={styles.chartCard}>
           <div className={styles.chartHeader}>
             <div>
               <h2 className={styles.chartTitle}>Pillar Breakdown</h2>
-              <p className={styles.chartSub}>Relative score distribution</p>
+              <p className={styles.chartSub}>Score trend across pillars</p>
               <span className={styles.chartHelp} title={`How your scores are distributed across your ${activePillars.length} pillars: ${joinWithAnd(activePillars.map(p => p.label))}.`}>
                 <HelpCircle size={11} />
               </span>
@@ -1012,17 +1025,12 @@ export default function Dashboard() {
           ) : !pillarAvgs.some(p => p.avg > 0) ? (
             <div className={styles.chartEmptyRich}>
               <div className={styles.sampleBackdrop}>
-                <ResponsiveContainer width="100%" height={120}>
-                  <PieChart>
-                    <Pie data={SAMPLE_DONUT} cx="50%" cy="50%"
-                      innerRadius={30} outerRadius={54}
-                      paddingAngle={2} dataKey="value" strokeWidth={0}
-                      startAngle={90} endAngle={-270}>
-                      {SAMPLE_DONUT.map((entry, i) => (
-                        <Cell key={i} fill={entry.color} />
-                      ))}
-                    </Pie>
-                  </PieChart>
+                <ResponsiveContainer width="100%" height={160}>
+                  <LineChart data={SAMPLE_PILLAR_TREND}>
+                    {SAMPLE_PILLAR_LINES.map(l => (
+                      <Line key={l.key} type="monotone" dataKey={l.key} stroke={l.color} strokeWidth={1.5} dot={false} />
+                    ))}
+                  </LineChart>
                 </ResponsiveContainer>
               </div>
               <div className={styles.emptyStateOverlay}>
@@ -1036,44 +1044,51 @@ export default function Dashboard() {
               </div>
             </div>
           ) : (
-            <div className={styles.donutWrap}>
-              <div className={styles.donutChartArea}>
-                <ResponsiveContainer width="100%" height={120}>
-                  <PieChart>
-                    <Pie data={donutData} cx="50%" cy="50%"
-                      innerRadius={30} outerRadius={54}
-                      paddingAngle={2} dataKey="value" strokeWidth={0}
-                      startAngle={90} endAngle={-270}>
-                      {donutData.map((entry, i) => (
-                        <Cell key={i} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip content={<DonutTooltip />} />
-                  </PieChart>
-                </ResponsiveContainer>
-                <DonutLabel score={avgScore} />
-              </div>
+            <>
+              <ResponsiveContainer width="100%" height={160}>
+                <LineChart data={pillarChartData} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
+                  <XAxis dataKey="idx" stroke="transparent"
+                    tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
+                  <YAxis domain={[0, 100]} stroke="transparent"
+                    tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
+                  <Tooltip content={<PillarLineTooltip pillars={activePillars} />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
+                  {activePillars.map(p => (
+                    <Line key={p.key} type="monotone" dataKey={p.key} stroke={p.color} strokeWidth={1.5}
+                      dot={false} activeDot={{ r: 3, strokeWidth: 0 }} />
+                  ))}
+                </LineChart>
+              </ResponsiveContainer>
 
-              <div className={styles.donutLegend}>
-                {pillarAvgs.map(p => (
-                  <div key={p.key} className={styles.donutLegendRow}>
-                    <div className={styles.donutLegendDot} style={{ background: p.color }} />
-                    <span className={styles.donutLegendLabel}>{p.label}</span>
-                    <div className={styles.donutLegendBarWrap}>
-                      <div className={styles.donutLegendBar}>
-                        <div style={{ width: `${p.avg}%`, background: p.color, height: '100%', borderRadius: 2 }} />
-                      </div>
-                    </div>
-                    <span className={styles.donutLegendScore}>{p.avg}</span>
-                  </div>
-                ))}
-                <div className={styles.contentHealth}>
-                  <Heart style={{ width: 11, height: 11, color: '#94a3b8' }} />
-                  <span>Content Health: </span>
-                  <strong>{contentHealth}%</strong>
-                </div>
+              <table className={styles.pillarTable}>
+                <thead>
+                  <tr>
+                    <th>Pillar</th>
+                    <th>Score</th>
+                    <th>Δ</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pillarAvgs.map(p => (
+                    <tr key={p.key}>
+                      <td>
+                        <span className={styles.pillarTableDot} style={{ background: p.color }} />
+                        {p.label}
+                      </td>
+                      <td className={styles.pillarTableScore}>{p.avg}</td>
+                      <td><TrendBadge pct={p.trend} /></td>
+                      <td className={styles.pillarTableStatus}>{statusLabel(p.avg)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              <div className={styles.contentHealth}>
+                <Heart style={{ width: 11, height: 11, color: '#94a3b8' }} />
+                <span>Content Health: </span>
+                <strong>{contentHealth}%</strong>
               </div>
-            </div>
+            </>
           )}
         </div>
       </div>

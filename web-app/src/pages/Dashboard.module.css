@@ -82,7 +82,7 @@
 
 .toolCard {
   background: var(--surface);
-  border: 1px solid transparent;
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 16px 18px;
   display: flex;
@@ -101,7 +101,7 @@
 /* Empty cards — same border, dimmer content */
 .toolCardEmpty {
   background: var(--surface);
-  border: 1px solid transparent;
+  border: 1px solid var(--border);
 }
 
 .toolCardEmpty:hover {
@@ -329,15 +329,16 @@
   color: var(--text-dim);
 }
 
+/* Plain text, no pill/background/border — trend direction is not a
+   pass/fail state, so it doesn't get a colored status treatment. */
 .trendBadge {
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  padding: 2px 7px;
-  border-radius: 5px;
   font-size: 10.5px;
   font-weight: 600;
-  border: 1px solid;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
   flex-shrink: 0;
 }
 
@@ -436,7 +437,7 @@
 /* ── Shared card ── */
 .chartCard {
   background: var(--surface);
-  border: 1px solid transparent;
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 18px;
 }
@@ -925,92 +926,71 @@ button.emptyLink {
 }
 
 /* ── Donut Chart ── */
-.donutWrap {
+/* ── Pillar line chart tooltip ── */
+.pillarTooltipRow {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.donutChartArea {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  padding-bottom: 4px;
-}
-
-.donutCenter {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  pointer-events: none;
-  gap: 1px;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11.5px;
+  padding: 1px 0;
 }
 
-.donutScore {
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: -0.2px;
-  line-height: 1;
+.pillarTooltipValue {
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
-.donutLabel {
-  font-size: 7px;
+/* ── Pillar table (replaces the donut + progress-bar legend) ── */
+.pillarTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.pillarTable th {
+  text-align: left;
+  font-size: 10.5px;
+  font-weight: 600;
   color: var(--text-dim);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
+  padding: 0 0 6px;
+  border-bottom: 1px solid var(--border);
 }
 
-.donutLegend {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.pillarTable td {
+  font-size: 12.5px;
+  color: var(--text);
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
 }
 
-.donutLegendRow {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.pillarTable tr:last-child td {
+  border-bottom: none;
 }
 
-.donutLegendDot {
+.pillarTable th:not(:first-child),
+.pillarTable td:not(:first-child) {
+  text-align: right;
+}
+
+.pillarTableDot {
+  display: inline-block;
   width: 6px;
   height: 6px;
   border-radius: 50%;
+  margin-right: 7px;
   flex-shrink: 0;
 }
 
-.donutLegendLabel {
-  font-size: 11.5px;
-  color: var(--text-muted);
-  flex: 1;
-  min-width: 0;
-}
-
-.donutLegendBarWrap {
-  flex: 1;
-  min-width: 40px;
-  max-width: 60px;
-}
-
-.donutLegendBar {
-  height: 3px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.donutLegendScore {
-  font-size: 12px;
-  font-weight: 500;
-  min-width: 22px;
-  text-align: right;
-  flex-shrink: 0;
+.pillarTableScore {
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
+}
+
+.pillarTableStatus {
+  color: var(--text-muted);
 }
 
 .contentHealth {
