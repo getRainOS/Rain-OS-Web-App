@@ -77,12 +77,12 @@
   font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.5px;
+  color: var(--text);
   border-bottom: 1px solid var(--border);
   margin-bottom: 16px;
 }
 
-.brandRain { color: var(--accent); }
-.brandOS   { color: var(--text); }
+.brandAccent { color: var(--cyan); }
 
 .demoBadge {
   display: inline-block;
