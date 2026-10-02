@@ -35,6 +35,22 @@ function applyTechnicalAdjustments(base: number, signals: Record<string, any>): 
   return Math.max(0, Math.min(100, Math.round(base + adj)));
 }
 
+/**
+ * Nudge the LLM-judged AI Readability pillar score based on live robots.txt
+ * AI-crawler-access signals. Penalty-only, matching applyTechnicalAdjustments's
+ * style: being blocked or missing the file costs points; being allowed or
+ * simply not mentioned (robots.txt's opt-out default) is neutral, not a bonus.
+ */
+function applyAiReadabilityAdjustment(base: number, signals: Record<string, any>): number {
+  let adj = 0;
+  if (!signals.hasRobotsTxt) adj -= 2;
+  const blocked = Array.isArray(signals.aiCrawlerAccess)
+    ? signals.aiCrawlerAccess.filter((c: { access: string }) => c.access === 'blocked').length
+    : 0;
+  adj -= blocked * 3;
+  return Math.max(0, Math.min(100, Math.round(base + adj)));
+}
+
 export default async function handler(req: express.Request, res: express.Response) {
   // ─── Auth & usage checks ──────────────────────────────────────────────────
   const apiKey = getApiKey(req);
@@ -109,6 +125,12 @@ export default async function handler(req: express.Request, res: express.Respons
 
     // ─── Adjust score with technical signals ─────────────────────────────────
     const adjustedScore = applyTechnicalAdjustments(gemini.overallScore, scan.signals);
+    const adjustedPillarScores = gemini.pillarScores
+      ? {
+          ...gemini.pillarScores,
+          aiReadability: applyAiReadabilityAdjustment(gemini.pillarScores.aiReadability, scan.signals),
+        }
+      : gemini.pillarScores;
 
     // ─── PageSpeed Insights — real Core Web Vitals (non-blocking) ───────────
     let pageSpeed = null;
@@ -123,6 +145,7 @@ export default async function handler(req: express.Request, res: express.Respons
     const result = {
       ...gemini,
       overallScore: adjustedScore,
+      pillarScores: adjustedPillarScores,
       // flat signals object — kept for isJsRendered check
       technical_signals: scan.signals,
       // display-ready signals array — rendered in the UI

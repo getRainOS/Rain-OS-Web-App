@@ -1,7 +1,63 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Check, X } from 'lucide-react';
 import styles from './PillarScores.module.css';
 import { PILLAR_COLORS } from '../lib/pillarColors.js';
+
+// A Gemini-judged sub-score (0-100) at or above this counts as a "pass" in
+// the breakdown below. The raw number is never shown — only pass/fail — so
+// the underlying scoring formula isn't exposed.
+const SUBITEM_PASS_THRESHOLD = 60;
+
+// Repo Analysis has no Gemini-judged sub-scores — it scores pillars from
+// plain boolean signals (RepoSignals). These map each pillar to the exact
+// signals its own scoreXxx() function in repoAnalysisService.ts reads, so
+// the breakdown shown here always matches what's actually scored. A signal
+// can legitimately appear under more than one pillar when it's genuinely
+// used in more than one scoring formula (e.g. hasSchemaMarkup).
+const REPO_SIGNAL_GROUPS = {
+  ai_readability: [
+    { key: 'hasReadme', label: 'Has README' },
+    { key: 'readmeHasHeadings', label: 'README Has Headings' },
+    { label: 'Substantial README (200+ words)', pass: s => s.readmeWordCount > 200 },
+    { key: 'hasLlmsTxt', label: 'llms.txt Present' },
+    { key: 'hasSchemaMarkup', label: 'Schema Markup Present' },
+    { key: 'templateHasCanonical', label: 'Canonical Tag In Template' },
+  ],
+  digital_authority: [
+    { key: 'hasLicense', label: 'LICENSE Present' },
+    { key: 'hasContributing', label: 'CONTRIBUTING Present' },
+    { key: 'hasChangelog', label: 'CHANGELOG Present' },
+    { key: 'hasOpenApiSpec', label: 'OpenAPI Spec Present' },
+    { key: 'hasOpenGraph', label: 'Open Graph Tags Present' },
+    { label: 'Substantial README (300+ words)', pass: s => s.hasReadme && s.readmeWordCount > 300 },
+    { key: 'packageHasKeywords', label: 'package.json Has Keywords' },
+    { key: 'templateHasCanonical', label: 'Canonical Tag In Template' },
+  ],
+  conversion_readiness: [
+    { key: 'readmeHasCta', label: 'README Has Call-To-Action' },
+    { key: 'hasInstallInstructions', label: 'Install Instructions Present' },
+    { key: 'hasDemoSection', label: 'Demo/Screenshot Section Present' },
+    { key: 'hasMetaDescription', label: 'Meta Description Present' },
+    { key: 'indexHtmlHasTitle', label: 'index.html Has Title' },
+    { key: 'hasSrcDocumentFile', label: 'Layout/_document Template Present' },
+  ],
+  product_discoverability: [
+    { key: 'hasPackageJson', label: 'package.json Present' },
+    { label: 'package.json Has Description', pass: s => !!s.packageDescription },
+    { key: 'packageHasKeywords', label: 'package.json Has Keywords' },
+    { key: 'hasSchemaMarkup', label: 'Schema Markup Present' },
+    { key: 'hasOpenGraph', label: 'Open Graph Tags Present' },
+  ],
+  rag_readiness: [
+    { key: 'readmeHasHeadings', label: 'README Has Headings' },
+    { key: 'readmeHasMultipleHeadingLevels', label: 'README Has Multiple Heading Levels' },
+    { label: 'Substantial README (300+ words)', pass: s => s.readmeWordCount > 300 },
+    { label: 'In-Depth README (800+ words)', pass: s => s.readmeWordCount > 800 },
+    { key: 'readmeHasFaqSection', label: 'README Has FAQ/Q&A Section' },
+    { key: 'readmeHasMultipleExternalLinks', label: 'Multiple External Links In README' },
+    { key: 'hasOpenApiSpec', label: 'OpenAPI Spec Present' },
+  ],
+};
 
 const PILLARS = [
   {
@@ -52,9 +108,110 @@ function scoreLabel(s) {
   return 'Needs Work';
 }
 
-/** "answerFirstFormatting" → "Answer First Formatting" */
+/** "answerFirstFormatting" → "Answer First Formatting"; "explicitQaStructures" → "Explicit QA Structures" */
 function camelToLabel(key) {
-  return key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase()).trim();
+  return key
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/^./, s => s.toUpperCase())
+    .trim()
+    .replace(/\bQa\b/g, 'QA');
+}
+
+/**
+ * robots.txt Present + one item per AI crawler (GPTBot, ClaudeBot,
+ * Google-Extended, PerplexityBot), pass/fail only. Only meaningful under AI
+ * Readability, and only when the tool actually has a domain to check —
+ * Content Analyzer has no URL at all, so both args are undefined there and
+ * this returns nothing.
+ */
+function buildCrawlerItems(hasRobotsTxt, aiCrawlerAccess) {
+  const items = [];
+  if (hasRobotsTxt !== undefined) {
+    items.push({ label: 'robots.txt Present', pass: !!hasRobotsTxt });
+  }
+  if (Array.isArray(aiCrawlerAccess)) {
+    for (const c of aiCrawlerAccess) {
+      items.push({ label: `${c.crawler} Access`, pass: c.access !== 'blocked' });
+    }
+  }
+  return items;
+}
+
+/**
+ * Build this pillar's pass/fail breakdown. Repo Analysis has no Gemini
+ * detail object — it has `result.signals`, so it's resolved from
+ * REPO_SIGNAL_GROUPS directly. Content Analyzer and URL Scanner have a
+ * Gemini-judged detail object (e.g. result.ai_readability_detail), which is
+ * thresholded into pass/fail instead of shown as a raw number. AI
+ * Readability additionally gets crawler-access items appended, sourced from
+ * wherever each tool keeps them.
+ */
+function buildSubItems(pillarKey, detailKey, result) {
+  let items;
+
+  // Repo Analysis's result.signals is the RepoSignals boolean map; URL
+  // Scanner also has a result.signals, but it's an unrelated array of
+  // display rows — guard on object-ness, not just truthiness, to tell them
+  // apart. Content Analyzer has neither.
+  if (result?.signals && !Array.isArray(result.signals)) {
+    const group = REPO_SIGNAL_GROUPS[pillarKey] || [];
+    items = group.map(item => ({
+      label: item.label,
+      pass: item.pass ? !!item.pass(result.signals) : !!result.signals[item.key],
+    }));
+    if (pillarKey === 'ai_readability') {
+      items = items.concat(buildCrawlerItems(result.signals.hasRobotsTxt, result.signals.aiCrawlerAccess));
+    }
+    return items;
+  }
+
+  const detail = result?.[detailKey];
+  items = detail
+    ? Object.entries(detail).map(([k, v]) => ({
+        label: camelToLabel(k),
+        pass: Number(v) >= SUBITEM_PASS_THRESHOLD,
+      }))
+    : [];
+  if (pillarKey === 'ai_readability') {
+    items = items.concat(
+      buildCrawlerItems(result?.technical_signals?.hasRobotsTxt, result?.technical_signals?.aiCrawlerAccess)
+    );
+  }
+  return items;
+}
+
+/* ── Collapsed-by-default pass/fail scoring breakdown ────────────────────── */
+function SubItemsList({ items }) {
+  const [collapsed, setCollapsed] = useState(true);
+  if (!items || items.length === 0) return null;
+
+  return (
+    <div className={styles.subItemsWrap}>
+      <button
+        onClick={() => setCollapsed(!collapsed)}
+        aria-expanded={!collapsed}
+        aria-label={collapsed ? 'Show scoring breakdown' : 'Hide scoring breakdown'}
+        className={styles.subItemsToggle}
+      >
+        {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+        <span>Scoring breakdown</span>
+      </button>
+      {!collapsed && (
+        <div className={styles.subItemsList}>
+          {items.map((item, i) => (
+            <div key={i} className={styles.subItem}>
+              {item.pass ? (
+                <Check size={14} className={styles.subItemPass} />
+              ) : (
+                <X size={14} className={styles.subItemFail} />
+              )}
+              <span className={styles.subItemLabel}>{item.label}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 /**
@@ -144,10 +301,6 @@ export default function PillarScores({ result, lane }) {
           const score = resolveScore(result, p.key, p.camel);
           const pct = score !== null ? Math.min(Math.round(score), 100) : null;
 
-          // Prefer the structured detail object (live API), fall back to legacy subscores
-          const detail =
-            result?.[p.detailKey] || result?.[`${p.key}_subscores`] || null;
-
           return (
             <div key={p.key} className={styles.pillar}>
               <div className={styles.pillarHeader}>
@@ -189,18 +342,7 @@ export default function PillarScores({ result, lane }) {
                 />
               </div>
 
-              {detail && Object.keys(detail).length > 0 && (
-                <div className={styles.subscores}>
-                  {Object.entries(detail).map(([k, v]) => (
-                    <div key={k} className={styles.subscore}>
-                      <span className={styles.subscoreLabel}>{camelToLabel(k)}</span>
-                      <span className={styles.subscoreValue} style={{ color: p.color }}>
-                        {Math.round(Number(v))}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <SubItemsList items={buildSubItems(p.key, p.detailKey, result)} />
             </div>
           );
         })}

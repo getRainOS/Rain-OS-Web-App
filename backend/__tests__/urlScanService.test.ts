@@ -1,19 +1,26 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { scanUrlForTechnicalSignals } from '../services/urlScanService';
 
-// ─── Mock global fetch for the llms.txt HEAD probe ───────────────────────────
-// Each test can override `llmsTxtOk` to control whether /llms.txt is "found".
+// ─── Mock global fetch for the llms.txt and robots.txt probes ────────────────
+// Each test can override `llmsTxtOk` / `robotsTxtBody` to control the result.
 let llmsTxtOk = false;
+let robotsTxtBody: string | null = null;
 const fetchMock = vi.fn(async (input: any, _init?: any) => {
   const url = typeof input === 'string' ? input : input?.url || String(input);
   if (url.endsWith('/llms.txt')) {
     return new Response(null, { status: llmsTxtOk ? 200 : 404 });
+  }
+  if (url.endsWith('/robots.txt')) {
+    return robotsTxtBody === null
+      ? new Response(null, { status: 404 })
+      : new Response(robotsTxtBody, { status: 200 });
   }
   return new Response(null, { status: 404 });
 });
 
 beforeEach(() => {
   llmsTxtOk = false;
+  robotsTxtBody = null;
   fetchMock.mockClear();
   vi.stubGlobal('fetch', fetchMock);
 });
@@ -192,6 +199,41 @@ describe('scanUrlForTechnicalSignals — llms.txt probe', () => {
     fetchMock.mockRejectedValueOnce(new Error('boom'));
     const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>'), 'https://x.test/');
     expect(r.signals.hasLlmsTxt).toBe(false);
+  });
+});
+
+describe('scanUrlForTechnicalSignals — robots.txt / AI crawler access probe', () => {
+  it('records hasRobotsTxt=false and all crawlers not_mentioned when robots.txt 404s', async () => {
+    robotsTxtBody = null;
+    const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>'), 'https://x.test/');
+    expect(r.signals.hasRobotsTxt).toBe(false);
+    expect(r.signals.aiCrawlerAccess.every((c) => c.access === 'not_mentioned')).toBe(true);
+  });
+
+  it('records hasRobotsTxt=true and fetches from the host root, not the page URL', async () => {
+    robotsTxtBody = 'User-agent: *\nAllow: /';
+    const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>'), 'https://x.test/some/path');
+    expect(r.signals.hasRobotsTxt).toBe(true);
+    const robotsCall = fetchMock.mock.calls.find(([u]) => String(u).endsWith('/robots.txt'));
+    expect(robotsCall).toBeDefined();
+    expect(String(robotsCall![0])).toBe('https://x.test/robots.txt');
+  });
+
+  it('parses explicit per-crawler blocks instead of a substring match', async () => {
+    robotsTxtBody = 'User-agent: GPTBot\nDisallow: /';
+    const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>'), 'https://x.test/');
+    const gptbot = r.signals.aiCrawlerAccess.find((c) => c.crawler === 'GPTBot');
+    expect(gptbot?.access).toBe('blocked');
+  });
+
+  it('records hasRobotsTxt=false when the probe throws (network error)', async () => {
+    // llms.txt is probed first, then robots.txt — queue a normal response for
+    // the first call and a rejection for the second.
+    fetchMock
+      .mockImplementationOnce(async () => new Response(null, { status: 404 }))
+      .mockImplementationOnce(async () => { throw new Error('boom'); });
+    const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>'), 'https://x.test/');
+    expect(r.signals.hasRobotsTxt).toBe(false);
   });
 });
 
