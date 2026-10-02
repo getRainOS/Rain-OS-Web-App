@@ -211,7 +211,7 @@
 
 .resultCiteNeutral { color: var(--text-muted); }
 .resultCiteGood { color: var(--green); }
-.resultCiteBad { color: var(--text-muted); }
+.resultCiteBad { color: var(--red); }
 
 .resultTopic {
   font-size: 13px;

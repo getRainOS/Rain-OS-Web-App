@@ -462,7 +462,7 @@ export default function CitationMonitor() {
               <ol className={styles.timelineList}>
                 {topicHistory.map((h, i) => (
                   <li key={h.id ?? i} className={styles.timelineItem}>
-                    <div className={styles.timelineDot} style={{ background: h.cited ? 'var(--green)' : 'var(--text-dim)' }} />
+                    <div className={styles.timelineDot} style={{ background: h.cited ? 'var(--green)' : 'var(--red)' }} />
                     <div className={styles.timelineMain}>
                       <div className={styles.timelineRow}>
                         <span className={styles.timelineDate}>
@@ -472,7 +472,7 @@ export default function CitationMonitor() {
                         </span>
                         <span
                           className={styles.timelineStatus}
-                          style={{ color: h.cited ? 'var(--green)' : 'var(--text-dim)' }}
+                          style={{ color: h.cited ? 'var(--green)' : 'var(--red)' }}
                         >
                           {h.cited ? 'Cited' : 'Not cited'}
                         </span>
@@ -537,7 +537,7 @@ function TrendHistoryView({ groups, loading, onRunCheck, onClearHistory, onTopic
           <div className={styles.trendStatus}>
             {g.cited
               ? <CheckCircle2 style={{ width: 22, height: 22, color: 'var(--green)' }} />
-              : <AlertCircle style={{ width: 22, height: 22, color: 'var(--text-dim)' }} />}
+              : <AlertCircle style={{ width: 22, height: 22, color: 'var(--red)' }} />}
             <div className={styles.trendStatusLabel}>{g.cited ? 'Cited' : 'Not cited'}</div>
           </div>
           <div className={styles.trendBody}>
