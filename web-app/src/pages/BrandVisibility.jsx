@@ -8,141 +8,152 @@ const S = {
   page: { padding: '32px 40px', maxWidth: 900, margin: '0 auto' },
   header: { marginBottom: 32 },
   titleRow: { display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 },
-  title: { fontSize: 22, fontWeight: 600, color: '#f1f5f9', margin: 0 },
-  sub: { color: '#64748b', fontSize: 14, margin: 0 },
-  tagline: { color: '#f1f5f9', fontSize: 14, fontWeight: 600, margin: '0 0 6px' },
+  title: { fontSize: 22, fontWeight: 600, color: 'var(--text)', margin: 0 },
+  sub: { color: 'var(--text-muted)', fontSize: 14, margin: 0 },
+  tagline: { color: 'var(--text)', fontSize: 14, fontWeight: 600, margin: '0 0 6px' },
 
   disclaimer: {
     background: 'rgba(255,255,255,0.02)',
-    border: '1px solid rgba(255,255,255,0.05)',
+    border: '1px solid var(--border)',
     borderRadius: 8, padding: '12px 16px', marginBottom: 20,
   },
   disclaimerText: {
-    fontSize: 12, lineHeight: 1.7, color: '#64748b', margin: 0,
+    fontSize: 12, lineHeight: 1.7, color: 'var(--text-dim)', margin: 0,
   },
   card: {
-    background: '#040714', border: '1px solid rgba(255,255,255,0.07)',
+    background: 'var(--surface)', border: '1px solid var(--border)',
     borderRadius: 16, padding: 24, marginBottom: 20,
   },
 
-  label: { fontSize: 12, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8, display: 'block' },
+  label: { fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8, display: 'block' },
   input: {
-    width: '100%', background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10,
-    padding: '10px 14px', color: '#f1f5f9', fontSize: 14,
+    width: '100%', background: 'var(--surface-2)',
+    border: '1px solid var(--border)', borderRadius: 10,
+    padding: '10px 14px', color: 'var(--text)', fontSize: 14,
     outline: 'none', boxSizing: 'border-box',
     transition: 'border-color 0.15s',
   },
-  hint: { fontSize: 11, color: '#475569', marginTop: 6 },
-  notMentionedHint: { fontSize: 12.5, color: '#0ea5e9', marginTop: 8, lineHeight: 1.5 },
+  hint: { fontSize: 11, color: 'var(--text-dim)', marginTop: 6 },
+  notMentionedHint: { fontSize: 12.5, color: 'var(--text-muted)', marginTop: 8, lineHeight: 1.5 },
   urlScannerCta: {
     display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 10,
-    color: '#0ea5e9', fontSize: 12.5, fontWeight: 600, textDecoration: 'none',
+    color: 'var(--accent)', fontSize: 12.5, fontWeight: 600, textDecoration: 'none',
   },
   grid2: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 },
   grid3: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, marginBottom: 16 },
 
   btn: {
-    background: 'linear-gradient(135deg, #0ea5e9, #6366f1)',
+    background: 'var(--accent)',
     color: '#fff', border: 'none', borderRadius: 10,
     padding: '11px 28px', fontSize: 14, fontWeight: 600,
-    cursor: 'pointer', transition: 'opacity 0.15s',
+    cursor: 'pointer', transition: 'background 0.15s',
     display: 'inline-flex', alignItems: 'center', gap: 8,
   },
   btnDisabled: { opacity: 0.5, cursor: 'not-allowed' },
   btnSecondary: {
-    background: 'rgba(255,255,255,0.06)', color: '#94a3b8',
-    border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10,
+    background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)',
+    border: '1px solid var(--border)', borderRadius: 10,
     padding: '9px 18px', fontSize: 13, fontWeight: 500, cursor: 'pointer',
     display: 'inline-flex', alignItems: 'center', gap: 6,
   },
 
   resultMeta: { flex: 1 },
-  resultTitle: { fontSize: 18, fontWeight: 600, color: '#f1f5f9', marginBottom: 6 },
-  resultSub: { fontSize: 14, color: '#94a3b8', lineHeight: 1.6 },
+  resultTitle: { fontSize: 18, fontWeight: 600, color: 'var(--text)', marginBottom: 6 },
+  resultSub: { fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.6 },
 
-  pill: { display: 'inline-flex', alignItems: 'center', gap: 6, borderRadius: 20, padding: '4px 12px', fontSize: 12, fontWeight: 600 },
+  statusText: { display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600 },
+  statusDot: { width: 6, height: 6, borderRadius: '50%', display: 'inline-block', flexShrink: 0 },
 
   section: { marginTop: 20 },
-  sectionTitle: { fontSize: 13, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12 },
+  sectionTitle: { fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12 },
 
   sourceItem: {
     display: 'flex', alignItems: 'flex-start', gap: 12,
     padding: '10px 14px', background: 'rgba(255,255,255,0.03)',
-    border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, marginBottom: 8,
+    border: '1px solid var(--border)', borderRadius: 10, marginBottom: 8,
   },
   favicon: { width: 16, height: 16, borderRadius: 2, marginTop: 2, flexShrink: 0, background: 'rgba(255,255,255,0.1)' },
-  sourceDomain: { fontSize: 13, fontWeight: 600, color: '#e2e8f0' },
-  sourceSnippet: { fontSize: 12, color: '#64748b', marginTop: 2, lineHeight: 1.5 },
+  sourceDomain: { fontSize: 13, fontWeight: 600, color: 'var(--text)' },
+  sourceSnippet: { fontSize: 12, color: 'var(--text-muted)', marginTop: 2, lineHeight: 1.5 },
 
   competitorGrid: { display: 'flex', flexWrap: 'wrap', gap: 8 },
   competitorChip: {
-    fontSize: 12, fontWeight: 500, color: '#94a3b8',
-    background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+    fontSize: 12, fontWeight: 500, color: 'var(--text-muted)',
+    background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)',
     borderRadius: 20, padding: '4px 12px',
   },
 
   excerpt: {
-    background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
+    background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)',
     borderRadius: 10, padding: '14px 16px',
-    fontSize: 13, color: '#94a3b8', lineHeight: 1.7,
+    fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.7,
     fontStyle: 'italic',
   },
 
   errorBox: {
     background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
     borderRadius: 10, padding: '12px 16px',
-    fontSize: 13, color: '#f87171', marginBottom: 20,
+    fontSize: 13, color: 'var(--red)', marginBottom: 20,
   },
   spinner: {
     width: 20, height: 20, borderRadius: '50%',
     border: '2px solid rgba(255,255,255,0.15)',
-    borderTop: '2px solid #0ea5e9',
+    borderTop: '2px solid var(--accent)',
     animation: 'spin 0.8s linear infinite',
     display: 'inline-block', marginRight: 8, verticalAlign: 'middle',
   },
+
+  tabs: { display: 'flex', gap: 20, marginBottom: 24, borderBottom: '1px solid var(--border)' },
+  tab: {
+    display: 'inline-flex', alignItems: 'center', gap: 6,
+    padding: '8px 2px', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+    border: 'none', borderBottom: '2px solid transparent',
+    background: 'transparent', color: 'var(--text-dim)',
+  },
+  tabActive: { color: 'var(--accent)', borderBottomColor: 'var(--accent)' },
+  tabCount: {
+    fontSize: 10.5, fontWeight: 700, padding: '1px 6px', borderRadius: 999,
+    background: 'rgba(91,95,199,0.15)', color: 'var(--accent)',
+    fontVariantNumeric: 'tabular-nums',
+  },
+
+  trendRow: {
+    display: 'flex', alignItems: 'center', gap: 20, padding: '16px 20px', cursor: 'pointer',
+  },
+  trendMeta: { fontSize: 12, color: 'var(--text-muted)', fontVariantNumeric: 'tabular-nums' },
+  trendTime: { flexShrink: 0, fontSize: 11, color: 'var(--text-dim)', fontVariantNumeric: 'tabular-nums' },
 };
 
 function MentionBadge({ status }) {
-  if (status === 'mentioned') return (
-    <span style={{ ...S.pill, background: 'rgba(74,222,128,0.12)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.3)' }}>
-      <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
-      Mentioned by AI
-    </span>
-  );
-  if (status === 'ambiguous') return (
-    <span style={{ ...S.pill, background: 'rgba(251,191,36,0.12)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.3)' }}>
-      <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#fbbf24', display: 'inline-block' }} />
-      Ambiguous mention
-    </span>
-  );
+  const map = {
+    mentioned: { color: 'var(--green)', label: 'Mentioned by AI' },
+    ambiguous: { color: 'var(--yellow)', label: 'Ambiguous mention' },
+    not_mentioned: { color: 'var(--red)', label: 'Not mentioned' },
+  };
+  const cfg = map[status] || map.not_mentioned;
   return (
-    <span style={{ ...S.pill, background: 'rgba(248,113,113,0.1)', color: '#f87171', border: '1px solid rgba(248,113,113,0.25)' }}>
-      <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#f87171', display: 'inline-block' }} />
-      Not mentioned
+    <span style={{ ...S.statusText, color: cfg.color }}>
+      <span style={{ ...S.statusDot, background: cfg.color }} />
+      {cfg.label}
     </span>
   );
 }
 
 function SentimentBadge({ sentiment }) {
   const map = {
-    positive: { bg: 'rgba(74,222,128,0.1)', color: '#4ade80', border: 'rgba(74,222,128,0.25)', label: 'Positive' },
-    neutral: { bg: 'rgba(148,163,184,0.1)', color: '#94a3b8', border: 'rgba(148,163,184,0.25)', label: 'Neutral' },
-    negative: { bg: 'rgba(248,113,113,0.1)', color: '#f87171', border: 'rgba(248,113,113,0.25)', label: 'Negative' },
-    not_applicable: { bg: 'rgba(100,116,139,0.1)', color: '#64748b', border: 'rgba(100,116,139,0.2)', label: 'N/A' },
+    positive: { color: 'var(--green)', label: 'Positive sentiment' },
+    neutral: { color: 'var(--text-muted)', label: 'Neutral sentiment' },
+    negative: { color: 'var(--red)', label: 'Negative sentiment' },
+    not_applicable: { color: 'var(--text-dim)', label: 'N/A sentiment' },
   };
   const cfg = map[sentiment] || map.not_applicable;
-  return (
-    <span style={{ ...S.pill, background: cfg.bg, color: cfg.color, border: `1px solid ${cfg.border}` }}>
-      {cfg.label} sentiment
-    </span>
-  );
+  return <span style={{ ...S.statusText, color: cfg.color }}>{cfg.label}</span>;
 }
 
 function CitedBadge() {
   return (
-    <span style={{ ...S.pill, background: 'rgba(99,102,241,0.1)', color: '#818cf8', border: '1px solid rgba(99,102,241,0.25)' }}>
-      <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#818cf8', display: 'inline-block' }} />
+    <span style={{ ...S.statusText, color: 'var(--accent)' }}>
+      <span style={{ ...S.statusDot, background: 'var(--accent)' }} />
       Your site was cited as a source
     </span>
   );
@@ -216,12 +227,12 @@ function DisclaimerBox() {
   return (
     <div style={{ ...S.disclaimer, padding: collapsed ? '8px 16px' : '12px 16px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
-        <strong style={{ color: '#94a3b8', fontWeight: 600 }}>How this works — and its limits.</strong>
+        <strong style={{ color: 'var(--text-muted)', fontWeight: 600 }}>How this works — and its limits.</strong>
         <button
           onClick={() => setCollapsed(!collapsed)}
           aria-expanded={!collapsed}
           aria-label={collapsed ? 'Expand disclaimer' : 'Collapse disclaimer'}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: '#64748b', display: 'flex', alignItems: 'center', flexShrink: 0 }}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: 'var(--text-dim)', display: 'flex', alignItems: 'center', flexShrink: 0 }}
         >
           {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
@@ -237,12 +248,12 @@ function WhatDoesThisMeanBox() {
   return (
     <div style={{ ...S.disclaimer, padding: collapsed ? '8px 16px' : '12px 16px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
-        <strong style={{ color: '#94a3b8', fontWeight: 600 }}>What does this mean?</strong>
+        <strong style={{ color: 'var(--text-muted)', fontWeight: 600 }}>What does this mean?</strong>
         <button
           onClick={() => setCollapsed(!collapsed)}
           aria-expanded={!collapsed}
           aria-label={collapsed ? 'Expand explanation' : 'Collapse explanation'}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: '#64748b', display: 'flex', alignItems: 'center', flexShrink: 0 }}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: 'var(--text-dim)', display: 'flex', alignItems: 'center', flexShrink: 0 }}
         >
           {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
@@ -346,7 +357,10 @@ export default function BrandVisibility() {
 
   return (
     <div style={S.page}>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .bsTrendRow:hover { background: var(--surface-2); }
+      `}</style>
 
       <div style={S.header}>
         <div style={S.titleRow}>
@@ -360,18 +374,26 @@ export default function BrandVisibility() {
       <DisclaimerBox />
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
-        {[{ key: 'check', label: 'New Check', Icon: SearchIcon }, { key: 'history', label: `Trend History${history.length ? ` (${trendGroups.length})` : ''}`, Icon: ClockIcon }].map(t => (
-          <button key={t.key} onClick={() => setTab(t.key)}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', border: 'none',
-              background: tab === t.key ? 'rgba(168,85,247,0.18)' : 'rgba(255,255,255,0.05)',
-              color: tab === t.key ? '#c084fc' : '#64748b',
-              boxShadow: tab === t.key ? '0 0 0 1px rgba(168,85,247,0.35)' : '0 0 0 1px rgba(255,255,255,0.06)',
-            }}>
-            <t.Icon size={13} />
-            {t.label}
-          </button>
-        ))}
+      <div style={S.tabs} role="tablist">
+        <button
+          role="tab"
+          aria-selected={tab === 'check'}
+          onClick={() => setTab('check')}
+          style={{ ...S.tab, ...(tab === 'check' ? S.tabActive : {}) }}
+        >
+          <SearchIcon size={13} />
+          New Check
+        </button>
+        <button
+          role="tab"
+          aria-selected={tab === 'history'}
+          onClick={() => setTab('history')}
+          style={{ ...S.tab, ...(tab === 'history' ? S.tabActive : {}) }}
+        >
+          <ClockIcon size={13} />
+          Trend History
+          {history.length > 0 && <span style={S.tabCount}>{trendGroups.length}</span>}
+        </button>
       </div>
 
       {/* ── Check tab ─────────────────────────────────────────────────────────────────── */}
@@ -379,19 +401,19 @@ export default function BrandVisibility() {
         <>
       {planGated && (
         <div style={{
-          background: 'linear-gradient(135deg, rgba(168,85,247,0.1), rgba(99,102,241,0.08))',
-          border: '1px solid rgba(168,85,247,0.3)',
+          background: 'var(--surface-2)',
+          border: '1px solid var(--border)',
           borderRadius: 14, padding: '24px 28px', marginBottom: 20,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap',
         }}>
           <div>
-            <div style={{ fontSize: 15, fontWeight: 600, color: '#c084fc', marginBottom: 6 }}>Business plan required</div>
-            <div style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.6 }}>
+            <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--accent)', marginBottom: 6 }}>Business plan required</div>
+            <div style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>
               Brand Sentiment tracks how Gemini describes your brand across live, Google Search-grounded answers. It runs multiple Gemini calls per check and is available on the Business plan.
             </div>
           </div>
           <a href="/upgrade" style={{
-            background: 'linear-gradient(135deg, #a855f7, #6366f1)',
+            background: 'var(--accent)',
             color: '#fff', borderRadius: 8, padding: '10px 22px',
             fontSize: 13, fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap',
           }}>
@@ -429,7 +451,7 @@ export default function BrandVisibility() {
             </div>
           </div>
           <div style={{ marginBottom: 20 }}>
-            <label style={S.label}>Your website URL <span style={{ color: '#475569', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional)</span></label>
+            <label style={S.label}>Your website URL <span style={{ color: 'var(--text-dim)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional)</span></label>
             <input
               style={S.input}
               value={url}
@@ -447,7 +469,7 @@ export default function BrandVisibility() {
               {loading && <span style={S.spinner} />}
               {loading ? 'Checking AI answers…' : 'Check brand sentiment'}
             </button>
-            {loading && <span style={{ fontSize: 12, color: '#64748b' }}>This takes ~20 seconds — we run multiple AI checks.</span>}
+            {loading && <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>This takes ~20 seconds — we run multiple AI checks.</span>}
           </div>
         </form>
       </div>
@@ -458,7 +480,7 @@ export default function BrandVisibility() {
             <div style={S.resultMeta}>
               <div style={S.resultTitle}>{result.brand}</div>
               <p style={S.resultSub}>{result.summary}</p>
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
+              <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 10 }}>
                 <MentionBadge status={result.mentionStatus} />
                 {result.mentionStatus === 'mentioned' && <SentimentBadge sentiment={result.sentiment} />}
                 {result.cited && <CitedBadge />}
@@ -473,7 +495,7 @@ export default function BrandVisibility() {
               )}
             </div>
             {result.sentimentExplanation && (
-              <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
                 <div style={S.sectionTitle}>AI's read</div>
                 <p style={S.resultSub}>{result.sentimentExplanation}</p>
               </div>
@@ -511,9 +533,9 @@ export default function BrandVisibility() {
                   />
                   <div>
                     <div style={S.sourceDomain}>
-                      <a href={s.url} target="_blank" rel="noopener noreferrer" style={{ color: '#e2e8f0', textDecoration: 'none' }}>{s.title || s.domain}</a>
+                      <a href={s.url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text)', textDecoration: 'none' }}>{s.title || s.domain}</a>
                       {i === result.citedSourceIndex && (
-                        <span style={{ marginLeft: 8, fontSize: 11, fontWeight: 600, color: '#818cf8' }}>Your site</span>
+                        <span style={{ marginLeft: 8, fontSize: 11, fontWeight: 600, color: 'var(--accent)' }}>Your site</span>
                       )}
                     </div>
                     {s.snippet && <div style={S.sourceSnippet}>{s.snippet}</div>}
@@ -531,41 +553,42 @@ export default function BrandVisibility() {
       {tab === 'history' && (
         <>
           {historyLoading ? (
-            <div style={{ textAlign: 'center', padding: '60px 0', color: '#64748b' }}>
+            <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text-muted)' }}>
               <span style={{ ...S.spinner, width: 24, height: 24, borderWidth: 3 }} />
             </div>
           ) : trendGroups.length === 0 ? (
             <div style={{ ...S.card, textAlign: 'center', padding: '48px 24px' }}>
               <ClockIcon size={32} />
-              <p style={{ color: '#64748b', marginBottom: 16 }}>No Brand Sentiment checks yet. Run your first check to start tracking trends.</p>
+              <p style={{ color: 'var(--text-muted)', marginBottom: 16 }}>No Brand Sentiment checks yet. Run your first check to start tracking trends.</p>
               <button onClick={() => setTab('check')} style={S.btn}><SearchIcon size={13} /> Run first check</button>
             </div>
           ) : (
             <>
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
-                <button onClick={clearHistory} style={{ ...S.btnSecondary, color: '#ef4444' }}>
+                <button onClick={clearHistory} style={{ ...S.btnSecondary, color: 'var(--red)' }}>
                   <TrashIcon size={12} /> Clear history
                 </button>
               </div>
 
               {trendGroups.map((g, i) => (
-                <div key={i} style={{ ...S.card, display: 'flex', alignItems: 'center', gap: 20, padding: '16px 20px', cursor: 'pointer' }}
+                <div
+                  key={i}
+                  className={`card bsTrendRow`}
+                  style={S.trendRow}
                   onClick={() => { setBrand(g.brand); setTopic(g.topic); setTab('check'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  onMouseEnter={e => e.currentTarget.style.background = '#060a18'}
-                  onMouseLeave={e => e.currentTarget.style.background = ''}
                 >
                   <div style={{ flexShrink: 0 }}>
                     <MentionBadge status={g.latestMention} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: '#f1f5f9', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {g.brand} — {g.topic}
                     </div>
-                    <div style={{ fontSize: 12, color: '#64748b' }}>
+                    <div style={S.trendMeta}>
                       {g.latestSentiment.replace('_', ' ')} sentiment · {g.checks} check{g.checks > 1 ? 's' : ''}
                     </div>
                   </div>
-                  <div style={{ flexShrink: 0, fontSize: 11, color: '#475569' }}>{timeAgo(g.checkedAt)}</div>
+                  <div style={S.trendTime}>{timeAgo(g.checkedAt)}</div>
                 </div>
               ))}
             </>
