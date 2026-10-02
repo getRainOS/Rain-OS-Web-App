@@ -329,11 +329,7 @@ export default function ContentAnalyzer() {
                   { label: 'Publish Date', ok: result.authorship.hasPublishDate },
                   { label: 'Organization', ok: result.authorship.hasOrganization },
                 ].map(({ label, ok }) => (
-                  <div
-                    key={label}
-                    className={styles.authorshipBadge}
-                    style={{ borderColor: ok ? 'rgba(34,197,94,0.35)' : 'rgba(239,68,68,0.25)', background: ok ? 'rgba(34,197,94,0.06)' : 'rgba(239,68,68,0.05)' }}
-                  >
+                  <div key={label} className={styles.authorshipBadge}>
                     <span className={styles.authorshipBadgeIcon} style={{ color: ok ? 'var(--green)' : 'var(--red)' }}>
                       {ok ? '✓' : '✗'}
                     </span>
@@ -385,8 +381,8 @@ export default function ContentAnalyzer() {
           <div style={{
             marginTop: 16,
             padding: '16px 20px',
-            background: 'rgba(14,165,233,0.06)',
-            border: '1px solid rgba(14,165,233,0.2)',
+            background: 'rgba(91,95,199,0.06)',
+            border: '1px solid rgba(91,95,199,0.2)',
             borderRadius: 12,
             display: 'flex',
             alignItems: 'center',
@@ -395,10 +391,10 @@ export default function ContentAnalyzer() {
             flexWrap: 'wrap',
           }}>
             <div>
-              <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#e2e8f0' }}>
+              <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text)' }}>
                 Optimization done? Now check if AI actually cites you.
               </p>
-              <p style={{ margin: '4px 0 0', fontSize: 12, color: '#64748b', lineHeight: 1.5 }}>
+              <p style={{ margin: '4px 0 0', fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.5 }}>
                 Citation Monitor gives you a real-time snapshot of current AI citations — run it before and after optimizing to see where you stand.
               </p>
             </div>
@@ -406,9 +402,9 @@ export default function ContentAnalyzer() {
               onClick={() => navigate('/citation-monitor')}
               style={{
                 flexShrink: 0,
-                background: 'rgba(14,165,233,0.15)',
-                border: '1px solid rgba(14,165,233,0.35)',
-                color: '#38bdf8',
+                background: 'rgba(91,95,199,0.15)',
+                border: '1px solid rgba(91,95,199,0.35)',
+                color: 'var(--accent)',
                 borderRadius: 8,
                 padding: '8px 16px',
                 fontSize: 13,
