@@ -208,7 +208,7 @@
   padding: 12px 14px;
   font-size: 12px;
   line-height: 1.6;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
   overflow-x: auto;
   white-space: pre;
@@ -227,6 +227,7 @@
   align-items: center;
   justify-content: center;
   margin-top: 1px;
+  font-variant-numeric: tabular-nums;
 }
 
 /* JS rendering warning banner */
@@ -242,7 +243,7 @@
 
 .jsWarningIcon {
   font-size: 20px;
-  color: #eab308;
+  color: var(--yellow);
   flex-shrink: 0;
   line-height: 1.2;
 }
@@ -256,16 +257,15 @@
   display: block;
   font-size: 14px;
   font-weight: 700;
-  color: #fde047;
+  color: var(--yellow);
   margin-bottom: 6px;
 }
 
 .jsWarningText {
   font-size: 13px;
-  color: #fef9c3;
+  color: var(--text-muted);
   line-height: 1.5;
   margin: 0 0 10px;
-  opacity: 0.85;
 }
 
 .jsWarningCta {
@@ -557,16 +557,6 @@
   margin-top: 4px;
 }
 
-.ghOpenPrBtn {
-  background: #16a34a !important;
-  border-color: #16a34a !important;
-}
-
-.ghOpenPrBtn:hover:not(:disabled) {
-  background: #15803d !important;
-  border-color: #15803d !important;
-}
-
 .ghWarning {
   font-size: 12px;
   color: var(--text-dim);
@@ -583,21 +573,21 @@
   gap: 12px;
   margin-top: 14px;
   padding: 14px 16px;
-  background: rgba(22,163,74,0.08);
-  border: 1px solid rgba(22,163,74,0.25);
+  background: rgba(74,222,128,0.08);
+  border: 1px solid rgba(74,222,128,0.25);
   border-radius: var(--radius-sm);
 }
 
 .ghSuccessIcon {
   font-size: 18px;
-  color: #4ade80;
+  color: var(--green);
   flex-shrink: 0;
 }
 
 .ghSuccessText {
   font-size: 13.5px;
   font-weight: 600;
-  color: #4ade80;
+  color: var(--green);
   margin-bottom: 6px;
 }
 
