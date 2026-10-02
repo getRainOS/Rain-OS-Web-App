@@ -13,77 +13,94 @@ const S = {
   page:  { padding: '32px 40px', maxWidth: 960, margin: '0 auto' },
   header: { marginBottom: 32 },
   titleRow: { display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 },
-  title: { fontSize: 22, fontWeight: 700, color: '#f1f5f9', margin: 0 },
-  sub: { color: '#64748b', fontSize: 14, margin: 0, lineHeight: 1.6 },
-  tagline: { color: '#f1f5f9', fontSize: 14, fontWeight: 600, margin: '0 0 6px' },
+  title: { fontSize: 22, fontWeight: 700, color: 'var(--text)', margin: 0 },
+  sub: { color: 'var(--text-muted)', fontSize: 14, margin: 0, lineHeight: 1.6 },
+  tagline: { color: 'var(--text)', fontSize: 14, fontWeight: 600, margin: '0 0 6px' },
 
   card: {
-    background: '#040714', border: '1px solid rgba(255,255,255,0.07)',
+    background: 'var(--surface)', border: '1px solid var(--border)',
     borderRadius: 16, padding: 24, marginBottom: 20,
   },
-  label: { fontSize: 12, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8, display: 'block' },
+  label: { fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8, display: 'block' },
   input: {
-    width: '100%', background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10,
-    padding: '10px 14px', color: '#f1f5f9', fontSize: 14,
+    width: '100%', background: 'var(--surface-2)',
+    border: '1px solid var(--border)', borderRadius: 10,
+    padding: '10px 14px', color: 'var(--text)', fontSize: 14,
     outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.15s',
   },
   grid2: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 },
-  hint: { fontSize: 11, color: '#475569', marginTop: 6 },
+  hint: { fontSize: 11, color: 'var(--text-dim)', marginTop: 6 },
   urlScannerCta: {
     display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 12,
-    color: '#0ea5e9', fontSize: 12.5, fontWeight: 600, textDecoration: 'none',
+    color: 'var(--accent)', fontSize: 12.5, fontWeight: 600, textDecoration: 'none',
   },
   btn: {
-    background: 'linear-gradient(135deg, #6366f1, #0ea5e9)',
+    background: 'var(--accent)',
     color: '#fff', border: 'none', borderRadius: 10,
     padding: '11px 28px', fontSize: 14, fontWeight: 600,
-    cursor: 'pointer', transition: 'opacity 0.15s',
+    cursor: 'pointer', transition: 'background 0.15s',
     display: 'inline-flex', alignItems: 'center', gap: 8,
   },
   btnSecondary: {
-    background: 'rgba(255,255,255,0.06)', color: '#94a3b8',
-    border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10,
+    background: 'rgba(255,255,255,0.06)', color: 'var(--text-muted)',
+    border: '1px solid var(--border)', borderRadius: 10,
     padding: '9px 18px', fontSize: 13, fontWeight: 500, cursor: 'pointer',
   },
-  sectionTitle: { fontSize: 12, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14, marginTop: 0 },
+  sectionTitle: { fontSize: 12, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14, marginTop: 0 },
   errorBox: {
     background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
-    borderRadius: 10, padding: '12px 16px', fontSize: 13, color: '#f87171', marginBottom: 20,
+    borderRadius: 10, padding: '12px 16px', fontSize: 13, color: 'var(--red)', marginBottom: 20,
   },
   infoBox: {
-    background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)',
-    borderRadius: 8, padding: '12px 16px', fontSize: 12, color: '#64748b',
+    background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)',
+    borderRadius: 8, padding: '12px 16px', fontSize: 12, color: 'var(--text-muted)',
     display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 20, lineHeight: 1.7,
+  },
+  tabs: { display: 'flex', gap: 20, marginBottom: 24, borderBottom: '1px solid var(--border)' },
+  tab: {
+    display: 'inline-flex', alignItems: 'center', gap: 6,
+    padding: '8px 2px', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+    border: 'none', borderBottom: '2px solid transparent',
+    background: 'transparent', color: 'var(--text-dim)',
+  },
+  tabActive: { color: 'var(--accent)', borderBottomColor: 'var(--accent)' },
+  tabCount: {
+    fontSize: 10.5, fontWeight: 700, padding: '1px 6px', borderRadius: 999,
+    background: 'rgba(91,95,199,0.15)', color: 'var(--accent)',
+    fontVariantNumeric: 'tabular-nums',
+  },
+  statusText: { display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600 },
+  modelCard: {
+    background: 'var(--surface-2)', border: '1px solid var(--border)',
+    borderRadius: 14, padding: 20,
   },
 };
 
 /* ── Per-prompt card ──────────────────────────────────────────────────────── */
 const MODEL_META = {
-  gemini:          { label: 'Informational question',          color: '#06b6d4', bg: 'rgba(6,182,212,0.08)',  border: 'rgba(6,182,212,0.2)' },
-  chatgpt_style:   { label: 'Conversational request',         color: '#22c55e', bg: 'rgba(34,197,94,0.08)',  border: 'rgba(34,197,94,0.2)' },
-  perplexity_style:{ label: 'Research comparison',      color: '#a855f7', bg: 'rgba(168,85,247,0.08)', border: 'rgba(168,85,247,0.2)' },
+  gemini:          { label: 'Informational question' },
+  chatgpt_style:   { label: 'Conversational request' },
+  perplexity_style:{ label: 'Research comparison' },
 };
 
 function ModelCard({ m }) {
   const meta  = MODEL_META[m.modelKey] || MODEL_META.gemini;
-  const color = meta.color;
   const mentioned = m.mentioned ?? m.cited ?? false;
   return (
-    <div style={{ background: meta.bg, border: `1px solid ${meta.border}`, borderRadius: 14, padding: 20 }}>
+    <div style={S.modelCard}>
       <div style={{ marginBottom: 12 }}>
-        <div style={{ fontSize: 15, fontWeight: 700, color: '#f1f5f9' }}>{meta.label}</div>
-        <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>{m.promptStyle}</div>
+        <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)' }}>{meta.label}</div>
+        <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{m.promptStyle}</div>
       </div>
 
-      {/* Mentioned pill */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+      {/* Mentioned status */}
+      <div style={{ marginBottom: 12 }}>
         {mentioned ? (
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(34,197,94,0.12)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.25)', borderRadius: 20, padding: '3px 10px', fontSize: 12, fontWeight: 600 }}>
+          <span style={{ ...S.statusText, color: 'var(--green)' }}>
             <CheckCircle2 size={11} /> Mentioned
           </span>
         ) : (
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(239,68,68,0.1)', color: '#f87171', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 20, padding: '3px 10px', fontSize: 12, fontWeight: 600 }}>
+          <span style={{ ...S.statusText, color: 'var(--red)' }}>
             <AlertCircle size={11} /> Not mentioned
           </span>
         )}
@@ -91,7 +108,7 @@ function ModelCard({ m }) {
 
       {/* Answer excerpt */}
       {m.answerExcerpt && (
-        <p style={{ fontSize: 12, color: '#64748b', lineHeight: 1.6, fontStyle: 'italic', margin: '0 0 12px', borderLeft: `2px solid ${color}40`, paddingLeft: 10 }}>
+        <p style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.6, fontStyle: 'italic', margin: '0 0 12px', borderLeft: '2px solid var(--border)', paddingLeft: 10 }}>
           "{m.answerExcerpt}"
         </p>
       )}
@@ -99,11 +116,11 @@ function ModelCard({ m }) {
       {/* Sources */}
       {m.sources?.length > 0 && (
         <div>
-          <div style={{ fontSize: 11, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Cited sources</div>
+          <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Cited sources</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
             {m.sources.slice(0, 4).map((s, i) => (
               <a key={i} href={s.url} target="_blank" rel="noopener noreferrer"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, color: color, background: `${color}12`, border: `1px solid ${color}25`, borderRadius: 6, padding: '3px 8px', textDecoration: 'none' }}>
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--accent)', background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border)', borderRadius: 6, padding: '3px 8px', textDecoration: 'none' }}>
                 <img src={`https://www.google.com/s2/favicons?domain=${s.domain}&sz=16`} alt="" style={{ width: 12, height: 12, borderRadius: 2 }} onError={e => e.currentTarget.style.display='none'} />
                 {s.title || s.domain}
                 <ExternalLink size={9} />
@@ -119,11 +136,9 @@ function ModelCard({ m }) {
 function MentionCountBadge({ count }) {
   const allGood = count === 3;
   const none    = count === 0;
-  const color  = allGood ? '#4ade80' : none ? '#f87171' : '#fbbf24';
-  const bg     = allGood ? 'rgba(74,222,128,0.12)' : none ? 'rgba(248,113,113,0.1)' : 'rgba(251,191,36,0.12)';
-  const border = allGood ? 'rgba(74,222,128,0.3)' : none ? 'rgba(248,113,113,0.25)' : 'rgba(251,191,36,0.3)';
+  const color = allGood ? 'var(--green)' : none ? 'var(--red)' : 'var(--yellow)';
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, borderRadius: 20, padding: '4px 12px', fontSize: 12, fontWeight: 600, background: bg, color, border: `1px solid ${border}`, whiteSpace: 'nowrap' }}>
+    <span style={{ ...S.statusText, color, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
       {count} of 3
     </span>
   );
@@ -155,12 +170,12 @@ function InfoBox() {
           onClick={() => setCollapsed(!collapsed)}
           aria-expanded={!collapsed}
           aria-label={collapsed ? 'Expand disclaimer' : 'Collapse disclaimer'}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: '#64748b', display: 'flex', alignItems: 'center', flexShrink: 0 }}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: 'var(--text-dim)', display: 'flex', alignItems: 'center', flexShrink: 0 }}
         >
           {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
       </div>
-      {!collapsed && <span style={{ display: 'block', marginTop: 8, fontSize: 12, lineHeight: 1.7, color: '#64748b' }}>We ask Google Gemini about your topic three different ways — an <em>informational</em> question, a <em>conversational</em> request, and a <em>research</em>-style comparison — each grounded in live Google Search. For each, we check whether your brand's name appears in the answer. If you gave a URL, we also check what share of all the sources cited across the three prompts is your own domain. Every number here — the mention count, the domain share, and the competitor list — comes directly from that live data; nothing is scored or guessed. However: this covers Gemini only, three phrasings, one moment in time. Run checks on multiple topic variations and track over time — use for trend spotting and competitor discovery, not as ground-truth market share data.</span>}
+      {!collapsed && <span style={{ display: 'block', marginTop: 8, fontSize: 12, lineHeight: 1.7, color: 'var(--text-muted)' }}>We ask Google Gemini about your topic three different ways — an <em>informational</em> question, a <em>conversational</em> request, and a <em>research</em>-style comparison — each grounded in live Google Search. For each, we check whether your brand's name appears in the answer. If you gave a URL, we also check what share of all the sources cited across the three prompts is your own domain. Every number here — the mention count, the domain share, and the competitor list — comes directly from that live data; nothing is scored or guessed. However: this covers Gemini only, three phrasings, one moment in time. Run checks on multiple topic variations and track over time — use for trend spotting and competitor discovery, not as ground-truth market share data.</span>}
     </div>
   );
 }
@@ -179,12 +194,12 @@ function WhatDoesThisMeanBox() {
           onClick={() => setCollapsed(!collapsed)}
           aria-expanded={!collapsed}
           aria-label={collapsed ? 'Expand explanation' : 'Collapse explanation'}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: '#64748b', display: 'flex', alignItems: 'center', flexShrink: 0 }}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: 'var(--text-dim)', display: 'flex', alignItems: 'center', flexShrink: 0 }}
         >
           {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
       </div>
-      {!collapsed && <span style={{ display: 'block', marginTop: 8, fontSize: 12, lineHeight: 1.7, color: '#64748b' }}>We send your topic as three differently-worded prompts and check each real answer for your brand and your domain. "Mentioned in 2 of 3" and your citation share are exact counts from those three checks, not a market-wide statistic. Run it again later to see whether your presence is growing.</span>}
+      {!collapsed && <span style={{ display: 'block', marginTop: 8, fontSize: 12, lineHeight: 1.7, color: 'var(--text-muted)' }}>We send your topic as three differently-worded prompts and check each real answer for your brand and your domain. "Mentioned in 2 of 3" and your citation share are exact counts from those three checks, not a market-wide statistic. Run it again later to see whether your presence is growing.</span>}
     </div>
   );
 }
@@ -305,7 +320,7 @@ export default function ShareOfVoice() {
       {/* Header */}
       <div style={S.header}>
         <div style={S.titleRow}>
-          <BarChart2 size={22} style={{ color: '#6366f1' }} />
+          <BarChart2 size={22} style={{ color: 'var(--accent)' }} />
           <h1 style={S.title}>Share of Voice</h1>
         </div>
         <p style={S.tagline}>Real counts across 3 real prompts — not an estimate.</p>
@@ -321,18 +336,26 @@ export default function ShareOfVoice() {
       <InfoBox />
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
-        {[{ key: 'check', label: 'New Check', Icon: Search }, { key: 'history', label: `Trend History${history.length ? ` (${trendGroups.length})` : ''}`, Icon: Clock }].map(t => (
-          <button key={t.key} onClick={() => setTab(t.key)}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', border: 'none',
-              background: tab === t.key ? 'rgba(99,102,241,0.18)' : 'rgba(255,255,255,0.05)',
-              color: tab === t.key ? '#818cf8' : '#64748b',
-              boxShadow: tab === t.key ? '0 0 0 1px rgba(99,102,241,0.35)' : '0 0 0 1px rgba(255,255,255,0.06)',
-            }}>
-            <t.Icon size={13} />
-            {t.label}
-          </button>
-        ))}
+      <div style={S.tabs} role="tablist">
+        <button
+          role="tab"
+          aria-selected={tab === 'check'}
+          onClick={() => setTab('check')}
+          style={{ ...S.tab, ...(tab === 'check' ? S.tabActive : {}) }}
+        >
+          <Search size={13} />
+          New Check
+        </button>
+        <button
+          role="tab"
+          aria-selected={tab === 'history'}
+          onClick={() => setTab('history')}
+          style={{ ...S.tab, ...(tab === 'history' ? S.tabActive : {}) }}
+        >
+          <Clock size={13} />
+          Trend History
+          {history.length > 0 && <span style={S.tabCount}>{trendGroups.length}</span>}
+        </button>
       </div>
 
       {/* ── Check tab ─────────────────────────────────────────────────────── */}
@@ -340,22 +363,21 @@ export default function ShareOfVoice() {
         <>
           {planGated && (
             <div style={{
-              background: 'linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.08))',
-              border: '1px solid rgba(99,102,241,0.3)',
+              background: 'var(--surface-2)',
+              border: '1px solid var(--border)',
               borderRadius: 14, padding: '24px 28px', marginBottom: 20,
               display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap',
             }}>
               <div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: '#818cf8', marginBottom: 6 }}>Business plan required</div>
-                <div style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.6 }}>
+                <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--accent)', marginBottom: 6 }}>Business plan required</div>
+                <div style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>
                   Share of Voice runs 3 Google Search-grounded Gemini checks per topic — an informational question, a conversational request, and a research-style comparison. Available on Business plan.
                 </div>
               </div>
               <a href="/upgrade" style={{
-                background: 'linear-gradient(135deg, #6366f1, #a855f7)',
+                background: 'var(--accent)',
                 color: '#fff', borderRadius: 8, padding: '10px 22px',
                 fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap',
-                boxShadow: '0 0 20px rgba(99,102,241,0.25)',
               }}>
                 Upgrade to Business →
               </a>
@@ -379,7 +401,7 @@ export default function ShareOfVoice() {
                 </div>
               </div>
               <div style={{ marginBottom: 20 }}>
-                <label style={S.label}>Your website URL <span style={{ color: '#475569', fontWeight: 400, textTransform: 'none' }}>(optional — used to check if your domain is in cited sources)</span></label>
+                <label style={S.label}>Your website URL <span style={{ color: 'var(--text-dim)', fontWeight: 400, textTransform: 'none' }}>(optional — used to check if your domain is in cited sources)</span></label>
                 <input style={S.input} type="text" value={url} onChange={e => setUrl(e.target.value)}
                   placeholder="https://yourdomain.com" />
               </div>
@@ -388,7 +410,7 @@ export default function ShareOfVoice() {
                 <button type="submit" style={{ ...S.btn, opacity: loading ? 0.6 : 1 }} disabled={loading}>
                   {loading ? <><span className="spinner" style={{ width: 14, height: 14, borderWidth: 2 }} /> Checking 3 query phrasings…</> : <><BarChart2 size={14} /> Check Share of Voice</>}
                 </button>
-                {loading && <span style={{ fontSize: 12, color: '#64748b' }}>This takes ~30 seconds — we run three separate grounded Gemini checks.</span>}
+                {loading && <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>This takes ~30 seconds — we run three separate grounded Gemini checks.</span>}
               </div>
             </form>
           ) : (
@@ -397,34 +419,31 @@ export default function ShareOfVoice() {
               {/* Overview card */}
               <div style={S.card}>
                 <div style={{ marginBottom: 20 }}>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: '#f1f5f9', marginBottom: 4 }}>{result.brand}</div>
-                  <div style={{ fontSize: 12, color: '#64748b', marginBottom: 14 }}>"{result.topic}"</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>{result.brand}</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 14 }}>"{result.topic}"</div>
 
-                  <div style={{ fontSize: 20, fontWeight: 800, color: '#f1f5f9', marginBottom: result.domainSharePercent !== null ? 4 : 12 }}>
+                  <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--text)', marginBottom: result.domainSharePercent !== null ? 4 : 12, fontVariantNumeric: 'tabular-nums' }}>
                     Mentioned in {result.mentionedCount} of 3 prompts
                   </div>
                   {result.domainSharePercent !== null && (
-                    <div style={{ fontSize: 13, color: '#94a3b8', marginBottom: 12 }}>
+                    <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 12, fontVariantNumeric: 'tabular-nums' }}>
                       Your domain is {result.domainCitedCount} of {result.domainSourceCount} cited sources ({result.domainSharePercent}%)
                     </div>
                   )}
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 12, flexWrap: 'wrap' }}>
                     {result.modelResults.map(m => {
                       const meta = MODEL_META[m.modelKey] || MODEL_META.gemini;
                       const mentioned = m.mentioned ?? m.cited ?? false;
                       return (
-                        <span key={m.modelKey} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 6,
-                          background: mentioned ? `${meta.color}18` : 'rgba(255,255,255,0.04)',
-                          color: mentioned ? meta.color : '#475569',
-                          border: `1px solid ${mentioned ? `${meta.color}35` : 'rgba(255,255,255,0.08)'}` }}>
+                        <span key={m.modelKey} style={{ ...S.statusText, fontSize: 11, color: mentioned ? 'var(--green)' : 'var(--text-dim)' }}>
                           {mentioned ? <CheckCircle2 size={9} /> : <AlertCircle size={9} />}
                           {meta.label}
                         </span>
                       );
                     })}
                   </div>
-                  <div style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.6 }}>{result.summary}</div>
+                  <div style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>{result.summary}</div>
 
                   {result.mentionedCount === 0 && result.url && (
                     <Link to={`/url-scanner?url=${encodeURIComponent(result.url)}`} style={S.urlScannerCta}>
@@ -448,7 +467,7 @@ export default function ShareOfVoice() {
                   <p style={S.sectionTitle}>Sites Gemini cited</p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                     {result.competitors.map((d, i) => (
-                      <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#94a3b8', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: '4px 12px' }}>
+                      <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: 20, padding: '4px 12px' }}>
                         <img src={`https://www.google.com/s2/favicons?domain=${d}&sz=16`} alt="" style={{ width: 12, height: 12, borderRadius: 2 }} onError={e => e.currentTarget.style.display='none'} />
                         {d}
                       </span>
@@ -465,19 +484,19 @@ export default function ShareOfVoice() {
       {tab === 'history' && (
         <>
           {histLoading ? (
-            <div style={{ textAlign: 'center', padding: '60px 0', color: '#64748b' }}>
+            <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text-muted)' }}>
               <span className="spinner" style={{ display: 'inline-block', width: 24, height: 24, borderWidth: 3 }} />
             </div>
           ) : trendGroups.length === 0 ? (
             <div style={{ ...S.card, textAlign: 'center', padding: '48px 24px' }}>
-              <BarChart2 size={32} style={{ color: '#334155', marginBottom: 12 }} />
-              <p style={{ color: '#64748b', marginBottom: 16 }}>No Share of Voice checks yet. Run your first check to start tracking trends.</p>
+              <BarChart2 size={32} style={{ color: 'var(--text-dim)', marginBottom: 12 }} />
+              <p style={{ color: 'var(--text-muted)', marginBottom: 16 }}>No Share of Voice checks yet. Run your first check to start tracking trends.</p>
               <button onClick={() => setTab('check')} style={S.btn}><Search size={13} /> Run first check</button>
             </div>
           ) : (
             <>
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
-                <button onClick={handleClear} style={{ ...S.btnSecondary, display: 'inline-flex', alignItems: 'center', gap: 6, color: '#ef4444' }}>
+                <button onClick={handleClear} style={{ ...S.btnSecondary, display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--red)' }}>
                   <Trash2 size={12} /> Clear history
                 </button>
               </div>
@@ -488,12 +507,12 @@ export default function ShareOfVoice() {
                     <MentionCountBadge count={g.mentionedCount} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: '#f1f5f9', marginBottom: 2 }}>{g.brand}</div>
-                    <div style={{ fontSize: 12, color: '#64748b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 2 }}>{g.brand}</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       "{g.topic}" · {g.checks} check{g.checks > 1 ? 's' : ''}
                     </div>
                   </div>
-                  <div style={{ flexShrink: 0, fontSize: 11, color: '#475569' }}>{timeAgo(g.checkedAt)}</div>
+                  <div style={{ flexShrink: 0, fontSize: 11, color: 'var(--text-dim)', fontVariantNumeric: 'tabular-nums' }}>{timeAgo(g.checkedAt)}</div>
                 </div>
               ))}
             </>
