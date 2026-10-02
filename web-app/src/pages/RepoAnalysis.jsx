@@ -364,7 +364,7 @@ export default function RepoAnalysis() {
             )}
           </div>
 
-          <PillarScores result={{ pillarScores: result.pillarScores, overallScore: result.overallScore }} lane={userLane} />
+          <PillarScores result={{ pillarScores: result.pillarScores, overallScore: result.overallScore, signals: result.signals }} lane={userLane} />
 
           <div className={`card ${styles.signalsCard}`}>
             <h3 className={styles.sectionTitle}>Source Code Signals</h3>
