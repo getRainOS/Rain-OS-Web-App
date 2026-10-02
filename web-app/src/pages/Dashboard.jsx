@@ -153,12 +153,6 @@ function getItemType(item) {
   return 'Content';
 }
 
-function statusLabel(score) {
-  if (score >= 75) return 'Good';
-  if (score >= 50) return 'Fair';
-  return 'Needs Work';
-}
-
 /* ── Gas Gauge Arc ── */
 function GaugeArc({ score = 0, color = '#0ea5e9', size = 120 }) {
   const cx = size / 2;
@@ -789,74 +783,98 @@ export default function Dashboard() {
         ) : null}
       </div>
 
-      {/* ── Score Trend (above the fold) ── */}
+      {/* ── Pillar Breakdown (above the fold, hero treatment) ── */}
       <div className={styles.chartCard} style={{ marginBottom: 12 }}>
         <div className={styles.chartHeader}>
           <div>
-            <h2 className={styles.chartTitle}>Score Trend</h2>
-            <p className={styles.chartSub}>Last {chartRange} analyses</p>
-            <span className={styles.chartHelp} title="How your overall content scores have changed over time. Higher scores mean AI engines are more likely to cite your content.">
+            <h2 className={styles.chartTitle}>Pillar Breakdown</h2>
+            <p className={styles.chartSub}>How your content performs across each AEO pillar, over time.</p>
+            <span className={styles.chartHelp} title={`How your scores are distributed across your ${activePillars.length} pillars: ${joinWithAnd(activePillars.map(p => p.label))}.`}>
               <HelpCircle size={11} />
             </span>
           </div>
-          <div className={styles.rangeToggle}>
-            {[7, 14, 30].map(r => (
-              <button key={r} type="button"
-                className={`${styles.rangeBtn} ${chartRange === r ? styles.rangeBtnActive : ''}`}
-                onClick={() => setChartRange(r)}>
-                {r}
-              </button>
-            ))}
-          </div>
         </div>
+
+        <WhatDoesThisMean tagline="AI's structured read of your content — not a raw measurement.">
+          Gemini reads your content and scores it against a fixed set of criteria for this pillar, the same way each time. It's not counting anything concrete, like word count or load speed — it's a graded read of how well your content works for an AI trying to understand and use it. Because the criteria stay fixed, the score is meaningful to compare across your own pages, or the same page over time, even though it's a judgment rather than a fact.
+        </WhatDoesThisMean>
+        {userLane === 'product_sellers' && (
+          <WhatDoesThisMean tagline="AI's read on how shoppable your page looks — specific to product sellers.">
+            This pillar checks something the other four don't: whether an AI could confidently describe, compare, and recommend your product from your page alone — things like clear pricing, specs, and availability. It's graded the same way as your other pillar scores, an AI's structured read rather than a technical measurement, but scored specifically for how AI tools use product pages when answering shopping questions.
+          </WhatDoesThisMean>
+        )}
 
         {loading ? (
           <div className={styles.chartEmpty}><span className="spinner" /></div>
-        ) : chartData.length < 2 ? (
+        ) : !pillarAvgs.some(p => p.avg > 0) ? (
           <div className={styles.chartEmptyRich}>
             <div className={styles.sampleBackdrop}>
               <ResponsiveContainer width="100%" height={200}>
-                <AreaChart data={SAMPLE_TREND} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
-                  <defs>
-                    <linearGradient id="scoreGradSample" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#5b5fc7" stopOpacity={0.08} />
-                      <stop offset="100%" stopColor="#5b5fc7" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <Area type="monotone" dataKey="score" stroke="#5b5fc7" strokeWidth={1.5}
-                    fill="url(#scoreGradSample)" dot={false} />
-                </AreaChart>
+                <LineChart data={SAMPLE_PILLAR_TREND}>
+                  {SAMPLE_PILLAR_LINES.map(l => (
+                    <Line key={l.key} type="monotone" dataKey={l.key} stroke={l.color} strokeWidth={1.5} dot={false} />
+                  ))}
+                </LineChart>
               </ResponsiveContainer>
             </div>
             <div className={styles.emptyStateOverlay}>
               <Activity className={styles.emptyIcon} />
-              <p>{filtersActive && history.length > 0 ? 'No analyses match these filters' : 'Run your first analysis to see trends here'}</p>
+              <p>{filtersActive && history.length > 0 ? 'No analyses match these filters' : 'No pillar data yet'}</p>
               {filtersActive && history.length > 0 ? (
                 <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
               ) : (
-                <Link to="/analyze" className={styles.emptyLink}>Get started →</Link>
+                <Link to="/analyze" className={styles.emptyLink}>Run analysis →</Link>
               )}
             </div>
           </div>
         ) : (
-          <ResponsiveContainer key={`chart-${chartRange}`} width="100%" height={200}>
-            <AreaChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
-              <defs>
-                <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#5b5fc7" stopOpacity={0.08} />
-                  <stop offset="100%" stopColor="#5b5fc7" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <XAxis dataKey="idx" stroke="transparent"
-                tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
-              <YAxis domain={[0, 100]} stroke="transparent"
-                tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
-              <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
-              <Area type="monotone" dataKey="score" stroke="#5b5fc7" strokeWidth={1.5}
-                fill="url(#scoreGrad)" dot={false}
-                activeDot={{ r: 4, fill: '#5b5fc7', strokeWidth: 0 }} />
-            </AreaChart>
-          </ResponsiveContainer>
+          <div className={styles.heroGrid}>
+            <div className={styles.heroMain}>
+              <div className={styles.heroStatRow}>
+                <span className={styles.heroStatValue}>{avgScore}</span>
+                <span className={styles.heroStatMax}>/100</span>
+                <TrendBadge pct={scoreTrend} />
+              </div>
+              <div className={styles.heroChartBg}>
+                <ResponsiveContainer width="100%" height={200}>
+                  <LineChart data={pillarChartData} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
+                    <XAxis dataKey="idx" stroke="transparent"
+                      tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
+                    <YAxis domain={[0, 100]} stroke="transparent"
+                      tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
+                    <Tooltip content={<PillarLineTooltip pillars={activePillars} />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
+                    {activePillars.map(p => (
+                      <Line key={p.key} type="monotone" dataKey={p.key} stroke={p.color} strokeWidth={2}
+                        dot={false} activeDot={{ r: 4, strokeWidth: 0 }} />
+                    ))}
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+              <div className={styles.contentHealth}>
+                <Heart style={{ width: 11, height: 11, color: '#94a3b8' }} />
+                <span>Content Health: </span>
+                <strong>{contentHealth}%</strong>
+              </div>
+            </div>
+
+            <div className={styles.heroRank}>
+              <div className={styles.heroRankHeader}>
+                <span>Pillars ranked by score</span>
+              </div>
+              {[...pillarAvgs].sort((a, b) => b.avg - a.avg).map(p => (
+                <div key={p.key} className={styles.heroRankRow}>
+                  <div className={styles.heroRankLabelRow}>
+                    <span className={styles.pillarTableDot} style={{ background: p.color }} />
+                    <span className={styles.heroRankLabel}>{p.label}</span>
+                  </div>
+                  <div className={styles.heroRankValueRow}>
+                    <span className={styles.heroRankScore}>{p.avg}</span>
+                    <TrendBadge pct={p.trend} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </div>
 
@@ -997,100 +1015,75 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* ── Pillar Breakdown ── */}
-      <div className={styles.chartsRow}>
+      {/* ── Score Trend ── */}
+      <div className={styles.chartCard} style={{ marginBottom: 12 }}>
+        <div className={styles.chartHeader}>
+          <div>
+            <h2 className={styles.chartTitle}>Score Trend</h2>
+            <p className={styles.chartSub}>Last {chartRange} analyses</p>
+            <span className={styles.chartHelp} title="How your overall content scores have changed over time. Higher scores mean AI engines are more likely to cite your content.">
+              <HelpCircle size={11} />
+            </span>
+          </div>
+          <div className={styles.rangeToggle}>
+            {[7, 14, 30].map(r => (
+              <button key={r} type="button"
+                className={`${styles.rangeBtn} ${chartRange === r ? styles.rangeBtnActive : ''}`}
+                onClick={() => setChartRange(r)}>
+                {r}
+              </button>
+            ))}
+          </div>
+        </div>
 
-        <div className={styles.chartCard}>
-          <div className={styles.chartHeader}>
-            <div>
-              <h2 className={styles.chartTitle}>Pillar Breakdown</h2>
-              <p className={styles.chartSub}>Score trend across pillars</p>
-              <span className={styles.chartHelp} title={`How your scores are distributed across your ${activePillars.length} pillars: ${joinWithAnd(activePillars.map(p => p.label))}.`}>
-                <HelpCircle size={11} />
-              </span>
+        {loading ? (
+          <div className={styles.chartEmpty}><span className="spinner" /></div>
+        ) : chartData.length < 2 ? (
+          <div className={styles.chartEmptyRich}>
+            <div className={styles.sampleBackdrop}>
+              <ResponsiveContainer width="100%" height={200}>
+                <AreaChart data={SAMPLE_TREND} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
+                  <defs>
+                    <linearGradient id="scoreGradSample" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#5b5fc7" stopOpacity={0.08} />
+                      <stop offset="100%" stopColor="#5b5fc7" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <Area type="monotone" dataKey="score" stroke="#5b5fc7" strokeWidth={1.5}
+                    fill="url(#scoreGradSample)" dot={false} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+            <div className={styles.emptyStateOverlay}>
+              <Activity className={styles.emptyIcon} />
+              <p>{filtersActive && history.length > 0 ? 'No analyses match these filters' : 'Run your first analysis to see trends here'}</p>
+              {filtersActive && history.length > 0 ? (
+                <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
+              ) : (
+                <Link to="/analyze" className={styles.emptyLink}>Get started →</Link>
+              )}
             </div>
           </div>
-
-          <WhatDoesThisMean tagline="AI's structured read of your content — not a raw measurement.">
-            Gemini reads your content and scores it against a fixed set of criteria for this pillar, the same way each time. It's not counting anything concrete, like word count or load speed — it's a graded read of how well your content works for an AI trying to understand and use it. Because the criteria stay fixed, the score is meaningful to compare across your own pages, or the same page over time, even though it's a judgment rather than a fact.
-          </WhatDoesThisMean>
-          {userLane === 'product_sellers' && (
-            <WhatDoesThisMean tagline="AI's read on how shoppable your page looks — specific to product sellers.">
-              This pillar checks something the other four don't: whether an AI could confidently describe, compare, and recommend your product from your page alone — things like clear pricing, specs, and availability. It's graded the same way as your other pillar scores, an AI's structured read rather than a technical measurement, but scored specifically for how AI tools use product pages when answering shopping questions.
-            </WhatDoesThisMean>
-          )}
-
-          {loading ? (
-            <div className={styles.chartEmpty}><span className="spinner" /></div>
-          ) : !pillarAvgs.some(p => p.avg > 0) ? (
-            <div className={styles.chartEmptyRich}>
-              <div className={styles.sampleBackdrop}>
-                <ResponsiveContainer width="100%" height={160}>
-                  <LineChart data={SAMPLE_PILLAR_TREND}>
-                    {SAMPLE_PILLAR_LINES.map(l => (
-                      <Line key={l.key} type="monotone" dataKey={l.key} stroke={l.color} strokeWidth={1.5} dot={false} />
-                    ))}
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-              <div className={styles.emptyStateOverlay}>
-                <Activity className={styles.emptyIcon} />
-                <p>{filtersActive && history.length > 0 ? 'No analyses match these filters' : 'No pillar data yet'}</p>
-                {filtersActive && history.length > 0 ? (
-                  <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
-                ) : (
-                  <Link to="/analyze" className={styles.emptyLink}>Run analysis →</Link>
-                )}
-              </div>
-            </div>
-          ) : (
-            <>
-              <ResponsiveContainer width="100%" height={160}>
-                <LineChart data={pillarChartData} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
-                  <XAxis dataKey="idx" stroke="transparent"
-                    tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
-                  <YAxis domain={[0, 100]} stroke="transparent"
-                    tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
-                  <Tooltip content={<PillarLineTooltip pillars={activePillars} />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
-                  {activePillars.map(p => (
-                    <Line key={p.key} type="monotone" dataKey={p.key} stroke={p.color} strokeWidth={1.5}
-                      dot={false} activeDot={{ r: 3, strokeWidth: 0 }} />
-                  ))}
-                </LineChart>
-              </ResponsiveContainer>
-
-              <table className={styles.pillarTable}>
-                <thead>
-                  <tr>
-                    <th>Pillar</th>
-                    <th>Score</th>
-                    <th>Δ</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {pillarAvgs.map(p => (
-                    <tr key={p.key}>
-                      <td>
-                        <span className={styles.pillarTableDot} style={{ background: p.color }} />
-                        {p.label}
-                      </td>
-                      <td className={styles.pillarTableScore}>{p.avg}</td>
-                      <td><TrendBadge pct={p.trend} /></td>
-                      <td className={styles.pillarTableStatus}>{statusLabel(p.avg)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-
-              <div className={styles.contentHealth}>
-                <Heart style={{ width: 11, height: 11, color: '#94a3b8' }} />
-                <span>Content Health: </span>
-                <strong>{contentHealth}%</strong>
-              </div>
-            </>
-          )}
-        </div>
+        ) : (
+          <ResponsiveContainer key={`chart-${chartRange}`} width="100%" height={200}>
+            <AreaChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
+              <defs>
+                <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#5b5fc7" stopOpacity={0.08} />
+                  <stop offset="100%" stopColor="#5b5fc7" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <XAxis dataKey="idx" stroke="transparent"
+                tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
+              <YAxis domain={[0, 100]} stroke="transparent"
+                tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
+              <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
+              <Area type="monotone" dataKey="score" stroke="#5b5fc7" strokeWidth={1.5}
+                fill="url(#scoreGrad)" dot={false}
+                activeDot={{ r: 4, fill: '#5b5fc7', strokeWidth: 0 }} />
+            </AreaChart>
+          </ResponsiveContainer>
+        )}
       </div>
 
       {/* ── Bottom row ── */}
