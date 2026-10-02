@@ -441,7 +441,7 @@ export default function History() {
                           <div className={styles.itemTitle}>
                             {c.cited
                               ? <CheckCircle2 style={{ width: 13, height: 13, color: 'var(--green)', marginRight: 6, verticalAlign: '-2px' }} />
-                              : <AlertCircle style={{ width: 13, height: 13, color: 'var(--text-dim)', marginRight: 6, verticalAlign: '-2px' }} />}
+                              : <AlertCircle style={{ width: 13, height: 13, color: 'var(--red)', marginRight: 6, verticalAlign: '-2px' }} />}
                             {c.topic}
                           </div>
                           <div className={styles.itemMeta}>
@@ -463,7 +463,7 @@ export default function History() {
                             )}
                             <span
                               className={styles.itemDate}
-                              style={{ color: c.cited ? 'var(--green)' : 'var(--text-dim)', fontWeight: 600 }}
+                              style={{ color: c.cited ? 'var(--green)' : 'var(--red)', fontWeight: 600 }}
                             >
                               {c.cited ? 'CITED' : 'NOT CITED'}
                             </span>

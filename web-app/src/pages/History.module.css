@@ -129,6 +129,7 @@
   font-weight: 600;
   min-width: 28px;
   text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
 .overallScore {
@@ -136,6 +137,7 @@
   font-weight: 700;
   min-width: 36px;
   text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 .chevron {
@@ -371,4 +373,5 @@
   color: var(--text-dim);
   min-width: 20px;
   text-align: right;
+  font-variant-numeric: tabular-nums;
 }
