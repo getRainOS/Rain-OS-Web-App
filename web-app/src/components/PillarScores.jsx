@@ -118,32 +118,66 @@ function camelToLabel(key) {
 }
 
 /**
+ * robots.txt Present + one item per AI crawler (GPTBot, ClaudeBot,
+ * Google-Extended, PerplexityBot), pass/fail only. Only meaningful under AI
+ * Readability, and only when the tool actually has a domain to check —
+ * Content Analyzer has no URL at all, so both args are undefined there and
+ * this returns nothing.
+ */
+function buildCrawlerItems(hasRobotsTxt, aiCrawlerAccess) {
+  const items = [];
+  if (hasRobotsTxt !== undefined) {
+    items.push({ label: 'robots.txt Present', pass: !!hasRobotsTxt });
+  }
+  if (Array.isArray(aiCrawlerAccess)) {
+    for (const c of aiCrawlerAccess) {
+      items.push({ label: `${c.crawler} Access`, pass: c.access !== 'blocked' });
+    }
+  }
+  return items;
+}
+
+/**
  * Build this pillar's pass/fail breakdown. Repo Analysis has no Gemini
  * detail object — it has `result.signals`, so it's resolved from
  * REPO_SIGNAL_GROUPS directly. Content Analyzer and URL Scanner have a
  * Gemini-judged detail object (e.g. result.ai_readability_detail), which is
- * thresholded into pass/fail instead of shown as a raw number.
+ * thresholded into pass/fail instead of shown as a raw number. AI
+ * Readability additionally gets crawler-access items appended, sourced from
+ * wherever each tool keeps them.
  */
 function buildSubItems(pillarKey, detailKey, result) {
+  let items;
+
   // Repo Analysis's result.signals is the RepoSignals boolean map; URL
   // Scanner also has a result.signals, but it's an unrelated array of
   // display rows — guard on object-ness, not just truthiness, to tell them
   // apart. Content Analyzer has neither.
   if (result?.signals && !Array.isArray(result.signals)) {
     const group = REPO_SIGNAL_GROUPS[pillarKey] || [];
-    return group.map(item => ({
+    items = group.map(item => ({
       label: item.label,
       pass: item.pass ? !!item.pass(result.signals) : !!result.signals[item.key],
     }));
+    if (pillarKey === 'ai_readability') {
+      items = items.concat(buildCrawlerItems(result.signals.hasRobotsTxt, result.signals.aiCrawlerAccess));
+    }
+    return items;
   }
+
   const detail = result?.[detailKey];
-  if (detail) {
-    return Object.entries(detail).map(([k, v]) => ({
-      label: camelToLabel(k),
-      pass: Number(v) >= SUBITEM_PASS_THRESHOLD,
-    }));
+  items = detail
+    ? Object.entries(detail).map(([k, v]) => ({
+        label: camelToLabel(k),
+        pass: Number(v) >= SUBITEM_PASS_THRESHOLD,
+      }))
+    : [];
+  if (pillarKey === 'ai_readability') {
+    items = items.concat(
+      buildCrawlerItems(result?.technical_signals?.hasRobotsTxt, result?.technical_signals?.aiCrawlerAccess)
+    );
   }
-  return [];
+  return items;
 }
 
 /* ── Collapsed-by-default pass/fail scoring breakdown ────────────────────── */

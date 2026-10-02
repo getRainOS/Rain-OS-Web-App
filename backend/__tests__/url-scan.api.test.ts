@@ -69,13 +69,21 @@ function defaultGeminiResponse() {
 }
 
 // Reusable fetch mock. The handler calls fetch once for the target URL; the
-// urlScanService also calls fetch once for /llms.txt. We dispatch by URL.
+// urlScanService also calls fetch once for /llms.txt and once for
+// /robots.txt. We dispatch by URL — robots.txt defaults to a 404 (no file)
+// so existing tests that don't care about it stay unaffected.
 let targetResponse: Response;
 let llmsTxtOk: boolean;
+let robotsTxtBody: string | null;
 const fetchMock = vi.fn(async (input: any) => {
   const url = typeof input === 'string' ? input : input?.url || String(input);
   if (url.endsWith('/llms.txt')) {
     return new Response(null, { status: llmsTxtOk ? 200 : 404 });
+  }
+  if (url.endsWith('/robots.txt')) {
+    return robotsTxtBody === null
+      ? new Response(null, { status: 404 })
+      : new Response(robotsTxtBody, { status: 200 });
   }
   return targetResponse;
 });
@@ -90,6 +98,7 @@ beforeEach(() => {
     headers: { 'content-type': 'text/html' },
   });
   llmsTxtOk = false;
+  robotsTxtBody = null;
   fetchMock.mockClear();
   vi.stubGlobal('fetch', fetchMock);
 });
@@ -291,6 +300,75 @@ describe('POST /api/url-scan — happy path', () => {
     expect(res.status).toBe(200);
     expect(res.body.overallScore).toBeLessThanOrEqual(100);
     expect(res.body.overallScore).toBeGreaterThanOrEqual(0);
+  });
+
+  it('includes robots.txt / per-crawler signals in technical_signals', async () => {
+    robotsTxtBody = 'User-agent: GPTBot\nDisallow: /\n\nUser-agent: *\nAllow: /';
+    const res = await request(app)
+      .post('/api/url-scan')
+      .set('Authorization', 'Bearer k')
+      .send({ url: 'https://target.test/' });
+
+    expect(res.status).toBe(200);
+    expect(res.body.technical_signals.hasRobotsTxt).toBe(true);
+    const byName = Object.fromEntries(
+      res.body.technical_signals.aiCrawlerAccess.map((c: any) => [c.crawler, c.access])
+    );
+    expect(byName['GPTBot']).toBe('blocked');
+    expect(byName['ClaudeBot']).toBe('allowed'); // falls back to the "*" Allow
+  });
+
+  it('nudges pillarScores.aiReadability down when a crawler is blocked, leaving other pillars untouched', async () => {
+    robotsTxtBody = 'User-agent: GPTBot\nDisallow: /\n\nUser-agent: ClaudeBot\nDisallow: /';
+    analyzeContent.mockResolvedValueOnce({
+      overallScore: 60,
+      pillarScores: { aiReadability: 80, digitalAuthority: 70, conversionReadiness: 65, productDiscoverability: 0, ragReadiness: 50 },
+      summary: '',
+      recommendations: [],
+    });
+    const res = await request(app)
+      .post('/api/url-scan')
+      .set('Authorization', 'Bearer k')
+      .send({ url: 'https://target.test/' });
+
+    expect(res.status).toBe(200);
+    // 2 blocked crawlers * -3 = -6, robots.txt exists so no -2 → 80 - 6 = 74
+    expect(res.body.pillarScores.aiReadability).toBe(74);
+    expect(res.body.pillarScores.digitalAuthority).toBe(70);
+  });
+
+  it('nudges pillarScores.aiReadability down by -2 when robots.txt is entirely absent', async () => {
+    robotsTxtBody = null;
+    analyzeContent.mockResolvedValueOnce({
+      overallScore: 60,
+      pillarScores: { aiReadability: 80, digitalAuthority: 70, conversionReadiness: 65, productDiscoverability: 0, ragReadiness: 50 },
+      summary: '',
+      recommendations: [],
+    });
+    const res = await request(app)
+      .post('/api/url-scan')
+      .set('Authorization', 'Bearer k')
+      .send({ url: 'https://target.test/' });
+
+    expect(res.status).toBe(200);
+    expect(res.body.pillarScores.aiReadability).toBe(78);
+  });
+
+  it('does not nudge pillarScores.aiReadability when robots.txt exists and nothing is blocked ("not mentioned" and "allowed" both count as pass)', async () => {
+    robotsTxtBody = 'User-agent: *\nAllow: /';
+    analyzeContent.mockResolvedValueOnce({
+      overallScore: 60,
+      pillarScores: { aiReadability: 80, digitalAuthority: 70, conversionReadiness: 65, productDiscoverability: 0, ragReadiness: 50 },
+      summary: '',
+      recommendations: [],
+    });
+    const res = await request(app)
+      .post('/api/url-scan')
+      .set('Authorization', 'Bearer k')
+      .send({ url: 'https://target.test/' });
+
+    expect(res.status).toBe(200);
+    expect(res.body.pillarScores.aiReadability).toBe(80);
   });
 
   it('returns 502 ai_provider_error (not the raw upstream message) when Gemini analyzeContent throws', async () => {

@@ -1,5 +1,6 @@
 // services/urlScanService.ts — Cheerio HTML analysis. Zero API cost.
 import * as cheerio from 'cheerio';
+import { checkAllCrawlers, type CrawlerStatus } from './robotsCheck';
 
 export interface TechnicalSignals {
   // Schema
@@ -30,6 +31,10 @@ export interface TechnicalSignals {
   jsRenderingWarning: string | null;
   // llms.txt
   hasLlmsTxt: boolean;
+  // robots.txt / AI crawler access — shown in PillarScores' AI Readability
+  // subcategory breakdown, not the flat Technical Signals list below.
+  hasRobotsTxt: boolean;
+  aiCrawlerAccess: CrawlerStatus[];
   // Discovery
   hasFavicon: boolean;
   hasRssFeed: boolean;
@@ -300,6 +305,17 @@ export async function scanUrlForTechnicalSignals(
     hasLlmsTxt = r.ok;
   } catch { /* unreachable or timeout */ }
   signals.hasLlmsTxt = hasLlmsTxt;
+
+  // ─── robots.txt check (AI crawler access) ───────────────────────────────────
+  let robotsTxtBody: string | null = null;
+  try {
+    const r = await fetch(`${parsedUrl.protocol}//${parsedUrl.host}/robots.txt`, {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (r.ok) robotsTxtBody = await r.text();
+  } catch { /* unreachable or timeout — treat as no robots.txt */ }
+  signals.hasRobotsTxt = robotsTxtBody !== null;
+  signals.aiCrawlerAccess = checkAllCrawlers(robotsTxtBody);
 
   // ─── Images ─────────────────────────────────────────────────────────────────
   const allImgs = $('img');

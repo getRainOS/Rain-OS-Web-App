@@ -2,6 +2,7 @@
 // Fetches key source files from a GitHub repo and scores them against
 // the 5 AEO pillars: AI Readability, Digital Authority,
 // Conversion Readiness, Product Discoverability, and RAG Readiness.
+import { checkAllCrawlers, scoreAiCrawlerAccess, type CrawlerStatus } from './robotsCheck';
 
 export type DetectedFramework =
   | 'Next.js' | 'Nuxt' | 'SvelteKit' | 'Remix' | 'Astro'
@@ -21,7 +22,7 @@ export interface RepoSignals {
   // AI crawlability
   hasLlmsTxt: boolean;
   hasRobotsTxt: boolean;
-  robotsTxtAllowsAiCrawlers: boolean;
+  aiCrawlerAccess: CrawlerStatus[];
   // Package
   hasPackageJson: boolean;
   packageName: string | null;
@@ -236,7 +237,9 @@ function parseTemplateSignals(content: string): {
 // ─── Scoring functions ─────────────────────────────────────────────────────
 
 function scoreAiReadability(signals: RepoSignals): number {
-  let score = 40;
+  // Base lowered from 40 to 23 to make room for the 17-point AI-crawler-access
+  // block below, so the pillar's ceiling stays at 100 — see scoreAiCrawlerAccess.
+  let score = 23;
   if (signals.hasReadme) score += 10;
   if (signals.readmeHasHeadings) score += 8;
   if (signals.readmeWordCount > 200) score += 6;
@@ -244,6 +247,7 @@ function scoreAiReadability(signals: RepoSignals): number {
   if (signals.hasLlmsTxt) score += 15;
   if (signals.hasSchemaMarkup) score += 12;
   if (signals.templateHasCanonical) score += 5;
+  score += scoreAiCrawlerAccess(signals.hasRobotsTxt, signals.aiCrawlerAccess);
   return Math.min(100, score);
 }
 
@@ -272,15 +276,17 @@ function scoreConversionReadiness(signals: RepoSignals): number {
 }
 
 function scoreProductDiscoverability(signals: RepoSignals): number {
+  // robots.txt/AI-crawler-access scoring moved to scoreAiReadability (it's an
+  // AI-crawlability signal, not a product-discoverability one). The
+  // remaining bonuses are scaled up proportionally (same relative emphasis
+  // as before) so this pillar's ceiling stays at 100 instead of dropping to 83.
   let score = 25;
-  if (signals.hasPackageJson) score += 7;
-  if (signals.packageDescription) score += 10;
-  if (signals.packageHasKeywords) score += 10;
-  if (signals.hasRobotsTxt) score += 7;
-  if (signals.robotsTxtAllowsAiCrawlers) score += 10;
-  if (signals.hasLlmsTxt) score += 14;
-  if (signals.hasSchemaMarkup) score += 12;
-  if (signals.hasOpenGraph) score += 5;
+  if (signals.hasPackageJson) score += 9;
+  if (signals.packageDescription) score += 13;
+  if (signals.packageHasKeywords) score += 13;
+  if (signals.hasLlmsTxt) score += 18;
+  if (signals.hasSchemaMarkup) score += 16;
+  if (signals.hasOpenGraph) score += 6;
   return Math.min(100, score);
 }
 
@@ -323,10 +329,13 @@ function buildRecommendations(signals: RepoSignals, owner: string, repo: string)
     });
   }
 
-  if (!signals.hasRobotsTxt || !signals.robotsTxtAllowsAiCrawlers) {
+  const blockedCrawlers = signals.aiCrawlerAccess.filter(c => c.access === 'blocked').map(c => c.crawler);
+  if (!signals.hasRobotsTxt || blockedCrawlers.length > 0) {
     recs.push({
-      issue: !signals.hasRobotsTxt ? 'robots.txt absent' : 'robots.txt does not explicitly allow AI crawlers',
-      recommendation: 'Add explicit Allow rules for major AI crawlers (GPTBot, ClaudeBot, PerplexityBot).',
+      issue: !signals.hasRobotsTxt
+        ? 'robots.txt absent'
+        : `robots.txt blocks ${blockedCrawlers.join(', ')}`,
+      recommendation: 'Add explicit Allow rules for major AI crawlers (GPTBot, ClaudeBot, PerplexityBot, Google-Extended).',
       severity: 'high',
       artifact: {
         type: 'robots-txt',
@@ -589,9 +598,7 @@ export async function analyzeRepo(owner: string, repo: string, token: string): P
         .length >= 3,
     hasLlmsTxt: !!llmsTxt,
     hasRobotsTxt: !!robotsTxt,
-    robotsTxtAllowsAiCrawlers:
-      (robotsTxt || '').toLowerCase().includes('gptbot') ||
-      (robotsTxt || '').toLowerCase().includes('claudebot'),
+    aiCrawlerAccess: checkAllCrawlers(robotsTxt),
     hasPackageJson: !!pkg,
     packageName: pkg?.name || null,
     packageDescription: pkg?.description || null,
