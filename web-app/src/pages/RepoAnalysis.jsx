@@ -6,7 +6,11 @@ import PillarScores from '../components/PillarScores.jsx';
 import ArtifactBlock from '../components/ArtifactBlock.jsx';
 import styles from './RepoAnalysis.module.css';
 
-const JS_RISK_COLORS = { low: '#22c55e', medium: '#f59e0b', high: '#ef4444' };
+// Hex literals, not var(--green)/var(--yellow)/var(--red): the jsRiskBanner
+// style below appends a hex alpha suffix ("18") to build a tinted
+// background, which only works with a literal hex string. Values match the
+// --green/--yellow/--red tokens in index.css exactly.
+const JS_RISK_COLORS = { low: '#4ade80', medium: '#fbbf24', high: '#f87171' };
 const JS_RISK_LABELS = {
   low: 'Low JS-Rendering Risk — site is SSR/SSG; AI crawlers can read your content',
   medium: 'Medium JS-Rendering Risk — some server-side rendering detected; spot-check with URL Scanner',
