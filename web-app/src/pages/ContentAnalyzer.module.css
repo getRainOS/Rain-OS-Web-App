@@ -229,6 +229,7 @@
   align-items: center;
   justify-content: center;
   margin-top: 1px;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ── Authorship signals card ──────────────────────────────────────────────── */
@@ -271,6 +272,7 @@
   font-weight: 700;
   color: var(--accent);
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ── Rewrite button ─────────────────────────────────────────────────────────── */
