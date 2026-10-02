@@ -1,4 +1,4 @@
-.root {
+.page {
   max-width: 820px;
 }
 
@@ -13,7 +13,7 @@
   margin-bottom: 8px;
 }
 
-.titleIcon {
+.iconTitle {
   width: 24px;
   height: 24px;
   color: var(--accent);
@@ -28,10 +28,33 @@
 
 .disclaimer {
   background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 12px 16px;
   margin-bottom: 20px;
+}
+
+.disclaimerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.disclaimerTitle {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.disclaimerToggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .disclaimerText {
@@ -103,21 +126,24 @@
 
 .input::placeholder { color: var(--text-dim); }
 
+.formRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 16px;
+}
+
 .examples {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   align-items: center;
-  margin-top: 10px;
-}
-
-.examplesLabel {
-  font-size: 11.5px;
   color: var(--text-dim);
-  margin-right: 4px;
+  font-size: 11.5px;
 }
 
-.exampleChip {
+.exampleLink {
   font-size: 11.5px;
   padding: 4px 10px;
   background: rgba(91,95,199,0.06);
@@ -129,22 +155,17 @@
   transition: background 0.15s, border-color 0.15s;
 }
 
-.exampleChip:hover:not(:disabled) {
+.exampleLink:hover:not(:disabled) {
   background: rgba(91,95,199,0.12);
   border-color: rgba(91,95,199,0.35);
 }
 
-.exampleChip:disabled { opacity: 0.5; cursor: not-allowed; }
+.exampleLink:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.submitBtn {
-  margin-top: 16px;
-  align-self: flex-start;
-  display: inline-flex;
+.errorBox {
+  display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.error {
   font-size: 13px;
   color: var(--red);
   background: rgba(239,68,68,0.08);
@@ -154,134 +175,53 @@
   margin: 12px 0 0;
 }
 
-.demoNote {
-  font-size: 12px;
-  color: var(--text-dim);
-  margin: 8px 0 0;
-  font-style: italic;
-}
-
 /* Results */
-.results {
+.resultsWrap {
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
 
-.resultsHeader {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.resultsTitle {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.4px;
-  margin: 0 0 4px;
-  line-height: 1.3;
-}
-
-.resultsUrl {
-  font-size: 12.5px;
-  color: var(--accent);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.resultsUrl:hover { text-decoration: underline; }
-
-/* Status banner */
-.statusBanner {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 14px 16px;
-  border: 1px solid;
-  border-radius: var(--radius);
-}
-
-.statusIcon {
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
-.statusTitle {
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 3px;
-}
-
-.statusDesc {
-  font-size: 12.5px;
-  color: var(--text-muted);
-  line-height: 1.5;
-}
-
-/* Score card */
-.scoreCard {
+.resultCard {
   display: flex;
   flex-direction: column;
-  gap: 12px;
 }
 
-.scoreHeader {
+.resultMain {
   display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.resultCite {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.resultCiteNeutral,
+.resultCiteGood,
+.resultCiteBad {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.scoreLabel {
-  font-size: 14px;
-  font-weight: 600;
-  margin: 0 0 2px;
-}
-
-.scoreSub {
-  font-size: 12px;
-  color: var(--text-dim);
-  margin: 0;
-}
-
-.scoreValue {
-  font-size: 36px;
+  gap: 8px;
+  font-size: 16px;
   font-weight: 700;
-  letter-spacing: -1px;
-  line-height: 1;
 }
 
-.scoreOutOf {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-dim);
-  margin-left: 2px;
-}
+.resultCiteNeutral { color: var(--text-muted); }
+.resultCiteGood { color: var(--green); }
+.resultCiteBad { color: var(--red); }
 
-.scoreTrack {
-  height: 8px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.scoreFill {
-  height: 100%;
-  border-radius: 999px;
-  transition: width 0.6s ease-out;
-}
-
-.scoreSummary {
+.resultTopic {
   font-size: 13px;
+  color: var(--text-dim);
+}
+
+.resultSummary {
+  font-size: 13.5px;
   color: var(--text-muted);
   line-height: 1.55;
-  margin: 4px 0 0;
 }
 
 /* Section common */
@@ -301,6 +241,7 @@
   border-radius: 999px;
   background: rgba(91,95,199,0.15);
   color: var(--accent);
+  font-variant-numeric: tabular-nums;
 }
 
 .sectionSub {
@@ -310,7 +251,9 @@
 }
 
 /* Sources */
-.sourcesList {
+.sourcesCard {}
+
+.sourceGrid {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -334,31 +277,6 @@
   border-color: rgba(91,95,199,0.2);
 }
 
-.sourceItemSelf {
-  background: rgba(34,197,94,0.07);
-  border-color: rgba(34,197,94,0.3);
-}
-
-.sourceItemSelf:hover {
-  background: rgba(34,197,94,0.12);
-  border-color: rgba(34,197,94,0.45);
-}
-
-.sourceRank {
-  flex-shrink: 0;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.06);
-  color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 1px;
-}
-
 .sourceFavicon {
   width: 18px;
   height: 18px;
@@ -368,16 +286,9 @@
   background: rgba(255,255,255,0.04);
 }
 
-.sourceContent {
+.sourceBody {
   flex: 1;
   min-width: 0;
-}
-
-.sourceTitleRow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
 }
 
 .sourceTitle {
@@ -387,82 +298,9 @@
   line-height: 1.35;
 }
 
-.youBadge {
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  padding: 1px 6px;
-  border-radius: 4px;
-  background: rgba(34,197,94,0.18);
-  color: #22c55e;
-}
-
-.sourceSnippet {
-  font-size: 12px;
-  color: var(--text-muted);
-  line-height: 1.5;
-  margin: 6px 0 0;
-  font-style: italic;
-}
-
-.sourceExternal {
-  width: 13px;
-  height: 13px;
-  color: var(--text-dim);
-  flex-shrink: 0;
-  margin-top: 5px;
-}
-
-/* Competitor gap */
-.gapCard {}
-
-.gapList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.gapItem {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 12px;
-  background: rgba(239,68,68,0.05);
-  border: 1px solid rgba(239,68,68,0.18);
-  border-radius: 999px;
-  text-decoration: none;
-  color: var(--text);
-  font-size: 12.5px;
-  transition: background 0.15s, border-color 0.15s, transform 0.15s;
-}
-
-.gapItem:hover {
-  background: rgba(239,68,68,0.1);
-  border-color: rgba(239,68,68,0.35);
-  transform: translateY(-1px);
-}
-
-.gapFavicon {
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
-  flex-shrink: 0;
-  background: rgba(255,255,255,0.04);
-}
-
-.gapDomain {
-  font-weight: 600;
-  color: var(--text);
-}
-
-.gapExternal {
-  width: 11px;
-  height: 11px;
-  color: var(--text-dim);
-  flex-shrink: 0;
-}
-
 /* Answer excerpt */
+.answerCard {}
+
 .answerQuote {
   font-size: 13.5px;
   color: var(--text-muted);
@@ -515,9 +353,10 @@
   border-radius: 999px;
   background: rgba(91,95,199,0.15);
   color: var(--accent);
+  font-variant-numeric: tabular-nums;
 }
 
-/* View map link inside competitor gap */
+/* View map link inside sources card */
 .viewMapLink {
   display: inline-flex;
   align-items: center;
@@ -549,7 +388,7 @@
 
 .urlScannerCta:hover { text-decoration: underline; }
 
-/* Competitor Map empty state */
+/* Competitor Map / Trend History empty state */
 .emptyMap {
   display: flex;
   flex-direction: column;
@@ -579,6 +418,66 @@
   line-height: 1.55;
   max-width: 480px;
   margin: 0 0 12px;
+}
+
+/* Trend History */
+.trendActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.trendRow {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.trendRow:hover {
+  background: var(--surface-2);
+}
+
+.trendStatus {
+  flex-shrink: 0;
+  text-align: center;
+  min-width: 60px;
+}
+
+.trendStatusLabel {
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+.trendBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.trendTopic {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trendMeta {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.trendTime {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
 }
 
 /* Competitor Map */
@@ -618,6 +517,7 @@
   font-weight: 700;
   letter-spacing: -0.5px;
   color: var(--text);
+  font-variant-numeric: tabular-nums;
 }
 
 .mapStatValueSm {
@@ -636,6 +536,7 @@
   font-size: 11px;
   color: var(--text-dim);
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
 @media (max-width: 600px) {
@@ -690,12 +591,13 @@
   flex-shrink: 0;
 }
 
+/* Self-contained popover — stays dark regardless of page theme, so its own
+   background/text use tokens freely without any light/dark special-casing. */
 .scatterTooltip {
-  background: #0b0f1e;
+  background: var(--surface-3);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 8px 12px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
 }
 
 .scatterTooltipDomain {
@@ -708,6 +610,7 @@
 .scatterTooltipStat {
   font-size: 11.5px;
   color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
 }
 
 .mapCardHeader {
@@ -776,6 +679,7 @@
   align-items: center;
   justify-content: center;
   margin-top: 1px;
+  font-variant-numeric: tabular-nums;
 }
 
 .domainFavicon {
@@ -826,6 +730,10 @@
   flex-wrap: wrap;
 }
 
+.metric {
+  font-variant-numeric: tabular-nums;
+}
+
 .metric strong {
   color: var(--text);
   font-weight: 700;
@@ -836,67 +744,39 @@
   opacity: 0.6;
 }
 
-.coverageTrack {
-  position: relative;
-  height: 18px;
-  background: rgba(255,255,255,0.04);
-  border-radius: 999px;
+.domainBarWrap {
+  height: 4px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 2px;
   overflow: hidden;
 }
 
-.coverageFill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  background: linear-gradient(90deg, rgba(91,95,199,0.7), rgba(99,102,241,0.60));
-  border-radius: 999px;
+.domainBar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
   transition: width 0.5s ease-out;
 }
 
-.coverageLabel {
-  position: relative;
-  display: block;
-  font-size: 10.5px;
-  font-weight: 600;
-  color: var(--text);
-  line-height: 18px;
-  text-align: right;
-  padding: 0 8px;
-  z-index: 1;
-  letter-spacing: 0.02em;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
-}
-
-.domainInsight {
-  font-size: 12.5px;
-  color: var(--text-muted);
-  line-height: 1.55;
-  margin: 0;
-}
-
-.topicChips {
+.domainMeta {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 4px 10px;
+  font-size: 11.5px;
+  color: var(--text-dim);
 }
 
-.topicChip {
-  font-size: 10.5px;
-  padding: 2px 8px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  color: var(--text-dim);
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.domainMetaLabel {
+  font-variant-numeric: tabular-nums;
 }
 
-.topicChipMore {
-  font-size: 10.5px;
-  padding: 2px 8px;
-  color: var(--text-dim);
-  font-style: italic;
+.domainMetaLink a {
+  color: var(--accent);
+}
+
+.domainMetaLink a:hover {
+  text-decoration: underline;
 }
 
 /* Per-topic timeline (backend-driven) */
