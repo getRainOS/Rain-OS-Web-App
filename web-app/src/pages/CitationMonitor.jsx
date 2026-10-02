@@ -25,13 +25,13 @@ function DisclaimerBlock() {
   const [collapsed, setCollapsed] = useState(true);
   return (
     <div className={styles.disclaimer} style={{ padding: collapsed ? '8px 16px' : '12px 16px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
-        <strong style={{ color: '#94a3b8', fontWeight: 600 }}>How this works — and its limits.</strong>
+      <div className={styles.disclaimerHeader}>
+        <strong className={styles.disclaimerTitle}>How this works — and its limits.</strong>
         <button
           onClick={() => setCollapsed(!collapsed)}
           aria-expanded={!collapsed}
           aria-label={collapsed ? 'Expand disclaimer' : 'Collapse disclaimer'}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: '#64748b', display: 'flex', alignItems: 'center', flexShrink: 0 }}
+          className={styles.disclaimerToggle}
         >
           {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
@@ -46,13 +46,13 @@ function WhatDoesThisMeanBlock() {
   const [collapsed, setCollapsed] = useState(true);
   return (
     <div className={styles.disclaimer} style={{ padding: collapsed ? '8px 16px' : '12px 16px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
-        <strong style={{ color: '#94a3b8', fontWeight: 600 }}>What does this mean?</strong>
+      <div className={styles.disclaimerHeader}>
+        <strong className={styles.disclaimerTitle}>What does this mean?</strong>
         <button
           onClick={() => setCollapsed(!collapsed)}
           aria-expanded={!collapsed}
           aria-label={collapsed ? 'Expand explanation' : 'Collapse explanation'}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: '#64748b', display: 'flex', alignItems: 'center', flexShrink: 0 }}
+          className={styles.disclaimerToggle}
         >
           {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
@@ -462,7 +462,7 @@ export default function CitationMonitor() {
               <ol className={styles.timelineList}>
                 {topicHistory.map((h, i) => (
                   <li key={h.id ?? i} className={styles.timelineItem}>
-                    <div className={styles.timelineDot} style={{ background: h.cited ? '#22c55e' : 'var(--text-dim)' }} />
+                    <div className={styles.timelineDot} style={{ background: h.cited ? 'var(--green)' : 'var(--text-dim)' }} />
                     <div className={styles.timelineMain}>
                       <div className={styles.timelineRow}>
                         <span className={styles.timelineDate}>
@@ -472,7 +472,7 @@ export default function CitationMonitor() {
                         </span>
                         <span
                           className={styles.timelineStatus}
-                          style={{ color: h.cited ? '#22c55e' : 'var(--text-dim)' }}
+                          style={{ color: h.cited ? 'var(--green)' : 'var(--text-dim)' }}
                         >
                           {h.cited ? 'Cited' : 'Not cited'}
                         </span>
@@ -522,38 +522,31 @@ function TrendHistoryView({ groups, loading, onRunCheck, onClearHistory, onTopic
 
   return (
     <div className="fade-in">
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
-        <button onClick={onClearHistory} style={{
-          background: 'rgba(255,255,255,0.06)', color: '#94a3b8',
-          border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10,
-          padding: '9px 18px', fontSize: 13, fontWeight: 500, cursor: 'pointer',
-          display: 'inline-flex', alignItems: 'center', gap: 6,
-        }}>
+      <div className={styles.trendActions}>
+        <button type="button" className={styles.clearBtn} onClick={onClearHistory}>
           <Trash2 size={12} /> Clear history
         </button>
       </div>
 
       {groups.map((g, i) => (
-        <div key={i} className={`card ${styles.trendRow}`} style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '16px 20px', marginBottom: 12, cursor: 'pointer' }}
+        <div
+          key={i}
+          className={`card ${styles.trendRow}`}
           onClick={() => onTopicClick(g.topic)}
-          onMouseEnter={e => e.currentTarget.style.background = '#060a18'}
-          onMouseLeave={e => e.currentTarget.style.background = ''}
         >
-          <div style={{ flexShrink: 0, textAlign: 'center', minWidth: 60 }}>
+          <div className={styles.trendStatus}>
             {g.cited
-              ? <CheckCircle2 style={{ width: 22, height: 22, color: '#22c55e' }} />
+              ? <CheckCircle2 style={{ width: 22, height: 22, color: 'var(--green)' }} />
               : <AlertCircle style={{ width: 22, height: 22, color: 'var(--text-dim)' }} />}
-            <div style={{ fontSize: 10, color: '#64748b', marginTop: 4 }}>{g.cited ? 'Cited' : 'Not cited'}</div>
+            <div className={styles.trendStatusLabel}>{g.cited ? 'Cited' : 'Not cited'}</div>
           </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 14, fontWeight: 600, color: '#f1f5f9', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {g.topic}
-            </div>
-            <div style={{ fontSize: 12, color: '#64748b' }}>
+          <div className={styles.trendBody}>
+            <div className={styles.trendTopic}>{g.topic}</div>
+            <div className={styles.trendMeta}>
               {g.checks} check{g.checks > 1 ? 's' : ''}
             </div>
           </div>
-          <div style={{ fontSize: 11, color: '#475569' }}>{timeAgo(g.checkedAt)}</div>
+          <div className={styles.trendTime}>{timeAgo(g.checkedAt)}</div>
         </div>
       ))}
     </div>
@@ -699,17 +692,17 @@ function CompetitorMapView({ map, history, ownDomain, loading, onRunCheck, onCle
                   label={{ value: 'Avg rank (lower = better)', angle: -90, position: 'insideLeft', fill: 'rgba(255,255,255,0.4)', fontSize: 11 }}
                 />
                 <Tooltip content={<ScatterTooltip />} cursor={{ strokeDasharray: '3 3', stroke: 'rgba(255,255,255,0.15)' }} />
-                <Scatter name="Competitors" data={scatterData} fill="#5b5fc7" />
+                <Scatter name="Competitors" data={scatterData} fill="var(--accent)" />
                 {ownScatterData.length > 0 && (
-                  <Scatter name="You" data={ownScatterData} fill="#22c55e" shape="star" />
+                  <Scatter name="You" data={ownScatterData} fill="var(--text)" shape="star" />
                 )}
               </ScatterChart>
             </ResponsiveContainer>
             {ownScatterData.length > 0 && (
               <div className={styles.scatterLegend}>
-                <span className={styles.scatterLegendDot} style={{ background: '#5b5fc7' }} />
+                <span className={styles.scatterLegendDot} style={{ background: 'var(--accent)' }} />
                 Competitors
-                <span className={styles.scatterLegendDot} style={{ background: '#22c55e', marginLeft: 14 }} />
+                <span className={styles.scatterLegendDot} style={{ background: 'var(--text)', marginLeft: 14 }} />
                 You
               </div>
             )}
