@@ -304,10 +304,10 @@
 }
 
 .kpiValue {
-  font-size: 30px;
-  font-weight: 600;
-  letter-spacing: -0.4px;
-  color: #e2e8f0;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+  color: var(--text);
   font-variant-numeric: tabular-nums;
 }
 
@@ -438,8 +438,8 @@
 .chartCard {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 18px;
+  border-radius: 12px;
+  padding: 22px;
 }
 
 .chartHeader {
@@ -451,11 +451,11 @@
 }
 
 .chartTitle {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
   color: var(--text);
   margin-bottom: 2px;
-  letter-spacing: -0.1px;
+  letter-spacing: -0.2px;
 }
 
 .chartSub {
@@ -941,40 +941,6 @@ button.emptyLink {
   font-variant-numeric: tabular-nums;
 }
 
-/* ── Pillar table (replaces the donut + progress-bar legend) ── */
-.pillarTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-
-.pillarTable th {
-  text-align: left;
-  font-size: 10.5px;
-  font-weight: 600;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 0 0 6px;
-  border-bottom: 1px solid var(--border);
-}
-
-.pillarTable td {
-  font-size: 12.5px;
-  color: var(--text);
-  padding: 7px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-
-.pillarTable tr:last-child td {
-  border-bottom: none;
-}
-
-.pillarTable th:not(:first-child),
-.pillarTable td:not(:first-child) {
-  text-align: right;
-}
-
 .pillarTableDot {
   display: inline-block;
   width: 6px;
@@ -984,13 +950,105 @@ button.emptyLink {
   flex-shrink: 0;
 }
 
-.pillarTableScore {
-  font-weight: 600;
+/* ── Pillar Breakdown hero layout (Profound-style stat + ranked side list) ── */
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 24px;
+  margin-top: 4px;
+}
+
+@media (max-width: 900px) {
+  .heroGrid { grid-template-columns: 1fr; }
+}
+
+.heroMain {
+  min-width: 0;
+}
+
+.heroStatRow {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.heroStatValue {
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  line-height: 1;
+  color: var(--text);
   font-variant-numeric: tabular-nums;
 }
 
-.pillarTableStatus {
-  color: var(--text-muted);
+.heroStatMax {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-dim);
+  margin-right: 8px;
+}
+
+.heroChartBg {
+  background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 16px 16px;
+  border-radius: 8px;
+  margin: 0 -4px;
+}
+
+.heroRank {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-left: 1px solid var(--border);
+  padding-left: 20px;
+}
+
+.heroRankHeader {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.heroRankRow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.heroRankRow:last-child {
+  border-bottom: none;
+}
+
+.heroRankLabelRow {
+  display: flex;
+  align-items: center;
+}
+
+.heroRankLabel {
+  font-size: 12px;
+  color: var(--text);
+}
+
+.heroRankValueRow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-left: 13px;
+}
+
+.heroRankScore {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
 }
 
 .contentHealth {
