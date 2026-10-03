@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { buildCitationShare } from '../lib/citationShare.js';
+import styles from './ShareOfVoice.module.css';
 
 /* ── Shared inline styles ─────────────────────────────────────────────────── */
 const S = {
@@ -30,7 +31,6 @@ const S = {
     padding: '10px 14px', color: 'var(--text)', fontSize: 14,
     outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.15s',
   },
-  grid2: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 },
   hint: { fontSize: 11, color: 'var(--text-dim)', marginTop: 6 },
   urlScannerCta: {
     display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 12,
@@ -407,7 +407,7 @@ export default function ShareOfVoice() {
 
           {!result ? (
             <form onSubmit={handleCheck} style={S.card}>
-              <div style={S.grid2}>
+              <div className={styles.formGrid2}>
                 <div>
                   <label style={S.label}>Brand / product name</label>
                   <input style={S.input} type="text" value={brand} onChange={e => setBrand(e.target.value)}
@@ -477,7 +477,7 @@ export default function ShareOfVoice() {
 
               {/* Per-prompt cards */}
               <h3 style={{ ...S.sectionTitle, marginBottom: 16 }}>Results by query phrasing</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 24 }}>
+              <div className={styles.resultsGrid3}>
                 {result.modelResults.map(m => <ModelCard key={m.modelKey} m={m} />)}
               </div>
 
