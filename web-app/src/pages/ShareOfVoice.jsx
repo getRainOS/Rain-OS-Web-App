@@ -223,6 +223,7 @@ function WhatDoesThisMeanBox() {
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 export default function ShareOfVoice() {
+  const [name,  setName]    = useState('');
   const [brand, setBrand]   = useState('');
   const [topic, setTopic]   = useState('');
   const [url,   setUrl]     = useState('');
@@ -244,13 +245,13 @@ export default function ShareOfVoice() {
 
   async function handleCheck(e) {
     e.preventDefault();
-    if (!brand.trim() || !topic.trim()) return;
+    if (!name.trim() || !brand.trim() || !topic.trim()) return;
     setLoading(true);
     setError('');
     setResult(null);
     setPlanGated(false);
     try {
-      const { data } = await api.shareOfVoice({ brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined });
+      const { data } = await api.shareOfVoice({ name: name.trim(), brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined });
       setResult(data?.data ?? data);
       // prepend to history without refetch
       setHistory(prev => [{ ...(data?.data ?? data), checkedAt: new Date().toISOString(), id: Date.now() }, ...prev]);
@@ -382,6 +383,12 @@ export default function ShareOfVoice() {
 
           {!result ? (
             <form onSubmit={handleCheck} style={S.card}>
+              <div style={{ marginBottom: 20 }}>
+                <label style={S.label}>Analysis name</label>
+                <input style={S.input} type="text" value={name} onChange={e => setName(e.target.value)}
+                  placeholder="e.g. Acme Roofing SOV check" maxLength={120} required />
+                <div style={S.hint}>Required — so you can find this check again later.</div>
+              </div>
               <div className={styles.formGrid2}>
                 <div>
                   <label style={S.label}>Brand / product name</label>
@@ -414,6 +421,9 @@ export default function ShareOfVoice() {
               {/* Overview card */}
               <div style={S.card}>
                 <div style={{ marginBottom: 20 }}>
+                  {result.name && (
+                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>{result.name}</div>
+                  )}
                   <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>{result.brand}</div>
                   <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 14 }}>"{result.topic}"</div>
 

@@ -58,6 +58,7 @@ const S = {
   resultMeta: { flex: 1 },
   resultTitle: { fontSize: 18, fontWeight: 600, color: 'var(--text)', marginBottom: 6 },
   resultSub: { fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.6 },
+  resultName: { fontSize: 12, fontWeight: 600, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 },
 
   statusText: { display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600 },
   statusDot: { width: 6, height: 6, borderRadius: '50%', display: 'inline-block', flexShrink: 0 },
@@ -242,6 +243,7 @@ function WhatDoesThisMeanBox() {
 }
 
 export default function BrandVisibility() {
+  const [name, setName] = useState('');
   const [brand, setBrand] = useState('');
   const [topic, setTopic] = useState('');
   const [url, setUrl] = useState('');
@@ -264,13 +266,13 @@ export default function BrandVisibility() {
 
   async function handleCheck(e) {
     e.preventDefault();
-    if (!brand.trim() || !topic.trim()) return;
+    if (!name.trim() || !brand.trim() || !topic.trim()) return;
     setLoading(true);
     setError('');
     setPlanGated(false);
     setResult(null);
     try {
-      const { data } = await api.brandVisibility({ brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined });
+      const { data } = await api.brandVisibility({ name: name.trim(), brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined });
       setResult(data.data || data);
       // Refresh history
       const h = await api.brandVisHistory();
@@ -396,6 +398,18 @@ export default function BrandVisibility() {
 
       <div style={S.card}>
         <form onSubmit={handleCheck}>
+          <div style={{ marginBottom: 20 }}>
+            <label style={S.label}>Analysis name</label>
+            <input
+              style={S.input}
+              value={name}
+              onChange={e => setName(e.target.value)}
+              placeholder="e.g. Acme Roofing brand check"
+              required
+              maxLength={120}
+            />
+            <div style={S.hint}>Required — so you can find this check again later.</div>
+          </div>
           <div className={styles.formGrid2}>
             <div>
               <label style={S.label}>Brand or product name</label>
@@ -449,6 +463,7 @@ export default function BrandVisibility() {
         <div>
           <div style={S.card}>
             <div style={S.resultMeta}>
+              {result.name && <div style={S.resultName}>{result.name}</div>}
               <div style={S.resultTitle}>{result.brand}</div>
               <p style={S.resultSub}>{result.summary}</p>
               <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 10 }}>

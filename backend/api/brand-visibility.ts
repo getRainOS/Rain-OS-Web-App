@@ -36,8 +36,14 @@ export default async function handler(req: express.Request, res: express.Respons
     return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Usage limit reached. Upgrade to continue.' } as ApiError);
   }
 
-  const { brand, topic, url } = req.body as { brand?: string; topic?: string; url?: string };
+  const { name, brand, topic, url } = req.body as { name?: string; brand?: string; topic?: string; url?: string };
 
+  if (!name || typeof name !== 'string' || name.trim().length < 1) {
+    return res.status(400).json({ error: 'bad_request', message: 'name is required' } as ApiError);
+  }
+  if (name.length > 120) {
+    return res.status(400).json({ error: 'bad_request', message: 'name is too long (max 120 characters)' } as ApiError);
+  }
   if (!brand || typeof brand !== 'string' || brand.trim().length < 2) {
     return res.status(400).json({ error: 'bad_request', message: 'brand is required (min 2 characters)' } as ApiError);
   }
@@ -70,6 +76,7 @@ export default async function handler(req: express.Request, res: express.Respons
     // are no longer computed (they were LLM guesses) — omitted here so they
     // fall back to their DB defaults (0 / null / []).
     await saveBrandVisibilityCheck(user.id, {
+      name: name.trim(),
       brand: result.brand,
       topic: result.topic,
       url: result.url,
@@ -85,7 +92,7 @@ export default async function handler(req: express.Request, res: express.Respons
     const updated = await incrementUserUsage(user.id);
     if (updated) res.setHeader('X-Usage-Info', JSON.stringify(updated.usage));
 
-    return res.status(200).json({ success: true, data: result, ...result });
+    return res.status(200).json({ success: true, data: { ...result, name: name.trim() }, ...result, name: name.trim() });
   } catch (error) {
     if (error instanceof GenerationIncompleteError) {
       return res.status(422).json({

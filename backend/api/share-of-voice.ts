@@ -37,8 +37,14 @@ export async function sovHandler(req: express.Request, res: express.Response) {
     return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Usage limit reached. Upgrade to continue.' } as ApiError);
   }
 
-  const { brand, topic, url } = req.body as { brand?: string; topic?: string; url?: string };
+  const { name, brand, topic, url } = req.body as { name?: string; brand?: string; topic?: string; url?: string };
 
+  if (!name || typeof name !== 'string' || name.trim().length < 1) {
+    return res.status(400).json({ error: 'bad_request', message: 'name is required' } as ApiError);
+  }
+  if (name.length > 120) {
+    return res.status(400).json({ error: 'bad_request', message: 'name is too long (max 120 characters)' } as ApiError);
+  }
   if (!brand || typeof brand !== 'string' || brand.trim().length < 2) {
     return res.status(400).json({ error: 'bad_request', message: 'brand is required (min 2 characters)' } as ApiError);
   }
@@ -70,10 +76,11 @@ export async function sovHandler(req: express.Request, res: express.Response) {
     // count of prompts that mentioned the brand. recommendations is no
     // longer computed and is omitted so it falls back to its DB default ([]).
     await pool.query(
-      `INSERT INTO sov_checks (user_id, brand, topic, url, overall_sov, cited_count, model_results, top_competitors, summary)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+      `INSERT INTO sov_checks (user_id, name, brand, topic, url, overall_sov, cited_count, model_results, top_competitors, summary)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
       [
         user.id,
+        name.trim(),
         result.brand,
         result.topic,
         result.url,
@@ -88,7 +95,7 @@ export async function sovHandler(req: express.Request, res: express.Response) {
     const updated = await incrementUserUsage(user.id);
     if (updated) res.setHeader('X-Usage-Info', JSON.stringify(updated.usage));
 
-    return res.status(200).json({ success: true, data: result });
+    return res.status(200).json({ success: true, data: { ...result, name: name.trim() } });
   } catch (err) {
     const { status, body } = classifyGeminiError(err, 'share-of-voice');
     return res.status(status).json(body as ApiError);
@@ -108,6 +115,7 @@ export async function sovHistoryHandler(req: express.Request, res: express.Respo
 
   const items = rows.rows.map((r: any) => ({
     id:               Number(r.id),
+    name:             r.name,
     brand:            r.brand,
     topic:            r.topic,
     url:              r.url,
