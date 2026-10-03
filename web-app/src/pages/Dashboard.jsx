@@ -33,26 +33,11 @@ function getFavicon(domain) {
 }
 
 const PILLARS = [
-  { key: 'ai_readability',          label: 'AI Readability',       color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
-    subs: ['semantic_clarity','readability_score','logical_structure','aeo_alignment'],
-    subLabels: ['Semantic Clarity','Readability Score','Logical Structure','AEO Alignment'],
-    subTooltips: ['How clearly your content conveys meaning beyond just keywords.','How easy it is for both humans and AI to read your content.','Whether your content follows a logical flow with clear headings.','How well your content matches answer-first formatting AI prefers.'] },
-  { key: 'digital_authority',       label: 'Digital Authority',    color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck,
-    subs: ['entity_recognition','citation_readiness','descriptive_metadata'],
-    subLabels: ['Entity Recognition','Citation Readiness','Descriptive Metadata'],
-    subTooltips: ['Whether AI can identify your brand, people, and products as distinct entities.','How likely AI is to cite you as a source when answering related questions.','Quality of your title tags, meta descriptions, and schema markup.'] },
-  { key: 'conversion_readiness',    label: 'Conversion Readiness', color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick,
-    subs: ['schema_extraction','qa_format_detection','metadata_audit'],
-    subLabels: ['Schema Extraction','QA-Format Detection','Metadata Audit'],
-    subTooltips: ['How well structured data helps AI extract pricing, products, and offers.','Whether your content uses question-answer format AI likes to quote.','Completeness of meta tags, Open Graph, and social sharing data.'] },
-  { key: 'product_discoverability', label: 'Discoverability',      color: PILLAR_COLORS.product_discoverability, Icon: SearchCheck,
-    subs: ['schema_completeness','answer_layer_quality','freshness_signals','conversational_query_match'],
-    subLabels: ['Schema Completeness','Answer Layer Quality','Freshness Signals','Query Match'],
-    subTooltips: ['Whether Product schema has all required fields for AI shopping engines.','How well your content directly answers common shopper questions.','How recent your content is — AI prefers up-to-date product info.','How well your content matches natural language and voice queries.'] },
-  { key: 'rag_readiness',           label: 'RAG Readiness',        color: PILLAR_COLORS.rag_readiness, Icon: Layers,
-    subs: ['information_density','semantic_mapping','narrative_nuance','hierarchical_formatting','explicit_qa_structures','authority_signals'],
-    subLabels: ['Information Density','Semantic Mapping','Narrative Nuance','Hierarchical Formatting','Explicit Q&A','Authority Signals'],
-    subTooltips: ['Deep, exhaustive coverage with high information density per chunk.','Rich vocabulary, synonyms, historical context, and entity relationships.','Multi-layered explanations, edge cases, and reasoning.','Clean markdown, logical headers, and descriptive titles.','FAQ sections, direct definitions, and problem-solution frameworks.','External links, author bios, and verifiable data points.'] },
+  { key: 'ai_readability',          label: 'AI Readability',       color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit },
+  { key: 'digital_authority',       label: 'Digital Authority',    color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck },
+  { key: 'conversion_readiness',    label: 'Conversion Readiness', color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick },
+  { key: 'product_discoverability', label: 'Discoverability',      color: PILLAR_COLORS.product_discoverability, Icon: SearchCheck },
+  { key: 'rag_readiness',           label: 'RAG Readiness',        color: PILLAR_COLORS.rag_readiness, Icon: Layers },
 ];
 
 const QUICK_ACTIONS_ALL = {
@@ -322,19 +307,6 @@ function WhatDoesThisMean({ tagline, children }) {
         </div>
         {!collapsed && <p className={styles.pillarDisclaimerText}>{children}</p>}
       </div>
-    </div>
-  );
-}
-
-/* ── Sub-score bar ── */
-function SubScoreBar({ label, value, color, tooltip }) {
-  return (
-    <div className={styles.subScoreRow} title={tooltip || label}>
-      <span className={styles.subScoreLabel}>{label}</span>
-      <div className={styles.subScoreTrack}>
-        <div className={styles.subScoreFill} style={{ width: `${value ?? 0}%`, background: color }} />
-      </div>
-      <span className={styles.subScoreVal} style={{ color }}>{value ?? '—'}</span>
     </div>
   );
 }
@@ -624,23 +596,6 @@ export default function Dashboard() {
       activePillars.forEach(p => { point[p.key] = h[p.key] ?? 0; });
       return point;
     });
-
-  /* ── sub-scores from most recent analysis ── */
-  const latest = filteredHistory[0];
-  const latestSubs = latest
-    ? activePillars.map(p => {
-        const detail = latest[`${p.key}_detail`] ?? {};
-        return {
-          ...p,
-          pillarScore: latest[p.key] ?? 0,
-          subscores: p.subs.map((sk, si) => ({
-            label: p.subLabels[si],
-            value: detail[sk] ?? null,
-            tooltip: p.subTooltips ? p.subTooltips[si] : null,
-          })),
-        };
-      })
-    : null;
 
   const citationTotal = citations.length;
   const citationCitedCount = citations.filter(c => c.cited).length;
@@ -1348,40 +1303,6 @@ export default function Dashboard() {
           </div>
         )}
       </div>
-
-      {/* ── Pillar Sub-scores (last analysis) ── */}
-      {latestSubs && latestSubs.some(p => p.subscores.some(s => s.value !== null)) && (
-        <div className={styles.chartCard}>
-          <div className={styles.chartHeader}>
-            <div>
-              <h2 className={styles.chartTitle}>Pillar Sub-scores</h2>
-              <p className={styles.chartSub}>
-                Detailed breakdown from{' '}
-                <span style={{ color: 'var(--accent)' }}>{latest?.title || latest?.url || 'last analysis'}</span>
-                <span className={styles.chartHelp} title="Each pillar breaks down into sub-metrics. Hover over any sub-score label to see what it measures. For example, Semantic Clarity measures how clearly your content conveys meaning beyond just keywords.">
-                  <HelpCircle size={11} />
-                </span>
-              </p>
-            </div>
-          </div>
-          <div className={styles.subScoresGrid}>
-            {latestSubs.map(p => (
-              <div key={p.key} className={styles.subScorePillar}>
-                <div className={styles.subScorePillarHeader}>
-                  <p.Icon style={{ width: 13, height: 13, color: '#94a3b8' }} />
-                  <span className={styles.subScorePillarLabel}>{p.label}</span>
-                  <span className={styles.subScorePillarScore}>{p.pillarScore}</span>
-                </div>
-                {p.subscores.map(s => (
-                  s.value !== null && (
-                    <SubScoreBar key={s.label} label={s.label} value={s.value} color={p.color} tooltip={s.tooltip} />
-                  )
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
     </div>
   );
