@@ -3,6 +3,8 @@
 //   { topic, url, sources: [{ domain, url, rank? }], competitorDomains? }
 // `rank` is optional — when missing we use 1-based position in the sources array.
 
+import { inferCountry } from './domainCountry.js';
+
 function insightFor({ queryCount, totalQueries, avgRank, citedAsTop }) {
   const dominanceRatio = queryCount / Math.max(totalQueries, 1);
   if (dominanceRatio >= 0.6 && totalQueries >= 3) {
@@ -33,6 +35,7 @@ function finalizeDomain(d, totalQueries) {
     bestRank: d.bestRank === Infinity ? null : d.bestRank,
     topics: d.topics,
     sampleUrl: d.sampleUrl || `https://${d.domain}`,
+    country: inferCountry(d.domain),
     insight: insightFor({
       queryCount: d.queryCount,
       totalQueries,
@@ -42,9 +45,33 @@ function finalizeDomain(d, totalQueries) {
   };
 }
 
+// Rolls up finalized domains by inferred country. Domains whose TLD carries
+// no reliable geographic signal (see domainCountry.js) are counted under
+// "Unknown" rather than dropped, so the totals still reconcile.
+function buildRegions(domains) {
+  const byCountry = new Map();
+  let unknownCount = 0;
+  for (const d of domains) {
+    if (!d.country) {
+      unknownCount += d.queryCount;
+      continue;
+    }
+    const key = d.country.name;
+    const existing = byCountry.get(key);
+    if (existing) {
+      existing.queryCount += d.queryCount;
+      existing.domainCount += 1;
+    } else {
+      byCountry.set(key, { name: key, flag: d.country.flag, queryCount: d.queryCount, domainCount: 1 });
+    }
+  }
+  const regions = Array.from(byCountry.values()).sort((a, b) => b.queryCount - a.queryCount);
+  return { regions, unknownCount };
+}
+
 export function buildCompetitorMap(history, ownDomain) {
   const totalQueries = history.length;
-  if (!totalQueries) return { totalQueries: 0, domains: [], ownPoint: null };
+  if (!totalQueries) return { totalQueries: 0, domains: [], ownPoint: null, regions: [], unknownCount: 0 };
 
   const ownNormalized = ownDomain ? ownDomain.toLowerCase().replace(/^www\./, '') : null;
   const byDomain = new Map();
@@ -116,6 +143,7 @@ export function buildCompetitorMap(history, ownDomain) {
     });
 
   const ownPoint = ownAgg ? finalizeDomain(ownAgg, totalQueries) : null;
+  const { regions, unknownCount } = buildRegions(domains);
 
-  return { totalQueries, domains, ownPoint };
+  return { totalQueries, domains, ownPoint, regions, unknownCount };
 }
