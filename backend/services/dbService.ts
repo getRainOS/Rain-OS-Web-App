@@ -490,6 +490,7 @@ export const getAiContentProfile = async (contentId: string): Promise<{ profile_
 
 export interface CitationCheckRecord {
   id: number;
+  name: string | null;
   topic: string;
   url: string | null;
   cited: boolean;
@@ -502,6 +503,7 @@ export interface CitationCheckRecord {
 
 const mapCitationRow = (row: any): CitationCheckRecord => ({
   id: Number(row.id),
+  name: row.name,
   topic: row.topic,
   url: row.url,
   cited: row.cited,
@@ -518,6 +520,7 @@ export const normaliseTopicKey = (topic: string): string =>
 export const saveCitationCheck = async (
   userId: string,
   data: {
+    name: string;
     topic: string;
     url: string | null;
     cited: boolean;
@@ -530,11 +533,12 @@ export const saveCitationCheck = async (
   const topicKey = normaliseTopicKey(data.topic);
   const res = await pool.query(
     `INSERT INTO citation_checks
-       (user_id, topic, topic_key, url, cited, alignment_score, sources, recommendations, summary)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       (user_id, name, topic, topic_key, url, cited, alignment_score, sources, recommendations, summary)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
      RETURNING *`,
     [
       userId,
+      data.name,
       data.topic,
       topicKey,
       data.url,
