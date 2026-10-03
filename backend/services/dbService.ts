@@ -618,6 +618,7 @@ export const deleteCitationChecksByUser = async (
 // --------------------------
 export interface BrandVisibilityRecord {
   id: number;
+  name: string | null;
   brand: string;
   topic: string;
   url: string | null;
@@ -636,6 +637,7 @@ export interface BrandVisibilityRecord {
 
 const mapBrandVisRow = (row: any): BrandVisibilityRecord => ({
   id: Number(row.id),
+  name: row.name ?? null,
   brand: row.brand,
   topic: row.topic,
   url: row.url ?? null,
@@ -655,6 +657,7 @@ const mapBrandVisRow = (row: any): BrandVisibilityRecord => ({
 export const saveBrandVisibilityCheck = async (
   userId: string,
   data: {
+    name: string;
     brand: string;
     topic: string;
     url?: string | null;
@@ -672,12 +675,13 @@ export const saveBrandVisibilityCheck = async (
 ): Promise<BrandVisibilityRecord | null> => {
   const res = await pool.query(
     `INSERT INTO brand_visibility_checks
-       (user_id, brand, topic, url, visibility_score, mention_status, mention_position,
+       (user_id, name, brand, topic, url, visibility_score, mention_status, mention_position,
         sentiment, sentiment_explanation, answer_excerpt, sources, competitors, recommendations, summary)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
      RETURNING *`,
     [
       userId,
+      data.name,
       data.brand,
       data.topic,
       data.url ?? null,
@@ -701,7 +705,7 @@ export const getBrandVisibilityChecksByUser = async (
   limit = 50
 ): Promise<BrandVisibilityRecord[]> => {
   const res = await pool.query(
-    `SELECT id, brand, topic, url, visibility_score, mention_status, mention_position,
+    `SELECT id, name, brand, topic, url, visibility_score, mention_status, mention_position,
             sentiment, sentiment_explanation, answer_excerpt, sources, competitors,
             recommendations, summary, checked_at
      FROM brand_visibility_checks

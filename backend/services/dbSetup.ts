@@ -84,6 +84,7 @@ CREATE INDEX IF NOT EXISTS idx_content_analyses_user_lane
 CREATE TABLE IF NOT EXISTS sov_checks (
   id BIGSERIAL PRIMARY KEY,
   user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  name TEXT,
   brand TEXT NOT NULL,
   topic TEXT NOT NULL,
   url TEXT,
@@ -99,11 +100,14 @@ CREATE TABLE IF NOT EXISTS sov_checks (
 );
 CREATE INDEX IF NOT EXISTS idx_sov_checks_user_checked_at
   ON sov_checks(user_id, checked_at DESC);
+-- Additive migration for existing deployments (idempotent)
+ALTER TABLE sov_checks ADD COLUMN IF NOT EXISTS name TEXT;
 
 -- Brand Visibility / Sentiment history (additive)
 CREATE TABLE IF NOT EXISTS brand_visibility_checks (
   id BIGSERIAL PRIMARY KEY,
   user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  name TEXT,
   brand TEXT NOT NULL,
   topic TEXT NOT NULL,
   url TEXT,
@@ -121,6 +125,8 @@ CREATE TABLE IF NOT EXISTS brand_visibility_checks (
 );
 CREATE INDEX IF NOT EXISTS idx_brand_vis_checks_user_checked_at
   ON brand_visibility_checks(user_id, checked_at DESC);
+-- Additive migration for existing deployments (idempotent)
+ALTER TABLE brand_visibility_checks ADD COLUMN IF NOT EXISTS name TEXT;
 `;
 
 const addGithubColumnsQuery = `
