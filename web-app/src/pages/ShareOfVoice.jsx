@@ -7,6 +7,7 @@ import {
   Clock, Trash2, Info, ChevronDown, ChevronUp,
   ExternalLink,
 } from 'lucide-react';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 
 /* ── Shared inline styles ─────────────────────────────────────────────────── */
 const S = {
@@ -74,7 +75,21 @@ const S = {
     background: 'var(--surface-2)', border: '1px solid var(--border)',
     borderRadius: 14, padding: 20,
   },
+  shareGrid: { display: 'grid', gridTemplateColumns: '220px 1fr', gap: 28, alignItems: 'center' },
+  shareLegend: { display: 'flex', flexDirection: 'column', gap: 10 },
+  shareLegendRow: { display: 'flex', alignItems: 'center', gap: 10 },
+  shareLegendDot: { width: 9, height: 9, borderRadius: '50%', flexShrink: 0 },
+  shareLegendLabel: { flex: 1, minWidth: 0, fontSize: 13, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
+  shareLegendPct: { fontSize: 13, fontWeight: 600, color: 'var(--text)', fontVariantNumeric: 'tabular-nums', flexShrink: 0 },
 };
+
+// Fixed small palette for distinguishing named domains in the citation-share
+// donut — the user's own domain always gets --accent; competitors cycle
+// through the rest. Not decorative: each color is a stable identity for one
+// specific domain within the chart, the same role PILLAR_COLORS plays
+// elsewhere, not a retired general-UI accent color.
+const SHARE_COLORS = ['var(--accent)', 'var(--cyan)', 'var(--green)', 'var(--orange)', 'var(--purple)', 'var(--yellow)'];
+const SHARE_OTHER_COLOR = 'var(--text-dim)';
 
 /* ── Per-prompt card ──────────────────────────────────────────────────────── */
 const MODEL_META = {
@@ -141,6 +156,58 @@ function MentionCountBadge({ count }) {
     <span style={{ ...S.statusText, color, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
       {count} of 3
     </span>
+  );
+}
+
+// Tallies real citation counts per domain across all 3 prompts' sources
+// (not the deduplicated `competitors` list, which carries no counts), caps
+// it at the top 5 + an "Other" bucket so the donut stays readable, and
+// flags whichever slice is the user's own domain so it can be highlighted.
+function buildCitationShare(result) {
+  if (!result?.modelResults) return [];
+  const ownDomain = result.url ? result.url.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/.*$/, '').toLowerCase() : null;
+
+  const counts = new Map();
+  for (const m of result.modelResults) {
+    for (const s of m.sources || []) {
+      const domain = (s.domain || '').toLowerCase().replace(/^www\./, '');
+      if (!domain) continue;
+      counts.set(domain, (counts.get(domain) || 0) + 1);
+    }
+  }
+  if (counts.size === 0) return [];
+
+  const sorted = Array.from(counts.entries())
+    .map(([domain, count]) => ({ domain, count, isOwn: domain === ownDomain }))
+    .sort((a, b) => b.count - a.count || (a.isOwn ? -1 : 0));
+
+  const TOP_N = 5;
+  const top = sorted.slice(0, TOP_N);
+  const rest = sorted.slice(TOP_N);
+  const total = sorted.reduce((s, d) => s + d.count, 0);
+
+  const slices = top.map((d, i) => ({
+    name: d.domain,
+    value: d.count,
+    pct: Math.round((d.count / total) * 100),
+    color: d.isOwn ? SHARE_COLORS[0] : SHARE_COLORS[(i % (SHARE_COLORS.length - 1)) + 1],
+    isOwn: d.isOwn,
+  }));
+  if (rest.length > 0) {
+    const restCount = rest.reduce((s, d) => s + d.count, 0);
+    slices.push({ name: `${rest.length} other site${rest.length > 1 ? 's' : ''}`, value: restCount, pct: Math.round((restCount / total) * 100), color: SHARE_OTHER_COLOR, isOwn: false });
+  }
+  return slices;
+}
+
+function ShareTooltip({ active, payload }) {
+  if (!active || !payload?.length) return null;
+  const d = payload[0].payload;
+  return (
+    <div style={{ background: 'var(--surface-3)', border: '1px solid var(--border)', borderRadius: 8, padding: '8px 12px', fontSize: 12 }}>
+      <div style={{ fontWeight: 600, color: 'var(--text)' }}>{d.name}</div>
+      <div style={{ color: 'var(--text-muted)', fontVariantNumeric: 'tabular-nums' }}>{d.pct}% of citations</div>
+    </div>
   );
 }
 
@@ -283,6 +350,8 @@ export default function ShareOfVoice() {
   }
 
   function handleReset() { setResult(null); setError(''); }
+
+  const citationShare = useMemo(() => buildCitationShare(result), [result]);
 
   // Group history by brand/topic. Old rows still render: the mention count
   // comes from the stored cited_count (repurposed to mean "mentioned in X
@@ -461,18 +530,40 @@ export default function ShareOfVoice() {
                 {result.modelResults.map(m => <ModelCard key={m.modelKey} m={m} />)}
               </div>
 
-              {/* Competitors */}
-              {result.competitors?.length > 0 && (
+              {/* Citation share */}
+              {citationShare.length > 0 && (
                 <div style={{ ...S.card, marginBottom: 20 }}>
-                  <p style={S.sectionTitle}>Sites Gemini cited</p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                    {result.competitors.map((d, i) => (
-                      <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: 20, padding: '4px 12px' }}>
-                        <img src={`https://www.google.com/s2/favicons?domain=${d}&sz=16`} alt="" style={{ width: 12, height: 12, borderRadius: 2 }} onError={e => e.currentTarget.style.display='none'} />
-                        {d}
-                      </span>
-                    ))}
+                  <p style={S.sectionTitle}>Citation share</p>
+                  <div style={S.shareGrid}>
+                    <ResponsiveContainer width="100%" height={200}>
+                      <PieChart>
+                        <Pie
+                          data={citationShare}
+                          dataKey="value"
+                          nameKey="name"
+                          innerRadius={55}
+                          outerRadius={85}
+                          paddingAngle={2}
+                          stroke="none"
+                        >
+                          {citationShare.map((d, i) => <Cell key={i} fill={d.color} />)}
+                        </Pie>
+                        <Tooltip content={<ShareTooltip />} />
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <div style={S.shareLegend}>
+                      {citationShare.map((d, i) => (
+                        <div key={i} style={S.shareLegendRow}>
+                          <span style={{ ...S.shareLegendDot, background: d.color }} />
+                          <span style={S.shareLegendLabel}>{d.name}{d.isOwn ? ' (you)' : ''}</span>
+                          <span style={S.shareLegendPct}>{d.pct}%</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
+                  <p style={{ fontSize: 11.5, color: 'var(--text-dim)', margin: '16px 0 0' }}>
+                    Share of all sources cited across the 3 query phrasings for this topic — real counts, not an estimate.
+                  </p>
                 </div>
               )}
             </>
