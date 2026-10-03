@@ -67,7 +67,7 @@ export default function CitationWorldMap({ regions, unknownCount }) {
                 const opacity = region ? Math.max(0.35, region.queryCount / maxQueryCount) : 0;
                 const fill = isHovered
                   ? (region ? 'var(--cyan)' : 'rgba(255,255,255,0.08)')
-                  : (region ? `rgba(91,95,199,${opacity})` : 'rgba(255,255,255,0.05)');
+                  : (region ? `rgba(139,134,196,${opacity})` : 'rgba(255,255,255,0.05)');
                 return (
                   <Geography
                     key={geo.rsmKey}
