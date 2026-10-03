@@ -8,6 +8,7 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import { buildCitationShare } from '../lib/citationShare.js';
 
 /* ── Shared inline styles ─────────────────────────────────────────────────── */
 const S = {
@@ -82,14 +83,6 @@ const S = {
   shareLegendPct: { fontSize: 12, color: 'var(--text-muted)', fontVariantNumeric: 'tabular-nums', flexShrink: 0 },
 };
 
-// Fixed small palette for distinguishing named domains in the citation-share
-// donut — the user's own domain always gets --accent; competitors cycle
-// through the rest. Not decorative: each color is a stable identity for one
-// specific domain within the chart, the same role PILLAR_COLORS plays
-// elsewhere, not a retired general-UI accent color.
-const SHARE_COLORS = ['var(--accent)', 'var(--cyan)', 'var(--green)', 'var(--orange)', 'var(--purple)', 'var(--yellow)'];
-const SHARE_OTHER_COLOR = 'var(--text-dim)';
-
 /* ── Per-prompt card ──────────────────────────────────────────────────────── */
 const MODEL_META = {
   gemini:          { label: 'Informational question' },
@@ -156,47 +149,6 @@ function MentionCountBadge({ count }) {
       {count} of 3
     </span>
   );
-}
-
-// Tallies real citation counts per domain across all 3 prompts' sources
-// (not the deduplicated `competitors` list, which carries no counts), caps
-// it at the top 5 + an "Other" bucket so the donut stays readable, and
-// flags whichever slice is the user's own domain so it can be highlighted.
-function buildCitationShare(result) {
-  if (!result?.modelResults) return [];
-  const ownDomain = result.url ? result.url.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/.*$/, '').toLowerCase() : null;
-
-  const counts = new Map();
-  for (const m of result.modelResults) {
-    for (const s of m.sources || []) {
-      const domain = (s.domain || '').toLowerCase().replace(/^www\./, '');
-      if (!domain) continue;
-      counts.set(domain, (counts.get(domain) || 0) + 1);
-    }
-  }
-  if (counts.size === 0) return [];
-
-  const sorted = Array.from(counts.entries())
-    .map(([domain, count]) => ({ domain, count, isOwn: domain === ownDomain }))
-    .sort((a, b) => b.count - a.count || (a.isOwn ? -1 : 0));
-
-  const TOP_N = 5;
-  const top = sorted.slice(0, TOP_N);
-  const rest = sorted.slice(TOP_N);
-  const total = sorted.reduce((s, d) => s + d.count, 0);
-
-  const slices = top.map((d, i) => ({
-    name: d.domain,
-    value: d.count,
-    pct: Math.round((d.count / total) * 100),
-    color: d.isOwn ? SHARE_COLORS[0] : SHARE_COLORS[(i % (SHARE_COLORS.length - 1)) + 1],
-    isOwn: d.isOwn,
-  }));
-  if (rest.length > 0) {
-    const restCount = rest.reduce((s, d) => s + d.count, 0);
-    slices.push({ name: `${rest.length} other site${rest.length > 1 ? 's' : ''}`, value: restCount, pct: Math.round((restCount / total) * 100), color: SHARE_OTHER_COLOR, isOwn: false });
-  }
-  return slices;
 }
 
 function ShareTooltip({ active, payload }) {
