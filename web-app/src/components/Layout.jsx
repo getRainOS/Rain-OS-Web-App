@@ -68,6 +68,14 @@ const LOCAL_GROUP_TOOLTIPS = {
   Monitor:   'Check if AI tools are recommending your business when local customers ask questions.',
 };
 
+// Local Service Business gets its own section labels in the sidebar — not
+// just reworded tooltips — so the lane reads as a distinct experience
+// rather than the generic tool groups with a relabeled pillar or two.
+const LOCAL_GROUP_LABELS = {
+  Optimize:  'Get Found',
+  Monitor:   'Reputation',
+};
+
 export default function Layout({ children }) {
   const { user, setUser, onLogout, userLane } = useApp();
   const navigate = useNavigate();
@@ -143,7 +151,7 @@ export default function Layout({ children }) {
             laneGroups.map(group => (
               <div key={group.label} className={styles.navGroup}>
                 <div className={styles.navLabelRow}>
-                  <span className={styles.navLabel}>{group.label}</span>
+                  <span className={styles.navLabel}>{isLocal ? (LOCAL_GROUP_LABELS[group.label] || group.label) : group.label}</span>
                   {groupTooltips[group.label] && (
                     <NavGroupTooltip text={groupTooltips[group.label]} />
                   )}
