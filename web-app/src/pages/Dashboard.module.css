@@ -883,6 +883,21 @@ button.emptyLink {
   text-align: right;
 }
 
+@media (max-width: 640px) {
+  .analysisRow {
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+
+  .analysisTitle {
+    order: -1;
+    flex: 1 1 100%;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+}
+
 .shareX {
   display: flex;
   align-items: center;
