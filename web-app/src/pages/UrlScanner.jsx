@@ -9,7 +9,7 @@ import styles from './UrlScanner.module.css';
 // ─── GitHub push panel ───────────────────────────────────────────────────────
 
 function GithubPushPanel({ result, scannedUrl }) {
-  const { user, isDemo } = useApp();
+  const { user } = useApp();
   const LS_KEY = 'urlscanner_last_github_repo';
   const [step, setStep] = useState('idle'); // idle | loading-repos | pick-repo | loading-preview | review | pushing | success | error
   const [repos, setRepos] = useState([]);

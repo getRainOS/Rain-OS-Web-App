@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase.js';
 import { setApiKey, api } from '../api/client.js';
-import { DEMO_KEY, DEMO_USER } from '../demo/demoData.js';
 import styles from './AuthModal.module.css';
 
 const BASE_API = 'https://api.getrainos.com';

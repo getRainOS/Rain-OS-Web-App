@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { api, isDemo } from '../api/client.js';
+import { api } from '../api/client.js';
 import PillarScores from '../components/PillarScores.jsx';
 import { PILLAR_COLORS } from '../lib/pillarColors.js';
 import { CheckCircle2, AlertCircle, ExternalLink, Trash2 } from 'lucide-react';
@@ -125,12 +125,6 @@ export default function History() {
   }
 
   async function handleDeleteAnalysis(id) {
-    if (isDemo()) {
-      setHistory(prev => prev.filter(a => a.id !== id));
-      setConfirmDeleteAnalysisId(null);
-      setExpanded(null);
-      return;
-    }
     setDeletingAnalysisId(id);
     setDeleteAnalysisError('');
     try {
@@ -343,7 +337,7 @@ export default function History() {
                             type="button"
                             className={styles.deleteBtn}
                             onClick={e => { e.stopPropagation(); setConfirmDeleteAnalysisId(item.id); setDeleteAnalysisError(''); }}
-                            disabled={item.id == null && !isDemo()}
+                            disabled={item.id == null}
                             aria-label="Delete analysis"
                             title="Delete"
                           >

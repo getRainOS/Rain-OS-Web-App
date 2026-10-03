@@ -143,7 +143,7 @@ function FixPromptGenerator({ result, repoUrl }) {
 }
 
 export default function RepoAnalysis() {
-  const { user, isDemo, userLane } = useApp();
+  const { user, userLane } = useApp();
   const navigate = useNavigate();
   const [repos, setRepos] = useState([]);
   const [connected, setConnected] = useState(false);
@@ -155,7 +155,6 @@ export default function RepoAnalysis() {
   const [connectSuccess, setConnectSuccess] = useState('');
 
   useEffect(() => {
-    if (isDemo) { setReposLoading(false); return; }
     api.github.repos()
       .then(({ data }) => {
         setConnected(data.connected);
@@ -163,7 +162,7 @@ export default function RepoAnalysis() {
       })
       .catch(() => setConnected(false))
       .finally(() => setReposLoading(false));
-  }, [isDemo]);
+  }, []);
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -236,7 +235,7 @@ export default function RepoAnalysis() {
         </div>
       )}
 
-      {!connected && !isDemo && (
+      {!connected && (
         <div className={styles.connectCard}>
           <div className={styles.connectIcon}>⊕</div>
           <h2 className={styles.connectTitle}>Connect GitHub to analyze repos</h2>
@@ -253,7 +252,7 @@ export default function RepoAnalysis() {
         </div>
       )}
 
-      {(connected || isDemo) && (
+      {connected && (
         <>
           {repos.length > 0 && !result && (
             <div className={`card ${styles.repoListCard}`}>

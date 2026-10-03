@@ -12,7 +12,7 @@ const PRICE_TO_PLAN = {
 };
 
 export default function Settings() {
-  const { user, onLogout, isDemo, refreshUser, userLane, setUserLane } = useApp();
+  const { user, onLogout, refreshUser, userLane, setUserLane } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
   const [copied, setCopied] = useState(false);
@@ -59,7 +59,6 @@ export default function Settings() {
   }
 
   async function handleConnectGithub() {
-    if (isDemo) return;
     try {
       const { data } = await api.github.connect();
       if (data?.url) {
@@ -165,7 +164,7 @@ export default function Settings() {
               <button
                 className="btn btn-ghost"
                 onClick={handleManageBilling}
-                disabled={portalLoading || isDemo}
+                disabled={portalLoading}
               >
                 {portalLoading ? <><span className="spinner" style={{ width: 14, height: 14 }} /> Opening…</> : 'Manage Subscription →'}
               </button>
@@ -173,7 +172,6 @@ export default function Settings() {
               <button
                 className="btn btn-primary"
                 onClick={() => navigate('/upgrade')}
-                disabled={isDemo}
               >
                 Upgrade Plan →
               </button>
@@ -190,14 +188,14 @@ export default function Settings() {
 
           <div className={styles.keyBox}>
             <code className={styles.keyDisplay}>
-              {apiKey && apiKey !== '__demo__'
+              {apiKey
                 ? apiKey.slice(0, 8) + '•'.repeat(Math.max(0, apiKey.length - 16)) + apiKey.slice(-8)
                 : '—'}
             </code>
             <button
               className={styles.copyBtn}
               onClick={handleCopyKey}
-              disabled={!apiKey || apiKey === '__demo__'}
+              disabled={!apiKey}
             >
               {copied ? '✓ Copied!' : 'Copy key'}
             </button>
@@ -246,7 +244,7 @@ export default function Settings() {
                 <button
                   className={styles.disconnectBtn}
                   onClick={handleDisconnectGithub}
-                  disabled={disconnecting || isDemo}
+                  disabled={disconnecting}
                 >
                   {disconnecting ? 'Disconnecting…' : 'Disconnect'}
                 </button>
@@ -256,7 +254,6 @@ export default function Settings() {
             <button
               className="btn btn-primary"
               onClick={handleConnectGithub}
-              disabled={isDemo}
             >
               Connect GitHub
             </button>

@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { useApp } from '../context/AppContext.jsx';
 import { api } from '../api/client.js';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import styles from './BrandVisibility.module.css';
@@ -200,26 +199,6 @@ function AlertIcon({ size = 14 }) {
   );
 }
 
-const DEMO_RESULT = {
-  brand: 'rain OS',
-  topic: 'AI readability optimization tools',
-  url: 'https://getrainos.com',
-  mentionStatus: 'not_mentioned',
-  mentionCount: 0,
-  cited: false,
-  citedSourceIndex: null,
-  sentiment: 'not_applicable',
-  sentimentExplanation: '',
-  answerExcerpt: 'AI readability optimization involves structuring content so that large language models can parse, understand, and cite it accurately. Tools in this space include Clearscope for content grading, Surfer SEO for on-page optimization, and Frase for answer-engine targeting. Structured data, FAQ schema, and clear heading hierarchies are all important signals...',
-  sources: [
-    { title: 'Clearscope Blog', url: 'https://clearscope.io', domain: 'clearscope.io', snippet: 'How to optimize content for AI readability and search engines.' },
-    { title: 'Surfer SEO Guide', url: 'https://surferseo.com', domain: 'surferseo.com', snippet: 'On-page optimization for AI-first search.' },
-  ],
-  competitors: ['clearscope.io', 'surferseo.com', 'frase.io', 'marketmuse.com'],
-  summary: 'Gemini did not mention rain OS — it favored clearscope.io, surferseo.com, frase.io instead when answering this topic.',
-  notMentionedHint: null,
-};
-
 /* ── Collapsible Disclaimer ─────────────────────────────────────────────── */
 function DisclaimerBox() {
   const [collapsed, setCollapsed] = useState(true);
@@ -263,7 +242,6 @@ function WhatDoesThisMeanBox() {
 }
 
 export default function BrandVisibility() {
-  const { isDemo } = useApp();
   const [brand, setBrand] = useState('');
   const [topic, setTopic] = useState('');
   const [url, setUrl] = useState('');
@@ -277,13 +255,12 @@ export default function BrandVisibility() {
   const [tab, setTab] = useState('check'); // 'check' | 'history'
 
   useEffect(() => {
-    if (isDemo) return;
     setHistoryLoading(true);
     api.brandVisHistory()
       .then(({ data }) => setHistory(Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : []))
       .catch(() => setHistory([]))
       .finally(() => setHistoryLoading(false));
-  }, [isDemo]);
+  }, []);
 
   async function handleCheck(e) {
     e.preventDefault();
@@ -293,16 +270,11 @@ export default function BrandVisibility() {
     setPlanGated(false);
     setResult(null);
     try {
-      if (isDemo) {
-        await new Promise(r => setTimeout(r, 1200));
-        setResult({ ...DEMO_RESULT, brand: brand || DEMO_RESULT.brand, topic: topic || DEMO_RESULT.topic });
-      } else {
-        const { data } = await api.brandVisibility({ brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined });
-        setResult(data.data || data);
-        // Refresh history
-        const h = await api.brandVisHistory();
-        setHistory(Array.isArray(h.data.data) ? h.data.data : Array.isArray(h.data) ? h.data : []);
-      }
+      const { data } = await api.brandVisibility({ brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined });
+      setResult(data.data || data);
+      // Refresh history
+      const h = await api.brandVisHistory();
+      setHistory(Array.isArray(h.data.data) ? h.data.data : Array.isArray(h.data) ? h.data : []);
     } catch (err) {
       if (err.status === 403) {
         setPlanGated(true);

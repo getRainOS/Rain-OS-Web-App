@@ -97,7 +97,7 @@ function timeAgo(str) {
 }
 
 export default function CitationMonitor() {
-  const { isDemo, refreshUser } = useApp();
+  const { refreshUser } = useApp();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const initialTab = searchParams.get('tab') === 'map' ? 'map' : searchParams.get('tab') === 'history' ? 'history' : 'check';
@@ -153,11 +153,11 @@ export default function CitationMonitor() {
     }
   }
 
-  // Load cross-topic history from the backend on mount / when demo flag flips
+  // Load cross-topic history from the backend on mount
   useEffect(() => {
     fetchMapHistory();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isDemo]);
+  }, []);
 
   async function loadTopicHistory(forTopic) {
     if (!forTopic || forTopic.trim().length < 3) {

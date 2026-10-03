@@ -46,19 +46,11 @@ async function syncWithBackend(accessToken) {
   return res.json();
 }
 
-const PREVIEW_LANE = 'general';
-
 export default function App() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const isPreview = urlParams.get('preview') === '1';
-  const [apiKey, setApiKeyState] = useState(() => isPreview ? '__demo__' : getApiKey());
+  const [apiKey, setApiKeyState] = useState(() => getApiKey());
   const [user, setUser] = useState(null);
   const [authChecked, setAuthChecked] = useState(true);
-  const [userLane, setUserLaneState] = useState(() => {
-    if (isPreview) return PREVIEW_LANE;
-    return localStorage.getItem('rain_os_user_lane') || null;
-  });
-  const isDemo = apiKey === '__demo__';
+  const [userLane, setUserLaneState] = useState(() => localStorage.getItem('rain_os_user_lane') || null);
 
   function setUserLane(lane) {
     if (lane) localStorage.setItem('rain_os_user_lane', lane);
@@ -68,7 +60,6 @@ export default function App() {
 
   useEffect(() => {
     async function initAuth() {
-      if (isPreview) { return; }
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         try {
@@ -78,14 +69,14 @@ export default function App() {
           setUser(userData);
         } catch (_) {
           const existingKey = getApiKey();
-          if (existingKey && existingKey !== '__demo__') {
+          if (existingKey) {
             try {
               const { data } = await api.me();
               setUser(data);
             } catch (_2) {}
           }
         }
-      } else if (getApiKey() && getApiKey() !== '__demo__') {
+      } else if (getApiKey()) {
         try {
           const { data } = await api.me();
           setUser(data);
@@ -119,7 +110,6 @@ export default function App() {
   }
 
   function refreshUser() {
-    if (isDemo) return;
     api.me()
       .then(({ data }) => setUser(data))
       .catch(() => {});
@@ -130,7 +120,6 @@ export default function App() {
   // up to 10s. Runs in the background; a newer call cancels the previous one.
   const planPollRef = useRef(null);
   function refreshUserUntilPlanChanges(prevPriceId) {
-    if (isDemo) return;
     clearTimeout(planPollRef.current);
     let attempts = 0;
     const tick = () => {
@@ -152,7 +141,7 @@ export default function App() {
   // Returning from Stripe Checkout: Upgrade.jsx stashes the pre-checkout price
   // before redirecting, so poll for the new plan once the user is loaded.
   useEffect(() => {
-    if (!user || isDemo) return;
+    if (!user) return;
     let prev;
     try { prev = sessionStorage.getItem('rain_os_prev_price'); } catch (_) { return; }
     if (prev === null) return;
@@ -161,7 +150,7 @@ export default function App() {
   }, [!!user]);
 
   return (
-    <AppContext.Provider value={{ apiKey, user, setUser, onLogout, refreshUser, refreshUserUntilPlanChanges, isDemo, userLane, setUserLane }}>
+    <AppContext.Provider value={{ apiKey, user, setUser, onLogout, refreshUser, refreshUserUntilPlanChanges, userLane, setUserLane }}>
       <BrowserRouter>
         <AppRoutes apiKey={apiKey} onAuth={onAuth} onLogout={onLogout} refreshUser={refreshUser} />
       </BrowserRouter>
