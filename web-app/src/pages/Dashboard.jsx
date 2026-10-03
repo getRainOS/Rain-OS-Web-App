@@ -629,7 +629,7 @@ export default function Dashboard() {
     },
     {
       key: 'citation',
-      label: isBusinessFraming ? 'Customer Mentions' : 'Citation Monitor',
+      label: isBusinessFraming ? 'Mentions' : 'Citation Monitor',
       to: '/citation-monitor',
       hasData: citationTotal > 0,
       value: citationTotal > 0 ? `${citationRate}%` : null,
@@ -648,7 +648,7 @@ export default function Dashboard() {
     },
     {
       key: 'brand',
-      label: isBusinessFraming ? 'Reputation Check' : 'Brand Sentiment',
+      label: isBusinessFraming ? 'Reputation' : 'Brand Sentiment',
       to: '/brand-visibility',
       hasData: brandVisTotal > 0,
       value: brandVisTotal > 0 ? `${brandVisRate}%` : null,
