@@ -117,7 +117,7 @@ export default function Layout({ children }) {
       <div className={`${styles.overlay} ${menuOpen ? styles.show : ''}`} onClick={() => setMenuOpen(false)} />
       <aside className={`${styles.sidebar} ${menuOpen ? styles.open : ''}`}>
         <div className={styles.brand}>
-          r<span className={styles.brandAccent}>ai</span>n
+          <span className={styles.brandWordmark}>r<span className={styles.brandAccent}>ai</span>n</span>
           {isDemo && <span className={styles.demoBadge}>DEMO</span>}
         </div>
 
