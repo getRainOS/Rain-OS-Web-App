@@ -434,18 +434,6 @@
   gap: 12px;
 }
 
-.chartsPairRow {
-  display: grid;
-  grid-template-columns: 3fr 2fr;
-  gap: 12px;
-  margin-bottom: 12px;
-  align-items: start;
-}
-
-@media (max-width: 1100px) {
-  .chartsPairRow { grid-template-columns: 1fr; }
-}
-
 /* ── Shared card ── */
 .chartCard {
   background: var(--surface);
@@ -795,11 +783,15 @@ button.emptyLink {
 /* ── Bottom Row ── */
 .bottomRow {
   display: grid;
-  grid-template-columns: 1.6fr 1fr;
+  grid-template-columns: 1.1fr 1.6fr 1fr;
   gap: 12px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
+  .bottomRow { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 700px) {
   .bottomRow { grid-template-columns: 1fr; }
 }
 
@@ -1078,67 +1070,6 @@ button.emptyLink {
   font-weight: 500;
 }
 
-/* ── Citations Being Tracked ── */
-.citationsList {
-  display: flex;
-  flex-direction: column;
-}
-
-.citationRow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-  text-decoration: none;
-  color: inherit;
-}
-
-.citationRow:last-child { border-bottom: none; }
-
-.citationStatus {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 10px;
-  font-weight: 600;
-  border: 1px solid;
-  flex-shrink: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  min-width: 70px;
-  justify-content: center;
-}
-
-.citationStatusIcon {
-  width: 10px;
-  height: 10px;
-}
-
-.citationMain {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 0;
-}
-
-.citationTopic {
-  font-size: 12px;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-weight: 500;
-}
-
-.citationMeta {
-  font-size: 10.5px;
-  color: var(--text-dim);
-}
-
 .sparkSvg {
   display: block;
 }
@@ -1172,140 +1103,6 @@ button.emptyLink {
   width: 100%;
   border-radius: 2px;
   transition: height 0.2s ease;
-}
-
-.citationArrow {
-  width: 12px;
-  height: 12px;
-  color: var(--text-dim);
-  flex-shrink: 0;
-  transition: transform 0.15s, color 0.15s;
-}
-
-.citationRow:hover .citationArrow {
-  color: var(--text-muted);
-  transform: translateX(2px);
-}
-
-@media (max-width: 700px) {
-  .citationMeta { font-size: 10px; }
-}
-
-/* ── Top cited competitors ── */
-.competitorCard {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 18px;
-}
-
-.competitorCardClickable {
-  cursor: pointer;
-  transition: border-color 0.15s;
-}
-
-.competitorCardClickable:hover {
-  border-color: var(--border-strong);
-}
-
-.competitorCardClickable:focus-visible {
-  outline: none;
-  border-color: rgba(91,95,199,0.35);
-  box-shadow: 0 0 0 2px rgba(91,95,199,0.10);
-}
-
-.competitorList {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.competitorEmpty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 24px 0;
-  color: var(--text-muted);
-  font-size: 13px;
-}
-
-.competitorEmptyIcon {
-  width: 22px;
-  height: 22px;
-  color: var(--text-dim);
-}
-
-.competitorRow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 8px;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.04);
-  border-radius: 6px;
-}
-
-.competitorRank {
-  font-size: 11px;
-  font-weight: 500;
-  color: #94a3b8;
-  min-width: 20px;
-}
-
-.competitorFavicon {
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
-  flex-shrink: 0;
-  background: rgba(255,255,255,0.03);
-}
-
-.competitorDomain {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text);
-  flex: 0 1 auto;
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 160px;
-}
-
-.competitorBarWrap {
-  flex: 1;
-  min-width: 50px;
-}
-
-.competitorBar {
-  height: 4px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.competitorBarFill {
-  height: 100%;
-  background: #64748b;
-  border-radius: 2px;
-  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.competitorCoverage {
-  font-size: 12px;
-  font-weight: 500;
-  flex-shrink: 0;
-  text-align: right;
-  min-width: 40px;
-  font-variant-numeric: tabular-nums;
-}
-
-.competitorCoverageSub {
-  font-size: 10px;
-  color: var(--text-dim);
-  font-weight: 500;
-  margin-left: 2px;
 }
 
 /* ── Quick Actions ── */

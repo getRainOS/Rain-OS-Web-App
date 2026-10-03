@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
-import { buildCompetitorMap } from '../lib/citationHistory.js';
 import { PILLAR_COLORS } from '../lib/pillarColors.js';
 import { buildCitationShare } from '../lib/citationShare.js';
 import {
@@ -16,7 +15,7 @@ import {
   FileText, Globe, GitBranch, ArrowRight,
   BrainCircuit, ShieldCheck, MousePointerClick, SearchCheck,
   Activity, Zap, Minus, Heart, Map as MapIcon, Radar,
-  CheckCircle2, AlertCircle, BarChart2, Lock, Clock, Sparkles, HelpCircle, Layers,
+  BarChart2, Lock, Clock, Sparkles, HelpCircle, Layers,
   ChevronDown, ChevronUp,
 } from 'lucide-react';
 import styles from './Dashboard.module.css';
@@ -25,11 +24,6 @@ function joinWithAnd(items) {
   if (items.length <= 1) return items.join('');
   if (items.length === 2) return `${items[0]} and ${items[1]}`;
   return `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`;
-}
-
-function getFavicon(domain) {
-  if (!domain) return '';
-  return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
 }
 
 const PILLARS = [
@@ -363,8 +357,6 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [chartRange, setChartRange] = useState(14);
   const [citations, setCitations] = useState([]);
-  const [citationsLoading, setCitationsLoading] = useState(true);
-  const [citationHistory, setCitationHistory] = useState([]);
   const [brandVisHistory, setBrandVisHistory] = useState([]);
   const [brandVisLoading, setBrandVisLoading] = useState(true);
   const [sovHistory, setSovHistory] = useState([]);
@@ -415,31 +407,12 @@ export default function Dashboard() {
   const clearFilters = () => { setDateFilter('all'); setTypeFilter('all'); };
 
   useEffect(() => {
-    let cancelled = false;
-    api.citationHistory()
-      .then(({ data }) => {
-        if (cancelled) return;
-        const items = Array.isArray(data) ? data : data?.items ?? [];
-        setCitationHistory(items);
-      })
-      .catch(() => { if (!cancelled) setCitationHistory([]); });
-    return () => { cancelled = true; };
-  }, [user?.id]);
-
-  const competitorMap = useMemo(
-    () => buildCompetitorMap(citationHistory, null),
-    [citationHistory]
-  );
-  const topCompetitors = competitorMap.domains.slice(0, 3);
-
-  useEffect(() => {
     api.citationHistory({ limit: 50 })
       .then(({ data }) => {
         const items = Array.isArray(data) ? data : data?.items ?? [];
         setCitations(items);
       })
-      .catch(() => setCitations([]))
-      .finally(() => setCitationsLoading(false));
+      .catch(() => setCitations([]));
   }, []);
 
   useEffect(() => {
@@ -467,33 +440,6 @@ export default function Dashboard() {
       .finally(() => { if (!cancelled) setSovLoading(false); });
     return () => { cancelled = true; };
   }, [user?.id]);
-
-  const trackedTopics = useMemo(() => {
-    if (!citations.length) return [];
-    const groups = new Map();
-    for (const c of citations) {
-      const key = (c.topic || '').trim().toLowerCase().replace(/\s+/g, ' ');
-      if (!key) continue;
-      if (!groups.has(key)) groups.set(key, []);
-      groups.get(key).push(c);
-    }
-    const out = [];
-    for (const [key, arr] of groups) {
-      arr.sort((a, b) => new Date(b.checkedAt).getTime() - new Date(a.checkedAt).getTime());
-      const latest = arr[0];
-      out.push({
-        key,
-        topic: latest.topic,
-        cited: !!latest.cited,
-        checkedAt: latest.checkedAt,
-        checkCount: arr.length,
-      });
-    }
-    out.sort(
-      (a, b) => new Date(b.checkedAt).getTime() - new Date(a.checkedAt).getTime()
-    );
-    return out.slice(0, 5);
-  }, [citations]);
 
   const activePillars = useMemo(() => {
     if (userLane === 'product_sellers') return [
@@ -755,9 +701,8 @@ export default function Dashboard() {
         ) : null}
       </div>
 
-      {/* ── Pillar Breakdown + Score Trend (above the fold, side by side) ── */}
-      <div className={styles.chartsPairRow}>
-      <div className={styles.chartCard}>
+      {/* ── Pillar Breakdown (above the fold, full-width hero) ── */}
+      <div className={styles.chartCard} style={{ marginBottom: 12 }}>
         <div className={styles.chartHeader}>
           <div>
             <h2 className={styles.chartTitle}>Pillar Breakdown</h2>
@@ -849,77 +794,6 @@ export default function Dashboard() {
             </div>
           </div>
         )}
-      </div>
-
-      <div className={styles.chartCard}>
-        <div className={styles.chartHeader}>
-          <div>
-            <h2 className={styles.chartTitle}>Score Trend</h2>
-            <p className={styles.chartSub}>Last {chartRange} analyses</p>
-            <span className={styles.chartHelp} title="How your overall content scores have changed over time. Higher scores mean AI engines are more likely to cite your content.">
-              <HelpCircle size={11} />
-            </span>
-          </div>
-          <div className={styles.rangeToggle}>
-            {[7, 14, 30].map(r => (
-              <button key={r} type="button"
-                className={`${styles.rangeBtn} ${chartRange === r ? styles.rangeBtnActive : ''}`}
-                onClick={() => setChartRange(r)}>
-                {r}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {loading ? (
-          <div className={styles.chartEmpty}><span className="spinner" /></div>
-        ) : chartData.length < 2 ? (
-          <div className={styles.chartEmptyRich}>
-            <div className={styles.sampleBackdrop}>
-              <ResponsiveContainer width="100%" height={200}>
-                <AreaChart data={SAMPLE_TREND} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
-                  <defs>
-                    <linearGradient id="scoreGradSample" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#5b5fc7" stopOpacity={0.08} />
-                      <stop offset="100%" stopColor="#5b5fc7" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <Area type="monotone" dataKey="score" stroke="#5b5fc7" strokeWidth={1.5}
-                    fill="url(#scoreGradSample)" dot={false} />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-            <div className={styles.emptyStateOverlay}>
-              <Activity className={styles.emptyIcon} />
-              <p>{filtersActive && history.length > 0 ? 'No analyses match these filters' : 'Run your first analysis to see trends here'}</p>
-              {filtersActive && history.length > 0 ? (
-                <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
-              ) : (
-                <Link to="/analyze" className={styles.emptyLink}>Get started →</Link>
-              )}
-            </div>
-          </div>
-        ) : (
-          <ResponsiveContainer key={`chart-${chartRange}`} width="100%" height={200}>
-            <AreaChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
-              <defs>
-                <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#5b5fc7" stopOpacity={0.08} />
-                  <stop offset="100%" stopColor="#5b5fc7" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <XAxis dataKey="idx" stroke="transparent"
-                tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
-              <YAxis domain={[0, 100]} stroke="transparent"
-                tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
-              <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
-              <Area type="monotone" dataKey="score" stroke="#5b5fc7" strokeWidth={1.5}
-                fill="url(#scoreGrad)" dot={false}
-                activeDot={{ r: 4, fill: '#5b5fc7', strokeWidth: 0 }} />
-            </AreaChart>
-          </ResponsiveContainer>
-        )}
-      </div>
       </div>
 
       {/* ── Tool Snapshot Cards ── */}
@@ -1066,6 +940,77 @@ export default function Dashboard() {
       {/* ── Bottom row ── */}
       <div className={styles.bottomRow}>
 
+        {/* Score Trend */}
+        <div className={styles.chartCard}>
+          <div className={styles.chartHeader}>
+            <div>
+              <h2 className={styles.chartTitle}>Score Trend</h2>
+              <p className={styles.chartSub}>Last {chartRange} analyses</p>
+              <span className={styles.chartHelp} title="How your overall content scores have changed over time. Higher scores mean AI engines are more likely to cite your content.">
+                <HelpCircle size={11} />
+              </span>
+            </div>
+            <div className={styles.rangeToggle}>
+              {[7, 14, 30].map(r => (
+                <button key={r} type="button"
+                  className={`${styles.rangeBtn} ${chartRange === r ? styles.rangeBtnActive : ''}`}
+                  onClick={() => setChartRange(r)}>
+                  {r}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {loading ? (
+            <div className={styles.chartEmpty}><span className="spinner" /></div>
+          ) : chartData.length < 2 ? (
+            <div className={styles.chartEmptyRich}>
+              <div className={styles.sampleBackdrop}>
+                <ResponsiveContainer width="100%" height={160}>
+                  <AreaChart data={SAMPLE_TREND} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
+                    <defs>
+                      <linearGradient id="scoreGradSample" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#5b5fc7" stopOpacity={0.08} />
+                        <stop offset="100%" stopColor="#5b5fc7" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <Area type="monotone" dataKey="score" stroke="#5b5fc7" strokeWidth={1.5}
+                      fill="url(#scoreGradSample)" dot={false} />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+              <div className={styles.emptyStateOverlay}>
+                <Activity className={styles.emptyIcon} />
+                <p>{filtersActive && history.length > 0 ? 'No analyses match these filters' : 'Run your first analysis to see trends here'}</p>
+                {filtersActive && history.length > 0 ? (
+                  <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
+                ) : (
+                  <Link to="/analyze" className={styles.emptyLink}>Get started →</Link>
+                )}
+              </div>
+            </div>
+          ) : (
+            <ResponsiveContainer key={`chart-${chartRange}`} width="100%" height={160}>
+              <AreaChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
+                <defs>
+                  <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#5b5fc7" stopOpacity={0.08} />
+                    <stop offset="100%" stopColor="#5b5fc7" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="idx" stroke="transparent"
+                  tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
+                <YAxis domain={[0, 100]} stroke="transparent"
+                  tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
+                <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
+                <Area type="monotone" dataKey="score" stroke="#5b5fc7" strokeWidth={1.5}
+                  fill="url(#scoreGrad)" dot={false}
+                  activeDot={{ r: 4, fill: '#5b5fc7', strokeWidth: 0 }} />
+              </AreaChart>
+            </ResponsiveContainer>
+          )}
+        </div>
+
         {/* Recent Analyses */}
         <div className={styles.chartCard}>
           <div className={styles.chartHeader}>
@@ -1161,147 +1106,6 @@ export default function Dashboard() {
             ))}
           </div>
         </div>
-      </div>
-
-      {/* ── Top cited competitors ── */}
-      <div
-        className={`${styles.competitorCard} ${topCompetitors.length > 0 ? styles.competitorCardClickable : ''}`}
-        role={topCompetitors.length > 0 ? 'button' : undefined}
-        tabIndex={topCompetitors.length > 0 ? 0 : undefined}
-        onClick={topCompetitors.length > 0 ? () => navigate('/citation-monitor?tab=map') : undefined}
-        onKeyDown={topCompetitors.length > 0 ? (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            navigate('/citation-monitor?tab=map');
-          }
-        } : undefined}
-      >
-        <div className={styles.chartHeader}>
-          <div>
-            <h2 className={styles.chartTitle}>
-              <MapIcon style={{ width: 13, height: 13, marginRight: 6, verticalAlign: '-2px', color: '#8f93c7' }} />
-              Top cited competitors
-            </h2>
-            <p className={styles.chartSub}>
-              {competitorMap.totalQueries > 0
-                ? `Use this as a before/after snapshot across your ${competitorMap.totalQueries} tracked ${competitorMap.totalQueries === 1 ? 'query' : 'queries'}`
-                : 'Use Citation Monitor to capture a real-time AI citation snapshot after you optimize'}
-              <span className={styles.chartHelp} title="Lists the domains AI cites most often for your tracked topics. If you are not on this list, your competitors are winning the citation game.">
-                <HelpCircle size={11} />
-              </span>
-            </p>
-          </div>
-          {topCompetitors.length > 0 && (
-            <span className={styles.viewAll}>Open Competitor Map →</span>
-          )}
-        </div>
-
-        {topCompetitors.length === 0 ? (
-          <div className={styles.competitorEmpty}>
-            <Radar className={styles.emptyIcon} />
-            <p>No citation history yet</p>
-            <Link
-              to="/citation-monitor"
-              className={styles.emptyLink}
-              onClick={(e) => e.stopPropagation()}
-            >
-              Optimize first, then run a citation check →
-            </Link>
-          </div>
-        ) : (
-          <div className={styles.competitorList}>
-            {topCompetitors.map((c, i) => {
-              const coveragePct = Math.round(c.coverage * 100);
-              return (
-                <div key={c.domain} className={styles.competitorRow}>
-                  <span className={styles.competitorRank}>#{i + 1}</span>
-                  <img
-                    src={getFavicon(c.domain)}
-                    alt=""
-                    className={styles.competitorFavicon}
-                    onError={(e) => { e.currentTarget.style.visibility = 'hidden'; }}
-                  />
-                  <span className={styles.competitorDomain}>{c.domain}</span>
-                  <div className={styles.competitorBarWrap}>
-                    <div className={styles.competitorBar}>
-                      <div
-                        className={styles.competitorBarFill}
-                        style={{ width: `${coveragePct}%` }}
-                      />
-                    </div>
-                  </div>
-                  <span className={styles.competitorCoverage}>
-                    {coveragePct}%
-                    <span className={styles.competitorCoverageSub}>
-                      {c.queryCount}/{competitorMap.totalQueries}
-                    </span>
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
-
-      {/* ── Citations Being Tracked ── */}
-      <div className={styles.chartCard}>
-        <div className={styles.chartHeader}>
-          <div>
-            <h2 className={styles.chartTitle}>
-              <Radar style={{ width: 14, height: 14, marginRight: 6, verticalAlign: '-2px', color: 'var(--accent)' }} />
-              Citations Being Tracked
-            </h2>
-            <p className={styles.chartSub}>A live snapshot of how AI engines are citing you after optimization</p>
-            <span className={styles.chartHelp} title="Shows which topics you are tracking and whether AI currently cites you for each. Green = cited, Red = not cited.">
-              <HelpCircle size={11} />
-            </span>
-          </div>
-          <Link to="/citation-monitor" className={styles.viewAll}>Open Citation Monitor →</Link>
-        </div>
-
-        {citationsLoading ? (
-          <div className={styles.chartEmpty}><span className="spinner" /></div>
-        ) : trackedTopics.length === 0 ? (
-          <div className={styles.chartEmpty}>
-            <div className={styles.emptyState}>
-              <Radar className={styles.emptyIcon} />
-              <p>No citation checks yet</p>
-              <Link to="/citation-monitor" className={styles.emptyLink}>Optimize, then verify citations →</Link>
-            </div>
-          </div>
-        ) : (
-          <div className={styles.citationsList}>
-            {trackedTopics.map((t) => (
-              <Link
-                key={t.key}
-                to={`/citation-monitor?topic=${encodeURIComponent(t.topic)}`}
-                className={styles.citationRow}
-              >
-                <div
-                  className={styles.citationStatus}
-                  style={{
-                    color: t.cited ? '#7cae8f' : '#c47a7a',
-                    background: t.cited ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.08)',
-                    borderColor: t.cited ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.25)',
-                  }}
-                  title={t.cited ? 'Your domain is being cited' : 'Your domain is not currently cited'}
-                >
-                  {t.cited
-                    ? <CheckCircle2 className={styles.citationStatusIcon} />
-                    : <AlertCircle className={styles.citationStatusIcon} />}
-                  {t.cited ? 'Cited' : 'Not cited'}
-                </div>
-                <div className={styles.citationMain}>
-                  <span className={styles.citationTopic}>{t.topic}</span>
-                  <span className={styles.citationMeta}>
-                    {t.checkCount} check{t.checkCount === 1 ? '' : 's'} · {timeAgo(t.checkedAt)}
-                  </span>
-                </div>
-                <ArrowRight className={styles.citationArrow} />
-              </Link>
-            ))}
-          </div>
-        )}
       </div>
 
     </div>
