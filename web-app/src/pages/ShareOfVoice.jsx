@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api/client.js';
-import { useApp } from '../context/AppContext.jsx';
 import {
   BarChart2, Search, CheckCircle2, AlertCircle,
   Clock, Trash2, Info, ChevronDown, ChevronUp,
@@ -224,8 +223,6 @@ function WhatDoesThisMeanBox() {
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 export default function ShareOfVoice() {
-  const { isDemo } = useApp();
-
   const [brand, setBrand]   = useState('');
   const [topic, setTopic]   = useState('');
   const [url,   setUrl]     = useState('');
@@ -238,38 +235,16 @@ export default function ShareOfVoice() {
   const [histLoading, setHistLoading] = useState(true);
   const [tab, setTab]                 = useState('check'); // 'check' | 'history'
 
-  // Demo result placeholder
-  const DEMO_RESULT = useMemo(() => ({
-    brand: brand || 'Rain OS',
-    topic: topic || 'AI content optimization tools',
-    url: url || null,
-    mentionedCount: 1,
-    domainCitedCount: url ? 1 : null,
-    domainSourceCount: url ? 3 : null,
-    domainSharePercent: url ? 33 : null,
-    competitors: ['clearscope.io', 'surferseo.com', 'frase.io', 'semrush.com'],
-    summary: url
-      ? 'Rain OS was mentioned in 1 of 3 query phrasings for this topic. Your domain is 1 of 3 cited sources (33%).'
-      : 'Rain OS was mentioned in 1 of 3 query phrasings for this topic.',
-    modelResults: [
-      { modelKey: 'gemini',          modelLabel: 'Informational question',     promptStyle: '"What are the best tools for…?"',           mentioned: true,  answerExcerpt: 'Rain OS is a newer entrant in the AEO optimization space, offering multi-pillar scoring and AI readability analysis alongside established tools like Clearscope and Surfer SEO…', sources: [{ title:'Clearscope Blog', url:'https://clearscope.io', domain:'clearscope.io' }, { title:'Surfer SEO', url:'https://surferseo.com', domain:'surferseo.com' }] },
-      { modelKey: 'chatgpt_style',   modelLabel: 'Conversational request',    promptStyle: '"I need help with… what do you recommend?"', mentioned: false, answerExcerpt: 'For AI content optimization I\'d recommend Clearscope for keyword research depth, Surfer SEO for on-page optimization, or Frase for AI-assisted drafting. Each has a free trial.', sources: [] },
-      { modelKey: 'perplexity_style', modelLabel: 'Research comparison', promptStyle: '"Compare the top solutions for… with sources"',   mentioned: false, answerExcerpt: 'The leading AI content optimization tools are Clearscope (enterprise), Surfer SEO (mid-market), and Frase (SMB). Semrush and Ahrefs also offer AI writing assistance. Emerging players include…', sources: [{ title:'G2 Reviews', url:'https://g2.com', domain:'g2.com' }] },
-    ],
-  }), [brand, topic, url]);
-
   useEffect(() => {
-    if (isDemo) { setHistLoading(false); setHistory([]); return; }
     api.sovHistory()
       .then(({ data }) => setHistory(Array.isArray(data) ? data : data?.data ?? []))
       .catch(() => setHistory([]))
       .finally(() => setHistLoading(false));
-  }, [isDemo]);
+  }, []);
 
   async function handleCheck(e) {
     e.preventDefault();
     if (!brand.trim() || !topic.trim()) return;
-    if (isDemo) { setResult(DEMO_RESULT); setTab('check'); return; }
     setLoading(true);
     setError('');
     setResult(null);

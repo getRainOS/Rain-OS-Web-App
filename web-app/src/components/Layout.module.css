@@ -89,20 +89,6 @@
 
 .brandAccent { color: var(--cyan); }
 
-.demoBadge {
-  position: absolute;
-  top: 2px;
-  right: 14px;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  padding: 2px 6px;
-  border-radius: 4px;
-  background: rgba(249,115,22,0.15);
-  color: #f97316;
-  border: 1px solid rgba(249,115,22,0.3);
-}
-
 .nav {
   flex: 1;
   display: flex;

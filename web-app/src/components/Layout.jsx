@@ -70,17 +70,16 @@ const LOCAL_GROUP_TOOLTIPS = {
 };
 
 export default function Layout({ children }) {
-  const { user, setUser, onLogout, isDemo, userLane } = useApp();
+  const { user, setUser, onLogout, userLane } = useApp();
   const navigate = useNavigate();
   const [usage, setUsage] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    if (isDemo) return;
     api.me()
       .then(({ data }) => setUser(data))
       .catch(() => {});
-  }, [isDemo]);
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -118,7 +117,6 @@ export default function Layout({ children }) {
       <aside className={`${styles.sidebar} ${menuOpen ? styles.open : ''}`}>
         <div className={styles.brand}>
           <span className={styles.brandWordmark}>r<span className={styles.brandAccent}>ai</span>n</span>
-          {isDemo && <span className={styles.demoBadge}>DEMO</span>}
         </div>
 
         <nav className={styles.nav} onClick={() => setMenuOpen(false)}>
@@ -218,7 +216,7 @@ export default function Layout({ children }) {
           )}
 
           <div className={styles.sidebarActions}>
-            {!isDemo && isFree && (
+            {isFree && (
               <NavLink to="/upgrade" className={styles.upgradeBtn}>
                 <ArrowUp style={{ width: 12, height: 12 }} />
                 Upgrade
@@ -226,7 +224,7 @@ export default function Layout({ children }) {
             )}
             <button onClick={handleLogout} className={styles.logoutBtn}>
               <LogOut style={{ width: 12, height: 12, opacity: 0.6 }} />
-              {isDemo ? 'Exit Demo' : 'Sign out'}
+              Sign out
             </button>
           </div>
         </div>

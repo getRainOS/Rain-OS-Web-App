@@ -40,7 +40,7 @@ function saveDraft(draft) {
 }
 
 export default function ContentAnalyzer() {
-  const { refreshUser, user, isDemo, userLane } = useApp();
+  const { refreshUser, user, userLane } = useApp();
   const navigate = useNavigate();
   const { id } = useParams();
   const location = useLocation();
@@ -93,7 +93,7 @@ export default function ContentAnalyzer() {
 
   const usageCount = user?.usage?.count ?? 0;
   const usageLimit = user?.usage?.limit ?? 5;
-  const isAtLimit = !isDemo && user && usageCount >= usageLimit && user.subscriptionStatus !== 'active';
+  const isAtLimit = user && usageCount >= usageLimit && user.subscriptionStatus !== 'active';
 
   const analysisModule = userLane === 'product_sellers' ? 'product_sellers'
     : userLane === 'developers' ? 'developers'
