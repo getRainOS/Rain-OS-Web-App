@@ -779,6 +779,13 @@
   text-decoration: underline;
 }
 
+.mapLoadingFallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 280px;
+}
+
 .regionList {
   list-style: none;
   margin: 8px 0 0;
@@ -830,12 +837,6 @@
   color: var(--text-dim);
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
-}
-
-.regionUnknownNote {
-  font-size: 11.5px;
-  color: var(--text-dim);
-  margin: 10px 0 0;
 }
 
 /* Per-topic timeline (backend-driven) */

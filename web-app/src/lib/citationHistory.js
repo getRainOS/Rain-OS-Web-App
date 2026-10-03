@@ -62,7 +62,7 @@ function buildRegions(domains) {
       existing.queryCount += d.queryCount;
       existing.domainCount += 1;
     } else {
-      byCountry.set(key, { name: key, flag: d.country.flag, queryCount: d.queryCount, domainCount: 1 });
+      byCountry.set(key, { name: key, flag: d.country.flag, iso: d.country.iso, queryCount: d.queryCount, domainCount: 1 });
     }
   }
   const regions = Array.from(byCountry.values()).sort((a, b) => b.queryCount - a.queryCount);
