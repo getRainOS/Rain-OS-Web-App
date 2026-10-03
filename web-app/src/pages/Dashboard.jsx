@@ -641,9 +641,6 @@ export default function Dashboard() {
         ? `${brandVisLatestBrand} — mentioned in ${brandVisMentionedCount} of your last ${brandVisTotal} check${brandVisTotal > 1 ? 's' : ''}`
         : 'No brand sentiment data yet — run a check to see how Gemini describes you',
       Icon: Heart,
-      dots: brandVisTotal > 0
-        ? brandVisScoped.slice(0, 8).reverse().map(h => (h.mention_status || h.mentionStatus) === 'mentioned')
-        : null,
       tooltip: 'Percentage of your recent checks where Gemini mentioned your brand by name when answering your topic.',
     },
     {
