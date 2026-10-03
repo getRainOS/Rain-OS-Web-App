@@ -383,7 +383,13 @@ export default function Dashboard() {
   const [showLaneSelector, setShowLaneSelector] = useState(!userLane || urlWantsLaneSelect);
   const [dateFilter, setDateFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
+  const [metricsFraming, setMetricsFraming] = useState(() => localStorage.getItem('rain_os_metrics_framing') || 'brand');
   const laneSectionRef = useRef(null);
+
+  function changeMetricsFraming(next) {
+    setMetricsFraming(next);
+    localStorage.setItem('rain_os_metrics_framing', next);
+  }
 
   useEffect(() => {
     if (urlWantsLaneSelect) {
@@ -606,6 +612,7 @@ export default function Dashboard() {
   const sovShare = sovScoped.length > 0 ? buildCitationShare(sovScoped[0]) : [];
 
   // Build tool-specific KPI cards
+  const isBusinessFraming = metricsFraming === 'business';
   const toolCards = [
     {
       key: 'content',
@@ -622,39 +629,59 @@ export default function Dashboard() {
     },
     {
       key: 'citation',
-      label: 'Citation Monitor',
+      label: isBusinessFraming ? 'Customer Mentions' : 'Citation Monitor',
       to: '/citation-monitor',
       hasData: citationTotal > 0,
       value: citationTotal > 0 ? `${citationRate}%` : null,
-      sub: citationTotal > 0 ? `${citationCitedCount}/${citationTotal} topics cited` : 'No citation data yet — run a topic check to see if AI cites you',
+      sub: citationTotal > 0
+        ? (isBusinessFraming
+          ? `${citationCitedCount}/${citationTotal} customer questions you showed up for`
+          : `${citationCitedCount}/${citationTotal} topics cited`)
+        : (isBusinessFraming
+          ? 'No data yet — check a question your customers ask to see if AI recommends you'
+          : 'No citation data yet — run a topic check to see if AI cites you'),
       Icon: Radar,
       dots: citationTotal > 0 ? citations.slice(0, 8).reverse().map(c => !!c.cited) : null,
-      tooltip: 'Percentage of tracked topics where Gemini cites your brand, using live Google Search grounding. The higher the number, the more often Gemini treats you as a source.',
+      tooltip: isBusinessFraming
+        ? 'Percentage of the questions your customers ask AI where your business gets recommended by name. The higher the number, the more often AI sends customers your way.'
+        : 'Percentage of tracked topics where Gemini cites your brand, using live Google Search grounding. The higher the number, the more often Gemini treats you as a source.',
     },
     {
       key: 'brand',
-      label: 'Brand Sentiment',
+      label: isBusinessFraming ? 'Reputation Check' : 'Brand Sentiment',
       to: '/brand-visibility',
       hasData: brandVisTotal > 0,
       value: brandVisTotal > 0 ? `${brandVisRate}%` : null,
       sub: brandVisTotal > 0
-        ? `${brandVisLatestBrand} — mentioned in ${brandVisMentionedCount} of your last ${brandVisTotal} check${brandVisTotal > 1 ? 's' : ''}`
-        : 'No brand sentiment data yet — run a check to see how Gemini describes you',
+        ? (isBusinessFraming
+          ? `AI mentioned ${brandVisLatestBrand} in ${brandVisMentionedCount} of your last ${brandVisTotal} check${brandVisTotal > 1 ? 's' : ''}`
+          : `${brandVisLatestBrand} — mentioned in ${brandVisMentionedCount} of your last ${brandVisTotal} check${brandVisTotal > 1 ? 's' : ''}`)
+        : (isBusinessFraming
+          ? 'No data yet — run a check to see how AI describes your business'
+          : 'No brand sentiment data yet — run a check to see how Gemini describes you'),
       Icon: Heart,
-      tooltip: 'Percentage of your recent checks where Gemini mentioned your brand by name when answering your topic.',
+      tooltip: isBusinessFraming
+        ? 'Percentage of recent checks where AI brought up your business by name when asked about businesses like yours.'
+        : 'Percentage of your recent checks where Gemini mentioned your brand by name when answering your topic.',
     },
     {
       key: 'sov',
-      label: 'Share of Voice',
+      label: isBusinessFraming ? 'Vs. Competitors' : 'Share of Voice',
       to: '/share-of-voice',
       hasData: sovTotal > 0,
       value: sovTotal > 0 ? `${sovRate}%` : null,
       sub: sovTotal > 0
-        ? `${sovLatestBrand} — mentioned in ${sovMentionedCount} of your last ${sovTotal} check${sovTotal > 1 ? 's' : ''}`
-        : 'No Share of Voice data yet — run a check to see how often Gemini cites your brand',
+        ? (isBusinessFraming
+          ? `AI recommended ${sovLatestBrand} in ${sovMentionedCount} of your last ${sovTotal} check${sovTotal > 1 ? 's' : ''}`
+          : `${sovLatestBrand} — mentioned in ${sovMentionedCount} of your last ${sovTotal} check${sovTotal > 1 ? 's' : ''}`)
+        : (isBusinessFraming
+          ? 'No data yet — run a check to see how often AI picks you over competitors'
+          : 'No Share of Voice data yet — run a check to see how often Gemini cites your brand'),
       Icon: BarChart2,
       donut: sovShare.length > 0 ? sovShare : null,
-      tooltip: 'How many of your recent checks had Gemini mention your brand in at least one of the three query phrasings.',
+      tooltip: isBusinessFraming
+        ? 'How often AI recommends your business over competitors when customers are deciding who to call or hire.'
+        : 'How many of your recent checks had Gemini mention your brand in at least one of the three query phrasings.',
     },
     {
       key: 'usage',
@@ -814,6 +841,32 @@ export default function Dashboard() {
       </div>
 
       {/* ── Tool Snapshot Cards ── */}
+      <div className={styles.chartHeader}>
+        <div>
+          <h2 className={styles.chartTitle}>Your AI Visibility</h2>
+          <p className={styles.chartSub}>How you show up when people ask AI about businesses like yours</p>
+        </div>
+        <div className={styles.framingToggle} role="tablist" aria-label="Metrics framing">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={!isBusinessFraming}
+            className={`${styles.framingBtn} ${!isBusinessFraming ? styles.framingBtnActive : ''}`}
+            onClick={() => changeMetricsFraming('brand')}
+          >
+            Brand
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={isBusinessFraming}
+            className={`${styles.framingBtn} ${isBusinessFraming ? styles.framingBtnActive : ''}`}
+            onClick={() => changeMetricsFraming('business')}
+          >
+            Business
+          </button>
+        </div>
+      </div>
       <div className={styles.toolCards}>
         {toolCards.map(t => (
           <Link key={t.key} to={t.to} className={`${styles.toolCard} ${!t.hasData ? styles.toolCardEmpty : ''}`}>
