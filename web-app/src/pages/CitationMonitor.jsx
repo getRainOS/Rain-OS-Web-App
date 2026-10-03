@@ -4,7 +4,7 @@ import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import {
   Radar, Search, ExternalLink, CheckCircle2, AlertCircle,
-  Map as MapIcon, Trophy, Trash2, Info,
+  Map as MapIcon, Trophy, Trash2, Info, Globe,
   History as HistoryIcon,
   Clock, ChevronDown, ChevronUp,
 } from 'lucide-react';
@@ -598,7 +598,7 @@ function CompetitorMapView({ map, history, ownDomain, loading, onRunCheck, onCle
     );
   }
 
-  const { totalQueries, domains, ownPoint } = map;
+  const { totalQueries, domains, ownPoint, regions, unknownCount } = map;
   const topDomain = domains[0];
   const maxCount = topDomain?.queryCount || 1;
 
@@ -780,6 +780,47 @@ function CompetitorMapView({ map, history, ownDomain, loading, onRunCheck, onCle
           </ul>
         )}
       </div>
+
+      {regions.length > 0 && (
+        <div className={`card ${styles.mapCard}`}>
+          <div className={styles.mapCardHeader}>
+            <h3 className={styles.sectionTitle}>
+              <Globe style={{ width: 14, height: 14, color: 'var(--accent)' }} />
+              Where citations come from
+              <span className={styles.sectionCount}>{regions.length}</span>
+            </h3>
+          </div>
+          <p className={styles.sectionSub}>
+            Inferred from competitor domains' country-code TLDs (e.g. .de, .jp) — most domains use generic
+            TLDs like .com that carry no geographic signal, so this is a partial, directional read, not a
+            full regional breakdown.
+          </p>
+          <ul className={styles.regionList}>
+            {regions.map(r => {
+              const widthPct = Math.max(8, Math.round((r.queryCount / regions[0].queryCount) * 100));
+              return (
+                <li key={r.name} className={styles.regionItem}>
+                  <span className={styles.regionFlag}>{r.flag}</span>
+                  <div className={styles.regionBody}>
+                    <div className={styles.regionHeadRow}>
+                      <span className={styles.regionName}>{r.name}</span>
+                      <span className={styles.regionCount}>{r.domainCount} domain{r.domainCount !== 1 ? 's' : ''}</span>
+                    </div>
+                    <div className={styles.domainBarWrap}>
+                      <div className={styles.domainBar} style={{ width: `${widthPct}%` }} />
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+          {unknownCount > 0 && (
+            <p className={styles.regionUnknownNote}>
+              + citations from domains with no geographic signal (generic TLDs like .com, .io, .ai)
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 }
