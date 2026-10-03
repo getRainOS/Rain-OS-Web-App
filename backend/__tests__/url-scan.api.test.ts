@@ -5,10 +5,10 @@ import type { User } from '../types';
 
 // ─── Mock dbService so we never touch a real database ────────────────────────
 const findUserByApiKey = vi.fn();
-const incrementUserUsage = vi.fn();
+const incrementUsageAndSaveAnalysis = vi.fn();
 vi.mock('../services/dbService', () => ({
   findUserByApiKey: (...args: unknown[]) => findUserByApiKey(...args),
-  incrementUserUsage: (...args: unknown[]) => incrementUserUsage(...args),
+  incrementUsageAndSaveAnalysis: (...args: unknown[]) => incrementUsageAndSaveAnalysis(...args),
 }));
 
 // ─── Mock the geminiService so analyzeContent is deterministic ───────────────
@@ -90,7 +90,7 @@ const fetchMock = vi.fn(async (input: any) => {
 
 beforeEach(() => {
   findUserByApiKey.mockReset();
-  incrementUserUsage.mockReset();
+  incrementUsageAndSaveAnalysis.mockReset();
   analyzeContent.mockReset();
   analyzeContent.mockResolvedValue(defaultGeminiResponse());
   targetResponse = new Response(richHtml, {
@@ -193,7 +193,7 @@ describe('POST /api/url-scan — fetch & content failures', () => {
     expect(res.status).toBe(422);
     expect(res.body.error).toBe('fetch_failed');
     expect(res.body.message).toMatch(/HTTP 503/);
-    expect(incrementUserUsage).not.toHaveBeenCalled();
+    expect(incrementUsageAndSaveAnalysis).not.toHaveBeenCalled();
   });
 
   it('returns 422 when fetching the URL throws (network error)', async () => {
@@ -221,16 +221,16 @@ describe('POST /api/url-scan — fetch & content failures', () => {
     expect(res.status).toBe(422);
     expect(res.body.error).toBe('insufficient_content');
     expect(analyzeContent).not.toHaveBeenCalled();
-    expect(incrementUserUsage).not.toHaveBeenCalled();
+    expect(incrementUsageAndSaveAnalysis).not.toHaveBeenCalled();
   });
 });
 
 describe('POST /api/url-scan — happy path', () => {
   beforeEach(() => {
     findUserByApiKey.mockResolvedValue(baseUser);
-    incrementUserUsage.mockResolvedValue({
-      ...baseUser,
-      usage: { count: 1, limit: 100 },
+    incrementUsageAndSaveAnalysis.mockResolvedValue({
+      updatedUser: { ...baseUser, usage: { count: 1, limit: 100 } },
+      analysisId: 1,
     });
   });
 
@@ -250,8 +250,9 @@ describe('POST /api/url-scan — happy path', () => {
     expect(industryArg).toBe('SaaS');
 
     // Usage was incremented exactly once and the header reflects the new usage
-    expect(incrementUserUsage).toHaveBeenCalledTimes(1);
-    expect(incrementUserUsage).toHaveBeenCalledWith('user-1');
+    expect(incrementUsageAndSaveAnalysis).toHaveBeenCalledTimes(1);
+    expect(incrementUsageAndSaveAnalysis.mock.calls[0][0]).toBe('user-1');
+    expect(incrementUsageAndSaveAnalysis.mock.calls[0][1].url).toBe('https://target.test/some/path');
     expect(JSON.parse(res.headers['x-usage-info'])).toEqual({ count: 1, limit: 100 });
 
     // Response shape: success flag, technical signals, recs, scan metadata
@@ -381,7 +382,7 @@ describe('POST /api/url-scan — happy path', () => {
     expect(res.status).toBe(502);
     expect(res.body.error).toBe('ai_provider_error');
     expect(res.body.message).not.toMatch(/gemini boom/);
-    expect(incrementUserUsage).not.toHaveBeenCalled();
+    expect(incrementUsageAndSaveAnalysis).not.toHaveBeenCalled();
     errSpy.mockRestore();
   });
 
@@ -394,7 +395,7 @@ describe('POST /api/url-scan — happy path', () => {
       .send({ url: 'https://target.test/' });
     expect(res.status).toBe(503);
     expect(res.body.error).toBe('ai_provider_busy');
-    expect(incrementUserUsage).not.toHaveBeenCalled();
+    expect(incrementUsageAndSaveAnalysis).not.toHaveBeenCalled();
     errSpy.mockRestore();
   });
 });

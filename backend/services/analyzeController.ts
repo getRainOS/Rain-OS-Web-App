@@ -45,14 +45,16 @@ return res.status(402).json({ error: 'payment_required', message: 'Active subscr
 if (user.usage.count >= user.usage.limit) {
 return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Usage limit reached. Upgrade to continue.' } as ApiError);
 }
-const { content, industry, module, lane } = req.body as { content?: string; industry?: string; module?: string; lane?: string };
+const { content, industry, module, lane, title, url } = req.body as { content?: string; industry?: string; module?: string; lane?: string; title?: string; url?: string };
   // Safeguard backend memory
   const safeContent = typeof content === "string" ? content.slice(0, 12000) : "";
-  console.log(`[SAVE DEBUG] safeContent: type=${typeof safeContent}, length=${safeContent.length}, preview=${JSON.stringify(safeContent.slice(0, 40))}`);
 const analysisModule: 'general' | 'product_sellers' | 'developers' | 'local_business' =
   module === 'product_sellers' || module === 'developers' || module === 'local_business' ? module : 'general';
 if (!content || typeof content !== 'string' || content.trim().length < 10) {
 return res.status(400).json({ error: 'bad_request', message: 'content is required (minimum 10 characters)' } as ApiError);
+}
+if (!title || typeof title !== 'string' || !title.trim()) {
+return res.status(400).json({ error: 'bad_request', message: 'title is required' } as ApiError);
 }
 try {
 const result = await analyzeContent(content, industry || 'General / Other', analysisModule);
@@ -64,12 +66,15 @@ const typedResult = result as AnalysisResponse;
 const pillar = typedResult.pillarScores || { aiReadability: 0, digitalAuthority: 0, contentQuality: 0, technicalSymmetry: 0 };
 
 const { updatedUser, analysisId } = await incrementUsageAndSaveAnalysis(user.id, {
+  title: title.trim(),
+  url: typeof url === 'string' && url.trim() ? url.trim() : null,
   overall_score: typeof typedResult.overallScore === 'number' ? typedResult.overallScore : null,
   ai_readability: typeof pillar?.aiReadability === 'number' ? pillar.aiReadability : null,
   digital_authority: typeof pillar?.digitalAuthority === 'number' ? pillar.digitalAuthority : null,
   conversion_readiness: typeof pillar?.conversionReadiness === 'number' ? pillar.conversionReadiness : null,
   product_discoverability: typeof pillar?.productDiscoverability === 'number' ? pillar.productDiscoverability : null,
   rag_readiness: typeof pillar?.ragReadiness === 'number' ? pillar.ragReadiness : null,
+  summary: typeof typedResult.summary === 'string' ? typedResult.summary : null,
   result_json: result,
   content: safeContent,
   lane: lane ?? null,

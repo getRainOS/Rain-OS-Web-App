@@ -372,6 +372,9 @@ export const resetAllUsersUsage = async (): Promise<number> => {
 // Consolidates two N+1 queries (incrementUserUsage + saveAnalysis) into a single
 // transaction for better performance and consistency.
 export interface AnalysisData {
+    title?: string | null;
+    url?: string | null;
+    repo?: string | null;
     overall_score?: number | null;
     ai_readability?: number | null;
     digital_authority?: number | null;
@@ -405,21 +408,22 @@ const incrementUsageAndSaveAnalysisAttempt = async (
         // Save analysis in the same transaction
         const analysisRes = await client.query(
             `INSERT INTO content_analyses
-          (user_id, title, url, overall_score, ai_readability, digital_authority,
+          (user_id, title, url, repo, overall_score, ai_readability, digital_authority,
           conversion_readiness, product_discoverability, rag_readiness, summary, result_json, lane, content)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
           RETURNING id`,
             [
                 userId,
-                null, // title
-                null, // url
+                analysisData.title ?? null,
+                analysisData.url ?? null,
+                analysisData.repo ?? null,
                 analysisData.overall_score ?? null,
                 analysisData.ai_readability ?? null,
                 analysisData.digital_authority ?? null,
                 analysisData.conversion_readiness ?? null,
                 analysisData.product_discoverability ?? null,
                 analysisData.rag_readiness ?? null,
-                null, // summary
+                analysisData.summary ?? null,
                 analysisData.result_json ? JSON.stringify(analysisData.result_json) : null,
                 analysisData.lane ?? null,
           analysisData.content ?? null,
@@ -733,6 +737,7 @@ export interface AnalysisRecord {
   id: number;
   title: string | null;
   url: string | null;
+  repo: string | null;
   overall_score: number | null;
   ai_readability: number | null;
   digital_authority: number | null;
@@ -750,6 +755,7 @@ const mapAnalysisRow = (row: any): AnalysisRecord => ({
   id: Number(row.id),
   title: row.title ?? null,
   url: row.url ?? null,
+  repo: row.repo ?? null,
   overall_score: row.overall_score !== null ? Number(row.overall_score) : null,
   ai_readability: row.ai_readability !== null ? Number(row.ai_readability) : null,
   digital_authority: row.digital_authority !== null ? Number(row.digital_authority) : null,
@@ -838,7 +844,7 @@ export const getAnalysesByUser = async (
   const laneFilter = lane ? 'AND lane = $3' : '';
   const params = lane ? [userId, limit, lane] : [userId, limit];
   const res = await pool.query(
-    `SELECT id, title, url, overall_score, ai_readability, digital_authority,
+    `SELECT id, title, url, repo, overall_score, ai_readability, digital_authority,
             conversion_readiness, product_discoverability, rag_readiness, summary, analyzed_at, lane, result_json
      FROM content_analyses
      WHERE user_id = $1 ${laneFilter}
@@ -854,7 +860,7 @@ export const getAnalysisById = async (
   id: number
 ): Promise<AnalysisRecord | null> => {
   const res = await pool.query(
-    `SELECT id, title, url, overall_score, ai_readability, digital_authority,
+    `SELECT id, title, url, repo, overall_score, ai_readability, digital_authority,
       conversion_readiness, product_discoverability, rag_readiness,
       summary, analyzed_at, lane, result_json, content
       FROM content_analyses

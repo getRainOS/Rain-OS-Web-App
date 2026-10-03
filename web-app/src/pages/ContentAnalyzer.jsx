@@ -123,6 +123,7 @@ export default function ContentAnalyzer() {
 
   async function handleAnalyze(e) {
     e.preventDefault();
+    if (!title.trim()) return;
     if (!content.trim() && !url.trim()) return;
     setLoading(true);
     setError('');
@@ -202,13 +203,14 @@ export default function ContentAnalyzer() {
         <form onSubmit={handleAnalyze} className={styles.form}>
           <div className={styles.formRow}>
             <div className={styles.field}>
-              <label className={styles.label}>Title (optional)</label>
+              <label className={styles.label}>Title</label>
               <input
                 type="text"
                 className={styles.input}
                 placeholder="My article title…"
                 value={title}
                 onChange={e => setTitle(e.target.value)}
+                required
               />
             </div>
             <div className={styles.field}>
@@ -251,7 +253,7 @@ export default function ContentAnalyzer() {
             <button
               type="submit"
               className="btn btn-primary"
-              disabled={loading || isAtLimit || (!content.trim() && !url.trim())}
+              disabled={loading || isAtLimit || !title.trim() || (!content.trim() && !url.trim())}
             >
               {loading ? <><span className="spinner" /> {result ? 'Re-analyzing…' : 'Analyzing…'}</> : (result ? '↻ Re-analyze' : '✦ Analyze Content')}
             </button>

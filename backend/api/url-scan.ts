@@ -1,6 +1,6 @@
 // api/url-scan.ts — Fetch a URL, score with Gemini + Cheerio HTML analysis.
 import express from 'express';
-import { findUserByApiKey, incrementUserUsage } from '../services/dbService';
+import { findUserByApiKey, incrementUsageAndSaveAnalysis } from '../services/dbService';
 import { analyzeContent } from '../services/geminiService';
 import { scanUrlForTechnicalSignals } from '../services/urlScanService';
 import { runPageSpeed, isGoogleApiConfigured } from '../services/googleApisService';
@@ -157,8 +157,19 @@ export default async function handler(req: express.Request, res: express.Respons
       page_speed: pageSpeed,
     };
 
-    // ─── Increment usage ────────────────────────────────────────────────────
-    const updated = await incrementUserUsage(user.id);
+    // ─── Increment usage and save to history ─────────────────────────────────
+    const saveResult = await incrementUsageAndSaveAnalysis(user.id, {
+      url,
+      overall_score: result.overallScore ?? null,
+      ai_readability: result.pillarScores?.aiReadability ?? null,
+      digital_authority: result.pillarScores?.digitalAuthority ?? null,
+      conversion_readiness: result.pillarScores?.conversionReadiness ?? null,
+      product_discoverability: result.pillarScores?.productDiscoverability ?? null,
+      rag_readiness: result.pillarScores?.ragReadiness ?? null,
+      summary: result.summary ?? null,
+      result_json: result,
+    });
+    const updated = saveResult.updatedUser;
     if (updated) res.setHeader('X-Usage-Info', JSON.stringify(updated.usage));
 
     return res.status(200).json({ success: true, data: result, ...result, raw: gemini });
