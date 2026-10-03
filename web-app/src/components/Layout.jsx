@@ -5,7 +5,7 @@ import { api, clearApiKey } from '../api/client.js';
 import { supabase } from '../lib/supabase.js';
 import {
   LayoutDashboard, FileText, Globe, GitBranch, Radar, Eye,
-  BarChart2, Clock, Settings, ArrowUp, LogOut, Wand2, Menu, X,
+  BarChart2, Settings, ArrowUp, LogOut, Wand2, Menu, X,
 } from 'lucide-react';
 import KnowledgeBase from './KnowledgeBase.jsx';
 import styles from './Layout.module.css';
@@ -32,30 +32,29 @@ const TOOLS = {
   citation:   { to: '/citation-monitor', label: 'Citation Monitor',    Icon: Radar,            tooltip: 'Check whether Gemini cites your brand for your topics, using live Google Search grounding.' },
   visibility: { to: '/brand-visibility', label: 'Brand Sentiment',       Icon: Eye,              tooltip: 'See how Gemini describes your brand, using live Google Search grounding — is the sentiment positive and are the facts correct?' },
   sov:        { to: '/share-of-voice',   label: 'Share of Voice',      Icon: BarChart2,        tooltip: 'See how visible your brand is when Gemini answers your topic three ways, using live Google Search grounding.' },
-  history:    { to: '/history',          label: 'Score History',       Icon: Clock,            tooltip: 'Browse all past analyses and track how your scores improve over time.' },
   settings:   { to: '/settings',         label: 'Settings',            Icon: Settings,         tooltip: 'Change your solution lane, API settings, and account preferences.' },
 };
 
 const LANE_GROUPS = {
   general: [
     { label: 'Optimize',  tools: ['analyze', 'urlScanner'] },
-    { label: 'Monitor',   tools: ['citation', 'visibility', 'sov', 'history'] },
+    { label: 'Monitor',   tools: ['citation', 'visibility', 'sov'] },
   ],
   product_sellers: [
     { label: 'Optimize',  tools: ['analyze', 'urlScanner'] },
-    { label: 'Monitor',   tools: ['citation', 'visibility', 'sov', 'history'] },
+    { label: 'Monitor',   tools: ['citation', 'visibility', 'sov'] },
   ],
   developers: [
     { label: 'Optimize',  tools: ['repo', 'urlScanner'] },
-    { label: 'Monitor',   tools: ['citation', 'sov', 'history'] },
+    { label: 'Monitor',   tools: ['citation', 'sov'] },
   ],
   local_business: [
     { label: 'Optimize',  tools: ['analyze', 'urlScanner'] },
-    { label: 'Monitor',   tools: ['citation', 'visibility', 'sov', 'history'] },
+    { label: 'Monitor',   tools: ['citation', 'visibility', 'sov'] },
   ],
   vibe_coders: [
     { label: 'Optimize',  tools: ['repo', 'urlScanner'] },
-    { label: 'Monitor',   tools: ['citation', 'visibility', 'sov', 'history'] },
+    { label: 'Monitor',   tools: ['citation', 'visibility', 'sov'] },
   ],
 };
 
