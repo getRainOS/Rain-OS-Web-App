@@ -116,7 +116,19 @@ export default async function handler(req: express.Request, res: express.Respons
   }
 
   // ─── Input validation ───────────────────────────────────────────────────
-  const { topic, url } = req.body as { topic?: string; url?: string };
+  const { name, topic, url } = req.body as { name?: string; topic?: string; url?: string };
+  if (!name || typeof name !== 'string' || name.trim().length < 1) {
+    return res.status(400).json({
+      error: 'bad_request',
+      message: 'name is required',
+    } as ApiError);
+  }
+  if (name.length > 120) {
+    return res.status(400).json({
+      error: 'bad_request',
+      message: 'name is too long (max 120 characters)',
+    } as ApiError);
+  }
   if (!topic || typeof topic !== 'string' || topic.trim().length < 3) {
     return res.status(400).json({
       error: 'bad_request',
@@ -151,6 +163,7 @@ export default async function handler(req: express.Request, res: express.Respons
     let history: any[] = [];
     try {
       await saveCitationCheck(user.id, {
+        name: name.trim(),
         topic: result.topic,
         url: result.url,
         cited: result.cited,
@@ -173,7 +186,7 @@ export default async function handler(req: express.Request, res: express.Respons
     const updated = await incrementUserUsage(user.id);
     if (updated) res.setHeader('X-Usage-Info', JSON.stringify(updated.usage));
 
-    return res.status(200).json({ success: true, data: result, history, ...result });
+    return res.status(200).json({ success: true, data: { ...result, name: name.trim() }, history, ...result, name: name.trim() });
   } catch (error) {
     const { status, body } = classifyGeminiError(error, 'citation-check');
     return res.status(status).json(body as ApiError);

@@ -34,6 +34,7 @@ CREATE INDEX IF NOT EXISTS idx_ai_content_profiles_updated_at ON ai_content_prof
 CREATE TABLE IF NOT EXISTS citation_checks (
   id BIGSERIAL PRIMARY KEY,
   user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  name TEXT,
   topic TEXT NOT NULL,
   topic_key TEXT NOT NULL,
   url TEXT,
@@ -49,6 +50,8 @@ CREATE INDEX IF NOT EXISTS idx_citation_checks_user_topic
   ON citation_checks(user_id, topic_key, checked_at DESC);
 CREATE INDEX IF NOT EXISTS idx_citation_checks_user_checked_at
   ON citation_checks(user_id, checked_at DESC);
+-- Additive migration for existing deployments (idempotent)
+ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS name TEXT;
 
 -- Content analysis history (additive)
 CREATE TABLE IF NOT EXISTS content_analyses (

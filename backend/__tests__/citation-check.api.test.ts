@@ -125,7 +125,7 @@ describe('POST /api/citation-check — input validation', () => {
     const res = await request(app)
       .post('/api/citation-check')
       .set('Authorization', 'Bearer k')
-      .send({});
+      .send({ name: 'Widgets check' });
     expect(res.status).toBe(400);
     expect(res.body.error).toBe('bad_request');
   });
@@ -134,7 +134,7 @@ describe('POST /api/citation-check — input validation', () => {
     const res = await request(app)
       .post('/api/citation-check')
       .set('Authorization', 'Bearer k')
-      .send({ topic: 'ab' });
+      .send({ name: 'Widgets check', topic: 'ab' });
     expect(res.status).toBe(400);
   });
 
@@ -142,7 +142,7 @@ describe('POST /api/citation-check — input validation', () => {
     const res = await request(app)
       .post('/api/citation-check')
       .set('Authorization', 'Bearer k')
-      .send({ topic: 'a'.repeat(501) });
+      .send({ name: 'Widgets check', topic: 'a'.repeat(501) });
     expect(res.status).toBe(400);
     expect(res.body.message).toMatch(/too long/i);
   });
@@ -151,9 +151,28 @@ describe('POST /api/citation-check — input validation', () => {
     const res = await request(app)
       .post('/api/citation-check')
       .set('Authorization', 'Bearer k')
-      .send({ topic: 'best widgets', url: 'http://[::bad-url' });
+      .send({ name: 'Widgets check', topic: 'best widgets', url: 'http://[::bad-url' });
     expect(res.status).toBe(400);
     expect(res.body.message).toMatch(/url is malformed/i);
+  });
+
+  it('returns 400 when name is missing', async () => {
+    const res = await request(app)
+      .post('/api/citation-check')
+      .set('Authorization', 'Bearer k')
+      .send({ topic: 'best widgets 2026' });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('bad_request');
+    expect(res.body.message).toMatch(/name is required/i);
+  });
+
+  it('returns 400 when name is longer than 120 characters', async () => {
+    const res = await request(app)
+      .post('/api/citation-check')
+      .set('Authorization', 'Bearer k')
+      .send({ name: 'a'.repeat(121), topic: 'best widgets 2026' });
+    expect(res.status).toBe(400);
+    expect(res.body.message).toMatch(/too long/i);
   });
 });
 
@@ -170,7 +189,7 @@ describe('POST /api/citation-check — happy path', () => {
     const res = await request(app)
       .post('/api/citation-check')
       .set('Authorization', 'Bearer k')
-      .send({ topic: 'best widgets 2026', url: 'https://example.com' });
+      .send({ name: 'Widgets check', topic: 'best widgets 2026', url: 'https://example.com' });
 
     expect(res.status).toBe(200);
     expect(incrementUserUsage).toHaveBeenCalledWith('user-1');
@@ -191,7 +210,7 @@ describe('POST /api/citation-check — happy path', () => {
     const res = await request(app)
       .post('/api/citation-check')
       .set('Authorization', 'Bearer k')
-      .send({ topic: 'best widgets 2026', url: 'https://mysite.test' });
+      .send({ name: 'Widgets check', topic: 'best widgets 2026', url: 'https://mysite.test' });
 
     expect(res.status).toBe(200);
     expect(res.body.cited).toBe(false);
