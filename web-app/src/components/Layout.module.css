@@ -73,21 +73,26 @@
 }
 
 .brand {
+  position: relative;
   padding: 0 20px 20px;
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  color: var(--text);
   text-align: center;
   border-bottom: 1px solid var(--border);
   margin-bottom: 16px;
 }
 
+.brandWordmark {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--text);
+}
+
 .brandAccent { color: var(--cyan); }
 
 .demoBadge {
-  display: inline-block;
-  margin-left: 8px;
+  position: absolute;
+  top: 2px;
+  right: 14px;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -96,7 +101,6 @@
   background: rgba(249,115,22,0.15);
   color: #f97316;
   border: 1px solid rgba(249,115,22,0.3);
-  vertical-align: middle;
 }
 
 .nav {
