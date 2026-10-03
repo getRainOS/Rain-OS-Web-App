@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
@@ -13,6 +13,10 @@ import {
 } from 'recharts';
 import { buildCompetitorMap } from '../lib/citationHistory.js';
 import styles from './CitationMonitor.module.css';
+
+// Lazy: react-simple-maps + d3-geo only need to load for whoever actually
+// opens the Competitor Map tab, not on every page in the app.
+const CitationWorldMap = lazy(() => import('../components/CitationWorldMap.jsx'));
 
 const EXAMPLE_TOPICS = [
   'best AI content optimizer for bloggers',
@@ -795,6 +799,9 @@ function CompetitorMapView({ map, history, ownDomain, loading, onRunCheck, onCle
             TLDs like .com that carry no geographic signal, so this is a partial, directional read, not a
             full regional breakdown.
           </p>
+          <Suspense fallback={<div className={styles.mapLoadingFallback}><span className="spinner" /></div>}>
+            <CitationWorldMap regions={regions} unknownCount={unknownCount} />
+          </Suspense>
           <ul className={styles.regionList}>
             {regions.map(r => {
               const widthPct = Math.max(8, Math.round((r.queryCount / regions[0].queryCount) * 100));
@@ -814,11 +821,6 @@ function CompetitorMapView({ map, history, ownDomain, loading, onRunCheck, onCle
               );
             })}
           </ul>
-          {unknownCount > 0 && (
-            <p className={styles.regionUnknownNote}>
-              + citations from domains with no geographic signal (generic TLDs like .com, .io, .ai)
-            </p>
-          )}
         </div>
       )}
     </div>
