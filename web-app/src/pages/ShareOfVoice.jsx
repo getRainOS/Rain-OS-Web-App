@@ -75,12 +75,11 @@ const S = {
     background: 'var(--surface-2)', border: '1px solid var(--border)',
     borderRadius: 14, padding: 20,
   },
-  shareGrid: { display: 'grid', gridTemplateColumns: '220px 1fr', gap: 28, alignItems: 'center' },
-  shareLegend: { display: 'flex', flexDirection: 'column', gap: 10 },
-  shareLegendRow: { display: 'flex', alignItems: 'center', gap: 10 },
+  shareLegendRowWrap: { display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px 20px' },
+  shareLegendInline: { display: 'inline-flex', alignItems: 'center', gap: 6 },
   shareLegendDot: { width: 9, height: 9, borderRadius: '50%', flexShrink: 0 },
-  shareLegendLabel: { flex: 1, minWidth: 0, fontSize: 13, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
-  shareLegendPct: { fontSize: 13, fontWeight: 600, color: 'var(--text)', fontVariantNumeric: 'tabular-nums', flexShrink: 0 },
+  shareLegendLabel: { fontSize: 12.5, color: 'var(--text)', whiteSpace: 'nowrap' },
+  shareLegendPct: { fontSize: 12, color: 'var(--text-muted)', fontVariantNumeric: 'tabular-nums', flexShrink: 0 },
 };
 
 // Fixed small palette for distinguishing named domains in the citation-share
@@ -534,16 +533,24 @@ export default function ShareOfVoice() {
               {citationShare.length > 0 && (
                 <div style={{ ...S.card, marginBottom: 20 }}>
                   <p style={S.sectionTitle}>Citation share</p>
-                  <div style={S.shareGrid}>
-                    <ResponsiveContainer width="100%" height={200}>
+                  <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--text)', fontVariantNumeric: 'tabular-nums' }}>
+                    {citationShare[0].name}
+                    <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)', marginLeft: 8 }}>
+                      {citationShare[0].pct}% of citations
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'center', margin: '8px 0' }}>
+                    <ResponsiveContainer width="100%" height={220}>
                       <PieChart>
                         <Pie
                           data={citationShare}
                           dataKey="value"
                           nameKey="name"
-                          innerRadius={55}
-                          outerRadius={85}
-                          paddingAngle={2}
+                          innerRadius={62}
+                          outerRadius={95}
+                          paddingAngle={6}
+                          cornerRadius={8}
                           stroke="none"
                         >
                           {citationShare.map((d, i) => <Cell key={i} fill={d.color} />)}
@@ -551,17 +558,19 @@ export default function ShareOfVoice() {
                         <Tooltip content={<ShareTooltip />} />
                       </PieChart>
                     </ResponsiveContainer>
-                    <div style={S.shareLegend}>
-                      {citationShare.map((d, i) => (
-                        <div key={i} style={S.shareLegendRow}>
-                          <span style={{ ...S.shareLegendDot, background: d.color }} />
-                          <span style={S.shareLegendLabel}>{d.name}{d.isOwn ? ' (you)' : ''}</span>
-                          <span style={S.shareLegendPct}>{d.pct}%</span>
-                        </div>
-                      ))}
-                    </div>
                   </div>
-                  <p style={{ fontSize: 11.5, color: 'var(--text-dim)', margin: '16px 0 0' }}>
+
+                  <div style={S.shareLegendRowWrap}>
+                    {citationShare.map((d, i) => (
+                      <div key={i} style={S.shareLegendInline}>
+                        <span style={{ ...S.shareLegendDot, background: d.color }} />
+                        <span style={S.shareLegendLabel}>{d.name}{d.isOwn ? ' (you)' : ''}</span>
+                        <span style={S.shareLegendPct}>{d.pct}%</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <p style={{ fontSize: 11.5, color: 'var(--text-dim)', margin: '16px 0 0', textAlign: 'center' }}>
                     Share of all sources cited across the 3 query phrasings for this topic — real counts, not an estimate.
                   </p>
                 </div>
