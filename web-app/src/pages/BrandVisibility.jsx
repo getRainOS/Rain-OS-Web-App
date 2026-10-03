@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext.jsx';
 import { api } from '../api/client.js';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import styles from './BrandVisibility.module.css';
 
 const S = {
   page: { padding: '32px 40px', maxWidth: 900, margin: '0 auto' },
@@ -39,8 +40,6 @@ const S = {
     display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 10,
     color: 'var(--accent)', fontSize: 12.5, fontWeight: 600, textDecoration: 'none',
   },
-  grid2: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 },
-  grid3: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, marginBottom: 16 },
 
   btn: {
     background: 'var(--accent)',
@@ -425,7 +424,7 @@ export default function BrandVisibility() {
 
       <div style={S.card}>
         <form onSubmit={handleCheck}>
-          <div style={S.grid2}>
+          <div className={styles.formGrid2}>
             <div>
               <label style={S.label}>Brand or product name</label>
               <input

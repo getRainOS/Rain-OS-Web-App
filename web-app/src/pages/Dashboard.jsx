@@ -319,6 +319,24 @@ function MiniDonut({ data, size = 28 }) {
   );
 }
 
+/* ── Mini hit/miss dot row (tool card accent) ── */
+function DotRow({ values }) {
+  if (!values || values.length === 0) {
+    return <span className={styles.sparkPlaceholder}>—</span>;
+  }
+  return (
+    <div className={styles.dotRow}>
+      {values.map((hit, i) => (
+        <span
+          key={i}
+          className={styles.dot}
+          style={{ background: hit ? 'var(--accent)' : 'rgba(255,255,255,0.12)' }}
+        />
+      ))}
+    </div>
+  );
+}
+
 /* ── Lane Selector ── */
 function LaneSelector({ onSelect }) {
   return (
@@ -596,7 +614,7 @@ export default function Dashboard() {
       hasData: totalAnalyses > 0,
       value: totalAnalyses > 0 ? `${avgScore}` : null,
       suffix: '/100',
-      sub: totalAnalyses > 0 ? `${totalAnalyses} analyses · ${weakestPillar ? `${weakestPillar.label} weakest` : 'all balanced'}` : 'No analysis data yet — paste content to score',
+      sub: totalAnalyses > 0 ? (weakestPillar ? `${weakestPillar.label} weakest` : 'All pillars balanced') : 'No analysis data yet — paste content to score',
       trend: scoreTrend,
       Icon: FileText,
       pillars: totalAnalyses > 0 ? pillarAvgs : null,
@@ -610,7 +628,7 @@ export default function Dashboard() {
       value: citationTotal > 0 ? `${citationRate}%` : null,
       sub: citationTotal > 0 ? `${citationCitedCount}/${citationTotal} topics cited` : 'No citation data yet — run a topic check to see if AI cites you',
       Icon: Radar,
-      spark: null,
+      dots: citationTotal > 0 ? citations.slice(0, 8).reverse().map(c => !!c.cited) : null,
       tooltip: 'Percentage of tracked topics where Gemini cites your brand, using live Google Search grounding. The higher the number, the more often Gemini treats you as a source.',
     },
     {
@@ -623,7 +641,9 @@ export default function Dashboard() {
         ? `${brandVisLatestBrand} — mentioned in ${brandVisMentionedCount} of your last ${brandVisTotal} check${brandVisTotal > 1 ? 's' : ''}`
         : 'No brand sentiment data yet — run a check to see how Gemini describes you',
       Icon: Heart,
-      spark: null,
+      dots: brandVisTotal > 0
+        ? brandVisScoped.slice(0, 8).reverse().map(h => (h.mention_status || h.mentionStatus) === 'mentioned')
+        : null,
       tooltip: 'Percentage of your recent checks where Gemini mentioned your brand by name when answering your topic.',
     },
     {
@@ -842,6 +862,10 @@ export default function Dashboard() {
             ) : t.donut && t.donut.length > 0 ? (
               <div className={styles.toolCardSpark}>
                 <MiniDonut data={t.donut} />
+              </div>
+            ) : t.dots && t.dots.length > 0 ? (
+              <div className={styles.toolCardSpark}>
+                <DotRow values={t.dots} />
               </div>
             ) : t.spark && t.spark.length > 1 && (
               <div className={styles.toolCardSpark}>
