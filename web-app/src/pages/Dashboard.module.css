@@ -304,9 +304,9 @@
 }
 
 .kpiValue {
-  font-size: 34px;
-  font-weight: 700;
-  letter-spacing: -0.6px;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
   color: var(--text);
   font-variant-numeric: tabular-nums;
 }
@@ -978,9 +978,9 @@ button.emptyLink {
 }
 
 .heroStatValue {
-  font-size: 40px;
-  font-weight: 700;
-  letter-spacing: -1px;
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
   line-height: 1;
   color: var(--text);
   font-variant-numeric: tabular-nums;

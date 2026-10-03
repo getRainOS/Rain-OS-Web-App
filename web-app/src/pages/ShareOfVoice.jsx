@@ -417,7 +417,7 @@ export default function ShareOfVoice() {
                   <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>{result.brand}</div>
                   <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 14 }}>"{result.topic}"</div>
 
-                  <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--text)', marginBottom: result.domainSharePercent !== null ? 4 : 12, fontVariantNumeric: 'tabular-nums' }}>
+                  <div style={{ fontSize: 20, fontWeight: 600, color: 'var(--text)', marginBottom: result.domainSharePercent !== null ? 4 : 12, fontVariantNumeric: 'tabular-nums' }}>
                     Mentioned in {result.mentionedCount} of 3 prompts
                   </div>
                   {result.domainSharePercent !== null && (
@@ -460,7 +460,7 @@ export default function ShareOfVoice() {
               {citationShare.length > 0 && (
                 <div style={{ ...S.card, marginBottom: 20 }}>
                   <p style={S.sectionTitle}>Citation share</p>
-                  <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--text)', fontVariantNumeric: 'tabular-nums' }}>
+                  <div style={{ fontSize: 20, fontWeight: 600, color: 'var(--text)', fontVariantNumeric: 'tabular-nums' }}>
                     {citationShare[0].name}
                     <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-muted)', marginLeft: 8 }}>
                       {citationShare[0].pct}% of citations

@@ -994,11 +994,11 @@ export default function Dashboard() {
                   <AreaChart data={SAMPLE_TREND} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
                     <defs>
                       <linearGradient id="scoreGradSample" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#5b5fc7" stopOpacity={0.08} />
-                        <stop offset="100%" stopColor="#5b5fc7" stopOpacity={0} />
+                        <stop offset="0%" stopColor="var(--accent)" stopOpacity={0.08} />
+                        <stop offset="100%" stopColor="var(--accent)" stopOpacity={0} />
                       </linearGradient>
                     </defs>
-                    <Area type="monotone" dataKey="score" stroke="#5b5fc7" strokeWidth={1.5}
+                    <Area type="monotone" dataKey="score" stroke="var(--accent)" strokeWidth={1.5}
                       fill="url(#scoreGradSample)" dot={false} />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -1018,8 +1018,8 @@ export default function Dashboard() {
               <AreaChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
                 <defs>
                   <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#5b5fc7" stopOpacity={0.08} />
-                    <stop offset="100%" stopColor="#5b5fc7" stopOpacity={0} />
+                    <stop offset="0%" stopColor="var(--accent)" stopOpacity={0.08} />
+                    <stop offset="100%" stopColor="var(--accent)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="idx" stroke="transparent"
@@ -1027,9 +1027,9 @@ export default function Dashboard() {
                 <YAxis domain={[0, 100]} stroke="transparent"
                   tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
                 <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
-                <Area type="monotone" dataKey="score" stroke="#5b5fc7" strokeWidth={1.5}
+                <Area type="monotone" dataKey="score" stroke="var(--accent)" strokeWidth={1.5}
                   fill="url(#scoreGrad)" dot={false}
-                  activeDot={{ r: 4, fill: '#5b5fc7', strokeWidth: 0 }} />
+                  activeDot={{ r: 4, fill: 'var(--accent)', strokeWidth: 0 }} />
               </AreaChart>
             </ResponsiveContainer>
           )}
