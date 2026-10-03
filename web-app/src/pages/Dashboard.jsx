@@ -394,7 +394,13 @@ export default function Dashboard() {
   const [showLaneSelector, setShowLaneSelector] = useState(!userLane || urlWantsLaneSelect);
   const [dateFilter, setDateFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
-  const [metricsFraming, setMetricsFraming] = useState(() => localStorage.getItem('rain_os_metrics_framing') || 'brand');
+  const [metricsFraming, setMetricsFraming] = useState(() => {
+    const stored = localStorage.getItem('rain_os_metrics_framing');
+    if (stored) return stored;
+    // Local Service Business users are, definitionally, a business — default
+    // their first-ever view to business framing instead of brand framing.
+    return userLane === 'local_business' ? 'business' : 'brand';
+  });
   const [showAllFixes, setShowAllFixes] = useState(false);
   const laneSectionRef = useRef(null);
   const typeFilterAutoSet = useRef(false);
@@ -883,8 +889,12 @@ export default function Dashboard() {
       {/* ── Tool Snapshot Cards ── */}
       <div className={styles.chartHeader}>
         <div>
-          <h2 className={styles.chartTitle}>Your AI Visibility</h2>
-          <p className={styles.chartSub}>How you show up when people ask AI about businesses like yours</p>
+          <h2 className={styles.chartTitle}>{userLane === 'local_business' ? 'Found by Local Customers' : 'Your AI Visibility'}</h2>
+          <p className={styles.chartSub}>
+            {userLane === 'local_business'
+              ? "Whether AI recommends you when nearby customers search — not just whether you rank, whether you're chosen."
+              : 'How you show up when people ask AI about businesses like yours'}
+          </p>
         </div>
         <div className={styles.framingToggle} role="tablist" aria-label="Metrics framing">
           <button
@@ -1199,8 +1209,8 @@ export default function Dashboard() {
         <div className={styles.quickActions}>
           <div className={styles.chartHeader}>
             <div>
-              <h2 className={styles.chartTitle}>Analyze</h2>
-              <p className={styles.chartSub}>Pick your analysis mode</p>
+              <h2 className={styles.chartTitle}>{userLane === 'local_business' ? 'Get Found' : 'Analyze'}</h2>
+              <p className={styles.chartSub}>{userLane === 'local_business' ? 'Score your site for local AI search' : 'Pick your analysis mode'}</p>
               <span className={styles.chartHelp} title="Quick shortcuts to run different types of analysis: Content Optimizer, URL Scanner, Repo Analysis, and more.">
                 <HelpCircle size={11} />
               </span>
