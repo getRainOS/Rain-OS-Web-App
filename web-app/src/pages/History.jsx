@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { api } from '../api/client.js';
 import PillarScores from '../components/PillarScores.jsx';
 import { PILLAR_COLORS } from '../lib/pillarColors.js';
-import { CheckCircle2, AlertCircle, ExternalLink, Trash2 } from 'lucide-react';
+import { CheckCircle2, AlertCircle, ExternalLink, Trash2, Search, X } from 'lucide-react';
 import styles from './History.module.css';
 
 const UNDO_DELAY_MS = 5000;
@@ -10,6 +10,25 @@ const UNDO_DELAY_MS = 5000;
 function normaliseTopicKey(topic) {
   return topic.trim().toLowerCase().replace(/\s+/g, ' ');
 }
+
+function getAnalysisType(item) {
+  if (item.repo) return 'repo';
+  if (item.url) return 'url';
+  return 'content';
+}
+
+const ANALYSIS_TYPE_FILTERS = [
+  { id: 'all', label: 'All types' },
+  { id: 'content', label: 'Content' },
+  { id: 'url', label: 'URL' },
+  { id: 'repo', label: 'Repo' },
+];
+
+const CITATION_STATUS_FILTERS = [
+  { id: 'all', label: 'All' },
+  { id: 'cited', label: 'Cited' },
+  { id: 'not_cited', label: 'Not cited' },
+];
 
 export default function History() {
   const [tab, setTab] = useState('analyses');
@@ -21,6 +40,8 @@ export default function History() {
   const [confirmDeleteAnalysisId, setConfirmDeleteAnalysisId] = useState(null);
   const [deletingAnalysisId, setDeletingAnalysisId] = useState(null);
   const [deleteAnalysisError, setDeleteAnalysisError] = useState('');
+  const [analysesSearch, setAnalysesSearch] = useState('');
+  const [analysesTypeFilter, setAnalysesTypeFilter] = useState('all');
 
   const [citations, setCitations] = useState([]);
   const [citationsLoading, setCitationsLoading] = useState(false);
@@ -29,6 +50,8 @@ export default function History() {
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
   const [deleteError, setDeleteError] = useState('');
+  const [citationsSearch, setCitationsSearch] = useState('');
+  const [citationsStatusFilter, setCitationsStatusFilter] = useState('all');
 
   const [confirmClearAll, setConfirmClearAll] = useState(false);
   const [clearingAll, setClearingAll] = useState(false);
@@ -76,6 +99,29 @@ export default function History() {
         setCitationsLoaded(true);
       });
   }, [tab, citationsLoaded]);
+
+  const filteredHistory = useMemo(() => {
+    const q = analysesSearch.trim().toLowerCase();
+    return history.filter(item => {
+      if (analysesTypeFilter !== 'all' && getAnalysisType(item) !== analysesTypeFilter) return false;
+      if (!q) return true;
+      return (item.title || '').toLowerCase().includes(q)
+        || (item.url || '').toLowerCase().includes(q)
+        || (item.repo || '').toLowerCase().includes(q);
+    });
+  }, [history, analysesSearch, analysesTypeFilter]);
+
+  const filteredCitations = useMemo(() => {
+    const q = citationsSearch.trim().toLowerCase();
+    return citations.filter(c => {
+      if (citationsStatusFilter === 'cited' && !c.cited) return false;
+      if (citationsStatusFilter === 'not_cited' && c.cited) return false;
+      if (!q) return true;
+      return (c.name || '').toLowerCase().includes(q)
+        || (c.topic || '').toLowerCase().includes(q)
+        || (c.url || '').toLowerCase().includes(q);
+    });
+  }, [citations, citationsSearch, citationsStatusFilter]);
 
   useEffect(() => {
     return () => {
@@ -262,9 +308,50 @@ export default function History() {
           )}
 
           {!loading && history.length > 0 && (
+            <div className={styles.toolbar}>
+              <div className={styles.searchWrap}>
+                <Search size={14} className={styles.searchIcon} />
+                <input
+                  type="text"
+                  className={styles.searchInput}
+                  placeholder="Search by title, URL, or repo…"
+                  value={analysesSearch}
+                  onChange={e => setAnalysesSearch(e.target.value)}
+                />
+                {analysesSearch && (
+                  <button type="button" className={styles.searchClear} onClick={() => setAnalysesSearch('')} aria-label="Clear search">
+                    <X size={13} />
+                  </button>
+                )}
+              </div>
+              <div className={styles.filterGroup}>
+                {ANALYSIS_TYPE_FILTERS.map(f => (
+                  <button key={f.id} type="button"
+                    className={`${styles.filterBtn} ${analysesTypeFilter === f.id ? styles.filterBtnActive : ''}`}
+                    onClick={() => setAnalysesTypeFilter(f.id)}>
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {!loading && history.length > 0 && filteredHistory.length === 0 && (
+            <div className={styles.empty}>
+              <p>No analyses match your search.</p>
+              <p className={styles.emptySub}>
+                <button type="button" className={styles.clearAllBtn} onClick={() => { setAnalysesSearch(''); setAnalysesTypeFilter('all'); }}>
+                  Clear search &amp; filters
+                </button>
+              </p>
+            </div>
+          )}
+
+          {!loading && filteredHistory.length > 0 && (
             <div className={styles.list}>
-              {history.map((item, i) => {
-                const isOpen = expanded === i;
+              {filteredHistory.map((item, i) => {
+                const itemKey = item.id ?? i;
+                const isOpen = expanded === itemKey;
                 const score = item.overall_score ?? null;
                 const scoreColor = score === null ? 'var(--text-dim)'
                   : score >= 75 ? 'var(--green)'
@@ -273,17 +360,17 @@ export default function History() {
                 const isConfirming = confirmDeleteAnalysisId === item.id;
                 const isDeleting = deletingAnalysisId === item.id;
                 return (
-                  <div key={item.id ?? i} className={styles.item}>
+                  <div key={itemKey} className={styles.item}>
                     <div
                       className={styles.itemHeader}
-                      onClick={() => !isConfirming && toggleExpand(i)}
+                      onClick={() => !isConfirming && toggleExpand(itemKey)}
                       role="button"
                       tabIndex={0}
-                      onKeyDown={e => { if ((e.key === 'Enter' || e.key === ' ') && !isConfirming) toggleExpand(i); }}
+                      onKeyDown={e => { if ((e.key === 'Enter' || e.key === ' ') && !isConfirming) toggleExpand(itemKey); }}
                     >
                       <div className={styles.itemLeft}>
                         <div className={styles.itemTitle}>
-                          {item.title || item.url || `Analysis #${history.length - i}`}
+                          {item.title || item.url || item.repo || `Analysis #${filteredHistory.length - i}`}
                         </div>
                         <div className={styles.itemMeta}>
                           {item.url && <span className={styles.itemUrl}>{item.url}</span>}
@@ -386,6 +473,33 @@ export default function History() {
 
           {!citationsLoading && citations.length > 0 && (
             <>
+              <div className={styles.toolbar}>
+                <div className={styles.searchWrap}>
+                  <Search size={14} className={styles.searchIcon} />
+                  <input
+                    type="text"
+                    className={styles.searchInput}
+                    placeholder="Search by name, topic, or URL…"
+                    value={citationsSearch}
+                    onChange={e => setCitationsSearch(e.target.value)}
+                  />
+                  {citationsSearch && (
+                    <button type="button" className={styles.searchClear} onClick={() => setCitationsSearch('')} aria-label="Clear search">
+                      <X size={13} />
+                    </button>
+                  )}
+                </div>
+                <div className={styles.filterGroup}>
+                  {CITATION_STATUS_FILTERS.map(f => (
+                    <button key={f.id} type="button"
+                      className={`${styles.filterBtn} ${citationsStatusFilter === f.id ? styles.filterBtnActive : ''}`}
+                      onClick={() => setCitationsStatusFilter(f.id)}>
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div className={styles.bulkBar}>
                 {confirmClearAll ? (
                   <div className={styles.deleteConfirm}>
@@ -422,8 +536,19 @@ export default function History() {
                 )}
               </div>
 
+              {filteredCitations.length === 0 && (
+                <div className={styles.empty}>
+                  <p>No citation checks match your search.</p>
+                  <p className={styles.emptySub}>
+                    <button type="button" className={styles.clearAllBtn} onClick={() => { setCitationsSearch(''); setCitationsStatusFilter('all'); }}>
+                      Clear search &amp; filters
+                    </button>
+                  </p>
+                </div>
+              )}
+
               <div className={styles.list}>
-                {citations.map((c, i) => {
+                {filteredCitations.map((c, i) => {
                   const isConfirming = confirmDeleteId === c.id;
                   const isDeleting = deletingId === c.id;
                   const isConfirmingTopic = confirmClearTopic === c.topic;
@@ -436,9 +561,10 @@ export default function History() {
                             {c.cited
                               ? <CheckCircle2 style={{ width: 13, height: 13, color: 'var(--green)', marginRight: 6, verticalAlign: '-2px' }} />
                               : <AlertCircle style={{ width: 13, height: 13, color: 'var(--red)', marginRight: 6, verticalAlign: '-2px' }} />}
-                            {c.topic}
+                            {c.name || c.topic}
                           </div>
                           <div className={styles.itemMeta}>
+                            {c.name && <span className={styles.itemDate}>{c.topic}</span>}
                             {c.url && (
                               <a
                                 href={c.url}
