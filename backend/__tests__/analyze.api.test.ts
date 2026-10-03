@@ -169,6 +169,18 @@ describe('POST /api/analyze — input validation', () => {
     expect(res.body.error).toBe('bad_request');
     expect(analyzeContent).not.toHaveBeenCalled();
   });
+
+  it('returns 400 when title is missing', async () => {
+    const res = await request(app)
+      .post('/api/analyze')
+      .set('Authorization', 'Bearer k')
+      .send({ content: 'This is a sufficiently long piece of content for analysis.' });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('bad_request');
+    expect(res.body.message).toMatch(/title is required/i);
+    expect(analyzeContent).not.toHaveBeenCalled();
+  });
 });
 
 // ─── Happy Path ───────────────────────────────────────────────────────────────
@@ -190,7 +202,7 @@ describe('POST /api/analyze — happy path', () => {
     const res = await request(app)
       .post('/api/analyze')
       .set('Authorization', 'Bearer k')
-      .send({ content: 'This is a sufficiently long piece of content for analysis.', industry: 'SaaS' });
+      .send({ title: 'My article', content: 'This is a sufficiently long piece of content for analysis.', industry: 'SaaS' });
 
     expect(res.status).toBe(200);
 
@@ -216,7 +228,7 @@ describe('POST /api/analyze — happy path', () => {
     await request(app)
       .post('/api/analyze')
       .set('Authorization', 'Bearer k')
-      .send({ content: 'This is a sufficiently long piece of content for analysis.' });
+      .send({ title: 'My article', content: 'This is a sufficiently long piece of content for analysis.' });
 
     expect(analyzeContent).toHaveBeenCalledTimes(1);
     expect(analyzeContent.mock.calls[0][1]).toBe('General / Other');
@@ -226,11 +238,12 @@ describe('POST /api/analyze — happy path', () => {
     await request(app)
       .post('/api/analyze')
       .set('Authorization', 'Bearer k')
-      .send({ content: 'This is a sufficiently long piece of content for analysis.', industry: 'Healthcare' });
+      .send({ title: 'My article', content: 'This is a sufficiently long piece of content for analysis.', industry: 'Healthcare' });
 
     expect(incrementUsageAndSaveAnalysis).toHaveBeenCalledTimes(1);
     const [userId, payload] = incrementUsageAndSaveAnalysis.mock.calls[0];
     expect(userId).toBe('user-1');
+    expect(payload.title).toBe('My article');
     expect(payload.overall_score).toBe(78);
     expect(payload.ai_readability).toBe(80);
     expect(payload.digital_authority).toBe(75);
@@ -247,7 +260,7 @@ describe('POST /api/analyze — happy path', () => {
     const res = await request(app)
       .post('/api/analyze')
       .set('Authorization', 'Bearer k')
-      .send({ content: 'This is a sufficiently long piece of content for analysis.' });
+      .send({ title: 'My article', content: 'This is a sufficiently long piece of content for analysis.' });
 
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
@@ -260,7 +273,7 @@ describe('POST /api/analyze — happy path', () => {
     const res = await request(app)
       .post('/api/analyze')
       .set('Authorization', 'Bearer k')
-      .send({ content: 'This is a sufficiently long piece of content for analysis.' });
+      .send({ title: 'My article', content: 'This is a sufficiently long piece of content for analysis.' });
 
     expect(res.status).toBe(200);
     expect(res.headers['x-usage-info']).toBeUndefined();
@@ -273,7 +286,7 @@ describe('POST /api/analyze — happy path', () => {
     const res = await request(app)
       .post('/api/analyze')
       .set('Authorization', 'Bearer k')
-      .send({ content: 'This is a sufficiently long piece of content for analysis.' });
+      .send({ title: 'My article', content: 'This is a sufficiently long piece of content for analysis.' });
 
     expect(res.status).toBe(502);
     expect(res.body.error).toBe('ai_provider_error');
@@ -289,7 +302,7 @@ describe('POST /api/analyze — happy path', () => {
     const res = await request(app)
       .post('/api/analyze')
       .set('Authorization', 'Bearer k')
-      .send({ content: 'This is a sufficiently long piece of content for analysis.' });
+      .send({ title: 'My article', content: 'This is a sufficiently long piece of content for analysis.' });
 
     expect(res.status).toBe(503);
     expect(res.body.error).toBe('ai_provider_busy');
@@ -317,7 +330,7 @@ describe('handleAnalyze — response shape', () => {
     const res = await request(app)
       .post('/api/analyze')
       .set('Authorization', 'Bearer k')
-      .send({ content: 'This is a sufficiently long piece of content for analysis.' });
+      .send({ title: 'My article', content: 'This is a sufficiently long piece of content for analysis.' });
 
     expect(res.status).toBe(200);
     expect(res.body.overallScore).toBe(78);
@@ -335,7 +348,7 @@ describe('handleAnalyze — response shape', () => {
     const res = await request(app)
       .post('/api/analyze')
       .set('Authorization', 'Bearer k')
-      .send({ content: 'This is a sufficiently long piece of content for analysis.' });
+      .send({ title: 'My article', content: 'This is a sufficiently long piece of content for analysis.' });
 
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);

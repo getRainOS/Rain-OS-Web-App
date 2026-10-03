@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS content_analyses (
   user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   title TEXT,
   url TEXT,
+  repo TEXT,
   overall_score NUMERIC,
   ai_readability NUMERIC,
   digital_authority NUMERIC,
@@ -73,6 +74,7 @@ CREATE TABLE IF NOT EXISTS content_analyses (
 ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS rag_readiness NUMERIC;
 ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS lane TEXT;
 ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS content TEXT;
+ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS repo TEXT;
 
 CREATE INDEX IF NOT EXISTS idx_content_analyses_user_analyzed_at
   ON content_analyses(user_id, analyzed_at DESC);

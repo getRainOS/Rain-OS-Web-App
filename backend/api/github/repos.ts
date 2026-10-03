@@ -3,7 +3,7 @@
 // All routes require a valid Rain OS API key (Authorization: Bearer).
 
 import express from 'express';
-import { findUserByApiKey, getUserGithubToken, disconnectGithub, incrementUserUsage } from '../../services/dbService';
+import { findUserByApiKey, getUserGithubToken, disconnectGithub, incrementUsageAndSaveAnalysis } from '../../services/dbService';
 import { analyzeRepo } from '../../services/repoAnalysisService';
 import type { ApiError } from '../../types';
 
@@ -142,7 +142,17 @@ export async function analyzeRepoHandler(req: express.Request, res: express.Resp
 
   try {
     const result = await analyzeRepo(owner, repo, token);
-    await incrementUserUsage(user.id);
+    await incrementUsageAndSaveAnalysis(user.id, {
+      title: result.description || `${owner}/${repo}`,
+      repo: result.repoUrl,
+      overall_score: result.overallScore ?? null,
+      ai_readability: result.pillarScores?.aiReadability ?? null,
+      digital_authority: result.pillarScores?.digitalAuthority ?? null,
+      conversion_readiness: result.pillarScores?.conversionReadiness ?? null,
+      product_discoverability: result.pillarScores?.productDiscoverability ?? null,
+      rag_readiness: result.pillarScores?.ragReadiness ?? null,
+      result_json: result,
+    });
     return res.status(200).json(result);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Analysis failed';
