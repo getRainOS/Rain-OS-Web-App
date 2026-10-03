@@ -4,10 +4,12 @@ import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import { buildCompetitorMap } from '../lib/citationHistory.js';
 import { PILLAR_COLORS } from '../lib/pillarColors.js';
+import { buildCitationShare } from '../lib/citationShare.js';
 import {
   AreaChart, Area, XAxis, YAxis,
   Tooltip, ResponsiveContainer,
   LineChart, Line,
+  PieChart, Pie, Cell,
 } from 'recharts';
 import {
   Plus, TrendingUp, TrendingDown,
@@ -334,6 +336,20 @@ function SubScoreBar({ label, value, color, tooltip }) {
       </div>
       <span className={styles.subScoreVal} style={{ color }}>{value ?? '—'}</span>
     </div>
+  );
+}
+
+/* ── Mini citation-share donut (tool card accent) ── */
+function MiniDonut({ data, size = 28 }) {
+  if (!data || data.length === 0) {
+    return <span className={styles.sparkPlaceholder}>—</span>;
+  }
+  return (
+    <PieChart width={size} height={size}>
+      <Pie data={data} dataKey="value" innerRadius={size * 0.3} outerRadius={size * 0.48} paddingAngle={3} stroke="none" isAnimationActive={false}>
+        {data.map((d, i) => <Cell key={i} fill={d.color} />)}
+      </Pie>
+    </PieChart>
   );
 }
 
@@ -668,6 +684,7 @@ export default function Dashboard() {
     h => (h.mentionedCount ?? h.citedCount ?? h.cited_count ?? 0) > 0
   ).length;
   const sovRate = sovTotal > 0 ? Math.round((sovMentionedCount / sovTotal) * 100) : null;
+  const sovShare = sovScoped.length > 0 ? buildCitationShare(sovScoped[0]) : [];
 
   // Build tool-specific KPI cards
   const toolCards = [
@@ -718,7 +735,7 @@ export default function Dashboard() {
         ? `${sovLatestBrand} — mentioned in ${sovMentionedCount} of your last ${sovTotal} check${sovTotal > 1 ? 's' : ''}`
         : 'No Share of Voice data yet — run a check to see how often Gemini cites your brand',
       Icon: BarChart2,
-      spark: null,
+      donut: sovShare.length > 0 ? sovShare : null,
       tooltip: 'How many of your recent checks had Gemini mention your brand in at least one of the three query phrasings.',
     },
     {
@@ -992,6 +1009,10 @@ export default function Dashboard() {
             {t.pillars && t.pillars.length > 0 ? (
               <div className={styles.toolCardSpark}>
                 <PillarBars pillars={t.pillars} />
+              </div>
+            ) : t.donut && t.donut.length > 0 ? (
+              <div className={styles.toolCardSpark}>
+                <MiniDonut data={t.donut} />
               </div>
             ) : t.spark && t.spark.length > 1 && (
               <div className={styles.toolCardSpark}>
