@@ -111,6 +111,13 @@ export default function CitationMonitor() {
 
   function changeTab(nextTab) {
     setTab(nextTab);
+    if (nextTab === 'check') {
+      // Clicking "New Check" should always land on the input form, not
+      // whatever result happens to still be sitting in state from the
+      // last check run this session.
+      setResult(null);
+      setError('');
+    }
     const params = new URLSearchParams(searchParams);
     if (nextTab === 'map') {
       params.set('tab', 'map');
@@ -369,6 +376,14 @@ export default function CitationMonitor() {
 
       {result && (
         <div className={styles.resultsWrap}>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            style={{ alignSelf: 'flex-start' }}
+            onClick={() => { setResult(null); setError(''); }}
+          >
+            ← New check
+          </button>
           <div className={`card ${styles.resultCard}`}>
             <div className={styles.resultMain}>
               <div className={styles.resultCite}>
