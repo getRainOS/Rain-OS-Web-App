@@ -90,12 +90,23 @@ const DATE_FILTERS = [
   { id: '90', label: '90d' },
 ];
 
-const TYPE_FILTERS = [
-  { id: 'all', label: 'All types' },
+const CONTENT_TYPE_TOGGLES = [
   { id: 'content', label: 'Content' },
   { id: 'url', label: 'URL' },
   { id: 'repo', label: 'Repo' },
 ];
+
+const CONTENT_TYPE_ROUTES = {
+  content: '/analyze',
+  url: '/url-scanner',
+  repo: '/repo-analysis',
+};
+
+const CONTENT_TYPE_TOOL_NAMES = {
+  content: 'Content Optimizer',
+  url: 'URL Scanner',
+  repo: 'Repo Analysis',
+};
 
 function timeAgo(dateStr) {
   if (!dateStr) return '—';
@@ -384,7 +395,9 @@ export default function Dashboard() {
   const [dateFilter, setDateFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
   const [metricsFraming, setMetricsFraming] = useState(() => localStorage.getItem('rain_os_metrics_framing') || 'brand');
+  const [showAllFixes, setShowAllFixes] = useState(false);
   const laneSectionRef = useRef(null);
+  const typeFilterAutoSet = useRef(false);
 
   function changeMetricsFraming(next) {
     setMetricsFraming(next);
@@ -408,8 +421,16 @@ export default function Dashboard() {
   useEffect(() => {
     api.history({ limit: 50, lane: userLane })
       .then(({ data }) => {
-        setHistory(Array.isArray(data) ? data : data?.items ?? []);
+        const items = Array.isArray(data) ? data : data?.items ?? [];
+        setHistory(items);
         setTotalCount(typeof data?.totalCount === 'number' ? data.totalCount : null);
+        // Default the Content Health type toggle to whichever type the user
+        // most recently ran — not a blended "all", and only on first load so
+        // a manual switch sticks for the rest of the session.
+        if (!typeFilterAutoSet.current && items.length > 0) {
+          setTypeFilter(getItemType(items[0]).toLowerCase());
+          typeFilterAutoSet.current = true;
+        }
       })
       .catch(() => setHistory([]))
       .finally(() => setLoading(false));
@@ -429,6 +450,7 @@ export default function Dashboard() {
 
   const filtersActive = dateFilter !== 'all' || typeFilter !== 'all';
   const clearFilters = () => { setDateFilter('all'); setTypeFilter('all'); };
+  const typeRoute = CONTENT_TYPE_ROUTES[typeFilter] || '/analyze';
 
   useEffect(() => {
     api.citationHistory({ limit: 50 })
@@ -528,22 +550,26 @@ export default function Dashboard() {
     ? Math.round(pillarAvgs.reduce((s, p) => s + p.avg, 0) / pillarAvgs.length)
     : 0;
 
-  const quickWins = useMemo(() => {
+  // The single most recent analysis for the selected type — fixes shown
+  // below are scoped to this one scan, not blended across several.
+  const latestTypedAnalysis = filteredHistory[0] || null;
+
+  const allFixes = useMemo(() => {
+    if (!latestTypedAnalysis) return [];
     const seen = new Set();
-    const wins = [];
-    for (const item of filteredHistory.slice(0, 5)) {
-      for (const rec of item.recommendations || []) {
-        if (!rec) continue;
-        const text = typeof rec === 'string' ? rec : rec.text;
-        const pillar = typeof rec === 'string' ? null : (rec.pillar ?? null);
-        if (!text || seen.has(text)) continue;
-        seen.add(text);
-        wins.push({ text, pillar });
-        if (wins.length >= 3) return wins;
-      }
+    const fixes = [];
+    for (const rec of latestTypedAnalysis.recommendations || []) {
+      if (!rec) continue;
+      const text = typeof rec === 'string' ? rec : rec.text;
+      const pillar = typeof rec === 'string' ? null : (rec.pillar ?? null);
+      if (!text || seen.has(text)) continue;
+      seen.add(text);
+      fixes.push({ text, pillar });
     }
-    return wins;
-  }, [filteredHistory]);
+    return fixes;
+  }, [latestTypedAnalysis]);
+
+  const quickWins = showAllFixes ? allFixes : allFixes.slice(0, 3);
 
   const weakestPillar = totalAnalyses >= 3
     ? [...pillarAvgs].sort((a, b) => a.avg - b.avg)[0]
@@ -755,6 +781,20 @@ export default function Dashboard() {
               <HelpCircle size={11} />
             </span>
           </div>
+          <div className={styles.framingToggle} role="tablist" aria-label="Analysis type">
+            {CONTENT_TYPE_TOGGLES.map(ct => (
+              <button
+                key={ct.id}
+                type="button"
+                role="tab"
+                aria-selected={typeFilter === ct.id}
+                className={`${styles.framingBtn} ${typeFilter === ct.id ? styles.framingBtnActive : ''}`}
+                onClick={() => { setTypeFilter(ct.id); setShowAllFixes(false); typeFilterAutoSet.current = true; }}
+              >
+                {ct.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <WhatDoesThisMean tagline="AI's structured read of your content — not a raw measurement.">
@@ -785,7 +825,7 @@ export default function Dashboard() {
               {filtersActive && history.length > 0 ? (
                 <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
               ) : (
-                <Link to="/analyze" className={styles.emptyLink}>Run analysis →</Link>
+                <Link to={typeRoute} className={styles.emptyLink}>Run analysis →</Link>
               )}
             </div>
           </div>
@@ -814,7 +854,7 @@ export default function Dashboard() {
               </div>
               <div className={styles.contentHealth}>
                 <Heart style={{ width: 11, height: 11, color: '#94a3b8' }} />
-                <span>Content Health: </span>
+                <span>Content Health ({CONTENT_TYPE_TOGGLES.find(ct => ct.id === typeFilter)?.label || 'Content'}): </span>
                 <strong>{contentHealth}%</strong>
               </div>
             </div>
@@ -946,15 +986,6 @@ export default function Dashboard() {
               </button>
             ))}
           </div>
-          <div className={styles.filterGroup}>
-            {TYPE_FILTERS.map(f => (
-              <button key={f.id} type="button"
-                className={`${styles.filterBtn} ${typeFilter === f.id ? styles.filterBtnActive : ''}`}
-                onClick={() => setTypeFilter(f.id)}>
-                {f.label}
-              </button>
-            ))}
-          </div>
           {filtersActive && (
             <span className={styles.filterSummary}>
               {filteredHistory.length} of {history.length}
@@ -972,7 +1003,7 @@ export default function Dashboard() {
             <strong>{weakestPillar.label}</strong> is your weakest pillar — averaging{' '}
             <strong>{weakestPillar.avg}/100</strong> across recent analyses.
           </span>
-          <Link to="/analyze" className={styles.insightAction}>Improve it →</Link>
+          <Link to={typeRoute} className={styles.insightAction}>Improve it →</Link>
         </div>
       )}
 
@@ -982,11 +1013,19 @@ export default function Dashboard() {
           <div className={styles.chartHeader}>
             <div>
               <h2 className={styles.chartTitle}>Quick wins</h2>
-              <p className={styles.chartSub}>Top fixes from your recent analyses</p>
-              <span className={styles.chartHelp} title="The highest-impact recommendations pulled from your most recent analyses.">
+              <p className={styles.chartSub}>
+                From "{latestTypedAnalysis.title || latestTypedAnalysis.url || latestTypedAnalysis.repo || 'Untitled'}"
+                {latestTypedAnalysis.analyzed_at ? ` · ${timeAgo(latestTypedAnalysis.analyzed_at)}` : ''}
+              </p>
+              <span className={styles.chartHelp} title="The top recommendations from your most recent analysis of this type. Switch the type toggle above to see fixes for a different tool.">
                 <HelpCircle size={11} />
               </span>
             </div>
+            {allFixes.length > 3 && (
+              <button type="button" className={styles.viewAll} onClick={() => setShowAllFixes(v => !v)}>
+                {showAllFixes ? 'Show top 3' : `Show all ${allFixes.length} fixes`}
+              </button>
+            )}
           </div>
           <div className={styles.quickWinsList}>
             {quickWins.map((rec, i) => {
@@ -1003,11 +1042,13 @@ export default function Dashboard() {
                     </span>
                   )}
                   <span className={styles.quickWinText}>{rec.text}</span>
-                  <Link to="/analyze" className={styles.insightAction}>Fix this →</Link>
                 </div>
               );
             })}
           </div>
+          <Link to={typeRoute} className={styles.insightAction} style={{ marginTop: 10, display: 'inline-flex' }}>
+            Open in {CONTENT_TYPE_TOOL_NAMES[typeFilter] || 'Content Optimizer'} to fix →
+          </Link>
         </div>
       )}
 
@@ -1059,7 +1100,7 @@ export default function Dashboard() {
                 {filtersActive && history.length > 0 ? (
                   <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
                 ) : (
-                  <Link to="/analyze" className={styles.emptyLink}>Get started →</Link>
+                  <Link to={typeRoute} className={styles.emptyLink}>Get started →</Link>
                 )}
               </div>
             </div>
@@ -1108,7 +1149,7 @@ export default function Dashboard() {
                 {filtersActive && history.length > 0 ? (
                   <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
                 ) : (
-                  <Link to="/analyze" className={styles.emptyLink}>Run your first →</Link>
+                  <Link to={typeRoute} className={styles.emptyLink}>Run your first →</Link>
                 )}
               </div>
             </div>
