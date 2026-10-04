@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { scanUrlForTechnicalSignals } from '../services/urlScanService';
+import { scanUrlForTechnicalSignals, detectPlatform } from '../services/urlScanService';
 
 // ─── Mock global fetch for the llms.txt and robots.txt probes ────────────────
 // Each test can override `llmsTxtOk` / `robotsTxtBody` to control the result.
@@ -456,5 +456,86 @@ describe('scanUrlForTechnicalSignals — recommendations', () => {
     `;
     const r = await scanUrlForTechnicalSignals(wrap(body, head), 'https://x.test/');
     expect(r.recommendations.length).toBeGreaterThan(0);
+  });
+});
+
+describe('detectPlatform', () => {
+  it('detects Shopify from its CDN script references', () => {
+    expect(detectPlatform(wrap('<p>x</p>', '<script src="https://cdn.shopify.com/s/files/1/theme.js"></script>'))).toBe('shopify');
+  });
+
+  it('detects Wix from its static asset host', () => {
+    expect(detectPlatform(wrap('<p>x</p>', '<link rel="stylesheet" href="https://static.wixstatic.com/site.css" />'))).toBe('wix');
+  });
+
+  it('detects Squarespace from its CDN host', () => {
+    expect(detectPlatform(wrap('<p>x</p>', '<script src="https://static1.squarespace.com/static/bundle.js"></script>'))).toBe('squarespace');
+  });
+
+  it('detects WordPress from its generator meta tag', () => {
+    expect(detectPlatform(wrap('<p>x</p>', '<meta name="generator" content="WordPress 6.4" />'))).toBe('wordpress');
+  });
+
+  it('detects WordPress from wp-content asset paths even without the generator tag', () => {
+    expect(detectPlatform(wrap('<p>x</p>', '<link rel="stylesheet" href="/wp-content/themes/mytheme/style.css" />'))).toBe('wordpress');
+  });
+
+  it('falls back to custom when nothing matches', () => {
+    expect(detectPlatform(wrap('<p>A fully hand-built page.</p>'))).toBe('custom');
+  });
+});
+
+describe('scanUrlForTechnicalSignals — two-part remediation guidance', () => {
+  it('surfaces the detected platform on the result', async () => {
+    const r = await scanUrlForTechnicalSignals(
+      wrap('<p>x</p>', '<meta name="generator" content="WordPress 6.4" />'),
+      'https://x.test/',
+    );
+    expect(r.detectedPlatform).toBe('wordpress');
+  });
+
+  it('defaults detectedPlatform to custom for a plain page', async () => {
+    const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>'), 'https://x.test/');
+    expect(r.detectedPlatform).toBe('custom');
+  });
+
+  it('gives product_sellers WordPress-specific non-technical guidance for missing Product schema', async () => {
+    const html = wrap('<p>x</p>', '<meta name="generator" content="WordPress 6.4" />');
+    const r = await scanUrlForTechnicalSignals(html, 'https://x.test/', 'product_sellers');
+    const rec = r.recommendations.find((x) => x.issue === 'Missing Product schema markup');
+    expect(rec?.nonTechnicalFix).toMatch(/WooCommerce|Yoast/);
+    expect(rec?.technicalFix).toMatch(/developer|site's code/);
+  });
+
+  it('gives local_business Wix-specific non-technical guidance for missing LocalBusiness schema', async () => {
+    const html = wrap('<p>x</p>', '<link rel="stylesheet" href="https://static.wixstatic.com/site.css" />');
+    const r = await scanUrlForTechnicalSignals(html, 'https://x.test/', 'local_business');
+    const rec = r.recommendations.find((x) => x.issue === 'Missing LocalBusiness schema markup');
+    expect(rec?.nonTechnicalFix).toMatch(/Wix/);
+  });
+
+  it('falls back to generic non-technical guidance for an undetected (custom) platform', async () => {
+    const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>'), 'https://x.test/', 'product_sellers');
+    const rec = r.recommendations.find((x) => x.issue === 'Missing Product schema markup');
+    expect(rec?.nonTechnicalFix).toBeTruthy();
+    expect(rec?.nonTechnicalFix).not.toMatch(/Shopify|Wix|Squarespace|WordPress/);
+  });
+
+  it('omits nonTechnicalFix for JS-rendering issues — there is no editor-level fix', async () => {
+    const scripts = '<script>1</script>'.repeat(6);
+    const r = await scanUrlForTechnicalSignals(wrap(`<div id="root"></div>${scripts}`), 'https://x.test/');
+    const rec = r.recommendations.find((x) => x.issue.includes('JavaScript-rendered'));
+    expect(rec?.nonTechnicalFix).toBeUndefined();
+    expect(rec?.technicalFix).toMatch(/server-side rendering|SSR/);
+  });
+
+  it('gives alt-text recommendations a non-technical fix with no technical artifact needed', async () => {
+    const body = `
+      <img src="a.png" /><img src="b.png" />
+      <img src="c.png" /><img src="d.png" alt="d" />
+    `;
+    const r = await scanUrlForTechnicalSignals(wrap(body), 'https://x.test/');
+    const rec = r.recommendations.find((x) => x.issue === 'Images missing alt text');
+    expect(rec?.nonTechnicalFix).toMatch(/Alt text/);
   });
 });

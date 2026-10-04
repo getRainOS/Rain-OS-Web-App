@@ -359,6 +359,13 @@ function PreviewFixItem({ item, checked, onToggle }) {
 
 // ─── Main page ───────────────────────────────────────────────────────────────
 
+const PLATFORM_DISPLAY_NAME = {
+  wordpress: 'WordPress',
+  shopify: 'Shopify',
+  wix: 'Wix',
+  squarespace: 'Squarespace',
+};
+
 const PLATFORMS = [
   { value: 'bolt', label: 'Bolt' },
   { value: 'lovable', label: 'Lovable' },
@@ -671,17 +678,40 @@ export default function UrlScanner() {
           {recommendations.length > 0 && (
             <div className={`card ${styles.recoCard}`}>
               <h3 className={styles.sectionTitle}>Recommendations</h3>
+              {result?.detected_platform && result.detected_platform !== 'custom' && (
+                <p style={{ fontSize: 12, color: 'var(--text-dim)', marginTop: -8, marginBottom: 14 }}>
+                  Detected platform: {PLATFORM_DISPLAY_NAME[result.detected_platform] || result.detected_platform} — guidance below is tailored to it where possible.
+                </p>
+              )}
               <ul className={styles.recoList}>
                 {recommendations.map((r, i) => {
                   const isObj = typeof r === 'object' && r !== null;
                   const text = isObj ? r.recommendation : r;
                   const artifact = isObj ? r.artifact : null;
+                  const nonTechnicalFix = isObj ? r.nonTechnicalFix : null;
+                  const technicalFix = isObj ? r.technicalFix : null;
                   return (
                     <li key={i} className={styles.recoItem}>
                       <span className={styles.recoNum}>{i + 1}</span>
                       <div className={styles.recoContent}>
                         <span>{text}</span>
-                        {artifact && <ArtifactBlock artifact={artifact} />}
+                        {(nonTechnicalFix || technicalFix || artifact) && (
+                          <div className={styles.fixGroup}>
+                            {nonTechnicalFix && (
+                              <div className={styles.fixBlock}>
+                                <span className={`${styles.fixLabel} ${styles.fixLabelNonTechnical}`}>Do it yourself — no code</span>
+                                <p className={styles.fixText}>{nonTechnicalFix}</p>
+                              </div>
+                            )}
+                            {(technicalFix || artifact) && (
+                              <div className={styles.fixBlock}>
+                                <span className={`${styles.fixLabel} ${styles.fixLabelTechnical}`}>Technical fix</span>
+                                {technicalFix && <p className={styles.fixText}>{technicalFix}</p>}
+                                {artifact && <ArtifactBlock artifact={artifact} />}
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </li>
                   );

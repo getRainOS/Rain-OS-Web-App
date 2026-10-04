@@ -214,6 +214,43 @@
   white-space: pre;
 }
 
+.fixGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.fixBlock {
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.02);
+}
+
+.fixLabel {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.fixLabelNonTechnical {
+  color: var(--green);
+}
+
+.fixLabelTechnical {
+  color: var(--accent);
+}
+
+.fixText {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
 .recoNum {
   flex-shrink: 0;
   width: 22px;

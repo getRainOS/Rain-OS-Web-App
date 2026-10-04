@@ -151,6 +151,7 @@ export default async function handler(req: express.Request, res: express.Respons
       // display-ready signals array — rendered in the UI
       signals: scan.displaySignals,
       technical_recommendations: scan.recommendations,
+      detected_platform: scan.detectedPlatform,
       url_scanned: url,
       scan_timestamp: new Date().toISOString(),
       // Real performance data from Google
