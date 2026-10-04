@@ -111,7 +111,7 @@ export default async function handler(req: express.Request, res: express.Respons
     }
 
     // ─── Cheerio technical analysis (zero API cost) ─────────────────────────
-    const scan = await scanUrlForTechnicalSignals(rawHtml, url);
+    const scan = await scanUrlForTechnicalSignals(rawHtml, url, analysisModule);
 
     if (!scan.extractedText || scan.extractedText.trim().length < 50) {
       return res.status(422).json({

@@ -8,6 +8,7 @@ export interface TechnicalSignals {
   schemaTypes: string[];
   hasFaqSchema: boolean;
   hasProductSchema: boolean;
+  hasLocalBusinessSchema: boolean;
   hasArticleSchema: boolean;
   hasHowToSchema: boolean;
   // Semantic structure
@@ -223,15 +224,26 @@ export function formatSignalsForDisplay(s: TechnicalSignals): DisplaySignal[] {
 export async function scanUrlForTechnicalSignals(
   html: string,
   pageUrl: string,
+  module: 'general' | 'product_sellers' | 'developers' | 'local_business' = 'general',
 ): Promise<UrlScanResult> {
   const $ = cheerio.load(html);
   const parsedUrl = new URL(pageUrl);
   const signals = {} as TechnicalSignals;
 
   // ─── Schema markup ──────────────────────────────────────────────────────────
+  // Common schema.org LocalBusiness subtypes — not an exhaustive list of the
+  // full LocalBusiness hierarchy, but covers what local service businesses
+  // actually declare in practice.
+  const LOCAL_BUSINESS_TYPES = [
+    'LocalBusiness', 'Store', 'Restaurant', 'FoodEstablishment',
+    'ProfessionalService', 'HomeAndConstructionBusiness', 'MedicalBusiness',
+    'LegalService', 'AutomotiveBusiness', 'FinancialService',
+    'EntertainmentBusiness', 'SportsActivityLocation', 'HealthAndBeautyBusiness',
+  ];
   const schemaTypes: string[] = [];
   let hasFaqSchema = false;
   let hasProductSchema = false;
+  let hasLocalBusinessSchema = false;
   let hasArticleSchema = false;
   let hasHowToSchema = false;
   $('script[type="application/ld+json"]').each((_, el) => {
@@ -242,6 +254,7 @@ export async function scanUrlForTechnicalSignals(
       schemaTypes.push(...types);
       if (types.includes('FAQPage')) hasFaqSchema = true;
       if (types.includes('Product')) hasProductSchema = true;
+      if (types.some(t => LOCAL_BUSINESS_TYPES.includes(t))) hasLocalBusinessSchema = true;
       if (['Article', 'BlogPosting', 'NewsArticle'].some(t => types.includes(t))) hasArticleSchema = true;
       if (types.includes('HowTo')) hasHowToSchema = true;
     } catch { /* malformed JSON-LD — skip */ }
@@ -250,6 +263,7 @@ export async function scanUrlForTechnicalSignals(
   signals.schemaTypes = schemaTypes;
   signals.hasFaqSchema = hasFaqSchema;
   signals.hasProductSchema = hasProductSchema;
+  signals.hasLocalBusinessSchema = hasLocalBusinessSchema;
   signals.hasArticleSchema = hasArticleSchema;
   signals.hasHowToSchema = hasHowToSchema;
 
@@ -361,7 +375,72 @@ export async function scanUrlForTechnicalSignals(
   const recs: UrlScanRecommendation[] = [];
   const host = `${parsedUrl.protocol}//${parsedUrl.host}`;
 
-  if (!signals.hasSchemaMarkup) {
+  // Schema recommendations are lane-specific: a product seller needs Product
+  // schema (price/availability/brand) for AI shopping surfaces, a local
+  // business needs LocalBusiness schema (address/phone/hours) for "near me"
+  // queries — recommending generic Article schema to either gives them the
+  // wrong fix. General/developers keep the original Article-schema default.
+  if (module === 'product_sellers' && !signals.hasProductSchema) {
+    const jsonLdContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      'name': 'Your Product Name',
+      'image': `${host}/product-image.jpg`,
+      'description': 'A short description of the product.',
+      'sku': 'YOUR-SKU',
+      'brand': { '@type': 'Brand', 'name': 'Your Brand' },
+      'offers': {
+        '@type': 'Offer',
+        'url': pageUrl,
+        'priceCurrency': 'USD',
+        'price': '29.99',
+        'availability': 'https://schema.org/InStock',
+      },
+    }, null, 2);
+    recs.push({
+      issue: 'Missing Product schema markup',
+      recommendation: 'Add Product schema with price, availability, and brand. This is what lets AI shopping assistants (ChatGPT, Perplexity, Google AI Overviews) and AI-powered product search surface your listing with real details instead of treating it as generic content.',
+      severity: 'high',
+      artifact: {
+        type: 'json-ld',
+        content: `<script type="application/ld+json">\n${jsonLdContent}\n</script>`,
+        filename: 'product-schema.json',
+      },
+    });
+  } else if (module === 'local_business' && !signals.hasLocalBusinessSchema) {
+    const jsonLdContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'LocalBusiness',
+      'name': 'Your Business Name',
+      'image': `${host}/business-photo.jpg`,
+      'address': {
+        '@type': 'PostalAddress',
+        'streetAddress': '123 Main St',
+        'addressLocality': 'Your City',
+        'addressRegion': 'ST',
+        'postalCode': '00000',
+        'addressCountry': 'US',
+      },
+      'telephone': '+1-000-000-0000',
+      'url': pageUrl,
+      'openingHoursSpecification': [{
+        '@type': 'OpeningHoursSpecification',
+        'dayOfWeek': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        'opens': '09:00',
+        'closes': '17:00',
+      }],
+    }, null, 2);
+    recs.push({
+      issue: 'Missing LocalBusiness schema markup',
+      recommendation: "Add LocalBusiness schema with your name, address, phone, and hours. This is the most direct way to tell AI assistants you're a real, findable local business when customers ask who's nearby.",
+      severity: 'high',
+      artifact: {
+        type: 'json-ld',
+        content: `<script type="application/ld+json">\n${jsonLdContent}\n</script>`,
+        filename: 'local-business-schema.json',
+      },
+    });
+  } else if (!signals.hasSchemaMarkup) {
     const jsonLdContent = JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'Article',

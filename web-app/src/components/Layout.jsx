@@ -8,6 +8,7 @@ import {
   BarChart2, Settings, ArrowUp, LogOut, Wand2, Menu, X,
 } from 'lucide-react';
 import KnowledgeBase from './KnowledgeBase.jsx';
+import { urlScannerLabel } from '../lib/laneLabels.js';
 import styles from './Layout.module.css';
 
 const PRICE_TO_PLAN = {
@@ -163,7 +164,7 @@ export default function Layout({ children }) {
                   )}
                 </div>
                 {group.tools.map(key => (
-                  <NavItem key={key} {...TOOLS[key]} />
+                  <NavItem key={key} {...TOOLS[key]} label={key === 'urlScanner' ? urlScannerLabel(userLane) : TOOLS[key].label} />
                 ))}
               </div>
             ))

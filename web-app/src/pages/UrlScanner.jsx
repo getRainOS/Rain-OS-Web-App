@@ -4,6 +4,7 @@ import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
 import ArtifactBlock from '../components/ArtifactBlock.jsx';
+import { urlScannerLabel } from '../lib/laneLabels.js';
 import styles from './UrlScanner.module.css';
 
 // ─── GitHub push panel ───────────────────────────────────────────────────────
@@ -518,11 +519,17 @@ export default function UrlScanner() {
       ? geminiRecs
       : [];
 
+  const pageSub = userLane === 'product_sellers'
+    ? 'Scan your product page to see if AI shopping assistants can find your pricing, availability, and details'
+    : userLane === 'local_business'
+    ? 'Scan your business page to see if AI assistants can find your name, address, phone, and hours'
+    : 'Scan any URL to analyze its AI readability and AEO performance';
+
   return (
     <div className={`${styles.root} fade-in`}>
       <div className={styles.header}>
-        <h1 className={styles.title}>URL Scanner</h1>
-        <p className={styles.sub}>Scan any URL to analyze its AI readability and AEO performance</p>
+        <h1 className={styles.title}>{urlScannerLabel(userLane)}</h1>
+        <p className={styles.sub}>{pageSub}</p>
       </div>
 
       {userLane === 'vibe_coders' ? (
