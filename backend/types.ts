@@ -1,5 +1,6 @@
 // types.ts — Rain OS API v2.4
 // 5-pillar scoring: AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, RAG Readiness
+import type { ReadabilityMetrics } from './services/readability';
 // ─── Auth / User types ───────────────────────────────────────────────────────
 // NOTE: Keep ALL fields here — dbService.mapRowToUser returns this full shape.
 // analyzeController, url-scan, etc. only use the subset they need.
@@ -151,6 +152,11 @@ export interface AiReadabilityDetail {
   product_discoverability_detail: ProductDiscoverabilityDetail;
   rag_readiness_detail: RagReadinessDetail;
   local_presence_detail: LocalPresenceDetail;
+  // Algorithmic pre-analysis metrics (deterministic, computed before Gemini
+  // ever sees the content) — the same anchors used to ground the prompt.
+  // Surfaced so the client can build a non-LLM-judged scoring breakdown for
+  // AI Readability instead of thresholding Gemini's own invented numbers.
+  readability_metrics: ReadabilityMetrics;
 recommendations: PillarRecommendation[];
   summary: string;
 keywords: string[];

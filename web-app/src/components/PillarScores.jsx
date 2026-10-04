@@ -5,7 +5,9 @@ import { PILLAR_COLORS } from '../lib/pillarColors.js';
 
 // A Gemini-judged sub-score (0-100) at or above this counts as a "pass" in
 // the breakdown below. The raw number is never shown — only pass/fail — so
-// the underlying scoring formula isn't exposed.
+// the underlying scoring formula isn't exposed. Used for every pillar except
+// AI Readability on fresh analyses, which is deterministic instead — see
+// READABILITY_METRIC_ITEMS.
 const SUBITEM_PASS_THRESHOLD = 60;
 
 // Repo Analysis has no Gemini-judged sub-scores — it scores pillars from
@@ -60,6 +62,24 @@ const REPO_SIGNAL_GROUPS = {
   // Repo Analysis has no local_business signals — local_presence is never
   // shown for it (filtered out in visiblePillars), so no entry needed here.
 };
+
+// AI Readability's breakdown for Content Analyzer and URL Scanner is built
+// from these — the same algorithmic metrics (computeReadabilityMetrics)
+// Gemini itself is grounded on as hard scoring anchors, not from Gemini's
+// own judged 0-100 numbers. That makes the breakdown deterministic: the
+// same content always produces the same pass/fail list, independent of any
+// LLM run-to-run variance. Thresholds mirror the anchors already stated in
+// readability.ts's formatMetricsAsGroundingBlock.
+const READABILITY_METRIC_ITEMS = [
+  { label: 'Average Sentence Length ≤25 Words', pass: m => m.avgSentenceLength <= 25 },
+  { label: 'Long Sentences Under 20% Of Content', pass: m => m.longSentenceRatio <= 0.20 },
+  { label: 'Passive Voice Under 30%', pass: m => m.passiveVoiceRatio <= 0.30 },
+  { label: 'Minimal Ambiguous Pronouns', pass: m => m.wordCount === 0 || (m.coreferenceLeakCount / m.wordCount) <= 0.03 },
+  { label: 'Low Vague/Abstract Language', pass: m => m.abstractionRatio <= 0.05 },
+  { label: 'Clause Nesting Under Control', pass: m => m.nestedClauseDepth <= 3 },
+  { label: 'Headings Present', pass: m => m.headingDensity >= 0.5 },
+  { label: 'Strong Answer-First Structure', pass: m => m.answerFirstRatio > 0.4 },
+];
 
 const PILLARS = [
   {
@@ -150,11 +170,14 @@ function buildCrawlerItems(hasRobotsTxt, aiCrawlerAccess) {
 /**
  * Build this pillar's pass/fail breakdown. Repo Analysis has no Gemini
  * detail object — it has `result.signals`, so it's resolved from
- * REPO_SIGNAL_GROUPS directly. Content Analyzer and URL Scanner have a
- * Gemini-judged detail object (e.g. result.ai_readability_detail), which is
- * thresholded into pass/fail instead of shown as a raw number. AI
- * Readability additionally gets crawler-access items appended, sourced from
- * wherever each tool keeps them.
+ * REPO_SIGNAL_GROUPS directly. For Content Analyzer and URL Scanner, AI
+ * Readability is resolved from `result.readability_metrics` — deterministic
+ * algorithmic metrics — when present; every other pillar (and AI Readability
+ * itself on older saved analyses without that field) falls back to
+ * thresholding Gemini's judged detail object (e.g. result.ai_readability_detail)
+ * into pass/fail instead of showing a raw number. AI Readability additionally
+ * gets crawler-access items appended, sourced from wherever each tool keeps
+ * them.
  */
 function buildSubItems(pillarKey, detailKey, result) {
   let items;
@@ -173,6 +196,18 @@ function buildSubItems(pillarKey, detailKey, result) {
       items = items.concat(buildCrawlerItems(result.signals.hasRobotsTxt, result.signals.aiCrawlerAccess));
     }
     return items;
+  }
+
+  // AI Readability: prefer the deterministic algorithmic breakdown when the
+  // backend returned it. Older saved analyses (from before readability_metrics
+  // shipped) won't have it — those fall through to the Gemini-judged
+  // threshold below, same as before.
+  if (pillarKey === 'ai_readability' && result?.readability_metrics) {
+    const m = result.readability_metrics;
+    items = READABILITY_METRIC_ITEMS.map(item => ({ label: item.label, pass: item.pass(m) }));
+    return items.concat(
+      buildCrawlerItems(result?.technical_signals?.hasRobotsTxt, result?.technical_signals?.aiCrawlerAccess)
+    );
   }
 
   const detail = result?.[detailKey];

@@ -331,6 +331,23 @@ describe('analyzeContent', () => {
     expect(categories).toContain('localPresence');
   });
 
+  // ── Deterministic readability metrics ──────────────────────────────────────
+  it('includes readability_metrics computed from the input content, independent of what Gemini returns', async () => {
+    const content = 'Short sentence. Another short one. A third sentence here.';
+    const result = await analyzeContent(content, 'General / Other');
+    expect(result.readability_metrics).toBeDefined();
+    expect(result.readability_metrics).toEqual(computeReadabilityMetrics(content));
+  });
+
+  it('computes different readability_metrics for different content, same mocked Gemini response', async () => {
+    const short = await analyzeContent('One short sentence.', 'General / Other');
+    const long = await analyzeContent(
+      'This is a much longer sentence that keeps going and going well past thirty words in total because it refuses to stop for any reason whatsoever today.',
+      'General / Other',
+    );
+    expect(short.readability_metrics.avgSentenceLength).not.toBe(long.readability_metrics.avgSentenceLength);
+  });
+
   it('clamps all subScore values to [0, 100]', async () => {
     mockResponseText = makeValidGeminiResponse({
       ai_readability_detail: {
