@@ -53,6 +53,7 @@ digitalAuthority: number; // 0-100
 conversionReadiness: number; // 0-100
 productDiscoverability: number; // 0-100 — NEW in v2.3
 ragReadiness: number; // 0-100 — NEW in v2.4
+localPresence: number; // 0-100 — NEW in v2.5, local_business module only
 }
 // ─── Sub-scores ───────────────────────────────────────────────────────────────
 export interface SubScore {
@@ -120,6 +121,13 @@ export interface AiReadabilityDetail {
   explicitQaStructures: number;       // FAQ sections, direct definitions, problem-solution frameworks
   authoritySignals: number;            // External links, author bios, verifiable data points
   }
+  export interface LocalPresenceDetail {
+  napConsistency: number;              // Name/Address/Phone completeness & consistency
+  localSchemaMarkup: number;           // LocalBusiness schema (address, geo, hours, serviceArea)
+  serviceAreaClarity: number;          // City/neighborhood/service-radius explicitly defined
+  reviewSignalStrength: number;        // Star ratings, review count, recency, business responses
+  localCitationSignals: number;        // Directory mentions, GBP link/embed, local press/community refs
+  }
   // ─── Authorship signals (v2.3) ────────────────────────────────────────────────
   export interface AuthorshipSignals {
   hasAuthorByline: boolean;
@@ -129,7 +137,7 @@ export interface AiReadabilityDetail {
   }
   // ─── Main analysis response (v2.3) ────────────────────────────────────────────
   export interface PillarRecommendation {
-  pillar: 'ai_readability' | 'digital_authority' | 'conversion_readiness' | 'product_discoverability' | 'rag_readiness' | null;
+  pillar: 'ai_readability' | 'digital_authority' | 'conversion_readiness' | 'product_discoverability' | 'rag_readiness' | 'local_presence' | null;
   text: string;
   }
   export interface AnalysisResponse {
@@ -142,6 +150,7 @@ export interface AiReadabilityDetail {
   conversion_readiness_detail: ConversionReadinessDetail;
   product_discoverability_detail: ProductDiscoverabilityDetail;
   rag_readiness_detail: RagReadinessDetail;
+  local_presence_detail: LocalPresenceDetail;
 recommendations: PillarRecommendation[];
   summary: string;
 keywords: string[];

@@ -13,11 +13,12 @@ DigitalAuthorityDetail,
 ConversionReadinessDetail,
 ProductDiscoverabilityDetail,
 RagReadinessDetail,
+LocalPresenceDetail,
 AuthorshipSignals,
 } from '../types';
 // ─── Config ───────────────────────────────────────────────────────────────────
 // api_version is a single source of truth — never hardcoded in return statements
-export const API_VERSION = '2.4';
+export const API_VERSION = '2.5';
 const API_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
 const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 let _client: GoogleGenerativeAI | null = null;
@@ -66,19 +67,19 @@ You will receive:
 Use these as scoring anchors. Do not contradict them.
 2. The content itself.
 3. The industry context.
-Score across 5 pillars (0-100 each):
-PILLAR 1 — AI READABILITY (weight: varies by module — 36% general, 20% product_sellers, 32% developers, 27% local_business)
+Score across 6 pillars (0-100 each — not every pillar applies to every module):
+PILLAR 1 — AI READABILITY (weight: varies by module — 36% general, 20% product_sellers, 32% developers, 20% local_business)
 How well can AI systems parse, chunk, and extract answers from this content?
 Sub-scores: structuralClarity, answerFirstFormatting, semanticPrecision,
 contextSufficiency, sectionConceptIsolation
 Anchors: use avgSentenceLength, longSentenceRatio, passiveVoiceRatio,
 nestedClauseDepth, headingDensity, answerFirstRatio from pre-analysis.
-PILLAR 2 — DIGITAL AUTHORITY (weight: varies by module — 27% general, 15% product_sellers, 32% developers, 36% local_business)
+PILLAR 2 — DIGITAL AUTHORITY (weight: varies by module — 27% general, 15% product_sellers, 32% developers, 20% local_business)
 Does the content signal expertise, trustworthiness, and citability to AI?
 Sub-scores: citationSignals, entityClarity, topicalAuthority, freshnessSignals,
 socialProofMarkup
 Anchors: use entityDensity, definitionDensity from pre-analysis.
-PILLAR 3 — CONVERSION READINESS (weight: varies by module — 27% general, 15% product_sellers, 26% developers, 27% local_business)
+PILLAR 3 — CONVERSION READINESS (weight: varies by module — 27% general, 15% product_sellers, 26% developers, 20% local_business)
 Does the content guide the reader toward a clear next action?
 Sub-scores: callToActionClarity, trustSignals, valueProposition, frictionReduction
 Anchors: use qaDensity, answerFirstRatio from pre-analysis.
@@ -105,6 +106,21 @@ contentChunkingQuality from pre-analysis.
 - hierarchicalFormatting: Clean markdown, logical header structure, descriptive titles
 - explicitQaStructures: FAQ sections, direct definitions, problem-solution frameworks
 - authoritySignals: External links to reputable sources, author bios, verifiable data
+
+PILLAR 6 — LOCAL PRESENCE SIGNALS (weight: varies by module — 0% general, 0% product_sellers, 0% developers, 30% local_business)
+For local service businesses: how well will AI trust and surface this
+business's name, address, phone, service area, and reputation when a nearby
+customer asks for a recommendation? This is distinct from Digital Authority —
+it measures local findability and trust, not general expertise.
+Sub-scores: napConsistency, localSchemaMarkup, serviceAreaClarity,
+reviewSignalStrength, localCitationSignals
+- napConsistency: Name, Address, Phone complete and consistent wherever it appears
+- localSchemaMarkup: LocalBusiness schema — address, geo coordinates, hours, serviceArea
+- serviceAreaClarity: City/neighborhood/service-radius explicitly stated
+- reviewSignalStrength: Star ratings, review count, recency, business responses
+- localCitationSignals: Third-party directory mentions, Google Business Profile link/embedded map, local press or community references
+If content is not local-business-focused, score conservatively (40-60 range) based
+on general local-relevance signals.
 PHASE 2 ADDITIONAL SIGNALS (score each 0-100):
 - sectionConceptIsolation: Does each section cover exactly one concept? AI
 chunking quality.
@@ -153,7 +169,7 @@ explanation.
 const RESPONSE_SCHEMA = {
 overallScore: 0,
 pillarScores: { aiReadability: 0, digitalAuthority: 0, conversionReadiness: 0,
-productDiscoverability: 0, ragReadiness: 0 },
+productDiscoverability: 0, ragReadiness: 0, localPresence: 0 },
 ai_readability_detail: { structuralClarity: 0, answerFirstFormatting: 0,
 semanticPrecision: 0, contextSufficiency: 0, sectionConceptIsolation: 0 },
 digital_authority_detail: { citationSignals: 0, entityClarity: 0,
@@ -166,6 +182,8 @@ comparativeContext: 0 },
 rag_readiness_detail: { informationDensity: 0, semanticMapping: 0,
 narrativeNuance: 0, hierarchicalFormatting: 0, explicitQaStructures: 0,
 authoritySignals: 0 },
+local_presence_detail: { napConsistency: 0, localSchemaMarkup: 0,
+serviceAreaClarity: 0, reviewSignalStrength: 0, localCitationSignals: 0 },
 phase2_sub_scores: {
 sectionConceptIsolation: 0, instructionDeterminism: 0, retrievalAnswerability:
 0,
@@ -188,7 +206,7 @@ false, authorityScore: 0 },
 const clamp = (n: number): number => Math.max(0, Math.min(100, Math.round(n)));
 const VALID_PILLARS = new Set([
   'ai_readability', 'digital_authority', 'conversion_readiness',
-  'product_discoverability', 'rag_readiness',
+  'product_discoverability', 'rag_readiness', 'local_presence',
 ]);
 function normalizeRecommendations(raw: unknown): import('../types').PillarRecommendation[] {
   if (!Array.isArray(raw)) return [];
@@ -219,40 +237,41 @@ const groundingBlock = formatMetricsAsGroundingBlock(metrics);
 // Build module-specific weight instruction
 const moduleWeightInstructions = module === 'product_sellers'
   ? `MODULE: product_sellers
-MODULE_WEIGHTS: AI Readability 20%, Digital Authority 15%, Conversion Readiness 15%, Product Discoverability 50%, RAG Readiness 10%
-For this module, Product Discoverability is the PRIMARY scoring focus. Score it with maximum precision — pricing transparency, variant coverage, availability, merchant identity, review signals, comparative context.`
+MODULE_WEIGHTS: AI Readability 20%, Digital Authority 15%, Conversion Readiness 15%, Product Discoverability 50%, Local Presence Signals 0%, RAG Readiness 10%
+For this module, Product Discoverability is the PRIMARY scoring focus. Score it with maximum precision — pricing transparency, variant coverage, availability, merchant identity, review signals, comparative context. Do not score Local Presence Signals — set to 0.`
   : module === 'developers'
   ? `MODULE: developers
-MODULE_WEIGHTS: AI Readability (Documentation Structure) 32%, Digital Authority (Technical Completeness) 32%, Conversion Readiness (Technical Clarity) 26%, Product Discoverability 0% (not applicable), RAG Readiness 10%
-For this module, score AI Readability as Documentation Structure (navigation, TOC, getting started), Digital Authority as Documentation Authority (API completeness, error coverage, versioning), and Conversion Readiness as Technical Clarity (code example quality, step determinism, snippet extractability). Do not score Product Discoverability — set to 0.`
+MODULE_WEIGHTS: AI Readability (Documentation Structure) 32%, Digital Authority (Technical Completeness) 32%, Conversion Readiness (Technical Clarity) 26%, Product Discoverability 0% (not applicable), Local Presence Signals 0% (not applicable), RAG Readiness 10%
+For this module, score AI Readability as Documentation Structure (navigation, TOC, getting started), Digital Authority as Documentation Authority (API completeness, error coverage, versioning), and Conversion Readiness as Technical Clarity (code example quality, step determinism, snippet extractability). Do not score Product Discoverability or Local Presence Signals — set both to 0.`
   : module === 'local_business'
   ? `MODULE: local_business
-MODULE_WEIGHTS: AI Readability 27%, Digital Authority 36%, Conversion Readiness 27%, Product Discoverability 0%, RAG Readiness 10%
-For this module, Digital Authority is the PRIMARY scoring focus — local businesses live or die on trust and findability signals. Score with maximum precision:
-DIGITAL AUTHORITY signals:
-- LocalBusiness schema presence (name, address, phone, hours, geo coordinates, serviceArea)
+MODULE_WEIGHTS: AI Readability 20%, Digital Authority 20%, Conversion Readiness 20%, Product Discoverability 0%, Local Presence Signals 30%, RAG Readiness 10%
+For this module, Local Presence Signals is the PRIMARY scoring focus — local businesses live or die on whether AI can find and trust their location, hours, and reputation. Score it with maximum precision:
+LOCAL PRESENCE SIGNALS:
 - NAP (Name, Address, Phone) consistency and completeness in page content
-- Review signals: star ratings, review count, recent review dates, business response presence
-- Local entity clarity: city/neighborhood explicitly mentioned, service area clearly defined
-- Citation signals: third-party directory mentions, local press, community references
-- Google Business Profile signals: link to GBP, embedded map, claimed/verified signals
-- Business profile completeness: owner name, years in business, staff descriptions, credentials/licenses
+- LocalBusiness schema presence (name, address, phone, hours, geo coordinates, serviceArea)
+- Service area / location clarity: city/neighborhood explicitly mentioned, service area or delivery radius clearly defined
+- Review signal strength: star ratings, review count, recent review dates, business response presence
+- Local citation signals: third-party directory mentions, Google Business Profile link/embedded map, local press, community references
 AI READABILITY signals (score how well AI can extract answers):
 - Business name, address, phone, and hours extractable as direct answers
 - Services list with plain-language descriptions
-- Service pricing transparency: clear price ranges or starting prices for each service (from product sellers module — pricing clarity drives AI citations)
+- Service pricing transparency: clear price ranges or starting prices for each service
 - Availability signals: booking links, appointment CTAs, "same day" or "emergency" availability
 - FAQs answering common local customer questions
+DIGITAL AUTHORITY signals (general credibility, distinct from local presence):
+- Business profile completeness: owner name, years in business, staff descriptions, credentials/licenses
+- Topical authority: depth of expertise shown on services offered
+- Freshness signals: recently updated content, current promotions or seasonal information
 CONVERSION READINESS signals:
 - Phone number prominence and click-to-call markup
 - Online booking or contact form accessibility
 - Directions link / embedded map
-- Service area or delivery radius clearly stated
 - Trust signals: licenses, insurance, certifications, guarantees
 Do not score Product Discoverability — set to 0.`
   : `MODULE: general
-MODULE_WEIGHTS: AI Readability 36%, Digital Authority 27%, Conversion Readiness 27%, Product Discoverability 0%, RAG Readiness 10%
-For this module, do not weight Product Discoverability in the overall score. Score it conservatively (40-60 range) but it does not affect the overall Rain Score.
+MODULE_WEIGHTS: AI Readability 36%, Digital Authority 27%, Conversion Readiness 27%, Product Discoverability 0%, Local Presence Signals 0%, RAG Readiness 10%
+For this module, do not weight Product Discoverability or Local Presence Signals in the overall score. Score both conservatively (40-60 range) but neither affects the overall Rain Score.
 RAG Readiness is scored at 10% weight and always included. It measures RAG-system retrieval quality.`;
 
 const prompt = [
@@ -264,7 +283,7 @@ moduleWeightInstructions,
 content.slice(0, 12000), // cap at ~12k chars to manage token cost
 '=== END CONTENT ===',
 '',
-'IMPORTANT: The "recommendations" array must contain 3-5 specific, actionable fixes tied to the lowest-scoring subcategories above (e.g. "Add a bulleted FAQ answering the top 3 buyer questions" rather than generic advice like "improve clarity"). Never return an empty array — every piece of content has room for at least one concrete improvement. Each recommendation must be an object of the shape { "pillar": "<key>", "text": "<fix>" }, where "pillar" is exactly one of: "ai_readability", "digital_authority", "conversion_readiness", "product_discoverability", "rag_readiness" — whichever pillar that specific fix most directly improves.',
+'IMPORTANT: The "recommendations" array must contain 3-5 specific, actionable fixes tied to the lowest-scoring subcategories above (e.g. "Add a bulleted FAQ answering the top 3 buyer questions" rather than generic advice like "improve clarity"). Never return an empty array — every piece of content has room for at least one concrete improvement. Each recommendation must be an object of the shape { "pillar": "<key>", "text": "<fix>" }, where "pillar" is exactly one of: "ai_readability", "digital_authority", "conversion_readiness", "product_discoverability", "rag_readiness", "local_presence" — whichever pillar that specific fix most directly improves.',
   'IMPORTANT: The "summary" field must be a concise 1-2 sentence overview of what this content is about and its overall AEO readiness, written in plain language for a non-technical reader.',
   'Return your scores as a single JSON object matching this exact shape (all fields required):',
 JSON.stringify(RESPONSE_SCHEMA, null, 2),
@@ -325,17 +344,18 @@ parsed.phase2_sub_scores.semanticRedundancyScore = 100 - raw_redundancy;
 const p = parsed.pillarScores || {};
 // Module-specific pillar weights
 const moduleWeights = module === 'product_sellers'
-  ? { ar: 0.20, da: 0.15, cr: 0.15, pd: 0.50, rr: 0.10 }
+  ? { ar: 0.20, da: 0.15, cr: 0.15, pd: 0.50, lp: 0.00, rr: 0.10 }
   : module === 'developers'
-  ? { ar: 0.32, da: 0.32, cr: 0.26, pd: 0.00, rr: 0.10 }
+  ? { ar: 0.32, da: 0.32, cr: 0.26, pd: 0.00, lp: 0.00, rr: 0.10 }
   : module === 'local_business'
-  ? { ar: 0.27, da: 0.36, cr: 0.27, pd: 0.00, rr: 0.10 }
-  : { ar: 0.36, da: 0.27, cr: 0.27, pd: 0.00, rr: 0.10 }; // general (Writers & Marketers)
+  ? { ar: 0.20, da: 0.20, cr: 0.20, pd: 0.00, lp: 0.30, rr: 0.10 }
+  : { ar: 0.36, da: 0.27, cr: 0.27, pd: 0.00, lp: 0.00, rr: 0.10 }; // general (Writers & Marketers)
 const computedOverall = Math.round(
 (p.aiReadability || 0) * moduleWeights.ar +
 (p.digitalAuthority || 0) * moduleWeights.da +
 (p.conversionReadiness || 0) * moduleWeights.cr +
 (p.productDiscoverability || 0) * moduleWeights.pd +
+(p.localPresence || 0) * moduleWeights.lp +
 (p.ragReadiness || 0) * moduleWeights.rr
 );
 if (Math.abs((parsed.overallScore || 0) - computedOverall) > 10) {
@@ -368,6 +388,8 @@ const subScores: SubScore[] = [
     clamp(parsed.conversion_readiness_detail?.valueProposition || 0), label: 'Value Proposition' },
     { category: 'productDiscoverability', score:
     clamp(parsed.pillarScores?.productDiscoverability || 0), label: 'Product Discoverability' },
+    { category: 'localPresence', score:
+    clamp(parsed.pillarScores?.localPresence || 0), label: 'Local Presence' },
     { category: 'ragReadiness', score:
     clamp(parsed.pillarScores?.ragReadiness || 0), label: 'RAG Readiness' },
     { category: 'informationDensity', score:
@@ -395,7 +417,7 @@ authorityScore: clamp(authorshipRaw.authorityScore || 0),
       overallScore: clamp(parsed.overallScore || computedOverall),
       pillarScores: parsed.pillarScores || {
         aiReadability: 0, digitalAuthority: 0, conversionReadiness: 0,
-        productDiscoverability: 0, ragReadiness: 0 },
+        productDiscoverability: 0, ragReadiness: 0, localPresence: 0 },
       subScores,
       phase2_sub_scores: parsed.phase2_sub_scores || ({} as Phase2SubScores),
       ai_readability_detail: parsed.ai_readability_detail || ({} as AiReadabilityDetail),
@@ -403,6 +425,7 @@ authorityScore: clamp(authorshipRaw.authorityScore || 0),
       conversion_readiness_detail: parsed.conversion_readiness_detail || ({} as ConversionReadinessDetail),
       product_discoverability_detail: parsed.product_discoverability_detail || ({} as ProductDiscoverabilityDetail),
       rag_readiness_detail: parsed.rag_readiness_detail || ({} as RagReadinessDetail),
+      local_presence_detail: parsed.local_presence_detail || ({} as LocalPresenceDetail),
       recommendations: normalizeRecommendations(parsed.recommendations),
       summary: typeof parsed.summary === 'string' ? parsed.summary : '',
       keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],

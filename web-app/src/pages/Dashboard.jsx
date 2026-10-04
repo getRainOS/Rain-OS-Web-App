@@ -14,7 +14,7 @@ import {
   Plus, TrendingUp, TrendingDown,
   FileText, Globe, GitBranch, ArrowRight,
   BrainCircuit, ShieldCheck, MousePointerClick, SearchCheck,
-  Activity, Zap, Minus, Heart, Map as MapIcon, Radar,
+  Activity, Zap, Minus, Heart, Map as MapIcon, MapPin, Radar,
   BarChart2, Lock, Clock, Sparkles, HelpCircle, Layers,
   ChevronDown, ChevronUp,
 } from 'lucide-react';
@@ -32,6 +32,7 @@ const PILLARS = [
   { key: 'conversion_readiness',    label: 'Conversion Readiness', color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick },
   { key: 'product_discoverability', label: 'Discoverability',      color: PILLAR_COLORS.product_discoverability, Icon: SearchCheck },
   { key: 'rag_readiness',           label: 'RAG Readiness',        color: PILLAR_COLORS.rag_readiness, Icon: Layers },
+  { key: 'local_presence',          label: 'Local Presence',       color: PILLAR_COLORS.local_presence, Icon: MapPin },
 ];
 
 const QUICK_ACTIONS_ALL = {
@@ -62,7 +63,7 @@ const LANES = [
   { id: 'product_sellers', label: 'Product Sellers',        desc: 'Maximize AI product discovery with Discoverability scoring at 50% weight.', color: '#5b5fc7', Icon: SearchCheck },
   { id: 'vibe_coders',     label: 'Vibe Coders',            desc: 'Ship fast with AI-built projects? Audit your content, repo, and discoverability before you launch.', color: '#8f93c7', Icon: GitBranch },
   { id: 'developers',      label: 'Developers',             desc: 'Analyze tech docs, READMEs, and API references for AI readability signals.', color: '#8f93c7', Icon: GitBranch },
-  { id: 'local_business',  label: 'Local Service Business', desc: 'Get your professional services business cited by AI when customers search locally.', color: '#5b5fc7', Icon: MapIcon },
+  { id: 'local_business',  label: 'Local Service Business', desc: 'Get your professional services business cited by AI when customers search locally, with Local Presence scoring at 30% weight.', color: '#5b5fc7', Icon: MapIcon },
 ];
 
 const SAMPLE_TREND = [42, 48, 45, 55, 60, 58, 67, 71, 68, 75].map((score, i) => ({ idx: i + 1, score }));
@@ -508,9 +509,10 @@ export default function Dashboard() {
       { ...PILLARS[4], label: 'RAG Readiness', weight: 10 },
     ];
     if (userLane === 'local_business') return [
-      { ...PILLARS[1], label: 'Local Authority', weight: 36 },
-      { ...PILLARS[0], label: 'AI Presence', weight: 27 },
-      { ...PILLARS[2], label: 'Trust & Conversion', weight: 27 },
+      { ...PILLARS[5], weight: 30 },
+      { ...PILLARS[0], label: 'AI Presence', weight: 20 },
+      { ...PILLARS[1], label: 'Digital Authority', weight: 20 },
+      { ...PILLARS[2], label: 'Trust & Conversion', weight: 20 },
       { ...PILLARS[4], label: 'RAG Readiness', weight: 10 },
     ];
     if (userLane === 'vibe_coders') return [

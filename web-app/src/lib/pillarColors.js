@@ -7,4 +7,5 @@ export const PILLAR_COLORS = {
   conversion_readiness: '#8f93c7',
   product_discoverability: '#c99b6e',
   rag_readiness: '#b97e97',
+  local_presence: '#5fa8a3',
 };

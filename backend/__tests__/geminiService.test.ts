@@ -24,7 +24,11 @@ vi.mock('@google/generative-ai', () => ({
 import { computeReadabilityMetrics, formatMetricsAsGroundingBlock } from '../services/readability';
 
 // ─── Dynamic imports for geminiService (after env var + mocks are set) ────────
-let analyzeContent: (content: string, industry?: string) => Promise<AnalysisResponse>;
+let analyzeContent: (
+  content: string,
+  industry?: string,
+  module?: 'general' | 'product_sellers' | 'developers' | 'local_business',
+) => Promise<AnalysisResponse>;
 let API_VERSION: string;
 
 beforeAll(async () => {
@@ -324,6 +328,7 @@ describe('analyzeContent', () => {
     expect(categories).toContain('citationSignals');
     expect(categories).toContain('callToActionClarity');
     expect(categories).toContain('productDiscoverability');
+    expect(categories).toContain('localPresence');
   });
 
   it('clamps all subScore values to [0, 100]', async () => {
@@ -425,6 +430,43 @@ describe('analyzeContent', () => {
     mockResponseText = makeValidGeminiResponse({ overallScore: 65 });
     const result = await analyzeContent('Content here.', 'General / Other');
     expect(result.overallScore).toBe(65);
+  });
+
+  // ── local_business module: Local Presence weighted at 30% ─────────────────
+  it('weights Local Presence at 30% for the local_business module', async () => {
+    // local_business weights: ar*0.20 + da*0.20 + cr*0.20 + lp*0.30 + rr*0.10
+    // 70*0.20 + 60*0.20 + 55*0.20 + 80*0.30 + 0*0.10 = 14 + 12 + 11 + 24 + 0 = 61
+    mockResponseText = makeValidGeminiResponse({
+      overallScore: 61,
+      pillarScores: {
+        aiReadability: 70,
+        digitalAuthority: 60,
+        conversionReadiness: 55,
+        productDiscoverability: 50,
+        localPresence: 80,
+      },
+    });
+    const result = await analyzeContent('Content here.', 'General / Other', 'local_business');
+    expect(result.overallScore).toBe(61);
+  });
+
+  it('ignores Local Presence in the overall score for non-local_business modules', async () => {
+    // general weights: ar*0.36 + da*0.27 + cr*0.27 + lp*0.00 + rr*0.10
+    // 70*0.36 + 60*0.27 + 55*0.27 = 25.2 + 16.2 + 14.85 = 56.25 → round → 56
+    // If localPresence (95) were weighted at all, this would not equal 56.
+    // Gemini claims 10 (46 off from the correctly-computed 56) to force correction.
+    mockResponseText = makeValidGeminiResponse({
+      overallScore: 10,
+      pillarScores: {
+        aiReadability: 70,
+        digitalAuthority: 60,
+        conversionReadiness: 55,
+        productDiscoverability: 50,
+        localPresence: 95,
+      },
+    });
+    const result = await analyzeContent('Content here.', 'General / Other');
+    expect(result.overallScore).toBe(56);
   });
 
   it('clamps the final overallScore to [0, 100]', async () => {

@@ -57,6 +57,8 @@ const REPO_SIGNAL_GROUPS = {
     { key: 'readmeHasMultipleExternalLinks', label: 'Multiple External Links In README' },
     { key: 'hasOpenApiSpec', label: 'OpenAPI Spec Present' },
   ],
+  // Repo Analysis has no local_business signals — local_presence is never
+  // shown for it (filtered out in visiblePillars), so no entry needed here.
 };
 
 const PILLARS = [
@@ -99,6 +101,14 @@ const PILLARS = [
     color: PILLAR_COLORS.rag_readiness,
     sub: 'RAG retrieval & synthesis quality',
     detailKey: 'rag_readiness_detail',
+  },
+  {
+    key: 'local_presence',
+    camel: 'localPresence',
+    label: 'Local Presence',
+    color: PILLAR_COLORS.local_presence,
+    sub: 'Local trust & findability signals',
+    detailKey: 'local_presence_detail',
   },
 ];
 
@@ -234,6 +244,9 @@ function resolveScore(result, key, camel) {
 const PRODUCT_DISCOVERABILITY_NOTE =
   "Product Discoverability applies specifically to product and e-commerce listings — it's part of scoring for the Product Seller lane only.";
 
+const LOCAL_PRESENCE_NOTE =
+  "Local Presence applies specifically to businesses serving a local customer base — it's part of scoring for the Local Service Business lane only.";
+
 /* ── Collapsible "What does this mean?" ──────────────────────────────────── */
 function WhatDoesThisMean({ tagline, children }) {
   const [collapsed, setCollapsed] = useState(true);
@@ -259,9 +272,11 @@ function WhatDoesThisMean({ tagline, children }) {
 }
 
 export default function PillarScores({ result, lane }) {
-  const visiblePillars = PILLARS.filter(
-    p => p.key !== 'product_discoverability' || lane === 'product_sellers'
-  );
+  const visiblePillars = PILLARS.filter(p => {
+    if (p.key === 'product_discoverability') return lane === 'product_sellers';
+    if (p.key === 'local_presence') return lane === 'local_business';
+    return true;
+  });
 
   const overall =
     result?.overall_score ??
@@ -311,6 +326,9 @@ export default function PillarScores({ result, lane }) {
                   {p.key === 'product_discoverability' && (
                     <div className={styles.pillarNote}>{PRODUCT_DISCOVERABILITY_NOTE}</div>
                   )}
+                  {p.key === 'local_presence' && (
+                    <div className={styles.pillarNote}>{LOCAL_PRESENCE_NOTE}</div>
+                  )}
                 </div>
                 <div className={styles.pillarRight}>
                   {pct !== null ? (
@@ -351,6 +369,12 @@ export default function PillarScores({ result, lane }) {
       {lane === 'product_sellers' && (
         <WhatDoesThisMean tagline="AI's read on how shoppable your page looks — specific to product sellers.">
           This pillar checks something the other four don't: whether an AI could confidently describe, compare, and recommend your product from your page alone — things like clear pricing, specs, and availability. It's graded the same way as your other pillar scores, an AI's structured read rather than a technical measurement, but scored specifically for how AI tools use product pages when answering shopping questions.
+        </WhatDoesThisMean>
+      )}
+
+      {lane === 'local_business' && (
+        <WhatDoesThisMean tagline="AI's read on how findable and trustworthy your business looks locally — specific to local service businesses.">
+          This pillar checks something the other four don't: whether an AI could confidently state your business's name, address, phone, service area, and reputation from your page alone. It's graded the same way as your other pillar scores, an AI's structured read rather than a technical measurement, but scored specifically for how AI tools decide which local business to recommend.
         </WhatDoesThisMean>
       )}
     </div>

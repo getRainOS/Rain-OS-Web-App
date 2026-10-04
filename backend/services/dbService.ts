@@ -381,6 +381,7 @@ export interface AnalysisData {
     conversion_readiness?: number | null;
     product_discoverability?: number | null;
     rag_readiness?: number | null;
+    local_presence?: number | null;
     result_json?: any;
     lane?: string | null;
   summary?: string | null;
@@ -409,8 +410,8 @@ const incrementUsageAndSaveAnalysisAttempt = async (
         const analysisRes = await client.query(
             `INSERT INTO content_analyses
           (user_id, title, url, repo, overall_score, ai_readability, digital_authority,
-          conversion_readiness, product_discoverability, rag_readiness, summary, result_json, lane, content)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+          conversion_readiness, product_discoverability, rag_readiness, local_presence, summary, result_json, lane, content)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
           RETURNING id`,
             [
                 userId,
@@ -423,6 +424,7 @@ const incrementUsageAndSaveAnalysisAttempt = async (
                 analysisData.conversion_readiness ?? null,
                 analysisData.product_discoverability ?? null,
                 analysisData.rag_readiness ?? null,
+                analysisData.local_presence ?? null,
                 analysisData.summary ?? null,
                 analysisData.result_json ? JSON.stringify(analysisData.result_json) : null,
                 analysisData.lane ?? null,
@@ -744,6 +746,7 @@ export interface AnalysisRecord {
   conversion_readiness: number | null;
   product_discoverability: number | null;
   rag_readiness: number | null;
+  local_presence: number | null;
   summary: string | null;
   analyzed_at: string;
   lane: string | null;
@@ -762,6 +765,7 @@ const mapAnalysisRow = (row: any): AnalysisRecord => ({
   conversion_readiness: row.conversion_readiness !== null ? Number(row.conversion_readiness) : null,
   product_discoverability: row.product_discoverability !== null ? Number(row.product_discoverability) : null,
   rag_readiness: row.rag_readiness !== null ? Number(row.rag_readiness) : null,
+  local_presence: row.local_presence !== null ? Number(row.local_presence) : null,
   summary: row.summary ?? null,
   analyzed_at: row.analyzed_at instanceof Date ? row.analyzed_at.toISOString() : row.analyzed_at,
   lane: row.lane ?? null,
@@ -845,7 +849,7 @@ export const getAnalysesByUser = async (
   const params = lane ? [userId, limit, lane] : [userId, limit];
   const res = await pool.query(
     `SELECT id, title, url, repo, overall_score, ai_readability, digital_authority,
-            conversion_readiness, product_discoverability, rag_readiness, summary, analyzed_at, lane, result_json
+            conversion_readiness, product_discoverability, rag_readiness, local_presence, summary, analyzed_at, lane, result_json
      FROM content_analyses
      WHERE user_id = $1 ${laneFilter}
      ORDER BY analyzed_at DESC
@@ -861,7 +865,7 @@ export const getAnalysisById = async (
 ): Promise<AnalysisRecord | null> => {
   const res = await pool.query(
     `SELECT id, title, url, repo, overall_score, ai_readability, digital_authority,
-      conversion_readiness, product_discoverability, rag_readiness,
+      conversion_readiness, product_discoverability, rag_readiness, local_presence,
       summary, analyzed_at, lane, result_json, content
       FROM content_analyses
       WHERE id = $1 AND user_id = $2`,
