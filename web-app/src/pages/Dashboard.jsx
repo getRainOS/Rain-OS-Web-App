@@ -69,11 +69,11 @@ const LANE_DEFAULT_ROUTES = {
 };
 
 const LANES = [
-  { id: 'general',         label: 'Writers & Marketers',    desc: 'Optimize articles, landing pages, and marketing copy for AI citation.', color: '#5b5fc7', Icon: FileText },
-  { id: 'product_sellers', label: 'Product Sellers',        desc: 'Maximize AI product discovery with Discoverability scoring at 50% weight.', color: '#5b5fc7', Icon: SearchCheck },
-  { id: 'vibe_coders',     label: 'Vibe Coders',            desc: 'Ship fast with AI-built projects? Audit your content, repo, and discoverability before you launch.', color: '#8f93c7', Icon: GitBranch },
-  { id: 'developers',      label: 'Developers',             desc: 'Analyze tech docs, READMEs, and API references for AI readability signals.', color: '#8f93c7', Icon: GitBranch },
-  { id: 'local_business',  label: 'Local Service Business', desc: 'Get your professional services business cited by AI when customers search locally, with Local Presence scoring at 30% weight.', color: '#5b5fc7', Icon: MapIcon },
+  { id: 'general',         label: 'Writers & Marketers',    desc: 'Blog posts, newsletters, and landing pages — written content built to get cited by AI, not just ranked.', color: '#5b5fc7', Icon: FileText },
+  { id: 'product_sellers', label: 'Product Sellers',        desc: 'For Shopify, Wix, Etsy, Amazon listings, and online stores — get your products found by AI shopping assistants.', color: '#5b5fc7', Icon: SearchCheck },
+  { id: 'vibe_coders',     label: 'Vibe Coders',            desc: 'Built with Bolt, Lovable, Replit, v0, or similar? Audit your app\'s content, repo, and discoverability before launch.', color: '#8f93c7', Icon: GitBranch },
+  { id: 'developers',      label: 'Developers',             desc: 'Technical docs, READMEs, and API references on GitHub or your docs site, scored for AI readability.', color: '#8f93c7', Icon: GitBranch },
+  { id: 'local_business',  label: 'Local Service Business', desc: "For local service businesses — on Wix, Squarespace, WordPress, or your own site — get found when customers ask AI who's nearby.", color: '#5b5fc7', Icon: MapIcon },
 ];
 
 const SAMPLE_TREND = [42, 48, 45, 55, 60, 58, 67, 71, 68, 75].map((score, i) => ({ idx: i + 1, score }));
