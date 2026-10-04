@@ -41,8 +41,8 @@ const QUICK_ACTIONS_ALL = {
     { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit a live URL for AEO signals', Icon: Globe,     color: '#8f93c7' },
   ],
   product_sellers: [
-    { to: '/analyze',       label: 'Content Optimizer', sub: 'Paste and score product copy',     Icon: FileText,  color: '#6b9bc4' },
     { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit product pages for AI signals', Icon: Globe,   color: '#8f93c7' },
+    { to: '/analyze',       label: 'Content Optimizer', sub: 'Paste and score product copy',     Icon: FileText,  color: '#6b9bc4' },
   ],
   vibe_coders: [
     { to: '/repo-analysis', label: 'Repo Analysis',     sub: 'Connect GitHub and score docs',     Icon: GitBranch, color: '#7cae8f' },
@@ -53,9 +53,18 @@ const QUICK_ACTIONS_ALL = {
     { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit docs site for AI signals',   Icon: Globe,     color: '#8f93c7' },
   ],
   local_business: [
-    { to: '/analyze',       label: 'Content Optimizer', sub: 'Paste and score your page copy',   Icon: FileText,  color: '#6b9bc4' },
     { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit your site for local signals', Icon: Globe,     color: '#8f93c7' },
+    { to: '/analyze',       label: 'Content Optimizer', sub: 'Paste and score your page copy',   Icon: FileText,  color: '#6b9bc4' },
   ],
+};
+
+// product_sellers and local_business already have their content live on a
+// page, not drafted fresh — URL Scanner (point at the live page) is the
+// right default action, not Content Optimizer (paste raw text). Other lanes
+// keep the Content Optimizer fallback unchanged.
+const LANE_DEFAULT_ROUTES = {
+  product_sellers: '/url-scanner',
+  local_business: '/url-scanner',
 };
 
 const LANES = [
@@ -457,7 +466,7 @@ export default function Dashboard() {
 
   const filtersActive = dateFilter !== 'all' || typeFilter !== 'all';
   const clearFilters = () => { setDateFilter('all'); setTypeFilter('all'); };
-  const typeRoute = CONTENT_TYPE_ROUTES[typeFilter] || '/analyze';
+  const typeRoute = CONTENT_TYPE_ROUTES[typeFilter] || LANE_DEFAULT_ROUTES[userLane] || '/analyze';
 
   useEffect(() => {
     api.citationHistory({ limit: 50 })
@@ -651,7 +660,7 @@ export default function Dashboard() {
     {
       key: 'content',
       label: 'Content Health',
-      to: '/analyze',
+      to: typeRoute,
       hasData: totalAnalyses > 0,
       value: totalAnalyses > 0 ? `${avgScore}` : null,
       suffix: '/100',
@@ -745,7 +754,7 @@ export default function Dashboard() {
             <Link to="/history" style={{ color: 'var(--accent)' }} title="Rows in the analysis history table (includes all saved analyses). 'API Usage' shows counted API calls against your plan and may exclude imports or manual inserts.">You have a library of {totalCount ?? history.length} pieces analyzed</Link>
           </p>
         </div>
-        <button onClick={() => navigate('/analyze')} className={styles.newBtn}>
+        <button onClick={() => navigate(typeRoute)} className={styles.newBtn}>
           <Plus className={styles.newBtnIcon} />
           New Analysis
         </button>
