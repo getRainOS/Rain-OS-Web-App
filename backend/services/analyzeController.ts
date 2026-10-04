@@ -74,6 +74,7 @@ const { updatedUser, analysisId } = await incrementUsageAndSaveAnalysis(user.id,
   conversion_readiness: typeof pillar?.conversionReadiness === 'number' ? pillar.conversionReadiness : null,
   product_discoverability: typeof pillar?.productDiscoverability === 'number' ? pillar.productDiscoverability : null,
   rag_readiness: typeof pillar?.ragReadiness === 'number' ? pillar.ragReadiness : null,
+  local_presence: typeof pillar?.localPresence === 'number' ? pillar.localPresence : null,
   summary: typeof typedResult.summary === 'string' ? typedResult.summary : null,
   result_json: result,
   content: safeContent,
@@ -98,7 +99,7 @@ export function handleCapabilities(_req: express.Request, res: express.Response)
 const capabilities: CapabilitiesResponse = {
 api_version: API_VERSION,
 pillars: ['aiReadability', 'digitalAuthority',
-'conversionReadiness', 'productDiscoverability', 'ragReadiness'],
+'conversionReadiness', 'productDiscoverability', 'ragReadiness', 'localPresence'],
 phase2_sub_scores: PHASE2_SUB_SCORES,
 scoring_model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
 };

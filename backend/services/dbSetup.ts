@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS content_analyses (
   conversion_readiness NUMERIC,
   product_discoverability NUMERIC,
   rag_readiness NUMERIC,
+  local_presence NUMERIC,
   summary TEXT,
   result_json JSONB,
   analyzed_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -75,6 +76,7 @@ ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS rag_readiness NUMERIC;
 ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS lane TEXT;
 ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS content TEXT;
 ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS repo TEXT;
+ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS local_presence NUMERIC;
 
 CREATE INDEX IF NOT EXISTS idx_content_analyses_user_analyzed_at
   ON content_analyses(user_id, analyzed_at DESC);
