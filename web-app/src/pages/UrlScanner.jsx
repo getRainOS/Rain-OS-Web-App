@@ -522,7 +522,7 @@ export default function UrlScanner() {
   const pageSub = userLane === 'product_sellers'
     ? 'Scan your product page to see if AI shopping assistants can find your pricing, availability, and details'
     : userLane === 'local_business'
-    ? 'Scan your business page to see if AI assistants can find your name, address, phone, and hours'
+    ? 'Scan a page from your site to see if AI assistants can find your name, address, phone, and hours'
     : 'Scan any URL to analyze its AI readability and AEO performance';
 
   return (
