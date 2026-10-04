@@ -2,6 +2,23 @@
 import * as cheerio from 'cheerio';
 import { checkAllCrawlers, type CrawlerStatus } from './robotsCheck';
 
+export type DetectedPlatform = 'wordpress' | 'shopify' | 'wix' | 'squarespace' | 'custom';
+
+/**
+ * Detect the site builder/CMS from fingerprints already present in the HTML
+ * we fetched to scan the page — no extra request. Lets remediation guidance
+ * point to the right editor instead of making the user self-identify their
+ * platform from a dropdown. 'custom' covers everything else: hand-built
+ * sites, less common platforms, or a platform whose fingerprint changed.
+ */
+export function detectPlatform(html: string): DetectedPlatform {
+  if (/cdn\.shopify\.com|Shopify\.theme|shopify-section/i.test(html)) return 'shopify';
+  if (/static\.wixstatic\.com|wix-dynamic-|_wixCIDX|wix\.com\/website/i.test(html)) return 'wix';
+  if (/static1\.squarespace\.com|squarespace-cdn\.com|squarespace\.com\/universal/i.test(html)) return 'squarespace';
+  if (/<meta[^>]+name=["']generator["'][^>]+content=["']WordPress/i.test(html) || /wp-content\/|wp-includes\//i.test(html)) return 'wordpress';
+  return 'custom';
+}
+
 export interface TechnicalSignals {
   // Schema
   hasSchemaMarkup: boolean;
@@ -62,6 +79,15 @@ export interface UrlScanRecommendation {
     content: string;
     filename?: string;
   };
+  // What they can do themselves, through their own site editor, no code —
+  // platform-aware when detectPlatform() recognized the site. Omitted when
+  // there's genuinely no editor-level equivalent (e.g. server-side
+  // rendering) and a developer is the only path.
+  nonTechnicalFix?: string;
+  // The code-level fix (pairs with `artifact` when present) plus a plain
+  // note on who it's for: do it yourself if you manage your site's code, or
+  // hand it to whoever does.
+  technicalFix?: string;
 }
 
 export interface DisplaySignal {
@@ -75,6 +101,7 @@ export interface UrlScanResult {
   displaySignals: DisplaySignal[];
   extractedText: string;
   recommendations: UrlScanRecommendation[];
+  detectedPlatform: DetectedPlatform;
 }
 
 /** Convert camelCase key to "Title Case" label */
@@ -221,6 +248,87 @@ export function formatSignalsForDisplay(s: TechnicalSignals): DisplaySignal[] {
   ];
 }
 
+// ─── Two-part remediation copy ──────────────────────────────────────────────
+// Every fix has a non-technical path (something doable in the site's own
+// editor, no code) and/or a technical path (the actual markup, for whoever
+// manages the site's code). Platform-aware when detectPlatform() recognized
+// the site; falls back to generic-but-still-useful guidance for 'custom'.
+function metaFieldGuide(platform: DetectedPlatform, fieldName: string): string {
+  switch (platform) {
+    case 'wordpress':
+      return `If you use Yoast SEO, Rank Math, or a similar plugin, look for the "${fieldName}" field in the SEO box below your page/post editor — no code needed.`;
+    case 'shopify':
+      return `Open the page or product, scroll to "Search engine listing preview," and fill in the ${fieldName.toLowerCase()} field there.`;
+    case 'wix':
+      return `Open the page's SEO settings (the SEO icon in the editor panel) and fill in the ${fieldName.toLowerCase()} field.`;
+    case 'squarespace':
+      return `Go to Page Settings → SEO and fill in the ${fieldName} field.`;
+    default:
+      return `Look for an "SEO" or "Search engine preview" section in your page editor — most modern site builders have a ${fieldName.toLowerCase()} field there.`;
+  }
+}
+
+function socialFieldGuide(platform: DetectedPlatform): string {
+  switch (platform) {
+    case 'wordpress':
+      return 'If you use Yoast SEO or Rank Math, check the "Social" tab in the SEO box — it sets the share title, description, and image for you.';
+    case 'shopify':
+      return 'The "Search engine listing preview" section also controls what shows when your page is shared on social media.';
+    case 'wix':
+    case 'squarespace':
+      return "Check your page's SEO or Social Share settings for a title, description, and image you can set without code.";
+    default:
+      return 'Look for a "Social share" or "Social preview" section in your page/SEO settings — most site builders let you set this without code.';
+  }
+}
+
+function productSchemaGuide(platform: DetectedPlatform): string {
+  switch (platform) {
+    case 'shopify':
+      return 'Shopify generates basic Product schema automatically on product pages — if it\'s still missing, check your theme supports it, or install a free structured data app (e.g. "JSON-LD for SEO") from the Shopify App Store to add price, availability, and brand without touching code.';
+    case 'wordpress':
+      return "If you use WooCommerce, Product schema is usually generated automatically — check WooCommerce's or your SEO plugin's settings. With Yoast SEO, there are Product fields in the SEO box.";
+    case 'wix':
+      return 'Add an SEO/structured-data app from the Wix App Market to fill in Product schema fields like price and availability without code.';
+    case 'squarespace':
+      return "Squarespace doesn't expose Product schema fields directly in the editor — this one will most likely need the code fix below, or a developer.";
+    default:
+      return 'Check whether your e-commerce platform has a built-in "structured data" or "rich snippets" setting — many have one without needing code.';
+  }
+}
+
+function localBusinessSchemaGuide(platform: DetectedPlatform): string {
+  switch (platform) {
+    case 'wordpress':
+      return "If you use Yoast SEO or a similar plugin, fill in your Local SEO settings (business name, address, phone, hours) — it generates this schema for you.";
+    case 'wix':
+      return "Fill in your business info under Wix's Business Info settings — Wix's local SEO tools generate structured data from it.";
+    case 'squarespace':
+      return "Add your business info under Squarespace's Business Information settings. For complete LocalBusiness schema you'll likely still need the code fix below.";
+    case 'shopify':
+      return 'Shopify is built around product sales rather than local-business listings — check if your theme has a business info or contact section, otherwise use the code fix below.';
+    default:
+      return 'Check whether your site builder has a "business info" or "local SEO" section — several generate this automatically once filled in.';
+  }
+}
+
+function articleSchemaGuide(platform: DetectedPlatform): string {
+  switch (platform) {
+    case 'wordpress':
+      return "If you use Yoast SEO or Rank Math, Article schema is usually generated automatically from your post — double-check it's enabled in the plugin's settings.";
+    case 'wix':
+    case 'squarespace':
+      return 'These platforms often add basic Article/blog schema automatically for blog posts — if it\'s still missing, this one will need the code fix below.';
+    default:
+      return 'Check whether your blogging platform or CMS has a setting for article/blog structured data before using the code fix below.';
+  }
+}
+
+/** Standard "who applies this" framing for a code-level fix. */
+function technicalNote(whatToAdd: string): string {
+  return `Add ${whatToAdd} to the page's <head>. If you manage your site's code yourself, add it directly; if not, send this to your developer, agency, or site host's support.`;
+}
+
 export async function scanUrlForTechnicalSignals(
   html: string,
   pageUrl: string,
@@ -229,6 +337,7 @@ export async function scanUrlForTechnicalSignals(
   const $ = cheerio.load(html);
   const parsedUrl = new URL(pageUrl);
   const signals = {} as TechnicalSignals;
+  const platform = detectPlatform(html);
 
   // ─── Schema markup ──────────────────────────────────────────────────────────
   // Common schema.org LocalBusiness subtypes — not an exhaustive list of the
@@ -406,6 +515,8 @@ export async function scanUrlForTechnicalSignals(
         content: `<script type="application/ld+json">\n${jsonLdContent}\n</script>`,
         filename: 'product-schema.json',
       },
+      nonTechnicalFix: productSchemaGuide(platform),
+      technicalFix: technicalNote('this Product schema block'),
     });
   } else if (module === 'local_business' && !signals.hasLocalBusinessSchema) {
     const jsonLdContent = JSON.stringify({
@@ -439,6 +550,8 @@ export async function scanUrlForTechnicalSignals(
         content: `<script type="application/ld+json">\n${jsonLdContent}\n</script>`,
         filename: 'local-business-schema.json',
       },
+      nonTechnicalFix: localBusinessSchemaGuide(platform),
+      technicalFix: technicalNote('this LocalBusiness schema block'),
     });
   } else if (!signals.hasSchemaMarkup) {
     const jsonLdContent = JSON.stringify({
@@ -460,6 +573,8 @@ export async function scanUrlForTechnicalSignals(
         content: `<script type="application/ld+json">\n${jsonLdContent}\n</script>`,
         filename: 'schema.json',
       },
+      nonTechnicalFix: articleSchemaGuide(platform),
+      technicalFix: technicalNote('this Article schema block'),
     });
   }
 
@@ -476,6 +591,7 @@ export async function scanUrlForTechnicalSignals(
       issue: 'Improper heading hierarchy',
       recommendation: 'Use exactly one H1 per page, then logical H2/H3 subheadings.',
       severity: 'medium',
+      nonTechnicalFix: 'In your editor, use the "Heading 1," "Heading 2," etc. styles when formatting text, rather than just making text bold or large — most block/visual editors (Wix, Squarespace, WordPress, Shopify) apply the correct underlying heading tag for you.',
     });
   }
 
@@ -489,6 +605,8 @@ export async function scanUrlForTechnicalSignals(
         content: `<meta name="description" content="A concise 150-160 character description of this page." />`,
         filename: 'meta-description.html',
       },
+      nonTechnicalFix: metaFieldGuide(platform, 'Meta description'),
+      technicalFix: technicalNote('this meta description tag'),
     });
   }
 
@@ -502,6 +620,8 @@ export async function scanUrlForTechnicalSignals(
         content: `<link rel="canonical" href="${pageUrl}" />`,
         filename: 'canonical.html',
       },
+      nonTechnicalFix: "Most site builders (Shopify, Wix, Squarespace, WordPress) set this automatically — you likely don't need to do anything here unless your pages use a custom template.",
+      technicalFix: technicalNote('this canonical tag'),
     });
   }
 
@@ -515,6 +635,9 @@ export async function scanUrlForTechnicalSignals(
         content: `# Allow major AI crawlers\nUser-agent: GPTBot\nAllow: /\n\nUser-agent: ClaudeBot\nAllow: /\n\nUser-agent: PerplexityBot\nAllow: /\n\nUser-agent: Google-Extended\nAllow: /\n\nUser-agent: Amazonbot\nAllow: /`,
         filename: 'robots.txt',
       },
+      // No non-technical path — this is an architecture-level issue, not an
+      // editor-level one.
+      technicalFix: 'This needs server-side rendering (SSR) or pre-rendering enabled — not a quick copy-paste fix. Talk to your developer. In the meantime, this robots.txt update at least confirms AI crawlers are allowed in once your content is actually visible to them.',
     });
   }
 
@@ -528,6 +651,8 @@ export async function scanUrlForTechnicalSignals(
         content: `# ${parsedUrl.host}\n\n> This file helps AI language models understand and navigate this site.\n\n## About\n\nThis is a website at ${host}. Replace with a brief summary of what your site offers.\n\n## Key Pages\n\n- [Home](${host}/): Main landing page\n- [About](${host}/about): About us\n- [Blog](${host}/blog): Articles and updates\n\n## Guidelines for AI\n\n- Content on this site may be cited with attribution.\n- For questions or permissions, contact: hello@${parsedUrl.host}`,
         filename: 'llms.txt',
       },
+      nonTechnicalFix: "If your platform or host gives you file upload or FTP access to your site's root, you can add this yourself as a plain text file.",
+      technicalFix: `Create this as a file named llms.txt at your domain root (${host}/llms.txt). If that's not something you manage yourself, send it to your developer or host support to upload.`,
     });
   }
 
@@ -541,6 +666,8 @@ export async function scanUrlForTechnicalSignals(
         content: `<meta property="og:title" content="Your Page Title" />\n<meta property="og:description" content="A compelling description (150-160 characters)." />\n<meta property="og:image" content="${host}/og-image.jpg" />\n<meta property="og:url" content="${pageUrl}" />\n<meta property="og:type" content="website" />`,
         filename: 'og-tags.html',
       },
+      nonTechnicalFix: socialFieldGuide(platform),
+      technicalFix: technicalNote('these Open Graph tags'),
     });
   }
 
@@ -554,6 +681,8 @@ export async function scanUrlForTechnicalSignals(
         content: `<meta name="viewport" content="width=device-width, initial-scale=1" />`,
         filename: 'viewport.html',
       },
+      nonTechnicalFix: "Modern site builders (Wix, Squarespace, Shopify, WordPress themes) set this automatically — if it's missing, your site is likely using older or custom code and this will need the fix below from a developer.",
+      technicalFix: technicalNote('this viewport tag'),
     });
   }
 
@@ -567,6 +696,8 @@ export async function scanUrlForTechnicalSignals(
         content: `<meta name="twitter:card" content="summary_large_image" />\n<meta name="twitter:title" content="Your Page Title" />\n<meta name="twitter:description" content="Your page description." />\n<meta name="twitter:image" content="${host}/og-image.jpg" />`,
         filename: 'twitter-cards.html',
       },
+      nonTechnicalFix: socialFieldGuide(platform),
+      technicalFix: technicalNote('these Twitter/X card tags'),
     });
   }
 
@@ -575,6 +706,8 @@ export async function scanUrlForTechnicalSignals(
       issue: 'Page is set to noindex',
       recommendation: 'Remove the noindex robots meta tag to allow AI crawlers to index this page.',
       severity: 'high',
+      nonTechnicalFix: 'Check your page\'s SEO or visibility settings for a "Hide this page from search engines" or "Allow indexing" toggle — this is a simple switch in Wix, Squarespace, Shopify, and WordPress (via Yoast or Rank Math).',
+      technicalFix: "If there's no such toggle on your platform, this requires removing the noindex directive from the page's meta robots tag directly — ask your developer if that's not you.",
     });
   }
 
@@ -583,6 +716,7 @@ export async function scanUrlForTechnicalSignals(
       issue: 'Images missing alt text',
       recommendation: `${Math.round(signals.missingAltTextRatio * 100)}% of images have no alt text. Add descriptive alt attributes.`,
       severity: 'medium',
+      nonTechnicalFix: 'Click each image in your editor and look for an "Alt text" or "Image description" field — every major platform (Wix, Squarespace, Shopify, WordPress) has this built in, no code needed.',
     });
   }
 
@@ -591,10 +725,11 @@ export async function scanUrlForTechnicalSignals(
       issue: 'Generic anchor text',
       recommendation: 'Replace generic anchor text ("click here", "read more") with descriptive text.',
       severity: 'low',
+      nonTechnicalFix: 'When adding links in your editor, change the clickable text itself (not just the URL) to describe what it links to — e.g. "Read our pricing guide" instead of "click here."',
     });
   }
 
   const displaySignals = formatSignalsForDisplay(signals);
 
-  return { signals, displaySignals, extractedText, recommendations: recs };
+  return { signals, displaySignals, extractedText, recommendations: recs, detectedPlatform: platform };
 }
