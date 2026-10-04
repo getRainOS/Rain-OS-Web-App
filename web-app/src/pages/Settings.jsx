@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useApp } from '../context/AppContext.jsx';
 import { api, getApiKey, clearApiKey } from '../api/client.js';
 import { supabase } from '../lib/supabase.js';
+import { LANES } from '../lib/lanes.js';
 import styles from './Settings.module.css';
 
 const PRICE_TO_PLAN = {
@@ -270,12 +271,7 @@ export default function Settings() {
             Choose the lane that best describes how you use Rain OS. This adjusts scoring weights and KPI cards across your dashboard and all analysis tools.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 16 }}>
-            {[
-              { id: 'general',         label: 'Writers & Marketers',     desc: 'AI Readability 40% · Digital Authority 30% · Conversion Readiness 30%' },
-              { id: 'product_sellers', label: 'Product Sellers',         desc: 'Discoverability 50% · AI Readability 20% · Authority 15% · Conversion 15%' },
-              { id: 'developers',      label: 'Developers',              desc: 'Doc Structure 35% · Tech Completeness 35% · Technical Clarity 30%' },
-              { id: 'local_business',  label: 'Local Service Business',  desc: 'Local Authority 40% · AI Presence 30% · Trust & Conversion 30%' },
-            ].map(lane => (
+            {LANES.map(lane => (
               <button
                 key={lane.id}
                 onClick={() => setUserLane(lane.id)}
