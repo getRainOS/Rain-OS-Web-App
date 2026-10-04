@@ -81,6 +81,26 @@ const READABILITY_METRIC_ITEMS = [
   { label: 'Strong Answer-First Structure', pass: m => m.answerFirstRatio > 0.4 },
 ];
 
+// Product Discoverability / Local Presence breakdowns for URL Scanner are
+// built from the actual fields found inside the detected Product/
+// LocalBusiness JSON-LD block — not Gemini's judgment of how "discoverable"
+// or "findable" the page reads. Same determinism rationale as
+// READABILITY_METRIC_ITEMS above.
+const PRODUCT_SCHEMA_FIELD_ITEMS = [
+  { label: 'Price Specified', key: 'productSchemaHasPrice' },
+  { label: 'Availability Specified', key: 'productSchemaHasAvailability' },
+  { label: 'Brand Specified', key: 'productSchemaHasBrand' },
+  { label: 'SKU / Product ID Specified', key: 'productSchemaHasSku' },
+  { label: 'Product Image Specified', key: 'productSchemaHasImage' },
+];
+
+const LOCAL_BUSINESS_SCHEMA_FIELD_ITEMS = [
+  { label: 'Address Specified', key: 'localBusinessSchemaHasAddress' },
+  { label: 'Phone Number Specified', key: 'localBusinessSchemaHasPhone' },
+  { label: 'Business Hours Specified', key: 'localBusinessSchemaHasHours' },
+  { label: 'Geo Coordinates Specified', key: 'localBusinessSchemaHasGeo' },
+];
+
 const PILLARS = [
   {
     key: 'ai_readability',
@@ -172,12 +192,14 @@ function buildCrawlerItems(hasRobotsTxt, aiCrawlerAccess) {
  * detail object — it has `result.signals`, so it's resolved from
  * REPO_SIGNAL_GROUPS directly. For Content Analyzer and URL Scanner, AI
  * Readability is resolved from `result.readability_metrics` — deterministic
- * algorithmic metrics — when present; every other pillar (and AI Readability
- * itself on older saved analyses without that field) falls back to
- * thresholding Gemini's judged detail object (e.g. result.ai_readability_detail)
- * into pass/fail instead of showing a raw number. AI Readability additionally
- * gets crawler-access items appended, sourced from wherever each tool keeps
- * them.
+ * algorithmic metrics — when present, and Product Discoverability / Local
+ * Presence are resolved from `result.technical_signals`'s detected schema
+ * fields when URL Scanner ran. Every other pillar (and these on older saved
+ * analyses, or on Content Analyzer where there's no URL to check) falls back
+ * to thresholding Gemini's judged detail object (e.g.
+ * result.ai_readability_detail) into pass/fail instead of showing a raw
+ * number. AI Readability additionally gets crawler-access items appended,
+ * sourced from wherever each tool keeps them.
  */
 function buildSubItems(pillarKey, detailKey, result) {
   let items;
@@ -208,6 +230,27 @@ function buildSubItems(pillarKey, detailKey, result) {
     return items.concat(
       buildCrawlerItems(result?.technical_signals?.hasRobotsTxt, result?.technical_signals?.aiCrawlerAccess)
     );
+  }
+
+  // Product Discoverability / Local Presence: ground the breakdown in the
+  // schema fields URL Scanner actually found, when it ran (technical_signals
+  // only exists for URL Scanner — Content Analyzer has no URL to check and
+  // falls through to the Gemini-judged threshold below, same as before).
+  if (pillarKey === 'product_discoverability' && result?.technical_signals) {
+    const sig = result.technical_signals;
+    if (!sig.hasProductSchema) return [{ label: 'Product Schema Present', pass: false }];
+    return [
+      { label: 'Product Schema Present', pass: true },
+      ...PRODUCT_SCHEMA_FIELD_ITEMS.map(item => ({ label: item.label, pass: !!sig[item.key] })),
+    ];
+  }
+  if (pillarKey === 'local_presence' && result?.technical_signals) {
+    const sig = result.technical_signals;
+    if (!sig.hasLocalBusinessSchema) return [{ label: 'LocalBusiness Schema Present', pass: false }];
+    return [
+      { label: 'LocalBusiness Schema Present', pass: true },
+      ...LOCAL_BUSINESS_SCHEMA_FIELD_ITEMS.map(item => ({ label: item.label, pass: !!sig[item.key] })),
+    ];
   }
 
   const detail = result?.[detailKey];

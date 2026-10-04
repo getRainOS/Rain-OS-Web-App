@@ -539,3 +539,74 @@ describe('scanUrlForTechnicalSignals — two-part remediation guidance', () => {
     expect(rec?.nonTechnicalFix).toMatch(/Alt text/);
   });
 });
+
+describe('scanUrlForTechnicalSignals — Product/LocalBusiness schema field detection', () => {
+  function ld(obj: unknown): string {
+    return `<script type="application/ld+json">${JSON.stringify(obj)}</script>`;
+  }
+
+  it('detects a fully-specified Product schema\'s individual fields', async () => {
+    const html = wrap('<p>x</p>', ld({
+      '@type': 'Product',
+      image: 'https://x.test/p.jpg',
+      sku: 'ABC-123',
+      brand: { '@type': 'Brand', name: 'Acme' },
+      offers: { '@type': 'Offer', price: '19.99', availability: 'https://schema.org/InStock' },
+    }));
+    const r = await scanUrlForTechnicalSignals(html, 'https://x.test/');
+    expect(r.signals.productSchemaHasPrice).toBe(true);
+    expect(r.signals.productSchemaHasAvailability).toBe(true);
+    expect(r.signals.productSchemaHasBrand).toBe(true);
+    expect(r.signals.productSchemaHasSku).toBe(true);
+    expect(r.signals.productSchemaHasImage).toBe(true);
+  });
+
+  it('reports false for Product schema fields that are absent', async () => {
+    const html = wrap('<p>x</p>', ld({ '@type': 'Product', name: 'Bare Product' }));
+    const r = await scanUrlForTechnicalSignals(html, 'https://x.test/');
+    expect(r.signals.hasProductSchema).toBe(true);
+    expect(r.signals.productSchemaHasPrice).toBe(false);
+    expect(r.signals.productSchemaHasAvailability).toBe(false);
+    expect(r.signals.productSchemaHasBrand).toBe(false);
+    expect(r.signals.productSchemaHasSku).toBe(false);
+    expect(r.signals.productSchemaHasImage).toBe(false);
+  });
+
+  it('accepts mpn or gtin as a substitute for sku', async () => {
+    const html = wrap('<p>x</p>', ld({ '@type': 'Product', gtin: '0012345678905' }));
+    const r = await scanUrlForTechnicalSignals(html, 'https://x.test/');
+    expect(r.signals.productSchemaHasSku).toBe(true);
+  });
+
+  it('detects a fully-specified LocalBusiness schema\'s individual fields', async () => {
+    const html = wrap('<p>x</p>', ld({
+      '@type': 'LocalBusiness',
+      address: { '@type': 'PostalAddress', streetAddress: '1 Main St' },
+      telephone: '+1-555-0100',
+      openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: 'Monday', opens: '09:00', closes: '17:00' }],
+      geo: { '@type': 'GeoCoordinates', latitude: 1, longitude: 2 },
+    }));
+    const r = await scanUrlForTechnicalSignals(html, 'https://x.test/');
+    expect(r.signals.localBusinessSchemaHasAddress).toBe(true);
+    expect(r.signals.localBusinessSchemaHasPhone).toBe(true);
+    expect(r.signals.localBusinessSchemaHasHours).toBe(true);
+    expect(r.signals.localBusinessSchemaHasGeo).toBe(true);
+  });
+
+  it('reports false for LocalBusiness schema fields that are absent', async () => {
+    const html = wrap('<p>x</p>', ld({ '@type': 'LocalBusiness', name: 'Bare Shop' }));
+    const r = await scanUrlForTechnicalSignals(html, 'https://x.test/');
+    expect(r.signals.hasLocalBusinessSchema).toBe(true);
+    expect(r.signals.localBusinessSchemaHasAddress).toBe(false);
+    expect(r.signals.localBusinessSchemaHasPhone).toBe(false);
+    expect(r.signals.localBusinessSchemaHasHours).toBe(false);
+    expect(r.signals.localBusinessSchemaHasGeo).toBe(false);
+  });
+
+  it('does not cross-contaminate Product fields onto a LocalBusiness-only page', async () => {
+    const html = wrap('<p>x</p>', ld({ '@type': 'LocalBusiness', telephone: '+1-555-0100' }));
+    const r = await scanUrlForTechnicalSignals(html, 'https://x.test/');
+    expect(r.signals.productSchemaHasPrice).toBe(false);
+    expect(r.signals.productSchemaHasBrand).toBe(false);
+  });
+});

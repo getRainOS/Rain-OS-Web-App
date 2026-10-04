@@ -28,6 +28,17 @@ export interface TechnicalSignals {
   hasLocalBusinessSchema: boolean;
   hasArticleSchema: boolean;
   hasHowToSchema: boolean;
+  // Fields within a detected Product/LocalBusiness schema block — only
+  // meaningful when the corresponding hasXSchema flag above is true.
+  productSchemaHasPrice: boolean;
+  productSchemaHasAvailability: boolean;
+  productSchemaHasBrand: boolean;
+  productSchemaHasSku: boolean;
+  productSchemaHasImage: boolean;
+  localBusinessSchemaHasAddress: boolean;
+  localBusinessSchemaHasPhone: boolean;
+  localBusinessSchemaHasHours: boolean;
+  localBusinessSchemaHasGeo: boolean;
   // Semantic structure
   hasSemanticHtml: boolean;
   semanticTagsFound: string[];
@@ -355,6 +366,19 @@ export async function scanUrlForTechnicalSignals(
   let hasLocalBusinessSchema = false;
   let hasArticleSchema = false;
   let hasHowToSchema = false;
+  // Once we know Product/LocalBusiness schema is present, check which of its
+  // own fields are actually filled in — presence of the block alone doesn't
+  // tell a seller whether price/availability are missing, or a business
+  // whether their address/phone made it into the markup.
+  let productSchemaHasPrice = false;
+  let productSchemaHasAvailability = false;
+  let productSchemaHasBrand = false;
+  let productSchemaHasSku = false;
+  let productSchemaHasImage = false;
+  let localBusinessSchemaHasAddress = false;
+  let localBusinessSchemaHasPhone = false;
+  let localBusinessSchemaHasHours = false;
+  let localBusinessSchemaHasGeo = false;
   $('script[type="application/ld+json"]').each((_, el) => {
     try {
       const j = JSON.parse($(el).html() || '');
@@ -362,8 +386,22 @@ export async function scanUrlForTechnicalSignals(
       const types: string[] = Array.isArray(raw) ? raw : raw ? [raw] : [];
       schemaTypes.push(...types);
       if (types.includes('FAQPage')) hasFaqSchema = true;
-      if (types.includes('Product')) hasProductSchema = true;
-      if (types.some(t => LOCAL_BUSINESS_TYPES.includes(t))) hasLocalBusinessSchema = true;
+      if (types.includes('Product')) {
+        hasProductSchema = true;
+        const offers = Array.isArray(j.offers) ? j.offers[0] : j.offers;
+        if (offers?.price != null || offers?.priceSpecification) productSchemaHasPrice = true;
+        if (offers?.availability) productSchemaHasAvailability = true;
+        if (j.brand) productSchemaHasBrand = true;
+        if (j.sku || j.mpn || j.gtin) productSchemaHasSku = true;
+        if (j.image) productSchemaHasImage = true;
+      }
+      if (types.some(t => LOCAL_BUSINESS_TYPES.includes(t))) {
+        hasLocalBusinessSchema = true;
+        if (j.address) localBusinessSchemaHasAddress = true;
+        if (j.telephone) localBusinessSchemaHasPhone = true;
+        if (j.openingHours || j.openingHoursSpecification) localBusinessSchemaHasHours = true;
+        if (j.geo) localBusinessSchemaHasGeo = true;
+      }
       if (['Article', 'BlogPosting', 'NewsArticle'].some(t => types.includes(t))) hasArticleSchema = true;
       if (types.includes('HowTo')) hasHowToSchema = true;
     } catch { /* malformed JSON-LD — skip */ }
@@ -375,6 +413,15 @@ export async function scanUrlForTechnicalSignals(
   signals.hasLocalBusinessSchema = hasLocalBusinessSchema;
   signals.hasArticleSchema = hasArticleSchema;
   signals.hasHowToSchema = hasHowToSchema;
+  signals.productSchemaHasPrice = productSchemaHasPrice;
+  signals.productSchemaHasAvailability = productSchemaHasAvailability;
+  signals.productSchemaHasBrand = productSchemaHasBrand;
+  signals.productSchemaHasSku = productSchemaHasSku;
+  signals.productSchemaHasImage = productSchemaHasImage;
+  signals.localBusinessSchemaHasAddress = localBusinessSchemaHasAddress;
+  signals.localBusinessSchemaHasPhone = localBusinessSchemaHasPhone;
+  signals.localBusinessSchemaHasHours = localBusinessSchemaHasHours;
+  signals.localBusinessSchemaHasGeo = localBusinessSchemaHasGeo;
 
   // ─── Semantic HTML ──────────────────────────────────────────────────────────
   const semTags = ['article', 'section', 'main', 'nav', 'aside', 'header', 'footer'];
