@@ -3,8 +3,8 @@
 // (scoring a product listing vs. a business page) — the name should say so.
 // Every other lane keeps the generic "URL Scanner" name.
 const URL_SCANNER_LABEL_BY_LANE = {
-  product_sellers: 'Product Page Analysis',
-  local_business: 'Business Page Analysis',
+  product_sellers: 'Product Page Optimization',
+  local_business: 'Business Page Optimization',
 };
 
 export function urlScannerLabel(lane) {
