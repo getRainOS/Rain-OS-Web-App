@@ -35,25 +35,31 @@ const TOOLS = {
   settings:   { to: '/settings',         label: 'Settings',            Icon: Settings,         tooltip: 'Change your solution lane, API settings, and account preferences.' },
 };
 
+// Every lane gets every tool — a lane is a scoring context (which pillars
+// apply, how they're weighted, what the sidebar calls things), not a gate
+// on which tools you're allowed to reach. A developer can still have
+// marketing copy to optimize; a writer can still have a repo. Only the
+// ordering changes per lane, surfacing the most relevant tool for that
+// lane first.
 const LANE_GROUPS = {
   general: [
-    { label: 'Optimize',  tools: ['analyze', 'urlScanner'] },
+    { label: 'Optimize',  tools: ['analyze', 'urlScanner', 'repo'] },
     { label: 'Monitor',   tools: ['citation', 'visibility', 'sov'] },
   ],
   product_sellers: [
-    { label: 'Optimize',  tools: ['analyze', 'urlScanner'] },
+    { label: 'Optimize',  tools: ['analyze', 'urlScanner', 'repo'] },
     { label: 'Monitor',   tools: ['citation', 'visibility', 'sov'] },
   ],
   developers: [
-    { label: 'Optimize',  tools: ['repo', 'urlScanner'] },
-    { label: 'Monitor',   tools: ['citation', 'sov'] },
+    { label: 'Optimize',  tools: ['repo', 'urlScanner', 'analyze'] },
+    { label: 'Monitor',   tools: ['citation', 'visibility', 'sov'] },
   ],
   local_business: [
-    { label: 'Optimize',  tools: ['analyze', 'urlScanner'] },
+    { label: 'Optimize',  tools: ['analyze', 'urlScanner', 'repo'] },
     { label: 'Monitor',   tools: ['citation', 'visibility', 'sov'] },
   ],
   vibe_coders: [
-    { label: 'Optimize',  tools: ['repo', 'urlScanner'] },
+    { label: 'Optimize',  tools: ['repo', 'urlScanner', 'analyze'] },
     { label: 'Monitor',   tools: ['citation', 'visibility', 'sov'] },
   ],
 };
