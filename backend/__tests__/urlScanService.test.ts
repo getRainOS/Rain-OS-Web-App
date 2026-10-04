@@ -76,6 +76,24 @@ describe('scanUrlForTechnicalSignals — schema markup', () => {
     expect(r.signals.hasProductSchema).toBe(true);
   });
 
+  it('detects LocalBusiness schema and common subtypes', async () => {
+    for (const type of ['LocalBusiness', 'Restaurant', 'ProfessionalService']) {
+      const ld = `<script type="application/ld+json">${JSON.stringify({ '@type': type })}</script>`;
+      const r = await scanUrlForTechnicalSignals(wrap('<p>hi</p>', ld), 'https://x.test/');
+      expect(r.signals.hasLocalBusinessSchema, `for ${type}`).toBe(true);
+    }
+  });
+
+  it('does not flag Product schema as LocalBusiness schema or vice versa', async () => {
+    const productLd = `<script type="application/ld+json">${JSON.stringify({ '@type': 'Product' })}</script>`;
+    const product = await scanUrlForTechnicalSignals(wrap('<p>hi</p>', productLd), 'https://x.test/');
+    expect(product.signals.hasLocalBusinessSchema).toBe(false);
+
+    const lbLd = `<script type="application/ld+json">${JSON.stringify({ '@type': 'LocalBusiness' })}</script>`;
+    const lb = await scanUrlForTechnicalSignals(wrap('<p>hi</p>', lbLd), 'https://x.test/');
+    expect(lb.signals.hasProductSchema).toBe(false);
+  });
+
   it('handles array @type values', async () => {
     const ld = `<script type="application/ld+json">${JSON.stringify({
       '@type': ['Article', 'FAQPage'],
@@ -324,6 +342,45 @@ describe('scanUrlForTechnicalSignals — recommendations', () => {
     expect(rec!.severity).toBe('high');
     expect(rec!.artifact?.type).toBe('json-ld');
     expect(rec!.artifact?.content).toContain('application/ld+json');
+  });
+
+  it('recommends Product schema (not Article) for product_sellers missing it', async () => {
+    const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>'), 'https://x.test/', 'product_sellers');
+    const productRec = r.recommendations.find((x) => x.issue === 'Missing Product schema markup');
+    expect(productRec).toBeDefined();
+    expect(productRec!.artifact?.content).toContain('"@type": "Product"');
+    expect(productRec!.artifact?.content).toContain('"availability"');
+    expect(r.recommendations.find((x) => x.issue === 'Missing schema markup')).toBeUndefined();
+  });
+
+  it('does not recommend Product schema for product_sellers when it is already present', async () => {
+    const ld = `<script type="application/ld+json">${JSON.stringify({ '@type': 'Product' })}</script>`;
+    const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>', ld), 'https://x.test/', 'product_sellers');
+    expect(r.recommendations.find((x) => x.issue.includes('Product schema'))).toBeUndefined();
+  });
+
+  it('recommends LocalBusiness schema (not Article) for local_business missing it', async () => {
+    const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>'), 'https://x.test/', 'local_business');
+    const lbRec = r.recommendations.find((x) => x.issue === 'Missing LocalBusiness schema markup');
+    expect(lbRec).toBeDefined();
+    expect(lbRec!.artifact?.content).toContain('"@type": "LocalBusiness"');
+    expect(lbRec!.artifact?.content).toContain('"telephone"');
+    expect(r.recommendations.find((x) => x.issue === 'Missing schema markup')).toBeUndefined();
+  });
+
+  it('does not recommend LocalBusiness schema for local_business when it is already present', async () => {
+    const ld = `<script type="application/ld+json">${JSON.stringify({ '@type': 'LocalBusiness' })}</script>`;
+    const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>', ld), 'https://x.test/', 'local_business');
+    expect(r.recommendations.find((x) => x.issue.includes('LocalBusiness schema'))).toBeUndefined();
+  });
+
+  it('still recommends generic Article schema for general and developers modules', async () => {
+    for (const mod of ['general', 'developers'] as const) {
+      const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>'), 'https://x.test/', mod);
+      const rec = r.recommendations.find((x) => x.issue === 'Missing schema markup');
+      expect(rec, `for ${mod}`).toBeDefined();
+      expect(rec!.artifact?.content, `for ${mod}`).toContain('"@type": "Article"');
+    }
   });
 
   it('emits an llms.txt rec with an llms-txt artifact when the file is absent', async () => {

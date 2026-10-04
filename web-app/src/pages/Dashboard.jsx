@@ -4,6 +4,7 @@ import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import { PILLAR_COLORS } from '../lib/pillarColors.js';
 import { buildCitationShare } from '../lib/citationShare.js';
+import { urlScannerLabel } from '../lib/laneLabels.js';
 import {
   AreaChart, Area, XAxis, YAxis,
   Tooltip, ResponsiveContainer,
@@ -1068,7 +1069,7 @@ export default function Dashboard() {
             })}
           </div>
           <Link to={typeRoute} className={styles.insightAction} style={{ marginTop: 10, display: 'inline-flex' }}>
-            Open in {CONTENT_TYPE_TOOL_NAMES[typeFilter] || 'Content Optimizer'} to fix →
+            Open in {typeFilter === 'url' ? urlScannerLabel(userLane) : (CONTENT_TYPE_TOOL_NAMES[typeFilter] || 'Content Optimizer')} to fix →
           </Link>
         </div>
       )}
@@ -1234,7 +1235,7 @@ export default function Dashboard() {
                   <a.Icon className={styles.actionIcon} style={{ color: '#94a3b8' }} />
                 </div>
                 <div className={styles.actionText}>
-                  <span className={styles.actionLabel}>{a.label}</span>
+                  <span className={styles.actionLabel}>{a.to === '/url-scanner' ? urlScannerLabel(userLane) : a.label}</span>
                   <span className={styles.actionSub}>{a.sub}</span>
                 </div>
                 <ArrowRight className={styles.actionArrow} />
