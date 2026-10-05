@@ -177,9 +177,9 @@
 }
 
 .navItemActive {
-  color: var(--accent) !important;
-  background: rgba(91,95,199,0.10) !important;
-  font-weight: 500;
+  color: var(--text) !important;
+  background: rgba(255,255,255,0.08) !important;
+  font-weight: 600;
 }
 
 .navIcon {
@@ -252,8 +252,8 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: rgba(91,95,199,0.18);
-  color: var(--accent);
+  background: rgba(255,255,255,0.12);
+  color: var(--text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -278,7 +278,7 @@
 
 .userTier {
   font-size: 10px;
-  color: var(--accent);
+  color: var(--text-muted);
   font-weight: 600;
 }
 
@@ -295,16 +295,16 @@
   gap: 6px;
   padding: 9px;
   border-radius: var(--radius-sm);
-  background: rgba(91,95,199,0.10);
-  color: var(--accent);
+  background: var(--text);
+  color: var(--bg);
   font-size: 12.5px;
   font-weight: 600;
-  border: 1px solid rgba(91,95,199,0.18);
+  border: 1px solid var(--text);
   transition: all 0.15s;
 }
 
 .upgradeBtn:hover {
-  background: rgba(91,95,199,0.18);
+  background: rgba(255,255,255,0.82);
 }
 
 .logoutBtn {

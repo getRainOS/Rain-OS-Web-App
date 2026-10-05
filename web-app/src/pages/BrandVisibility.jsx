@@ -37,12 +37,12 @@ const S = {
   notMentionedHint: { fontSize: 12.5, color: 'var(--text-muted)', marginTop: 8, lineHeight: 1.5 },
   urlScannerCta: {
     display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 10,
-    color: 'var(--accent)', fontSize: 12.5, fontWeight: 600, textDecoration: 'none',
+    color: 'var(--text)', fontSize: 12.5, fontWeight: 600, textDecoration: 'underline',
   },
 
   btn: {
-    background: 'var(--accent)',
-    color: '#fff', border: 'none', borderRadius: 10,
+    background: 'var(--text)',
+    color: 'var(--bg)', border: 'none', borderRadius: 10,
     padding: '11px 28px', fontSize: 14, fontWeight: 600,
     cursor: 'pointer', transition: 'background 0.15s',
     display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -97,7 +97,7 @@ const S = {
   spinner: {
     width: 20, height: 20, borderRadius: '50%',
     border: '2px solid rgba(255,255,255,0.15)',
-    borderTop: '2px solid var(--accent)',
+    borderTop: '2px solid var(--text)',
     animation: 'spin 0.8s linear infinite',
     display: 'inline-block', marginRight: 8, verticalAlign: 'middle',
   },
@@ -109,10 +109,10 @@ const S = {
     border: 'none', borderBottom: '2px solid transparent',
     background: 'transparent', color: 'var(--text-dim)',
   },
-  tabActive: { color: 'var(--accent)', borderBottomColor: 'var(--accent)' },
+  tabActive: { color: 'var(--text)', borderBottomColor: 'var(--text)' },
   tabCount: {
     fontSize: 10.5, fontWeight: 700, padding: '1px 6px', borderRadius: 999,
-    background: 'rgba(91,95,199,0.15)', color: 'var(--accent)',
+    background: 'rgba(255,255,255,0.1)', color: 'var(--text)',
     fontVariantNumeric: 'tabular-nums',
   },
 
@@ -151,8 +151,8 @@ function SentimentBadge({ sentiment }) {
 
 function CitedBadge() {
   return (
-    <span style={{ ...S.statusText, color: 'var(--accent)' }}>
-      <span style={{ ...S.statusDot, background: 'var(--accent)' }} />
+    <span style={{ ...S.statusText, color: 'var(--text)' }}>
+      <span style={{ ...S.statusDot, background: 'var(--text)' }} />
       Your site was cited as a source
     </span>
   );
@@ -380,14 +380,14 @@ export default function BrandVisibility() {
           display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap',
         }}>
           <div>
-            <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--accent)', marginBottom: 6 }}>Business plan required</div>
+            <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)', marginBottom: 6 }}>Business plan required</div>
             <div style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>
               Brand Sentiment tracks how Gemini describes your brand across live, Google Search-grounded answers. It runs multiple Gemini calls per check and is available on the Business plan.
             </div>
           </div>
           <a href="/upgrade" style={{
-            background: 'var(--accent)',
-            color: '#fff', borderRadius: 8, padding: '10px 22px',
+            background: 'var(--text)',
+            color: 'var(--bg)', borderRadius: 8, padding: '10px 22px',
             fontSize: 13, fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap',
           }}>
             Upgrade to Business →
@@ -521,7 +521,7 @@ export default function BrandVisibility() {
                     <div style={S.sourceDomain}>
                       <a href={s.url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text)', textDecoration: 'none' }}>{s.title || s.domain}</a>
                       {i === result.citedSourceIndex && (
-                        <span style={{ marginLeft: 8, fontSize: 11, fontWeight: 600, color: 'var(--accent)' }}>Your site</span>
+                        <span style={{ marginLeft: 8, fontSize: 11, fontWeight: 600, color: 'var(--text)' }}>Your site</span>
                       )}
                     </div>
                     {s.snippet && <div style={S.sourceSnippet}>{s.snippet}</div>}

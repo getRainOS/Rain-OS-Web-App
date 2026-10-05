@@ -37,15 +37,15 @@
 }
 
 .toolBtn:hover:not(:disabled) {
-  background: rgba(91,95,199,0.1);
-  border-color: rgba(91,95,199,0.3);
-  color: var(--accent);
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.3);
+  color: var(--text);
 }
 
 .toolBtnActive {
-  background: rgba(91,95,199,0.12) !important;
-  border-color: rgba(91,95,199,0.35) !important;
-  color: var(--accent) !important;
+  background: rgba(255,255,255,0.12) !important;
+  border-color: rgba(255,255,255,0.35) !important;
+  color: var(--text) !important;
 }
 
 .toolBtn:disabled {
@@ -85,7 +85,7 @@
 }
 
 .rewriteInput:focus {
-  border-color: var(--accent);
+  border-color: var(--text);
 }
 
 .rewriteInput::placeholder { color: var(--text-dim); }
@@ -110,7 +110,7 @@
 
 .result {
   background: var(--surface-3);
-  border: 1px solid rgba(91,95,199,0.15);
+  border: 1px solid rgba(255,255,255,0.15);
   border-radius: var(--radius-sm);
   padding: 14px;
 }
@@ -125,7 +125,7 @@
 .resultLabel {
   font-size: 12px;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--text);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }

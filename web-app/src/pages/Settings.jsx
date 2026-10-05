@@ -122,7 +122,7 @@ export default function Settings() {
               </div>
               <div className={styles.accountRow}>
                 <span className={styles.accountLabel}>Plan</span>
-                <span className={styles.accountValue} style={{ color: isFree ? 'var(--text-muted)' : 'var(--accent)' }}>
+                <span className={styles.accountValue} style={{ color: isFree ? 'var(--text-muted)' : 'var(--text)' }}>
                   {plan}
                 </span>
               </div>
@@ -142,7 +142,7 @@ export default function Settings() {
                   className={styles.usageFill}
                   style={{
                     width: `${usagePct}%`,
-                    background: usagePct >= 100 ? 'var(--red)' : usagePct > 75 ? 'var(--yellow)' : 'var(--accent)',
+                    background: usagePct >= 100 ? 'var(--red)' : usagePct > 75 ? 'var(--yellow)' : 'var(--text-muted)',
                   }}
                 />
               </div>
@@ -280,8 +280,8 @@ export default function Settings() {
                   flexDirection: 'column',
                   gap: 4,
                   padding: '12px 16px',
-                  background: userLane === lane.id ? 'rgba(91,95,199,0.1)' : 'rgba(255,255,255,0.02)',
-                  border: `1px solid ${userLane === lane.id ? 'rgba(91,95,199,0.5)' : 'var(--border)'}`,
+                  background: userLane === lane.id ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.02)',
+                  border: `1px solid ${userLane === lane.id ? 'var(--text-muted)' : 'var(--border)'}`,
                   borderRadius: 10,
                   cursor: 'pointer',
                   textAlign: 'left',
@@ -289,7 +289,7 @@ export default function Settings() {
                   transition: 'border-color 0.15s, background 0.15s',
                 }}
               >
-                <span style={{ fontSize: 13.5, fontWeight: 700, color: userLane === lane.id ? 'var(--accent)' : 'var(--text)' }}>{lane.label}</span>
+                <span style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--text)' }}>{lane.label}</span>
                 <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{lane.desc}</span>
               </button>
             ))}

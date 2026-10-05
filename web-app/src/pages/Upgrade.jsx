@@ -33,7 +33,7 @@ const PLANS = [
     period: '/ month',
     priceId: 'price_1SeCJH3NMjs4uYdgpi0xB0XN',
     description: 'Everything in Free, plus the full AEO suite for content creators and growing brands.',
-    color: 'var(--accent)',
+    color: 'var(--text)',
     featured: true,
     limit: '200 checks / month',
     features: [
@@ -55,7 +55,7 @@ const PLANS = [
     period: '/ month',
     priceId: 'price_1SeCKM3NMjs4uYdgcBRhgIhD',
     description: 'Premium AI intelligence for scaling brands and agencies.',
-    color: 'var(--purple)',
+    color: 'var(--text)',
     limit: '500 checks / month',
     features: [
       { label: '500 analyses / month', included: true },
@@ -190,7 +190,7 @@ export default function Upgrade() {
                 ) : (
                   <button
                     className={styles.ctaBtn}
-                    style={{ background: plan.color, boxShadow: `0 0 20px ${plan.color}40` }}
+                    style={{ background: plan.color }}
                     onClick={() => handleUpgrade(plan.priceId)}
                     disabled={isLoading}
                   >

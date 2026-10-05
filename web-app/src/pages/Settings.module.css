@@ -89,7 +89,7 @@
 .inlineLink {
   background: none;
   border: none;
-  color: var(--accent);
+  color: var(--text);
   cursor: pointer;
   font-size: 12.5px;
   font-family: inherit;
@@ -142,10 +142,10 @@
 }
 
 .copyBtn {
-  background: var(--accent);
+  background: var(--text);
   border: none;
   border-radius: 6px;
-  color: #fff;
+  color: var(--bg);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -157,7 +157,7 @@
 }
 
 .copyBtn:hover:not(:disabled) {
-  background: var(--accent-hover);
+  background: rgba(255,255,255,0.82);
 }
 
 .copyBtn:disabled {

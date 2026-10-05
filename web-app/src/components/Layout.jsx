@@ -19,11 +19,11 @@ const PRICE_TO_PLAN = {
 };
 
 const LANE_META = {
-  general:         { label: 'Writers & Marketers',    color: '#8b86c4' },
-  product_sellers: { label: 'Product Sellers',        color: '#8b86c4' },
-  developers:      { label: 'Developers',             color: '#818cf8' },
-  local_business:  { label: 'Local Service Business', color: '#8b86c4' },
-  vibe_coders:     { label: 'Vibe Coders',            color: '#818cf8' },
+  general:         { label: 'Writers & Marketers',    color: '#f5f5f5' },
+  product_sellers: { label: 'Product Sellers',        color: '#f5f5f5' },
+  developers:      { label: 'Developers',             color: '#f5f5f5' },
+  local_business:  { label: 'Local Service Business', color: '#f5f5f5' },
+  vibe_coders:     { label: 'Vibe Coders',             color: '#f5f5f5' },
 };
 
 const TOOLS = {
@@ -229,7 +229,7 @@ export default function Layout({ children }) {
                   className={styles.usageFill}
                   style={{
                     width: `${Math.min(pct, 100)}%`,
-                    background: isAtLimit ? 'var(--red)' : isNearLimit ? 'var(--yellow)' : 'var(--accent)',
+                    background: isAtLimit ? 'var(--red)' : isNearLimit ? 'var(--yellow)' : 'var(--text-muted)',
                   }}
                 />
               </div>

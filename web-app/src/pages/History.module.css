@@ -95,7 +95,7 @@
 }
 
 .searchInput:focus {
-  border-color: var(--accent);
+  border-color: var(--text);
 }
 
 .searchInput::placeholder {
@@ -145,8 +145,8 @@
 }
 
 .filterBtnActive {
-  color: var(--accent);
-  border-color: var(--accent);
+  color: var(--text);
+  border-color: var(--text);
   background: rgba(139,134,196,0.1);
 }
 
@@ -192,7 +192,7 @@
 
 .itemUrl {
   font-size: 11.5px;
-  color: var(--accent);
+  color: var(--text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -440,8 +440,8 @@
 }
 
 .tabActive {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
+  color: var(--text);
+  border-bottom-color: var(--text);
 }
 
 .undoToast {
@@ -475,8 +475,8 @@
 
 .undoBtn {
   background: none;
-  border: 1px solid var(--accent);
-  color: var(--accent);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
   border-radius: var(--radius-sm);
   padding: 4px 12px;
   font-size: 12px;
@@ -486,8 +486,8 @@
 }
 
 .undoBtn:hover {
-  background: var(--accent);
-  color: #fff;
+  background: var(--text);
+  color: var(--bg);
 }
 
 .undoCountdown {

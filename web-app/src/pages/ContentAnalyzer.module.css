@@ -80,6 +80,16 @@
   letter-spacing: 0.06em;
 }
 
+.required {
+  color: var(--danger);
+}
+
+.actionHint {
+  font-size: 12px;
+  color: var(--text-dim);
+  align-self: center;
+}
+
 .input {
   background: var(--surface-2);
   border: 1px solid var(--border);
@@ -92,8 +102,8 @@
 }
 
 .input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(91,95,199,0.12);
+  border-color: var(--border-strong);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.08);
 }
 
 .input::placeholder { color: var(--text-dim); }
@@ -120,8 +130,8 @@
 }
 
 .textarea:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(91,95,199,0.12);
+  border-color: var(--border-strong);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.08);
 }
 
 .textarea::placeholder { color: var(--text-dim); }
@@ -221,8 +231,8 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: rgba(91,95,199,0.15);
-  color: var(--accent);
+  background: rgba(255,255,255,0.1);
+  color: var(--text);
   font-size: 11px;
   font-weight: 700;
   display: flex;
@@ -281,12 +291,12 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 10px 18px;
+  padding: 9px 16px;
   border-radius: var(--radius-sm);
-  background: rgba(139,92,246,0.12);
-  border: 1px solid rgba(139,92,246,0.3);
-  color: #a78bfa;
-  font-size: 14px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 13.5px;
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
@@ -295,8 +305,8 @@
 }
 
 .rewriteBtn:hover:not(:disabled) {
-  background: rgba(139,92,246,0.2);
-  border-color: rgba(139,92,246,0.45);
+  background: rgba(255,255,255,0.09);
+  border-color: var(--border-strong);
 }
 
 .rewriteBtn:disabled {
@@ -307,9 +317,9 @@
 /* ── Rewrite panel ─────────────────────────────────────────────────────────── */
 
 .rewritePanel {
-  border: 1px solid rgba(139,92,246,0.25);
+  border: 1px solid rgba(255,255,255,0.25);
   border-radius: var(--radius);
-  background: rgba(139,92,246,0.05);
+  background: rgba(255,255,255,0.05);
   overflow: hidden;
 }
 
@@ -319,7 +329,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 14px 18px;
-  border-bottom: 1px solid rgba(139,92,246,0.15);
+  border-bottom: 1px solid rgba(255,255,255,0.15);
   flex-wrap: wrap;
 }
 
@@ -329,12 +339,12 @@
   gap: 8px;
   font-size: 14px;
   font-weight: 700;
-  color: #c4b5fd;
+  color: var(--text);
 }
 
 .rewriteSparkle {
   font-size: 16px;
-  color: #a78bfa;
+  color: var(--text);
 }
 
 .rewriteTabs {
@@ -359,8 +369,8 @@
 }
 
 .rewriteTabActive {
-  background: rgba(139,92,246,0.3);
-  color: #c4b5fd;
+  background: rgba(255,255,255,0.3);
+  color: var(--text);
   font-weight: 600;
 }
 
@@ -397,7 +407,7 @@
 }
 
 .rewriteChangeTick {
-  color: #a78bfa;
+  color: var(--text);
   font-size: 14px;
   line-height: 1.4;
   flex-shrink: 0;
@@ -407,15 +417,15 @@
   display: flex;
   gap: 10px;
   padding: 14px 18px;
-  border-top: 1px solid rgba(139,92,246,0.15);
+  border-top: 1px solid rgba(255,255,255,0.15);
 }
 
 .rewriteAcceptBtn {
   padding: 9px 18px;
   border-radius: var(--radius-sm);
-  background: rgba(139,92,246,0.2);
-  border: 1px solid rgba(139,92,246,0.4);
-  color: #c4b5fd;
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.4);
+  color: var(--text);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -424,7 +434,7 @@
 }
 
 .rewriteAcceptBtn:hover {
-  background: rgba(139,92,246,0.3);
+  background: rgba(255,255,255,0.3);
 }
 
 .rewriteDiscardBtn {

@@ -16,7 +16,7 @@
 .iconTitle {
   width: 24px;
   height: 24px;
-  color: var(--accent);
+  color: var(--text);
 }
 
 .title {
@@ -148,8 +148,8 @@
 }
 
 .input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(91,95,199,0.12);
+  border-color: var(--text);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.12);
 }
 
 .input::placeholder { color: var(--text-dim); }
@@ -174,18 +174,18 @@
 .exampleLink {
   font-size: 11.5px;
   padding: 4px 10px;
-  background: rgba(91,95,199,0.06);
-  border: 1px solid rgba(91,95,199,0.18);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.18);
   border-radius: 999px;
-  color: var(--accent);
+  color: var(--text);
   cursor: pointer;
   font-family: inherit;
   transition: background 0.15s, border-color 0.15s;
 }
 
 .exampleLink:hover:not(:disabled) {
-  background: rgba(91,95,199,0.12);
-  border-color: rgba(91,95,199,0.35);
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.35);
 }
 
 .exampleLink:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -273,8 +273,8 @@
   font-weight: 700;
   padding: 1px 7px;
   border-radius: 999px;
-  background: rgba(91,95,199,0.15);
-  color: var(--accent);
+  background: rgba(255,255,255,0.15);
+  color: var(--text);
   font-variant-numeric: tabular-nums;
 }
 
@@ -307,8 +307,8 @@
 }
 
 .sourceItem:hover {
-  background: rgba(91,95,199,0.05);
-  border-color: rgba(91,95,199,0.2);
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.2);
 }
 
 .sourceFavicon {
@@ -341,7 +341,7 @@
   line-height: 1.65;
   padding: 14px 16px;
   background: rgba(255,255,255,0.02);
-  border-left: 3px solid var(--accent);
+  border-left: 3px solid var(--text);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   margin: 0;
   font-style: italic;
@@ -353,7 +353,7 @@
   align-items: center;
   gap: 6px;
   margin-top: 8px;
-  color: var(--accent);
+  color: var(--text);
   font-size: 12.5px;
   font-weight: 600;
   text-decoration: none;
@@ -374,7 +374,7 @@
 .emptyMapIcon {
   width: 36px;
   height: 36px;
-  color: var(--accent);
+  color: var(--text);
   opacity: 0.7;
   margin-bottom: 4px;
 }
@@ -423,7 +423,7 @@
 }
 
 .showMoreBtn:hover {
-  color: var(--accent);
+  color: var(--text);
   border-color: rgba(139,134,196,0.35);
 }
 
@@ -663,8 +663,8 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: rgba(91,95,199,0.14);
-  color: var(--accent);
+  background: rgba(255,255,255,0.14);
+  color: var(--text);
   font-size: 12px;
   font-weight: 700;
   display: flex;
@@ -710,7 +710,7 @@
 }
 
 .domainName:hover {
-  color: var(--accent);
+  color: var(--text);
 }
 
 .domainMetrics {
@@ -745,7 +745,7 @@
 
 .domainBar {
   height: 100%;
-  background: var(--accent);
+  background: var(--text-muted);
   border-radius: 2px;
   transition: width 0.5s ease-out;
 }
@@ -764,7 +764,7 @@
 }
 
 .domainMetaLink a {
-  color: var(--accent);
+  color: var(--text);
 }
 
 .domainMetaLink a:hover {

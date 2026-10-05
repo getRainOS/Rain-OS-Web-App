@@ -33,11 +33,11 @@ const S = {
   hint: { fontSize: 11, color: 'var(--text-dim)', marginTop: 6 },
   urlScannerCta: {
     display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 12,
-    color: 'var(--accent)', fontSize: 12.5, fontWeight: 600, textDecoration: 'none',
+    color: 'var(--text)', fontSize: 12.5, fontWeight: 600, textDecoration: 'underline',
   },
   btn: {
-    background: 'var(--accent)',
-    color: '#fff', border: 'none', borderRadius: 10,
+    background: 'var(--text)',
+    color: 'var(--bg)', border: 'none', borderRadius: 10,
     padding: '11px 28px', fontSize: 14, fontWeight: 600,
     cursor: 'pointer', transition: 'background 0.15s',
     display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -64,10 +64,10 @@ const S = {
     border: 'none', borderBottom: '2px solid transparent',
     background: 'transparent', color: 'var(--text-dim)',
   },
-  tabActive: { color: 'var(--accent)', borderBottomColor: 'var(--accent)' },
+  tabActive: { color: 'var(--text)', borderBottomColor: 'var(--text)' },
   tabCount: {
     fontSize: 10.5, fontWeight: 700, padding: '1px 6px', borderRadius: 999,
-    background: 'rgba(91,95,199,0.15)', color: 'var(--accent)',
+    background: 'rgba(255,255,255,0.1)', color: 'var(--text)',
     fontVariantNumeric: 'tabular-nums',
   },
   statusText: { display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600 },
@@ -126,7 +126,7 @@ function ModelCard({ m }) {
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
             {m.sources.slice(0, 4).map((s, i) => (
               <a key={i} href={s.url} target="_blank" rel="noopener noreferrer"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--accent)', background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border)', borderRadius: 6, padding: '3px 8px', textDecoration: 'none' }}>
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--text)', background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border)', borderRadius: 6, padding: '3px 8px', textDecoration: 'none' }}>
                 <img src={`https://www.google.com/s2/favicons?domain=${s.domain}&sz=16`} alt="" style={{ width: 12, height: 12, borderRadius: 2 }} onError={e => e.currentTarget.style.display='none'} />
                 {s.title || s.domain}
                 <ExternalLink size={9} />
@@ -316,7 +316,7 @@ export default function ShareOfVoice() {
       {/* Header */}
       <div style={S.header}>
         <div style={S.titleRow}>
-          <BarChart2 size={22} style={{ color: 'var(--accent)' }} />
+          <BarChart2 size={22} style={{ color: 'var(--text)' }} />
           <h1 style={S.title}>Share of Voice</h1>
         </div>
         <p style={S.tagline}>Real counts across 3 real prompts — not an estimate.</p>
@@ -365,14 +365,14 @@ export default function ShareOfVoice() {
               display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap',
             }}>
               <div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--accent)', marginBottom: 6 }}>Business plan required</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', marginBottom: 6 }}>Business plan required</div>
                 <div style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>
                   Share of Voice runs 3 Google Search-grounded Gemini checks per topic — an informational question, a conversational request, and a research-style comparison. Available on Business plan.
                 </div>
               </div>
               <a href="/upgrade" style={{
-                background: 'var(--accent)',
-                color: '#fff', borderRadius: 8, padding: '10px 22px',
+                background: 'var(--text)',
+                color: 'var(--bg)', borderRadius: 8, padding: '10px 22px',
                 fontSize: 13, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap',
               }}>
                 Upgrade to Business →
