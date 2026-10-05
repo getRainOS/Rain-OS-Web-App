@@ -203,7 +203,7 @@ export default function ContentAnalyzer() {
         <form onSubmit={handleAnalyze} className={styles.form}>
           <div className={styles.formRow}>
             <div className={styles.field}>
-              <label className={styles.label}>Title</label>
+              <label className={styles.label}>Title <span className={styles.required}>*</span></label>
               <input
                 type="text"
                 className={styles.input}
@@ -265,6 +265,9 @@ export default function ContentAnalyzer() {
             >
               {rewriteLoading ? <><span className="spinner" style={{ width: 14, height: 14 }} /> Rewriting…</> : '✦ Rewrite for AI'}
             </button>
+            {!loading && !title.trim() && (content.trim() || url.trim()) && (
+              <span className={styles.actionHint}>Add a title above to analyze</span>
+            )}
           </div>
 
           {rewriteError && <p className={styles.error}>{rewriteError}</p>}
