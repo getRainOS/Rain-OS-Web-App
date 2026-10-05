@@ -17,10 +17,12 @@
   --border: rgba(255,255,255,0.08);
   --border-strong: rgba(255,255,255,0.14);
 
-  /* ── Accent: muted lavender-indigo, not saturated indigo ── */
-  --accent: #8b86c4;
-  --accent-hover: #756fa8;
-  --accent-glow: rgba(139,134,196,0.10);
+  /* ── Accent: now chart-only (every UI-chrome use was swept to
+     monochrome) — bright/fluorescent for the single-series trend
+     line and scatter plot that still reach for it ── */
+  --accent: #00F0FF;
+  --accent-hover: #33F3FF;
+  --accent-glow: rgba(0,240,255,0.15);
 
   /* ── Text ── */
   --text: #f5f5f5;
