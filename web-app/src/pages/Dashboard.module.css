@@ -23,9 +23,9 @@
 }
 
 .greeting {
-  font-size: 20px;
-  font-weight: 500;
-  letter-spacing: -0.3px;
+  font-size: 25px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
   color: var(--text);
   margin-bottom: 4px;
 }
@@ -1040,9 +1040,6 @@ button.emptyLink {
 }
 
 .heroChartBg {
-  background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
-  background-size: 16px 16px;
-  border-radius: 8px;
   margin: 0 -4px;
 }
 
@@ -1067,8 +1064,9 @@ button.emptyLink {
 
 .heroRankRow {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
   padding: 8px 0;
   border-bottom: 1px solid rgba(255,255,255,0.04);
 }
@@ -1080,18 +1078,22 @@ button.emptyLink {
 .heroRankLabelRow {
   display: flex;
   align-items: center;
+  min-width: 0;
 }
 
 .heroRankLabel {
   font-size: 12px;
   color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .heroRankValueRow {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  padding-left: 13px;
+  flex-shrink: 0;
 }
 
 .heroRankScore {

@@ -204,12 +204,14 @@ function GaugeArc({ score = 0, color = '#0ea5e9', size = 120 }) {
   );
 }
 
-/* ── Trend indicator — plain text, no colored pill (retired per redesign) ── */
+/* ── Trend indicator — plain text, colored by direction. Only the delta
+   itself carries semantic color, never the whole card it sits in. ── */
 function TrendBadge({ pct }) {
   if (pct === null || pct === undefined) return null;
   const up = pct > 0, flat = pct === 0;
+  const color = flat ? 'var(--text-muted)' : up ? 'var(--success)' : 'var(--danger)';
   return (
-    <span className={styles.trendBadge}>
+    <span className={styles.trendBadge} style={{ color }}>
       {flat ? <Minus className={styles.trendIcon} /> : up ? <TrendingUp className={styles.trendIcon} /> : <TrendingDown className={styles.trendIcon} />}
       {flat ? 'Flat' : `${up ? '+' : ''}${pct}%`}
     </span>
