@@ -79,7 +79,7 @@ const S = {
   competitorChip: {
     fontSize: 12, fontWeight: 500, color: 'var(--text-muted)',
     background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)',
-    borderRadius: 20, padding: '4px 12px',
+    borderRadius: 5, padding: '4px 12px',
   },
 
   excerpt: {
@@ -111,7 +111,7 @@ const S = {
   },
   tabActive: { color: 'var(--text)', borderBottomColor: 'var(--text)' },
   tabCount: {
-    fontSize: 10.5, fontWeight: 700, padding: '1px 6px', borderRadius: 999,
+    fontSize: 10.5, fontWeight: 700, padding: '1px 6px', borderRadius: 5,
     background: 'rgba(255,255,255,0.1)', color: 'var(--text)',
     fontVariantNumeric: 'tabular-nums',
   },

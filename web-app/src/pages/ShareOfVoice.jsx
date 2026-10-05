@@ -66,7 +66,7 @@ const S = {
   },
   tabActive: { color: 'var(--text)', borderBottomColor: 'var(--text)' },
   tabCount: {
-    fontSize: 10.5, fontWeight: 700, padding: '1px 6px', borderRadius: 999,
+    fontSize: 10.5, fontWeight: 700, padding: '1px 6px', borderRadius: 5,
     background: 'rgba(255,255,255,0.1)', color: 'var(--text)',
     fontVariantNumeric: 'tabular-nums',
   },
@@ -539,7 +539,13 @@ export default function ShareOfVoice() {
               </div>
 
               {trendGroups.map((g, i) => (
-                <div key={i} style={{ ...S.card, display: 'flex', alignItems: 'center', gap: 20, padding: '16px 20px' }}>
+                <div
+                  key={i}
+                  style={{ ...S.card, display: 'flex', alignItems: 'center', gap: 20, padding: '16px 20px', cursor: 'pointer', transition: 'background 0.15s' }}
+                  onClick={() => { setBrand(g.brand); setTopic(g.topic); setTab('check'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'var(--surface-2)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = S.card.background; }}
+                >
                   <div style={{ flexShrink: 0 }}>
                     <MentionCountBadge count={g.mentionedCount} />
                   </div>
