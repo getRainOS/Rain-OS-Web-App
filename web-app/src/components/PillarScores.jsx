@@ -385,7 +385,7 @@ export default function PillarScores({ result, lane }) {
         </div>
       )}
 
-      <WhatDoesThisMean tagline="AI's structured read of your content — not a raw measurement.">
+      <WhatDoesThisMean tagline="AI's structured read of your content.">
         Gemini reads your content and scores it against a fixed set of criteria for this pillar, the same way each time. It's not counting anything concrete, like word count or load speed — it's a graded read of how well your content works for an AI trying to understand and use it. Because the criteria stay fixed, the score is meaningful to compare across your own pages, or the same page over time, even though it's a judgment rather than a fact.
       </WhatDoesThisMean>
 
