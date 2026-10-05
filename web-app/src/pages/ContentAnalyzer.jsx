@@ -386,8 +386,8 @@ export default function ContentAnalyzer() {
           <div style={{
             marginTop: 16,
             padding: '16px 20px',
-            background: 'rgba(91,95,199,0.06)',
-            border: '1px solid rgba(91,95,199,0.2)',
+            background: 'rgba(255,255,255,0.06)',
+            border: '1px solid rgba(255,255,255,0.2)',
             borderRadius: 12,
             display: 'flex',
             alignItems: 'center',
@@ -407,9 +407,9 @@ export default function ContentAnalyzer() {
               onClick={() => navigate('/citation-monitor')}
               style={{
                 flexShrink: 0,
-                background: 'rgba(91,95,199,0.15)',
-                border: '1px solid rgba(91,95,199,0.35)',
-                color: 'var(--accent)',
+                background: 'rgba(255,255,255,0.08)',
+                border: '1px solid var(--border-strong)',
+                color: 'var(--text)',
                 borderRadius: 8,
                 padding: '8px 16px',
                 fontSize: 13,

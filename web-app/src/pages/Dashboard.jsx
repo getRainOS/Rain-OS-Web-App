@@ -70,11 +70,11 @@ const LANE_DEFAULT_ROUTES = {
 };
 
 const LANE_VISUALS = {
-  general:         { color: '#5b5fc7', Icon: FileText },
-  product_sellers: { color: '#5b5fc7', Icon: SearchCheck },
-  vibe_coders:     { color: '#8f93c7', Icon: GitBranch },
-  developers:      { color: '#8f93c7', Icon: GitBranch },
-  local_business:  { color: '#5b5fc7', Icon: MapIcon },
+  general:         { color: '#f5f5f5', Icon: FileText },
+  product_sellers: { color: '#f5f5f5', Icon: SearchCheck },
+  vibe_coders:     { color: '#f5f5f5', Icon: GitBranch },
+  developers:      { color: '#f5f5f5', Icon: GitBranch },
+  local_business:  { color: '#f5f5f5', Icon: MapIcon },
 };
 const LANES = LANE_META.map(l => ({ ...l, ...LANE_VISUALS[l.id] }));
 
@@ -379,7 +379,7 @@ function LaneSelector({ onSelect }) {
             onClick={() => onSelect(lane.id)}
           >
             <div className={styles.laneCardIcon}>
-              <lane.Icon size={15} style={{ color: 'var(--accent)' }} />
+              <lane.Icon size={15} style={{ color: 'var(--text)' }} />
             </div>
             <div className={styles.laneCardLabel}>{lane.label}</div>
             <div className={styles.laneCardDesc}>{lane.desc}</div>
@@ -756,7 +756,7 @@ export default function Dashboard() {
           <p className={styles.headerSub}>
             {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
             {' · '}
-            <Link to="/history" style={{ color: 'var(--accent)' }} title="Rows in the analysis history table (includes all saved analyses). 'API Usage' shows counted API calls against your plan and may exclude imports or manual inserts.">You have a library of {totalCount ?? history.length} pieces analyzed</Link>
+            <Link to="/history" style={{ color: 'var(--text)', textDecoration: 'underline', textUnderlineOffset: '2px' }} title="Rows in the analysis history table (includes all saved analyses). 'API Usage' shows counted API calls against your plan and may exclude imports or manual inserts.">You have a library of {totalCount ?? history.length} pieces analyzed</Link>
           </p>
         </div>
         <button onClick={() => navigate(typeRoute)} className={styles.newBtn}>
@@ -920,7 +920,7 @@ export default function Dashboard() {
             className={`${styles.framingBtn} ${!isBusinessFraming ? styles.framingBtnActive : ''}`}
             onClick={() => changeMetricsFraming('brand')}
           >
-            Brand
+            Brand Signals
           </button>
           <button
             type="button"
@@ -929,7 +929,7 @@ export default function Dashboard() {
             className={`${styles.framingBtn} ${isBusinessFraming ? styles.framingBtnActive : ''}`}
             onClick={() => changeMetricsFraming('business')}
           >
-            Business
+            Business Signals
           </button>
         </div>
       </div>

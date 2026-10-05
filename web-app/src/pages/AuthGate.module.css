@@ -12,8 +12,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(91,95,199,0.18) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 30% at 80% 90%, rgba(91,95,199,0.06) 0%, transparent 70%);
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(255,255,255,0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 80% 90%, rgba(255,255,255,0.06) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -38,7 +38,7 @@
 }
 
 .logoText {
-  color: var(--accent);
+  color: var(--text);
 }
 
 .logoOS {
@@ -93,8 +93,8 @@
 }
 
 .input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(91,95,199,0.15);
+  border-color: var(--text);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.15);
 }
 
 .input::placeholder {
@@ -126,7 +126,7 @@
 }
 
 .link {
-  color: var(--accent);
+  color: var(--text);
 }
 
 .link:hover {

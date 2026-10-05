@@ -548,7 +548,7 @@ export default function UrlScanner() {
           borderRadius: 'var(--radius-sm)',
           padding: '14px 16px',
         }}>
-          <div style={{ color: 'var(--accent)', fontWeight: 600, marginBottom: '8px' }}>
+          <div style={{ color: 'var(--text)', fontWeight: 600, marginBottom: '8px' }}>
             Don't have a URL yet? Your app is probably already running somewhere — here's where to find the link:
           </div>
           <ul style={{ marginTop: '6px', paddingLeft: '18px', lineHeight: 1.7 }}>
@@ -571,7 +571,7 @@ export default function UrlScanner() {
           borderRadius: 'var(--radius-sm)',
           padding: '10px 14px',
         }}>
-          <summary style={{ cursor: 'pointer', color: 'var(--accent)', fontWeight: 500 }}>
+          <summary style={{ cursor: 'pointer', color: 'var(--text)', fontWeight: 500 }}>
             Don't have a URL yet? Find your preview link →
           </summary>
           <div style={{ marginTop: '10px', lineHeight: 1.6 }}>
@@ -733,8 +733,8 @@ export default function UrlScanner() {
           <div style={{
             marginTop: 16,
             padding: '16px 20px',
-            background: 'rgba(91,95,199,0.06)',
-            border: '1px solid rgba(91,95,199,0.2)',
+            background: 'rgba(255,255,255,0.06)',
+            border: '1px solid rgba(255,255,255,0.2)',
             borderRadius: 12,
             display: 'flex',
             alignItems: 'center',
@@ -754,9 +754,9 @@ export default function UrlScanner() {
               to="/citation-monitor"
               style={{
                 flexShrink: 0,
-                background: 'rgba(91,95,199,0.15)',
-                border: '1px solid rgba(91,95,199,0.35)',
-                color: 'var(--accent)',
+                background: 'rgba(255,255,255,0.08)',
+                border: '1px solid var(--border-strong)',
+                color: 'var(--text)',
                 borderRadius: 8,
                 padding: '8px 16px',
                 fontSize: 13,

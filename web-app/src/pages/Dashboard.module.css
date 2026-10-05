@@ -39,11 +39,11 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 10px 18px;
-  background: var(--accent);
+  padding: 9px 16px;
+  background: var(--text);
   border: none;
-  border-radius: 8px;
-  color: #fff;
+  border-radius: var(--radius-sm);
+  color: var(--bg);
   font-size: 13.5px;
   font-weight: 600;
   cursor: pointer;
@@ -53,7 +53,7 @@
 }
 
 .newBtn:hover {
-  background: #4c4fa5;
+  background: rgba(255,255,255,0.82);
 }
 
 .newBtnIcon {
@@ -149,8 +149,8 @@
 
 .toolCardInfo:hover {
   background: rgba(255,255,255,0.1);
-  border-color: var(--accent);
-  color: var(--accent);
+  border-color: var(--text);
+  color: var(--text);
 }
 
 /* Tooltip */
@@ -235,7 +235,7 @@
 
 .toolCardBarFill {
   height: 100%;
-  background: var(--accent);
+  background: var(--text-muted);
   border-radius: 2px;
   transition: width 0.4s ease;
 }
@@ -373,7 +373,7 @@
 
 .insightAction {
   font-size: 11.5px;
-  color: var(--accent);
+  color: var(--text);
   white-space: nowrap;
   font-weight: 600;
 }
@@ -482,8 +482,8 @@
 
 .chartHelp:hover {
   background: rgba(255,255,255,0.08);
-  border-color: var(--accent);
-  color: var(--accent);
+  border-color: var(--text);
+  color: var(--text);
 }
 
 .framingToggle {
@@ -492,7 +492,7 @@
   gap: 2px;
   background: var(--surface-2);
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: 7px;
   padding: 3px;
   flex-shrink: 0;
 }
@@ -500,7 +500,7 @@
 .framingBtn {
   background: transparent;
   border: none;
-  border-radius: 999px;
+  border-radius: 5px;
   color: var(--text-dim);
   font-family: inherit;
   font-size: 12px;
@@ -513,8 +513,8 @@
 .framingBtn:hover { color: var(--text); }
 
 .framingBtnActive {
-  background: var(--accent);
-  color: #fff;
+  background: var(--text);
+  color: var(--bg);
 }
 
 .pillarTagline {
@@ -585,7 +585,7 @@
 }
 
 .emptyLink {
-  color: var(--accent);
+  color: var(--text);
   font-size: 12px;
   font-weight: 600;
 }
@@ -649,7 +649,7 @@ button.emptyLink {
 }
 
 .filterClear {
-  color: var(--accent);
+  color: var(--text);
   font-size: 12px;
   font-weight: 600;
   background: none;
@@ -828,7 +828,7 @@ button.emptyLink {
 
 .viewAll {
   font-size: 12px;
-  color: var(--accent);
+  color: var(--text);
   font-weight: 600;
   white-space: nowrap;
   align-self: flex-start;
@@ -1304,7 +1304,7 @@ button.emptyLink {
 }
 
 .laneCard:hover {
-  border-color: rgba(91,95,199,0.35);
+  border-color: rgba(255,255,255,0.35);
   background: var(--surface-2);
 }
 
@@ -1315,8 +1315,8 @@ button.emptyLink {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(91,95,199,0.08);
-  border: 1px solid rgba(91,95,199,0.14);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
   margin-bottom: 4px;
   flex-shrink: 0;
 }
@@ -1338,7 +1338,7 @@ button.emptyLink {
 .laneCardCta {
   font-size: 11px;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--text);
   margin-top: 4px;
   opacity: 0;
   transition: opacity 0.15s;

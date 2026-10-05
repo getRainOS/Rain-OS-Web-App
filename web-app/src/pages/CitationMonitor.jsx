@@ -560,7 +560,7 @@ function MapEmptyViz() {
       <line x1="6" y1="72" x2="96" y2="72" stroke="var(--border)" strokeWidth="1" />
       <line x1="6" y1="6" x2="6" y2="72" stroke="var(--border)" strokeWidth="1" />
       {dots.map((d, i) => (
-        <circle key={i} cx={d.x} cy={d.y} r={d.big ? 3.5 : 2.5} fill="var(--accent)" opacity={d.big ? 0.4 : 0.22} />
+        <circle key={i} cx={d.x} cy={d.y} r={d.big ? 3.5 : 2.5} fill="var(--text)" opacity={d.big ? 0.4 : 0.22} />
       ))}
     </svg>
   );
@@ -610,7 +610,7 @@ function MapSummaryPanel({ map, history, loading }) {
   return (
     <div className={`card ${styles.mapSummaryCard}`}>
       <h3 className={styles.sectionTitle}>
-        <MapIcon style={{ width: 14, height: 14, color: 'var(--accent)' }} />
+        <MapIcon style={{ width: 14, height: 14, color: 'var(--text)' }} />
         Competitor Map
         <span className={styles.sectionCount}>{domains.length}</span>
       </h3>
@@ -689,7 +689,7 @@ function MapDetailSection({ map }) {
         <div className={`card ${styles.mapCard}`}>
           <div className={styles.mapCardHeader}>
             <h3 className={styles.sectionTitle}>
-              <Trophy style={{ width: 14, height: 14, color: 'var(--accent)' }} />
+              <Trophy style={{ width: 14, height: 14, color: 'var(--text)' }} />
               Domains dominating your topics
               <span className={styles.sectionCount}>{domains.length}</span>
             </h3>
@@ -771,7 +771,7 @@ function MapDetailSection({ map }) {
         <div className={`card ${styles.mapCard}`}>
           <div className={styles.mapCardHeader}>
             <h3 className={styles.sectionTitle}>
-              <Globe style={{ width: 14, height: 14, color: 'var(--accent)' }} />
+              <Globe style={{ width: 14, height: 14, color: 'var(--text)' }} />
               Where citations come from
               <span className={styles.sectionCount}>{regions.length}</span>
             </h3>
