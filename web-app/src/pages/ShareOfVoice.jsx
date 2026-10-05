@@ -397,7 +397,7 @@ export default function ShareOfVoice() {
                   <div style={S.hint}>Use your name as people write it publicly.</div>
                 </div>
                 <div>
-                  <label style={S.label}>Topic / query to check</label>
+                  <label style={S.label}>Question or Prompt to Determine Share of Voice For</label>
                   <input style={S.input} type="text" value={topic} onChange={e => setTopic(e.target.value)}
                     placeholder="e.g. AI content optimization tools" maxLength={300} required />
                 </div>

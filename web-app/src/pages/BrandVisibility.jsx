@@ -424,7 +424,7 @@ export default function BrandVisibility() {
               <div style={S.hint}>Use your name as people write it publicly.</div>
             </div>
             <div>
-              <label style={S.label}>Topic or keyword</label>
+              <label style={S.label}>Question or Prompt to View Sentiment For</label>
               <input
                 style={S.input}
                 value={topic}
