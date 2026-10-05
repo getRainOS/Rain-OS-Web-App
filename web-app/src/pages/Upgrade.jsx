@@ -118,7 +118,7 @@ export default function Upgrade() {
     setError('');
     setPortalLoading(true);
     try {
-      const { data } = await api.createBillingPortal(window.location.origin + '//upgrade');
+      const { data } = await api.createBillingPortal(window.location.origin + '/upgrade');
       if (data?.url) {
         window.location.href = data.url;
       } else {
