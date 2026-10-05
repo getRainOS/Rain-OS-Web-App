@@ -793,6 +793,24 @@ export default function Dashboard() {
         ) : null}
       </div>
 
+      {/* ── Create Content hero ── */}
+      <div className={styles.contentHero}>
+        <div className={styles.contentHeroIcon}>
+          <Sparkles size={18} />
+        </div>
+        <h2 className={styles.contentHeroTitle}>Create content that increases your AI visibility</h2>
+        <p className={styles.contentHeroSub}>
+          Paste a draft and score it against the same signals AI engines use to decide what to cite — then fix what's holding it back.
+        </p>
+        <button onClick={() => navigate('/analyze')} className={`btn btn-primary ${styles.contentHeroBtn}`}>
+          Open Content Optimizer
+          <ArrowRight size={14} />
+        </button>
+        <span className={styles.contentHeroCaption}>
+          <Sparkles size={11} /> Scored in seconds, not days
+        </span>
+      </div>
+
       {/* ── Pillar Breakdown (above the fold, full-width hero) ── */}
       <div className={`${styles.chartCard} ${styles.dottedBg}`} style={{ marginBottom: 12 }}>
         <div className={styles.chartHeader}>

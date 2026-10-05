@@ -61,6 +61,61 @@
   height: 15px;
 }
 
+/* ── Create Content hero ── */
+.contentHero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 36px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.contentHeroIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.contentHeroTitle {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  color: var(--text);
+  max-width: 480px;
+  line-height: 1.25;
+}
+
+.contentHeroSub {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  max-width: 460px;
+  line-height: 1.6;
+}
+
+.contentHeroBtn {
+  margin-top: 6px;
+}
+
+.contentHeroCaption {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
 /* ── Tool Snapshot Cards ── */
 .toolCards {
   display: grid;
