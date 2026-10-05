@@ -261,7 +261,7 @@ export default function Settings() {
           )}
 
           <p className={styles.wpHint}>
-            Requires a GitHub OAuth App. Set <strong>GITHUB_CLIENT_ID</strong> and <strong>GITHUB_CLIENT_SECRET</strong> in your backend environment.
+            You'll authorize access on GitHub's site — nothing to configure here.
           </p>
         </div>
 
