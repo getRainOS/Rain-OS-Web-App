@@ -26,6 +26,7 @@
   --text: #f5f5f5;
   --text-muted: rgba(255,255,255,0.50);
   --text-dim: rgba(255,255,255,0.30);
+  --text-faint: rgba(255,255,255,0.18);
 
   /* ── Pillar / status colors: muted, professional ── */
   --cyan:   #38bdf8;
@@ -35,9 +36,19 @@
   --red:    #f87171;
   --yellow: #fbbf24;
 
+  /* ── Semantic aliases — same palette, named by meaning so callers don't
+     reach for a color that happens to look right ── */
+  --success: var(--green);
+  --warning: var(--yellow);
+  --danger:  var(--red);
+
+  /* ── Interactive surface states ── */
+  --surface-hover: rgba(255,255,255,0.05);
+
   /* ── Geometry ── */
   --radius:    12px;
   --radius-sm: 8px;
+  --radius-lg: 16px;
   --sidebar-w: 220px;
 }
 
