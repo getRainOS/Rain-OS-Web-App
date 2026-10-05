@@ -1,4 +1,4 @@
-export const SHARE_COLORS = ['var(--accent)', 'var(--cyan)', 'var(--green)', 'var(--orange)', 'var(--purple)', 'var(--yellow)'];
+export const SHARE_COLORS = ['#00F0FF', '#39FF88', '#FF9D00', '#B026FF', '#FF2E9A', '#FFEE00'];
 export const SHARE_OTHER_COLOR = 'var(--text-dim)';
 
 export function buildCitationShare(result) {
