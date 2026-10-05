@@ -14,7 +14,46 @@
   flex-direction: column;
   padding: 20px 0;
   overflow-y: auto;
-  transition: transform 0.25s ease;
+  transition: transform 0.25s ease, width 0.2s ease;
+}
+
+@media (min-width: 769px) {
+  .sidebar.collapsed {
+    width: 64px;
+  }
+  .sidebar.collapsed .brand {
+    padding: 0 8px 20px;
+  }
+  .sidebar.collapsed .nav {
+    padding: 0 8px;
+  }
+  .sidebar.collapsed .navItem {
+    justify-content: center;
+    padding: 9px;
+  }
+  .sidebar.collapsed .navItemLabel,
+  .sidebar.collapsed .navLabelRow,
+  .sidebar.collapsed .laneChipLabel,
+  .sidebar.collapsed .laneChangeBtn,
+  .sidebar.collapsed .lanePrompt span,
+  .sidebar.collapsed .noLaneMessage,
+  .sidebar.collapsed .userInfo,
+  .sidebar.collapsed .collapseBtn span,
+  .sidebar.collapsed .upgradeBtn span,
+  .sidebar.collapsed .logoutBtn span {
+    display: none;
+  }
+  .sidebar.collapsed .laneChip,
+  .sidebar.collapsed .lanePrompt {
+    justify-content: center;
+    padding: 6px;
+  }
+  .sidebar.collapsed .bottom {
+    padding: 16px 8px 0;
+  }
+  .sidebar.collapsed .userRow {
+    justify-content: center;
+  }
 }
 
 .mobileMenuBtn {
@@ -85,6 +124,7 @@
   font-weight: 700;
   letter-spacing: -0.5px;
   color: var(--text);
+  margin-left: -2px;
 }
 
 .brandAccent { color: var(--cyan); }
@@ -285,6 +325,34 @@
 .logoutBtn:hover {
   background: rgba(255,255,255,0.05);
   color: var(--text);
+}
+
+.collapseBtn {
+  width: 100%;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.collapseBtn:hover {
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+}
+
+@media (max-width: 768px) {
+  .collapseBtn {
+    display: none;
+  }
 }
 
 .limitCta {

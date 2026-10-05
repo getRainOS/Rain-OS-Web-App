@@ -6,6 +6,7 @@ import { supabase } from '../lib/supabase.js';
 import {
   LayoutDashboard, FileText, Globe, GitBranch, Radar, Eye,
   BarChart2, Settings, ArrowUp, LogOut, Wand2, Menu, X,
+  ChevronLeft, ChevronRight,
 } from 'lucide-react';
 import KnowledgeBase from './KnowledgeBase.jsx';
 import { urlScannerLabel } from '../lib/laneLabels.js';
@@ -88,6 +89,17 @@ export default function Layout({ children }) {
   const navigate = useNavigate();
   const [usage, setUsage] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    try { return localStorage.getItem('rain_os_sidebar_collapsed') === '1'; } catch { return false; }
+  });
+
+  function toggleCollapsed() {
+    setCollapsed(c => {
+      const next = !c;
+      try { localStorage.setItem('rain_os_sidebar_collapsed', next ? '1' : '0'); } catch {}
+      return next;
+    });
+  }
 
   useEffect(() => {
     api.me()
@@ -128,9 +140,11 @@ export default function Layout({ children }) {
         {menuOpen ? <X style={{ width: 18, height: 18 }} /> : <Menu style={{ width: 18, height: 18 }} />}
       </button>
       <div className={`${styles.overlay} ${menuOpen ? styles.show : ''}`} onClick={() => setMenuOpen(false)} />
-      <aside className={`${styles.sidebar} ${menuOpen ? styles.open : ''}`}>
+      <aside className={`${styles.sidebar} ${menuOpen ? styles.open : ''} ${collapsed ? styles.collapsed : ''}`}>
         <div className={styles.brand}>
-          <span className={styles.brandWordmark}>r<span className={styles.brandAccent}>ai</span>n</span>
+          {collapsed
+            ? <span className={styles.brandWordmark}>r</span>
+            : <span className={styles.brandWordmark}>r<span className={styles.brandAccent}>ai</span>n</span>}
         </div>
 
         <nav className={styles.nav} onClick={() => setMenuOpen(false)}>
@@ -181,10 +195,21 @@ export default function Layout({ children }) {
           </div>
         </nav>
 
-        <KnowledgeBase />
+        {!collapsed && <KnowledgeBase />}
 
         <div className={styles.bottom}>
-          {usage && (
+          <button
+            className={styles.collapseBtn}
+            onClick={toggleCollapsed}
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            {collapsed
+              ? <ChevronRight style={{ width: 14, height: 14 }} />
+              : <ChevronLeft style={{ width: 14, height: 14 }} />}
+            <span>{collapsed ? 'Expand' : 'Collapse'}</span>
+          </button>
+
+          {usage && !collapsed && (
             <div className={styles.usageBox}>
               <div className={styles.usageRow}>
                 <span className={styles.usageLabel}>
@@ -233,12 +258,12 @@ export default function Layout({ children }) {
             {isFree && (
               <NavLink to="/upgrade" className={styles.upgradeBtn}>
                 <ArrowUp style={{ width: 12, height: 12 }} />
-                Upgrade
+                <span>Upgrade</span>
               </NavLink>
             )}
             <button onClick={handleLogout} className={styles.logoutBtn}>
               <LogOut style={{ width: 12, height: 12, opacity: 0.6 }} />
-              Sign out
+              <span>Sign out</span>
             </button>
           </div>
         </div>
@@ -253,11 +278,15 @@ export default function Layout({ children }) {
 
 function NavItem({ to, label, Icon, tooltip }) {
   const [show, setShow] = useState(false);
-  const [y, setY] = useState(0);
+  const [pos, setPos] = useState({ top: 0, left: 232 });
 
   return (
     <div className={styles.navItemWrap}
-      onMouseEnter={(e) => { setShow(true); setY(e.currentTarget.getBoundingClientRect().top + 10); }}
+      onMouseEnter={(e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        setShow(true);
+        setPos({ top: r.top + 10, left: r.right + 10 });
+      }}
       onMouseLeave={() => setShow(false)}
     >
       <NavLink
@@ -267,10 +296,10 @@ function NavItem({ to, label, Icon, tooltip }) {
         }
       >
         <Icon className={styles.navIcon} />
-        {label}
+        <span className={styles.navItemLabel}>{label}</span>
       </NavLink>
       {show && tooltip && (
-        <div className={styles.navTooltip} style={{ top: y }}>
+        <div className={styles.navTooltip} style={{ top: pos.top, left: pos.left }}>
           {tooltip}
         </div>
       )}
