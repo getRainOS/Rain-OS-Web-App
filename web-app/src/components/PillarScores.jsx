@@ -5,9 +5,12 @@ import { PILLAR_COLORS } from '../lib/pillarColors.js';
 
 // A Gemini-judged sub-score (0-100) at or above this counts as a "pass" in
 // the breakdown below. The raw number is never shown — only pass/fail — so
-// the underlying scoring formula isn't exposed. Used for every pillar except
-// AI Readability on fresh analyses, which is deterministic instead — see
-// READABILITY_METRIC_ITEMS.
+// the underlying scoring formula isn't exposed; Gemini's number is a
+// judgment, not a fact, and varies run to run, unlike the fixed-point values
+// below. Used for every pillar except AI Readability, Product
+// Discoverability, and Local Presence on fresh analyses, which ground their
+// breakdowns in real algorithmic/schema signals instead — see
+// READABILITY_METRIC_ITEMS and the technical_signals branches below.
 const SUBITEM_PASS_THRESHOLD = 60;
 
 // Repo Analysis has no Gemini-judged sub-scores — it scores pillars from
@@ -63,22 +66,45 @@ const REPO_SIGNAL_GROUPS = {
   // shown for it (filtered out in visiblePillars), so no entry needed here.
 };
 
+// A continuous 0-100 score graded around a metric's own pass/fail threshold
+// (T) — the same T these items used to gate on. Well inside the passing
+// zone (0.6x T for a lower-is-better metric, 1.6x T for higher-is-better)
+// scores 100; well past the threshold in the failing direction (1.6x / 0.4x
+// respectively) scores 0; linear, clamped, in between. This replaces the
+// binary check/X with a real fixed-point value without inventing a new
+// formula — every anchor is the threshold already reviewed for that metric.
+function gradedScore(value, threshold, higherIsBetter) {
+  const good = higherIsBetter ? threshold * 1.6 : threshold * 0.6;
+  const bad = higherIsBetter ? threshold * 0.4 : threshold * 1.6;
+  const t = (value - bad) / (good - bad);
+  return Math.round(Math.min(1, Math.max(0, t)) * 100);
+}
+
 // AI Readability's breakdown for Content Analyzer and URL Scanner is built
 // from these — the same algorithmic metrics (computeReadabilityMetrics)
 // Gemini itself is grounded on as hard scoring anchors, not from Gemini's
 // own judged 0-100 numbers. That makes the breakdown deterministic: the
-// same content always produces the same pass/fail list, independent of any
-// LLM run-to-run variance. Thresholds mirror the anchors already stated in
-// readability.ts's formatMetricsAsGroundingBlock.
+// same content always produces the same fixed-point values, independent of
+// any LLM run-to-run variance. Thresholds mirror the anchors already stated
+// in readability.ts's formatMetricsAsGroundingBlock.
 const READABILITY_METRIC_ITEMS = [
-  { label: 'Average Sentence Length ≤25 Words', pass: m => m.avgSentenceLength <= 25 },
-  { label: 'Long Sentences Under 20% Of Content', pass: m => m.longSentenceRatio <= 0.20 },
-  { label: 'Passive Voice Under 30%', pass: m => m.passiveVoiceRatio <= 0.30 },
-  { label: 'Minimal Ambiguous Pronouns', pass: m => m.wordCount === 0 || (m.coreferenceLeakCount / m.wordCount) <= 0.03 },
-  { label: 'Low Vague/Abstract Language', pass: m => m.abstractionRatio <= 0.05 },
-  { label: 'Clause Nesting Under Control', pass: m => m.nestedClauseDepth <= 3 },
-  { label: 'Headings Present', pass: m => m.headingDensity >= 0.5 },
-  { label: 'Strong Answer-First Structure', pass: m => m.answerFirstRatio > 0.4 },
+  { label: 'Average Sentence Length', threshold: 25, higherIsBetter: false,
+    raw: m => m.avgSentenceLength, format: v => `${v.toFixed(1)} words (target ≤25)` },
+  { label: 'Long Sentence Ratio', threshold: 0.20, higherIsBetter: false,
+    raw: m => m.longSentenceRatio, format: v => `${Math.round(v * 100)}% of sentences >30 words (target ≤20%)` },
+  { label: 'Passive Voice', threshold: 0.30, higherIsBetter: false,
+    raw: m => m.passiveVoiceRatio, format: v => `${Math.round(v * 100)}% passive (target ≤30%)` },
+  { label: 'Ambiguous Pronouns', threshold: 0.03, higherIsBetter: false,
+    raw: m => (m.wordCount === 0 ? 0 : m.coreferenceLeakCount / m.wordCount),
+    format: v => `${(v * 100).toFixed(1)}% of words (target ≤3%)` },
+  { label: 'Vague/Abstract Language', threshold: 0.05, higherIsBetter: false,
+    raw: m => m.abstractionRatio, format: v => `${Math.round(v * 100)}% of words (target ≤5%)` },
+  { label: 'Clause Nesting', threshold: 3, higherIsBetter: false,
+    raw: m => m.nestedClauseDepth, format: v => `${v.toFixed(1)} commas/sentence (target ≤3)` },
+  { label: 'Heading Density', threshold: 0.5, higherIsBetter: true,
+    raw: m => m.headingDensity, format: v => `${v.toFixed(2)} per 100 words (target ≥0.5)` },
+  { label: 'Answer-First Structure', threshold: 0.4, higherIsBetter: true,
+    raw: m => m.answerFirstRatio, format: v => `${Math.round(v * 100)}% (target >40%)` },
 ];
 
 // Product Discoverability / Local Presence breakdowns for URL Scanner are
@@ -169,19 +195,24 @@ function camelToLabel(key) {
 
 /**
  * robots.txt Present + one item per AI crawler (GPTBot, ClaudeBot,
- * Google-Extended, PerplexityBot), pass/fail only. Only meaningful under AI
- * Readability, and only when the tool actually has a domain to check —
+ * Google-Extended, PerplexityBot) — a binary network check, so its "real
+ * fixed-point value" is 0 or 100, not a graded score. Only meaningful under
+ * AI Readability, and only when the tool actually has a domain to check —
  * Content Analyzer has no URL at all, so both args are undefined there and
- * this returns nothing.
+ * this returns nothing. `numeric` picks the item shape: the deterministic
+ * readability_metrics path renders numeric chips alongside its other
+ * fixed-point items, while Repo Analysis's REPO_SIGNAL_GROUPS path (the
+ * only other caller) still renders plain pass/fail chips.
  */
-function buildCrawlerItems(hasRobotsTxt, aiCrawlerAccess) {
+function buildCrawlerItems(hasRobotsTxt, aiCrawlerAccess, numeric = false) {
   const items = [];
+  const item = (label, ok) => numeric ? { label, value: ok ? 100 : 0 } : { label, pass: ok };
   if (hasRobotsTxt !== undefined) {
-    items.push({ label: 'robots.txt Present', pass: !!hasRobotsTxt });
+    items.push(item('robots.txt Present', !!hasRobotsTxt));
   }
   if (Array.isArray(aiCrawlerAccess)) {
     for (const c of aiCrawlerAccess) {
-      items.push({ label: `${c.crawler} Access`, pass: c.access !== 'blocked' });
+      items.push(item(`${c.crawler} Access`, c.access !== 'blocked'));
     }
   }
   return items;
@@ -226,9 +257,12 @@ function buildSubItems(pillarKey, detailKey, result) {
   // threshold below, same as before.
   if (pillarKey === 'ai_readability' && result?.readability_metrics) {
     const m = result.readability_metrics;
-    items = READABILITY_METRIC_ITEMS.map(item => ({ label: item.label, pass: item.pass(m) }));
+    items = READABILITY_METRIC_ITEMS.map(item => {
+      const raw = item.raw(m);
+      return { label: item.label, value: gradedScore(raw, item.threshold, item.higherIsBetter), caption: item.format(raw) };
+    });
     return items.concat(
-      buildCrawlerItems(result?.technical_signals?.hasRobotsTxt, result?.technical_signals?.aiCrawlerAccess)
+      buildCrawlerItems(result?.technical_signals?.hasRobotsTxt, result?.technical_signals?.aiCrawlerAccess, true)
     );
   }
 
@@ -236,20 +270,23 @@ function buildSubItems(pillarKey, detailKey, result) {
   // schema fields URL Scanner actually found, when it ran (technical_signals
   // only exists for URL Scanner — Content Analyzer has no URL to check and
   // falls through to the Gemini-judged threshold below, same as before).
+  // Each field is a real present/absent fact, not a graded judgment, so its
+  // fixed-point value is 0 or 100 — honest about what's actually known,
+  // same as before when it was a checkmark, just numeric now.
   if (pillarKey === 'product_discoverability' && result?.technical_signals) {
     const sig = result.technical_signals;
-    if (!sig.hasProductSchema) return [{ label: 'Product Schema Present', pass: false }];
+    if (!sig.hasProductSchema) return [{ label: 'Product Schema Present', value: 0 }];
     return [
-      { label: 'Product Schema Present', pass: true },
-      ...PRODUCT_SCHEMA_FIELD_ITEMS.map(item => ({ label: item.label, pass: !!sig[item.key] })),
+      { label: 'Product Schema Present', value: 100 },
+      ...PRODUCT_SCHEMA_FIELD_ITEMS.map(item => ({ label: item.label, value: sig[item.key] ? 100 : 0 })),
     ];
   }
   if (pillarKey === 'local_presence' && result?.technical_signals) {
     const sig = result.technical_signals;
-    if (!sig.hasLocalBusinessSchema) return [{ label: 'LocalBusiness Schema Present', pass: false }];
+    if (!sig.hasLocalBusinessSchema) return [{ label: 'LocalBusiness Schema Present', value: 0 }];
     return [
-      { label: 'LocalBusiness Schema Present', pass: true },
-      ...LOCAL_BUSINESS_SCHEMA_FIELD_ITEMS.map(item => ({ label: item.label, pass: !!sig[item.key] })),
+      { label: 'LocalBusiness Schema Present', value: 100 },
+      ...LOCAL_BUSINESS_SCHEMA_FIELD_ITEMS.map(item => ({ label: item.label, value: sig[item.key] ? 100 : 0 })),
     ];
   }
 
@@ -286,16 +323,31 @@ function SubItemsList({ items }) {
       </button>
       {!collapsed && (
         <div className={styles.subItemsList}>
-          {items.map((item, i) => (
-            <div key={i} className={styles.subItem}>
-              {item.pass ? (
-                <Check size={14} className={styles.subItemPass} />
-              ) : (
-                <X size={14} className={styles.subItemFail} />
-              )}
-              <span className={styles.subItemLabel}>{item.label}</span>
-            </div>
-          ))}
+          {items.map((item, i) =>
+            item.value !== undefined ? (
+              <div key={i} className={`${styles.subItem} ${styles.subItemNumeric}`}>
+                <div className={styles.subItemNumericHeader}>
+                  <span className={styles.subItemLabel}>{item.label}</span>
+                  <span
+                    className={styles.subItemValue}
+                    style={{ color: item.value >= 75 ? 'var(--green)' : item.value >= 50 ? 'var(--yellow)' : 'var(--red)' }}
+                  >
+                    {item.value}
+                  </span>
+                </div>
+                {item.caption && <span className={styles.subItemCaption}>{item.caption}</span>}
+              </div>
+            ) : (
+              <div key={i} className={styles.subItem}>
+                {item.pass ? (
+                  <Check size={14} className={styles.subItemPass} />
+                ) : (
+                  <X size={14} className={styles.subItemFail} />
+                )}
+                <span className={styles.subItemLabel}>{item.label}</span>
+              </div>
+            )
+          )}
         </div>
       )}
     </div>
