@@ -23,9 +23,9 @@
 }
 
 .greeting {
-  font-size: 32px;
+  font-size: 22px;
   font-weight: 700;
-  letter-spacing: -0.6px;
+  letter-spacing: -0.4px;
   color: var(--text);
   margin-bottom: 4px;
 }
@@ -440,6 +440,14 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 28px;
+}
+
+/* ── Dotted grid backdrop (Pillar Breakdown hero) ── */
+.dottedBg {
+  position: relative;
+  background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 16px 16px;
+  background-position: -4px -4px;
 }
 
 .chartHeader {

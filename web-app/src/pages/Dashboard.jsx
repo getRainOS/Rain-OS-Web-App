@@ -794,7 +794,7 @@ export default function Dashboard() {
       </div>
 
       {/* ── Pillar Breakdown (above the fold, full-width hero) ── */}
-      <div className={styles.chartCard} style={{ marginBottom: 12 }}>
+      <div className={`${styles.chartCard} ${styles.dottedBg}`} style={{ marginBottom: 12 }}>
         <div className={styles.chartHeader}>
           <div>
             <h2 className={styles.chartTitle}>Pillar Breakdown</h2>
