@@ -4,13 +4,8 @@ import { useApp } from '../context/AppContext.jsx';
 import { api, getApiKey, clearApiKey } from '../api/client.js';
 import { supabase } from '../lib/supabase.js';
 import { LANES } from '../lib/lanes.js';
+import { PRICE_TO_PLAN } from '../lib/plans.js';
 import styles from './Settings.module.css';
-
-const PRICE_TO_PLAN = {
-  'price_1SeCJH3NMjs4uYdgpi0xB0XN': 'Pro',
-  'price_1SeCKM3NMjs4uYdgcBRhgIhD': 'Business',
-  'price_1SeCHg3NMjs4uYdguOgkr3SQ': 'Free',
-};
 
 export default function Settings() {
   const { user, onLogout, refreshUser, userLane, setUserLane } = useApp();
