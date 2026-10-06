@@ -18,9 +18,6 @@ import { listHandler as historyListHandler, deleteHandler as historyDeleteHandle
 import brandVisibilityHandler, { brandVisHistoryHandler, brandVisDeleteHandler } from './brand-visibility';
 import { sovHandler, sovHistoryHandler, sovDeleteHandler } from './share-of-voice';
 // Auth
-import googleAuthHandler from './auth/google';
-import googleRedirectHandler from './auth/google-redirect';
-import googleCallbackHandler from './auth/google-callback';
 import loginHandler from './auth/login';
 import passwordResetRequestHandler from './auth/password-reset/request';
 import passwordResetSubmitHandler from './auth/password-reset/submit';
@@ -131,9 +128,6 @@ app.get('/api/history/:id', historyGetByIdHandler);
 app.delete('/api/history/:id', historyDeleteHandler);
 app.delete('/v1/api/history/:id', historyDeleteHandler);
 // ─── Auth ──────────────────────────────────────────────────────────────────
-app.post('/api/auth/google', googleAuthHandler);
-app.get( '/api/auth/google', googleRedirectHandler);
-app.get( '/api/auth/google/callback', googleCallbackHandler);
 app.post('/api/auth/login', loginHandler);
 app.post('/api/auth/password-reset/request', passwordResetRequestHandler);
 app.post('/api/auth/password-reset/submit', passwordResetSubmitHandler);
