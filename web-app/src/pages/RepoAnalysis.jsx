@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
@@ -145,6 +145,7 @@ function FixPromptGenerator({ result, repoUrl }) {
 export default function RepoAnalysis() {
   const { user, userLane } = useApp();
   const navigate = useNavigate();
+  const location = useLocation();
   const [repos, setRepos] = useState([]);
   const [connected, setConnected] = useState(false);
   const [reposLoading, setReposLoading] = useState(true);
@@ -165,16 +166,15 @@ export default function RepoAnalysis() {
   }, []);
 
   useEffect(() => {
-    const hash = window.location.hash;
-    if (!hash.includes('github=connected')) return;
-    const params = new URLSearchParams(hash.split('?')[1] || '');
+    const params = new URLSearchParams(location.search);
+    if (params.get('github') !== 'connected') return;
     const login = params.get('login');
     setConnectSuccess(login ? `GitHub connected as @${login}` : 'GitHub connected successfully');
-    // Clean the URL without reloading
-    window.history.replaceState(null, '', window.location.pathname + window.location.search + '/repo-analysis');
+    // Clean the OAuth params out of the URL without reloading
+    window.history.replaceState(null, '', window.location.pathname);
     const t = setTimeout(() => setConnectSuccess(''), 6000);
     return () => clearTimeout(t);
-  }, []);
+  }, [location.search]);
 
   async function handleAnalyze(e) {
     e.preventDefault();

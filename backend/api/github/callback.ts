@@ -29,29 +29,29 @@ export default async function handler(req: express.Request, res: express.Respons
   const { code, state, error } = req.query;
 
   if (error) {
-    return res.redirect(`${APP_URL}/#/settings?github=cancelled`);
+    return res.redirect(`${APP_URL}/settings?github=cancelled`);
   }
 
   if (!code || typeof code !== 'string' || !state || typeof state !== 'string') {
-    return res.redirect(`${APP_URL}/#/settings?github=error&reason=missing_params`);
+    return res.redirect(`${APP_URL}/settings?github=error&reason=missing_params`);
   }
 
   try {
     // Consume the nonce from the DB — verifies the request came from us and retrieves userId
     const userId = await consumeOAuthState(state);
     if (!userId) {
-      return res.redirect(`${APP_URL}/#/settings?github=error&reason=invalid_or_expired_state`);
+      return res.redirect(`${APP_URL}/settings?github=error&reason=invalid_or_expired_state`);
     }
 
     const user = await findUserById(userId);
     if (!user) {
-      return res.redirect(`${APP_URL}/#/settings?github=error&reason=user_not_found`);
+      return res.redirect(`${APP_URL}/settings?github=error&reason=user_not_found`);
     }
 
     const clientId = process.env.GITHUB_CLIENT_ID;
     const clientSecret = process.env.GITHUB_CLIENT_SECRET;
     if (!clientId || !clientSecret) {
-      return res.redirect(`${APP_URL}/#/settings?github=error&reason=not_configured`);
+      return res.redirect(`${APP_URL}/settings?github=error&reason=not_configured`);
     }
 
     // Exchange code for access token
@@ -70,13 +70,13 @@ export default async function handler(req: express.Request, res: express.Respons
     });
 
     if (!tokenRes.ok) {
-      return res.redirect(`${APP_URL}/#/settings?github=error&reason=token_exchange_failed`);
+      return res.redirect(`${APP_URL}/settings?github=error&reason=token_exchange_failed`);
     }
 
     const tokenData = await tokenRes.json() as GitHubTokenResponse;
     if (tokenData.error || !tokenData.access_token) {
       console.error('GitHub token error:', tokenData.error_description);
-      return res.redirect(`${APP_URL}/#/settings?github=error&reason=token_denied`);
+      return res.redirect(`${APP_URL}/settings?github=error&reason=token_denied`);
     }
 
     const accessToken = tokenData.access_token;
@@ -91,7 +91,7 @@ export default async function handler(req: express.Request, res: express.Respons
     });
 
     if (!profileRes.ok) {
-      return res.redirect(`${APP_URL}/#/settings?github=error&reason=profile_fetch_failed`);
+      return res.redirect(`${APP_URL}/settings?github=error&reason=profile_fetch_failed`);
     }
 
     const profile = await profileRes.json() as GitHubUserProfile;
@@ -101,10 +101,10 @@ export default async function handler(req: express.Request, res: express.Respons
     // Save GitHub auth to the user record (token is encrypted inside saveGithubAuth)
     await saveGithubAuth(user.id, githubId, githubLogin, accessToken);
 
-    res.redirect(`${APP_URL}/#/repo-analysis?github=connected&login=${encodeURIComponent(githubLogin)}`);
+    res.redirect(`${APP_URL}/repo-analysis?github=connected&login=${encodeURIComponent(githubLogin)}`);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     console.error('GitHub OAuth callback error:', message);
-    res.redirect(`${APP_URL}/#/settings?github=error&reason=internal_error`);
+    res.redirect(`${APP_URL}/settings?github=error&reason=internal_error`);
   }
 }
