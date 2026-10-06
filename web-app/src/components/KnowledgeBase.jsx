@@ -108,6 +108,8 @@ const KB_DATA = {
       { label: 'URL Scanner',       desc: 'Audit your docs site for meta tags, structured data, and crawler accessibility.' },
       { label: 'Repo Analysis',     desc: 'Score your GitHub repo README, package.json, and source files for AI discoverability.' },
       { label: 'Citation Monitor',  desc: 'Track whether AI coding assistants cite your library when developers ask for solutions.' },
+      { label: 'Brand Sentiment',   desc: 'See how Gemini describes your library or framework when developers ask, using live Google Search grounding.' },
+      { label: 'Share of Voice',    desc: 'See how visible your project is versus alternatives when Gemini answers developer questions, using live Google Search grounding.' },
       { label: 'Score History',     desc: 'Track every docs revision and see which structural changes improved your score.' },
     ],
     tips: [
@@ -133,8 +135,10 @@ const KB_DATA = {
     tools: [
       { label: 'Content Optimizer', desc: 'Paste your website content or GBP description to score it for local AI visibility.' },
       { label: 'URL Scanner',       desc: 'Audit your site for local schema, NAP consistency, and mobile usability.' },
+      { label: 'Repo Analysis',     desc: 'If your site or booking app has a codebase, connect your GitHub repo to score it for AI discoverability too.' },
       { label: 'Citation Monitor',  desc: 'Check if AI recommends your business when local customers ask for services you offer.' },
       { label: 'Brand Sentiment',   desc: 'See how Gemini describes your local business, using live Google Search grounding — are the facts and sentiment correct?' },
+      { label: 'Share of Voice',    desc: 'See how often AI recommends your business over nearby competitors when customers are deciding who to call.' },
       { label: 'Score History',     desc: 'Track every local analysis and monitor your local AI visibility over time.' },
     ],
     tips: [
