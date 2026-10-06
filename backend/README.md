@@ -45,9 +45,6 @@ STRIPE_WEBHOOK_SECRET="whsec_..."
 
 # Application Security
 ENCRYPTION_SECRET="a_random_32_character_string_for_db_encryption"
-
-# (Optional) Google OAuth Client ID
-GOOGLE_CLIENT_ID="your_google_client_id.apps.googleusercontent.com"
 ```
 
 ### 3. Database Setup

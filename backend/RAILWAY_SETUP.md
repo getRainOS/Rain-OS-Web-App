@@ -51,13 +51,6 @@ Set these in Railway → your service → **Variables**:
 | `GITHUB_CLIENT_ID` | GitHub OAuth App client ID |
 | `GITHUB_CLIENT_SECRET` | GitHub OAuth App client secret |
 
-### Google OAuth (if used)
-| Variable | Description |
-|---|---|
-| `GOOGLE_CLIENT_ID` | Google OAuth client ID |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
-| `GOOGLE_CALLBACK_URL` | OAuth callback URL |
-
 ### Security
 | Variable | Description |
 |---|---|
