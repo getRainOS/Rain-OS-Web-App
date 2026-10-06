@@ -10,13 +10,8 @@ import {
 } from 'lucide-react';
 import KnowledgeBase from './KnowledgeBase.jsx';
 import { urlScannerLabel } from '../lib/laneLabels.js';
+import { PRICE_TO_PLAN } from '../lib/plans.js';
 import styles from './Layout.module.css';
-
-const PRICE_TO_PLAN = {
-  'price_1SeCJH3NMjs4uYdgpi0xB0XN': 'Pro',
-  'price_1SeCKM3NMjs4uYdgcBRhgIhD': 'Business',
-  'price_1SeCHg3NMjs4uYdguOgkr3SQ': 'Free',
-};
 
 const LANE_META = {
   general:         { label: 'Writers & Marketers',    color: '#f5f5f5' },

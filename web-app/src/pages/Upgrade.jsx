@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext.jsx';
 import { api } from '../api/client.js';
+import { PRICE_IDS, PRICE_TO_PLAN } from '../lib/plans.js';
 import styles from './Upgrade.module.css';
 
 
@@ -10,7 +11,7 @@ const PLANS = [
     name: 'Free',
     price: '$0',
     period: '',
-    priceId: 'price_1SeCHg3NMjs4uYdguOgkr3SQ',
+    priceId: PRICE_IDS.FREE,
     description: 'Try Rain OS and see how AI reads your content.',
     color: 'var(--text-muted)',
     limit: '5 checks total',
@@ -31,7 +32,7 @@ const PLANS = [
     name: 'Pro',
     price: '$29',
     period: '/ month',
-    priceId: 'price_1SeCJH3NMjs4uYdgpi0xB0XN',
+    priceId: PRICE_IDS.PRO,
     description: 'Everything in Free, plus the full AEO suite for content creators and growing brands.',
     color: 'var(--text)',
     featured: true,
@@ -53,7 +54,7 @@ const PLANS = [
     name: 'Business',
     price: '$99',
     period: '/ month',
-    priceId: 'price_1SeCKM3NMjs4uYdgcBRhgIhD',
+    priceId: PRICE_IDS.BUSINESS,
     description: 'Premium AI intelligence for scaling brands and agencies.',
     color: 'var(--text)',
     limit: '500 checks / month',
@@ -79,8 +80,7 @@ export default function Upgrade() {
 
   function getCurrentPlanName() {
     if (!currentPriceId) return 'Free';
-    const match = PLANS.find(p => p.priceId === currentPriceId);
-    return match?.name ?? 'Free';
+    return PRICE_TO_PLAN[currentPriceId] ?? 'Free';
   }
 
   const currentPlan = getCurrentPlanName();

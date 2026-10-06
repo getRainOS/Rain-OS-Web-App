@@ -4,6 +4,7 @@ import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
 import ArtifactBlock from '../components/ArtifactBlock.jsx';
+import CitationCrossPromo from '../components/CitationCrossPromo.jsx';
 import { urlScannerLabel } from '../lib/laneLabels.js';
 import styles from './UrlScanner.module.css';
 
@@ -540,18 +541,18 @@ export default function UrlScanner() {
       </div>
 
       {userLane === 'vibe_coders' ? (
-        <div style={{
+        <details style={{
           marginBottom: '18px',
           fontSize: '13px',
           color: 'var(--text-dim)',
           border: '1px solid var(--border)',
           borderRadius: 'var(--radius-sm)',
-          padding: '14px 16px',
+          padding: '10px 14px',
         }}>
-          <div style={{ color: 'var(--text)', fontWeight: 600, marginBottom: '8px' }}>
-            Don't have a URL yet? Your app is probably already running somewhere — here's where to find the link:
-          </div>
-          <ul style={{ marginTop: '6px', paddingLeft: '18px', lineHeight: 1.7 }}>
+          <summary style={{ cursor: 'pointer', color: 'var(--text)', fontWeight: 600 }}>
+            Don't have a URL yet? Your app is probably already running somewhere — here's where to find the link →
+          </summary>
+          <ul style={{ marginTop: '10px', paddingLeft: '18px', lineHeight: 1.7 }}>
             <li><strong>Bolt.new:</strong> look for a small arrow icon at the top of your preview (right side of the screen). Click it to open your app in its own browser tab, then copy the address from that tab.</li>
             <li><strong>Lovable:</strong> your preview is already running in the panel on the right. Look at the top of that panel — there's an address bar. Copy the link shown there.</li>
             <li><strong>v0 by Vercel:</strong> click the "···" (three dots) near the top of your preview, then choose "Open in new tab." Copy the address from the new tab.</li>
@@ -561,7 +562,7 @@ export default function UrlScanner() {
           <div style={{ marginTop: '10px' }}>
             Once you've got the link, paste it into the box below and click <strong>Scan URL</strong>.
           </div>
-        </div>
+        </details>
       ) : (
         <details style={{
           marginBottom: '16px',
@@ -730,45 +731,10 @@ export default function UrlScanner() {
 
           <GithubPushPanel result={result} scannedUrl={scannedUrl} />
 
-          <div style={{
-            marginTop: 16,
-            padding: '16px 20px',
-            background: 'rgba(255,255,255,0.06)',
-            border: '1px solid rgba(255,255,255,0.2)',
-            borderRadius: 12,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: 16,
-            flexWrap: 'wrap',
-          }}>
-            <div>
-              <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: 'var(--text)' }}>
-                Scan done? Now check if AI actually cites this URL.
-              </p>
-              <p style={{ margin: '4px 0 0', fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.5 }}>
-                Citation Monitor gives you a real-time snapshot — run it before and after making fixes to track whether AI citations improve.
-              </p>
-            </div>
-            <Link
-              to="/citation-monitor"
-              style={{
-                flexShrink: 0,
-                background: 'rgba(255,255,255,0.08)',
-                border: '1px solid var(--border-strong)',
-                color: 'var(--text)',
-                borderRadius: 8,
-                padding: '8px 16px',
-                fontSize: 13,
-                fontWeight: 600,
-                textDecoration: 'none',
-                whiteSpace: 'nowrap',
-                display: 'inline-block',
-              }}
-            >
-              Check citations now →
-            </Link>
-          </div>
+          <CitationCrossPromo
+            title="Scan done? Now check if AI actually cites this URL."
+            sub="Citation Monitor gives you a real-time snapshot — run it before and after making fixes to track whether AI citations improve."
+          />
         </div>
       )}
     </div>
