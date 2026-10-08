@@ -19,6 +19,14 @@ export function detectPlatform(html: string): DetectedPlatform {
   return 'custom';
 }
 
+// Below this many trimmed characters, a 200 response at /llms.txt is treated
+// as effectively empty rather than a real pass — catches bare redirect
+// stubs and near-blank placeholders without false-flagging genuinely short
+// but real content. Deliberately conservative: we can't reliably fingerprint
+// any one platform's specific default text, so this only catches the
+// clearest case (next-to-nothing there) rather than judging quality.
+const LLMS_TXT_MIN_CONTENT_LENGTH = 40;
+
 export interface TechnicalSignals {
   // Schema
   hasSchemaMarkup: boolean;
@@ -60,6 +68,9 @@ export interface TechnicalSignals {
   jsRenderingWarning: string | null;
   // llms.txt
   hasLlmsTxt: boolean;
+  // true when llms.txt exists but is too thin to be useful (e.g. a
+  // platform-managed placeholder) — see LLMS_TXT_MIN_CONTENT_LENGTH.
+  llmsTxtIsThin: boolean;
   // robots.txt / AI crawler access — shown in PillarScores' AI Readability
   // subcategory breakdown, not the flat Technical Signals list below.
   hasRobotsTxt: boolean;
@@ -146,10 +157,12 @@ export function formatSignalsForDisplay(s: TechnicalSignals): DisplaySignal[] {
     },
     {
       label: 'llms.txt',
-      pass: s.hasLlmsTxt,
-      detail: s.hasLlmsTxt
-        ? 'llms.txt found — AI crawlers have a site map to follow.'
-        : 'No llms.txt — AI crawlers must guess what to read.',
+      pass: s.hasLlmsTxt && !s.llmsTxtIsThin,
+      detail: !s.hasLlmsTxt
+        ? 'No llms.txt — AI crawlers must guess what to read.'
+        : s.llmsTxtIsThin
+          ? 'llms.txt found, but it\'s too thin to be useful — some platforms auto-generate a bare placeholder here.'
+          : 'llms.txt found — AI crawlers have a site map to follow.',
     },
     {
       label: 'Heading Hierarchy',
@@ -466,15 +479,27 @@ export async function scanUrlForTechnicalSignals(
     : null;
 
   // ─── llms.txt check ─────────────────────────────────────────────────────────
+  // GET (not HEAD) and look at content length: several site builders now
+  // auto-generate a minimal /llms.txt for every store whether or not the
+  // owner configured one (e.g. Shopify mirrors it from /agents.md by
+  // default), so a bare 200 no longer means a merchant actually set this
+  // up. A short, boilerplate-sized response is flagged as "thin" rather
+  // than counted as a pass.
   let hasLlmsTxt = false;
+  let llmsTxtIsThin = false;
   try {
     const r = await fetch(`${parsedUrl.protocol}//${parsedUrl.host}/llms.txt`, {
-      method: 'HEAD',
-      signal: AbortSignal.timeout(3000),
+      signal: AbortSignal.timeout(5000),
     });
-    hasLlmsTxt = r.ok;
+    if (r.ok) {
+      const body = await r.text();
+      const contentLength = body.trim().length;
+      hasLlmsTxt = contentLength > 0;
+      llmsTxtIsThin = contentLength > 0 && contentLength < LLMS_TXT_MIN_CONTENT_LENGTH;
+    }
   } catch { /* unreachable or timeout */ }
   signals.hasLlmsTxt = hasLlmsTxt;
+  signals.llmsTxtIsThin = llmsTxtIsThin;
 
   // ─── robots.txt check (AI crawler access) ───────────────────────────────────
   let robotsTxtBody: string | null = null;
@@ -688,18 +713,25 @@ export async function scanUrlForTechnicalSignals(
     });
   }
 
-  if (!signals.hasLlmsTxt) {
+  if (!signals.hasLlmsTxt || signals.llmsTxtIsThin) {
+    const isThin = signals.hasLlmsTxt && signals.llmsTxtIsThin;
     recs.push({
-      issue: 'llms.txt absent',
-      recommendation: 'Create /llms.txt at your domain root to guide AI crawlers.',
+      issue: isThin ? 'llms.txt is too thin to be useful' : 'llms.txt absent',
+      recommendation: isThin
+        ? 'Replace the placeholder /llms.txt at your domain root with real site guidance for AI crawlers.'
+        : 'Create /llms.txt at your domain root to guide AI crawlers.',
       severity: 'high',
       artifact: {
         type: 'llms-txt',
         content: `# ${parsedUrl.host}\n\n> This file helps AI language models understand and navigate this site.\n\n## About\n\nThis is a website at ${host}. Replace with a brief summary of what your site offers.\n\n## Key Pages\n\n- [Home](${host}/): Main landing page\n- [About](${host}/about): About us\n- [Blog](${host}/blog): Articles and updates\n\n## Guidelines for AI\n\n- Content on this site may be cited with attribution.\n- For questions or permissions, contact: hello@${parsedUrl.host}`,
         filename: 'llms.txt',
       },
-      nonTechnicalFix: "If your platform or host gives you file upload or FTP access to your site's root, you can add this yourself as a plain text file.",
-      technicalFix: `Create this as a file named llms.txt at your domain root (${host}/llms.txt). If that's not something you manage yourself, send it to your developer or host support to upload.`,
+      nonTechnicalFix: isThin
+        ? "Some platforms (e.g. Shopify) auto-generate a bare /llms.txt for every store. If your platform lets you override it with your own file, replace the placeholder with real detail about what your site offers."
+        : "If your platform or host gives you file upload or FTP access to your site's root, you can add this yourself as a plain text file.",
+      technicalFix: isThin
+        ? `Overwrite the file at ${host}/llms.txt with real site guidance — the placeholder your platform generated isn't tailored to your content.`
+        : `Create this as a file named llms.txt at your domain root (${host}/llms.txt). If that's not something you manage yourself, send it to your developer or host support to upload.`,
     });
   }
 
