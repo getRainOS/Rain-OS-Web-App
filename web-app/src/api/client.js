@@ -64,6 +64,7 @@ export const api = {
   },
   deleteCitationCheck: (id) => request('DELETE', `/api/citation-checks/${id}`),
   deleteCitationHistory: () => request('DELETE', '/api/citation-checks'),
+  resolveDomainCountries: (domains) => request('POST', '/api/citation-checks/regions', { domains }),
   brandVisibility: ({ name, brand, topic, url }) => request('POST', '/api/brand-visibility', { name, brand, topic, url }),
   brandVisHistory: () => request('GET', '/api/brand-visibility'),
   clearBrandVisHistory: () => request('DELETE', '/api/brand-visibility'),

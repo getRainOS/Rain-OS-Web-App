@@ -164,6 +164,19 @@ CREATE TABLE IF NOT EXISTS oauth_states (
 CREATE INDEX IF NOT EXISTS idx_oauth_states_expires_at ON oauth_states(expires_at);
 `;
 
+// Shared, global cache of domain -> inferred HQ country (Gemini-classified,
+// not per-user). country_name is NULL when Gemini couldn't confidently place
+// the domain — still cached, so we never re-ask about the same domain twice.
+const createDomainCountriesQuery = `
+CREATE TABLE IF NOT EXISTS domain_countries (
+  domain TEXT PRIMARY KEY,
+  country_name TEXT,
+  country_iso TEXT,
+  country_flag TEXT,
+  checked_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+`;
+
 export const setupDatabase = async () => {
   try {
     await pool.query(createTableQuery);
@@ -171,6 +184,7 @@ export const setupDatabase = async () => {
     await pool.query(addEmailConfirmationColumnsQuery);
     await pool.query(addNameColumnQuery);
     await pool.query(createOAuthStatesQuery);
+    await pool.query(createDomainCountriesQuery);
     console.log('Database table "users" is ready.');
   } catch (error) {
     console.error('Error setting up database table:', error);
