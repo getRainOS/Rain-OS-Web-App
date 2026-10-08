@@ -362,6 +362,17 @@ export default function BrandVisibility() {
             </div>
           )}
 
+          {result.recommendations && result.recommendations.length > 0 && (
+            <div className={styles.card}>
+              <div className={styles.sectionTitle}>What you can do about it</div>
+              <ul className={styles.recommendationsList}>
+                {result.recommendations.map((r, i) => (
+                  <li key={i} className={styles.recommendationItem}>{r}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {result.competitors && result.competitors.length > 0 && (
             <div className={styles.card}>
               <div className={styles.sectionTitle}>Sites Gemini cited</div>

@@ -4,6 +4,7 @@ import {
   computeDomainShare,
   rankCompetitorDomains,
   buildSummary,
+  buildRecommendations,
 } from '../services/shareOfVoiceService';
 import { buildAnswerExcerpt, ANSWER_EXCERPT_LIMIT } from '../services/textExcerpt';
 
@@ -178,5 +179,37 @@ describe('answerExcerpt (via the shared buildAnswerExcerpt helper)', () => {
     const withoutEllipsis = result.slice(0, -1);
     expect(withoutEllipsis.length).toBeLessThanOrEqual(ANSWER_EXCERPT_LIMIT);
     expect(text[withoutEllipsis.length]).toBe(' ');
+  });
+});
+
+describe('buildRecommendations', () => {
+  it('tells the user to run Content Optimizer when never mentioned', () => {
+    const recs = buildRecommendations(0, null, null, [], false);
+    expect(recs.some(r => r.includes('Content Optimizer'))).toBe(true);
+  });
+
+  it('asks for a URL when none was given, instead of assuming domain share', () => {
+    const recs = buildRecommendations(2, null, null, ['competitor.com'], false);
+    expect(recs.some(r => r.includes('Add your website URL'))).toBe(true);
+  });
+
+  it('names the top competitor and points to URL Scanner when domain share is zero', () => {
+    const recs = buildRecommendations(2, 0, 0, ['competitor.com', 'other.com'], true);
+    expect(recs.some(r => r.includes('competitor.com') && r.includes('URL Scanner'))).toBe(true);
+  });
+
+  it('names the top competitor when share is low but nonzero', () => {
+    const recs = buildRecommendations(3, 25, 1, ['competitor.com'], true);
+    expect(recs.some(r => r.includes('competitor.com'))).toBe(true);
+  });
+
+  it('gives a maintenance tip, not a problem, when share is already strong', () => {
+    const recs = buildRecommendations(3, 75, 3, ['competitor.com'], true);
+    expect(recs.some(r => r.toLowerCase().includes('leading cited source'))).toBe(true);
+  });
+
+  it('returns no recommendations when everything already looks healthy with no url', () => {
+    const recs = buildRecommendations(3, null, null, [], false);
+    expect(recs).toContain('Add your website URL next time you run this check — without it, we can only tell you whether you were mentioned by name, not whether your domain is actually among the cited sources.');
   });
 });
