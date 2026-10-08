@@ -797,12 +797,6 @@ export default function VibeCoders() {
       <main className="flex-grow">
         {/* Hero */}
         <section className="pt-32 md:pt-44 pb-20 md:pb-28 relative z-10 px-4 md:px-6 overflow-hidden">
-          <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] pointer-events-none -z-10"
-            style={{
-              background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.04) 40%, transparent 70%)',
-            }}
-          />
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <motion.div
               initial={{ opacity: 0, y: -16 }}

@@ -287,10 +287,6 @@ function LandingWrapper({ children, light }) {
     return (
       <div className="min-h-screen text-white font-sans relative" style={{ background: '#000000' }}>
         <div className="fixed inset-0 z-0" style={{ background: '#000000' }} />
-        <div
-          className="fixed inset-0 z-[1] pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse 1400px 800px at 50% -10%, rgba(255,255,255,0.05) 0%, transparent 60%)' }}
-        />
         <div className="relative z-10 flex flex-col min-h-screen">
           {children}
         </div>
