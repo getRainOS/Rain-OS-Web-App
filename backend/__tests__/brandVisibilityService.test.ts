@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { extractMentionSentences, buildSummary, buildNotMentionedHint } from '../services/brandVisibilityService';
+import { extractMentionSentences, buildSummary, buildNotMentionedHint, buildRecommendations } from '../services/brandVisibilityService';
 
 // splitSentences / buildAnswerExcerpt now live in services/textExcerpt.ts
 // (shared with Citation Monitor and Share of Voice) — see textExcerpt.test.ts.
@@ -81,5 +81,32 @@ describe('buildNotMentionedHint', () => {
   it('never triggers for a single-word brand name', () => {
     const text = 'Starbucks is one of the most recognizable coffeehouse chains in the world.';
     expect(buildNotMentionedHint('Starbucks', text)).toBeNull();
+  });
+});
+
+describe('buildRecommendations', () => {
+  it('tells the user to run Content Optimizer when not mentioned', () => {
+    const recs = buildRecommendations(false, false, 'not_applicable', [], false);
+    expect(recs.some(r => r.includes('Content Optimizer'))).toBe(true);
+  });
+
+  it('asks for a URL when none was given', () => {
+    const recs = buildRecommendations(true, false, 'neutral', ['competitor.com'], false);
+    expect(recs.some(r => r.includes('Add your website URL'))).toBe(true);
+  });
+
+  it('names the competitor cited instead of the user when not cited', () => {
+    const recs = buildRecommendations(true, false, 'neutral', ['competitor.com'], true);
+    expect(recs.some(r => r.includes('competitor.com') && r.includes('URL Scanner'))).toBe(true);
+  });
+
+  it('gives a maintenance tip when already cited', () => {
+    const recs = buildRecommendations(true, true, 'neutral', [], true);
+    expect(recs.some(r => r.toLowerCase().includes('already among the cited sources'))).toBe(true);
+  });
+
+  it('flags negative sentiment with a distinct recommendation', () => {
+    const recs = buildRecommendations(true, true, 'negative', [], true);
+    expect(recs.some(r => r.toLowerCase().includes('negative'))).toBe(true);
   });
 });

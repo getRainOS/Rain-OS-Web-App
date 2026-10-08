@@ -73,11 +73,12 @@ export async function sovHandler(req: express.Request, res: express.Response) {
     // guess) — written as 0 with this comment, same placeholder pattern as
     // Citation Monitor's alignment_score, since the column is NOT NULL with
     // no default. cited_count is repurposed to hold the (now deterministic)
-    // count of prompts that mentioned the brand. recommendations is no
-    // longer computed and is omitted so it falls back to its DB default ([]).
+    // count of prompts that mentioned the brand. recommendations is now
+    // deterministic advice built from the same facts (see
+    // shareOfVoiceService.buildRecommendations), not an LLM guess.
     await pool.query(
-      `INSERT INTO sov_checks (user_id, name, brand, topic, url, overall_sov, cited_count, model_results, top_competitors, summary)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+      `INSERT INTO sov_checks (user_id, name, brand, topic, url, overall_sov, cited_count, model_results, top_competitors, recommendations, summary)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
       [
         user.id,
         name.trim(),
@@ -88,6 +89,7 @@ export async function sovHandler(req: express.Request, res: express.Response) {
         result.mentionedCount,
         JSON.stringify(result.modelResults),
         JSON.stringify(result.competitors),
+        JSON.stringify(result.recommendations),
         result.summary,
       ]
     );

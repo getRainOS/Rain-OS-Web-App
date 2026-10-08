@@ -77,6 +77,7 @@ export interface BrandVisibilityResult {
   answerExcerpt: string;
   sources: BrandVisibilitySource[];
   competitors: string[];
+  recommendations: string[];
   summary: string;
   notMentionedHint: string | null;
 }
@@ -149,6 +150,51 @@ export function buildNotMentionedHint(brand: string, answerText: string): string
 
   const longest = matching.reduce((a, b) => (b.length > a.length ? b : a));
   return `"${longest}" appears in the answer — try searching with just that name instead of the fuller version.`;
+}
+
+/**
+ * Deterministic next-step advice built only from facts this check already
+ * produced — no extra LLM call, same "no guessing" rule as buildSummary().
+ * Mirrors shareOfVoiceService's version so the two tools give consistent
+ * advice for the same underlying situation (not mentioned, not cited,
+ * negative sentiment).
+ */
+export function buildRecommendations(
+  mentioned: boolean,
+  cited: boolean,
+  sentiment: VisibilitySentiment,
+  competitors: string[],
+  hasUrl: boolean
+): string[] {
+  const recs: string[] = [];
+
+  if (!mentioned) {
+    recs.push(
+      'Gemini did not mention your brand by name for this topic. Run this page through Content Optimizer to strengthen the AI-readable signals that get a brand named directly in an answer.'
+    );
+  }
+
+  if (!hasUrl) {
+    recs.push(
+      "Add your website URL next time you run this check — without it, we can only tell you whether you're mentioned by name, not whether your domain is among the cited sources."
+    );
+  } else if (!cited && competitors.length > 0) {
+    recs.push(
+      `${competitors[0]} was cited as a source instead of you. Run URL Scanner on your page — missing schema markup or weak page structure is the most common reason Google's grounded search skips a page in favor of a competitor's.`
+    );
+  } else if (cited) {
+    recs.push(
+      'Your site is already among the cited sources for this topic — re-run this check periodically to catch a new competitor before they displace you.'
+    );
+  }
+
+  if (mentioned && sentiment === 'negative') {
+    recs.push(
+      'The tone toward your brand in this answer is negative. Check the quoted sentences above for the specific complaint, and address it directly in your own published content so future grounded searches surface your side too.'
+    );
+  }
+
+  return recs;
 }
 
 export async function runBrandVisibilityCheck(
@@ -305,6 +351,7 @@ export async function runBrandVisibilityCheck(
     answerExcerpt: buildAnswerExcerpt(answerText),
     sources,
     competitors,
+    recommendations: buildRecommendations(mentioned, cited, sentiment, competitors, !!userDomain),
     summary: buildSummary(trimmedBrand, mentioned, cited, competitors),
     notMentionedHint,
   };

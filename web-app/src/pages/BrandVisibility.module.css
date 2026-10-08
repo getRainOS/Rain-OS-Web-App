@@ -358,6 +358,23 @@
   font-style: italic;
 }
 
+.recommendationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.recommendationItem {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  padding-left: 16px;
+  border-left: 2px solid var(--border);
+}
+
 .competitorGrid {
   display: flex;
   flex-wrap: wrap;

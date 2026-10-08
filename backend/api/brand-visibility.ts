@@ -72,9 +72,11 @@ export default async function handler(req: express.Request, res: express.Respons
   try {
     const result = await runBrandVisibilityCheck(brand.trim(), topic.trim(), normalisedUrl);
 
-    // Persist to DB. visibility_score, mention_position, and recommendations
-    // are no longer computed (they were LLM guesses) — omitted here so they
-    // fall back to their DB defaults (0 / null / []).
+    // Persist to DB. visibility_score and mention_position are no longer
+    // computed (they were LLM guesses) — omitted so they fall back to their
+    // DB defaults (0 / null). recommendations is now deterministic advice
+    // built from the same facts (see brandVisibilityService.buildRecommendations),
+    // not an LLM guess.
     await saveBrandVisibilityCheck(user.id, {
       name: name.trim(),
       brand: result.brand,
@@ -86,6 +88,7 @@ export default async function handler(req: express.Request, res: express.Respons
       answer_excerpt: result.answerExcerpt,
       sources: result.sources,
       competitors: result.competitors,
+      recommendations: result.recommendations,
       summary: result.summary,
     });
 

@@ -378,6 +378,18 @@ export default function ShareOfVoice() {
                 <button onClick={handleReset} className={styles.btnSecondary}>← Run another check</button>
               </div>
 
+              {/* What you can do about it */}
+              {result.recommendations?.length > 0 && (
+                <div className={styles.card}>
+                  <p className={styles.sectionTitle}>What you can do about it</p>
+                  <ul className={styles.recommendationsList}>
+                    {result.recommendations.map((r, i) => (
+                      <li key={i} className={styles.recommendationItem}>{r}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
               {/* Per-prompt cards */}
               <h3 className={styles.sectionTitle} style={{ marginBottom: 16 }}>Results by query phrasing</h3>
               <div className={styles.resultsGrid3}>

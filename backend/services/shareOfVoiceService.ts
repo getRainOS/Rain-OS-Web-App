@@ -52,6 +52,7 @@ export interface SovResult {
   domainSourceCount:  number | null;  // M — total sources across all 3 prompts; null without a url
   domainSharePercent: number | null;  // round(N/M*100); null without a url or when M is 0
   competitors: string[];              // source domains, ranked by frequency across the 3 prompts
+  recommendations: string[];          // deterministic next-step advice — see buildRecommendations()
   summary:     string;
 }
 
@@ -145,6 +146,48 @@ export function buildSummary(
   return `${mentionPart}. Your domain is ${domainCitedCount} of ${domainSourceCount} cited sources (${domainSharePercent}%).`;
 }
 
+/**
+ * Deterministic next-step advice built only from facts this check already
+ * produced — no extra LLM call, same "no guessing" rule as buildSummary().
+ * Each string names a concrete cause and, where relevant, which Rain OS
+ * tool addresses it, so a low share never dead-ends with just a number.
+ */
+export function buildRecommendations(
+  mentionedCount: number,
+  domainSharePercent: number | null,
+  domainCitedCount: number | null,
+  competitors: string[],
+  hasUrl: boolean
+): string[] {
+  const recs: string[] = [];
+
+  if (mentionedCount === 0) {
+    recs.push(
+      'Gemini never named your brand across any of the 3 phrasings. Run this page through Content Optimizer to strengthen the AI-readable signals (clear headings, direct answers, structured facts) that get a brand mentioned by name.'
+    );
+  }
+
+  if (!hasUrl) {
+    recs.push(
+      'Add your website URL next time you run this check — without it, we can only tell you whether you were mentioned by name, not whether your domain is actually among the cited sources.'
+    );
+  } else if (domainSharePercent !== null && domainCitedCount === 0 && competitors.length > 0) {
+    recs.push(
+      `Your domain wasn't cited at all, while ${competitors[0]} was. Run URL Scanner on the page you want cited — missing schema markup or weak page structure is the most common reason Google's grounded search skips a page in favor of a competitor's.`
+    );
+  } else if (domainSharePercent !== null && domainSharePercent > 0 && domainSharePercent < 50 && competitors.length > 0) {
+    recs.push(
+      `${competitors[0]} is cited more often than you for this topic. Compare its page against yours in URL Scanner to see which structural signals it has that yours doesn't.`
+    );
+  } else if (domainSharePercent !== null && domainSharePercent >= 50) {
+    recs.push(
+      "You're already the leading cited source for this topic — re-run this check periodically to catch a new competitor before they close the gap."
+    );
+  }
+
+  return recs;
+}
+
 /* ─────────────────────────────────────────────────────────────────────────── *
  *  Core runner — executes one grounded prompt, returns structured result      *
  * ─────────────────────────────────────────────────────────────────────────── */
@@ -232,6 +275,7 @@ export async function runShareOfVoice(
   const { domainCitedCount, domainSourceCount, domainSharePercent } = computeDomainShare(allSources, userDomain);
 
   const competitors = rankCompetitorDomains(modelResults, userDomain);
+  const recommendations = buildRecommendations(mentionedCount, domainSharePercent, domainCitedCount, competitors, !!userDomain);
 
   return {
     brand: b,
@@ -243,6 +287,7 @@ export async function runShareOfVoice(
     domainSourceCount,
     domainSharePercent,
     competitors,
+    recommendations,
     summary: buildSummary(b, t, mentionedCount, domainSharePercent, domainCitedCount, domainSourceCount),
   };
 }
