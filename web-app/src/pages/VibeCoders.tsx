@@ -209,8 +209,15 @@ function ScoreCard({ p, score, isFixed, isScanning, index }: {
 
       <div className="flex items-center justify-between mb-4 relative z-10">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: p.bg, border: `1px solid ${p.border}` }}>
-            <p.Icon className="w-4 h-4" style={{ color: p.color }} />
+          <div
+            className="w-9 h-9 rounded-xl flex items-center justify-center"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02))',
+              border: `1px solid ${p.border}`,
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08)',
+            }}
+          >
+            <p.Icon className="w-4 h-4" strokeWidth={1.5} style={{ color: p.color }} />
           </div>
           <span className="text-sm font-semibold text-white">{p.name}</span>
         </div>
@@ -701,7 +708,7 @@ function RepoDemo({ isVisible }: { isVisible: boolean }) {
   const phaseDotColor = { idle: 'bg-neutral-600', scanning: 'bg-white', analyzed: 'bg-neutral-300', generating_prompt: 'bg-white', prompt_ready: 'bg-white', pasting: 'bg-white', applying: 'bg-white', rescanning: 'bg-white', improved: 'bg-white', resetting: 'bg-neutral-600' }[phase];
 
   return (
-    <section className="py-20 px-6 border-t border-white/10">
+    <section className="py-16 px-6 border-t border-white/10">
       <div className="max-w-5xl mx-auto">
         <DemoHeader title="" subtitle="Scan a repo, get a fix prompt, paste it into your vibe builder, and watch the score improve after rescanning." />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -883,7 +890,7 @@ export default function VibeCoders() {
         </section>
 
         {/* The Problem */}
-        <section className="py-20 px-6 border-t border-white/10">
+        <section className="py-16 px-6 border-t border-white/10">
           <div className="max-w-5xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -949,7 +956,7 @@ export default function VibeCoders() {
         <VibeWorkflowDiagram />
 
         {/* What We Analyze */}
-        <section className="py-20 px-6 border-t border-white/10">
+        <section className="py-24 px-6 border-t border-white/10">
           <div className="max-w-5xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -973,13 +980,17 @@ export default function VibeCoders() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.06 }}
-                  className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-6 hover:border-white/10 transition-colors"
+                  className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-7 hover:border-white/20 hover:bg-white/[0.045] transition-colors"
                 >
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: p.bg, border: `1px solid ${p.border}` }}
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02))',
+                      border: `1px solid ${p.border}`,
+                      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08)',
+                    }}
                   >
-                    <p.Icon className="w-5 h-5" style={{ color: p.color }} />
+                    <p.Icon className="w-5 h-5" strokeWidth={1.5} style={{ color: p.color }} />
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-white mb-1">{p.name}</h3>
@@ -1000,7 +1011,7 @@ export default function VibeCoders() {
         </motion.div>
 
         {/* How It Works */}
-        <section className="py-20 px-6 border-t border-white/10">
+        <section className="py-16 px-6 border-t border-white/10">
           <div className="max-w-5xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -1033,7 +1044,14 @@ export default function VibeCoders() {
         </section>
 
         {/* Five Pillars — Dynamic Scores */}
-        <section className="py-20 px-6 border-t border-white/10">
+        <section
+          className="py-24 px-6 border-t border-white/10 relative"
+          style={{
+            backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px)',
+            backgroundSize: '120px 100%',
+            backgroundPosition: 'center',
+          }}
+        >
           <div className="max-w-5xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -1067,8 +1085,15 @@ export default function VibeCoders() {
                   }}
                 >
                   <div className="flex items-center gap-3 mb-5">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${p.border}` }}>
-                      <p.Icon className="w-5 h-5" style={{ color: p.color }} />
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center"
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(0,0,0,0.15))',
+                        border: `1px solid ${p.border}`,
+                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
+                      }}
+                    >
+                      <p.Icon className="w-5 h-5" strokeWidth={1.5} style={{ color: p.color }} />
                     </div>
                     <div>
                       <h3 className="text-sm font-semibold text-white">{p.name}</h3>
@@ -1124,7 +1149,7 @@ export default function VibeCoders() {
         </section>
 
         {/* CTA */}
-        <section className="py-20 px-6 border-t border-white/10">
+        <section className="py-28 px-6 border-t border-white/10">
           <div className="max-w-3xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
