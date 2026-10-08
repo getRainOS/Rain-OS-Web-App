@@ -11,6 +11,22 @@ import styles from './ContentAnalyzer.module.css';
 
 const DRAFT_STORAGE_KEY = 'rain_os_content_analyzer_draft';
 
+const CONTENT_TYPES = [
+  { id: 'article', label: 'Article', icon: '📄' },
+  { id: 'blog_post', label: 'Blog Post', icon: '✏️' },
+  { id: 'product_description', label: 'Product Description', icon: '🛒' },
+  { id: 'landing_page', label: 'Landing Page', icon: '🪧' },
+  { id: 'documentation', label: 'Documentation', icon: '📘' },
+  { id: 'social_post', label: 'Social Post', icon: '💬' },
+];
+
+function defaultContentTypeForLane(lane) {
+  if (lane === 'product_sellers') return 'product_description';
+  if (lane === 'developers') return 'documentation';
+  if (lane === 'local_business' || lane === 'vibe_coders') return 'landing_page';
+  return 'article';
+}
+
 function readSavedDraft() {
   try {
     const saved = JSON.parse(localStorage.getItem(DRAFT_STORAGE_KEY) || 'null');
@@ -19,6 +35,7 @@ function readSavedDraft() {
       title: typeof saved.title === 'string' ? saved.title : '',
       content: typeof saved.content === 'string' ? saved.content : '',
       url: typeof saved.url === 'string' ? saved.url : '',
+      contentType: typeof saved.contentType === 'string' ? saved.contentType : '',
       analysisId: saved.analysisId != null ? String(saved.analysisId) : null,
     };
   } catch {
@@ -32,6 +49,7 @@ function saveDraft(draft) {
       title: draft.title || '',
       content: draft.content || '',
       url: draft.url || '',
+      contentType: draft.contentType || '',
       analysisId: draft.analysisId != null ? String(draft.analysisId) : null,
       savedAt: new Date().toISOString(),
     }));
@@ -51,6 +69,9 @@ export default function ContentAnalyzer() {
   const [title, setTitle] = useState(prefill.pendingTitle || (savedDraftMatchesAnalysis ? savedDraft.title : '') || '');
   const [content, setContent] = useState(prefill.pendingContent || (savedDraftMatchesAnalysis ? savedDraft.content : '') || '');
   const [url, setUrl] = useState(prefill.pendingUrl || (savedDraftMatchesAnalysis ? savedDraft.url : '') || '');
+  const [contentType, setContentType] = useState(
+    (savedDraftMatchesAnalysis ? savedDraft.contentType : '') || defaultContentTypeForLane(userLane)
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
@@ -58,8 +79,8 @@ export default function ContentAnalyzer() {
   // Keep the editor draft across refreshes and route changes. This is intentionally
   // separate from analysis history so an in-progress edit is never lost.
   useEffect(() => {
-    saveDraft({ title, content, url, analysisId: id || null });
-  }, [title, content, url, id]);
+    saveDraft({ title, content, url, contentType, analysisId: id || null });
+  }, [title, content, url, contentType, id]);
 
   useEffect(() => {
     if (!id) return;
@@ -131,7 +152,8 @@ export default function ContentAnalyzer() {
     setResult(null);
     setRewriteResult(null);
     try {
-      const { data } = await api.analyze({ title, content, url, module: analysisModule, lane: userLane });
+      const contentTypeLabel = CONTENT_TYPES.find(t => t.id === contentType)?.label || '';
+      const { data } = await api.analyze({ title, content, url, module: analysisModule, lane: userLane, contentType: contentTypeLabel });
       setResult(data);
       refreshUser();
       if (data?.analysisId) {
@@ -223,6 +245,23 @@ export default function ContentAnalyzer() {
                 value={url}
                 onChange={e => setUrl(e.target.value)}
               />
+            </div>
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label}>Content Type</label>
+            <div className={styles.typePills}>
+              {CONTENT_TYPES.map(t => (
+                <button
+                  key={t.id}
+                  type="button"
+                  className={`${styles.typePill} ${contentType === t.id ? styles.typePillActive : ''}`}
+                  onClick={() => setContentType(t.id)}
+                >
+                  <span className={styles.typePillIcon}>{t.icon}</span>
+                  {t.label}
+                </button>
+              ))}
             </div>
           </div>
 
