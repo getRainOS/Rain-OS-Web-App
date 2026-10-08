@@ -576,8 +576,8 @@
 .framingBtn:hover { color: var(--text); }
 
 .framingBtnActive {
-  background: var(--text);
-  color: var(--bg);
+  background: var(--surface-3);
+  color: var(--text);
 }
 
 .pillarTagline {
