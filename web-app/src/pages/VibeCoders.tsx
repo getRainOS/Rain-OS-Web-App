@@ -10,15 +10,14 @@ import {
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
 import VibeWorkflowDiagram from '@/components/VibeWorkflowDiagram';
-import { PILLAR_COLORS } from '@/lib/pillarColors.js';
 
 const ROTATING_WORDS = ['SaaS?', 'MVP?', 'Website?', 'Web App?', 'Portfolio?', 'Landing Page?', 'Store?', 'Product?', 'Blog?', 'App?'];
 
 const repoPillars = [
   {
-    color: PILLAR_COLORS.ai_readability,
-    bg: 'rgba(14,165,233,0.1)',
-    border: 'rgba(14,165,233,0.25)',
+    color: '#ffffff',
+    bg: 'rgba(255,255,255,0.04)',
+    border: 'rgba(255,255,255,0.12)',
     Icon: BrainCircuit,
     name: 'AI Readability',
     score: 42,
@@ -31,9 +30,9 @@ const repoPillars = [
     ],
   },
   {
-    color: PILLAR_COLORS.digital_authority,
-    bg: 'rgba(16,185,129,0.1)',
-    border: 'rgba(16,185,129,0.25)',
+    color: '#ffffff',
+    bg: 'rgba(255,255,255,0.04)',
+    border: 'rgba(255,255,255,0.12)',
     Icon: ShieldCheck,
     name: 'Digital Authority',
     score: 58,
@@ -46,9 +45,9 @@ const repoPillars = [
     ],
   },
   {
-    color: PILLAR_COLORS.conversion_readiness,
-    bg: 'rgba(139,92,246,0.1)',
-    border: 'rgba(139,92,246,0.25)',
+    color: '#ffffff',
+    bg: 'rgba(255,255,255,0.04)',
+    border: 'rgba(255,255,255,0.12)',
     Icon: MousePointerClick,
     name: 'Conversion Readiness',
     score: 35,
@@ -61,9 +60,9 @@ const repoPillars = [
     ],
   },
   {
-    color: PILLAR_COLORS.product_discoverability,
-    bg: 'rgba(249,115,22,0.1)',
-    border: 'rgba(249,115,22,0.25)',
+    color: '#ffffff',
+    bg: 'rgba(255,255,255,0.04)',
+    border: 'rgba(255,255,255,0.12)',
     Icon: SearchCheck,
     name: 'Product Discoverability',
     score: 38,
@@ -76,9 +75,9 @@ const repoPillars = [
     ],
   },
   {
-    color: PILLAR_COLORS.rag_readiness,
-    bg: 'rgba(236,72,153,0.1)',
-    border: 'rgba(236,72,153,0.25)',
+    color: '#ffffff',
+    bg: 'rgba(255,255,255,0.04)',
+    border: 'rgba(255,255,255,0.12)',
     Icon: Layers,
     name: 'RAG Readiness',
     score: 40,
@@ -95,65 +94,65 @@ const repoPillars = [
 
 const vibeSignals = [
   {
-    color: '#a78bfa',
-    bg: 'rgba(139,92,246,0.1)',
-    border: 'rgba(139,92,246,0.2)',
+    color: '#ffffff',
+    bg: 'rgba(255,255,255,0.04)',
+    border: 'rgba(255,255,255,0.12)',
     Icon: FileCode,
     name: 'llms.txt Presence',
     desc: 'The single most important file for AI discoverability. Tells LLMs what your app does, how to use it, and where key info lives. Most vibe-coded sites skip this entirely.',
   },
   {
-    color: '#38bdf8',
-    bg: 'rgba(14,165,233,0.1)',
-    border: 'rgba(14,165,233,0.2)',
+    color: '#ffffff',
+    bg: 'rgba(255,255,255,0.04)',
+    border: 'rgba(255,255,255,0.12)',
     Icon: Search,
     name: 'Meta Description & OG Tags',
     desc: 'AI engines use meta descriptions and Open Graph tags to understand your page before they render it. Missing these means AI has no context to cite you.',
   },
   {
-    color: '#fbbf24',
-    bg: 'rgba(251,191,36,0.1)',
-    border: 'rgba(251,191,36,0.2)',
+    color: '#ffffff',
+    bg: 'rgba(255,255,255,0.04)',
+    border: 'rgba(255,255,255,0.12)',
     Icon: Shield,
     name: 'robots.txt & Crawler Access',
     desc: 'Is your robots.txt blocking GPTBot, ChatGPT-User, or other AI crawlers? Many vibe-coded sites inherit restrictive defaults that hide them from AI search.',
   },
   {
-    color: '#34d399',
-    bg: 'rgba(16,185,129,0.1)',
-    border: 'rgba(16,185,129,0.2)',
+    color: '#ffffff',
+    bg: 'rgba(255,255,255,0.04)',
+    border: 'rgba(255,255,255,0.12)',
     Icon: Code2,
     name: 'Schema Markup (JSON-LD)',
     desc: 'Structured data tells AI exactly what your page represents — product, article, organization, FAQ. Without it, AI guesses. Most vibe tools don\'t add schema automatically.',
   },
   {
-    color: '#fb7185',
-    bg: 'rgba(251,113,133,0.1)',
-    border: 'rgba(251,113,133,0.2)',
+    color: '#ffffff',
+    bg: 'rgba(255,255,255,0.04)',
+    border: 'rgba(255,255,255,0.12)',
     Icon: Monitor,
     name: 'SSR vs SPA Detection',
     desc: 'Vibe-coded SPAs (Vite, CRA) render content in JavaScript. AI crawlers often see a blank page. We detect this and flag it as high-risk for AI discoverability.',
   },
   {
-    color: '#a78bfa',
-    bg: 'rgba(139,92,246,0.08)',
-    border: 'rgba(139,92,246,0.18)',
+    color: '#ffffff',
+    bg: 'rgba(255,255,255,0.04)',
+    border: 'rgba(255,255,255,0.12)',
     Icon: Terminal,
     name: 'README & Package.json Quality',
     desc: 'Your README is often the first thing AI reads about your project. Missing install steps, unclear description, or no keywords in package.json hurts discoverability.',
   },
   {
-    color: '#38bdf8',
-    bg: 'rgba(14,165,233,0.08)',
-    border: 'rgba(14,165,233,0.18)',
+    color: '#ffffff',
+    bg: 'rgba(255,255,255,0.04)',
+    border: 'rgba(255,255,255,0.12)',
     Icon: Globe,
     name: 'Canonical URL & index.html',
     desc: 'Duplicate content and missing canonical tags confuse AI. We check your index.html for title tags, meta viewport, and proper head structure.',
   },
   {
-    color: '#fbbf24',
-    bg: 'rgba(251,191,36,0.08)',
-    border: 'rgba(251,191,36,0.18)',
+    color: '#ffffff',
+    bg: 'rgba(255,255,255,0.04)',
+    border: 'rgba(255,255,255,0.12)',
     Icon: Cpu,
     name: 'AI-Ready Content Structure',
     desc: 'Clear H1/H2 hierarchy, FAQ sections, bullet-point answers. AI extracts the first 1-2 sentences of each section. If your lead is vague, AI moves to a competitor.',
@@ -270,7 +269,7 @@ function ScoreCard({ p, score, isFixed, isScanning, index }: {
                       {sig.before ? (
                         <CheckCircle2 className="w-3 h-3" style={{ color: p.color }} />
                       ) : (
-                        <AlertTriangle className="w-3 h-3 text-amber-400" />
+                        <AlertTriangle className="w-3 h-3 text-white" />
                       )}
                     </motion.div>
                   )}
@@ -319,24 +318,24 @@ function TerminalLine({ type, text, color = 'sky', delay = 0 }: {
   delay?: number;
 }) {
   const colorMap: Record<string, string> = {
-    sky: 'text-sky-400',
-    emerald: 'text-emerald-400',
-    amber: 'text-amber-400',
-    violet: 'text-violet-400',
-    red: 'text-red-400',
+    sky: 'text-white',
+    emerald: 'text-white',
+    amber: 'text-white',
+    violet: 'text-white',
+    red: 'text-neutral-300',
     slate: 'text-neutral-400',
     white: 'text-white',
   };
 
   const iconMap: Record<string, React.ReactNode> = {
-    cmd: <span className="text-emerald-400 mr-1">$</span>,
+    cmd: <span className="text-white mr-1">$</span>,
     out: <span className="text-neutral-400 mr-1">&gt;</span>,
-    ok: <span className="text-emerald-400 mr-1">&#10003;</span>,
-    warn: <span className="text-amber-400 mr-1">!</span>,
-    prompt: <span className="text-violet-400 mr-1">&#9654;</span>,
-    vibe: <span className="text-violet-400 mr-1">~</span>,
-    commit: <span className="text-sky-400 mr-1">&#9679;</span>,
-    rescan: <span className="text-amber-400 mr-1">&#8635;</span>,
+    ok: <span className="text-white mr-1">&#10003;</span>,
+    warn: <span className="text-white mr-1">!</span>,
+    prompt: <span className="text-white mr-1">&#9654;</span>,
+    vibe: <span className="text-white mr-1">~</span>,
+    commit: <span className="text-white mr-1">&#9679;</span>,
+    rescan: <span className="text-white mr-1">&#8635;</span>,
   };
 
   return (
@@ -489,7 +488,7 @@ function ScoreCards({ pillars, animScores, demoFixed, phase }: {
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ type: 'spring', stiffness: 300, damping: 15 }}
-              className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-white"
             >
               <TrendingUp className="w-3 h-3" />+{overallScore - initialOverall}
             </motion.span>
@@ -499,9 +498,9 @@ function ScoreCards({ pillars, animScores, demoFixed, phase }: {
           <motion.div
             className="h-full rounded-full relative"
             style={{
-              background: 'linear-gradient(90deg, #8b5cf6, #0ea5e9)',
+              background: 'linear-gradient(90deg, #ffffff, #a3a3a3)',
               width: `${overallScore}%`,
-              boxShadow: demoFixed ? '0 0 20px rgba(139,92,246,0.3)' : 'none',
+              boxShadow: demoFixed ? '0 0 20px rgba(255,255,255,0.2)' : 'none',
             }}
           >
             {demoFixed && (
@@ -549,43 +548,43 @@ function TerminalPanel({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: 0.2 }}
-      className="rounded-2xl border border-white/10 bg-[#0a0f1e] p-5 font-mono"
+      className="rounded-2xl border border-white/10 bg-[#0d0d0d] p-5 font-mono"
     >
       <div className="flex items-center justify-between mb-4">
-        <span className="text-xs font-bold text-violet-400 uppercase tracking-wider">{header}</span>
+        <span className="text-xs font-bold text-white uppercase tracking-wider">{header}</span>
         <span className="flex items-center gap-1.5 text-xs text-neutral-400">
           <span className={`relative flex h-1.5 w-1.5 ${phase === 'scanning' || phase === 'rescanning' ? 'animate-pulse' : ''}`}>
             <span className={`relative inline-flex rounded-full h-1.5 w-1.5 ${phaseDotColor}`}></span>
           </span>
-          <span className={`text-${phaseColor}-400`}>{phaseLabel}</span>
+          <span className="text-neutral-300">{phaseLabel}</span>
         </span>
       </div>
-      <div className="rounded-lg bg-[#060912] border border-white/10 p-4 text-xs leading-relaxed min-h-[180px] max-h-[280px] overflow-y-auto">
+      <div className="rounded-lg bg-[#141414] border border-white/10 p-4 text-xs leading-relaxed min-h-[180px] max-h-[280px] overflow-y-auto">
         {lines.map((line, i) => (
           <div key={i} className="mb-1">
             <span className={
-              line.type === 'cmd' ? 'text-emerald-400' :
+              line.type === 'cmd' ? 'text-white' :
               line.type === 'out' ? 'text-neutral-400' :
-              line.type === 'ok' ? 'text-emerald-400' :
-              line.type === 'warn' ? 'text-amber-400' :
-              line.type === 'vibe' ? 'text-violet-400' :
-              line.type === 'commit' ? 'text-sky-400' :
-              line.type === 'rescan' ? 'text-amber-400' :
-              line.type === 'rec' ? 'text-violet-400' :
-              line.type === 'fix' ? 'text-emerald-400' : 'text-neutral-400'
+              line.type === 'ok' ? 'text-white' :
+              line.type === 'warn' ? 'text-white' :
+              line.type === 'vibe' ? 'text-white' :
+              line.type === 'commit' ? 'text-white' :
+              line.type === 'rescan' ? 'text-white' :
+              line.type === 'rec' ? 'text-white' :
+              line.type === 'fix' ? 'text-white' : 'text-neutral-400'
             }>
               {line.type === 'cmd' ? '$ ' : line.type === 'out' ? '> ' : line.type === 'ok' ? '\u2713 ' : line.type === 'warn' ? '! ' : line.type === 'vibe' ? '~ ' : line.type === 'commit' ? '\u25CF ' : line.type === 'rescan' ? '\u21BB ' : line.type === 'rec' ? '\u25B6 ' : line.type === 'fix' ? '\u2713 ' : '> '}
             </span>
             <span className={
               line.type === 'cmd' ? 'text-neutral-300' :
               line.type === 'out' ? 'text-neutral-400' :
-              line.type === 'ok' ? 'text-emerald-300' :
-              line.type === 'warn' ? 'text-amber-300' :
-              line.type === 'vibe' ? 'text-violet-300' :
-              line.type === 'commit' ? 'text-sky-300' :
-              line.type === 'rescan' ? 'text-amber-300' :
-              line.type === 'rec' ? 'text-violet-300' :
-              line.type === 'fix' ? 'text-emerald-300' : 'text-neutral-400'
+              line.type === 'ok' ? 'text-neutral-300' :
+              line.type === 'warn' ? 'text-neutral-300' :
+              line.type === 'vibe' ? 'text-neutral-300' :
+              line.type === 'commit' ? 'text-neutral-300' :
+              line.type === 'rescan' ? 'text-neutral-300' :
+              line.type === 'rec' ? 'text-neutral-300' :
+              line.type === 'fix' ? 'text-neutral-300' : 'text-neutral-400'
             }>
               {line.text}
             </span>
@@ -699,7 +698,7 @@ function RepoDemo({ isVisible }: { isVisible: boolean }) {
 
   const phaseColor = { idle: 'slate', scanning: 'amber', analyzed: 'red', generating_prompt: 'violet', prompt_ready: 'violet', pasting: 'sky', applying: 'violet', rescanning: 'amber', improved: 'emerald', resetting: 'slate' }[phase];
   const phaseLabel = { idle: 'Idle', scanning: 'Scanning', analyzed: 'Analyzed', generating_prompt: 'Generating', prompt_ready: 'Prompt Ready', pasting: 'Pasting', applying: 'Applying', rescanning: 'Rescanning', improved: 'Improved', resetting: 'Resetting' }[phase];
-  const phaseDotColor = { idle: 'bg-neutral-600', scanning: 'bg-amber-400', analyzed: 'bg-red-400', generating_prompt: 'bg-violet-400', prompt_ready: 'bg-violet-400', pasting: 'bg-sky-400', applying: 'bg-violet-400', rescanning: 'bg-amber-400', improved: 'bg-emerald-400', resetting: 'bg-neutral-600' }[phase];
+  const phaseDotColor = { idle: 'bg-neutral-600', scanning: 'bg-white', analyzed: 'bg-neutral-300', generating_prompt: 'bg-white', prompt_ready: 'bg-white', pasting: 'bg-white', applying: 'bg-white', rescanning: 'bg-white', improved: 'bg-white', resetting: 'bg-neutral-600' }[phase];
 
   return (
     <section className="py-20 px-6 border-t border-white/10">
@@ -711,41 +710,41 @@ function RepoDemo({ isVisible }: { isVisible: boolean }) {
             <TerminalPanel header="rain-os scan" phase={phase} phaseColor={phaseColor} phaseLabel={phaseLabel} phaseDotColor={phaseDotColor} lines={terminalLines} processing={phase === 'scanning' || phase === 'rescanning' || phase === 'generating_prompt' || phase === 'applying'} />
             <AnimatePresence>
               {showPromptPanel && (
-                <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} transition={{ duration: 0.5 }} className="rounded-2xl border border-violet-400/20 bg-violet-500/[0.03] p-5">
+                <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} transition={{ duration: 0.5 }} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-bold text-violet-400 uppercase tracking-wider flex items-center gap-2"><Wand2 className="w-3.5 h-3.5" />Fix Prompt Generated</span>
+                    <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><Wand2 className="w-3.5 h-3.5" />Fix Prompt Generated</span>
                     <span className="text-xs text-neutral-400">for Bolt</span>
                   </div>
-                  <div className="rounded-lg bg-[#060912] border border-white/10 p-4 text-xs text-neutral-300 leading-relaxed max-h-48 overflow-y-auto">{FIX_PROMPT}</div>
+                  <div className="rounded-lg bg-[#141414] border border-white/10 p-4 text-xs text-neutral-300 leading-relaxed max-h-48 overflow-y-auto">{FIX_PROMPT}</div>
                   <div className="mt-3 flex items-center gap-2 text-xs text-neutral-400"><ClipboardCopy className="w-3 h-3" /><span>Copied to clipboard</span></div>
                 </motion.div>
               )}
             </AnimatePresence>
             <AnimatePresence>
               {showVibePanel && (
-                <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} transition={{ duration: 0.5 }} className="rounded-2xl border border-sky-400/20 bg-sky-500/[0.03] p-5">
-                  <div className="flex items-center gap-2 mb-3"><span className="text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-2"><Send className="w-3.5 h-3.5" />Bolt Builder</span></div>
-                  <div className="rounded-lg bg-[#060912] border border-white/10 p-4 space-y-2">
+                <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} transition={{ duration: 0.5 }} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+                  <div className="flex items-center gap-2 mb-3"><span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><Send className="w-3.5 h-3.5" />Bolt Builder</span></div>
+                  <div className="rounded-lg bg-[#141414] border border-white/10 p-4 space-y-2">
                     <div className="flex items-start gap-2">
-                      <div className="w-6 h-6 rounded-full bg-violet-400/20 flex items-center justify-center shrink-0"><span className="text-xs text-violet-400">AI</span></div>
-                      <div className="text-xs text-neutral-400 leading-relaxed"><span className="text-sky-400 font-medium">Prompt pasted. </span>Processing your request to add llms.txt, schema markup, meta tags, and FAQ section...</div>
+                      <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center shrink-0"><span className="text-xs text-white">AI</span></div>
+                      <div className="text-xs text-neutral-400 leading-relaxed"><span className="text-white font-medium">Prompt pasted. </span>Processing your request to add llms.txt, schema markup, meta tags, and FAQ section...</div>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-neutral-400"><span className="w-1 h-1 rounded-full bg-sky-400 animate-pulse"></span><span>Generating changes...</span></div>
+                    <div className="flex items-center gap-2 text-xs text-neutral-400"><span className="w-1 h-1 rounded-full bg-white animate-pulse"></span><span>Generating changes...</span></div>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
             <AnimatePresence>
               {showCommitPanel && (
-                <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} transition={{ duration: 0.5 }} className="rounded-2xl border border-emerald-400/20 bg-emerald-500/[0.03] p-5">
-                  <div className="flex items-center gap-2 mb-3"><span className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2"><GitCommit className="w-3.5 h-3.5" />Changes Applied</span></div>
+                <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} transition={{ duration: 0.5 }} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+                  <div className="flex items-center gap-2 mb-3"><span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><GitCommit className="w-3.5 h-3.5" />Changes Applied</span></div>
                   <div className="space-y-2">
                     {[{ file: 'llms.txt', action: 'Created', status: 'added' }, { file: 'index.html', action: 'Schema markup added', status: 'modified' }, { file: 'robots.txt', action: 'Updated for AI crawlers', status: 'modified' }, { file: 'src/App.tsx', action: 'FAQ section added', status: 'modified' }].map((change, i) => (
-                      <motion.div key={change.file} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.15 }} className="flex items-center justify-between rounded-lg bg-[#060912] border border-white/10 px-3 py-2 text-xs">
+                      <motion.div key={change.file} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.15 }} className="flex items-center justify-between rounded-lg bg-[#141414] border border-white/10 px-3 py-2 text-xs">
                         <span className="text-neutral-300">{change.file}</span>
                         <div className="flex items-center gap-2">
                           <span className="text-neutral-400">{change.action}</span>
-                          <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${change.status === 'added' ? 'bg-emerald-400/10 text-emerald-400' : 'bg-sky-400/10 text-sky-400'}`}>{change.status === 'added' ? 'A' : 'M'}</span>
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-white/10 text-white">{change.status === 'added' ? 'A' : 'M'}</span>
                         </div>
                       </motion.div>
                     ))}
@@ -755,8 +754,8 @@ function RepoDemo({ isVisible }: { isVisible: boolean }) {
             </AnimatePresence>
             <AnimatePresence>
               {showRescanPanel && (
-                <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} transition={{ duration: 0.5 }} className="rounded-2xl border border-amber-400/20 bg-amber-500/[0.03] p-5">
-                  <div className="flex items-center gap-2 mb-3"><span className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2"><RefreshCw className="w-3.5 h-3.5 animate-spin" />Rescanning</span></div>
+                <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} transition={{ duration: 0.5 }} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+                  <div className="flex items-center gap-2 mb-3"><span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><RefreshCw className="w-3.5 h-3.5 animate-spin" />Rescanning</span></div>
                   <div className="text-xs text-neutral-400 leading-relaxed">Verifying that all fixes were applied correctly and checking new AI Readability scores...</div>
                 </motion.div>
               )}
@@ -788,7 +787,7 @@ export default function VibeCoders() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen relative z-10 selection:bg-violet-500/30">
+    <div className="flex flex-col min-h-screen relative z-10 selection:bg-white/20">
       <MarketingNav
         light
         onGetStartedClick={() => navigate('/login')}
@@ -801,7 +800,7 @@ export default function VibeCoders() {
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] pointer-events-none -z-10"
             style={{
-              background: 'radial-gradient(ellipse at center, rgba(139,92,246,0.15) 0%, rgba(14,165,233,0.08) 40%, transparent 70%)',
+              background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.04) 40%, transparent 70%)',
             }}
           />
           <div className="max-w-4xl mx-auto text-center space-y-8">
@@ -817,7 +816,7 @@ export default function VibeCoders() {
                   style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}
                 >
                   <span>Vibe Coded Your</span>
-                  <span className="inline-block relative text-violet-400 min-w-[6rem] sm:min-w-[8rem] md:min-w-[10rem]">
+                  <span className="inline-block relative text-white min-w-[6rem] sm:min-w-[8rem] md:min-w-[10rem]">
                     {ROTATING_WORDS.map((word, i) => (
                       <span
                         key={word}
@@ -840,7 +839,7 @@ export default function VibeCoders() {
                 Your vibe-coded site is{' '}
                 <span
                   className="text-transparent bg-clip-text"
-                  style={{ backgroundImage: 'linear-gradient(135deg, #c4b5fd, #38bdf8)' }}
+                  style={{ backgroundImage: 'linear-gradient(135deg, #ffffff, #a3a3a3)' }}
                 >
                   invisible to AI.
                 </span>
@@ -933,7 +932,7 @@ export default function VibeCoders() {
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                   className={`rounded-2xl border p-6 ${
                     c.highlight
-                      ? 'border-violet-400/30 bg-violet-500/5'
+                      ? 'border-white/20 bg-white/5'
                       : c.dim
                       ? 'border-white/5 bg-white/[0.03]'
                       : 'border-white/10 bg-white/[0.03]'
@@ -941,7 +940,7 @@ export default function VibeCoders() {
                 >
                   <p
                     className={`text-sm font-bold mb-2 ${
-                      c.highlight ? 'text-violet-300' : c.dim ? 'text-neutral-400' : 'text-white'
+                      c.highlight ? 'text-neutral-300' : c.dim ? 'text-neutral-400' : 'text-white'
                     }`}
                   >
                     {c.label}
@@ -965,7 +964,7 @@ export default function VibeCoders() {
               transition={{ duration: 0.6 }}
               className="mb-12"
             >
-              <span className="text-violet-400 font-bold tracking-wider text-xs uppercase mb-3 block">8 signals scored</span>
+              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">8 signals scored</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">What we analyze in your repo or URL</h2>
               <p className="text-neutral-400 max-w-xl leading-relaxed">
                 Each signal has a direct impact on whether AI search engines can discover, understand, and cite your vibe-coded project.
@@ -1016,7 +1015,7 @@ export default function VibeCoders() {
               transition={{ duration: 0.6 }}
               className="text-center mb-14"
             >
-              <span className="text-violet-400 font-bold tracking-wider text-xs uppercase mb-3 block">Simple workflow</span>
+              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Simple workflow</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white">From invisible to cited in three steps</h2>
             </motion.div>
 
@@ -1049,7 +1048,7 @@ export default function VibeCoders() {
               transition={{ duration: 0.6 }}
               className="text-center mb-14"
             >
-              <span className="text-violet-400 font-bold tracking-wider text-xs uppercase mb-3 block">Scoring breakdown</span>
+              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Scoring breakdown</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Five pillars, granular signals</h2>
               <p className="text-neutral-400 max-w-xl mx-auto leading-relaxed mb-3">
                 Every repo scan and URL check breaks down into these five core areas.
@@ -1099,7 +1098,7 @@ export default function VibeCoders() {
                         {/* Hover tooltip */}
                         {sig.description && (
                           <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 z-50 w-64 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                            <div className="rounded-lg bg-[#0a0f1e] border border-white/10 p-3 shadow-xl">
+                            <div className="rounded-lg bg-[#0d0d0d] border border-white/10 p-3 shadow-xl">
                               <p className="text-xs text-neutral-300 leading-relaxed">{sig.description}</p>
                             </div>
                           </div>
@@ -1138,7 +1137,7 @@ export default function VibeCoders() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="rounded-[28px] border border-violet-400/20 bg-violet-500/[0.03] p-10"
+              className="rounded-[28px] border border-white/10 bg-white/[0.03] p-10"
             >
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">Stop building in the dark.</h2>
               <p className="text-neutral-400 mb-8 max-w-lg mx-auto leading-relaxed">
@@ -1158,7 +1157,7 @@ export default function VibeCoders() {
         </section>
       </main>
 
-      <footer className="border-t border-white/10 bg-black py-12 relative z-10">
+      <footer className="border-t border-white/10 py-12 relative z-10">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
           <span className="font-bold text-3xl tracking-tighter text-white">
             r<span className="text-sky-400">ai</span>n
