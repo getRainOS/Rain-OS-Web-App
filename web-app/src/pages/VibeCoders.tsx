@@ -1148,6 +1148,78 @@ export default function VibeCoders() {
           </div>
         </section>
 
+        {/* Product Screenshots */}
+        <section className="py-24 px-6 border-t border-white/10">
+          <div className="max-w-5xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-14"
+            >
+              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Inside Rain OS</span>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Built for people who ship fast</h2>
+              <p className="text-neutral-400 max-w-xl mx-auto leading-relaxed">
+                You already watch your build's deploy logs. This is the same instinct, pointed at whether AI can actually read what you shipped — real trendlines, not a vibe check.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="rounded-2xl border border-white/10 overflow-hidden mb-6"
+              style={{ boxShadow: '0 40px 80px -20px rgba(0,0,0,0.6)' }}
+            >
+              <div className="flex items-center gap-2 px-4 py-3 bg-[#0a0a0a] border-b border-white/10">
+                <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+                <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+                <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+                <span className="ml-3 text-xs text-neutral-500 font-mono">app.getrainos.com/dashboard</span>
+              </div>
+              <img src="/screenshots/dashboard-chart.png" alt="Rain OS pillar breakdown dashboard showing AI Readability, Digital Authority, Conversion Readiness, and RAG Readiness trendlines" className="w-full block" />
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-start">
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="md:col-span-3 rounded-2xl border border-white/10 overflow-hidden"
+                style={{ boxShadow: '0 30px 60px -20px rgba(0,0,0,0.6)' }}
+              >
+                <div className="flex items-center gap-2 px-4 py-3 bg-[#0a0a0a] border-b border-white/10">
+                  <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+                  <span className="ml-3 text-xs text-neutral-500 font-mono">app.getrainos.com/citation-monitor</span>
+                </div>
+                <img src="/screenshots/citation-map.png" alt="Rain OS citation map showing which countries AI engines are citing your domain from" className="w-full block" />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="md:col-span-2 rounded-2xl border border-white/10 bg-white/[0.03] p-7 h-full flex flex-col justify-center"
+              >
+                <h3 className="text-base font-semibold text-white mb-3">You shipped it in an afternoon. Now find out if AI can even see it.</h3>
+                <p className="text-sm text-neutral-400 leading-relaxed mb-4">
+                  Repo scans, live-site checks, citation tracking, and a world map of where your domain actually gets cited — the same dashboard whether you vibe-coded it in Bolt or hand-wrote every line.
+                </p>
+                <a href="/login" className="inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:text-neutral-300 transition-colors">
+                  Scan your build free
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </a>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
         {/* CTA */}
         <section className="py-28 px-6 border-t border-white/10">
           <div className="max-w-3xl mx-auto text-center">
