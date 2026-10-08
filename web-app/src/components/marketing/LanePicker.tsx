@@ -80,8 +80,12 @@ export default function LanePicker() {
             </button>
           </div>
 
-          {/* Choose-your-lane body */}
-          <div className="flex-1 flex flex-col items-center justify-center px-6 py-10 overflow-y-auto relative">
+          {/* Choose-your-lane body. justify-start + my-auto (not justify-center)
+              on the overflow-y-auto parent — centering flex content that's taller
+              than the viewport clips the top with no way to scroll to it; this
+              still centers short content but lets tall content scroll from the top. */}
+          <div className="flex-1 flex flex-col items-center justify-start px-6 py-10 overflow-y-auto relative">
+            <div className="m-auto flex flex-col items-center w-full">
             {/* Slow ambient drift behind the cards — reads as depth, not urgency,
                 because it's slow, blurred, and grayscale rather than fast/colored. */}
             <motion.div
@@ -148,6 +152,7 @@ export default function LanePicker() {
             >
               Not sure yet — just show me the site
             </motion.button>
+            </div>
           </div>
         </motion.div>
       )}
