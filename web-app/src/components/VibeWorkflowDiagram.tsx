@@ -39,7 +39,14 @@ export default function VibeWorkflowDiagram() {
   };
 
   return (
-    <section className="py-20 px-6 border-t border-white/[0.06] overflow-hidden">
+    <section
+      className="py-24 px-6 border-t border-white/[0.06] overflow-hidden relative"
+      style={{
+        backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px)',
+        backgroundSize: '120px 100%',
+        backgroundPosition: 'center',
+      }}
+    >
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
@@ -70,7 +77,7 @@ export default function VibeWorkflowDiagram() {
               step={step}
               targetStep={0}
               label="Plan"
-              icon={<Layers className="w-5 h-5" />}
+              icon={<Layers className="w-5 h-5" strokeWidth={1.5} />}
               color="#ffffff"
               description="Idea ready"
             />
@@ -83,7 +90,7 @@ export default function VibeWorkflowDiagram() {
               step={step}
               targetStep={1}
               label="Vibe Code"
-              icon={<Code2 className="w-5 h-5" />}
+              icon={<Code2 className="w-5 h-5" strokeWidth={1.5} />}
               color="#ffffff"
               description="Build fast"
               expanded={step >= 1 && step < 3}
@@ -113,7 +120,7 @@ export default function VibeWorkflowDiagram() {
               step={step}
               targetStep={2}
               label="Rain OS"
-              icon={<Zap className="w-5 h-5" />}
+              icon={<Zap className="w-5 h-5" strokeWidth={1.5} />}
               color="#ffffff"
               description="Optimize for AI"
               isHighlighted
@@ -129,7 +136,7 @@ export default function VibeWorkflowDiagram() {
                   step={step}
                   targetStep={3}
                   label="Repo Scanner"
-                  icon={<GitBranch className="w-5 h-5" />}
+                  icon={<GitBranch className="w-5 h-5" strokeWidth={1.5} />}
                   color="#ffffff"
                   description="Scan source code"
                 />
@@ -147,7 +154,7 @@ export default function VibeWorkflowDiagram() {
                   step={step}
                   targetStep={3}
                   label="URL Scanner"
-                  icon={<Search className="w-5 h-5" />}
+                  icon={<Search className="w-5 h-5" strokeWidth={1.5} />}
                   color="#ffffff"
                   description="Scan live site"
                 />
@@ -163,7 +170,7 @@ export default function VibeWorkflowDiagram() {
                 step={step}
                 targetStep={4}
                 label="5 Pillars"
-                icon={<Globe className="w-5 h-5" />}
+                icon={<Globe className="w-5 h-5" strokeWidth={1.5} />}
                 color="#ffffff"
                 description="Analyze signals"
                 expanded={step >= 4 && step < 5}
@@ -197,7 +204,7 @@ export default function VibeWorkflowDiagram() {
                 step={step}
                 targetStep={5}
                 label="AI Prompt"
-                icon={<Zap className="w-5 h-5" />}
+                icon={<Zap className="w-5 h-5" strokeWidth={1.5} />}
                 color="#ffffff"
                 description="Get fixes"
               />
@@ -209,7 +216,7 @@ export default function VibeWorkflowDiagram() {
                 step={step}
                 targetStep={6}
                 label="Optimize"
-                icon={<CheckCircle2 className="w-5 h-5" />}
+                icon={<CheckCircle2 className="w-5 h-5" strokeWidth={1.5} />}
                 color="#ffffff"
                 description="Apply changes"
                 isHighlighted
@@ -227,7 +234,7 @@ export default function VibeWorkflowDiagram() {
                   step={step}
                   targetStep={7}
                   label="Score ↑"
-                  icon={<TrendingUp className="w-5 h-5" />}
+                  icon={<TrendingUp className="w-5 h-5" strokeWidth={1.5} />}
                   color="#ffffff"
                   description="AI-ready now"
                 />
@@ -251,7 +258,7 @@ export default function VibeWorkflowDiagram() {
                 step={step}
                 targetStep={8}
                 label="Go Live"
-                icon={<Rocket className="w-5 h-5" />}
+                icon={<Rocket className="w-5 h-5" strokeWidth={1.5} />}
                 color="#ffffff"
                 description="Site is alive"
                 isFinal
@@ -366,11 +373,14 @@ function WorkflowNode({
         <div
           className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
           style={{
-            background: isActive ? `${color}15` : 'rgba(255,255,255,0.03)',
+            background: isActive
+              ? 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02))'
+              : 'rgba(255,255,255,0.03)',
             border: `1px solid ${isActive ? `${color}30` : 'rgba(255,255,255,0.06)'}`,
+            boxShadow: isActive ? 'inset 0 1px 0 rgba(255,255,255,0.08)' : 'none',
           }}
         >
-          <span style={{ color: isActive ? color : '#737373' }}>{icon}</span>
+          <span style={{ color: isActive ? color : '#737373', display: 'flex' }}>{icon}</span>
         </div>
 
         {/* Text */}
