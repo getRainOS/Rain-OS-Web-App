@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, GitBranch, Search, Code2, Globe, TrendingUp, Rocket, ArrowRight, Layers, CheckCircle2 } from 'lucide-react';
-import { PILLAR_COLORS } from '../lib/pillarColors.js';
 
 const VIBE_TOOLS = [
-  { name: 'Bolt', color: '#f59e0b' },
-  { name: 'Lovable', color: '#ec4899' },
-  { name: 'Cursor', color: '#22c55e' },
-  { name: 'v0', color: '#000000' },
-  { name: 'Replit', color: '#f97316' },
-  { name: 'Windsurf', color: '#06b6d4' },
+  { name: 'Bolt', color: '#ffffff' },
+  { name: 'Lovable', color: '#ffffff' },
+  { name: 'Cursor', color: '#ffffff' },
+  { name: 'v0', color: '#ffffff' },
+  { name: 'Replit', color: '#ffffff' },
+  { name: 'Windsurf', color: '#ffffff' },
 ];
 
 const PILLARS = [
-  { name: 'AI Readability', color: PILLAR_COLORS.ai_readability, short: 'Readability' },
-  { name: 'Digital Authority', color: PILLAR_COLORS.digital_authority, short: 'Authority' },
-  { name: 'Conversion Readiness', color: PILLAR_COLORS.conversion_readiness, short: 'Conversion' },
-  { name: 'Product Discoverability', color: PILLAR_COLORS.product_discoverability, short: 'Discoverability' },
-  { name: 'RAG Readiness', color: PILLAR_COLORS.rag_readiness, short: 'RAG' },
+  { name: 'AI Readability', color: '#ffffff', short: 'Readability' },
+  { name: 'Digital Authority', color: '#ffffff', short: 'Authority' },
+  { name: 'Conversion Readiness', color: '#ffffff', short: 'Conversion' },
+  { name: 'Product Discoverability', color: '#ffffff', short: 'Discoverability' },
+  { name: 'RAG Readiness', color: '#ffffff', short: 'RAG' },
 ];
 
 export default function VibeWorkflowDiagram() {
@@ -50,7 +49,7 @@ export default function VibeWorkflowDiagram() {
           transition={{ duration: 0.6 }}
           className="text-center mb-14"
         >
-          <span className="text-violet-400 font-bold tracking-wider text-xs uppercase mb-3 block">
+          <span className="text-neutral-400 font-bold tracking-wider text-xs uppercase mb-3 block">
             The complete workflow
           </span>
           <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
@@ -72,7 +71,7 @@ export default function VibeWorkflowDiagram() {
               targetStep={0}
               label="Plan"
               icon={<Layers className="w-5 h-5" />}
-              color="#94a3b8"
+              color="#ffffff"
               description="Idea ready"
             />
 
@@ -85,7 +84,7 @@ export default function VibeWorkflowDiagram() {
               targetStep={1}
               label="Vibe Code"
               icon={<Code2 className="w-5 h-5" />}
-              color="#94a3b8"
+              color="#ffffff"
               description="Build fast"
               expanded={step >= 1 && step < 3}
             >
@@ -115,7 +114,7 @@ export default function VibeWorkflowDiagram() {
               targetStep={2}
               label="Rain OS"
               icon={<Zap className="w-5 h-5" />}
-              color="#0ea5e9"
+              color="#ffffff"
               description="Optimize for AI"
               isHighlighted
               pulse={step === 2}
@@ -131,7 +130,7 @@ export default function VibeWorkflowDiagram() {
                   targetStep={3}
                   label="Repo Scanner"
                   icon={<GitBranch className="w-5 h-5" />}
-                  color="#f59e0b"
+                  color="#ffffff"
                   description="Scan source code"
                 />
               </div>
@@ -149,7 +148,7 @@ export default function VibeWorkflowDiagram() {
                   targetStep={3}
                   label="URL Scanner"
                   icon={<Search className="w-5 h-5" />}
-                  color="#ec4899"
+                  color="#ffffff"
                   description="Scan live site"
                 />
               </div>
@@ -165,7 +164,7 @@ export default function VibeWorkflowDiagram() {
                 targetStep={4}
                 label="5 Pillars"
                 icon={<Globe className="w-5 h-5" />}
-                color="#a78bfa"
+                color="#ffffff"
                 description="Analyze signals"
                 expanded={step >= 4 && step < 5}
               >
@@ -199,7 +198,7 @@ export default function VibeWorkflowDiagram() {
                 targetStep={5}
                 label="AI Prompt"
                 icon={<Zap className="w-5 h-5" />}
-                color="#94a3b8"
+                color="#ffffff"
                 description="Get fixes"
               />
 
@@ -211,7 +210,7 @@ export default function VibeWorkflowDiagram() {
                 targetStep={6}
                 label="Optimize"
                 icon={<CheckCircle2 className="w-5 h-5" />}
-                color="#0ea5e9"
+                color="#ffffff"
                 description="Apply changes"
                 isHighlighted
               />
@@ -229,7 +228,7 @@ export default function VibeWorkflowDiagram() {
                   targetStep={7}
                   label="Score ↑"
                   icon={<TrendingUp className="w-5 h-5" />}
-                  color="#34d399"
+                  color="#ffffff"
                   description="AI-ready now"
                 />
                 <AnimatePresence>
@@ -237,7 +236,7 @@ export default function VibeWorkflowDiagram() {
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-bold text-emerald-400"
+                      className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-bold text-white"
                     >
                       +42 points
                     </motion.div>
@@ -253,7 +252,7 @@ export default function VibeWorkflowDiagram() {
                 targetStep={8}
                 label="Go Live"
                 icon={<Rocket className="w-5 h-5" />}
-                color="#f59e0b"
+                color="#ffffff"
                 description="Site is alive"
                 isFinal
               />
@@ -345,7 +344,7 @@ function WorkflowNode({
           isHighlighted
             ? 'border-2'
             : 'border'
-        } ${isFinal && isActive ? 'shadow-lg shadow-amber-500/20' : ''}`}
+        } ${isFinal && isActive ? 'shadow-lg shadow-white/10' : ''}`}
         style={{
           background: isHighlighted
             ? `linear-gradient(135deg, ${color}10, ${color}05)`
@@ -371,7 +370,7 @@ function WorkflowNode({
             border: `1px solid ${isActive ? `${color}30` : 'rgba(255,255,255,0.06)'}`,
           }}
         >
-          <span style={{ color: isActive ? color : '#64748b' }}>{icon}</span>
+          <span style={{ color: isActive ? color : '#737373' }}>{icon}</span>
         </div>
 
         {/* Text */}
@@ -424,21 +423,21 @@ function FlowArrow({ visible, direction = 'right' }: { visible: boolean; directi
         <div className="relative w-full h-px bg-white/10">
           <motion.div
             className="absolute top-0 left-0 h-full"
-            style={{ background: 'linear-gradient(90deg, #0ea5e9, #a78bfa)' }}
+            style={{ background: '#ffffff' }}
             initial={false}
             animate={{ width: visible ? '100%' : '0%' }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
           />
           <ArrowRight
             className="absolute top-1/2 -translate-y-1/2 right-0 w-3 h-3"
-            style={{ color: visible ? '#a78bfa' : '#475569' }}
+            style={{ color: visible ? '#ffffff' : '#525252' }}
           />
         </div>
       ) : (
         <div className="relative w-px h-full bg-white/10">
           <motion.div
             className="absolute left-0 top-0 w-full"
-            style={{ background: 'linear-gradient(180deg, #0ea5e9, #a78bfa)' }}
+            style={{ background: '#ffffff' }}
             initial={false}
             animate={{ height: visible ? '100%' : '0%' }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
