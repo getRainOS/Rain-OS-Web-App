@@ -155,6 +155,16 @@ export default function RepoAnalysis() {
   const [result, setResult] = useState(null);
   const [connectSuccess, setConnectSuccess] = useState('');
 
+  const connectCopy = userLane === 'developers'
+    ? { title: 'See your codebase through an AI agent\'s eyes', desc: "Link your GitHub account to fetch source files (package.json, index.html, llms.txt, robots.txt) and score your docs and app structure against all 5 AEO pillars. This is the only way to analyze JavaScript-rendered apps." }
+    : userLane === 'vibe_coders'
+    ? { title: 'Analyze the app you just shipped', desc: "Link your GitHub account to pull your repo's source directly — package.json, index.html, llms.txt — and score it before AI tools try to read it. Catches JS-rendered pages that a plain URL scan can't see." }
+    : userLane === 'product_sellers'
+    ? { title: 'Check what AI shopping agents can see in your storefront code', desc: "Link your GitHub account to fetch source files from your storefront repo and score product discoverability signals AI shopping assistants rely on. This is the only way to analyze JavaScript-rendered storefronts." }
+    : userLane === 'local_business'
+    ? { title: 'Check what AI assistants can see in your site\'s source', desc: "Link your GitHub account to fetch source files from your website repo and score the local-presence signals AI assistants rely on. This is the only way to analyze JavaScript-rendered sites." }
+    : { title: "See your codebase through an AI's eyes", desc: "Link your GitHub account to fetch source files (package.json, index.html, llms.txt, robots.txt) and score them against all 5 AEO pillars. This is the only way to analyze JavaScript-rendered apps." };
+
   useEffect(() => {
     api.github.repos()
       .then(({ data }) => {
@@ -238,11 +248,8 @@ export default function RepoAnalysis() {
       {!connected && (
         <div className={styles.connectCard}>
           <div className={styles.connectIcon}>⊕</div>
-          <h2 className={styles.connectTitle}>See your codebase through an AI's eyes</h2>
-          <p className={styles.connectDesc}>
-            Link your GitHub account to fetch source files (package.json, index.html, llms.txt, robots.txt) and
-            score them against all 5 AEO pillars. This is the only way to analyze JavaScript-rendered apps.
-          </p>
+          <h2 className={styles.connectTitle}>{connectCopy.title}</h2>
+          <p className={styles.connectDesc}>{connectCopy.desc}</p>
           <button
             className="btn btn-primary"
             onClick={() => navigate('/settings')}

@@ -533,6 +533,16 @@ export default function UrlScanner() {
     ? 'Scan a page from your site to see if AI assistants can find your name, address, phone, and hours'
     : 'Scan any URL to analyze its AI readability and AEO performance';
 
+  const heroCopy = userLane === 'product_sellers'
+    ? { icon: '🛒', title: "Scan your product page and see exactly what's missing", sub: "We'll check whether AI shopping assistants like ChatGPT and Perplexity can actually read your pricing, availability, specs, and reviews — then tell you precisely what to fix." }
+    : userLane === 'local_business'
+    ? { icon: '📍', title: 'Scan your site and see if AI can find your business', sub: "We'll check whether AI assistants can surface your name, address, phone, hours, and reviews when someone nearby asks — then tell you precisely what to fix." }
+    : userLane === 'developers'
+    ? { icon: '⌁', title: 'Scan your app and see what AI tools can actually parse', sub: "We'll check whether AI coding assistants and crawlers can read your rendered markup, metadata, and structured data — then tell you precisely what to fix." }
+    : userLane === 'vibe_coders'
+    ? { icon: '✦', title: 'Scan your build before you ship it', sub: "We'll check whether AI assistants can read your landing page or app copy — then tell you precisely what to fix before launch." }
+    : { icon: '◎', title: 'Scan any page and see what AI actually sees', sub: "We'll check whether AI assistants can extract, cite, and trust what's on this page — then tell you precisely what to fix." };
+
   return (
     <div className={`${styles.root} fade-in`}>
       <div className={styles.header}>
@@ -540,15 +550,13 @@ export default function UrlScanner() {
         <p className={styles.sub}>{pageSub}</p>
       </div>
 
-      {userLane === 'product_sellers' && (
-        <div className={styles.hero}>
-          <div className={styles.heroIcon}>🛒</div>
-          <div>
-            <div className={styles.heroTitle}>Scan your product page and see exactly what's missing</div>
-            <div className={styles.heroSub}>We'll check whether AI shopping assistants like ChatGPT and Perplexity can actually read your pricing, availability, specs, and reviews — then tell you precisely what to fix.</div>
-          </div>
+      <div className={styles.hero}>
+        <div className={styles.heroIcon}>{heroCopy.icon}</div>
+        <div>
+          <div className={styles.heroTitle}>{heroCopy.title}</div>
+          <div className={styles.heroSub}>{heroCopy.sub}</div>
         </div>
-      )}
+      </div>
 
       {userLane === 'vibe_coders' ? (
         <details style={{
