@@ -4,11 +4,21 @@
 // The map previously inferred geography from a domain's TLD alone (see
 // lib/domainCountry.js on the frontend), which is a weak signal: almost
 // every company uses a generic .com/.io regardless of where it's based, so
-// the map was empty for most accounts. This asks Gemini instead — it
-// generally knows where real, notable companies are headquartered — and
-// caches every answer (including "couldn't place it") in a shared,
-// cross-user table so we never re-ask about the same domain twice.
-import { GoogleGenerativeAI, type GenerativeModel } from '@google/generative-ai';
+// the map was empty for most accounts.
+//
+// A first pass asked Gemini to classify domains from parametric knowledge
+// alone — but Rain OS's actual users are small businesses, indie
+// freelancers, and writers, whose competitors are equally small and
+// obscure. Gemini has no memorized knowledge of who they are, so that
+// approach degraded to "null for almost everyone" for exactly this
+// audience. This version grounds each lookup in a real Google Search (the
+// same tool citationCheckService uses) so Gemini can find a small
+// business's About/contact page, LinkedIn, or a directory listing instead
+// of relying on brand recognition. It costs one real search per new
+// domain, so lookups are capped per call and the result is cached forever
+// (including a confident "couldn't find it") in a shared, cross-user table
+// so no domain is ever searched for twice.
+import { GoogleGenerativeAI, type GenerativeModel, type Tool } from '@google/generative-ai';
 import { pool } from './db';
 
 const API_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
@@ -20,19 +30,26 @@ export interface DomainCountry {
   flag: string;
 }
 
-// Cap how many never-seen domains we'll ask Gemini about in a single
-// request, so one pathological call (a user with hundreds of competitor
-// domains) can't blow up the prompt or the token budget.
-const MAX_DOMAINS_PER_CALL = 60;
+// Each lookup is a real grounded search call, not a cheap classification
+// call, so this stays small — the cache means the rest fill in across
+// later page loads (by this user or others) rather than all at once.
+const MAX_DOMAINS_PER_CALL = 8;
+// How many of those grounded searches run concurrently.
+const CONCURRENCY = 3;
+
+interface GoogleSearchTool {
+  googleSearch: Record<string, never>;
+}
 
 let _client: GoogleGenerativeAI | null = null;
-let _model: GenerativeModel | null = null;
-function getModel(): GenerativeModel {
-  if (!_model) {
+let _groundedModel: GenerativeModel | null = null;
+function getGroundedModel(): GenerativeModel {
+  if (!_groundedModel) {
     if (!_client) _client = new GoogleGenerativeAI(API_KEY);
-    _model = _client.getGenerativeModel({ model: MODEL });
+    const tools: GoogleSearchTool[] = [{ googleSearch: {} }];
+    _groundedModel = _client.getGenerativeModel({ model: MODEL, tools: tools as unknown as Tool[] });
   }
-  return _model;
+  return _groundedModel;
 }
 
 async function getCachedCountries(domains: string[]): Promise<Map<string, DomainCountry | null>> {
@@ -66,49 +83,45 @@ async function cacheCountries(entries: Map<string, DomainCountry | null>): Promi
   }
 }
 
-async function classifyWithGemini(domains: string[]): Promise<Map<string, DomainCountry | null>> {
-  const model = getModel();
+async function lookupDomainWithGrounding(domain: string): Promise<DomainCountry | null> {
+  const model = getGroundedModel();
   const prompt = [
-    'For each domain below, identify the country where that company/organization is headquartered.',
-    'Respond with a single JSON object mapping each domain to either an object or null:',
-    '{ "example.com": { "country": "United States", "iso": "840" } }',
-    'Use the ISO 3166-1 NUMERIC code (e.g. "840" for United States, "276" for Germany, "392" for Japan) for "iso".',
-    'If you are not confident where a domain\'s company is headquartered, map it to null — do not guess.',
+    `Search the web to find out what country the business or organization behind the website "${domain}" is`,
+    `headquartered or based in. Check their site (About/Contact pages), LinkedIn, business directories, or`,
+    `domain registration info if needed — this may be a small business, freelancer, or independent site, not`,
+    `necessarily a well-known company.`,
     '',
-    `DOMAINS: ${JSON.stringify(domains)}`,
-    '',
-    'Return ONLY the JSON object, no other text.',
+    'Respond with ONLY a single JSON object, no other text:',
+    '{ "country": "United States", "iso": "840" } — using the ISO 3166-1 NUMERIC code for "iso".',
+    'If you cannot find a confident answer after searching, respond with exactly: { "country": null }',
   ].join('\n');
 
-  const result = await model.generateContent({
-    contents: [{ role: 'user', parts: [{ text: prompt }] }],
-    generationConfig: {
-      temperature: 0,
-      maxOutputTokens: 4096,
-      responseMimeType: 'application/json',
-    },
-  });
-
-  const raw = result.response.text();
-  let parsed: Record<string, { country: string; iso: string } | null>;
   try {
-    const clean = raw.replace(/```json|```/g, '').trim();
-    parsed = JSON.parse(clean);
-  } catch {
-    // Parsing failure degrades to "unknown for everything we asked about"
-    // rather than throwing — a bad map response shouldn't break the page.
-    parsed = {};
+    const result = await model.generateContent({
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0, maxOutputTokens: 1024 },
+    });
+    const raw = result.response.text();
+    // Grounded responses can include stray markdown fences or trailing prose
+    // despite the instruction — pull out the first {...} block rather than
+    // assuming the whole response is clean JSON.
+    const match = raw.match(/\{[\s\S]*\}/);
+    if (!match) return null;
+    const entry = JSON.parse(match[0]) as { country?: string | null; iso?: string };
+    if (!entry.country || !entry.iso) return null;
+    return { name: entry.country, iso: entry.iso, flag: isoToFlag(entry.iso) };
+  } catch (err) {
+    console.error(`Domain geo lookup failed for ${domain}:`, err);
+    return null;
   }
+}
 
+async function classifyWithGemini(domains: string[]): Promise<Map<string, DomainCountry | null>> {
   const out = new Map<string, DomainCountry | null>();
-  for (const domain of domains) {
-    const entry = parsed[domain];
-    out.set(
-      domain,
-      entry && entry.country && entry.iso
-        ? { name: entry.country, iso: entry.iso, flag: isoToFlag(entry.iso) }
-        : null
-    );
+  for (let i = 0; i < domains.length; i += CONCURRENCY) {
+    const batch = domains.slice(i, i + CONCURRENCY);
+    const results = await Promise.all(batch.map(d => lookupDomainWithGrounding(d)));
+    batch.forEach((domain, j) => out.set(domain, results[j]));
   }
   return out;
 }
