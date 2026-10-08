@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
@@ -484,6 +484,10 @@ function FixPromptGenerator({ recommendations, url, overallScore }) {
   );
 }
 
+function heroSeenKey(lane) {
+  return `rain_os_url_scanner_hero_seen_${lane || 'general'}`;
+}
+
 export default function UrlScanner() {
   const { refreshUser, userLane } = useApp();
   const navigate = useNavigate();
@@ -493,6 +497,21 @@ export default function UrlScanner() {
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
   const [scannedUrl, setScannedUrl] = useState('');
+  const [heroSeen, setHeroSeen] = useState(() => {
+    try {
+      return localStorage.getItem(heroSeenKey(userLane)) === '1';
+    } catch {
+      return false;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      setHeroSeen(localStorage.getItem(heroSeenKey(userLane)) === '1');
+    } catch {
+      // ignore
+    }
+  }, [userLane]);
 
   async function handleScan(e) {
     e.preventDefault();
@@ -506,6 +525,12 @@ export default function UrlScanner() {
       setResult(data);
       setScannedUrl(url.trim());
       refreshUser();
+      try {
+        localStorage.setItem(heroSeenKey(userLane), '1');
+      } catch {
+        // best-effort only
+      }
+      setHeroSeen(true);
     } catch (err) {
       setError(err.message || 'Scan failed. Please try again.');
     } finally {
@@ -550,13 +575,15 @@ export default function UrlScanner() {
         <p className={styles.sub}>{pageSub}</p>
       </div>
 
-      <div className={styles.hero}>
-        <div className={styles.heroIcon}>{heroCopy.icon}</div>
-        <div>
-          <div className={styles.heroTitle}>{heroCopy.title}</div>
-          <div className={styles.heroSub}>{heroCopy.sub}</div>
+      {!heroSeen && (
+        <div className={styles.hero}>
+          <div className={styles.heroIcon}>{heroCopy.icon}</div>
+          <div>
+            <div className={styles.heroTitle}>{heroCopy.title}</div>
+            <div className={styles.heroSub}>{heroCopy.sub}</div>
+          </div>
         </div>
-      </div>
+      )}
 
       {userLane === 'vibe_coders' ? (
         <details style={{
