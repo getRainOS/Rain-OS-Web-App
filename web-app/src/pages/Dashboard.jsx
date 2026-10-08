@@ -473,6 +473,16 @@ export default function Dashboard() {
   const clearFilters = () => { setDateFilter('all'); setTypeFilter('all'); };
   const typeRoute = CONTENT_TYPE_ROUTES[typeFilter] || LANE_DEFAULT_ROUTES[userLane] || '/analyze';
 
+  const dashboardHeroCopy = userLane === 'product_sellers'
+    ? { title: 'See what AI shopping assistants see on your product pages', sub: "Scan a product page and score it against the pricing, availability, and spec signals AI shopping tools look for — then fix what's holding it back.", cta: 'Open Product Page Optimization', route: '/url-scanner' }
+    : userLane === 'local_business'
+    ? { title: 'Make sure AI assistants can find your business', sub: "Scan a page from your site and score it against the name, address, phone, and hours signals local AI search relies on — then fix what's holding it back.", cta: 'Open Product Page Optimization', route: '/url-scanner' }
+    : userLane === 'developers'
+    ? { title: 'See what AI tools can actually parse in your repo', sub: "Connect a repo and score your docs and app structure against the signals AI coding assistants and crawlers rely on — then fix what's holding it back.", cta: 'Open Repo Analysis', route: '/repo-analysis' }
+    : userLane === 'vibe_coders'
+    ? { title: 'Audit your build before AI tools try to read it', sub: "Connect the repo you just shipped and score it against the signals AI assistants rely on — then fix what's holding it back before launch.", cta: 'Open Repo Analysis', route: '/repo-analysis' }
+    : { title: 'Create content that increases your AI visibility', sub: "Paste a draft and score it against the same signals AI engines use to decide what to cite — then fix what's holding it back.", cta: 'Open Content Optimizer', route: '/analyze' };
+
   useEffect(() => {
     api.citationHistory({ limit: 50 })
       .then(({ data }) => {
@@ -796,23 +806,23 @@ export default function Dashboard() {
         ) : null}
       </div>
 
-      {/* ── Create Content hero ── */}
-      <div className={styles.contentHero}>
-        <div className={styles.contentHeroIcon}>
-          <Sparkles size={18} />
+      {/* ── Create Content hero — one-time per-lane onboarding prompt, gone once the lane has any analysis history ── */}
+      {!loading && history.length === 0 && (
+        <div className={styles.contentHero}>
+          <div className={styles.contentHeroIcon}>
+            <Sparkles size={18} />
+          </div>
+          <h2 className={styles.contentHeroTitle}>{dashboardHeroCopy.title}</h2>
+          <p className={styles.contentHeroSub}>{dashboardHeroCopy.sub}</p>
+          <button onClick={() => navigate(dashboardHeroCopy.route)} className={`btn btn-primary ${styles.contentHeroBtn}`}>
+            {dashboardHeroCopy.cta}
+            <ArrowRight size={14} />
+          </button>
+          <span className={styles.contentHeroCaption}>
+            <Sparkles size={11} /> Scored in seconds, not days
+          </span>
         </div>
-        <h2 className={styles.contentHeroTitle}>Create content that increases your AI visibility</h2>
-        <p className={styles.contentHeroSub}>
-          Paste a draft and score it against the same signals AI engines use to decide what to cite — then fix what's holding it back.
-        </p>
-        <button onClick={() => navigate('/analyze')} className={`btn btn-primary ${styles.contentHeroBtn}`}>
-          Open Content Optimizer
-          <ArrowRight size={14} />
-        </button>
-        <span className={styles.contentHeroCaption}>
-          <Sparkles size={11} /> Scored in seconds, not days
-        </span>
-      </div>
+      )}
 
       {/* ── Pillar Breakdown (above the fold, full-width hero) ── */}
       <div className={`${styles.chartCard} ${styles.dottedBg}`} style={{ marginBottom: 12 }}>
