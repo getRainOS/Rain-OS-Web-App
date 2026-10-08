@@ -238,7 +238,7 @@ export default function RepoAnalysis() {
       {!connected && (
         <div className={styles.connectCard}>
           <div className={styles.connectIcon}>⊕</div>
-          <h2 className={styles.connectTitle}>Connect GitHub to analyze repos</h2>
+          <h2 className={styles.connectTitle}>See your codebase through an AI's eyes</h2>
           <p className={styles.connectDesc}>
             Link your GitHub account to fetch source files (package.json, index.html, llms.txt, robots.txt) and
             score them against all 5 AEO pillars. This is the only way to analyze JavaScript-rendered apps.
