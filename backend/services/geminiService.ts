@@ -223,6 +223,26 @@ function normalizeRecommendations(raw: unknown): import('../types').PillarRecomm
   }
   return out;
 }
+// ─── Content-type scoring rubrics ───────────────────────────────────────────
+// Each type gets concrete, distinct structural/tonal expectations — not a
+// generic "consider the type" hint — so the same draft is judged differently
+// as a Social Post vs. a Landing Page vs. Documentation.
+const CONTENT_TYPE_RUBRICS: Record<string, string> = {
+  'article': `CONTENT TYPE: Article. Expect a clear headline, a scannable structure with descriptive subheadings, a logical narrative arc (intro -> body -> conclusion), and well-attributed claims or sources. Penalize walls of unbroken text and missing subheadings. Reward a strong, answer-first opening paragraph that works as a standalone AI citation.`,
+  'blog post': `CONTENT TYPE: Blog Post. Expect a conversational but structured voice, short paragraphs, a clear takeaway or point of view, and scannable subheadings or a listicle structure where appropriate. Penalize corporate/stiff phrasing and missing a clear hook in the first two sentences. Reward concrete examples and a distinct author point of view.`,
+  'product description': `CONTENT TYPE: Product Description. Expect pricing, availability, and key specs stated as direct, extractable facts (not buried in prose), a clear description of who the product is for, and concrete differentiators vs. alternatives. Penalize vague marketing adjectives with no supporting facts ("premium quality", "amazing") and missing specs. Reward bullet-style spec clarity and explicit comparison points.`,
+  'landing page': `CONTENT TYPE: Landing Page. Expect a single clear value proposition above the fold, a direct call to action, scannable benefit-oriented sections (not dense paragraphs), and concrete proof points (numbers, testimonials, specifics) over vague claims. Penalize missing or buried CTAs and generic "we help businesses grow" style copy with no specifics. Reward clarity on exactly who this is for and what happens when they click through.`,
+  'documentation': `CONTENT TYPE: Documentation. Expect a clear navigational structure (headings/TOC), deterministic step-by-step instructions, complete and runnable code examples, and explicit coverage of error cases or edge cases. Penalize ambiguous steps, missing prerequisites, and code snippets that can't be copy-pasted as-is. Reward versioning/compatibility notes and explicit expected output for each step.`,
+  'social post': `CONTENT TYPE: Social Post. Expect extreme brevity, a strong hook in the first line, a single clear idea (not multiple buried points), and a natural, platform-appropriate tone. Penalize long-form structure, buried CTAs, and corporate phrasing that reads like a press release. Reward a clear single takeaway that stands alone without needing surrounding context.`,
+};
+
+function contentTypeRubric(contentType?: string): string | null {
+  if (!contentType) return null;
+  const rubric = CONTENT_TYPE_RUBRICS[contentType.trim().toLowerCase()];
+  if (rubric) return rubric;
+  // Unrecognized/custom type label — still give Gemini the signal, just without a canned rubric.
+  return `CONTENT TYPE: ${contentType} — weigh structure, tone, and formatting expectations for this content type when judging AI Readability and Conversion Readiness.`;
+}
 // ─── Main export ──────────────────────────────────────────────────────────────
 export async function analyzeContent(
 content: string,
@@ -279,7 +299,7 @@ const prompt = [
 groundingBlock,
 moduleWeightInstructions,
 `INDUSTRY: ${industry}`,
-...(contentType ? [`CONTENT TYPE: ${contentType} — weigh structure, tone, and formatting expectations for this content type when judging AI Readability and Conversion Readiness.`] : []),
+...(contentTypeRubric(contentType) ? [contentTypeRubric(contentType) as string] : []),
 '',
 '=== CONTENT TO SCORE ===',
 content.slice(0, 12000), // cap at ~12k chars to manage token cost

@@ -27,6 +27,12 @@ function defaultContentTypeForLane(lane) {
   return 'article';
 }
 
+function contentTypesForLane(lane) {
+  const defaultId = defaultContentTypeForLane(lane);
+  const ordered = CONTENT_TYPES.filter(t => t.id === defaultId);
+  return ordered.concat(CONTENT_TYPES.filter(t => t.id !== defaultId));
+}
+
 function readSavedDraft() {
   try {
     const saved = JSON.parse(localStorage.getItem(DRAFT_STORAGE_KEY) || 'null');
@@ -251,7 +257,7 @@ export default function ContentAnalyzer() {
           <div className={styles.field}>
             <label className={styles.label}>Content Type</label>
             <div className={styles.typePills}>
-              {CONTENT_TYPES.map(t => (
+              {contentTypesForLane(userLane).map(t => (
                 <button
                   key={t.id}
                   type="button"
