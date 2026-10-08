@@ -44,7 +44,7 @@ const LANE_GROUPS = {
     { label: 'Monitor',   tools: ['citation', 'visibility', 'sov'] },
   ],
   product_sellers: [
-    { label: 'Optimize',  tools: ['analyze', 'urlScanner', 'repo'] },
+    { label: 'Optimize',  tools: ['urlScanner', 'analyze', 'repo'] },
     { label: 'Monitor',   tools: ['citation', 'visibility', 'sov'] },
   ],
   developers: [
@@ -52,7 +52,7 @@ const LANE_GROUPS = {
     { label: 'Monitor',   tools: ['citation', 'visibility', 'sov'] },
   ],
   local_business: [
-    { label: 'Optimize',  tools: ['analyze', 'urlScanner', 'repo'] },
+    { label: 'Optimize',  tools: ['urlScanner', 'analyze', 'repo'] },
     { label: 'Monitor',   tools: ['citation', 'visibility', 'sov'] },
   ],
   vibe_coders: [
