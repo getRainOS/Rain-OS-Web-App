@@ -285,8 +285,8 @@ function AppRoutes({ apiKey, onAuth }) {
 function LandingWrapper({ children, light }) {
   if (light) {
     return (
-      <div className="min-h-screen text-neutral-900 font-sans relative" style={{ background: '#ffffff' }}>
-        <div className="fixed inset-0 z-0" style={{ background: '#ffffff' }} />
+      <div className="min-h-screen text-white font-sans relative" style={{ background: '#000000' }}>
+        <div className="fixed inset-0 z-0" style={{ background: '#000000' }} />
         <div className="relative z-10 flex flex-col min-h-screen">
           {children}
         </div>
