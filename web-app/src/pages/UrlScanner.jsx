@@ -540,6 +540,16 @@ export default function UrlScanner() {
         <p className={styles.sub}>{pageSub}</p>
       </div>
 
+      {userLane === 'product_sellers' && (
+        <div className={styles.hero}>
+          <div className={styles.heroIcon}>🛒</div>
+          <div>
+            <div className={styles.heroTitle}>Scan your product page and see exactly what's missing</div>
+            <div className={styles.heroSub}>We'll check whether AI shopping assistants like ChatGPT and Perplexity can actually read your pricing, availability, specs, and reviews — then tell you precisely what to fix.</div>
+          </div>
+        </div>
+      )}
+
       {userLane === 'vibe_coders' ? (
         <details style={{
           marginBottom: '18px',
