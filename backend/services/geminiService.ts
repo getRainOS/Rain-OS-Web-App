@@ -227,7 +227,8 @@ function normalizeRecommendations(raw: unknown): import('../types').PillarRecomm
 export async function analyzeContent(
 content: string,
 industry: string = 'General / Other',
-module: 'general' | 'product_sellers' | 'developers' | 'local_business' = 'general'
+module: 'general' | 'product_sellers' | 'developers' | 'local_business' = 'general',
+contentType?: string
 ): Promise<AnalysisResponse> {
 if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
 // Step 1: Algorithmic pre-analysis — hard metrics, no API cost
@@ -278,6 +279,7 @@ const prompt = [
 groundingBlock,
 moduleWeightInstructions,
 `INDUSTRY: ${industry}`,
+...(contentType ? [`CONTENT TYPE: ${contentType} — weigh structure, tone, and formatting expectations for this content type when judging AI Readability and Conversion Readiness.`] : []),
 '',
 '=== CONTENT TO SCORE ===',
 content.slice(0, 12000), // cap at ~12k chars to manage token cost

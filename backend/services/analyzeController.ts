@@ -45,7 +45,7 @@ return res.status(402).json({ error: 'payment_required', message: 'Active subscr
 if (user.usage.count >= user.usage.limit) {
 return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Usage limit reached. Upgrade to continue.' } as ApiError);
 }
-const { content, industry, module, lane, title, url } = req.body as { content?: string; industry?: string; module?: string; lane?: string; title?: string; url?: string };
+const { content, industry, module, lane, title, url, contentType } = req.body as { content?: string; industry?: string; module?: string; lane?: string; title?: string; url?: string; contentType?: string };
   // Safeguard backend memory
   const safeContent = typeof content === "string" ? content.slice(0, 12000) : "";
 const analysisModule: 'general' | 'product_sellers' | 'developers' | 'local_business' =
@@ -57,7 +57,8 @@ if (!title || typeof title !== 'string' || !title.trim()) {
 return res.status(400).json({ error: 'bad_request', message: 'title is required' } as ApiError);
 }
 try {
-const result = await analyzeContent(content, industry || 'General / Other', analysisModule);
+const safeContentType = typeof contentType === 'string' && contentType.trim() ? contentType.trim().slice(0, 60) : undefined;
+const result = await analyzeContent(content, industry || 'General / Other', analysisModule, safeContentType);
 
 // ─── Batched Transaction: Increment Usage + Save Analysis ─────────────────────
 // Consolidate N+1 queries into a single transaction for better performance.
