@@ -545,8 +545,11 @@ export default function Dashboard() {
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
-  const rawName = user?.email?.split('@')[0]?.replace(/[._]/g, ' ');
-  const displayName = rawName ? rawName.charAt(0).toUpperCase() + rawName.slice(1) : '';
+  // Prefer the user's real name (set in Settings, or pulled from their
+  // Google profile at sign-in) — only fall back to guessing one from the
+  // email's local part when no real name is on file.
+  const rawName = user?.name || user?.email?.split('@')[0]?.replace(/[._]/g, ' ');
+  const displayName = rawName ? (user?.name ? rawName.split(' ')[0] : rawName.charAt(0).toUpperCase() + rawName.slice(1)) : '';
 
   const totalAnalyses = filtersActive ? filteredHistory.length : (totalCount ?? history.length);
   const avgScore = filteredHistory.length > 0

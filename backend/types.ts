@@ -22,6 +22,7 @@ export type SubscriptionStatus =
 export interface User {
 id: string;
 email: string;
+name?: string;
 googleId?: string;
 githubId?: string;
 githubLogin?: string;

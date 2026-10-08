@@ -16,6 +16,10 @@ export default function Settings() {
   const [error, setError] = useState('');
   const [githubStatus, setGithubStatus] = useState(null);
   const [disconnecting, setDisconnecting] = useState(false);
+  const [editingName, setEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState('');
+  const [savingName, setSavingName] = useState(false);
+  const [nameError, setNameError] = useState('');
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -80,6 +84,31 @@ export default function Settings() {
     }
   }
 
+  function startEditingName() {
+    setNameInput(user?.name || '');
+    setNameError('');
+    setEditingName(true);
+  }
+
+  async function handleSaveName() {
+    const trimmed = nameInput.trim();
+    if (!trimmed) {
+      setNameError('Name cannot be empty.');
+      return;
+    }
+    setSavingName(true);
+    setNameError('');
+    try {
+      await api.updateName(trimmed);
+      refreshUser();
+      setEditingName(false);
+    } catch (err) {
+      setNameError(err.message || 'Failed to update name.');
+    } finally {
+      setSavingName(false);
+    }
+  }
+
   async function handleManageBilling() {
     setError('');
     setPortalLoading(true);
@@ -111,6 +140,36 @@ export default function Settings() {
           <h2 className={styles.sectionTitle}>Account</h2>
           {user && (
             <div className={styles.accountGrid}>
+              <div className={styles.accountRow}>
+                <span className={styles.accountLabel}>Name</span>
+                {editingName ? (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                    <input
+                      type="text"
+                      className={styles.input}
+                      value={nameInput}
+                      onChange={e => setNameInput(e.target.value)}
+                      maxLength={100}
+                      autoFocus
+                      style={{ padding: '4px 8px', fontSize: 13, width: 180 }}
+                    />
+                    <button className={styles.inlineLink} onClick={handleSaveName} disabled={savingName}>
+                      {savingName ? 'Saving…' : 'Save'}
+                    </button>
+                    <button className={styles.inlineLink} onClick={() => { setEditingName(false); setNameError(''); }} disabled={savingName}>
+                      Cancel
+                    </button>
+                  </span>
+                ) : (
+                  <span className={styles.accountValue} style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                    {user.name || '—'}
+                    <button className={styles.inlineLink} onClick={startEditingName}>
+                      {user.name ? 'Edit' : 'Add name'}
+                    </button>
+                  </span>
+                )}
+              </div>
+              {nameError && <p className={styles.errorBanner} style={{ margin: 0 }}>{nameError}</p>}
               <div className={styles.accountRow}>
                 <span className={styles.accountLabel}>Email</span>
                 <span className={styles.accountValue}>{user.email ?? '—'}</span>
