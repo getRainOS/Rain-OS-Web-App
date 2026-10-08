@@ -17,6 +17,7 @@ import Upgrade from './pages/Upgrade.jsx';
 import Settings from './pages/Settings.jsx';
 import ConfirmEmail from './pages/ConfirmEmail.jsx';
 
+const LanePicker = lazy(() => import('./components/marketing/LanePicker.tsx'));
 const LocalBusinessPage = lazy(() => import('./pages/LocalBusinessPage.tsx'));
 const ContentWriters = lazy(() => import('./pages/ContentWriters.tsx'));
 const VibeCoders = lazy(() => import('./pages/VibeCoders.tsx'));
@@ -221,6 +222,7 @@ function AppRoutes({ apiKey, onAuth }) {
             path="/"
             element={
               <LandingWrapper light>
+                <LanePicker />
                 <VibeCoders light />
               </LandingWrapper>
             }
