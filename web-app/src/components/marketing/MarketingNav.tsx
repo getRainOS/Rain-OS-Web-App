@@ -101,7 +101,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
         <div
           className={`flex items-center justify-between px-4 md:px-8 transition-all duration-500 ${
             isScrolled
-              ? 'w-full max-w-5xl py-2 md:py-3 rounded-2xl md:rounded-full bg-[#0d0d0d]/90 backdrop-blur-2xl border border-white/5 shadow-2xl shadow-black/40'
+              ? 'w-full max-w-5xl py-2 md:py-3 rounded-2xl md:rounded-full bg-[#000000]/90 backdrop-blur-2xl border border-white/5 shadow-2xl shadow-black/40'
               : 'w-full max-w-7xl bg-transparent border-transparent'
           }`}
         >
@@ -214,7 +214,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
               className="absolute top-0 right-0 bottom-0 w-[85vw] max-w-[340px] flex flex-col"
               style={{
-                background: '#0d0d0d',
+                background: '#000000',
                 borderLeft: '1px solid rgba(255,255,255,0.08)',
               }}
               onClick={(e) => e.stopPropagation()}

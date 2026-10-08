@@ -548,7 +548,7 @@ function TerminalPanel({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: 0.2 }}
-      className="rounded-2xl border border-white/10 bg-[#0d0d0d] p-5 font-mono"
+      className="rounded-2xl border border-white/10 bg-[#000000] p-5 font-mono"
     >
       <div className="flex items-center justify-between mb-4">
         <span className="text-xs font-bold text-white uppercase tracking-wider">{header}</span>
@@ -559,7 +559,7 @@ function TerminalPanel({
           <span className="text-neutral-300">{phaseLabel}</span>
         </span>
       </div>
-      <div className="rounded-lg bg-[#141414] border border-white/10 p-4 text-xs leading-relaxed min-h-[180px] max-h-[280px] overflow-y-auto">
+      <div className="rounded-lg bg-[#0a0a0a] border border-white/10 p-4 text-xs leading-relaxed min-h-[180px] max-h-[280px] overflow-y-auto">
         {lines.map((line, i) => (
           <div key={i} className="mb-1">
             <span className={
@@ -715,7 +715,7 @@ function RepoDemo({ isVisible }: { isVisible: boolean }) {
                     <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><Wand2 className="w-3.5 h-3.5" />Fix Prompt Generated</span>
                     <span className="text-xs text-neutral-400">for Bolt</span>
                   </div>
-                  <div className="rounded-lg bg-[#141414] border border-white/10 p-4 text-xs text-neutral-300 leading-relaxed max-h-48 overflow-y-auto">{FIX_PROMPT}</div>
+                  <div className="rounded-lg bg-[#0a0a0a] border border-white/10 p-4 text-xs text-neutral-300 leading-relaxed max-h-48 overflow-y-auto">{FIX_PROMPT}</div>
                   <div className="mt-3 flex items-center gap-2 text-xs text-neutral-400"><ClipboardCopy className="w-3 h-3" /><span>Copied to clipboard</span></div>
                 </motion.div>
               )}
@@ -724,7 +724,7 @@ function RepoDemo({ isVisible }: { isVisible: boolean }) {
               {showVibePanel && (
                 <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} transition={{ duration: 0.5 }} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
                   <div className="flex items-center gap-2 mb-3"><span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><Send className="w-3.5 h-3.5" />Bolt Builder</span></div>
-                  <div className="rounded-lg bg-[#141414] border border-white/10 p-4 space-y-2">
+                  <div className="rounded-lg bg-[#0a0a0a] border border-white/10 p-4 space-y-2">
                     <div className="flex items-start gap-2">
                       <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center shrink-0"><span className="text-xs text-white">AI</span></div>
                       <div className="text-xs text-neutral-400 leading-relaxed"><span className="text-white font-medium">Prompt pasted. </span>Processing your request to add llms.txt, schema markup, meta tags, and FAQ section...</div>
@@ -740,7 +740,7 @@ function RepoDemo({ isVisible }: { isVisible: boolean }) {
                   <div className="flex items-center gap-2 mb-3"><span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><GitCommit className="w-3.5 h-3.5" />Changes Applied</span></div>
                   <div className="space-y-2">
                     {[{ file: 'llms.txt', action: 'Created', status: 'added' }, { file: 'index.html', action: 'Schema markup added', status: 'modified' }, { file: 'robots.txt', action: 'Updated for AI crawlers', status: 'modified' }, { file: 'src/App.tsx', action: 'FAQ section added', status: 'modified' }].map((change, i) => (
-                      <motion.div key={change.file} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.15 }} className="flex items-center justify-between rounded-lg bg-[#141414] border border-white/10 px-3 py-2 text-xs">
+                      <motion.div key={change.file} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.15 }} className="flex items-center justify-between rounded-lg bg-[#0a0a0a] border border-white/10 px-3 py-2 text-xs">
                         <span className="text-neutral-300">{change.file}</span>
                         <div className="flex items-center gap-2">
                           <span className="text-neutral-400">{change.action}</span>
@@ -1098,7 +1098,7 @@ export default function VibeCoders() {
                         {/* Hover tooltip */}
                         {sig.description && (
                           <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 z-50 w-64 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                            <div className="rounded-lg bg-[#0d0d0d] border border-white/10 p-3 shadow-xl">
+                            <div className="rounded-lg bg-[#000000] border border-white/10 p-3 shadow-xl">
                               <p className="text-xs text-neutral-300 leading-relaxed">{sig.description}</p>
                             </div>
                           </div>
