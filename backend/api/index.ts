@@ -14,6 +14,7 @@ import citationCheckHandler, {
   deleteHandler as citationCheckDeleteHandler,
   bulkDeleteHandler as citationChecksBulkDeleteHandler,
 } from './citation-check';
+import { regionsHandler as citationRegionsHandler } from './citation-regions';
 import { listHandler as historyListHandler, deleteHandler as historyDeleteHandler, getByIdHandler as historyGetByIdHandler } from './history';
 import brandVisibilityHandler, { brandVisHistoryHandler, brandVisDeleteHandler } from './brand-visibility';
 import { sovHandler, sovHistoryHandler, sovDeleteHandler } from './share-of-voice';
@@ -122,6 +123,8 @@ app.delete('/api/citation-checks', citationChecksBulkDeleteHandler);
 app.delete('/v1/api/citation-checks', citationChecksBulkDeleteHandler);
 app.delete('/api/citation-checks/:id', citationCheckDeleteHandler);
 app.delete('/v1/api/citation-checks/:id', citationCheckDeleteHandler);
+app.post('/api/citation-checks/regions', citationRegionsHandler);
+app.post('/v1/api/citation-checks/regions', citationRegionsHandler);
 // ─── Content analysis history ───────────────────────────────────────────────
 app.get('/api/history', historyListHandler);
 app.get('/v1/api/history', historyListHandler);

@@ -189,7 +189,41 @@ export default function CitationMonitor() {
 
   const ownDomain = normalizeDomain(url);
 
-  const competitorMap = useMemo(() => buildCompetitorMap(mapHistory, ownDomain), [mapHistory, ownDomain]);
+  // Most competitor domains use generic TLDs (.com, .io) that carry no
+  // geographic signal, so TLD inference alone leaves the map mostly empty.
+  // Once we know which domains TLD inference couldn't place, we ask the
+  // backend (Gemini HQ lookup, cached server-side) for just those — results
+  // land here and override the TLD guess on the next render.
+  const [resolvedCountries, setResolvedCountries] = useState(() => new Map());
+
+  const competitorMap = useMemo(
+    () => buildCompetitorMap(mapHistory, ownDomain, resolvedCountries),
+    [mapHistory, ownDomain, resolvedCountries]
+  );
+
+  useEffect(() => {
+    const needsLookup = competitorMap.domains
+      .filter(d => d.country === null && !resolvedCountries.has(d.domain))
+      .map(d => d.domain);
+    if (needsLookup.length === 0) return;
+    let cancelled = false;
+    api.resolveDomainCountries(needsLookup)
+      .then(({ data }) => {
+        if (cancelled || !data?.domains) return;
+        setResolvedCountries(prev => {
+          const next = new Map(prev);
+          for (const [domain, country] of Object.entries(data.domains)) {
+            next.set(domain, country);
+          }
+          return next;
+        });
+      })
+      .catch(() => {
+        // Best-effort only — the map still works with TLD-only inference.
+      });
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [competitorMap.domains]);
 
   async function handleClearHistory() {
     if (!window.confirm('Clear all saved citation checks? This permanently deletes your citation history from your account.')) return;

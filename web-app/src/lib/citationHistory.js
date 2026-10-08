@@ -25,8 +25,15 @@ function insightFor({ queryCount, totalQueries, avgRank, citedAsTop }) {
   return 'Cited once so far — lower priority, but worth tracking as you add more checks.';
 }
 
-function finalizeDomain(d, totalQueries) {
+function finalizeDomain(d, totalQueries, countryOverrides) {
   const avgRank = d.rankSum / Math.max(d.queryCount, 1);
+  // Prefer a server-resolved (Gemini HQ-lookup) country when we have one —
+  // it's keyed by domain and may be explicitly null (looked up, unplaceable),
+  // which we still prefer over a TLD guess. Only fall back to the TLD
+  // heuristic when the domain hasn't been resolved at all yet.
+  const resolved = countryOverrides && countryOverrides.has(d.domain)
+    ? countryOverrides.get(d.domain)
+    : inferCountry(d.domain);
   return {
     domain: d.domain,
     queryCount: d.queryCount,
@@ -35,7 +42,7 @@ function finalizeDomain(d, totalQueries) {
     bestRank: d.bestRank === Infinity ? null : d.bestRank,
     topics: d.topics,
     sampleUrl: d.sampleUrl || `https://${d.domain}`,
-    country: inferCountry(d.domain),
+    country: resolved,
     insight: insightFor({
       queryCount: d.queryCount,
       totalQueries,
@@ -69,7 +76,7 @@ function buildRegions(domains) {
   return { regions, unknownCount };
 }
 
-export function buildCompetitorMap(history, ownDomain) {
+export function buildCompetitorMap(history, ownDomain, countryOverrides) {
   const totalQueries = history.length;
   if (!totalQueries) return { totalQueries: 0, domains: [], ownPoint: null, regions: [], unknownCount: 0 };
 
@@ -136,13 +143,13 @@ export function buildCompetitorMap(history, ownDomain) {
   }
 
   const domains = Array.from(byDomain.values())
-    .map(d => finalizeDomain(d, totalQueries))
+    .map(d => finalizeDomain(d, totalQueries, countryOverrides))
     .sort((a, b) => {
       if (b.queryCount !== a.queryCount) return b.queryCount - a.queryCount;
       return a.avgRank - b.avgRank;
     });
 
-  const ownPoint = ownAgg ? finalizeDomain(ownAgg, totalQueries) : null;
+  const ownPoint = ownAgg ? finalizeDomain(ownAgg, totalQueries, countryOverrides) : null;
   const { regions, unknownCount } = buildRegions(domains);
 
   return { totalQueries, domains, ownPoint, regions, unknownCount };
