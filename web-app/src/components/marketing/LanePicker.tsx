@@ -81,12 +81,31 @@ export default function LanePicker() {
           </div>
 
           {/* Choose-your-lane body */}
-          <div className="flex-1 flex flex-col items-center justify-center px-6 py-10 overflow-y-auto">
+          <div className="flex-1 flex flex-col items-center justify-center px-6 py-10 overflow-y-auto relative">
+            {/* Slow ambient drift behind the cards — reads as depth, not urgency,
+                because it's slow, blurred, and grayscale rather than fast/colored. */}
+            <motion.div
+              aria-hidden="true"
+              className="pointer-events-none absolute top-1/2 left-1/2 rounded-full z-0"
+              style={{
+                width: 560,
+                height: 560,
+                marginLeft: -280,
+                marginTop: -280,
+                background: 'radial-gradient(circle, rgba(255,255,255,0.07), transparent 70%)',
+                filter: 'blur(40px)',
+              }}
+              animate={{
+                x: [-60, 60, -60],
+                y: [-30, 40, -30],
+              }}
+              transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
+            />
             <motion.h1
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.1 }}
-              className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-white text-center max-w-2xl"
+              className="relative z-10 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-white text-center max-w-2xl"
             >
               Choose where you fit.
             </motion.h1>
@@ -94,7 +113,7 @@ export default function LanePicker() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.2 }}
-              className="mt-4 text-base text-neutral-400 text-center max-w-md"
+              className="relative z-10 mt-4 text-base text-neutral-400 text-center max-w-md"
             >
               Rain OS scores content differently depending on what you're building. Pick one to see what we check for you.
             </motion.p>
@@ -103,7 +122,7 @@ export default function LanePicker() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.3 }}
-              className="mt-10 w-full max-w-3xl grid grid-cols-1 sm:grid-cols-2 gap-3"
+              className="relative z-10 mt-10 w-full max-w-3xl grid grid-cols-1 sm:grid-cols-2 gap-3"
             >
               {LANES.map((lane) => (
                 <button
@@ -125,7 +144,7 @@ export default function LanePicker() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4, delay: 0.4 }}
               onClick={dismiss}
-              className="mt-8 text-sm text-neutral-500 hover:text-white transition-colors"
+              className="relative z-10 mt-8 text-sm text-neutral-500 hover:text-white transition-colors"
             >
               Not sure yet — just show me the site
             </motion.button>

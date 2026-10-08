@@ -889,6 +889,36 @@ export default function VibeCoders() {
           </div>
         </section>
 
+        {/* Stat banner — real, cited industry data, not a customer claim */}
+        <section
+          className="relative overflow-hidden border-t border-white/10 py-20 px-6"
+          style={{
+            backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px)',
+            backgroundSize: '64px 64px',
+            backgroundPosition: 'center',
+          }}
+        >
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(255,255,255,0.06), transparent 70%)' }}
+          />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative max-w-3xl mx-auto text-center"
+          >
+            <div className="text-6xl md:text-8xl font-bold tracking-tight text-white">47%</div>
+            <p className="mt-5 text-lg md:text-xl text-neutral-300 max-w-xl mx-auto leading-relaxed">
+              drop in click-through to normal search results when Google shows an AI Overview instead.
+            </p>
+            <p className="mt-4 text-xs text-neutral-500 uppercase tracking-wider">
+              Pew Research Center, July 2025
+            </p>
+          </motion.div>
+        </section>
+
         {/* The Problem */}
         <section className="py-16 px-6 border-t border-white/10">
           <div className="max-w-5xl mx-auto">
