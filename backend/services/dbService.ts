@@ -98,6 +98,7 @@ const mapRowToUser = (row: any, hashedApiKey?: string): User => {
     return {
         id: row.id,
         email: row.email,
+        name: row.name,
         googleId: row.google_id,
         githubId: row.github_id,
         githubLogin: row.github_login,
@@ -192,7 +193,7 @@ export const createUser = async (
     email: string,
     password?: string,
     googleId?: string,
-    options?: { emailConfirmed?: boolean; confirmationToken?: string }
+    options?: { emailConfirmed?: boolean; confirmationToken?: string; name?: string }
 ): Promise<User> => {
     if (await findUserByEmail(email)) {
         throw new Error('User already exists');
@@ -209,6 +210,7 @@ export const createUser = async (
     const newUser: Omit<User, 'apiKey' | 'createdAt'> & { encryptedApiKey: string, hashedPassword?: string } = {
         id,
         email: email.toLowerCase(),
+        name: options?.name,
         googleId,
         hashedApiKey,
         encryptedApiKey,
@@ -222,12 +224,12 @@ export const createUser = async (
     }
 
     const query = `
-        INSERT INTO users (id, email, google_id, hashed_password, hashed_api_key, encrypted_api_key, subscription_status, email_confirmed, confirmation_token, usage)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        INSERT INTO users (id, email, name, google_id, hashed_password, hashed_api_key, encrypted_api_key, subscription_status, email_confirmed, confirmation_token, usage)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
         RETURNING *
     `;
     const values = [
-        newUser.id, newUser.email, newUser.googleId, newUser.hashedPassword,
+        newUser.id, newUser.email, newUser.name, newUser.googleId, newUser.hashedPassword,
         newUser.hashedApiKey, newUser.encryptedApiKey, newUser.subscriptionStatus,
         newUser.emailConfirmed, newUser.confirmationToken,
         JSON.stringify(newUser.usage)
@@ -237,13 +239,17 @@ export const createUser = async (
     return mapRowToUser(res.rows[0], hashedApiKey);
 };
 
-export const updateUser = async (userId: string, updates: Partial<Pick<User, 'googleId' | 'hashedPassword' | 'passwordResetToken' | 'passwordResetExpires' | 'emailConfirmed'>> & { confirmationToken?: string | null }): Promise<User | null> => {
+export const updateUser = async (userId: string, updates: Partial<Pick<User, 'googleId' | 'hashedPassword' | 'passwordResetToken' | 'passwordResetExpires' | 'emailConfirmed' | 'name'>> & { confirmationToken?: string | null }): Promise<User | null> => {
     const setClauses: string[] = [];
     const values: any[] = [userId];
 
     if (updates.googleId !== undefined) {
         values.push(updates.googleId);
         setClauses.push(`google_id = $${values.length}`);
+    }
+    if (updates.name !== undefined) {
+        values.push(updates.name);
+        setClauses.push(`name = $${values.length}`);
     }
     if (updates.hashedPassword !== undefined) {
         values.push(updates.hashedPassword);

@@ -49,6 +49,7 @@ async function request(method, path, body) {
 
 export const api = {
   me: () => request('GET', '/api/users/me'),
+  updateName: (name) => request('POST', '/api/users/me/update-name', { name }),
   analyze: (body) => request('POST', '/api/analyze', body),
   history: (params) => {
     const qs = params ? '?' + new URLSearchParams(params).toString() : '';

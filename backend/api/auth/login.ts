@@ -36,6 +36,7 @@ export default async function handler(req: express.Request, res: express.Respons
     const clientSafeUser: Partial<User> & { apiKey: string } = {
       id: user.id,
       email: user.email,
+      name: user.name,
       apiKey: user.apiKey, // IMPORTANT: Sending the raw key
       subscriptionStatus: user.subscriptionStatus,
       usage: user.usage,

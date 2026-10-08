@@ -2,13 +2,18 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { scanUrlForTechnicalSignals, detectPlatform } from '../services/urlScanService';
 
 // ─── Mock global fetch for the llms.txt and robots.txt probes ────────────────
-// Each test can override `llmsTxtOk` / `robotsTxtBody` to control the result.
+// Each test can override `llmsTxtOk` / `llmsTxtBody` / `robotsTxtBody` to
+// control the result. llmsTxtBody defaults to a realistic, non-thin body so
+// existing "llms.txt exists" tests exercise the normal (not thin) path.
 let llmsTxtOk = false;
+let llmsTxtBody = '# Example Site\n\nThis file helps AI crawlers understand and navigate this site.';
 let robotsTxtBody: string | null = null;
 const fetchMock = vi.fn(async (input: any, _init?: any) => {
   const url = typeof input === 'string' ? input : input?.url || String(input);
   if (url.endsWith('/llms.txt')) {
-    return new Response(null, { status: llmsTxtOk ? 200 : 404 });
+    return llmsTxtOk
+      ? new Response(llmsTxtBody, { status: 200 })
+      : new Response(null, { status: 404 });
   }
   if (url.endsWith('/robots.txt')) {
     return robotsTxtBody === null
@@ -20,6 +25,7 @@ const fetchMock = vi.fn(async (input: any, _init?: any) => {
 
 beforeEach(() => {
   llmsTxtOk = false;
+  llmsTxtBody = '# Example Site\n\nThis file helps AI crawlers understand and navigate this site.';
   robotsTxtBody = null;
   fetchMock.mockClear();
   vi.stubGlobal('fetch', fetchMock);
@@ -196,21 +202,28 @@ describe('scanUrlForTechnicalSignals — JS rendering detection', () => {
 });
 
 describe('scanUrlForTechnicalSignals — llms.txt probe', () => {
-  it('records hasLlmsTxt=true when /llms.txt responds 200, and uses a HEAD request to the host root', async () => {
+  it('records hasLlmsTxt=true when /llms.txt responds 200 with real content, probing the host root', async () => {
     llmsTxtOk = true;
     const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>'), 'https://x.test/some/path');
     expect(r.signals.hasLlmsTxt).toBe(true);
+    expect(r.signals.llmsTxtIsThin).toBe(false);
     // verify the probe URL is the host root, not the page URL
-    const [calledUrl, calledInit] = fetchMock.mock.calls[0];
+    const [calledUrl] = fetchMock.mock.calls[0];
     expect(String(calledUrl)).toBe('https://x.test/llms.txt');
-    // verify it's a HEAD request — we don't need the body, only existence
-    expect((calledInit as RequestInit | undefined)?.method).toBe('HEAD');
   });
 
   it('records hasLlmsTxt=false when /llms.txt 404s', async () => {
     llmsTxtOk = false;
     const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>'), 'https://x.test/');
     expect(r.signals.hasLlmsTxt).toBe(false);
+  });
+
+  it('records hasLlmsTxt=true but llmsTxtIsThin=true when the file is just a bare placeholder', async () => {
+    llmsTxtOk = true;
+    llmsTxtBody = 'llms.txt';
+    const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>'), 'https://x.test/');
+    expect(r.signals.hasLlmsTxt).toBe(true);
+    expect(r.signals.llmsTxtIsThin).toBe(true);
   });
 
   it('records hasLlmsTxt=false when the probe throws (network error)', async () => {

@@ -146,6 +146,13 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS email_confirmed BOOLEAN NOT NULL DEFA
 ALTER TABLE users ADD COLUMN IF NOT EXISTS confirmation_token TEXT;
 `;
 
+// Display name (additive). Nullable — populated from the OAuth provider's
+// profile on Google sign-in, or set by the user in Settings. Falls back to
+// an email-derived guess in the UI when absent.
+const addNameColumnQuery = `
+ALTER TABLE users ADD COLUMN IF NOT EXISTS name TEXT;
+`;
+
 // Durable OAuth state store — shared across all instances, TTL enforced via expires_at.
 const createOAuthStatesQuery = `
 CREATE TABLE IF NOT EXISTS oauth_states (
@@ -162,6 +169,7 @@ export const setupDatabase = async () => {
     await pool.query(createTableQuery);
     await pool.query(addGithubColumnsQuery);
     await pool.query(addEmailConfirmationColumnsQuery);
+    await pool.query(addNameColumnQuery);
     await pool.query(createOAuthStatesQuery);
     console.log('Database table "users" is ready.');
   } catch (error) {

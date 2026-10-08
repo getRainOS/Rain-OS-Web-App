@@ -4,6 +4,11 @@
 // Conversion Readiness, Product Discoverability, and RAG Readiness.
 import { checkAllCrawlers, scoreAiCrawlerAccess, type CrawlerStatus } from './robotsCheck';
 
+// Below this many trimmed characters, a committed llms.txt is treated as
+// effectively empty rather than a real pass — see urlScanService.ts for the
+// same threshold applied to the URL-scan version of this check.
+const LLMS_TXT_MIN_CONTENT_LENGTH = 40;
+
 export type DetectedFramework =
   | 'Next.js' | 'Nuxt' | 'SvelteKit' | 'Remix' | 'Astro'
   | 'React (SPA)' | 'Vue (SPA)' | 'Angular' | 'Svelte' | 'Unknown';
@@ -21,6 +26,7 @@ export interface RepoSignals {
   readmeHasMultipleExternalLinks: boolean;
   // AI crawlability
   hasLlmsTxt: boolean;
+  llmsTxtIsThin: boolean;
   hasRobotsTxt: boolean;
   aiCrawlerAccess: CrawlerStatus[];
   // Package
@@ -244,7 +250,7 @@ function scoreAiReadability(signals: RepoSignals): number {
   if (signals.readmeHasHeadings) score += 8;
   if (signals.readmeWordCount > 200) score += 6;
   if (signals.readmeWordCount > 500) score += 4;
-  if (signals.hasLlmsTxt) score += 15;
+  if (signals.hasLlmsTxt && !signals.llmsTxtIsThin) score += 15;
   if (signals.hasSchemaMarkup) score += 12;
   if (signals.templateHasCanonical) score += 5;
   score += scoreAiCrawlerAccess(signals.hasRobotsTxt, signals.aiCrawlerAccess);
@@ -284,7 +290,7 @@ function scoreProductDiscoverability(signals: RepoSignals): number {
   if (signals.hasPackageJson) score += 9;
   if (signals.packageDescription) score += 13;
   if (signals.packageHasKeywords) score += 13;
-  if (signals.hasLlmsTxt) score += 18;
+  if (signals.hasLlmsTxt && !signals.llmsTxtIsThin) score += 18;
   if (signals.hasSchemaMarkup) score += 16;
   if (signals.hasOpenGraph) score += 6;
   return Math.min(100, score);
@@ -316,10 +322,12 @@ function scoreRagReadiness(signals: RepoSignals): number {
 function buildRecommendations(signals: RepoSignals, owner: string, repo: string): RepoRecommendation[] {
   const recs: RepoRecommendation[] = [];
 
-  if (!signals.hasLlmsTxt) {
+  if (!signals.hasLlmsTxt || signals.llmsTxtIsThin) {
     recs.push({
-      issue: 'llms.txt absent',
-      recommendation: 'Add /llms.txt to your repo root (deploy to your site root) to guide AI crawlers.',
+      issue: signals.llmsTxtIsThin ? 'llms.txt is too thin to be useful' : 'llms.txt absent',
+      recommendation: signals.llmsTxtIsThin
+        ? 'Replace the placeholder /llms.txt with real guidance for AI crawlers.'
+        : 'Add /llms.txt to your repo root (deploy to your site root) to guide AI crawlers.',
       severity: 'high',
       artifact: {
         type: 'llms-txt',
@@ -597,6 +605,7 @@ export async function analyzeRepo(owner: string, repo: string, token: string): P
         .filter(link => !link.includes(`github.com/${owner}/${repo}`))
         .length >= 3,
     hasLlmsTxt: !!llmsTxt,
+    llmsTxtIsThin: !!llmsTxt && llmsTxt.trim().length < LLMS_TXT_MIN_CONTENT_LENGTH,
     hasRobotsTxt: !!robotsTxt,
     aiCrawlerAccess: checkAllCrawlers(robotsTxt),
     hasPackageJson: !!pkg,

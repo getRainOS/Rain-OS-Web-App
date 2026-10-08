@@ -137,9 +137,7 @@ export default function Layout({ children }) {
       <div className={`${styles.overlay} ${menuOpen ? styles.show : ''}`} onClick={() => setMenuOpen(false)} />
       <aside className={`${styles.sidebar} ${menuOpen ? styles.open : ''} ${collapsed ? styles.collapsed : ''}`}>
         <div className={styles.brand}>
-          {collapsed
-            ? <span className={styles.brandWordmark}>r</span>
-            : <span className={styles.brandWordmark}>r<span className={styles.brandAccent}>ai</span>n</span>}
+          {!collapsed && <span className={styles.brandWordmark}>r<span className={styles.brandAccent}>ai</span>n</span>}
         </div>
 
         <nav className={styles.nav} onClick={() => setMenuOpen(false)}>

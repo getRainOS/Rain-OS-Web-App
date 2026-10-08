@@ -31,6 +31,7 @@ export default async function handler(req: express.Request, res: express.Respons
     const clientSafeUser: Partial<User> = {
       id: user.id,
       email: user.email,
+      name: user.name,
       subscriptionStatus: user.subscriptionStatus,
       stripePriceId: user.stripePriceId,
       usage: user.usage,

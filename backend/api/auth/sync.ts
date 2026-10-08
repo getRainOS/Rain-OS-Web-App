@@ -36,6 +36,10 @@ export default async function handler(req: express.Request, res: express.Respons
 
     const email = supabaseUser.email;
     const googleId = supabaseUser.app_metadata?.provider === 'google' ? supabaseUser.id : undefined; // Supabase User ID isn't exactly Google ID, but it's the stable ID for Supabase.
+    // Google's OAuth profile, as Supabase mirrors it — used so the dashboard
+    // greeting can show a real name instead of guessing one from the email.
+    const providerName: string | undefined =
+      supabaseUser.user_metadata?.full_name || supabaseUser.user_metadata?.name || undefined;
 
     // Find or Create User in Local DB
     let user = await findUserByEmail(email);
@@ -44,7 +48,7 @@ export default async function handler(req: express.Request, res: express.Respons
     if (!user) {
       try {
         // Create new user. Google already verified this email, so it's confirmed immediately.
-        user = await createUser(email, undefined, googleId, { emailConfirmed: true });
+        user = await createUser(email, undefined, googleId, { emailConfirmed: true, name: providerName });
         isNewUser = true;
 
       } catch (createError: any) {
@@ -58,6 +62,11 @@ export default async function handler(req: express.Request, res: express.Respons
           throw createError;
         }
       }
+    } else if (!user.name && providerName) {
+      // Existing user signed in via Google again and we now have a name we
+      // didn't before (e.g. they originally signed up with email/password) —
+      // backfill it.
+      user = await updateUser(user.id, { name: providerName }) ?? user;
     }
 
     if (isNewUser) {
@@ -68,6 +77,7 @@ export default async function handler(req: express.Request, res: express.Respons
     const clientSafeUser: Partial<User> & { apiKey: string } = {
         id: user.id,
         email: user.email,
+        name: user.name,
         apiKey: user.apiKey,
         subscriptionStatus: user.subscriptionStatus,
         stripePriceId: user.stripePriceId,
