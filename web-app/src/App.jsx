@@ -191,8 +191,8 @@ function AuthModalRoute({ onAuth }) {
   const initialMode = params.get('mode') === 'login' ? 'login' : 'signup';
 
   return (
-    <LandingWrapper>
-      <VibeCoders />
+    <LandingWrapper light>
+      <VibeCoders light />
       <AuthModal
         onAuth={(key, userData) => {
           onAuth(key, userData);
@@ -220,8 +220,8 @@ function AppRoutes({ apiKey, onAuth }) {
           <Route
             path="/"
             element={
-              <LandingWrapper>
-                <VibeCoders />
+              <LandingWrapper light>
+                <VibeCoders light />
               </LandingWrapper>
             }
           />
@@ -282,7 +282,17 @@ function AppRoutes({ apiKey, onAuth }) {
   );
 }
 
-function LandingWrapper({ children }) {
+function LandingWrapper({ children, light }) {
+  if (light) {
+    return (
+      <div className="min-h-screen text-neutral-900 font-sans relative" style={{ background: '#ffffff' }}>
+        <div className="fixed inset-0 z-0" style={{ background: '#ffffff' }} />
+        <div className="relative z-10 flex flex-col min-h-screen">
+          {children}
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen text-slate-50 font-sans relative" style={{ background: '#020410' }}>
       <div className="fixed inset-0 z-0" style={{ background: '#020410' }} />
