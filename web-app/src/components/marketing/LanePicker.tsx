@@ -126,21 +126,27 @@ export default function LanePicker() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.3 }}
-              className="relative z-10 mt-10 w-full max-w-3xl grid grid-cols-1 sm:grid-cols-2 gap-3"
+              className="relative z-10 mt-10 w-full max-w-3xl grid grid-cols-2 gap-2 sm:gap-3"
             >
-              {LANES.map((lane) => (
-                <button
-                  key={lane.id}
-                  onClick={() => choose(lane)}
-                  className="group text-left rounded-2xl border border-white/10 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.06] transition-colors p-5"
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-base font-semibold text-white">{lane.label}</span>
-                    <ArrowRight className="w-4 h-4 text-white/40 group-hover:text-white group-hover:translate-x-0.5 transition-all shrink-0" />
-                  </div>
-                  <p className="mt-1.5 text-sm text-neutral-400 leading-relaxed">{lane.desc}</p>
-                </button>
-              ))}
+              {LANES.map((lane, i) => {
+                // 5 is odd — rather than leave the last card dangling alone in
+                // the left column, give it the full width so the grid still
+                // reads as a deliberate layout instead of a leftover.
+                const isLastOdd = LANES.length % 2 === 1 && i === LANES.length - 1;
+                return (
+                  <button
+                    key={lane.id}
+                    onClick={() => choose(lane)}
+                    className={`group text-left rounded-2xl border border-white/10 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.06] transition-colors p-3 sm:p-5 ${isLastOdd ? 'col-span-2' : ''}`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-sm sm:text-base font-semibold text-white">{lane.label}</span>
+                      <ArrowRight className="w-4 h-4 text-white/40 group-hover:text-white group-hover:translate-x-0.5 transition-all shrink-0" />
+                    </div>
+                    <p className="mt-1 sm:mt-1.5 text-xs sm:text-sm text-neutral-400 leading-relaxed">{lane.desc}</p>
+                  </button>
+                );
+              })}
             </motion.div>
 
             <motion.button
