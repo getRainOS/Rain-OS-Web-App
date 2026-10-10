@@ -581,10 +581,6 @@ export default function Dashboard() {
     trend: computeTrend(filteredHistory, p.key),
   }));
 
-  const contentHealth = pillarAvgs.some(p => p.avg > 0)
-    ? Math.round(pillarAvgs.reduce((s, p) => s + p.avg, 0) / pillarAvgs.length)
-    : 0;
-
   // The single most recent analysis for the selected type — fixes shown
   // below are scoped to this one scan, not blended across several.
   const latestTypedAnalysis = filteredHistory[0] || null;
@@ -675,19 +671,6 @@ export default function Dashboard() {
   // Build tool-specific KPI cards
   const isBusinessFraming = metricsFraming === 'business';
   const toolCards = [
-    {
-      key: 'content',
-      label: 'Content Health',
-      to: typeRoute,
-      hasData: totalAnalyses > 0,
-      value: totalAnalyses > 0 ? `${avgScore}` : null,
-      suffix: '/100',
-      sub: totalAnalyses > 0 ? (weakestPillar ? `${weakestPillar.label} weakest` : 'All pillars balanced') : 'No analysis data yet — paste content to score',
-      trend: scoreTrend,
-      Icon: FileText,
-      pillars: totalAnalyses > 0 ? pillarAvgs : null,
-      tooltip: `Average of your ${joinWithAnd(activePillars.map(p => p.label))} scores — the same signals that make AI search engines more likely to cite you. Bars below show each pillar.`,
-    },
     {
       key: 'citation',
       label: isBusinessFraming ? 'Mentions' : 'Citation Monitor',
@@ -904,11 +887,6 @@ export default function Dashboard() {
                     ))}
                   </LineChart>
                 </ResponsiveContainer>
-              </div>
-              <div className={styles.contentHealth}>
-                <Heart style={{ width: 11, height: 11, color: '#94a3b8' }} />
-                <span>Content Health ({CONTENT_TYPE_TOGGLES.find(ct => ct.id === typeFilter)?.label || 'Content'}): </span>
-                <strong>{contentHealth}%</strong>
               </div>
             </div>
 
