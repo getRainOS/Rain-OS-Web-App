@@ -42,7 +42,7 @@ function DisclaimerBlock() {
           {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
       </div>
-      {!collapsed && <p className={styles.disclaimerText} style={{ marginTop: 8 }}>We check real Google Search grounding — live data from the search engine that still handles the vast majority of how people (and increasingly, AI systems) find businesses like yours. Not a simulation, not a guess: this is what Google's AI can actually find and say about you right now. We query Google Gemini with live Google Search grounding using your exact topic, then check whether your domain appears among the sources Gemini used to generate its answer. This matters now more than ever: Google recently launched AI Search ads that cite sources within AI-generated answers (Google Marketing Live 2026). The <em>cited / not cited</em> result is a real, factual snapshot of what Gemini pulled right now. However: it reflects only one AI model (Gemini) and one query phrasing; different phrasings or models may yield different sources. Run checks on multiple topic variations and re-run regularly to track trends — a single check is a data point, not a verdict.</p>}
+      {!collapsed && <p className={styles.disclaimerText} style={{ marginTop: 8 }}>We query Gemini with live Google Search grounding for your exact topic and report, as a real factual snapshot, whether your domain is among the sources it cited — but that reflects only one model and one phrasing at one moment, so run multiple variations over time rather than treating a single check as a verdict.</p>}
     </div>
   );
 }
@@ -63,7 +63,7 @@ function WhatDoesThisMeanBlock() {
           {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
       </div>
-      {!collapsed && <p className={styles.disclaimerText} style={{ marginTop: 8 }}>We ask Gemini your exact question and look at the sources it actually cites in its answer. "Cited" or "Not cited" reflects that one real answer, at that moment — not a guess, and not a lasting rank. AI answers can shift from one search to the next, so think of each check as a snapshot of how you're showing up right now, worth tracking over time rather than judging on a single result.</p>}
+      {!collapsed && <p className={styles.disclaimerText} style={{ marginTop: 8 }}>"Cited" or "Not cited" reflects one real Gemini answer at that moment, not a guess or a lasting rank, so treat each check as a snapshot worth tracking over time rather than a single verdict.</p>}
     </div>
   );
 }

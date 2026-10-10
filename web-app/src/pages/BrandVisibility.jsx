@@ -98,7 +98,7 @@ function DisclaimerBox() {
           {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
       </div>
-      {!collapsed && <p className={styles.disclaimerText} style={{ marginTop: 8 }}>We query Google Gemini with live Google Search grounding for your topic, then check the real AI-generated answer for your brand name and, if you gave a URL, your domain among the cited sources. The mention status, citation, and sources are all drawn directly from that live data — nothing is scored or guessed. When your brand is mentioned, we ask Gemini a second, much smaller question — classifying tone only from the exact sentences that mention it — and label that "AI's read." However: this is a single-model, single-query snapshot — only Gemini, one phrasing, one moment in time. Ask the same question differently ("best project management software" vs "what tool should my team use for task tracking?") and you may get entirely different results. Use this for directional spot-checking and competitor discovery, not as comprehensive brand monitoring.</p>}
+      {!collapsed && <p className={styles.disclaimerText} style={{ marginTop: 8 }}>We query Gemini with live Google Search grounding and report your brand's mention, citation, and tone exactly as given — a single-model, single-phrasing snapshot, so different wording can return different results, making this better for spot-checking than comprehensive brand monitoring.</p>}
     </div>
   );
 }
@@ -119,7 +119,7 @@ function WhatDoesThisMeanBox() {
           {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
       </div>
-      {!collapsed && <p className={styles.disclaimerText} style={{ marginTop: 8 }}>Whether you're mentioned comes from a direct check of Gemini's answer, not a guess. The sentiment label (positive, neutral, negative) is AI's judgment of the specific sentences that mention you; showing you those sentences lets you judge the tone yourself too.</p>}
+      {!collapsed && <p className={styles.disclaimerText} style={{ marginTop: 8 }}>Whether you're mentioned is a direct check of Gemini's answer, not a guess, while the sentiment label is AI's judgment of the exact sentences that mention you — shown to you so you can judge the tone yourself too.</p>}
     </div>
   );
 }
