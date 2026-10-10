@@ -105,7 +105,7 @@ export async function analyzeRepoHandler(req: express.Request, res: express.Resp
   if (!user) return;
 
   if (!user.githubId) {
-    return res.status(400).json({ error: 'not_connected', message: 'GitHub account not connected. Connect in Settings.' });
+    return res.status(400).json({ error: 'not_connected', message: "Your GitHub account isn't connected. Click Connect GitHub above to link it before analyzing a repo." });
   }
 
   const { repoUrl } = req.body as { repoUrl?: string };
@@ -128,7 +128,7 @@ export async function analyzeRepoHandler(req: express.Request, res: express.Resp
 
   const token = await getUserGithubToken(user.id);
   if (!token) {
-    return res.status(400).json({ error: 'not_connected', message: 'GitHub token not found. Reconnect GitHub in Settings.' });
+    return res.status(400).json({ error: 'token_invalid', message: 'Your GitHub connection has expired or lost access. Reconnect it in Settings to continue.' });
   }
 
   // Free tier gets 5 scans total (usage.limit defaults to 5 at signup — see
@@ -159,9 +159,9 @@ export async function analyzeRepoHandler(req: express.Request, res: express.Resp
     const message = err instanceof Error ? err.message : 'Analysis failed';
     console.error('Repo analysis error:', message);
     if (message.includes('404') || message.includes('Not Found')) {
-      return res.status(404).json({ error: 'not_found', message: 'Repository not found or not accessible with your GitHub permissions.' });
+      return res.status(404).json({ error: 'not_found', message: "We couldn't find that repository, or your GitHub account doesn't have access to it. Double-check the URL, and make sure the repo is public or that your GitHub connection has access to it if it's private." });
     }
-    return res.status(500).json({ error: 'analysis_failed', message: 'Repo analysis failed. Please try again.' });
+    return res.status(500).json({ error: 'analysis_failed', message: 'Something went wrong analyzing this repo. Try again in a moment — if it keeps failing, reconnect GitHub in Settings.' });
   }
 }
 

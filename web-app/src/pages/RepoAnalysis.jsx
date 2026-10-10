@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
@@ -151,6 +151,7 @@ export default function RepoAnalysis() {
   const [repoUrl, setRepoUrl] = useState('');
   const [analyzing, setAnalyzing] = useState(false);
   const [error, setError] = useState('');
+  const [errorCode, setErrorCode] = useState('');
   const [result, setResult] = useState(null);
   const [connectSuccess, setConnectSuccess] = useState('');
   const [connecting, setConnecting] = useState(false);
@@ -192,6 +193,7 @@ export default function RepoAnalysis() {
     if (!repoUrl.trim()) return;
     setAnalyzing(true);
     setError('');
+    setErrorCode('');
     setResult(null);
     try {
       const analysisModule = userLane === 'product_sellers' ? 'product_sellers' : userLane === 'developers' ? 'developers' : 'general';
@@ -200,6 +202,7 @@ export default function RepoAnalysis() {
       refreshUser();
     } catch (err) {
       setError(err.message || 'Analysis failed. Please try again.');
+      setErrorCode(err.code || '');
     } finally {
       setAnalyzing(false);
     }
@@ -343,7 +346,14 @@ export default function RepoAnalysis() {
                 {analyzing ? <><span className="spinner" /> Analyzing…</> : '⊕ Analyze Repo'}
               </button>
             </div>
-            {error && <p className={styles.error}>{error}</p>}
+            {error && (
+              <p className={styles.error}>
+                {error}
+                {errorCode === 'token_invalid' && (
+                  <> <Link to="/settings" className={styles.inlineLink}>Go to Settings →</Link></>
+                )}
+              </p>
+            )}
           </form>
         </>
       )}
