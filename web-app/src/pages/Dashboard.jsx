@@ -851,11 +851,11 @@ export default function Dashboard() {
         </div>
 
         <WhatDoesThisMean tagline="AI's structured read of your content.">
-          Gemini reads your content and grades it against this pillar's fixed rubric — not a word count or load-speed check, but a judgment of how well an AI could actually use your content to understand and answer with it. The rubric never changes, so the score stays comparable: between your own pages, or the same page over time. It's a consistent AI judgment, not a measured fact — but a reliable one to track.
+          Gemini grades your content against this pillar's fixed rubric — a consistent AI judgment of how well an AI could use it, not a literal count like word count or load speed, so scores stay comparable across your pages and over time.
         </WhatDoesThisMean>
         {userLane === 'product_sellers' && (
           <WhatDoesThisMean tagline="AI's read on how shoppable your page looks — specific to product sellers.">
-            This pillar checks something the other four don't: whether an AI could confidently describe, compare, and recommend your product from your page alone — things like clear pricing, specs, and availability. It's graded the same way as your other pillar scores, an AI's structured read rather than a technical measurement, but scored specifically for how AI tools use product pages when answering shopping questions.
+            This pillar grades whether an AI could confidently describe, compare, and recommend your product from your page alone — clear pricing, specs, and availability — the same AI-judgment method as your other pillars, but scored for shopping questions specifically.
           </WhatDoesThisMean>
         )}
 

@@ -120,7 +120,7 @@ function InfoBox() {
           {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
       </div>
-      {!collapsed && <span className={styles.infoBoxText}>We ask Google Gemini about your topic three different ways — an <em>informational</em> question, a <em>conversational</em> request, and a <em>research</em>-style comparison — each grounded in live Google Search. For each, we check whether your brand's name appears in the answer. If you gave a URL, we also check what share of all the sources cited across the three prompts is your own domain. Every number here — the mention count, the domain share, and the competitor list — comes directly from that live data; nothing is scored or guessed. However: this covers Gemini only, three phrasings, one moment in time. Run checks on multiple topic variations and track over time — use for trend spotting and competitor discovery, not as ground-truth market share data.</span>}
+      {!collapsed && <span className={styles.infoBoxText}>We ask Gemini your topic three different ways with live Google Search grounding and report exactly what came back — real mention and domain-share counts, not scores or guesses — but it's Gemini only, three phrasings, one moment in time, so treat it as a trend signal rather than ground-truth market share.</span>}
     </div>
   );
 }
@@ -144,7 +144,7 @@ function WhatDoesThisMeanBox() {
           {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
       </div>
-      {!collapsed && <span className={styles.infoBoxText}>We send your topic to Gemini as three differently-worded prompts and check each real answer for your brand name and your domain. Unlike the pillar scores, this isn't a judgment — "mentioned in 2 of 3" and your citation share are literal counts from those three checks, not an estimate of market share. Run the same check again later to see whether your presence is growing.</span>}
+      {!collapsed && <span className={styles.infoBoxText}>Unlike the pillar scores, this isn't a judgment — "mentioned in 2 of 3" and your citation share are literal counts from three real Gemini prompts, worth re-running over time to see whether your presence is growing.</span>}
     </div>
   );
 }
