@@ -12,8 +12,8 @@ function AccordionItem({ question, answer }: { question: string; answer: string 
         onClick={() => setOpen(!open)}
         className="w-full py-5 flex items-center justify-between text-left group"
       >
-        <span className="text-base font-medium text-white pr-6 group-hover:text-sky-300 transition-colors">{question}</span>
-        <div className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all ${open ? 'bg-sky-500 border-sky-500 text-white' : 'border-white/10 text-slate-400'}`}>
+        <span className="text-base font-medium text-white pr-6 group-hover:text-white transition-colors">{question}</span>
+        <div className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all ${open ? 'bg-white border-white/20 text-white' : 'border-white/10 text-slate-400'}`}>
           {open ? <Minus className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
         </div>
       </button>
@@ -141,7 +141,7 @@ const contactCards = [
     desc: 'For account issues, billing questions, and bug reports.',
     cta: 'support@getrainos.com',
     href: 'mailto:support@getrainos.com',
-    color: '#06b6d4',
+    color: '#e5e5e5',
     response: 'Typically within 1 business day',
   },
   {
@@ -150,7 +150,7 @@ const contactCards = [
     desc: 'API reference, plugin setup guide, and integration docs.',
     cta: 'Browse the docs →',
     href: '/docs',
-    color: '#a855f7',
+    color: '#e5e5e5',
     response: 'Self-serve, available 24/7',
   },
   {
@@ -159,7 +159,7 @@ const contactCards = [
     desc: 'Plugin-specific help, changelog, and installation guide.',
     cta: 'Plugin page →',
     href: '/wordpress-plugin',
-    color: '#22c55e',
+    color: '#e5e5e5',
     response: 'Plugin v1.x documentation',
   },
 ];
@@ -170,9 +170,9 @@ export default function SupportPage() {
     <div className="min-h-screen text-slate-50 font-sans relative" style={{ background: '#020410' }}>
       <div className="fixed inset-0 z-0" style={{ background: '#020410' }} />
       <div className="fixed top-[-20%] left-[-10%] w-[800px] h-[800px] rounded-full pointer-events-none z-[2]"
-        style={{ background: 'rgba(14,165,233,0.05)', filter: 'blur(150px)', mixBlendMode: 'screen' }} />
+        style={{ background: 'rgba(255,255,255,0.05)', filter: 'blur(150px)', mixBlendMode: 'screen' }} />
       <div className="fixed bottom-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full pointer-events-none z-[2]"
-        style={{ background: 'rgba(168,85,247,0.05)', filter: 'blur(150px)', mixBlendMode: 'screen' }} />
+        style={{ background: 'rgba(255,255,255,0.05)', filter: 'blur(150px)', mixBlendMode: 'screen' }} />
       <div className="fixed inset-0 pointer-events-none z-[4]"
         style={{ background: 'linear-gradient(to bottom, rgba(2,4,16,0.4), transparent, #020410)' }} />
 
@@ -182,7 +182,7 @@ export default function SupportPage() {
 
         {/* Header */}
         <div className="text-center mb-16">
-          <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-3 block">Help Center</span>
+          <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Help Center</span>
           <h1 className="text-4xl md:text-5xl font-semibold text-white mb-4" style={{ letterSpacing: '-0.03em' }}>How can we help?</h1>
           <p className="text-slate-400 max-w-xl mx-auto">Find answers to common questions, or reach out directly. We respond to all support emails within one business day.</p>
         </div>
@@ -214,7 +214,7 @@ export default function SupportPage() {
         {/* FAQ groups */}
         {faqGroups.map((group) => (
           <div key={group.label} className="mb-12">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-sky-400 mb-4">{group.label}</h2>
+            <h2 className="text-xs font-bold uppercase tracking-widest text-white mb-4">{group.label}</h2>
             <div>
               {group.items.map((item, i) => (
                 <AccordionItem key={i} question={item.q} answer={item.a} />
@@ -225,14 +225,14 @@ export default function SupportPage() {
 
         {/* Still stuck */}
         <div className="mt-16 p-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] text-center">
-          <MessageSquare className="w-8 h-8 text-sky-400 mx-auto mb-4" />
+          <MessageSquare className="w-8 h-8 text-white mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-white mb-2">Still stuck?</h3>
           <p className="text-slate-400 text-sm mb-6 max-w-md mx-auto">
             If you can not find an answer here, send us an email and include your account email address and a description of the issue. Screenshots are helpful.
           </p>
           <a
             href="mailto:support@getrainos.com"
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-sky-500/10 border border-sky-400/30 text-sky-300 text-sm font-semibold hover:bg-sky-500/15 hover:border-sky-400/50 transition-all"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-white/[0.03] border border-white/10 text-white text-sm font-semibold hover:bg-white/[0.05] hover:border-white/10 transition-all"
           >
             <Mail className="w-4 h-4" />
             Email support@getrainos.com
@@ -246,7 +246,7 @@ export default function SupportPage() {
           <div className="flex items-center gap-6 text-sm text-slate-500">
             <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
-            <a href="/support" className="text-sky-400">Support</a>
+            <a href="/support" className="text-white">Support</a>
           </div>
           <div className="text-xs text-slate-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
         </div>

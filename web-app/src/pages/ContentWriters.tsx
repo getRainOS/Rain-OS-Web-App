@@ -8,46 +8,45 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { HybridFuture, FeatureGrid, ReadabilityIntelligence, ComparisonTable, FAQ } from '@/components/marketing/MarketingComponents';
 import MarketingNav from '@/components/marketing/MarketingNav';
-import { PILLAR_COLORS } from '@/lib/pillarColors.js';
 import TypewriterPlaceholder from '@/components/TypewriterPlaceholder';
 
 const pillars = [
   {
-    color: PILLAR_COLORS.ai_readability,
-    bg: 'rgba(14,165,233,0.1)',
-    border: 'rgba(14,165,233,0.25)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.25)',
     Icon: BrainCircuit,
     name: 'AI Readability',
     desc: 'How easily ChatGPT, Gemini, and Perplexity can extract answers from your content.',
   },
   {
-    color: PILLAR_COLORS.digital_authority,
-    bg: 'rgba(16,185,129,0.1)',
-    border: 'rgba(16,185,129,0.25)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.25)',
     Icon: ShieldCheck,
     name: 'Digital Authority',
     desc: 'The trust signals that make AI engines choose your content over a competitor\'s.',
   },
   {
-    color: PILLAR_COLORS.conversion_readiness,
-    bg: 'rgba(139,92,246,0.1)',
-    border: 'rgba(139,92,246,0.25)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.25)',
     Icon: MousePointerClick,
     name: 'Conversion Readiness',
     desc: 'How effectively your content turns AI-referred readers into customers.',
   },
   {
-    color: PILLAR_COLORS.product_discoverability,
-    bg: 'rgba(249,115,22,0.1)',
-    border: 'rgba(249,115,22,0.25)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.25)',
     Icon: SearchCheck,
     name: 'Product Discoverability',
     desc: 'How easily AI search and recommendation systems can surface your product or service.',
   },
   {
-    color: PILLAR_COLORS.rag_readiness,
-    bg: 'rgba(236,72,153,0.1)',
-    border: 'rgba(236,72,153,0.25)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.25)',
     Icon: Layers,
     name: 'RAG Readiness',
     desc: 'How well your content is structured for vector database retrieval and AI embedding systems.',
@@ -106,21 +105,21 @@ export default function ContentWriters() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen relative z-10 selection:bg-sky-500/30">
+    <div className="flex flex-col min-h-screen relative z-10 selection:bg-white/[0.08]">
       <MarketingNav onLoginClick={() => navigate('/login?mode=login')} onGetStartedClick={() => navigate('/login')} />
 
       <main className="flex-grow">
         {/* Hero */}
         <section className="pt-40 pb-24 md:pt-52 md:pb-40 relative z-10 px-6 overflow-hidden" style={{ paddingTop: '10rem', paddingBottom: '6rem' }}>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] pointer-events-none -z-10"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(14,165,233,0.22) 0%, transparent 70%)' }} />
+            style={{ background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.22) 0%, transparent 70%)' }} />
 
           <div className="max-w-5xl mx-auto flex flex-col gap-12 items-center">
             <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="text-center space-y-6">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.05] text-white"
                 style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
                 Write content that{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-200 to-sky-400">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white/40 to-white/20">
                   AI engines cite
                 </span>
               </h1>
@@ -138,8 +137,8 @@ export default function ContentWriters() {
               className="relative w-full max-w-3xl"
             >
               <div className="absolute -inset-[1px] rounded-[25px] pointer-events-none"
-                style={{ background: 'linear-gradient(135deg, rgba(56,189,248,0.12), rgba(255,255,255,0.04), rgba(56,189,248,0.06))', filter: 'blur(0px)' }} />
-              <form onSubmit={handleSubmit} className="rounded-[24px] p-2 text-left relative group" style={{ background: 'rgba(4,7,20,0.65)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 40px rgba(14,165,233,0.07), 0 20px 60px -12px rgba(0,0,0,0.7)' }}>
+                style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04), rgba(255,255,255,0.06))', filter: 'blur(0px)' }} />
+              <form onSubmit={handleSubmit} className="rounded-[24px] p-2 text-left relative group" style={{ background: 'rgba(4,7,20,0.65)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 40px rgba(255,255,255,0.07), 0 20px 60px -12px rgba(0,0,0,0.7)' }}>
                 <div className="relative">
                   <TypewriterPlaceholder
                     value={content}
@@ -175,8 +174,8 @@ export default function ContentWriters() {
                   <div className="flex items-center gap-4">
                     <button
                       type="submit"
-                      className="bg-sky-500 hover:bg-sky-400 text-white rounded-xl px-6 py-2.5 text-sm font-bold transition-all flex items-center gap-2 group/btn"
-                      style={{ boxShadow: '0 0 16px rgba(14,165,233,0.25), 0 2px 8px rgba(0,0,0,0.4)' }}
+                      className="bg-white hover:bg-white text-white rounded-xl px-6 py-2.5 text-sm font-bold transition-all flex items-center gap-2 group/btn"
+                      style={{ boxShadow: '0 0 16px rgba(255,255,255,0.25), 0 2px 8px rgba(0,0,0,0.4)' }}
                     >
                       Analyze now
                       <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
@@ -220,13 +219,13 @@ export default function ContentWriters() {
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                   className={`rounded-2xl border p-6 ${
                     c.highlight
-                      ? 'border-sky-400/30 bg-sky-500/5'
+                      ? 'border-white/10 bg-white/[0.03]'
                       : c.dim
                       ? 'border-white/5 bg-white/[0.02]'
                       : 'border-white/10 bg-white/[0.03]'
                   }`}
                 >
-                  <p className={`text-sm font-bold mb-2 ${c.highlight ? 'text-sky-300' : c.dim ? 'text-slate-600' : 'text-white'}`}>
+                  <p className={`text-sm font-bold mb-2 ${c.highlight ? 'text-white' : c.dim ? 'text-slate-600' : 'text-white'}`}>
                     {c.label}
                   </p>
                   <p className={`text-sm leading-relaxed ${c.dim ? 'text-slate-600' : 'text-slate-400'}`}>{c.body}</p>
@@ -246,7 +245,7 @@ export default function ContentWriters() {
               transition={{ duration: 0.6 }}
               className="mb-12"
             >
-              <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-3 block">How we score</span>
+              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">How we score</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Five pillars. One Rain Score.</h2>
               <p className="text-slate-400 max-w-xl leading-relaxed">
                 Every analysis returns a weighted score across the five dimensions that determine whether AI engines cite your content.
@@ -287,7 +286,7 @@ export default function ContentWriters() {
               transition={{ duration: 0.6 }}
               className="text-center mb-14"
             >
-              <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-3 block">Simple workflow</span>
+              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Simple workflow</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white">From draft to cited in three steps</h2>
             </motion.div>
 
@@ -320,7 +319,7 @@ export default function ContentWriters() {
               transition={{ duration: 0.6 }}
               className="mb-12"
             >
-              <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-3 block">Everything included</span>
+              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Everything included</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white">Built for content writers</h2>
             </motion.div>
 
@@ -332,9 +331,9 @@ export default function ContentWriters() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.07 }}
-                  className="rounded-2xl border border-white/8 bg-white/[0.02] p-6 hover:border-sky-400/20 hover:bg-white/[0.04] transition-all"
+                  className="rounded-2xl border border-white/8 bg-white/[0.02] p-6 hover:border-white/10 hover:bg-white/[0.04] transition-all"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-sky-500/10 border border-sky-400/20 flex items-center justify-center text-sky-400 mb-4">
+                  <div className="w-9 h-9 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-white mb-4">
                     <f.Icon className="w-4.5 h-4.5" />
                   </div>
                   <h3 className="text-sm font-semibold text-white mb-2">{f.title}</h3>
@@ -386,7 +385,7 @@ export default function ContentWriters() {
         {/* CTA */}
         <section className="py-28 px-6 border-t border-white/[0.06] relative overflow-hidden">
           <div className="absolute inset-0 pointer-events-none -z-10"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(14,165,233,0.07) 0%, transparent 70%)' }} />
+            style={{ background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.07) 0%, transparent 70%)' }} />
 
           <div className="max-w-2xl mx-auto text-center">
             <motion.div
@@ -404,7 +403,7 @@ export default function ContentWriters() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button
                   onClick={() => navigate('/login')}
-                  className="flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white rounded-xl px-8 py-4 text-sm font-bold shadow-xl shadow-sky-500/25 transition-all hover:scale-105 active:scale-95 group"
+                  className="flex items-center gap-2 bg-white hover:bg-white text-white rounded-xl px-8 py-4 text-sm font-bold shadow-xl shadow-sky-500/25 transition-all hover:scale-105 active:scale-95 group"
                 >
                   Score your content free
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

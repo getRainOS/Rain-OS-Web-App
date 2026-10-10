@@ -104,7 +104,7 @@ export default function TermsOfService() {
     <div className="min-h-screen text-slate-50 font-sans relative" style={{ background: '#020410' }}>
       <div className="fixed inset-0 z-0" style={{ background: '#020410' }} />
       <div className="fixed top-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full pointer-events-none z-[2]"
-        style={{ background: 'rgba(168,85,247,0.04)', filter: 'blur(150px)' }} />
+        style={{ background: 'rgba(255,255,255,0.04)', filter: 'blur(150px)' }} />
       <div className="fixed inset-0 pointer-events-none z-[4]"
         style={{ background: 'linear-gradient(to bottom, rgba(2,4,16,0.4), transparent, #020410)' }} />
 
@@ -112,7 +112,7 @@ export default function TermsOfService() {
 
       <main className="relative z-10 max-w-3xl mx-auto px-6 pt-36 pb-24">
         <div className="mb-12">
-          <span className="text-purple-400 font-bold tracking-wider text-xs uppercase mb-3 block">Legal</span>
+          <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Legal</span>
           <h1 className="text-4xl font-semibold text-white mb-3" style={{ letterSpacing: '-0.03em' }}>Terms of Service</h1>
           <p className="text-slate-500 text-sm">Last updated: {LAST_UPDATED}</p>
           <p className="text-slate-400 mt-4 leading-relaxed">
@@ -139,7 +139,7 @@ export default function TermsOfService() {
         <div className="max-w-6xl mx-auto px-6 flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-6 text-sm text-slate-500">
             <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="/terms" className="text-purple-400">Terms of Service</a>
+            <a href="/terms" className="text-white">Terms of Service</a>
             <a href="/support" className="hover:text-white transition-colors">Support</a>
           </div>
           <div className="text-xs text-slate-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>

@@ -13,10 +13,10 @@ interface Lane {
 }
 
 const LANES: Lane[] = [
+  { id: 'local_business', label: 'Local Service Business', desc: "Get found when customers ask AI who's nearby.", href: '/local-business' },
   { id: 'vibe_coders', label: 'Vibe Coders', desc: 'Built with Bolt, Lovable, Replit, v0, or similar — audit your app before launch.', href: null },
   { id: 'developers', label: 'Developers', desc: 'Technical docs, READMEs, and API references, scored for AI readability.', href: '/developers' },
   { id: 'product_sellers', label: 'Product Sellers', desc: 'Shopify, Wix, Etsy, Amazon listings — get found by AI shopping assistants.', href: '/product-sellers' },
-  { id: 'local_business', label: 'Local Service Business', desc: "Get found when customers ask AI who's nearby.", href: '/local-business' },
   { id: 'general', label: 'Writers & Marketers', desc: 'Blog posts, newsletters, and landing pages built to get cited by AI.', href: '/content-writers' },
 ];
 
@@ -107,25 +107,6 @@ export default function LanePicker() {
               scrolled-to. */}
           <div className="flex-1 min-h-0 flex flex-col items-center justify-start px-6 py-10 overflow-y-auto relative">
             <div className="m-auto flex flex-col items-center w-full">
-            {/* Slow ambient drift behind the cards — reads as depth, not urgency,
-                because it's slow, blurred, and grayscale rather than fast/colored. */}
-            <motion.div
-              aria-hidden="true"
-              className="pointer-events-none absolute top-1/2 left-1/2 rounded-full z-0"
-              style={{
-                width: 560,
-                height: 560,
-                marginLeft: -280,
-                marginTop: -280,
-                background: 'radial-gradient(circle, rgba(255,255,255,0.07), transparent 70%)',
-                filter: 'blur(40px)',
-              }}
-              animate={{
-                x: [-60, 60, -60],
-                y: [-30, 40, -30],
-              }}
-              transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
-            />
             <motion.h1
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}

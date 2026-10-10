@@ -17,7 +17,7 @@ export default function BlogPost() {
         <button
           onClick={() => navigate('/blog')}
           className="text-white rounded-lg px-5 py-2.5 text-sm font-semibold cursor-pointer"
-          style={{ background: '#0EA5E9' }}
+          style={{ background: '#e5e5e5' }}
         >
           Back to blog
         </button>
@@ -50,7 +50,7 @@ export default function BlogPost() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-4 block">
+          <span className="text-white font-bold tracking-wider text-xs uppercase mb-4 block">
             {post.category}
           </span>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
@@ -72,7 +72,7 @@ export default function BlogPost() {
           transition={{ duration: 0.4 }}
           className="flex items-center gap-4 mb-12 flex-wrap"
         >
-          <span className="text-xs font-semibold uppercase tracking-wider text-sky-400 px-3 py-1.5 rounded-md bg-sky-500/10 border border-sky-500/20">
+          <span className="text-xs font-semibold uppercase tracking-wider text-white px-3 py-1.5 rounded-md bg-white/[0.03] border border-white/10">
             {post.category}
           </span>
           <span className="flex items-center gap-1 text-sm text-slate-400">
@@ -128,7 +128,7 @@ export default function BlogPost() {
           transition={{ duration: 0.4 }}
           className="flex items-center gap-3 py-4 border-y border-white/[0.06] mb-10"
         >
-          <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0" style={{ background: 'linear-gradient(135deg, #0EA5E9, #a855f7)' }}>
+          <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0" style={{ background: 'linear-gradient(135deg, #e5e5e5, #e5e5e5)' }}>
             {post.author[0]}
           </div>
           <div>
@@ -150,8 +150,8 @@ export default function BlogPost() {
                   transition={{ duration: 0.4 }}
                 >
                   <h2 className="text-xl font-semibold text-white mt-2 mb-1 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center shrink-0">
-                      <FileText className="w-4 h-4 text-sky-400" />
+                    <div className="w-8 h-8 rounded-lg bg-white/[0.03] border border-white/10 flex items-center justify-center shrink-0">
+                      <FileText className="w-4 h-4 text-white" />
                     </div>
                     {para.replace(/\*\*/g, '')}
                   </h2>
@@ -171,7 +171,7 @@ export default function BlogPost() {
                 >
                   {items.map((item, j) => (
                     <li key={j} className="text-[15px] leading-relaxed text-slate-300 flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-sky-400 mt-2 shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-white mt-2 shrink-0" />
                       {item.replace('- ', '')}
                     </li>
                   ))}
@@ -206,7 +206,7 @@ export default function BlogPost() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mt-16 rounded-2xl border border-violet-400/20 bg-violet-500/[0.03] p-8 text-center"
+          className="mt-16 rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-center"
         >
           <h3 className="text-xl font-semibold text-white mb-3">
             Ready to see how AI-readable your content is?
@@ -218,8 +218,8 @@ export default function BlogPost() {
             onClick={() => navigate('/login')}
             className="inline-flex items-center gap-2 text-white rounded-xl px-8 py-3.5 text-sm font-bold shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer"
             style={{
-              background: 'linear-gradient(135deg, #8b5cf6, #0ea5e9)',
-              boxShadow: '0 8px 24px rgba(139,92,246,0.25)',
+              background: 'linear-gradient(135deg, #e5e5e5, #e5e5e5)',
+              boxShadow: '0 8px 24px rgba(255,255,255,0.25)',
             }}
           >
             Scan my content free

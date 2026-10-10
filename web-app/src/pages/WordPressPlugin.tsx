@@ -7,54 +7,53 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
-import { PILLAR_COLORS } from '@/lib/pillarColors.js';
 
 const coreFeatures = [
   {
     Icon: BrainCircuit,
-    color: '#38bdf8',
-    bg: 'rgba(14,165,233,0.1)',
-    border: 'rgba(14,165,233,0.2)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.2)',
     title: 'Full 5-Pillar Rain Score',
     desc: 'Every post gets scored across AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, and RAG Readiness — directly inside WordPress.',
   },
   {
     Icon: Layers,
-    color: '#34d399',
-    bg: 'rgba(16,185,129,0.1)',
-    border: 'rgba(16,185,129,0.2)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.2)',
     title: 'Gutenberg Sidebar Panel',
     desc: 'A native React sidebar integrates seamlessly into the block editor. Score and review recommendations without leaving the post.',
   },
   {
     Icon: Globe,
-    color: '#a78bfa',
-    bg: 'rgba(139,92,246,0.1)',
-    border: 'rgba(139,92,246,0.2)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.2)',
     title: 'URL Scanner',
     desc: 'Scan any published URL for technical AEO signals — schema markup, llms.txt, JS rendering risk, open graph tags, and more.',
   },
   {
     Icon: FileText,
-    color: '#fb923c',
-    bg: 'rgba(249,115,22,0.1)',
-    border: 'rgba(249,115,22,0.2)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.2)',
     title: 'Classic Editor Support',
     desc: 'Works in both the block editor and the classic editor through dedicated meta boxes. No workflow disruption.',
   },
   {
     Icon: Zap,
-    color: '#f472b6',
-    bg: 'rgba(244,114,182,0.1)',
-    border: 'rgba(244,114,182,0.2)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.2)',
     title: 'Built-in Rewrite Tools',
     desc: 'Suggest AI-optimized titles, generate meta descriptions, summarize for AI snippets, and rewrite vague sentences — all in-editor.',
   },
   {
     Icon: BarChart3,
-    color: '#38bdf8',
-    bg: 'rgba(14,165,233,0.1)',
-    border: 'rgba(14,165,233,0.2)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.2)',
     title: 'Score History & Tracking',
     desc: 'Every analysis is saved. Track how your score changes across rewrites and see which changes had the most impact.',
   },
@@ -68,9 +67,9 @@ const coreFeatures = [
   },
   {
     Icon: Lock,
-    color: '#34d399',
-    bg: 'rgba(16,185,129,0.1)',
-    border: 'rgba(16,185,129,0.2)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.2)',
     title: 'Secure API Key Storage',
     desc: 'Your rain OS API key is stored securely in WordPress options with nonce-verified AJAX and REST API endpoints.',
   },
@@ -184,8 +183,8 @@ function AccordionItem({ question, answer }: { question: string; answer: string 
         onClick={() => setOpen(!open)}
         className="w-full py-5 flex items-center justify-between text-left group"
       >
-        <span className="text-base font-medium text-white pr-6 group-hover:text-sky-300 transition-colors">{question}</span>
-        <div className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all ${open ? 'bg-sky-500 border-sky-500 text-white' : 'border-white/10 text-slate-400'}`}>
+        <span className="text-base font-medium text-white pr-6 group-hover:text-white transition-colors">{question}</span>
+        <div className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all ${open ? 'bg-white border-white/20 text-white' : 'border-white/10 text-slate-400'}`}>
           {open ? <Minus className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
         </div>
       </button>
@@ -210,7 +209,7 @@ export default function WordPressPlugin() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col min-h-screen relative z-10 selection:bg-sky-500/30">
+    <div className="flex flex-col min-h-screen relative z-10 selection:bg-white/[0.08]">
       <MarketingNav onLoginClick={() => navigate('/login?mode=login')} onGetStartedClick={() => navigate('/login')} />
 
       <main className="flex-grow">
@@ -218,21 +217,21 @@ export default function WordPressPlugin() {
         {/* Hero */}
         <section className="pt-32 md:pt-44 pb-16 md:pb-24 relative z-10 px-4 md:px-6 overflow-hidden">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] pointer-events-none -z-10"
-            style={{ background: 'radial-gradient(ellipse at top, rgba(14,165,233,0.18) 0%, transparent 65%)' }} />
+            style={{ background: 'radial-gradient(ellipse at top, rgba(255,255,255,0.18) 0%, transparent 65%)' }} />
 
           <div className="max-w-5xl mx-auto">
             <div className="flex flex-col lg:flex-row items-center gap-16">
               <div className="flex-1 text-center lg:text-left">
                 <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-                  <div className="inline-flex items-center rounded-full border border-sky-400/30 bg-sky-400/10 px-4 py-1.5 text-xs font-bold text-sky-300 tracking-[0.2em] uppercase mb-6">
-                    <span className="flex h-2 w-2 rounded-full bg-sky-400 mr-3 animate-pulse" />
+                  <div className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-1.5 text-xs font-bold text-white tracking-[0.2em] uppercase mb-6">
+                    <span className="flex h-2 w-2 rounded-full bg-white mr-3 animate-pulse" />
                     WordPress Plugin
                   </div>
 
                   <h1 className="text-4xl md:text-5xl font-semibold leading-[1.08] text-white mb-6"
                     style={{ letterSpacing: '-0.04em' }}>
                     AEO scoring{' '}
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-200 to-sky-400">
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-white/40 to-white/20">
                       inside WordPress
                     </span>
                   </h1>
@@ -243,8 +242,8 @@ export default function WordPressPlugin() {
 
                   <div className="flex flex-wrap gap-2 mb-8 justify-center lg:justify-start">
                     {[
-                      { label: 'Content Analysis', icon: FileText, color: 'text-sky-400 border-sky-400/30 bg-sky-400/8' },
-                      { label: 'URL Scanner', icon: Globe, color: 'text-violet-400 border-violet-400/30 bg-violet-400/8' },
+                      { label: 'Content Analysis', icon: FileText, color: 'text-white border-white/10 bg-white/[0.03]' },
+                      { label: 'URL Scanner', icon: Globe, color: 'text-white border-white/10 bg-white/[0.03]' },
                     ].map(({ label, icon: Icon, color }) => (
                       <span key={label} className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold ${color}`}>
                         <Icon className="w-3 h-3" />
@@ -256,7 +255,7 @@ export default function WordPressPlugin() {
                   <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                     <button
                       onClick={() => navigate('/login')}
-                      className="flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white rounded-xl px-7 py-3.5 text-sm font-bold shadow-lg shadow-sky-500/25 transition-all hover:scale-105 active:scale-95 group"
+                      className="flex items-center gap-2 bg-white hover:bg-white text-white rounded-xl px-7 py-3.5 text-sm font-bold shadow-lg shadow-sky-500/25 transition-all hover:scale-105 active:scale-95 group"
                     >
                       Get Started Free
                       <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -274,37 +273,37 @@ export default function WordPressPlugin() {
               >
                 <div className="relative">
                   <div className="absolute -inset-[1px] rounded-[20px]"
-                    style={{ background: 'linear-gradient(135deg, rgba(56,189,248,0.2), rgba(255,255,255,0.04), rgba(139,92,246,0.1))' }} />
+                    style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.04), rgba(255,255,255,0.1))' }} />
                   <div className="relative bg-[#0a1220] border border-white/10 rounded-[20px] overflow-hidden">
                     <div className="bg-[#111827] border-b border-white/10 px-4 py-3 flex items-center gap-2">
                       <div className="flex gap-1.5">
-                        <span className="w-3 h-3 rounded-full bg-red-500/60" />
-                        <span className="w-3 h-3 rounded-full bg-yellow-500/60" />
-                        <span className="w-3 h-3 rounded-full bg-green-500/60" />
+                        <span className="w-3 h-3 rounded-full bg-white/[0.08]" />
+                        <span className="w-3 h-3 rounded-full bg-white/[0.08]" />
+                        <span className="w-3 h-3 rounded-full bg-white/[0.08]" />
                       </div>
                       <span className="text-xs text-slate-500 ml-2 font-medium">rain OS — WordPress Sidebar</span>
                     </div>
                     <div className="p-5 space-y-4">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-bold text-slate-300">Rain Score</span>
-                        <span className="text-xs text-sky-400 font-bold">Analyzed</span>
+                        <span className="text-xs text-white font-bold">Analyzed</span>
                       </div>
 
                       <div className="flex items-center gap-4">
                         <div className="relative w-16 h-16 shrink-0">
                           <svg className="w-full h-full -rotate-90" viewBox="0 0 64 64">
                             <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="5" />
-                            <circle cx="32" cy="32" r="26" fill="none" stroke="#38bdf8" strokeWidth="5" strokeLinecap="round"
-                              strokeDasharray="163.4" strokeDashoffset="32.7" style={{ filter: 'drop-shadow(0 0 4px rgba(56,189,248,0.4))' }} />
+                            <circle cx="32" cy="32" r="26" fill="none" stroke="#e5e5e5" strokeWidth="5" strokeLinecap="round"
+                              strokeDasharray="163.4" strokeDashoffset="32.7" style={{ filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.4))' }} />
                           </svg>
                           <span className="absolute inset-0 flex items-center justify-center text-lg font-bold text-white">82</span>
                         </div>
                         <div className="flex-1 space-y-2">
                           {[
-                            { name: 'AI Readability', score: 88, color: PILLAR_COLORS.ai_readability },
-                            { name: 'Authority', score: 79, color: PILLAR_COLORS.digital_authority },
-                            { name: 'Conversion', score: 84, color: PILLAR_COLORS.conversion_readiness },
-                            { name: 'Discoverability', score: 72, color: PILLAR_COLORS.product_discoverability },
+                            { name: 'AI Readability', score: 88, color: '#e5e5e5' },
+                            { name: 'Authority', score: 79, color: '#e5e5e5' },
+                            { name: 'Conversion', score: 84, color: '#e5e5e5' },
+                            { name: 'Discoverability', score: 72, color: '#e5e5e5' },
                           ].map(p => (
                             <div key={p.name}>
                               <div className="flex justify-between mb-0.5">
@@ -326,14 +325,14 @@ export default function WordPressPlugin() {
                           'Structure paragraph 3 with answer-first formatting',
                         ].map((r, i) => (
                           <div key={i} className="flex items-start gap-2 text-[11px] text-slate-400">
-                            <CheckCircle className="w-3 h-3 text-sky-400 mt-0.5 shrink-0" />
+                            <CheckCircle className="w-3 h-3 text-white mt-0.5 shrink-0" />
                             {r}
                           </div>
                         ))}
                       </div>
 
                       <button className="w-full py-2 rounded-lg text-xs font-bold text-white transition-all"
-                        style={{ background: 'linear-gradient(135deg, rgba(14,165,233,0.25), rgba(56,189,248,0.15))', border: '1px solid rgba(56,189,248,0.3)' }}>
+                        style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.15))', border: '1px solid rgba(255,255,255,0.3)' }}>
                         Re-analyze
                       </button>
                     </div>
@@ -354,7 +353,7 @@ export default function WordPressPlugin() {
               transition={{ duration: 0.6 }}
               className="text-center mb-12"
             >
-              <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-3 block">What's inside the plugin</span>
+              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">What's inside the plugin</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Two analysis tools. Zero context-switching.</h2>
               <p className="text-slate-400 max-w-xl mx-auto leading-relaxed">
                 Whether you're writing new content or auditing a live page, both tools run directly inside WordPress — no browser tabs, no copy-pasting.
@@ -368,15 +367,15 @@ export default function WordPressPlugin() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
-                className="rounded-2xl border border-sky-400/20 bg-sky-400/[0.05] p-7 flex flex-col gap-4"
+                className="rounded-2xl border border-white/10 bg-white/[0.05] p-7 flex flex-col gap-4"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-sky-400/10 border border-sky-400/20 flex items-center justify-center">
-                    <FileText className="w-5 h-5 text-sky-400" />
+                  <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center">
+                    <FileText className="w-5 h-5 text-white" />
                   </div>
                   <div>
                     <h3 className="text-base font-bold text-white">Content Analysis</h3>
-                    <span className="text-[10px] font-bold text-sky-400 uppercase tracking-widest">Gutenberg Sidebar + Classic Editor</span>
+                    <span className="text-[10px] font-bold text-white uppercase tracking-widest">Gutenberg Sidebar + Classic Editor</span>
                   </div>
                 </div>
                 <p className="text-sm text-slate-400 leading-relaxed">
@@ -391,7 +390,7 @@ export default function WordPressPlugin() {
                     'Works on drafts before you publish',
                   ].map((item) => (
                     <li key={item} className="flex items-center gap-2 text-xs text-slate-400">
-                      <CheckCircle className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                      <CheckCircle className="w-3.5 h-3.5 text-white shrink-0" />
                       {item}
                     </li>
                   ))}
@@ -404,15 +403,15 @@ export default function WordPressPlugin() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="rounded-2xl border border-violet-400/20 bg-violet-400/[0.05] p-7 flex flex-col gap-4"
+                className="rounded-2xl border border-white/10 bg-white/[0.05] p-7 flex flex-col gap-4"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-violet-400/10 border border-violet-400/20 flex items-center justify-center">
-                    <Globe className="w-5 h-5 text-violet-400" />
+                  <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center">
+                    <Globe className="w-5 h-5 text-white" />
                   </div>
                   <div>
                     <h3 className="text-base font-bold text-white">URL Scanner</h3>
-                    <span className="text-[10px] font-bold text-violet-400 uppercase tracking-widest">Plugin Admin Panel</span>
+                    <span className="text-[10px] font-bold text-white uppercase tracking-widest">Plugin Admin Panel</span>
                   </div>
                 </div>
                 <p className="text-sm text-slate-400 leading-relaxed">
@@ -427,7 +426,7 @@ export default function WordPressPlugin() {
                     'Actionable technical AEO recommendations',
                   ].map((item) => (
                     <li key={item} className="flex items-center gap-2 text-xs text-slate-400">
-                      <CheckCircle className="w-3.5 h-3.5 text-violet-400 shrink-0" />
+                      <CheckCircle className="w-3.5 h-3.5 text-white shrink-0" />
                       {item}
                     </li>
                   ))}
@@ -448,7 +447,7 @@ export default function WordPressPlugin() {
               transition={{ duration: 0.6 }}
               className="text-center mb-14"
             >
-              <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-3 block">Setup in minutes</span>
+              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Setup in minutes</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white">From install to first analysis in three steps</h2>
             </motion.div>
 
@@ -463,10 +462,10 @@ export default function WordPressPlugin() {
                   className="relative"
                 >
                   {i < steps.length - 1 && (
-                    <div className="hidden md:block absolute top-6 left-full w-8 h-px bg-gradient-to-r from-sky-500/30 to-transparent" />
+                    <div className="hidden md:block absolute top-6 left-full w-8 h-px bg-gradient-to-r from-white/20 to-transparent" />
                   )}
                   <div className="flex items-center gap-3 mb-4">
-                    <span className="w-8 h-8 rounded-full bg-sky-500/10 border border-sky-400/25 flex items-center justify-center text-xs font-bold text-sky-400">
+                    <span className="w-8 h-8 rounded-full bg-white/[0.03] border border-white/10 flex items-center justify-center text-xs font-bold text-white">
                       {s.num}
                     </span>
                   </div>
@@ -489,7 +488,7 @@ export default function WordPressPlugin() {
               transition={{ duration: 0.6 }}
               className="mb-12"
             >
-              <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-3 block">What's included</span>
+              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">What's included</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Every feature you need for AEO in WordPress</h2>
               <p className="text-slate-400 max-w-xl leading-relaxed">
                 rain OS goes beyond what traditional SEO plugins offer, covering every signal that determines whether AI engines read, trust, and cite your content.
@@ -528,7 +527,7 @@ export default function WordPressPlugin() {
               transition={{ duration: 0.6 }}
               className="text-center mb-12"
             >
-              <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-3 block">How we compare</span>
+              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">How we compare</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">rain OS vs traditional SEO plugins</h2>
               <p className="text-slate-400 max-w-lg mx-auto">
                 rain OS doesn't replace Yoast or RankMath — it adds the AEO layer they don't cover.
@@ -546,7 +545,7 @@ export default function WordPressPlugin() {
                   <div className="p-4 text-slate-400">Feature</div>
                   <div className="p-4 text-slate-500 text-center">Yoast SEO</div>
                   <div className="p-4 text-slate-500 text-center">RankMath</div>
-                  <div className="p-4 text-sky-400 text-center bg-sky-500/5 border-l border-sky-500/15">rain OS</div>
+                  <div className="p-4 text-white text-center bg-white/[0.03] border-l border-white/10">rain OS</div>
                 </div>
                 {vsComparison.map((row, i) => (
                   <div key={i} className="grid grid-cols-4 border-b border-white/[0.05] last:border-0 hover:bg-white/[0.02] transition-colors">
@@ -561,9 +560,9 @@ export default function WordPressPlugin() {
                         ? <CheckCircle className="w-4 h-4 text-slate-500" />
                         : <span className="text-slate-700 text-lg">—</span>}
                     </div>
-                    <div className="p-4 flex items-center justify-center bg-sky-500/[0.03] border-l border-sky-500/10">
+                    <div className="p-4 flex items-center justify-center bg-white/[0.03] border-l border-white/10">
                       {row.rain
-                        ? <CheckCircle className="w-4 h-4 text-sky-400" />
+                        ? <CheckCircle className="w-4 h-4 text-white" />
                         : <span className="text-slate-700 text-lg">—</span>}
                     </div>
                   </div>
@@ -583,13 +582,13 @@ export default function WordPressPlugin() {
                       ].map(({ label, val, accent }) => (
                         <div
                           key={label}
-                          className={`flex flex-col items-center gap-1.5 rounded-lg py-2 ${accent ? 'bg-sky-500/[0.05] border border-sky-500/10' : 'bg-white/[0.03]'}`}
+                          className={`flex flex-col items-center gap-1.5 rounded-lg py-2 ${accent ? 'bg-white/[0.05] border border-white/10' : 'bg-white/[0.03]'}`}
                         >
-                          <span className={`text-[10px] font-bold uppercase tracking-wider ${accent ? 'text-sky-400' : 'text-slate-500'}`}>
+                          <span className={`text-[10px] font-bold uppercase tracking-wider ${accent ? 'text-white' : 'text-slate-500'}`}>
                             {label}
                           </span>
                           {val
-                            ? <CheckCircle className={`w-4 h-4 ${accent ? 'text-sky-400' : 'text-slate-500'}`} />
+                            ? <CheckCircle className={`w-4 h-4 ${accent ? 'text-white' : 'text-slate-500'}`} />
                             : <span className="text-slate-700 text-sm">—</span>}
                         </div>
                       ))}
@@ -611,7 +610,7 @@ export default function WordPressPlugin() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-3 block">Technical details</span>
+                <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Technical details</span>
                 <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">Built for performance and security</h2>
                 <p className="text-slate-400 leading-relaxed mb-8">
                   rain OS uses a modular, class-based plugin architecture with WordPress coding standards. All API calls are asynchronous — your site's frontend is never affected.
@@ -626,7 +625,7 @@ export default function WordPressPlugin() {
                     'Full WordPress Coding Standards compliance',
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-3 text-sm text-slate-300">
-                      <CheckCircle className="w-4 h-4 text-sky-400 shrink-0" />
+                      <CheckCircle className="w-4 h-4 text-white shrink-0" />
                       {item}
                     </div>
                   ))}
@@ -689,7 +688,7 @@ export default function WordPressPlugin() {
         {/* CTA */}
         <section className="py-28 px-6 border-t border-white/[0.06] relative overflow-hidden">
           <div className="absolute inset-0 pointer-events-none -z-10"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(14,165,233,0.07) 0%, transparent 70%)' }} />
+            style={{ background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.07) 0%, transparent 70%)' }} />
 
           <div className="max-w-2xl mx-auto text-center">
             <motion.div
@@ -707,7 +706,7 @@ export default function WordPressPlugin() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button
                   onClick={() => navigate('/login')}
-                  className="flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white rounded-xl px-8 py-4 text-sm font-bold shadow-xl shadow-sky-500/25 transition-all hover:scale-105 active:scale-95 group"
+                  className="flex items-center gap-2 bg-white hover:bg-white text-white rounded-xl px-8 py-4 text-sm font-bold shadow-xl shadow-sky-500/25 transition-all hover:scale-105 active:scale-95 group"
                 >
                   Get Started Free
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
