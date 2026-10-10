@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
@@ -20,6 +20,8 @@ function GithubPushPanel({ result, scannedUrl }) {
   const [checked, setChecked] = useState({}); // id → boolean
   const [prUrl, setPrUrl] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [connecting, setConnecting] = useState(false);
+  const [connectError, setConnectError] = useState('');
 
   const fixableArtifacts = (result?.technical_recommendations || [])
     .filter((r) => r?.artifact)
@@ -29,6 +31,27 @@ function GithubPushPanel({ result, scannedUrl }) {
 
   // Not connected
   if (!user?.githubLogin) {
+    async function handleConnect() {
+      setConnecting(true);
+      setConnectError('');
+      try {
+        // Pre-fill the scanned URL on return so the page isn't blank after
+        // the GitHub redirect round-trip — one click to re-run the scan
+        // and get the push-fixes panel back, instead of retyping the URL.
+        const returnTo = `/url-scanner${scannedUrl ? `?url=${encodeURIComponent(scannedUrl)}` : ''}`;
+        const { data } = await api.github.connect(returnTo);
+        if (data?.url) {
+          window.location.href = data.url;
+        } else {
+          setConnectError('Could not start GitHub connection. Please try again.');
+          setConnecting(false);
+        }
+      } catch (err) {
+        setConnectError(err.message || 'Could not start GitHub connection. Please try again.');
+        setConnecting(false);
+      }
+    }
+
     return (
       <div className={`card ${styles.ghPanel}`}>
         <div className={styles.ghPanelHeader}>
@@ -38,9 +61,15 @@ function GithubPushPanel({ result, scannedUrl }) {
             <p className={styles.ghPanelSub}>Connect your GitHub account to open a PR with these fixes automatically.</p>
           </div>
         </div>
-        <Link to="/settings" className="btn btn-primary" style={{ marginTop: 12, display: 'inline-flex' }}>
-          Connect GitHub in Settings →
-        </Link>
+        {connectError && <p style={{ color: 'var(--red)', fontSize: 13, marginTop: 8 }}>{connectError}</p>}
+        <button
+          onClick={handleConnect}
+          disabled={connecting}
+          className="btn btn-primary"
+          style={{ marginTop: 12, display: 'inline-flex', opacity: connecting ? 0.6 : 1 }}
+        >
+          {connecting ? 'Connecting…' : 'Connect GitHub →'}
+        </button>
       </div>
     );
   }

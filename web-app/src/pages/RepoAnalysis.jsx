@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
@@ -144,7 +144,6 @@ function FixPromptGenerator({ result, repoUrl }) {
 
 export default function RepoAnalysis() {
   const { user, userLane, refreshUser } = useApp();
-  const navigate = useNavigate();
   const location = useLocation();
   const [repos, setRepos] = useState([]);
   const [connected, setConnected] = useState(false);
@@ -154,6 +153,8 @@ export default function RepoAnalysis() {
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
   const [connectSuccess, setConnectSuccess] = useState('');
+  const [connecting, setConnecting] = useState(false);
+  const [connectError, setConnectError] = useState('');
 
   const connectCopy = userLane === 'developers'
     ? { title: 'See your codebase through an AI agent\'s eyes', desc: "Link your GitHub account to fetch source files (package.json, index.html, llms.txt, robots.txt) and score your docs and app structure against all 5 AEO pillars. This is the only way to analyze JavaScript-rendered apps." }
@@ -215,6 +216,23 @@ export default function RepoAnalysis() {
     setError('');
   }
 
+  async function handleConnect() {
+    setConnecting(true);
+    setConnectError('');
+    try {
+      const { data } = await api.github.connect('/repo-analysis');
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        setConnectError('Could not start GitHub connection. Please try again.');
+        setConnecting(false);
+      }
+    } catch (err) {
+      setConnectError(err.message || 'Could not start GitHub connection. Please try again.');
+      setConnecting(false);
+    }
+  }
+
   if (reposLoading) {
     return (
       <div className={styles.root}>
@@ -251,11 +269,14 @@ export default function RepoAnalysis() {
           <div className={styles.connectIcon}>⊕</div>
           <h2 className={styles.connectTitle}>{connectCopy.title}</h2>
           <p className={styles.connectDesc}>{connectCopy.desc}</p>
+          {connectError && <p style={{ color: 'var(--red)', fontSize: 13, marginBottom: 8 }}>{connectError}</p>}
           <button
             className="btn btn-primary"
-            onClick={() => navigate('/settings')}
+            onClick={handleConnect}
+            disabled={connecting}
+            style={{ opacity: connecting ? 0.6 : 1 }}
           >
-            Connect GitHub in Settings →
+            {connecting ? 'Connecting…' : 'Connect GitHub →'}
           </button>
         </div>
       )}
