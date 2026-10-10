@@ -1166,21 +1166,6 @@ button.emptyLink {
   font-variant-numeric: tabular-nums;
 }
 
-.contentHealth {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  color: var(--text-dim);
-  margin-top: 2px;
-  padding-top: 6px;
-  border-top: 1px solid rgba(255,255,255,0.04);
-}
-
-.contentHealth strong {
-  font-weight: 500;
-}
-
 .sparkSvg {
   display: block;
 }
