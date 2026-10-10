@@ -162,6 +162,10 @@ CREATE TABLE IF NOT EXISTS oauth_states (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE INDEX IF NOT EXISTS idx_oauth_states_expires_at ON oauth_states(expires_at);
+-- Additive migration for existing deployments (idempotent). Lets GitHub
+-- Connect return the user to the page they started from (e.g. URL Scanner,
+-- Repo Analysis) instead of always landing on /repo-analysis.
+ALTER TABLE oauth_states ADD COLUMN IF NOT EXISTS return_to TEXT;
 `;
 
 // Shared, global cache of domain -> inferred HQ country (Gemini-classified,

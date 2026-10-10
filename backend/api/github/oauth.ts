@@ -13,6 +13,15 @@ function getApiKey(req: express.Request): string | null {
   return (Array.isArray(h) ? h[0] : h)?.split(' ')[1] || null;
 }
 
+// Only accept an in-app relative path ("/url-scanner?url=...") — never a
+// full URL or protocol-relative path ("//evil.com"), which would turn this
+// into an open redirect once GitHub bounces back through our callback.
+function sanitizeReturnTo(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  if (!value.startsWith('/') || value.startsWith('//')) return null;
+  return value.slice(0, 500);
+}
+
 export default async function handler(req: express.Request, res: express.Response) {
   try {
     const apiKey = getApiKey(req);
@@ -31,7 +40,8 @@ export default async function handler(req: express.Request, res: express.Respons
     }
 
     // Create a cryptographically random nonce — never exposes the API key in URLs
-    const state = await createOAuthState(user.id);
+    const returnTo = sanitizeReturnTo((req.body as { returnTo?: unknown })?.returnTo);
+    const state = await createOAuthState(user.id, returnTo);
 
     const apiBase = process.env.API_BASE_URL || 'https://api.getrainos.com';
     const params = new URLSearchParams({

@@ -38,10 +38,11 @@ export default async function handler(req: express.Request, res: express.Respons
 
   try {
     // Consume the nonce from the DB — verifies the request came from us and retrieves userId
-    const userId = await consumeOAuthState(state);
-    if (!userId) {
+    const consumed = await consumeOAuthState(state);
+    if (!consumed) {
       return res.redirect(`${APP_URL}/settings?github=error&reason=invalid_or_expired_state`);
     }
+    const { userId, returnTo } = consumed;
 
     const user = await findUserById(userId);
     if (!user) {
@@ -101,7 +102,13 @@ export default async function handler(req: express.Request, res: express.Respons
     // Save GitHub auth to the user record (token is encrypted inside saveGithubAuth)
     await saveGithubAuth(user.id, githubId, githubLogin, accessToken);
 
-    res.redirect(`${APP_URL}/repo-analysis?github=connected&login=${encodeURIComponent(githubLogin)}`);
+    // Return to wherever the user started the connect flow from (URL
+    // Scanner, Repo Analysis, etc.) instead of always landing on Repo
+    // Analysis — returnTo was validated as an in-app relative path at
+    // /api/github/oauth/init, so it's safe to redirect to directly.
+    const destination = returnTo || '/repo-analysis';
+    const separator = destination.includes('?') ? '&' : '?';
+    res.redirect(`${APP_URL}${destination}${separator}github=connected&login=${encodeURIComponent(githubLogin)}`);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     console.error('GitHub OAuth callback error:', message);
