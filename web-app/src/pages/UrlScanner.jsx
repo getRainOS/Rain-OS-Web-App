@@ -524,6 +524,7 @@ export default function UrlScanner() {
   const [url, setUrl] = useState(() => searchParams.get('url') || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [errorCode, setErrorCode] = useState('');
   const [result, setResult] = useState(null);
   const [scannedUrl, setScannedUrl] = useState('');
   const [heroSeen, setHeroSeen] = useState(() => {
@@ -547,6 +548,7 @@ export default function UrlScanner() {
     if (!url.trim()) return;
     setLoading(true);
     setError('');
+    setErrorCode('');
     setResult(null);
     try {
       const analysisModule = userLane === 'product_sellers' ? 'product_sellers' : userLane === 'developers' ? 'developers' : userLane === 'local_business' ? 'local_business' : 'general';
@@ -562,6 +564,7 @@ export default function UrlScanner() {
       setHeroSeen(true);
     } catch (err) {
       setError(err.message || 'Scan failed. Please try again.');
+      setErrorCode(err.code || '');
     } finally {
       setLoading(false);
     }
@@ -680,7 +683,14 @@ export default function UrlScanner() {
             {loading ? <><span className="spinner" /> Scanning…</> : '◎ Scan URL'}
           </button>
         </div>
-        {error && <p className={styles.error}>{error}</p>}
+        {error && (
+          <p className={styles.error}>
+            {error}
+            {errorCode === 'insufficient_content' && (
+              <> <Link to="/repo-analysis" className={styles.inlineLink}>Go to Repo Analysis →</Link></>
+            )}
+          </p>
+        )}
       </form>
 
       {result && (
