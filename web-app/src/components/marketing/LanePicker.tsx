@@ -121,7 +121,7 @@ export default function LanePicker() {
               transition={{ duration: 0.4, delay: 0.2 }}
               className="relative z-10 mt-4 text-base text-neutral-400 text-center max-w-md"
             >
-              rain OS optimizes you for AI readability depending on your business. Pick one to see what we check for you.
+              rain OS optimizes you for AI readability depending on your business. Pick one to begin.
             </motion.p>
 
             <motion.div
