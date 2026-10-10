@@ -6,69 +6,68 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
-import { PILLAR_COLORS } from '@/lib/pillarColors.js';
 
 const docSignals = [
   {
-    color: '#38bdf8',
-    bg: 'rgba(14,165,233,0.1)',
-    border: 'rgba(14,165,233,0.2)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.2)',
     Icon: Layers,
     name: 'Navigation Structure',
     desc: 'Clear hierarchy, table of contents signals, and logical section ordering — the foundation of AI-parseable documentation.',
   },
   {
-    color: '#34d399',
-    bg: 'rgba(16,185,129,0.1)',
-    border: 'rgba(16,185,129,0.2)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.2)',
     Icon: Code2,
     name: 'Code Example Quality',
     desc: 'Self-contained, labeled, runnable code blocks. AI answers dev questions using your examples — incomplete snippets get skipped.',
   },
   {
-    color: '#a78bfa',
-    bg: 'rgba(139,92,246,0.1)',
-    border: 'rgba(139,92,246,0.2)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.2)',
     Icon: Terminal,
     name: 'Step Determinism',
     desc: 'Numbered, unambiguous instructions. Vague steps like "configure as needed" are unfollowable for AI — and for developers.',
   },
   {
-    color: '#fb923c',
-    bg: 'rgba(249,115,22,0.1)',
-    border: 'rgba(249,115,22,0.2)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.2)',
     Icon: FileCode,
     name: 'API Reference Completeness',
     desc: 'Parameters, types, return values, and examples for every endpoint. Missing any of these makes your API docs uncitable.',
   },
   {
-    color: '#38bdf8',
-    bg: 'rgba(14,165,233,0.08)',
-    border: 'rgba(14,165,233,0.18)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.08)',
+    border: 'rgba(255,255,255,0.18)',
     Icon: BookOpen,
     name: 'Getting Started Clarity',
     desc: 'A clear entry path: prerequisites, first command, expected output. Without this, AI can\'t confidently guide a developer to success.',
   },
   {
-    color: '#34d399',
-    bg: 'rgba(16,185,129,0.08)',
-    border: 'rgba(16,185,129,0.18)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.08)',
+    border: 'rgba(255,255,255,0.18)',
     Icon: AlertCircle,
     name: 'Error Recovery Coverage',
     desc: 'Common errors, their causes, and their fixes. AI frequently gets asked "why is X failing?" — if your docs don\'t answer it, AI guesses.',
   },
   {
-    color: '#a78bfa',
-    bg: 'rgba(139,92,246,0.08)',
-    border: 'rgba(139,92,246,0.18)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.08)',
+    border: 'rgba(255,255,255,0.18)',
     Icon: Search,
     name: 'Search Snippet Quality',
     desc: 'Can AI extract a one-sentence answer to "how do I do X?" from your docs? High snippet quality = high citation rate.',
   },
   {
-    color: '#fb923c',
-    bg: 'rgba(249,115,22,0.08)',
-    border: 'rgba(249,115,22,0.18)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.08)',
+    border: 'rgba(255,255,255,0.18)',
     Icon: Link2,
     name: 'Cross-Reference Quality',
     desc: 'Related concepts linked and mentioned in context. Isolated pages score lower — AI navigates your docs like a graph.',
@@ -77,9 +76,9 @@ const docSignals = [
 
 const docPillars = [
   {
-    color: PILLAR_COLORS.ai_readability,
-    bg: 'rgba(14,165,233,0.1)',
-    border: 'rgba(14,165,233,0.25)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.25)',
     Icon: Layers,
     name: 'Doc Structure',
     weight: '32%',
@@ -87,9 +86,9 @@ const docPillars = [
     scores: ['Structural Clarity', 'Answer-First Formatting', 'Semantic Precision', 'Context Sufficiency', 'Section Isolation'],
   },
   {
-    color: PILLAR_COLORS.digital_authority,
-    bg: 'rgba(16,185,129,0.1)',
-    border: 'rgba(16,185,129,0.25)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.25)',
     Icon: Code2,
     name: 'Tech Completeness',
     weight: '32%',
@@ -97,9 +96,9 @@ const docPillars = [
     scores: ['Citation Signals', 'Entity Clarity', 'Topical Authority', 'Freshness Signals', 'Social Proof'],
   },
   {
-    color: PILLAR_COLORS.conversion_readiness,
-    bg: 'rgba(139,92,246,0.1)',
-    border: 'rgba(139,92,246,0.25)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.25)',
     Icon: Cpu,
     name: 'Technical Clarity',
     weight: '26%',
@@ -107,9 +106,9 @@ const docPillars = [
     scores: ['CTA Clarity', 'Trust Signals', 'Value Proposition', 'Friction Reduction'],
   },
   {
-    color: PILLAR_COLORS.rag_readiness,
-    bg: 'rgba(236,72,153,0.1)',
-    border: 'rgba(236,72,153,0.25)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.25)',
     Icon: Layers,
     name: 'RAG Readiness',
     weight: '10%',
@@ -137,7 +136,7 @@ export default function Developers() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col min-h-screen relative z-10 selection:bg-teal-500/30">
+    <div className="flex flex-col min-h-screen relative z-10 selection:bg-white/[0.08]">
       <MarketingNav onGetStartedClick={() => navigate('/login')} onLoginClick={() => navigate('/login?mode=login')} />
 
       <main className="flex-grow">
@@ -145,7 +144,7 @@ export default function Developers() {
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] pointer-events-none -z-10"
             style={{
-              background: 'radial-gradient(ellipse at center, rgba(16,185,129,0.15) 0%, rgba(14,165,233,0.08) 40%, transparent 70%)',
+              background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 40%, transparent 70%)',
             }}
           />
 
@@ -158,7 +157,7 @@ export default function Developers() {
                 Make your docs{' '}
                 <span
                   className="text-transparent bg-clip-text"
-                  style={{ backgroundImage: 'linear-gradient(135deg, #6ee7b7, #38bdf8)' }}
+                  style={{ backgroundImage: 'linear-gradient(135deg, #e5e5e5, #e5e5e5)' }}
                 >
                   the source AI cites.
                 </span>
@@ -181,9 +180,9 @@ export default function Developers() {
                     key={label}
                     className="px-4 py-1.5 rounded-full text-xs font-semibold"
                     style={{
-                      background: 'rgba(16,185,129,0.08)',
-                      border: '1px solid rgba(52,211,153,0.2)',
-                      color: '#6ee7b7',
+                      background: 'rgba(255,255,255,0.08)',
+                      border: '1px solid rgba(255,255,255,0.2)',
+                      color: '#e5e5e5',
                     }}
                   >
                     {label}
@@ -202,8 +201,8 @@ export default function Developers() {
                 onClick={() => navigate('/login')}
                 className="flex items-center gap-2 text-white rounded-xl px-8 py-3.5 text-sm font-bold shadow-lg transition-all hover:scale-105 active:scale-95 group"
                 style={{
-                  background: 'linear-gradient(135deg, #059669, #0ea5e9)',
-                  boxShadow: '0 8px 24px rgba(16,185,129,0.25)',
+                  background: 'linear-gradient(135deg, #a3a3a3, #e5e5e5)',
+                  boxShadow: '0 8px 24px rgba(255,255,255,0.25)',
                 }}
               >
                 Score your docs free
@@ -247,13 +246,13 @@ export default function Developers() {
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                   className={`rounded-2xl border p-6 ${
                     c.highlight
-                      ? 'border-emerald-400/30 bg-emerald-500/5'
+                      ? 'border-white/10 bg-white/[0.03]'
                       : c.dim
                       ? 'border-white/5 bg-white/[0.02]'
                       : 'border-white/10 bg-white/[0.03]'
                   }`}
                 >
-                  <p className={`text-sm font-bold mb-2 ${c.highlight ? 'text-emerald-300' : c.dim ? 'text-slate-600' : 'text-white'}`}>
+                  <p className={`text-sm font-bold mb-2 ${c.highlight ? 'text-white' : c.dim ? 'text-slate-600' : 'text-white'}`}>
                     {c.label}
                   </p>
                   <p className={`text-sm leading-relaxed ${c.dim ? 'text-slate-600' : 'text-slate-400'}`}>{c.body}</p>
@@ -272,7 +271,7 @@ export default function Developers() {
               transition={{ duration: 0.6 }}
               className="mb-12"
             >
-              <span className="text-emerald-400 font-bold tracking-wider text-xs uppercase mb-3 block">
+              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">
                 Documentation Scoring Framework
               </span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
@@ -332,7 +331,7 @@ export default function Developers() {
               transition={{ duration: 0.6 }}
               className="mb-12"
             >
-              <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-3 block">8 signals scored</span>
+              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">8 signals scored</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">What we analyze</h2>
               <p className="text-slate-400 max-w-xl leading-relaxed">
                 Each of these signals has a measurable impact on whether AI cites your docs or guesses instead.
@@ -374,7 +373,7 @@ export default function Developers() {
               transition={{ duration: 0.6 }}
               className="mb-12 text-center"
             >
-              <span className="text-emerald-400 font-bold tracking-wider text-xs uppercase mb-3 block">Works with</span>
+              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Works with</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white">Analyze any doc format</h2>
             </motion.div>
 
@@ -386,9 +385,9 @@ export default function Developers() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.07 }}
-                  className="flex items-center gap-3 rounded-xl border border-white/8 bg-white/[0.02] p-4 hover:border-emerald-400/20 hover:bg-white/[0.04] transition-all"
+                  className="flex items-center gap-3 rounded-xl border border-white/8 bg-white/[0.02] p-4 hover:border-white/10 hover:bg-white/[0.04] transition-all"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-center text-emerald-400 shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-white shrink-0">
                     <f.icon className="w-4 h-4" />
                   </div>
                   <div>
@@ -410,7 +409,7 @@ export default function Developers() {
               transition={{ duration: 0.6 }}
               className="text-center mb-14"
             >
-              <span className="text-emerald-400 font-bold tracking-wider text-xs uppercase mb-3 block">Simple workflow</span>
+              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Simple workflow</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white">From written to cited in three steps</h2>
             </motion.div>
 
@@ -436,7 +435,7 @@ export default function Developers() {
         <section className="py-28 px-6 border-t border-white/[0.06] relative overflow-hidden">
           <div
             className="absolute inset-0 pointer-events-none -z-10"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(16,185,129,0.06) 0%, transparent 70%)' }}
+            style={{ background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.06) 0%, transparent 70%)' }}
           />
           <div className="max-w-2xl mx-auto text-center">
             <motion.div
@@ -456,8 +455,8 @@ export default function Developers() {
                   onClick={() => navigate('/login')}
                   className="flex items-center gap-2 text-white rounded-xl px-8 py-4 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
                   style={{
-                    background: 'linear-gradient(135deg, #059669, #0ea5e9)',
-                    boxShadow: '0 8px 24px rgba(16,185,129,0.25)',
+                    background: 'linear-gradient(135deg, #a3a3a3, #e5e5e5)',
+                    boxShadow: '0 8px 24px rgba(255,255,255,0.25)',
                   }}
                 >
                   Score your docs free

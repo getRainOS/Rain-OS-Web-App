@@ -7,7 +7,6 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MarketingNav from '@/components/marketing/MarketingNav';
-import { PILLAR_COLORS } from '@/lib/pillarColors.js';
 
 const sections = [
   { id: 'getting-started', label: 'Getting Started' },
@@ -62,7 +61,7 @@ export default function DocsPage() {
                       onClick={() => setActiveSection(s.id)}
                       className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
                         activeSection === s.id
-                          ? 'bg-sky-500/10 text-sky-300 border border-sky-400/20'
+                          ? 'bg-white/[0.03] text-white border border-white/10'
                           : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
                       }`}
                     >
@@ -75,7 +74,7 @@ export default function DocsPage() {
                 <div className="mt-8 pt-8 border-t border-white/[0.06]">
                   <button
                     onClick={() => navigate('/login')}
-                    className="w-full bg-sky-500 hover:bg-sky-400 text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-all"
+                    className="w-full bg-white hover:bg-white text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-all"
                   >
                     Get started free
                   </button>
@@ -85,7 +84,7 @@ export default function DocsPage() {
 
             <main className="flex-grow min-w-0 space-y-16">
               <div className="mb-12">
-                <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-3 block">Documentation</span>
+                <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Documentation</span>
                 <h1 className="text-4xl font-semibold text-white mb-4" style={{ letterSpacing: '-0.03em' }}>
                   rain OS Documentation
                 </h1>
@@ -152,9 +151,9 @@ export default function DocsPage() {
                   <div className="space-y-4">
                     {[
                       {
-                        color: PILLAR_COLORS.ai_readability,
-                        bg: 'rgba(14,165,233,0.08)',
-                        border: 'rgba(14,165,233,0.2)',
+                        color: '#e5e5e5',
+                        bg: 'rgba(255,255,255,0.08)',
+                        border: 'rgba(255,255,255,0.2)',
                         Icon: BrainCircuit,
                         name: 'AI Readability',
                         weight: '36%',
@@ -162,9 +161,9 @@ export default function DocsPage() {
                         subScores: ['Structural Clarity', 'Answer-First Formatting', 'Semantic Precision', 'Context Sufficiency', 'Section Concept Isolation'],
                       },
                       {
-                        color: PILLAR_COLORS.digital_authority,
-                        bg: 'rgba(16,185,129,0.08)',
-                        border: 'rgba(16,185,129,0.2)',
+                        color: '#e5e5e5',
+                        bg: 'rgba(255,255,255,0.08)',
+                        border: 'rgba(255,255,255,0.2)',
                         Icon: ShieldCheck,
                         name: 'Digital Authority',
                         weight: '27%',
@@ -172,9 +171,9 @@ export default function DocsPage() {
                         subScores: ['Citation Signals', 'Entity Clarity', 'Topical Authority', 'Freshness Signals', 'Social Proof Markup'],
                       },
                       {
-                        color: PILLAR_COLORS.conversion_readiness,
-                        bg: 'rgba(139,92,246,0.08)',
-                        border: 'rgba(139,92,246,0.2)',
+                        color: '#e5e5e5',
+                        bg: 'rgba(255,255,255,0.08)',
+                        border: 'rgba(255,255,255,0.2)',
                         Icon: MousePointerClick,
                         name: 'Conversion Readiness',
                         weight: '27%',
@@ -182,9 +181,9 @@ export default function DocsPage() {
                         subScores: ['CTA Clarity', 'Trust Signals', 'Value Proposition', 'Friction Reduction'],
                       },
                       {
-                        color: PILLAR_COLORS.product_discoverability,
-                        bg: 'rgba(249,115,22,0.08)',
-                        border: 'rgba(249,115,22,0.2)',
+                        color: '#e5e5e5',
+                        bg: 'rgba(255,255,255,0.08)',
+                        border: 'rgba(255,255,255,0.2)',
                         Icon: SearchCheck,
                         name: 'Product Discoverability',
                         weight: '0% (general)',
@@ -192,9 +191,9 @@ export default function DocsPage() {
                         subScores: ['Product Variant Coverage', 'Merchant Identity', 'Pricing Transparency', 'Availability Signals', 'Comparative Context'],
                       },
                       {
-                        color: PILLAR_COLORS.rag_readiness,
-                        bg: 'rgba(236,72,153,0.08)',
-                        border: 'rgba(236,72,153,0.2)',
+                        color: '#e5e5e5',
+                        bg: 'rgba(255,255,255,0.08)',
+                        border: 'rgba(255,255,255,0.2)',
                         Icon: Layers,
                         name: 'RAG Readiness',
                         weight: '10%',
@@ -249,7 +248,7 @@ export default function DocsPage() {
                   <div className="space-y-4">
                     {[
                       {
-                        color: '#38bdf8',
+                        color: '#e5e5e5',
                         Icon: BrainCircuit,
                         name: 'Writers & Marketers',
                         badge: 'General module',
@@ -257,7 +256,7 @@ export default function DocsPage() {
                         module: 'general',
                       },
                       {
-                        color: '#fb923c',
+                        color: '#e5e5e5',
                         Icon: Package,
                         name: 'Product Sellers',
                         badge: 'Product Discoverability module',
@@ -265,7 +264,7 @@ export default function DocsPage() {
                         module: 'product_sellers',
                       },
                       {
-                        color: '#34d399',
+                        color: '#e5e5e5',
                         Icon: BookOpen,
                         name: 'Developers',
                         badge: 'Documentation module',
@@ -273,7 +272,7 @@ export default function DocsPage() {
                         module: 'developers',
                       },
                       {
-                        color: '#10b981',
+                        color: '#e5e5e5',
                         Icon: Zap,
                         name: 'Vibe Coders',
                         badge: 'Vibe builder module',
@@ -281,7 +280,7 @@ export default function DocsPage() {
                         module: 'vibe_coders',
                       },
                       {
-                        color: '#fb7185',
+                        color: '#e5e5e5',
                         Icon: MapPin,
                         name: 'Local Businesses',
                         badge: 'Local SEO module',
@@ -318,7 +317,7 @@ export default function DocsPage() {
                     {[
                       {
                         Icon: FileText,
-                        color: '#38bdf8',
+                        color: '#e5e5e5',
                         name: 'Content Analyzer',
                         path: '/analyze',
                         desc: 'Paste any text content — blog posts, product descriptions, landing page copy, documentation. Returns a full Rain Score with pillar breakdowns and recommendations.',
@@ -326,7 +325,7 @@ export default function DocsPage() {
                       },
                       {
                         Icon: Globe,
-                        color: '#a78bfa',
+                        color: '#e5e5e5',
                         name: 'URL Scanner',
                         path: '/url-scanner',
                         desc: 'Enter any live URL. We fetch the page, parse the HTML, and surface every technical AEO signal: schema markup, llms.txt, JS rendering risk, open graph, and more.',
@@ -334,7 +333,7 @@ export default function DocsPage() {
                       },
                       {
                         Icon: GitBranch,
-                        color: '#34d399',
+                        color: '#e5e5e5',
                         name: 'Repo Analysis',
                         path: '/repo-analysis',
                         desc: 'Connect your GitHub repo and we scan the actual source files — README, package.json, llms.txt, robots.txt, index.html. Catches issues invisible in the rendered output.',
@@ -423,8 +422,8 @@ export default function DocsPage() {
                             <span
                               className={`text-xs font-bold font-mono px-2 py-0.5 rounded ${
                                 ep.method === 'GET'
-                                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-400/20'
-                                  : 'bg-sky-500/10 text-sky-400 border border-sky-400/20'
+                                  ? 'bg-white/[0.03] text-white border border-white/10'
+                                  : 'bg-white/[0.03] text-white border border-white/10'
                               }`}
                             >
                               {ep.method}
@@ -455,7 +454,7 @@ export default function DocsPage() {
                     <h3 className="text-white font-semibold mb-4">Response headers</h3>
                     <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
                       <div className="flex items-start gap-4">
-                        <code className="text-xs font-mono text-sky-400 shrink-0">X-Usage-Info</code>
+                        <code className="text-xs font-mono text-white shrink-0">X-Usage-Info</code>
                         <p className="text-sm">JSON object returned on every authenticated request containing <code className="text-xs font-mono text-slate-300">count</code> and <code className="text-xs font-mono text-slate-300">limit</code> for the current billing period.</p>
                       </div>
                     </div>
@@ -479,7 +478,7 @@ export default function DocsPage() {
                         <ul className="space-y-1.5">
                           {g.items.map((item) => (
                             <li key={item} className="flex items-center gap-2 text-sm text-slate-400">
-                              <span className="w-1 h-1 rounded-full bg-sky-400 shrink-0" />
+                              <span className="w-1 h-1 rounded-full bg-white shrink-0" />
                               {item}
                             </li>
                           ))}
@@ -511,7 +510,7 @@ export default function DocsPage() {
                   <div className="flex items-center gap-4 pt-2">
                     <a
                       href="/wordpress-plugin"
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-sky-500/10 border border-sky-400/25 text-sky-300 text-sm font-semibold hover:bg-sky-500/15 transition-all"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/[0.03] border border-white/10 text-white text-sm font-semibold hover:bg-white/[0.05] transition-all"
                     >
                       WordPress Plugin page
                       <ChevronRight className="w-4 h-4" />

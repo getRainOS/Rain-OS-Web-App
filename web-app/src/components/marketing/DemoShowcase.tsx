@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BrainCircuit, ShieldCheck, MousePointerClick, Target, ArrowRight, GitBranch, Globe, FileText, AlertTriangle, CheckCircle2, Sparkles, Zap } from 'lucide-react';
-import { PILLAR_COLORS } from '../../lib/pillarColors.js';
 
 const STATES = [
   {
     mode: 'Repo Analysis',
     modeIcon: GitBranch,
-    modeColor: '#34d399',
-    modeBg: 'rgba(16,185,129,0.12)',
-    modeBorder: 'rgba(16,185,129,0.3)',
+    modeColor: '#e5e5e5',
+    modeBg: 'rgba(255,255,255,0.12)',
+    modeBorder: 'rgba(255,255,255,0.3)',
     label: 'Bolt App — Before',
     score: 31,
-    color: '#f87171',
-    glow: 'rgba(248,113,113,0.2)',
+    color: '#e5e5e5',
+    glow: 'rgba(255,255,255,0.2)',
     status: 'Critical gaps found',
-    statusColor: '#f87171',
+    statusColor: '#e5e5e5',
     pillars: [
-      { name: 'AI Readability', score: 22, color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit },
-      { name: 'Digital Authority', score: 29, color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck },
-      { name: 'Conversion', score: 38, color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick },
-      { name: 'Discoverability', score: 35, color: PILLAR_COLORS.product_discoverability, Icon: Target },
+      { name: 'AI Readability', score: 22, color: '#e5e5e5', Icon: BrainCircuit },
+      { name: 'Digital Authority', score: 29, color: '#e5e5e5', Icon: ShieldCheck },
+      { name: 'Conversion', score: 38, color: '#e5e5e5', Icon: MousePointerClick },
+      { name: 'Discoverability', score: 35, color: '#e5e5e5', Icon: Target },
     ],
     signals: [
       { label: 'llms.txt missing', ok: false },
@@ -31,20 +30,20 @@ const STATES = [
   {
     mode: 'Repo Analysis',
     modeIcon: GitBranch,
-    modeColor: '#34d399',
-    modeBg: 'rgba(16,185,129,0.12)',
-    modeBorder: 'rgba(16,185,129,0.3)',
+    modeColor: '#e5e5e5',
+    modeBg: 'rgba(255,255,255,0.12)',
+    modeBorder: 'rgba(255,255,255,0.3)',
     label: 'Bolt App — After',
     score: 89,
-    color: '#34d399',
-    glow: 'rgba(52,211,153,0.2)',
+    color: '#e5e5e5',
+    glow: 'rgba(255,255,255,0.2)',
     status: 'AI-ready',
-    statusColor: '#34d399',
+    statusColor: '#e5e5e5',
     pillars: [
-      { name: 'AI Readability', score: 91, color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit },
-      { name: 'Digital Authority', score: 87, color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck },
-      { name: 'Conversion', score: 88, color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick },
-      { name: 'Discoverability', score: 90, color: PILLAR_COLORS.product_discoverability, Icon: Target },
+      { name: 'AI Readability', score: 91, color: '#e5e5e5', Icon: BrainCircuit },
+      { name: 'Digital Authority', score: 87, color: '#e5e5e5', Icon: ShieldCheck },
+      { name: 'Conversion', score: 88, color: '#e5e5e5', Icon: MousePointerClick },
+      { name: 'Discoverability', score: 90, color: '#e5e5e5', Icon: Target },
     ],
     signals: [
       { label: 'llms.txt present', ok: true },
@@ -55,20 +54,20 @@ const STATES = [
   {
     mode: 'URL Scanner',
     modeIcon: Globe,
-    modeColor: '#a78bfa',
-    modeBg: 'rgba(139,92,246,0.12)',
-    modeBorder: 'rgba(139,92,246,0.3)',
+    modeColor: '#e5e5e5',
+    modeBg: 'rgba(255,255,255,0.12)',
+    modeBorder: 'rgba(255,255,255,0.3)',
     label: 'Landing Page Scan',
     score: 67,
-    color: '#fbbf24',
-    glow: 'rgba(251,191,36,0.2)',
+    color: '#e5e5e5',
+    glow: 'rgba(255,255,255,0.2)',
     status: 'Needs improvement',
-    statusColor: '#fbbf24',
+    statusColor: '#e5e5e5',
     pillars: [
-      { name: 'AI Readability', score: 61, color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit },
-      { name: 'Digital Authority', score: 72, color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck },
-      { name: 'Conversion', score: 69, color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick },
-      { name: 'Discoverability', score: 66, color: PILLAR_COLORS.product_discoverability, Icon: Target },
+      { name: 'AI Readability', score: 61, color: '#e5e5e5', Icon: BrainCircuit },
+      { name: 'Digital Authority', score: 72, color: '#e5e5e5', Icon: ShieldCheck },
+      { name: 'Conversion', score: 69, color: '#e5e5e5', Icon: MousePointerClick },
+      { name: 'Discoverability', score: 66, color: '#e5e5e5', Icon: Target },
     ],
     signals: [
       { label: 'Open Graph present', ok: true },
@@ -79,20 +78,20 @@ const STATES = [
   {
     mode: 'Content Analysis',
     modeIcon: FileText,
-    modeColor: '#38bdf8',
-    modeBg: 'rgba(14,165,233,0.12)',
-    modeBorder: 'rgba(14,165,233,0.3)',
+    modeColor: '#e5e5e5',
+    modeBg: 'rgba(255,255,255,0.12)',
+    modeBorder: 'rgba(255,255,255,0.3)',
     label: 'Blog Post — Optimized',
     score: 94,
-    color: '#38bdf8',
-    glow: 'rgba(56,189,248,0.25)',
+    color: '#e5e5e5',
+    glow: 'rgba(255,255,255,0.25)',
     status: 'Highly citable',
-    statusColor: '#38bdf8',
+    statusColor: '#e5e5e5',
     pillars: [
-      { name: 'AI Readability', score: 96, color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit },
-      { name: 'Digital Authority', score: 91, color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck },
-      { name: 'Conversion', score: 95, color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick },
-      { name: 'Discoverability', score: 94, color: PILLAR_COLORS.product_discoverability, Icon: Target },
+      { name: 'AI Readability', score: 96, color: '#e5e5e5', Icon: BrainCircuit },
+      { name: 'Digital Authority', score: 91, color: '#e5e5e5', Icon: ShieldCheck },
+      { name: 'Conversion', score: 95, color: '#e5e5e5', Icon: MousePointerClick },
+      { name: 'Discoverability', score: 94, color: '#e5e5e5', Icon: Target },
     ],
     signals: [
       { label: 'Answer-first format', ok: true },
@@ -127,7 +126,7 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
 
         {/* Section header */}
         <div className="text-center mb-14">
-          <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-3 block">Live preview</span>
+          <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Live preview</span>
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4" style={{ letterSpacing: '-0.03em' }}>
             Your Rain Score, in real time
           </h2>
@@ -183,9 +182,9 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
                   <>
                     <h3 className="text-2xl font-semibold text-white mb-4 leading-snug">Your Bolt app is invisible to AI — here's why</h3>
                     <p className="text-slate-400 leading-relaxed mb-6">Connect your GitHub repo and rain OS reads the actual source files your AI tool generated. Most vibe-coded apps score below 40 before optimization — missing llms.txt, no schema, JS-only rendering.</p>
-                    <div className="flex items-center gap-3 p-3 rounded-xl bg-rose-500/5 border border-rose-500/20">
-                      <AlertTriangle className="w-5 h-5 text-rose-400 shrink-0" />
-                      <span className="text-sm text-rose-300">3 critical AEO gaps found in source</span>
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10">
+                      <AlertTriangle className="w-5 h-5 text-white shrink-0" />
+                      <span className="text-sm text-white">3 critical AEO gaps found in source</span>
                     </div>
                   </>
                 )}
@@ -193,9 +192,9 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
                   <>
                     <h3 className="text-2xl font-semibold text-white mb-4 leading-snug">Same repo. Fixed in one pass. Score jumped 58 points.</h3>
                     <p className="text-slate-400 leading-relaxed mb-6">After acting on rain OS recommendations — adding llms.txt, schema markup, and a static HTML fallback — the same Bolt app went from invisible to highly citable.</p>
-                    <div className="flex items-center gap-3 p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20">
-                      <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
-                      <span className="text-sm text-emerald-300">All critical gaps resolved</span>
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10">
+                      <CheckCircle2 className="w-5 h-5 text-white shrink-0" />
+                      <span className="text-sm text-white">All critical gaps resolved</span>
                     </div>
                   </>
                 )}
@@ -203,9 +202,9 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
                   <>
                     <h3 className="text-2xl font-semibold text-white mb-4 leading-snug">Scan any live URL and see every technical AEO signal</h3>
                     <p className="text-slate-400 leading-relaxed mb-6">Paste a URL and rain OS fetches the raw HTML — the same way AI crawlers see it. Surface missing schema, robots issues, open graph gaps, and llms.txt status in seconds.</p>
-                    <div className="flex items-center gap-3 p-3 rounded-xl bg-amber-500/5 border border-amber-500/20">
-                      <Zap className="w-5 h-5 text-amber-400 shrink-0" />
-                      <span className="text-sm text-amber-300">2 fixable issues found — score impact: +18pts</span>
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10">
+                      <Zap className="w-5 h-5 text-white shrink-0" />
+                      <span className="text-sm text-white">2 fixable issues found — score impact: +18pts</span>
                     </div>
                   </>
                 )}
@@ -213,9 +212,9 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
                   <>
                     <h3 className="text-2xl font-semibold text-white mb-4 leading-snug">Paste any content and watch it score across all five pillars</h3>
                     <p className="text-slate-400 leading-relaxed mb-6">Works on blog posts, landing pages, product copy, or anything else. Get a weighted Rain Score with actionable recommendations — and built-in rewrite tools to fix issues without leaving the dashboard.</p>
-                    <div className="flex items-center gap-3 p-3 rounded-xl bg-sky-500/5 border border-sky-500/20">
-                      <Sparkles className="w-5 h-5 text-sky-400 shrink-0" />
-                      <span className="text-sm text-sky-300">Highly citable — AI engines will quote this</span>
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10">
+                      <Sparkles className="w-5 h-5 text-white shrink-0" />
+                      <span className="text-sm text-white">Highly citable — AI engines will quote this</span>
                     </div>
                   </>
                 )}
@@ -224,7 +223,7 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
 
             <button
               onClick={onAnalyzeClick}
-              className="group inline-flex items-center gap-2 text-sm font-semibold text-sky-400 hover:text-sky-300 transition-colors mt-8"
+              className="group inline-flex items-center gap-2 text-sm font-semibold text-white hover:text-white transition-colors mt-8"
             >
               Try it free with your own content
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -235,7 +234,7 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
           <div className="w-full lg:w-auto lg:shrink-0">
             <div className="relative w-full max-w-[340px] mx-auto">
               <div className="absolute -inset-[1px] rounded-[24px] pointer-events-none"
-                style={{ background: `linear-gradient(135deg, ${data.modeBorder}, rgba(255,255,255,0.03), rgba(139,92,246,0.08))` }} />
+                style={{ background: `linear-gradient(135deg, ${data.modeBorder}, rgba(255,255,255,0.03), rgba(255,255,255,0.08))` }} />
 
               <div className="relative bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[24px] p-6 overflow-hidden">
                 <div className="absolute top-0 left-0 right-0 h-px"
@@ -355,10 +354,10 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
                     >
                       {data.signals.map((sig, i) => (
                         <div key={i} className="flex items-center gap-2">
-                          <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 text-[8px] font-black ${sig.ok ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`}>
+                          <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 text-[8px] font-black ${sig.ok ? 'bg-white/[0.05] text-white' : 'bg-white/[0.05] text-white'}`}>
                             {sig.ok ? '✓' : '✕'}
                           </span>
-                          <span className={`text-[10px] font-medium ${sig.ok ? 'text-emerald-300' : 'text-rose-300'}`}>{sig.label}</span>
+                          <span className={`text-[10px] font-medium ${sig.ok ? 'text-white' : 'text-white'}`}>{sig.label}</span>
                         </div>
                       ))}
                     </motion.div>

@@ -8,31 +8,31 @@ const SOLUTIONS = [
     label: 'Content Writers and Agencies',
     href: '/content-writers',
     desc: 'Blog posts, articles, marketing copy',
-    color: '#38bdf8',
+    color: '#e5e5e5',
   },
   {
     label: 'Product Sellers',
     href: '/product-sellers',
     desc: 'Ecommerce, DTC, product pages',
-    color: '#fb923c',
+    color: '#e5e5e5',
   },
   {
     label: 'Developers',
     href: '/developers',
     desc: 'Tech docs, READMEs, API references',
-    color: '#34d399',
+    color: '#e5e5e5',
   },
   {
     label: 'Vibe Coders',
     href: '/vibe-coders',
     desc: 'Bolt, Lovable, Cursor, v0 builders',
-    color: '#10b981',
+    color: '#e5e5e5',
   },
   {
     label: 'Local Businesses',
     href: '/local-business',
     desc: 'SEO + AEO for local & service businesses',
-    color: '#fb7185',
+    color: '#e5e5e5',
   },
 ];
 
@@ -120,7 +120,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
                 Solutions
                 <ChevronDown
                   className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                    solutionsOpen ? 'rotate-180 text-sky-400' : ''
+                    solutionsOpen ? 'rotate-180 text-white' : ''
                   }`}
                 />
               </button>
@@ -147,7 +147,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
                           href={s.href}
                           className={"flex flex-col px-4 py-3 rounded-xl transition-colors group hover:bg-white/[0.05]"}
                         >
-                          <span className={"text-sm font-medium transition-colors text-white group-hover:text-sky-300"}>
+                          <span className={"text-sm font-medium transition-colors text-white group-hover:text-white"}>
                             {s.label}
                           </span>
                           <span className={"text-xs mt-0.5 text-slate-500"}>{s.desc}</span>
@@ -187,7 +187,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileOpen(true)}
-              className={"md:hidden p-2 transition-colors text-white hover:text-sky-400"}
+              className={"md:hidden p-2 transition-colors text-white hover:text-white"}
               aria-label="Open menu"
             >
               <Menu className="w-6 h-6" />
@@ -273,7 +273,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
                     key={link.href}
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className={"flex items-center px-5 py-3 text-sm font-medium transition-colors text-white hover:text-sky-400 hover:bg-white/[0.03]"}
+                    className={"flex items-center px-5 py-3 text-sm font-medium transition-colors text-white hover:text-white hover:bg-white/[0.03]"}
                   >
                     {link.label}
                   </a>

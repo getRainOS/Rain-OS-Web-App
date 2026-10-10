@@ -31,7 +31,7 @@ export default function BlogIndex() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-4 block">
+          <span className="text-white font-bold tracking-wider text-xs uppercase mb-4 block">
             Founders Mode
           </span>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
@@ -51,8 +51,8 @@ export default function BlogIndex() {
           className="mb-12"
         >
           <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center shrink-0">
-              <BookOpen className="w-5 h-5 text-sky-400" />
+            <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center shrink-0">
+              <BookOpen className="w-5 h-5 text-white" />
             </div>
             Latest post
           </h2>
@@ -67,8 +67,8 @@ export default function BlogIndex() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center shrink-0">
-              <BookOpen className="w-5 h-5 text-violet-400" />
+            <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center shrink-0">
+              <BookOpen className="w-5 h-5 text-white" />
             </div>
             All posts
           </h2>
@@ -103,7 +103,7 @@ function FeaturedCard({ post, onClick }: { post: BlogPost; onClick: () => void }
           style={{ backgroundImage: `url(${post.image})` }}
         />
         <div className="p-6 md:p-8 flex flex-col justify-center">
-          <span className="text-xs font-semibold uppercase tracking-wider text-sky-400 mb-3">
+          <span className="text-xs font-semibold uppercase tracking-wider text-white mb-3">
             {post.category}
           </span>
           <h3 className="text-xl md:text-2xl font-bold text-white mb-3 leading-tight">
@@ -139,7 +139,7 @@ function PostRow({ post, onClick }: { post: BlogPost; onClick: () => void }) {
         style={{ backgroundImage: `url(${post.image})` }}
       />
       <div className="flex-1 min-w-0">
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-sky-400 mb-2 block">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-white mb-2 block">
           {post.category}
         </span>
         <h3 className="text-base font-semibold text-white mb-1 leading-snug truncate">

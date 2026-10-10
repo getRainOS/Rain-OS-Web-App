@@ -10,41 +10,41 @@ import MarketingNav from '@/components/marketing/MarketingNav';
 
 const pdSignals = [
   {
-    color: '#fb923c',
-    bg: 'rgba(249,115,22,0.1)',
-    border: 'rgba(249,115,22,0.2)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.2)',
     Icon: Tag,
     name: 'Pricing Transparency',
     desc: 'AI shopping assistants need clear, unambiguous pricing. Buried or conditional prices get skipped entirely.',
   },
   {
-    color: '#f472b6',
-    bg: 'rgba(244,114,182,0.1)',
-    border: 'rgba(244,114,182,0.2)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.2)',
     Icon: Package,
     name: 'Product Variant Coverage',
     desc: 'Every size, color, and configuration should be explicitly described. AI cannot infer what isn\'t written.',
   },
   {
-    color: '#38bdf8',
-    bg: 'rgba(14,165,233,0.1)',
-    border: 'rgba(14,165,233,0.2)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.2)',
     Icon: Globe,
     name: 'Availability Signals',
     desc: 'In stock, shipping time, delivery region — these signals drive AI product recommendations. Vague availability kills discoverability.',
   },
   {
-    color: '#34d399',
-    bg: 'rgba(16,185,129,0.1)',
-    border: 'rgba(16,185,129,0.2)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.2)',
     Icon: Shield,
     name: 'Merchant Identity Clarity',
     desc: 'Is your brand clearly identified? AI shopping assistants need to know who is selling the product, not just what it is.',
   },
   {
-    color: '#a78bfa',
-    bg: 'rgba(139,92,246,0.1)',
-    border: 'rgba(139,92,246,0.2)',
+    color: '#e5e5e5',
+    bg: 'rgba(255,255,255,0.1)',
+    border: 'rgba(255,255,255,0.2)',
     Icon: BarChart3,
     name: 'Comparative Context',
     desc: 'Content that explains why your product is different — and better — gives AI the context to recommend you over a competitor.',
@@ -92,7 +92,7 @@ export default function ProductSellers() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col min-h-screen relative z-10 selection:bg-orange-500/30">
+    <div className="flex flex-col min-h-screen relative z-10 selection:bg-white/[0.08]">
       <MarketingNav onGetStartedClick={() => navigate('/login')} onLoginClick={() => navigate('/login?mode=login')} />
 
       <main className="flex-grow">
@@ -100,7 +100,7 @@ export default function ProductSellers() {
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] pointer-events-none -z-10"
             style={{
-              background: 'radial-gradient(ellipse at center, rgba(249,115,22,0.18) 0%, transparent 70%)',
+              background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.18) 0%, transparent 70%)',
             }}
           />
 
@@ -113,7 +113,7 @@ export default function ProductSellers() {
                 Your products.{' '}
                 <span
                   className="text-transparent bg-clip-text"
-                  style={{ backgroundImage: 'linear-gradient(135deg, #fdba74, #fb923c)' }}
+                  style={{ backgroundImage: 'linear-gradient(135deg, #e5e5e5, #e5e5e5)' }}
                 >
                   Discovered by AI.
                 </span>
@@ -136,9 +136,9 @@ export default function ProductSellers() {
                     key={label}
                     className="px-4 py-1.5 rounded-full text-xs font-semibold"
                     style={{
-                      background: 'rgba(249,115,22,0.08)',
-                      border: '1px solid rgba(249,115,22,0.2)',
-                      color: '#fdba74',
+                      background: 'rgba(255,255,255,0.08)',
+                      border: '1px solid rgba(255,255,255,0.2)',
+                      color: '#e5e5e5',
                     }}
                   >
                     {label}
@@ -157,11 +157,11 @@ export default function ProductSellers() {
                 onClick={() => navigate('/login')}
                 className="flex items-center gap-2 text-white rounded-xl px-8 py-3.5 text-sm font-bold shadow-lg transition-all hover:scale-105 active:scale-95 group"
                 style={{
-                  background: '#fb923c',
-                  boxShadow: '0 8px 24px rgba(249,115,22,0.3)',
+                  background: '#e5e5e5',
+                  boxShadow: '0 8px 24px rgba(255,255,255,0.3)',
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = '#f97316')}
-                onMouseLeave={(e) => (e.currentTarget.style.background = '#fb923c')}
+                onMouseEnter={(e) => (e.currentTarget.style.background = '#e5e5e5')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = '#e5e5e5')}
               >
                 Score your product page free
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -197,13 +197,13 @@ export default function ProductSellers() {
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                   className={`rounded-2xl border p-6 ${
                     c.highlight
-                      ? 'border-orange-400/30 bg-orange-500/5'
+                      ? 'border-white/10 bg-white/[0.03]'
                       : c.dim
                       ? 'border-white/5 bg-white/[0.02]'
                       : 'border-white/10 bg-white/[0.03]'
                   }`}
                 >
-                  <p className={`text-sm font-bold mb-2 ${c.highlight ? 'text-orange-300' : c.dim ? 'text-slate-600' : 'text-white'}`}>
+                  <p className={`text-sm font-bold mb-2 ${c.highlight ? 'text-white' : c.dim ? 'text-slate-600' : 'text-white'}`}>
                     {c.label}
                   </p>
                   <p className={`text-sm leading-relaxed ${c.dim ? 'text-slate-600' : 'text-slate-400'}`}>{c.body}</p>
@@ -224,7 +224,7 @@ export default function ProductSellers() {
             >
               <span
                 className="font-bold tracking-wider text-xs uppercase mb-3 block"
-                style={{ color: '#fb923c' }}
+                style={{ color: '#e5e5e5' }}
               >
                 Product Discoverability Module
               </span>
@@ -271,7 +271,7 @@ export default function ProductSellers() {
               transition={{ duration: 0.6 }}
               className="text-center mb-14"
             >
-              <span className="font-bold tracking-wider text-xs uppercase mb-3 block text-orange-400">Simple workflow</span>
+              <span className="font-bold tracking-wider text-xs uppercase mb-3 block text-white">Simple workflow</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white">From invisible to recommended in three steps</h2>
             </motion.div>
 
@@ -311,7 +311,7 @@ export default function ProductSellers() {
                 <div className="grid grid-cols-3 border-b border-white/10 bg-white/5">
                   <div className="p-5 font-bold text-white text-sm">Signal</div>
                   <div className="p-5 font-bold text-slate-400 text-center text-sm">Standard SEO</div>
-                  <div className="p-5 font-bold text-center text-sm border-x border-white/5" style={{ color: '#fb923c', background: 'rgba(249,115,22,0.05)' }}>
+                  <div className="p-5 font-bold text-center text-sm border-x border-white/5" style={{ color: '#e5e5e5', background: 'rgba(255,255,255,0.05)' }}>
                     rain OS
                   </div>
                 </div>
@@ -321,8 +321,8 @@ export default function ProductSellers() {
                     <div className="p-5 flex items-center justify-center">
                       {f.standard ? <span className="text-slate-500">✓</span> : <span className="text-slate-700">✕</span>}
                     </div>
-                    <div className="p-5 flex items-center justify-center border-x border-white/5" style={{ background: 'rgba(249,115,22,0.03)' }}>
-                      {f.rain ? <span className="font-bold" style={{ color: '#fb923c' }}>✓</span> : <span className="text-slate-700">✕</span>}
+                    <div className="p-5 flex items-center justify-center border-x border-white/5" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                      {f.rain ? <span className="font-bold" style={{ color: '#e5e5e5' }}>✓</span> : <span className="text-slate-700">✕</span>}
                     </div>
                   </div>
                 ))}
@@ -334,7 +334,7 @@ export default function ProductSellers() {
         <section className="py-28 px-6 border-t border-white/[0.06] relative overflow-hidden">
           <div
             className="absolute inset-0 pointer-events-none -z-10"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(249,115,22,0.06) 0%, transparent 70%)' }}
+            style={{ background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.06) 0%, transparent 70%)' }}
           />
           <div className="max-w-2xl mx-auto text-center">
             <motion.div
@@ -354,11 +354,11 @@ export default function ProductSellers() {
                   onClick={() => navigate('/login')}
                   className="flex items-center gap-2 text-white rounded-xl px-8 py-4 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
                   style={{
-                    background: '#fb923c',
-                    boxShadow: '0 8px 24px rgba(249,115,22,0.3)',
+                    background: '#e5e5e5',
+                    boxShadow: '0 8px 24px rgba(255,255,255,0.3)',
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = '#f97316')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = '#fb923c')}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = '#e5e5e5')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = '#e5e5e5')}
                 >
                   Score your product page free
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

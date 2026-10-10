@@ -16,30 +16,30 @@ export const HybridFuture = () => {
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
           className="flex flex-col items-center mb-24 relative"
         >
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-rain-500/10 blur-[100px] rounded-full pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-white/10 blur-[100px] rounded-full pointer-events-none" />
           
           <div className="relative flex items-center justify-center w-full max-w-2xl mx-auto">
-            <div className="w-48 h-48 rounded-full border border-sky-300/40 bg-sky-400/10 flex items-center justify-center absolute -translate-x-16 z-10">
-              <Users className="w-8 h-8 text-sky-300" style={{ filter: 'drop-shadow(0 0 6px rgba(14,165,233,0.6))' }} />
+            <div className="w-48 h-48 rounded-full border border-white/10 bg-white/[0.03] flex items-center justify-center absolute -translate-x-16 z-10">
+              <Users className="w-8 h-8 text-white" style={{ filter: 'drop-shadow(0 0 6px rgba(255,255,255,0.6))' }} />
             </div>
             <div className="absolute -translate-x-16 -translate-y-28 z-20 flex flex-col items-center">
               <span className="text-white font-bold tracking-wider text-sm uppercase" style={{ textShadow: '0 0 10px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.7)' }}>Humans</span>
             </div>
 
-            <div className="w-48 h-48 rounded-full border border-emerald-300/40 bg-emerald-400/10 flex items-center justify-center absolute translate-x-16 z-10">
-              <Cpu className="w-8 h-8 text-emerald-300" style={{ filter: 'drop-shadow(0 0 6px rgba(52,211,153,0.6))' }} />
+            <div className="w-48 h-48 rounded-full border border-white/10 bg-white/[0.03] flex items-center justify-center absolute translate-x-16 z-10">
+              <Cpu className="w-8 h-8 text-white" style={{ filter: 'drop-shadow(0 0 6px rgba(255,255,255,0.6))' }} />
             </div>
             <div className="absolute translate-x-16 -translate-y-28 z-20 flex flex-col items-center">
               <span className="text-white font-bold tracking-wider text-sm uppercase" style={{ textShadow: '0 0 10px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.7)' }}>Machines</span>
             </div>
             
-            <div className="z-20 flex flex-col items-center justify-center w-24 h-24 rounded-full bg-gradient-to-b from-[#0B1D35] to-[#040714] border border-sky-400/40 shadow-[0_0_30px_rgba(14,165,233,0.25)] backdrop-blur-sm">
+            <div className="z-20 flex flex-col items-center justify-center w-24 h-24 rounded-full bg-gradient-to-b from-[#0B1D35] to-[#040714] border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.25)] backdrop-blur-sm">
               <span className="text-sm font-bold leading-none">
                 <span className="text-white">rain</span>
-                <span className="text-sky-400"> OS</span>
+                <span className="text-white"> OS</span>
               </span>
-              <div className="w-10 h-px bg-gradient-to-r from-transparent via-sky-400/60 to-transparent my-1.5" />
-              <Sparkles className="w-3.5 h-3.5 text-sky-400" />
+              <div className="w-10 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-1.5" />
+              <Sparkles className="w-3.5 h-3.5 text-white" />
             </div>
           </div>
         </motion.div>
@@ -52,13 +52,13 @@ export const HybridFuture = () => {
           </motion.div>
           
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="card-gradient rounded-3xl p-8 hover:border-white/20 transition-all relative overflow-hidden">
-            <AlertTriangle className="w-8 h-8 text-rose-400 mb-6" />
+            <AlertTriangle className="w-8 h-8 text-white mb-6" />
             <h3 className="text-2xl font-bold text-white mb-4">The Hybrid Gap</h3>
             <p className="text-slate-400 leading-relaxed relative z-10">Content that reads well to humans often falls apart when AI crawlers parse it. Long sentences, buried answers, missing structure, no clear entities — if LLMs can't extract your key points, they won't cite your article or recommend your landing page. Meanwhile, marketing agencies are churning out content that never gets found.</p>
           </motion.div>
           
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }} className="card-gradient rounded-3xl p-8 hover:border-rain-400/30 transition-all">
-            <Shield className="w-8 h-8 text-rain-400 mb-6" />
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }} className="card-gradient rounded-3xl p-8 hover:border-white/30 transition-all">
+            <Shield className="w-8 h-8 text-white mb-6" />
             <h3 className="text-2xl font-bold text-white mb-4">The rain OS Standard</h3>
             <p className="text-slate-400 leading-relaxed">We bridge the gap. We ensure your content is perfectly structured for AI extraction while maintaining all traditional SEO benefits.</p>
           </motion.div>
@@ -72,7 +72,7 @@ export const LocalBusinessBadge = () => {
   return (
     <a
       href="/local-business"
-      className="inline-flex items-center gap-2 rounded-xl bg-rose-500 hover:bg-rose-400 px-5 py-2.5 text-sm font-bold text-white transition-all shadow-lg shadow-rose-500/25 hover:scale-105 active:scale-95"
+      className="inline-flex items-center gap-2 rounded-xl bg-white hover:bg-white px-5 py-2.5 text-sm font-bold text-white transition-all shadow-lg shadow-rose-500/25 hover:scale-105 active:scale-95"
     >
       <MapPin className="w-4 h-4" />
       Local Businesses →
@@ -87,12 +87,12 @@ export const FourPillars = () => {
       weight: '36%',
       tagline: 'Can AI actually read your source?',
       description: 'Vibe-coded sites render great in a browser, but AI crawlers read the raw HTML. This scores how well your source actually translates into machine-extractable answers — the #1 gap in AI-generated sites.',
-      color: 'rain-400',
-      glowColor: 'rgba(14,165,233,0.25)',
-      borderColor: 'rain-400/50',
-      viaColor: 'via-sky-400',
-      bgColor: 'bg-rain-500/20',
-      dotColor: 'bg-rain-500',
+      color: 'white',
+      glowColor: 'rgba(255,255,255,0.25)',
+      borderColor: 'white/50',
+      viaColor: 'via-white/20',
+      bgColor: 'bg-white/20',
+      dotColor: 'bg-white',
       Icon: BrainCircuit,
       scores: ['Structural Clarity', 'Answer-First Formatting', 'Semantic Precision', 'Context Sufficiency', 'Section Concept Isolation'],
     },
@@ -102,11 +102,11 @@ export const FourPillars = () => {
       tagline: 'Is your site a source AI will quote?',
       description: 'AI tools built your site fast, but they skipped the trust markup. This pillar scores the schema, entity clarity, and credibility signals that make AI engines treat your domain as a quotable source.',
       color: 'emerald-400',
-      glowColor: 'rgba(16,185,129,0.25)',
+      glowColor: 'rgba(255,255,255,0.25)',
       borderColor: 'emerald-400/50',
-      viaColor: 'via-emerald-400',
-      bgColor: 'bg-emerald-500/20',
-      dotColor: 'bg-emerald-500',
+      viaColor: 'via-white/20',
+      bgColor: 'bg-white/[0.05]',
+      dotColor: 'bg-white',
       Icon: ShieldCheck,
       scores: ['Citation Signals', 'Entity Clarity', 'Topical Authority', 'Freshness Signals', 'Social Proof Markup'],
     },
@@ -116,11 +116,11 @@ export const FourPillars = () => {
       tagline: 'Does your site convert AI-referred visitors?',
       description: "Getting traffic from AI is only half the job. This pillar scores whether your site's copy actually converts that traffic — CTA clarity, trust proof, and friction that vibe-coded landing pages routinely miss.",
       color: 'violet-400',
-      glowColor: 'rgba(139,92,246,0.2)',
+      glowColor: 'rgba(255,255,255,0.2)',
       borderColor: 'violet-400/50',
-      viaColor: 'via-violet-400',
-      bgColor: 'bg-violet-500/20',
-      dotColor: 'bg-violet-500',
+      viaColor: 'via-white/20',
+      bgColor: 'bg-white/[0.05]',
+      dotColor: 'bg-white',
       Icon: MousePointerClick,
       scores: ['CTA Clarity', 'Trust Signals', 'Value Proposition', 'Friction Reduction'],
     },
@@ -130,11 +130,11 @@ export const FourPillars = () => {
       tagline: 'Can AI retrieval systems find and synthesize your content?',
       description: 'RAG Readiness measures how well your content is optimized for Retrieval-Augmented Generation (RAG) systems \u2014 vector databases, embedding models, and chunk-based retrieval. It checks information density, semantic mapping, hierarchical formatting, and structured Q&A.',
       color: 'pink-400',
-      glowColor: 'rgba(236,72,153,0.2)',
+      glowColor: 'rgba(255,255,255,0.2)',
       borderColor: 'pink-400/50',
-      viaColor: 'via-pink-400',
-      bgColor: 'bg-pink-500/20',
-      dotColor: 'bg-pink-500',
+      viaColor: 'via-white/20',
+      bgColor: 'bg-white/[0.05]',
+      dotColor: 'bg-white',
       Icon: Layers,
       scores: ['Information Density', 'Semantic Mapping', 'Narrative Nuance', 'Hierarchical Formatting', 'Explicit Q&A', 'Authority Signals'],
     },
@@ -144,7 +144,7 @@ export const FourPillars = () => {
     <section id="five-pillars" className="py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <span className="text-rain-400 font-bold tracking-wider text-xs uppercase mb-3 block">Your AI Built Your Product Or Website</span>
+          <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Your AI Built Your Product Or Website</span>
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Now Optimize For AI Search</h2>
           <p className="text-slate-400 max-w-2xl mx-auto">AI Readability is how easily ChatGPT, Perplexity, and Gemini can extract answers from your raw content. It is the #1 factor in whether AI cites you or skips you. We score it — plus Authority and Conversion — so you own the answers that matter.</p>
         </div>
@@ -193,55 +193,55 @@ export const FeatureGrid = () => {
     <section id="features" className="py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <span className="text-rain-400 font-bold tracking-wider text-xs uppercase mb-3 block">Under the Hood</span>
+          <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Under the Hood</span>
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">What No Other Tool Measures</h2>
           <p className="text-slate-400 max-w-2xl mx-auto">Beyond the five pillars, rain OS runs a deeper layer of signals that most tools don't even know exist.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="md:col-span-2 bg-gradient-to-br from-white/[0.08] to-white/[0.02] border border-white/10 backdrop-blur-sm rounded-3xl p-8 relative overflow-hidden group hover:border-rain-500/30 transition-all duration-300">
-            <BrainCircuit className="absolute -right-10 -bottom-10 w-64 h-64 text-rain-400 opacity-5 group-hover:opacity-10 transition-opacity duration-500" />
-            <BrainCircuit className="w-8 h-8 text-rain-400 mb-6 relative z-10" />
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="md:col-span-2 bg-gradient-to-br from-white/[0.08] to-white/[0.02] border border-white/10 backdrop-blur-sm rounded-3xl p-8 relative overflow-hidden group hover:border-white/30 transition-all duration-300">
+            <BrainCircuit className="absolute -right-10 -bottom-10 w-64 h-64 text-white opacity-5 group-hover:opacity-10 transition-opacity duration-500" />
+            <BrainCircuit className="w-8 h-8 text-white mb-6 relative z-10" />
             <h3 className="text-2xl font-bold text-white mb-4 relative z-10">Semantic Precision Scoring</h3>
             <p className="text-slate-400 mb-6 relative z-10 max-w-md">LLMs don't read like humans — they extract facts. We score every sentence on how machine-extractable it is and flag anything too vague to be cited.</p>
             <div className="bg-midnight/50 rounded-xl p-4 border border-white/5 relative z-10">
-              <div className="flex items-center gap-2 text-sm text-rose-400 line-through mb-2"><span className="w-2 h-2 rounded-full bg-rose-500" /> "We've seen some really significant growth recently"</div>
-              <div className="flex items-center gap-2 text-sm text-emerald-400"><span className="w-2 h-2 rounded-full bg-emerald-500" /> "Revenue grew 34% quarter-over-quarter in Q2 2025"</div>
+              <div className="flex items-center gap-2 text-sm text-white line-through mb-2"><span className="w-2 h-2 rounded-full bg-white" /> "We've seen some really significant growth recently"</div>
+              <div className="flex items-center gap-2 text-sm text-white"><span className="w-2 h-2 rounded-full bg-white" /> "Revenue grew 34% quarter-over-quarter in Q2 2025"</div>
             </div>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-sky-500/30 transition-all duration-300">
-            <Layers className="w-8 h-8 text-sky-400 mb-6" />
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
+            <Layers className="w-8 h-8 text-white mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">RAG Chunking Quality</h3>
             <p className="text-slate-400 text-sm">Most AI systems retrieve content in chunks. We score how cleanly your content breaks into standalone, answerable units — the way retrieval systems actually read it.</p>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-emerald-500/30 transition-all duration-300">
-            <SearchCheck className="w-8 h-8 text-emerald-400 mb-6" />
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
+            <SearchCheck className="w-8 h-8 text-white mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">Information Gain Score</h3>
             <p className="text-slate-400 text-sm">AI already knows what's common. This score measures how much genuinely new or specific information your content adds — the higher it is, the more likely AI is to quote you over a generic source.</p>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-orange-500/30 transition-all duration-300">
-            <Network className="w-8 h-8 text-orange-400 mb-6" />
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
+            <Network className="w-8 h-8 text-white mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">Query Alignment Score</h3>
             <p className="text-slate-400 text-sm">Maps your content against the real questions people ask AI tools in your topic area. If your content doesn't match the query patterns AI sees, it won't get surfaced.</p>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.4 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-violet-500/30 transition-all duration-300">
-            <Target className="w-8 h-8 text-violet-400 mb-6" />
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.4 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
+            <Target className="w-8 h-8 text-white mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">Semantic Redundancy Detection</h3>
             <p className="text-slate-400 text-sm">Repeated or padded content dilutes AI extraction confidence. We flag every redundant passage so you can cut it — tighter content scores higher.</p>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.5 }} className="md:col-span-2 bg-gradient-to-br from-cyan-500/[0.05] to-surface/50 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-cyan-500/30 transition-all duration-300">
-            <Sparkles className="w-8 h-8 text-cyan-400 mb-6" />
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.5 }} className="md:col-span-2 bg-gradient-to-br from-white/20/[0.05] to-surface/50 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
+            <Sparkles className="w-8 h-8 text-white mb-6" />
             <h3 className="text-2xl font-bold text-white mb-4">AI-Powered Rewrite Tools</h3>
             <p className="text-slate-400 max-w-md">Don't just see the problem — fix it. Built-in tools suggest improved titles, generate meta descriptions, summarize for AI snippets, and rewrite vague sentences into citable facts. All without losing your voice.</p>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.6 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-teal-500/30 transition-all duration-300">
-            <FileJson className="w-8 h-8 text-teal-400 mb-6" />
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.6 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
+            <FileJson className="w-8 h-8 text-white mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">Multimodal Readiness</h3>
             <p className="text-slate-400 text-sm">Images and tables are invisible to AI unless they're described in text. We flag every non-text element that's missing an AI-readable description.</p>
           </motion.div>
@@ -257,7 +257,7 @@ export const ReadabilityIntelligence = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
-            <span className="text-rain-400 font-bold tracking-wider text-xs uppercase mb-2 block flex items-center gap-2">
+            <span className="text-white font-bold tracking-wider text-xs uppercase mb-2 block flex items-center gap-2">
               <Layers className="w-4 h-4" /> Readability Intelligence
             </span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-6 leading-[1.1]">
@@ -266,9 +266,9 @@ export const ReadabilityIntelligence = () => {
             <p className="text-slate-400 leading-relaxed mb-8">
               Traditional SEO tools measure keyword density and Flesch-Kincaid reading scores. But LLMs don't read like humans. They process tokens, entities, and semantic relationships.
             </p>
-            <div className="border-l-2 border-rain-500 pl-6 py-2 mb-12">
+            <div className="border-l-2 border-white pl-6 py-2 mb-12">
               <div className="flex items-center gap-2 text-white font-medium mb-2">
-                <Sparkles className="w-4 h-4 text-rain-400" /> Good AI Readability = Good SEO.
+                <Sparkles className="w-4 h-4 text-white" /> Good AI Readability = Good SEO.
               </div>
               <p className="text-slate-400 text-sm">When you optimize for machine extraction, human readability naturally improves. It's a win-win.</p>
             </div>
@@ -277,10 +277,10 @@ export const ReadabilityIntelligence = () => {
               <div>
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-slate-300">Standard Content (Fluff)</span>
-                  <span className="text-rose-400 font-mono">32% confidence</span>
+                  <span className="text-white font-mono">32% confidence</span>
                 </div>
                 <div className="w-full bg-white/5 rounded-full h-2 mb-2">
-                  <div className="bg-rose-500/50 h-2 rounded-full" style={{ width: '32%' }} />
+                  <div className="bg-white/[0.08] h-2 rounded-full" style={{ width: '32%' }} />
                 </div>
                 <p className="text-xs text-slate-500 italic">"We saw some significant growth recently..."</p>
               </div>
@@ -288,13 +288,13 @@ export const ReadabilityIntelligence = () => {
               <div>
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-white font-medium">rain OS Optimized (Facts)</span>
-                  <span className="text-rain-400 font-mono font-bold">98% confidence</span>
+                  <span className="text-white font-mono font-bold">98% confidence</span>
                 </div>
                 <div className="w-full bg-white/5 rounded-full h-2 mb-2 relative">
-                  <div className="bg-rain-500 h-2 rounded-full shadow-[0_0_10px_rgba(14,165,233,0.5)]" style={{ width: '98%' }} />
+                  <div className="bg-white h-2 rounded-full shadow-[0_0_10px_rgba(255,255,255,0.5)]" style={{ width: '98%' }} />
                 </div>
                 <p className="text-xs text-slate-300 font-medium flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                   "Revenue increased by 24% in Q3 2024."
                 </p>
               </div>
@@ -304,26 +304,26 @@ export const ReadabilityIntelligence = () => {
           <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="relative h-[400px] flex items-center justify-center">
             <div className="absolute inset-0 border-2 border-dashed border-white/10 rounded-full animate-[spin_60s_linear_infinite]" />
             
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface border border-white/10 rounded-2xl p-4 shadow-[0_0_30px_rgba(56,189,248,0.2)]">
-              <Search className="w-6 h-6 text-rain-400" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface border border-white/10 rounded-2xl p-4 shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+              <Search className="w-6 h-6 text-white" />
               <div className="text-xs font-bold text-white mt-2 text-center">SEO</div>
             </div>
 
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-surface border border-white/10 rounded-2xl p-4 shadow-[0_0_30px_rgba(20,184,166,0.2)]">
-              <BrainCircuit className="w-6 h-6 text-teal-400" />
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-surface border border-white/10 rounded-2xl p-4 shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+              <BrainCircuit className="w-6 h-6 text-white" />
               <div className="text-xs font-bold text-white mt-2 text-center">AEO</div>
             </div>
 
             <div className="absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
               <div className="text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Feeds</div>
-              <div className="w-px h-16 bg-gradient-to-b from-rain-400 to-teal-400 relative">
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 border-b-2 border-r-2 border-teal-400 transform rotate-45" />
+              <div className="w-px h-16 bg-gradient-to-b from-white to-white/20 relative">
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 border-b-2 border-r-2 border-white/20 transform rotate-45" />
               </div>
             </div>
 
             <div className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-              <div className="w-px h-16 bg-gradient-to-t from-teal-400 to-rain-400 relative mb-2">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 border-t-2 border-l-2 border-rain-400 transform rotate-45" />
+              <div className="w-px h-16 bg-gradient-to-t from-white/20 to-white relative mb-2">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 border-t-2 border-l-2 border-white transform rotate-45" />
               </div>
               <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Strengthens</div>
             </div>
@@ -331,7 +331,7 @@ export const ReadabilityIntelligence = () => {
             <div className="w-32 h-32 bg-white rounded-full flex flex-col items-center justify-center shadow-[0_0_50px_rgba(255,255,255,0.2)] z-10">
               <span className="font-bold text-midnight text-lg">rain OS</span>
               <div className="w-12 h-px bg-slate-200 my-2" />
-              <Sparkles className="w-5 h-5 text-rain-500" />
+              <Sparkles className="w-5 h-5 text-white" />
             </div>
           </motion.div>
         </div>
@@ -362,7 +362,7 @@ export const ComparisonTable = () => {
             <div className="grid grid-cols-3 border-b border-white/10 bg-white/5">
               <div className="p-6 font-bold text-white">Feature</div>
               <div className="p-6 font-bold text-slate-400 text-center">Traditional SEO</div>
-              <div className="p-6 font-bold text-rain-400 text-center bg-rain-500/5 border-x border-white/5">rain OS</div>
+              <div className="p-6 font-bold text-white text-center bg-white/5 border-x border-white/5">rain OS</div>
             </div>
             
             {features.map((f, i) => (
@@ -380,8 +380,8 @@ export const ComparisonTable = () => {
                 <div className="p-6 flex items-center justify-center">
                   {f.seo ? <span className="text-slate-500">✓</span> : <span className="text-slate-700">✕</span>}
                 </div>
-                <div className="p-6 flex items-center justify-center bg-rain-500/5 border-x border-white/5">
-                  {f.rain ? <span className="text-rain-400 font-bold">✓</span> : <span className="text-slate-700">✕</span>}
+                <div className="p-6 flex items-center justify-center bg-white/5 border-x border-white/5">
+                  {f.rain ? <span className="text-white font-bold">✓</span> : <span className="text-slate-700">✕</span>}
                 </div>
               </div>
             ))}
@@ -418,7 +418,7 @@ export const Pricing = () => {
     },
     {
       plan: "Pro", price: "$29", period: "/ mo", checkCount: "200 analyses / month", isPopular: true,
-      accentColor: "#0ea5e9",
+      accentColor: "#e5e5e5",
       description: "Everything in Free, plus the full AEO suite for content creators, startups, and growing brands optimizing for ChatGPT, Perplexity, and Gemini.",
       buttonText: "Get Started",
       features: [
@@ -435,7 +435,7 @@ export const Pricing = () => {
     },
     {
       plan: "Business", price: "$99", period: "/ mo", checkCount: "500 analyses / month",
-      accentColor: "#a855f7",
+      accentColor: "#e5e5e5",
       description: "Premium AI intelligence for scaling brands, agencies, and teams that need to track and grow their presence inside AI answers.",
       buttonText: "Get Started",
       features: [
@@ -455,12 +455,12 @@ export const Pricing = () => {
             <motion.div 
               key={i}
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }}
-              className={`relative bg-surface/40 border border-white/10 rounded-3xl p-8 backdrop-blur-sm flex flex-col h-full ${p.isPopular ? '-mt-4 mb-4 bg-rain-900/10' : ''}`}
+              className={`relative bg-surface/40 border border-white/10 rounded-3xl p-8 backdrop-blur-sm flex flex-col h-full ${p.isPopular ? '-mt-4 mb-4 bg-neutral-700/10' : ''}`}
             >
               {p.isPopular && (
                 <>
-                  <div className="absolute -inset-[1px] rounded-[34px] bg-gradient-to-b from-rain-400 to-rain-600 opacity-40 blur-sm group-hover:opacity-70 pointer-events-none" />
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-rain-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider z-10">Best Value</div>
+                  <div className="absolute -inset-[1px] rounded-[34px] bg-gradient-to-b from-white to-neutral-700 opacity-40 blur-sm group-hover:opacity-70 pointer-events-none" />
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider z-10">Best Value</div>
                 </>
               )}
               
@@ -472,7 +472,7 @@ export const Pricing = () => {
                 </div>
                 <p className="text-slate-400 text-sm mb-6">{p.description}</p>
                 
-                <a href="/login" className={`block w-full text-center py-3 rounded-lg font-medium transition-colors mb-8 ${p.isPopular ? 'bg-rain-500 hover:bg-rain-400 text-white shadow-[0_0_20px_rgba(14,165,233,0.3)]' : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'}`}>
+                <a href="/login" className={`block w-full text-center py-3 rounded-lg font-medium transition-colors mb-8 ${p.isPopular ? 'bg-white hover:bg-white text-white shadow-[0_0_20px_rgba(255,255,255,0.3)]' : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'}`}>
                   {p.buttonText}
                 </a>
                 
@@ -504,8 +504,8 @@ export const AccordionItem = ({ question, answer }: { question: string, answer: 
   return (
     <div className="border-b border-white/10">
       <button onClick={() => setIsOpen(!isOpen)} className="w-full py-6 flex items-center justify-between text-left focus:outline-none group">
-        <span className="text-lg font-medium text-white pr-8 group-hover:text-rain-400 transition-colors">{question}</span>
-        <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${isOpen ? 'bg-rain-500 border-rain-500 text-white rotate-180' : 'border-white/10 text-slate-400 group-hover:border-rain-500/50 group-hover:text-rain-400'}`}>
+        <span className="text-lg font-medium text-white pr-8 group-hover:text-white transition-colors">{question}</span>
+        <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${isOpen ? 'bg-white border-white text-white rotate-180' : 'border-white/10 text-slate-400 group-hover:border-white/50 group-hover:text-white'}`}>
           {isOpen ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
         </div>
       </button>
@@ -558,20 +558,20 @@ export const CTA = () => {
   return (
     <section className="py-24 relative z-10">
       <div className="max-w-5xl mx-auto px-6">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="relative bg-gradient-to-r from-rain-900/40 to-midnight border border-rain-500/20 rounded-3xl p-8 md:p-16 text-center overflow-hidden">
-          <div className="absolute top-0 left-1/2 w-[600px] h-[300px] bg-rain-500/20 blur-[100px] -translate-x-1/2 pointer-events-none" />
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="relative bg-gradient-to-r from-neutral-700/40 to-midnight border border-white/20 rounded-3xl p-8 md:p-16 text-center overflow-hidden">
+          <div className="absolute top-0 left-1/2 w-[600px] h-[300px] bg-white/20 blur-[100px] -translate-x-1/2 pointer-events-none" />
           
           <div className="relative z-10 flex flex-col items-center">
-            <div className="w-20 h-20 bg-rain-500/10 rounded-2xl border border-white/10 flex items-center justify-center mb-8">
-              <Sparkles className="w-10 h-10 text-rain-400" />
+            <div className="w-20 h-20 bg-white/10 rounded-2xl border border-white/10 flex items-center justify-center mb-8">
+              <Sparkles className="w-10 h-10 text-white" />
             </div>
             <h2 className="text-4xl md:text-5xl font-semibold text-white mb-6 leading-[1.05]">
-              Ready to <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-100 via-sky-200 to-sky-400">grow</span> your reach?
+              Ready to <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-100 via-white/40 to-white/20">grow</span> your reach?
             </h2>
             <p className="text-lg text-slate-400 max-w-2xl mx-auto mb-10">
               Start optimizing for the future of search today. Join thousands of creators ensuring their content survives the AI shift.
             </p>
-            <a href="/login" className="bg-rain-500 hover:bg-rain-400 text-white px-8 py-4 rounded-xl font-medium shadow-[0_0_20px_rgba(14,165,233,0.3)] transition-all hover:scale-105">
+            <a href="/login" className="bg-white hover:bg-white text-white px-8 py-4 rounded-xl font-medium shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all hover:scale-105">
               Get Started for Free
             </a>
           </div>
@@ -585,44 +585,44 @@ export const ThreeModesSection = ({ onGetStarted }: { onGetStarted?: () => void 
   const modes = [
     {
       Icon: FileText,
-      accent: '#38bdf8',
-      bg: 'rgba(14,165,233,0.08)',
-      border: 'rgba(14,165,233,0.2)',
-      glow: 'rgba(14,165,233,0.12)',
+      accent: '#e5e5e5',
+      bg: 'rgba(255,255,255,0.08)',
+      border: 'rgba(255,255,255,0.2)',
+      glow: 'rgba(255,255,255,0.12)',
       tag: 'Most popular',
-      tagColor: 'text-sky-300 bg-sky-400/10 border-sky-400/25',
+      tagColor: 'text-white bg-white/[0.03] border-white/10',
       title: 'Content Analysis',
       description: 'Paste any content — a blog post, product page, or landing copy — and get a full Rain Score with actionable recommendations in seconds.',
       availability: ['WordPress Plugin', 'Web App'],
-      availColor: 'text-sky-400',
+      availColor: 'text-white',
       detail: 'The fastest way to go from draft to AI-optimized. Works on any text, any format.',
     },
     {
       Icon: Globe,
-      accent: '#a78bfa',
-      bg: 'rgba(139,92,246,0.08)',
-      border: 'rgba(139,92,246,0.2)',
-      glow: 'rgba(139,92,246,0.12)',
+      accent: '#e5e5e5',
+      bg: 'rgba(255,255,255,0.08)',
+      border: 'rgba(255,255,255,0.2)',
+      glow: 'rgba(255,255,255,0.12)',
       tag: 'Technical signals',
-      tagColor: 'text-violet-300 bg-violet-400/10 border-violet-400/25',
+      tagColor: 'text-white bg-white/[0.03] border-white/10',
       title: 'URL Scanner',
       description: 'Enter any live URL. We fetch the page, parse the HTML, and surface every technical AEO signal: schema markup, llms.txt, JS rendering risk, open graph, and more.',
       availability: ['WordPress Plugin', 'Web App'],
-      availColor: 'text-violet-400',
+      availColor: 'text-white',
       detail: 'Spot what\'s invisible in the rendered page — because AI crawlers see the raw HTML, not what your browser shows.',
     },
     {
       Icon: GitBranch,
-      accent: '#34d399',
-      bg: 'rgba(16,185,129,0.08)',
-      border: 'rgba(16,185,129,0.2)',
-      glow: 'rgba(16,185,129,0.12)',
+      accent: '#e5e5e5',
+      bg: 'rgba(255,255,255,0.08)',
+      border: 'rgba(255,255,255,0.2)',
+      glow: 'rgba(255,255,255,0.12)',
       tag: 'For vibe coders',
-      tagColor: 'text-emerald-300 bg-emerald-400/10 border-emerald-400/25',
+      tagColor: 'text-white bg-white/[0.03] border-white/10',
       title: 'Repo Analysis',
       description: 'Built with Bolt, Lovable, Cursor, or v0? Connect your GitHub repo and we scan the actual source files — README, package.json, llms.txt, robots.txt, index.html — not just the rendered output.',
       availability: ['Web App only'],
-      availColor: 'text-emerald-400',
+      availColor: 'text-white',
       availIcon: Lock,
       detail: 'The only analysis mode that reads your site the way it was built — at the source level. Catches gaps that URL scanning can\'t see.',
     },
@@ -641,7 +641,7 @@ export const ThreeModesSection = ({ onGetStarted }: { onGetStarted?: () => void 
           <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-3 block">Three ways to analyze</span>
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4" style={{ letterSpacing: '-0.03em' }}>
             One platform.{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-emerald-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white/40 to-white/20">
               Three analysis modes.
             </span>
           </h2>
@@ -700,7 +700,7 @@ export const ThreeModesSection = ({ onGetStarted }: { onGetStarted?: () => void 
           <div className="mt-12 text-center">
             <button
               onClick={onGetStarted}
-              className="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-white text-sm font-bold shadow-lg shadow-sky-500/20 transition-all hover:scale-105 active:scale-95"
+              className="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-white hover:bg-white text-white text-sm font-bold shadow-lg shadow-sky-500/20 transition-all hover:scale-105 active:scale-95"
             >
               Try all three free
               <ArrowRight className="w-4 h-4" />
@@ -717,16 +717,16 @@ export const AIRewriteTools = () => {
     <section className="py-20 relative z-10">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-12">
-          <span className="text-cyan-400 font-bold tracking-wider text-xs uppercase mb-3 block">Built-in tools</span>
+          <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Built-in tools</span>
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Fix it without leaving the dashboard</h2>
           <p className="text-slate-400 max-w-2xl mx-auto">Don&apos;t just see the problem. rain OS gives you one-click AI tools to rewrite, improve, and optimize the exact issues your score flags.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {[
-            { color: 'text-sky-400', border: 'hover:border-sky-500/30', bg: 'bg-sky-500/5', title: 'Suggest Titles', body: 'Generate AI-optimized headlines that match how people phrase questions to ChatGPT and Perplexity.' },
-            { color: 'text-emerald-400', border: 'hover:border-emerald-500/30', bg: 'bg-emerald-500/5', title: 'Meta Description', body: 'Auto-generate a meta description structured for AI snippet extraction, not just keyword stuffing.' },
-            { color: 'text-violet-400', border: 'hover:border-violet-500/30', bg: 'bg-violet-500/5', title: 'Summarize for AI', body: 'Condense your page into a tight, citable paragraph that AI engines can lift directly as an answer.' },
-            { color: 'text-orange-400', border: 'hover:border-orange-500/30', bg: 'bg-orange-500/5', title: 'Rewrite Sentences', body: 'Flag vague, fluffy sentences and replace them with specific, machine-extractable facts in one click.' },
+            { color: 'text-white', border: 'hover:border-white/10', bg: 'bg-white/[0.03]', title: 'Suggest Titles', body: 'Generate AI-optimized headlines that match how people phrase questions to ChatGPT and Perplexity.' },
+            { color: 'text-white', border: 'hover:border-white/10', bg: 'bg-white/[0.03]', title: 'Meta Description', body: 'Auto-generate a meta description structured for AI snippet extraction, not just keyword stuffing.' },
+            { color: 'text-white', border: 'hover:border-white/10', bg: 'bg-white/[0.03]', title: 'Summarize for AI', body: 'Condense your page into a tight, citable paragraph that AI engines can lift directly as an answer.' },
+            { color: 'text-white', border: 'hover:border-white/10', bg: 'bg-white/[0.03]', title: 'Rewrite Sentences', body: 'Flag vague, fluffy sentences and replace them with specific, machine-extractable facts in one click.' },
           ].map((t, i) => (
             <motion.div key={t.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }}
               className={`${t.bg} border border-white/10 ${t.border} rounded-2xl p-6 transition-all duration-300`}>
@@ -758,7 +758,7 @@ export const VibeFAQ = () => {
     <section className="py-24 relative z-10">
       <div className="max-w-3xl mx-auto px-6">
         <div className="text-center mb-12">
-          <span className="text-emerald-400 font-bold tracking-wider text-xs uppercase mb-3 block">Got questions?</span>
+          <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Got questions?</span>
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Frequently Asked Questions</h2>
           <p className="text-slate-400 max-w-xl mx-auto">Common questions from developers and vibe coders getting their sites AI-ready.</p>
         </div>
@@ -773,16 +773,16 @@ export const VibeFAQ = () => {
 export const VibeCoderBand = ({ onGetStarted }: { onGetStarted?: () => void }) => {
   const platforms = ['Bolt', 'Lovable', 'Cursor', 'v0', 'Replit', 'Windsurf'];
   return (
-    <section className="py-20 relative z-10 border-y border-white/[0.06]" style={{ background: 'radial-gradient(ellipse at center, rgba(16,185,129,0.05) 0%, transparent 70%)' }}>
+    <section className="py-20 relative z-10 border-y border-white/[0.06]" style={{ background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, transparent 70%)' }}>
       <div className="max-w-5xl mx-auto px-6 flex flex-col items-center text-center gap-6">
-        <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/8 px-4 py-1.5">
-          <GitBranch className="w-3.5 h-3.5 text-emerald-400" />
-          <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-emerald-400">For vibe coders</span>
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-1.5">
+          <GitBranch className="w-3.5 h-3.5 text-white" />
+          <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-white">For vibe coders</span>
         </div>
 
         <h2 className="text-2xl md:text-3xl font-semibold text-white leading-tight max-w-2xl" style={{ letterSpacing: '-0.03em' }}>
           Your AI built the site.{' '}
-          <span className="text-emerald-400">Now scan the repo.</span>
+          <span className="text-white">Now scan the repo.</span>
         </h2>
 
         <div className="flex flex-wrap items-center justify-center gap-2">
@@ -808,7 +808,7 @@ export const VibeCoderBand = ({ onGetStarted }: { onGetStarted?: () => void }) =
         {onGetStarted && (
           <button
             onClick={onGetStarted}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-emerald-500/10 border border-emerald-400/30 text-emerald-300 text-sm font-semibold hover:bg-emerald-500/15 hover:border-emerald-400/50 transition-all"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-white/[0.03] border border-white/10 text-white text-sm font-semibold hover:bg-white/[0.05] hover:border-white/10 transition-all"
           >
             <GitBranch className="w-4 h-4" />
             Connect your repo — it's free
