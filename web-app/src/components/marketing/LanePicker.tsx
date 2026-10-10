@@ -13,7 +13,7 @@ interface Lane {
 }
 
 const LANES: Lane[] = [
-  { id: 'local_business', label: 'Local Service Business', desc: "Get found when customers ask AI who's nearby.", href: '/local-business' },
+  { id: 'local_business', label: 'Local Service Business', desc: "Get found when customers ask AI about a business like yours nearby.", href: '/local-business' },
   { id: 'vibe_coders', label: 'Vibe Coders', desc: 'Built with Bolt, Lovable, Replit, v0, or similar — audit your app before launch.', href: null },
   { id: 'developers', label: 'Developers', desc: 'Technical docs, READMEs, and API references, scored for AI readability.', href: '/developers' },
   { id: 'product_sellers', label: 'Product Sellers', desc: 'Shopify, Wix, Etsy, Amazon listings — get found by AI shopping assistants.', href: '/product-sellers' },
