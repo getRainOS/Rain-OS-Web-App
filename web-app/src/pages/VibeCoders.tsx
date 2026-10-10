@@ -1146,7 +1146,7 @@ export default function VibeCoders() {
                         <span className="text-neutral-400">{sig.name}</span>
                         {/* Hover tooltip */}
                         {sig.description && (
-                          <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 z-50 w-64 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                          <div className="hidden md:block absolute left-full ml-2 top-1/2 -translate-y-1/2 z-50 w-64 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
                             <div className="rounded-lg bg-[#000000] border border-white/10 p-3 shadow-xl">
                               <p className="text-xs text-neutral-300 leading-relaxed">{sig.description}</p>
                             </div>
