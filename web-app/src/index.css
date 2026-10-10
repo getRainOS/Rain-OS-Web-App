@@ -61,6 +61,11 @@ html, body {
   font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  /* Decorative full-bleed elements (blurred glows, hover tooltips,
+     diagram rings) are built to extend past the viewport edge on
+     purpose — this clips that overflow site-wide instead of letting
+     it open up a horizontal scrollbar on narrow/mobile screens. */
+  overflow-x: hidden;
 }
 
 #root {
