@@ -54,6 +54,7 @@ export const api = {
   me: () => request('GET', '/api/users/me'),
   updateName: (name) => request('POST', '/api/users/me/update-name', { name }),
   analyze: (body) => request('POST', '/api/analyze', body),
+  quickTool: (body) => request('POST', '/api/quick-tool', body),
   history: (params) => {
     const qs = params ? '?' + new URLSearchParams(params).toString() : '';
     return request('GET', `/api/history${qs}`);

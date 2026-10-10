@@ -7,7 +7,7 @@ import { setupDatabase } from '../services/dbSetup';
 import process from 'process';
 // ─── Route handlers ───────────────────────────────────────────────────────────
 // Phase 2: new analyze controller (replaces inline analyzeHandler)
-import { handleAnalyze, handleCapabilities } from '../services/analyzeController';
+import { handleAnalyze, handleCapabilities, handleQuickTool } from '../services/analyzeController';
 import urlScanHandler from './url-scan';
 import citationCheckHandler, {
   listHandler as citationChecksListHandler,
@@ -88,6 +88,7 @@ app.get('/api/capabilities', handleCapabilities);
 app.get('/v1/api/capabilities', handleCapabilities);
 // ─── Analyze (Phase 2 controller — replaces old analyzeHandler) ───────────
 app.post('/api/analyze', handleAnalyze);
+app.post('/api/quick-tool', handleQuickTool);
 app.post('/v1/api/analyze', handleAnalyze);
 app.post('/v1/analyze', handleAnalyze);
 app.post('/analyze', handleAnalyze);

@@ -2,7 +2,7 @@
 // Route handlers for POST /api/analyze and GET /api/capabilities.
 // Auth, usage-check, and incrementing all live here — keeping api/index.ts thin.
 import express from 'express';
-import { analyzeContent, API_VERSION } from './geminiService';
+import { analyzeContent, API_VERSION, generateTitles, generateDescription, summarizeContent } from './geminiService';
 import { findUserByApiKey, incrementUsageAndSaveAnalysis } from './dbService';
 import { classifyGeminiError } from './geminiErrors';
 import type { ApiError, CapabilitiesResponse, AnalysisResponse } from '../types';
@@ -96,6 +96,53 @@ const { status, body } = classifyGeminiError(error, 'analyze');
 return res.status(status).json(body as ApiError);
 }
 }
+// POST /api/quick-tool — lightweight single-purpose Gemini helpers
+// (suggest titles, write a meta description, summarize) used by the
+// Content Optimizer's "Quick Tools" panel. Kept separate from
+// handleAnalyze, which always runs the full multi-pillar scoring pass
+// and was never meant to serve these.
+export async function handleQuickTool(req: express.Request, res: express.Response) {
+const apiKey = getApiKey(req);
+if (!apiKey) {
+return res.status(401).json({ error: 'unauthorized', message: 'API key missing' } as ApiError);
+}
+const user = await findUserByApiKey(apiKey);
+if (!user) {
+return res.status(401).json({ error: 'unauthorized', message: 'Invalid API key' } as ApiError);
+}
+if (user.subscriptionStatus !== 'active') {
+return res.status(402).json({ error: 'payment_required', message: 'Active subscription required' } as ApiError);
+}
+
+const { action, content } = req.body as { action?: string; content?: string };
+const safeContent = typeof content === 'string' ? content.slice(0, 12000) : '';
+if (!safeContent.trim()) {
+return res.status(400).json({ error: 'bad_request', message: 'content is required' } as ApiError);
+}
+
+try {
+switch (action) {
+case 'suggest_titles': {
+const { titles } = await generateTitles(safeContent);
+return res.status(200).json({ result: titles });
+}
+case 'generate_description': {
+const { description } = await generateDescription(safeContent);
+return res.status(200).json({ result: description });
+}
+case 'summarize_content': {
+const { summary } = await summarizeContent(safeContent);
+return res.status(200).json({ result: summary });
+}
+default:
+return res.status(400).json({ error: 'bad_request', message: 'Unknown action. Use suggest_titles, generate_description, or summarize_content.' } as ApiError);
+}
+} catch (error) {
+const { status, body } = classifyGeminiError(error, 'quick_tool');
+return res.status(status).json(body as ApiError);
+}
+}
+
 export function handleCapabilities(_req: express.Request, res: express.Response) {
 const capabilities: CapabilitiesResponse = {
 api_version: API_VERSION,
