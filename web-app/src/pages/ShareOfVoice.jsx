@@ -144,7 +144,7 @@ function WhatDoesThisMeanBox() {
           {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
       </div>
-      {!collapsed && <span className={styles.infoBoxText}>We send your topic as three differently-worded prompts and check each real answer for your brand and your domain. "Mentioned in 2 of 3" and your citation share are exact counts from those three checks, not a market-wide statistic. Run it again later to see whether your presence is growing.</span>}
+      {!collapsed && <span className={styles.infoBoxText}>We send your topic to Gemini as three differently-worded prompts and check each real answer for your brand name and your domain. Unlike the pillar scores, this isn't a judgment — "mentioned in 2 of 3" and your citation share are literal counts from those three checks, not an estimate of market share. Run the same check again later to see whether your presence is growing.</span>}
     </div>
   );
 }
