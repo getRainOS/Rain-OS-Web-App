@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   BrainCircuit, ShieldCheck, MousePointerClick, SearchCheck, Network, Target, 
   Sparkles, FileJson, Layers, Cpu, Users, Globe2, AlertTriangle, Shield,
-  Search, Info, Plus, Minus, CheckCircle2,
+  Search, Plus, Minus, CheckCircle2,
   FileText, Globe, GitBranch, ArrowRight, Lock, MapPin, BadgeCheck
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -369,13 +369,6 @@ export const ComparisonTable = () => {
               <div key={i} className="grid grid-cols-3 border-b border-white/5 last:border-0 group hover:bg-white/[0.02] transition-colors">
                 <div className="p-6 flex items-center gap-2 text-slate-300">
                   {f.name}
-                  <div className="relative group/tooltip cursor-help">
-                    <Info className="w-4 h-4 text-slate-500" />
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-midnight border border-white/10 rounded text-xs text-slate-300 opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none z-20">
-                      Information about {f.name}
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-white/10" />
-                    </div>
-                  </div>
                 </div>
                 <div className="p-6 flex items-center justify-center">
                   {f.seo ? <span className="text-slate-500">✓</span> : <span className="text-slate-700">✕</span>}
