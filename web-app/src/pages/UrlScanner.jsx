@@ -771,7 +771,7 @@ export default function UrlScanner() {
               <ul className={styles.recoList}>
                 {recommendations.map((r, i) => {
                   const isObj = typeof r === 'object' && r !== null;
-                  const text = isObj ? r.recommendation : r;
+                  const text = isObj ? (r.recommendation || r.text) : r;
                   const artifact = isObj ? r.artifact : null;
                   const nonTechnicalFix = isObj ? r.nonTechnicalFix : null;
                   const technicalFix = isObj ? r.technicalFix : null;
