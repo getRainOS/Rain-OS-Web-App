@@ -146,16 +146,6 @@ export default function LanePicker() {
                 );
               })}
             </motion.div>
-
-            <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 0.4 }}
-              onClick={dismiss}
-              className="relative z-10 mt-8 text-sm text-neutral-500 hover:text-white transition-colors"
-            >
-              Not sure yet — just show me the site
-            </motion.button>
             </div>
           </div>
         </motion.div>
