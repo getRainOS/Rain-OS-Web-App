@@ -410,7 +410,7 @@ export default function ContentAnalyzer() {
                 {result.recommendations.map((r, i) => {
                   const isObj = typeof r === 'object' && r !== null;
                   const text = isObj
-                    ? (r.recommendation || r.description || r.issue || '')
+                    ? (r.text || r.recommendation || r.description || r.issue || '')
                     : String(r);
                   const artifact = isObj ? r.artifact : null;
                   return (
