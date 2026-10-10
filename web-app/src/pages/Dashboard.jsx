@@ -769,7 +769,7 @@ export default function Dashboard() {
           <p className={styles.headerSub}>
             {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
             {' · '}
-            <Link to="/history" style={{ color: 'var(--text)', textDecoration: 'underline', textUnderlineOffset: '2px' }} title="Rows in the analysis history table (includes all saved analyses). 'API Usage' shows counted API calls against your plan and may exclude imports or manual inserts.">You have a library of {totalCount ?? history.length} pieces analyzed</Link>
+            <Link to="/history" style={{ color: 'var(--text)', textDecoration: 'underline', textUnderlineOffset: '2px' }} title="Every saved analysis in your history — separate from 'API Usage', which counts billed API calls and may exclude imports or manual inserts.">You have a library of {totalCount ?? history.length} pieces analyzed</Link>
           </p>
         </div>
         <button onClick={() => navigate(typeRoute)} className={styles.newBtn}>
@@ -1074,7 +1074,7 @@ export default function Dashboard() {
                 From "{latestTypedAnalysis.title || latestTypedAnalysis.url || latestTypedAnalysis.repo || 'Untitled'}"
                 {latestTypedAnalysis.analyzed_at ? ` · ${timeAgo(latestTypedAnalysis.analyzed_at)}` : ''}
               </p>
-              <span className={styles.chartHelp} title="The top recommendations from your most recent analysis of this type. Switch the type toggle above to see fixes for a different tool.">
+              <span className={styles.chartHelp} title="The top recommendations from your most recent analysis of this type — switch the toggle above to see fixes for a different tool.">
                 <HelpCircle size={11} />
               </span>
             </div>
@@ -1118,7 +1118,7 @@ export default function Dashboard() {
             <div>
               <h2 className={styles.chartTitle}>Score Trend</h2>
               <p className={styles.chartSub}>Last {chartRange} analyses</p>
-              <span className={styles.chartHelp} title="How your overall content scores have changed over time. Higher scores mean AI engines are more likely to cite your content.">
+              <span className={styles.chartHelp} title="How your overall content scores have changed over time — higher means AI engines are more likely to cite your content.">
                 <HelpCircle size={11} />
               </span>
             </div>
@@ -1189,7 +1189,7 @@ export default function Dashboard() {
             <div>
               <h2 className={styles.chartTitle}>Recent Analyses</h2>
               <p className={styles.chartSub}>Your latest content scores</p>
-              <span className={styles.chartHelp} title="A quick list of your latest analyses with overall scores and pillar breakdowns. Click to view the full analysis.">
+              <span className={styles.chartHelp} title="Your latest analyses with overall scores and pillar breakdowns — click any row to view the full analysis.">
                 <HelpCircle size={11} />
               </span>
             </div>
