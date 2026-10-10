@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { api } from '../api/client.js';
+import { useApp } from '../context/AppContext.jsx';
 import { buildCitationShare } from '../lib/citationShare.js';
 import styles from './ShareOfVoice.module.css';
 
@@ -150,6 +151,7 @@ function WhatDoesThisMeanBox() {
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 export default function ShareOfVoice() {
+  const { refreshUser } = useApp();
   const [name,  setName]    = useState('');
   const [brand, setBrand]   = useState('');
   const [topic, setTopic]   = useState('');
@@ -182,6 +184,7 @@ export default function ShareOfVoice() {
       setResult(data?.data ?? data);
       // prepend to history without refetch
       setHistory(prev => [{ ...(data?.data ?? data), checkedAt: new Date().toISOString(), id: Date.now() }, ...prev]);
+      refreshUser();
     } catch (err) {
       if (err.status === 403) {
         setPlanGated(true);
