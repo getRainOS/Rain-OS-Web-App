@@ -40,6 +40,21 @@ export default function LanePicker() {
     }
   }, []);
 
+  // Lock background scroll while the overlay is open. Without this, the
+  // homepage underneath (much taller than the viewport) is still
+  // scrollable — on mobile a swipe inside the overlay can scroll the
+  // hidden page behind it instead of the overlay's own card list, making
+  // the lower cards feel unreachable/"off screen" even though they're
+  // really just one proper swipe away.
+  useEffect(() => {
+    if (!visible) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [visible]);
+
   function markSeen() {
     try { localStorage.setItem(SEEN_KEY, '1'); } catch { /* ignore */ }
   }
@@ -64,7 +79,7 @@ export default function LanePicker() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25 }}
           className="fixed inset-0 z-[100] flex flex-col"
-          style={{ background: '#000000' }}
+          style={{ background: '#000000', height: '100dvh' }}
         >
           {/* Minimal header — logo left, close right, same wordmark as the main nav */}
           <div className="flex items-center justify-between px-6 md:px-10 py-5 shrink-0">
@@ -84,7 +99,13 @@ export default function LanePicker() {
               on the overflow-y-auto parent — centering flex content that's taller
               than the viewport clips the top with no way to scroll to it; this
               still centers short content but lets tall content scroll from the top. */}
-          <div className="flex-1 flex flex-col items-center justify-start px-6 py-10 overflow-y-auto relative">
+          {/* min-h-0 overrides the flex default of min-height:auto — without
+              it, a flex child with overflow-y-auto can refuse to shrink to
+              its allotted space and instead grow past the fixed parent's
+              bottom edge, which (being position:fixed, not scrollable)
+              makes that overflow genuinely unreachable rather than just
+              scrolled-to. */}
+          <div className="flex-1 min-h-0 flex flex-col items-center justify-start px-6 py-10 overflow-y-auto relative">
             <div className="m-auto flex flex-col items-center w-full">
             {/* Slow ambient drift behind the cards — reads as depth, not urgency,
                 because it's slow, blurred, and grayscale rather than fast/colored. */}
