@@ -34,12 +34,15 @@ async function request(method, path, body) {
 
   if (!res.ok) {
     let msg = `HTTP ${res.status}`;
+    let code;
     try {
       const err = await res.json();
       msg = err.message || err.error || msg;
+      code = err.error;
     } catch (_) {}
     const error = new Error(msg);
     error.status = res.status;
+    error.code = code;
     throw error;
   }
 

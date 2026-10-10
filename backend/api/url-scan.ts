@@ -116,7 +116,7 @@ export default async function handler(req: express.Request, res: express.Respons
     if (!scan.extractedText || scan.extractedText.trim().length < 50) {
       return res.status(422).json({
         error: 'insufficient_content',
-        message: 'Not enough readable text. Page may require JavaScript to render.',
+        message: "We couldn't find enough text on this page to analyze. This usually means the content loads in after the page opens — which AI assistants can't see either. Try Repo Analysis instead, which reads your site's actual code.",
       } as ApiError);
     }
 
