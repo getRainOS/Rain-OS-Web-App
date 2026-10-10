@@ -143,7 +143,7 @@ function FixPromptGenerator({ result, repoUrl }) {
 }
 
 export default function RepoAnalysis() {
-  const { user, userLane } = useApp();
+  const { user, userLane, refreshUser } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
   const [repos, setRepos] = useState([]);
@@ -196,6 +196,7 @@ export default function RepoAnalysis() {
       const analysisModule = userLane === 'product_sellers' ? 'product_sellers' : userLane === 'developers' ? 'developers' : 'general';
       const { data } = await api.github.analyze(repoUrl.trim(), { module: analysisModule });
       setResult(data);
+      refreshUser();
     } catch (err) {
       setError(err.message || 'Analysis failed. Please try again.');
     } finally {

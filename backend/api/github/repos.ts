@@ -142,7 +142,7 @@ export async function analyzeRepoHandler(req: express.Request, res: express.Resp
 
   try {
     const result = await analyzeRepo(owner, repo, token);
-    await incrementUsageAndSaveAnalysis(user.id, {
+    const { updatedUser } = await incrementUsageAndSaveAnalysis(user.id, {
       title: result.description || `${owner}/${repo}`,
       repo: result.repoUrl,
       overall_score: result.overallScore ?? null,
@@ -153,6 +153,7 @@ export async function analyzeRepoHandler(req: express.Request, res: express.Resp
       rag_readiness: result.pillarScores?.ragReadiness ?? null,
       result_json: result,
     });
+    if (updatedUser) res.setHeader('X-Usage-Info', JSON.stringify(updatedUser.usage));
     return res.status(200).json(result);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Analysis failed';

@@ -164,6 +164,7 @@ export default function CitationMonitor() {
       }
       // Refresh cross-topic history for the Competitor Map + Recent Analyses
       fetchMapHistory();
+      refreshUser();
     } catch (err) {
       setError(err.message || 'Citation check failed. Please try again.');
     } finally {

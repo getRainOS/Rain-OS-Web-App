@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api/client.js';
+import { useApp } from '../context/AppContext.jsx';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import styles from './BrandVisibility.module.css';
 
@@ -124,6 +125,7 @@ function WhatDoesThisMeanBox() {
 }
 
 export default function BrandVisibility() {
+  const { refreshUser } = useApp();
   const [name, setName] = useState('');
   const [brand, setBrand] = useState('');
   const [topic, setTopic] = useState('');
@@ -158,6 +160,7 @@ export default function BrandVisibility() {
       // Refresh history
       const h = await api.brandVisHistory();
       setHistory(Array.isArray(h.data.data) ? h.data.data : Array.isArray(h.data) ? h.data : []);
+      refreshUser();
     } catch (err) {
       if (err.status === 403) {
         setPlanGated(true);
