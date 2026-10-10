@@ -6,7 +6,6 @@ const TOOLS = [
   { action: 'suggest_titles',      label: 'Suggest Titles',       icon: '✎' },
   { action: 'generate_description', label: 'Meta Description',     icon: '◷' },
   { action: 'summarize_content',   label: 'Summarize',            icon: '≡' },
-  { action: 'rewrite_sentence',    label: 'Rewrite',              icon: '↺' },
 ];
 
 export default function QuickTools({ content, title }) {
@@ -14,7 +13,6 @@ export default function QuickTools({ content, title }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
-  const [rewriteTarget, setRewriteTarget] = useState('');
 
   async function run(action) {
     if (!content?.trim()) return;
@@ -23,12 +21,8 @@ export default function QuickTools({ content, title }) {
     setResult(null);
     setError('');
     try {
-      const body = { action, content, title };
-      if (action === 'rewrite_sentence' && rewriteTarget.trim()) {
-        body.sentence = rewriteTarget;
-      }
-      const { data } = await api.analyze(body);
-      setResult(data?.result ?? data?.output ?? data?.text ?? JSON.stringify(data));
+      const { data } = await api.quickTool({ action, content, title });
+      setResult(data?.result ?? '');
     } catch (err) {
       setError(err.message || 'Tool failed. Please try again.');
     } finally {
@@ -54,11 +48,7 @@ export default function QuickTools({ content, title }) {
             className={`${styles.toolBtn} ${activeTool === t.action ? styles.toolBtnActive : ''}`}
             onClick={() => {
               reset();
-              if (t.action === 'rewrite_sentence') {
-                setActiveTool('rewrite_sentence');
-              } else {
-                run(t.action);
-              }
+              run(t.action);
             }}
             disabled={loading || !content?.trim()}
           >
@@ -68,30 +58,7 @@ export default function QuickTools({ content, title }) {
         ))}
       </div>
 
-      {activeTool === 'rewrite_sentence' && !result && (
-        <div className={styles.rewriteField}>
-          <label className={styles.label}>Sentence to rewrite</label>
-          <textarea
-            className={styles.rewriteInput}
-            rows={3}
-            placeholder="Paste the sentence you want rewritten…"
-            value={rewriteTarget}
-            onChange={e => setRewriteTarget(e.target.value)}
-          />
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button
-              className="btn btn-primary"
-              onClick={() => run('rewrite_sentence')}
-              disabled={loading || !rewriteTarget.trim()}
-            >
-              {loading ? <><span className="spinner" /> Rewriting…</> : 'Rewrite'}
-            </button>
-            <button className="btn btn-ghost" onClick={reset}>Cancel</button>
-          </div>
-        </div>
-      )}
-
-      {loading && activeTool !== 'rewrite_sentence' && (
+      {loading && (
         <div className={styles.loading}>
           <span className="spinner" />
           <span>Running {TOOLS.find(t => t.action === activeTool)?.label}…</span>

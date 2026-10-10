@@ -303,22 +303,24 @@ export default function ContentAnalyzer() {
             >
               {loading ? <><span className="spinner" /> {result ? 'Re-analyzing…' : 'Analyzing…'}</> : (result ? '↻ Re-analyze' : '✦ Analyze Content')}
             </button>
-            <button
-              type="button"
-              className={styles.rewriteBtn}
-              disabled={rewriteLoading || isAtLimit || !content.trim()}
-              onClick={handleRewrite}
-            >
-              {rewriteLoading ? <><span className="spinner" style={{ width: 14, height: 14 }} /> Rewriting…</> : '✦ Rewrite for AI'}
-            </button>
+            {!result && (
+              <button
+                type="button"
+                className={styles.rewriteBtn}
+                disabled={rewriteLoading || isAtLimit || !content.trim()}
+                onClick={handleRewrite}
+              >
+                {rewriteLoading ? <><span className="spinner" style={{ width: 14, height: 14 }} /> Rewriting…</> : '✦ Rewrite for AI'}
+              </button>
+            )}
             {!loading && !title.trim() && (content.trim() || url.trim()) && (
               <span className={styles.actionHint}>Add a title above to analyze</span>
             )}
           </div>
 
-          {rewriteError && <p className={styles.error}>{rewriteError}</p>}
+          {!result && rewriteError && <p className={styles.error}>{rewriteError}</p>}
 
-          {rewriteResult && (
+          {!result && rewriteResult && (
             <RewritePanel
               rewriteResult={rewriteResult}
               onAccept={handleAcceptRewrite}
