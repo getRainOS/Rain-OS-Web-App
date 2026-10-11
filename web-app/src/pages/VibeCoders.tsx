@@ -164,12 +164,6 @@ const platforms = [
   'Base44', 'lovable.dev', 'Framer', 'Webflow',
 ];
 
-const steps = [
-  { num: '01', title: 'Connect your GitHub repo or URL', desc: 'One-click OAuth for repo access, or paste any URL. We scan README, package.json, index.html, llms.txt, robots.txt, and source files.' },
-  { num: '02', title: 'Get your AI Readability Score', desc: 'See exactly which signals are missing and how they affect whether ChatGPT, Gemini, and Perplexity can discover and cite your site.' },
-  { num: '03', title: 'Copy the fix prompt', desc: 'Pick your vibe platform (Bolt, Lovable, Cursor, etc.) and get a platform-specific prompt. Paste it into your builder\'s AI and watch the fixes apply automatically.' },
-];
-
 const FIX_PROMPT = `Add llms.txt to the root of the repo with a concise description of what this app does, how to install it, and where key files live. Then add JSON-LD schema markup to index.html (Organization type with name, url, description). Add meta description and Open Graph tags (og:title, og:description, og:image). Ensure H1/H2 hierarchy is clear and add an FAQ section with 3-5 questions in a <details> block. Update robots.txt to allow GPTBot and ChatGPT-User.`;
 
 const URL_FIX_PROMPT = `Add llms.txt to the root with a description of what this site does. Add JSON-LD schema markup (Organization type with name, url, description). Add meta description and Open Graph tags (og:title, og:description, og:image). Ensure H1/H2 hierarchy is clear, add an FAQ section with 3-5 questions, and include bullet-point answers for AI extraction. Add a clear lead paragraph in the first sentence of each section.`;
@@ -1039,39 +1033,6 @@ export default function VibeCoders() {
         >
           <RepoDemo isVisible={repoDemoVisible} />
         </motion.div>
-
-        {/* How It Works */}
-        <section className="py-16 px-6 border-t border-white/10">
-          <div className="max-w-5xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-14"
-            >
-              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Simple workflow</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white">From invisible to cited in three steps</h2>
-            </motion.div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {steps.map((s, i) => (
-                <motion.div
-                  key={s.num}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="text-center"
-                >
-                  <span className="text-5xl font-bold text-white/30 block mb-4">{s.num}</span>
-                  <h3 className="text-base font-semibold text-white mb-2">{s.title}</h3>
-                  <p className="text-sm text-neutral-400 leading-relaxed">{s.desc}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* Five Pillars — Dynamic Scores */}
         <section
