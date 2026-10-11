@@ -501,7 +501,6 @@ function ScoreCards({ pillars, animScores, demoFixed, phase }: {
             style={{
               background: 'linear-gradient(90deg, #ffffff, #a3a3a3)',
               width: `${overallScore}%`,
-              boxShadow: demoFixed ? '0 0 20px rgba(255,255,255,0.2)' : 'none',
             }}
           >
             {demoFixed && (
@@ -874,7 +873,10 @@ export default function VibeCoders() {
             >
               <button
                 onClick={() => navigate('/login')}
-                className="flex items-center gap-2 text-black bg-white hover:bg-neutral-200 rounded-xl px-8 py-3.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
+                className="flex items-center gap-2 text-white rounded-xl px-8 py-3.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
+                style={{ background: '#38BDF8' }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = '#0EA5E9')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = '#38BDF8')}
               >
                 Scan my repo or URL free
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -1228,7 +1230,10 @@ export default function VibeCoders() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button
                   onClick={() => navigate('/login')}
-                  className="flex items-center gap-2 text-black bg-white hover:bg-neutral-200 rounded-xl px-8 py-3.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
+                  className="flex items-center gap-2 text-white rounded-xl px-8 py-3.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
+                style={{ background: '#38BDF8' }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = '#0EA5E9')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = '#38BDF8')}
                 >
                   Scan my repo or URL free
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
