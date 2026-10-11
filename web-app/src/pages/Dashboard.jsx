@@ -37,29 +37,6 @@ const PILLARS = [
   { key: 'local_presence',          label: 'Local Presence',       color: PILLAR_COLORS.local_presence, Icon: MapPin },
 ];
 
-const QUICK_ACTIONS_ALL = {
-  general: [
-    { to: '/analyze',       label: 'Content Optimizer', sub: 'Paste and score any text',         Icon: FileText,  color: '#6b9bc4' },
-    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit a live URL for AEO signals', Icon: Globe,     color: '#8f93c7' },
-  ],
-  product_sellers: [
-    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit product pages for AI signals', Icon: Globe,   color: '#8f93c7' },
-    { to: '/analyze',       label: 'Content Optimizer', sub: 'Paste and score product copy',     Icon: FileText,  color: '#6b9bc4' },
-  ],
-  vibe_coders: [
-    { to: '/repo-analysis', label: 'Repo Analysis',     sub: 'Connect GitHub and score docs',     Icon: GitBranch, color: '#7cae8f' },
-    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit your live app for AI signals', Icon: Globe,     color: '#8f93c7' },
-  ],
-  developers: [
-    { to: '/repo-analysis', label: 'Repo Analysis',     sub: 'Connect GitHub and score source',  Icon: GitBranch, color: '#7cae8f' },
-    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit docs site for AI signals',   Icon: Globe,     color: '#8f93c7' },
-  ],
-  local_business: [
-    { to: '/url-scanner',   label: 'URL Scanner',       sub: 'Audit your site for local signals', Icon: Globe,     color: '#8f93c7' },
-    { to: '/analyze',       label: 'Content Optimizer', sub: 'Paste and score your page copy',   Icon: FileText,  color: '#6b9bc4' },
-  ],
-};
-
 // product_sellers and local_business already have their content live on a
 // page, not drafted fresh — URL Scanner (point at the live page) is the
 // right default action, not Content Optimizer (paste raw text). Other lanes
@@ -1230,32 +1207,6 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Quick Actions */}
-        <div className={styles.quickActions}>
-          <div className={styles.chartHeader}>
-            <div>
-              <h2 className={styles.chartTitle}>{userLane === 'local_business' ? 'Get Found' : 'Analyze'}</h2>
-              <p className={styles.chartSub}>{userLane === 'local_business' ? 'Score your site for local AI search' : 'Pick your analysis mode'}</p>
-              <span className={styles.chartHelp} title="Quick shortcuts to run different types of analysis: Content Optimizer, URL Scanner, Repo Analysis, and more.">
-                <HelpCircle size={11} />
-              </span>
-            </div>
-          </div>
-          <div className={styles.actionList}>
-            {(QUICK_ACTIONS_ALL[userLane] || QUICK_ACTIONS_ALL.general).map(a => (
-              <Link key={a.to} to={a.to} className={styles.actionCard}>
-                <div className={styles.actionIconWrap} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                  <a.Icon className={styles.actionIcon} style={{ color: '#94a3b8' }} />
-                </div>
-                <div className={styles.actionText}>
-                  <span className={styles.actionLabel}>{a.to === '/url-scanner' ? urlScannerLabel(userLane) : a.label}</span>
-                  <span className={styles.actionSub}>{a.sub}</span>
-                </div>
-                <ArrowRight className={styles.actionArrow} />
-              </Link>
-            ))}
-          </div>
-        </div>
       </div>
 
     </div>
