@@ -468,21 +468,35 @@ const model = client.getGenerativeModel({ model: MODEL });
 const result = await generateContentWithRetry(model, {
 systemInstruction,
 contents: [{ role: 'user', parts: [{ text: prompt }] }],
-generationConfig: { temperature: 0.5, maxOutputTokens: 512, responseMimeType:
-'application/json' },
+generationConfig: {
+temperature: 0.5,
+// Same fix as the main scoring call (see analyzeContent): gemini-2.5-flash
+// has "thinking" on by default, and those reasoning tokens count against
+// the same maxOutputTokens cap as the visible JSON — without disabling it,
+// a 512-token budget can be fully consumed by thinking before any output
+// is produced, leaving `raw` empty and silently breaking every quick tool.
+thinkingConfig: { thinkingBudget: 0 },
+maxOutputTokens: 512,
+responseMimeType: 'application/json',
+},
 });
 
-
-
 return result.response.text();
+}
+function parseQuickToolJson<T>(raw: string, label: string, fallback: T): T {
+try {
+return JSON.parse(raw.replace(/```json|```/g, '').trim());
+} catch {
+console.error(`[quick-tool] ${label} failed to parse Gemini response:`, raw.slice(0, 300));
+throw new Error(`${label} failed — the AI response could not be read. Please try again.`);
+}
 }
 export const generateTitles = async (content: string): Promise<{ titles: string[] }> => {
 const raw = await callGeminiSimple(
 content,
 `You are a creative copywriter. Based on the provided content, generate 3-5 compelling and SEO-friendly titles. Respond ONLY with valid JSON: { "titles": ["string", ...] }`
 );
-try { return JSON.parse(raw.replace(/```json|```/g, '').trim()); } catch {
-return { titles: [] }; }
+return parseQuickToolJson(raw, 'Suggest Titles', { titles: [] });
 };
 export const generateDescription = async (content: string): Promise<{ description:
 string }> => {
@@ -490,8 +504,7 @@ const raw = await callGeminiSimple(
 content,
 `You are an expert SEO copywriter. Write a concise meta description of no more than 160 characters. Respond ONLY with valid JSON: { "description": "string" }`
 );
-try { return JSON.parse(raw.replace(/```json|```/g, '').trim()); } catch {
-return { description: '' }; }
+return parseQuickToolJson(raw, 'Meta Description', { description: '' });
 };
 export const summarizeContent = async (content: string): Promise<{ summary: string
 }> => {
@@ -499,8 +512,7 @@ const raw = await callGeminiSimple(
 content,
 `You are an expert summarizer. Generate a concise summary that captures key points. Respond ONLY with valid JSON: { "summary": "string" }`
 );
-try { return JSON.parse(raw.replace(/```json|```/g, '').trim()); } catch {
-return { summary: '' }; }
+return parseQuickToolJson(raw, 'Summarize', { summary: '' });
 };
 export const rewriteSentence = async (sentence: string): Promise<{ rewritten:
 string }> => {
@@ -508,8 +520,7 @@ const raw = await callGeminiSimple(
 sentence,
 `You are an expert editor. Rewrite the sentence for clarity and conciseness while preserving its meaning. Respond ONLY with valid JSON: { "rewritten": "string" }`
 );
-try { return JSON.parse(raw.replace(/```json|```/g, '').trim()); } catch {
-return { rewritten: sentence }; }
+return parseQuickToolJson(raw, 'Rewrite', { rewritten: sentence });
 };
 
 // ─── Document rewrite for AI readability ──────────────────────────────────────
