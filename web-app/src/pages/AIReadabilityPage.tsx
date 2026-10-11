@@ -33,7 +33,7 @@ export default function AIReadabilityPage() {
             How rain OS Scores Content for AI Citation
           </h1>
           <p className="text-lg text-neutral-400 leading-relaxed mb-6">
-            Every piece of content you create — blog posts, product pages, docs, or landing pages — gets scored across five pillars. The weights change based on what you are optimizing for, but the goal is the same: make sure AI can read, trust, and cite your content.
+            Every piece of content you create — blog posts, product pages, docs, or landing pages — gets scored across six pillars. The weights change based on what you are optimizing for, but the goal is the same: make sure AI can read, trust, and cite your content.
           </p>
         </motion.div>
       </div>
@@ -79,10 +79,10 @@ export default function AIReadabilityPage() {
             <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center shrink-0">
               <BrainCircuit className="w-5 h-5 text-white" />
             </div>
-            The five pillars of scoring
+            The six pillars of scoring
           </h2>
           <p className="text-neutral-400 leading-relaxed mb-6">
-            Every analysis returns a 0–100 Rain Score built from five pillars. The exact weights depend on your content type — writers, product sellers, developers, and vibe coders each get a different blend. Here is how they work.
+            Every analysis returns a 0–100 Rain Score built from six pillars. The exact weights depend on your content type — writers, product sellers, developers, vibe coders, and local businesses each get a different blend. Here is how they work.
           </p>
 
           <div className="space-y-6">
@@ -93,7 +93,7 @@ export default function AIReadabilityPage() {
                 AI Readability
               </h3>
               <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                Can the AI read and understand your content clearly? This pillar checks the structural basics that make content machine-readable. Weight varies by lane — 36% for writers, 20% for product sellers, 32% for developers and vibe coders, 27% for local business.
+                Can the AI read and understand your content clearly? This pillar checks the structural basics that make content machine-readable. Weight varies by lane — 36% for writers, 20% for product sellers, 32% for developers and vibe coders, 20% for local business.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
@@ -122,7 +122,7 @@ export default function AIReadabilityPage() {
                 Digital Authority
               </h3>
               <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                Does the AI trust your content? This pillar checks the signals that make an AI confident your content is reliable. Weight varies by lane — 27% for writers, 15% for product sellers, 32% for developers, 36% for local business.
+                Does the AI trust your content? This pillar checks the signals that make an AI confident your content is reliable. Weight varies by lane — 27% for writers, 15% for product sellers, 32% for developers and vibe coders, 20% for local business.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
@@ -151,7 +151,7 @@ export default function AIReadabilityPage() {
                 Conversion Readiness
               </h3>
               <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                Is your content organized so that AI can extract the answer and point the user to the next step? Weight varies by lane — 27% for writers, 15% for product sellers, 26% for developers, 27% for local business.
+                Is your content organized so that AI can extract the answer and point the user to the next step? Weight varies by lane — 27% for writers, 15% for product sellers, 26% for developers and vibe coders, 20% for local business.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
@@ -234,6 +234,39 @@ export default function AIReadabilityPage() {
                 </li>
               </ul>
             </div>
+
+            {/* Pillar 6 — Local Presence */}
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+              <h3 className="text-base font-semibold text-white mb-3">
+                <span className="text-white mr-2">0% (general) → 30% (local business)</span>
+                Local Presence
+              </h3>
+              <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
+                For local service businesses, this pillar measures how confidently AI can recommend you for a "near me" query. It is 0% for writers, product sellers, developers, and vibe coders — but jumps to 30% for local businesses, where it is the single largest pillar.
+              </p>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
+                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
+                  <span>NAP consistency — name, address, and phone number that match everywhere you're listed</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
+                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
+                  <span>LocalBusiness schema — structured data AI uses to confirm who you are and where you serve</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
+                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
+                  <span>Service area clarity — the cities, regions, or radius you actually serve, stated plainly</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
+                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
+                  <span>Review signal strength — visible ratings and review counts AI can cite as trust signals</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
+                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
+                  <span>Local citation signals — consistent mentions across directories and Google Business Profile</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </motion.div>
 
@@ -280,7 +313,7 @@ export default function AIReadabilityPage() {
           </h2>
           <div className="space-y-4 text-neutral-400 leading-relaxed">
             <p>
-              Rain OS scans your content, URL, or repository and scores it across all five pillars — using the right weights for your lane. You get a single number — your Rain Score — plus a breakdown of exactly which signals are strong and which are missing.
+              Rain OS scans your content, URL, or repository and scores it across all six pillars — using the right weights for your lane. You get a single number — your Rain Score — plus a breakdown of exactly which signals are strong and which are missing.
             </p>
             <p>
               More importantly, you get specific recommendations. Not vague advice like "improve your SEO." Exact, actionable steps like "Add an FAQ section with these questions" or "Your H2 structure is missing — add these three subheadings."

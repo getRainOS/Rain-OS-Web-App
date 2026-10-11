@@ -10,7 +10,7 @@ import MarketingNav from '@/components/marketing/MarketingNav';
 
 const sections = [
   { id: 'getting-started', label: 'Getting Started' },
-  { id: 'five-pillars', label: 'The Five Pillars' },
+  { id: 'six-pillars', label: 'The Six Pillars' },
   { id: 'solutions', label: 'Solution Modules' },
   { id: 'analysis-modes', label: 'Analysis Modes' },
   { id: 'api-reference', label: 'API Reference' },
@@ -142,10 +142,10 @@ export default function DocsPage() {
                 </div>
               </Section>
 
-              <Section id="five-pillars" title="The Five Pillars">
+              <Section id="six-pillars" title="The Six Pillars">
                 <div className="space-y-6">
                   <p className="text-neutral-400 leading-relaxed">
-                    Every analysis returns a weighted Rain Score built from five core pillars. These are the exact signals
+                    Every analysis returns a weighted Rain Score built from six core pillars. These are the exact signals
                     AI engines use to decide what gets cited and recommended.
                   </p>
 
@@ -201,6 +201,16 @@ export default function DocsPage() {
                         desc: 'How well content is optimized for Retrieval-Augmented Generation (RAG) systems — vector databases, embedding models, and chunk-based retrieval.',
                         subScores: ['Information Density', 'Semantic Mapping', 'Narrative Nuance', 'Hierarchical Formatting', 'Explicit Q&A', 'Authority Signals'],
                       },
+                      {
+                        color: '#e5e5e5',
+                        bg: 'rgba(255,255,255,0.08)',
+                        border: 'rgba(255,255,255,0.2)',
+                        Icon: MapPin,
+                        name: 'Local Presence',
+                        weight: '0% (general)',
+                        desc: 'For local service businesses: how confidently AI can recommend you for a "near me" query. 30% weight in the Local Businesses module — the largest single pillar there.',
+                        subScores: ['NAP Consistency', 'LocalBusiness Schema', 'Service Area Clarity', 'Review Signal Strength', 'Local Citation Signals'],
+                      },
                     ].map((p) => (
                       <div
                         key={p.name}
@@ -233,7 +243,7 @@ export default function DocsPage() {
                     <h3 className="text-sm font-semibold text-white mb-2">Overall Score Calculation</h3>
                     <CodeBlock
                       lang="formula"
-                      code={`Rain Score = (AI Readability × 0.36) + (Digital Authority × 0.27) + (Conversion Readiness × 0.27) + (Product Discoverability × 0.00) + (RAG Readiness × 0.10)`}
+                      code={`Rain Score = (AI Readability × 0.36) + (Digital Authority × 0.27) + (Conversion Readiness × 0.27) + (Product Discoverability × 0.00) + (Local Presence × 0.00) + (RAG Readiness × 0.10)`}
                     />
                   </div>
                 </div>
@@ -242,7 +252,7 @@ export default function DocsPage() {
               <Section id="solutions" title="Solution Modules">
                 <div className="space-y-6">
                   <p className="text-neutral-400 leading-relaxed">
-                    Beyond the five core pillars, rain OS offers specialized modules for specific use cases. Each module
+                    Beyond the six core pillars, rain OS offers specialized modules for specific use cases. Each module
                     has its own weighted scoring system built for that content type.
                   </p>
 
@@ -253,7 +263,7 @@ export default function DocsPage() {
                         Icon: BrainCircuit,
                         name: 'Writers & Marketers',
                         badge: 'General module',
-                        desc: 'The default module. Optimized for blog posts, articles, landing pages, and marketing copy. Uses the five-pillar scoring framework (AI Readability 36%, Digital Authority 27%, Conversion Readiness 27%, Product Discoverability 0% by default, RAG Readiness 10%).',
+                        desc: 'The default module. Optimized for blog posts, articles, landing pages, and marketing copy. Uses the six-pillar scoring framework (AI Readability 36%, Digital Authority 27%, Conversion Readiness 27%, Product Discoverability 0% by default, RAG Readiness 10%).',
                         module: 'general',
                       },
                       {
@@ -269,7 +279,7 @@ export default function DocsPage() {
                         Icon: BookOpen,
                         name: 'Developers',
                         badge: 'Documentation module',
-                        desc: 'Specialized scoring for technical documentation. Reweights the five-pillar engine so AI Readability (32%), Digital Authority (32%), and Conversion Readiness (26%) matter most, with RAG Readiness at 10% — built for READMEs, API references, guides, and developer docs.',
+                        desc: 'Specialized scoring for technical documentation. Reweights the six-pillar engine so AI Readability (32%), Digital Authority (32%), and Conversion Readiness (26%) matter most, with RAG Readiness at 10% — built for READMEs, API references, guides, and developer docs.',
                         module: 'developers',
                       },
                       {
@@ -285,7 +295,7 @@ export default function DocsPage() {
                         Icon: MapPin,
                         name: 'Local Businesses',
                         badge: 'Local SEO module',
-                        desc: 'Built for service businesses and local shops. Digital Authority rises to 36% because local trust signals are primary. AI Readability 27%, Conversion Readiness 27%, RAG Readiness 10%. Checks NAP consistency, LocalBusiness schema, review signals, Google Business Profile mentions, and click-to-call CTAs.',
+                        desc: 'Built for service businesses and local shops. Local Presence rises to 30% because local trust signals are primary. AI Readability 20%, Digital Authority 20%, Conversion Readiness 20%, RAG Readiness 10%. Checks NAP consistency, LocalBusiness schema, review signals, Google Business Profile mentions, and click-to-call CTAs.',
                         module: 'local_business',
                       },
                     ].map((s) => (
@@ -386,7 +396,7 @@ export default function DocsPage() {
   "action": "full_analysis",
   "content": "string (required)",
   "industry": "string (optional)",
-  "module": "general | product_sellers | developers (optional)"
+  "module": "general | product_sellers | developers | vibe_coders | local_business (optional)"
 }`,
                           response: `{
   "success": true,
@@ -396,6 +406,7 @@ export default function DocsPage() {
     "digitalAuthority": 68,
     "conversionReadiness": 71,
     "productDiscoverability": 62,
+    "localPresence": 0,
     "ragReadiness": 74
   },
   "recommendations": [...],
