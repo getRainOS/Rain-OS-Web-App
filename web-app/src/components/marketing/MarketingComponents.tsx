@@ -155,9 +155,6 @@ export const FourPillars = () => {
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }}
               whileHover={{ y: -6, scale: 1.01 }}
               className={`group bg-surface/30 backdrop-blur-xl border border-white/10 rounded-[32px] p-8 transition-all duration-500 hover:border-${p.borderColor} relative overflow-hidden`}
-              style={{ '--hover-shadow': p.glowColor } as React.CSSProperties}
-              onMouseEnter={e => (e.currentTarget.style.boxShadow = `0 0 60px ${p.glowColor}`)}
-              onMouseLeave={e => (e.currentTarget.style.boxShadow = '')}
             >
               <div className={`absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent ${p.viaColor} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
 
@@ -450,10 +447,7 @@ export const Pricing = () => {
               className={`relative bg-surface/40 border border-white/10 rounded-3xl p-8 backdrop-blur-sm flex flex-col h-full ${p.isPopular ? '-mt-4 mb-4 bg-neutral-700/10' : ''}`}
             >
               {p.isPopular && (
-                <>
-                  <div className="absolute -inset-[1px] rounded-[34px] bg-gradient-to-b from-white to-neutral-700 opacity-40 blur-sm group-hover:opacity-70 pointer-events-none" />
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider z-10">Best Value</div>
-                </>
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-black text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider z-10">Best Value</div>
               )}
               
               <div className="relative z-10 flex-grow">
@@ -656,7 +650,6 @@ export const ThreeModesSection = ({ onGetStarted }: { onGetStarted?: () => void 
               style={{
                 background: m.bg,
                 border: `1px solid ${m.border}`,
-                boxShadow: `0 0 40px ${m.glow}`,
               }}
             >
               <div className="flex items-start justify-between gap-3">

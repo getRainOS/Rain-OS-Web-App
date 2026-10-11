@@ -291,7 +291,6 @@ function ScoreCard({ p, score, isFixed, isScanning, index }: {
           style={{
             background: `linear-gradient(90deg, ${p.color}, ${p.color}88)`,
             width: `${score}%`,
-            boxShadow: isFixed ? `0 0 12px ${p.color}44` : 'none',
           }}
           transition={{ duration: 0.3 }}
         >
