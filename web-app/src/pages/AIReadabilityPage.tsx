@@ -8,14 +8,14 @@ export default function AIReadabilityPage() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ minHeight: '100vh', background: '#020410', color: '#f1f5f9' }}>
+    <div style={{ minHeight: '100vh', background: '#000000', color: '#f1f5f9' }}>
       <MarketingNav />
 
       {/* Hero */}
       <div style={{ padding: '140px 24px 60px', maxWidth: '760px', margin: '0 auto' }}>
         <button
           onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors mb-8"
+          className="flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors mb-8"
         >
           <ArrowLeft size={14} />
           Back to home
@@ -32,7 +32,7 @@ export default function AIReadabilityPage() {
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
             How rain OS Scores Content for AI Citation
           </h1>
-          <p className="text-lg text-slate-400 leading-relaxed mb-6">
+          <p className="text-lg text-neutral-400 leading-relaxed mb-6">
             Every piece of content you create — blog posts, product pages, docs, or landing pages — gets scored across five pillars. The weights change based on what you are optimizing for, but the goal is the same: make sure AI can read, trust, and cite your content.
           </p>
         </motion.div>
@@ -54,7 +54,7 @@ export default function AIReadabilityPage() {
             </div>
             The core idea
           </h2>
-          <div className="space-y-4 text-slate-400 leading-relaxed">
+          <div className="space-y-4 text-neutral-400 leading-relaxed">
             <p>
               When someone asks an AI a question, the AI does not hand them a web page. It reads, understands, and summarizes the answer from sources it trusts. AI Readability is about making sure your content is one of those sources.
             </p>
@@ -81,7 +81,7 @@ export default function AIReadabilityPage() {
             </div>
             The five pillars of scoring
           </h2>
-          <p className="text-slate-400 leading-relaxed mb-6">
+          <p className="text-neutral-400 leading-relaxed mb-6">
             Every analysis returns a 0–100 Rain Score built from five pillars. The exact weights depend on your content type — writers, product sellers, developers, and vibe coders each get a different blend. Here is how they work.
           </p>
 
@@ -92,23 +92,23 @@ export default function AIReadabilityPage() {
                 <span className="text-white mr-2">36% (general)</span>
                 AI Readability
               </h3>
-              <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+              <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
                 Can the AI read and understand your content clearly? This pillar checks the structural basics that make content machine-readable. Weight varies by lane — 36% for writers, 20% for product sellers, 32% for developers and vibe coders, 27% for local business.
               </p>
               <ul className="space-y-2">
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>Clear heading structure — H1, H2, H3 that organize ideas logically</span>
                 </li>
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>Schema markup — structured data that tells AI what each part of your page means</span>
                 </li>
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>Meta tags — accurate title and description that match your content</span>
                 </li>
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>LLM-ready files — llms.txt or similar that give AI a clean map of your content</span>
                 </li>
@@ -121,23 +121,23 @@ export default function AIReadabilityPage() {
                 <span className="text-white mr-2">27% (general)</span>
                 Digital Authority
               </h3>
-              <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+              <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
                 Does the AI trust your content? This pillar checks the signals that make an AI confident your content is reliable. Weight varies by lane — 27% for writers, 15% for product sellers, 32% for developers, 36% for local business.
               </p>
               <ul className="space-y-2">
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>Credible sources — citations and links that back up your claims</span>
                 </li>
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>Consistent expertise — depth on a topic over time, not surface-level coverage</span>
                 </li>
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>robots.txt and canonicals — clear signals about which content to index and which to avoid</span>
                 </li>
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>Open Graph tags — social metadata that reinforces your content's identity</span>
                 </li>
@@ -150,23 +150,23 @@ export default function AIReadabilityPage() {
                 <span className="text-white mr-2">27% (general)</span>
                 Conversion Readiness
               </h3>
-              <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+              <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
                 Is your content organized so that AI can extract the answer and point the user to the next step? Weight varies by lane — 27% for writers, 15% for product sellers, 26% for developers, 27% for local business.
               </p>
               <ul className="space-y-2">
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>Direct answers — clear, concise answers to likely questions near the top</span>
                 </li>
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>FAQ sections — structured questions and answers that AI can quote directly</span>
                 </li>
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>Clear CTAs — next steps that are obvious without extra navigation</span>
                 </li>
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>Lead paragraph quality — the first paragraph says what the page is about and why it matters</span>
                 </li>
@@ -179,23 +179,23 @@ export default function AIReadabilityPage() {
                 <span className="text-white mr-2">0% (general) → 50% (product sellers)</span>
                 Product Discoverability
               </h3>
-              <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+              <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
                 For product-focused content, this pillar measures how well AI can surface your products in shopping and discovery contexts. It is 0% for writers, developers, and local business — but jumps to 50% for product sellers, where it becomes the most important pillar.
               </p>
               <ul className="space-y-2">
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>Product schema completeness — all required fields for AI shopping engines</span>
                 </li>
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>Pricing transparency — clear, visible pricing that AI can extract</span>
                 </li>
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>Variant coverage — sizes, colors, options fully described</span>
                 </li>
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>Availability signals — stock status, shipping info, delivery estimates</span>
                 </li>
@@ -208,27 +208,27 @@ export default function AIReadabilityPage() {
                 <span className="text-white mr-2">10% (all lanes)</span>
                 RAG Readiness
               </h3>
-              <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+              <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
                 How well is your content optimized for Retrieval-Augmented Generation (RAG) systems — vector databases, embedding models, and chunk-based retrieval? This stays at 10% across every lane. It is distinct from citation scoring: RAG readiness measures whether an AI retrieval system can accurately find, chunk, and synthesize your content.
               </p>
               <ul className="space-y-2">
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>Information density — deep, exhaustive coverage per content chunk</span>
                 </li>
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>Semantic mapping — rich vocabulary, synonyms, entity relationships</span>
                 </li>
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>Hierarchical formatting — clean markdown, logical headers, descriptive titles</span>
                 </li>
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>Explicit Q&A structures — FAQ sections, direct definitions, problem-solution frameworks</span>
                 </li>
-                <li className="flex items-start gap-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
                   <span>Authority signals — external links, author bios, verifiable data points</span>
                 </li>
@@ -251,7 +251,7 @@ export default function AIReadabilityPage() {
             </div>
             Why this matters now
           </h2>
-          <div className="space-y-4 text-slate-400 leading-relaxed">
+          <div className="space-y-4 text-neutral-400 leading-relaxed">
             <p>
               Search is changing. People ask ChatGPT, Perplexity, and Gemini questions instead of typing keywords into Google. When they do, the AI answers directly — often without sending anyone to your website.
             </p>
@@ -278,7 +278,7 @@ export default function AIReadabilityPage() {
             </div>
             What Rain OS does about it
           </h2>
-          <div className="space-y-4 text-slate-400 leading-relaxed">
+          <div className="space-y-4 text-neutral-400 leading-relaxed">
             <p>
               Rain OS scans your content, URL, or repository and scores it across all five pillars — using the right weights for your lane. You get a single number — your Rain Score — plus a breakdown of exactly which signals are strong and which are missing.
             </p>
@@ -291,7 +291,7 @@ export default function AIReadabilityPage() {
             <h3 className="text-xl font-semibold text-white mb-3">
               Ready to see how AI-readable your content is?
             </h3>
-            <p className="text-slate-400 mb-6 max-w-lg mx-auto leading-relaxed">
+            <p className="text-neutral-400 mb-6 max-w-lg mx-auto leading-relaxed">
               Run your first analysis free. No credit card. No setup. Just paste your content or enter a URL and see your score.
             </p>
             <button

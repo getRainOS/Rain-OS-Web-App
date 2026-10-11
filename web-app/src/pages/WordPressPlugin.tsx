@@ -59,9 +59,9 @@ const coreFeatures = [
   },
   {
     Icon: Settings,
-    color: '#94a3b8',
-    bg: 'rgba(148,163,184,0.08)',
-    border: 'rgba(148,163,184,0.15)',
+    color: '#a3a3a3',
+    bg: 'rgba(163,163,163,0.08)',
+    border: 'rgba(163,163,163,0.15)',
     title: 'Per-Pillar Configuration',
     desc: 'Toggle individual pillars on or off per post type. E-commerce sites can weight Product Discoverability higher; service businesses can mute it entirely.',
   },
@@ -184,7 +184,7 @@ function AccordionItem({ question, answer }: { question: string; answer: string 
         className="w-full py-5 flex items-center justify-between text-left group"
       >
         <span className="text-base font-medium text-white pr-6 group-hover:text-white transition-colors">{question}</span>
-        <div className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all ${open ? 'bg-white border-white/20 text-white' : 'border-white/10 text-slate-400'}`}>
+        <div className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all ${open ? 'bg-white border-white/20 text-white' : 'border-white/10 text-neutral-400'}`}>
           {open ? <Minus className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
         </div>
       </button>
@@ -197,7 +197,7 @@ function AccordionItem({ question, answer }: { question: string; answer: string 
             transition={{ duration: 0.25 }}
             className="overflow-hidden"
           >
-            <p className="pb-5 text-slate-400 leading-relaxed text-sm">{answer}</p>
+            <p className="pb-5 text-neutral-400 leading-relaxed text-sm">{answer}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -236,7 +236,7 @@ export default function WordPressPlugin() {
                     </span>
                   </h1>
 
-                  <p className="text-lg text-slate-400 max-w-lg mx-auto lg:mx-0 leading-relaxed mb-5">
+                  <p className="text-lg text-neutral-400 max-w-lg mx-auto lg:mx-0 leading-relaxed mb-5">
                     Two powerful analysis tools — Content Analysis and URL Scanner — built directly into your editor. Score, audit, and optimize without leaving WordPress.
                   </p>
 
@@ -274,18 +274,18 @@ export default function WordPressPlugin() {
                 <div className="relative">
                   <div className="absolute -inset-[1px] rounded-[20px]"
                     style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.04), rgba(255,255,255,0.1))' }} />
-                  <div className="relative bg-[#0a1220] border border-white/10 rounded-[20px] overflow-hidden">
-                    <div className="bg-[#111827] border-b border-white/10 px-4 py-3 flex items-center gap-2">
+                  <div className="relative bg-[#0a0a0a] border border-white/10 rounded-[20px] overflow-hidden">
+                    <div className="bg-[#161616] border-b border-white/10 px-4 py-3 flex items-center gap-2">
                       <div className="flex gap-1.5">
                         <span className="w-3 h-3 rounded-full bg-white/[0.08]" />
                         <span className="w-3 h-3 rounded-full bg-white/[0.08]" />
                         <span className="w-3 h-3 rounded-full bg-white/[0.08]" />
                       </div>
-                      <span className="text-xs text-slate-500 ml-2 font-medium">rain OS — WordPress Sidebar</span>
+                      <span className="text-xs text-neutral-500 ml-2 font-medium">rain OS — WordPress Sidebar</span>
                     </div>
                     <div className="p-5 space-y-4">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-slate-300">Rain Score</span>
+                        <span className="text-xs font-bold text-neutral-300">Rain Score</span>
                         <span className="text-xs text-white font-bold">Analyzed</span>
                       </div>
 
@@ -307,7 +307,7 @@ export default function WordPressPlugin() {
                           ].map(p => (
                             <div key={p.name}>
                               <div className="flex justify-between mb-0.5">
-                                <span className="text-[10px] text-slate-500">{p.name}</span>
+                                <span className="text-[10px] text-neutral-500">{p.name}</span>
                                 <span className="text-[10px] font-bold" style={{ color: p.color }}>{p.score}</span>
                               </div>
                               <div className="h-1 bg-white/5 rounded-full">
@@ -319,12 +319,12 @@ export default function WordPressPlugin() {
                       </div>
 
                       <div className="border-t border-white/[0.06] pt-3 space-y-2">
-                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Top Recommendations</span>
+                        <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Top Recommendations</span>
                         {[
                           'Add entity signals — name your company and product explicitly',
                           'Structure paragraph 3 with answer-first formatting',
                         ].map((r, i) => (
-                          <div key={i} className="flex items-start gap-2 text-[11px] text-slate-400">
+                          <div key={i} className="flex items-start gap-2 text-[11px] text-neutral-400">
                             <CheckCircle className="w-3 h-3 text-white mt-0.5 shrink-0" />
                             {r}
                           </div>
@@ -355,7 +355,7 @@ export default function WordPressPlugin() {
             >
               <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">What's inside the plugin</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Two analysis tools. Zero context-switching.</h2>
-              <p className="text-slate-400 max-w-xl mx-auto leading-relaxed">
+              <p className="text-neutral-400 max-w-xl mx-auto leading-relaxed">
                 Whether you're writing new content or auditing a live page, both tools run directly inside WordPress — no browser tabs, no copy-pasting.
               </p>
             </motion.div>
@@ -378,7 +378,7 @@ export default function WordPressPlugin() {
                     <span className="text-[10px] font-bold text-white uppercase tracking-widest">Gutenberg Sidebar + Classic Editor</span>
                   </div>
                 </div>
-                <p className="text-sm text-slate-400 leading-relaxed">
+                <p className="text-sm text-neutral-400 leading-relaxed">
                   Score the post you're currently editing. The Gutenberg sidebar panel pulls the live content from the editor and sends it for a full 5-pillar analysis — AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, and RAG Readiness — without you leaving the screen.
                 </p>
                 <ul className="space-y-2">
@@ -389,7 +389,7 @@ export default function WordPressPlugin() {
                     'Built-in rewrite tools: titles, meta, summarize, rewrite',
                     'Works on drafts before you publish',
                   ].map((item) => (
-                    <li key={item} className="flex items-center gap-2 text-xs text-slate-400">
+                    <li key={item} className="flex items-center gap-2 text-xs text-neutral-400">
                       <CheckCircle className="w-3.5 h-3.5 text-white shrink-0" />
                       {item}
                     </li>
@@ -414,7 +414,7 @@ export default function WordPressPlugin() {
                     <span className="text-[10px] font-bold text-white uppercase tracking-widest">Plugin Admin Panel</span>
                   </div>
                 </div>
-                <p className="text-sm text-slate-400 leading-relaxed">
+                <p className="text-sm text-neutral-400 leading-relaxed">
                   Enter any URL — your own pages or a competitor's — and we fetch the raw HTML, parse every technical AEO signal, and return a full breakdown. Catch what JS rendering hides, what schema is missing, and what AI crawlers actually see.
                 </p>
                 <ul className="space-y-2">
@@ -425,7 +425,7 @@ export default function WordPressPlugin() {
                     'Full pillar scores on the live page',
                     'Actionable technical AEO recommendations',
                   ].map((item) => (
-                    <li key={item} className="flex items-center gap-2 text-xs text-slate-400">
+                    <li key={item} className="flex items-center gap-2 text-xs text-neutral-400">
                       <CheckCircle className="w-3.5 h-3.5 text-white shrink-0" />
                       {item}
                     </li>
@@ -470,8 +470,8 @@ export default function WordPressPlugin() {
                     </span>
                   </div>
                   <h3 className="text-base font-semibold text-white mb-2">{s.title}</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed mb-2">{s.desc}</p>
-                  <p className="text-xs text-slate-600 leading-relaxed">{s.detail}</p>
+                  <p className="text-sm text-neutral-400 leading-relaxed mb-2">{s.desc}</p>
+                  <p className="text-xs text-neutral-600 leading-relaxed">{s.detail}</p>
                 </motion.div>
               ))}
             </div>
@@ -490,7 +490,7 @@ export default function WordPressPlugin() {
             >
               <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">What's included</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Every feature you need for AEO in WordPress</h2>
-              <p className="text-slate-400 max-w-xl leading-relaxed">
+              <p className="text-neutral-400 max-w-xl leading-relaxed">
                 rain OS goes beyond what traditional SEO plugins offer, covering every signal that determines whether AI engines read, trust, and cite your content.
               </p>
             </motion.div>
@@ -510,7 +510,7 @@ export default function WordPressPlugin() {
                     <f.Icon className="w-4 h-4" style={{ color: f.color }} />
                   </div>
                   <h3 className="text-sm font-semibold text-white mb-2">{f.title}</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">{f.desc}</p>
+                  <p className="text-xs text-neutral-400 leading-relaxed">{f.desc}</p>
                 </motion.div>
               ))}
             </div>
@@ -529,7 +529,7 @@ export default function WordPressPlugin() {
             >
               <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">How we compare</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">rain OS vs traditional SEO plugins</h2>
-              <p className="text-slate-400 max-w-lg mx-auto">
+              <p className="text-neutral-400 max-w-lg mx-auto">
                 rain OS doesn't replace Yoast or RankMath — it adds the AEO layer they don't cover.
               </p>
             </motion.div>
@@ -542,28 +542,28 @@ export default function WordPressPlugin() {
             >
               <div className="bg-white/[0.02] border border-white/10 rounded-2xl overflow-hidden md:block hidden">
                 <div className="grid grid-cols-4 bg-white/5 border-b border-white/10 text-xs font-bold uppercase tracking-wider">
-                  <div className="p-4 text-slate-400">Feature</div>
-                  <div className="p-4 text-slate-500 text-center">Yoast SEO</div>
-                  <div className="p-4 text-slate-500 text-center">RankMath</div>
+                  <div className="p-4 text-neutral-400">Feature</div>
+                  <div className="p-4 text-neutral-500 text-center">Yoast SEO</div>
+                  <div className="p-4 text-neutral-500 text-center">RankMath</div>
                   <div className="p-4 text-white text-center bg-white/[0.03] border-l border-white/10">rain OS</div>
                 </div>
                 {vsComparison.map((row, i) => (
                   <div key={i} className="grid grid-cols-4 border-b border-white/[0.05] last:border-0 hover:bg-white/[0.02] transition-colors">
-                    <div className="p-4 text-sm text-slate-300">{row.feature}</div>
+                    <div className="p-4 text-sm text-neutral-300">{row.feature}</div>
                     <div className="p-4 flex items-center justify-center">
                       {row.yoast
-                        ? <CheckCircle className="w-4 h-4 text-slate-500" />
-                        : <span className="text-slate-700 text-lg">—</span>}
+                        ? <CheckCircle className="w-4 h-4 text-neutral-500" />
+                        : <span className="text-neutral-700 text-lg">—</span>}
                     </div>
                     <div className="p-4 flex items-center justify-center">
                       {row.rankmath
-                        ? <CheckCircle className="w-4 h-4 text-slate-500" />
-                        : <span className="text-slate-700 text-lg">—</span>}
+                        ? <CheckCircle className="w-4 h-4 text-neutral-500" />
+                        : <span className="text-neutral-700 text-lg">—</span>}
                     </div>
                     <div className="p-4 flex items-center justify-center bg-white/[0.03] border-l border-white/10">
                       {row.rain
                         ? <CheckCircle className="w-4 h-4 text-white" />
-                        : <span className="text-slate-700 text-lg">—</span>}
+                        : <span className="text-neutral-700 text-lg">—</span>}
                     </div>
                   </div>
                 ))}
@@ -584,12 +584,12 @@ export default function WordPressPlugin() {
                           key={label}
                           className={`flex flex-col items-center gap-1.5 rounded-lg py-2 ${accent ? 'bg-white/[0.05] border border-white/10' : 'bg-white/[0.03]'}`}
                         >
-                          <span className={`text-[10px] font-bold uppercase tracking-wider ${accent ? 'text-white' : 'text-slate-500'}`}>
+                          <span className={`text-[10px] font-bold uppercase tracking-wider ${accent ? 'text-white' : 'text-neutral-500'}`}>
                             {label}
                           </span>
                           {val
-                            ? <CheckCircle className={`w-4 h-4 ${accent ? 'text-white' : 'text-slate-500'}`} />
-                            : <span className="text-slate-700 text-sm">—</span>}
+                            ? <CheckCircle className={`w-4 h-4 ${accent ? 'text-white' : 'text-neutral-500'}`} />
+                            : <span className="text-neutral-700 text-sm">—</span>}
                         </div>
                       ))}
                     </div>
@@ -612,7 +612,7 @@ export default function WordPressPlugin() {
               >
                 <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Technical details</span>
                 <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">Built for performance and security</h2>
-                <p className="text-slate-400 leading-relaxed mb-8">
+                <p className="text-neutral-400 leading-relaxed mb-8">
                   rain OS uses a modular, class-based plugin architecture with WordPress coding standards. All API calls are asynchronous — your site's frontend is never affected.
                 </p>
                 <div className="space-y-2">
@@ -624,7 +624,7 @@ export default function WordPressPlugin() {
                     'Analysis runs in cloud — zero server load on your host',
                     'Full WordPress Coding Standards compliance',
                   ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-3 text-sm text-slate-300">
+                    <div key={i} className="flex items-center gap-3 text-sm text-neutral-300">
                       <CheckCircle className="w-4 h-4 text-white shrink-0" />
                       {item}
                     </div>
@@ -645,7 +645,7 @@ export default function WordPressPlugin() {
                   <div className="divide-y divide-white/[0.05]">
                     {technicalSpecs.map((spec) => (
                       <div key={spec.label} className="flex items-center justify-between px-6 py-3.5">
-                        <span className="text-sm text-slate-400">{spec.label}</span>
+                        <span className="text-sm text-neutral-400">{spec.label}</span>
                         <span className="text-sm font-medium text-white">{spec.value}</span>
                       </div>
                     ))}
@@ -700,7 +700,7 @@ export default function WordPressPlugin() {
               <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
                 Get your content cited by AI
               </h2>
-              <p className="text-slate-400 text-lg mb-8 leading-relaxed">
+              <p className="text-neutral-400 text-lg mb-8 leading-relaxed">
                 Install the free plugin, connect your rain OS account, and run your first analysis in under five minutes.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -722,12 +722,12 @@ export default function WordPressPlugin() {
       <footer className="border-t border-white/10 bg-midnight py-12 relative z-10">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
           <span className="font-bold text-3xl tracking-tighter text-white">r<span className="text-sky-400">ai</span>n</span>
-          <div className="flex items-center justify-center gap-6 text-sm text-slate-400">
+          <div className="flex items-center justify-center gap-6 text-sm text-neutral-400">
             <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
             <a href="/support" className="hover:text-white transition-colors">Support</a>
           </div>
-          <div className="text-right text-xs text-slate-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
+          <div className="text-right text-xs text-neutral-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
         </div>
       </footer>
     </div>

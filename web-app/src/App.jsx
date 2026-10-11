@@ -181,7 +181,7 @@ function AuthCallbackRoute({ onAuth }) {
     handleCallback();
   }, []);
 
-  return <div style={{ minHeight: '100vh', background: '#020410' }} />;
+  return <div style={{ minHeight: '100vh', background: '#000000' }} />;
 }
 
 function AuthModalRoute({ onAuth }) {
@@ -296,14 +296,14 @@ function LandingWrapper({ children, light }) {
     );
   }
   return (
-    <div className="min-h-screen text-slate-50 font-sans relative" style={{ background: '#020410' }}>
-      <div className="fixed inset-0 z-0" style={{ background: '#020410' }} />
+    <div className="min-h-screen text-neutral-50 font-sans relative" style={{ background: '#000000' }}>
+      <div className="fixed inset-0 z-0" style={{ background: '#000000' }} />
       <div className="fixed top-[-20%] left-[-10%] w-[800px] h-[800px] rounded-full pointer-events-none z-[2]"
-        style={{ background: 'rgba(14,165,233,0.05)', filter: 'blur(150px)', mixBlendMode: 'screen' }} />
+        style={{ background: 'rgba(255,255,255,0.04)', filter: 'blur(150px)', mixBlendMode: 'screen' }} />
       <div className="fixed bottom-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full pointer-events-none z-[2]"
-        style={{ background: 'rgba(168,85,247,0.05)', filter: 'blur(150px)', mixBlendMode: 'screen' }} />
+        style={{ background: 'rgba(255,255,255,0.04)', filter: 'blur(150px)', mixBlendMode: 'screen' }} />
       <div className="fixed inset-0 pointer-events-none z-[4]"
-        style={{ background: 'linear-gradient(to bottom, rgba(2,4,16,0.4), transparent, #020410)' }} />
+        style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.4), transparent, #000000)' }} />
       <div className="relative z-10 flex flex-col min-h-screen">
         {children}
       </div>

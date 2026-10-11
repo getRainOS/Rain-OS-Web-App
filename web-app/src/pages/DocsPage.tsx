@@ -30,9 +30,9 @@ function CodeBlock({ code, lang = 'bash' }: { code: string; lang?: string }) {
   return (
     <div className="rounded-xl border border-white/10 bg-[#06091a] overflow-hidden">
       <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/5">
-        <span className="text-xs font-mono text-slate-500">{lang}</span>
+        <span className="text-xs font-mono text-neutral-500">{lang}</span>
       </div>
-      <pre className="p-4 text-sm font-mono text-slate-300 overflow-x-auto leading-relaxed">
+      <pre className="p-4 text-sm font-mono text-neutral-300 overflow-x-auto leading-relaxed">
         <code>{code}</code>
       </pre>
     </div>
@@ -52,7 +52,7 @@ export default function DocsPage() {
           <div className="flex gap-12">
             <aside className="hidden lg:block w-56 shrink-0">
               <div className="sticky top-28">
-                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Documentation</p>
+                <p className="text-xs font-bold text-neutral-500 uppercase tracking-widest mb-4">Documentation</p>
                 <nav className="space-y-1">
                   {sections.map((s) => (
                     <a
@@ -62,7 +62,7 @@ export default function DocsPage() {
                       className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
                         activeSection === s.id
                           ? 'bg-white/[0.03] text-white border border-white/10'
-                          : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
+                          : 'text-neutral-400 hover:text-white hover:bg-white/[0.04]'
                       }`}
                     >
                       <ChevronRight className="w-3 h-3 shrink-0" />
@@ -88,13 +88,13 @@ export default function DocsPage() {
                 <h1 className="text-4xl font-semibold text-white mb-4" style={{ letterSpacing: '-0.03em' }}>
                   rain OS Documentation
                 </h1>
-                <p className="text-slate-400 text-lg leading-relaxed max-w-2xl">
+                <p className="text-neutral-400 text-lg leading-relaxed max-w-2xl">
                   Everything you need to get your content, products, and documentation scoring high for AI readability.
                 </p>
               </div>
 
               <Section id="getting-started" title="Getting Started">
-                <div className="space-y-6 text-slate-400 leading-relaxed">
+                <div className="space-y-6 text-neutral-400 leading-relaxed">
                   <p>
                     rain OS is an AEO (Answer Engine Optimization) and GEO (Generative Engine Optimization) platform.
                     It analyzes your content and scores it against the signals that ChatGPT, Perplexity, Gemini, and Claude
@@ -110,7 +110,7 @@ export default function DocsPage() {
                       <div key={s.num} className="rounded-xl border border-white/8 bg-white/[0.02] p-5">
                         <span className="text-3xl font-bold text-white/[0.07] block mb-3">{s.num}</span>
                         <h3 className="text-sm font-semibold text-white mb-1.5">{s.title}</h3>
-                        <p className="text-xs text-slate-500 leading-relaxed">{s.desc}</p>
+                        <p className="text-xs text-neutral-500 leading-relaxed">{s.desc}</p>
                       </div>
                     ))}
                   </div>
@@ -143,7 +143,7 @@ export default function DocsPage() {
 
               <Section id="five-pillars" title="The Five Pillars">
                 <div className="space-y-6">
-                  <p className="text-slate-400 leading-relaxed">
+                  <p className="text-neutral-400 leading-relaxed">
                     Every analysis returns a weighted Rain Score built from five core pillars. These are the exact signals
                     AI engines use to decide what gets cited and recommended.
                   </p>
@@ -216,10 +216,10 @@ export default function DocsPage() {
                             {p.weight} weight
                           </span>
                         </div>
-                        <p className="text-slate-400 text-sm leading-relaxed mb-4">{p.desc}</p>
+                        <p className="text-neutral-400 text-sm leading-relaxed mb-4">{p.desc}</p>
                         <div className="flex flex-wrap gap-2">
                           {p.subScores.map((s) => (
-                            <span key={s} className="text-xs px-2.5 py-1 rounded-lg text-slate-300 bg-white/[0.04] border border-white/8">
+                            <span key={s} className="text-xs px-2.5 py-1 rounded-lg text-neutral-300 bg-white/[0.04] border border-white/8">
                               {s}
                             </span>
                           ))}
@@ -240,7 +240,7 @@ export default function DocsPage() {
 
               <Section id="solutions" title="Solution Modules">
                 <div className="space-y-6">
-                  <p className="text-slate-400 leading-relaxed">
+                  <p className="text-neutral-400 leading-relaxed">
                     Beyond the five core pillars, rain OS offers specialized modules for specific use cases. Each module
                     has its own weighted scoring system built for that content type.
                   </p>
@@ -292,11 +292,11 @@ export default function DocsPage() {
                         <div className="flex items-center gap-3 mb-3">
                           <s.Icon className="w-5 h-5" style={{ color: s.color }} />
                           <h3 className="font-semibold text-white">{s.name}</h3>
-                          <span className="text-xs text-slate-500 bg-white/[0.04] border border-white/8 px-2.5 py-0.5 rounded-full ml-auto">
+                          <span className="text-xs text-neutral-500 bg-white/[0.04] border border-white/8 px-2.5 py-0.5 rounded-full ml-auto">
                             {s.badge}
                           </span>
                         </div>
-                        <p className="text-slate-400 text-sm leading-relaxed mb-4">{s.desc}</p>
+                        <p className="text-neutral-400 text-sm leading-relaxed mb-4">{s.desc}</p>
                         <CodeBlock
                           lang="json"
                           code={`{ "action": "full_analysis", "content": "...", "module": "${s.module}" }`}
@@ -309,7 +309,7 @@ export default function DocsPage() {
 
               <Section id="analysis-modes" title="Analysis Modes">
                 <div className="space-y-6">
-                  <p className="text-slate-400 leading-relaxed">
+                  <p className="text-neutral-400 leading-relaxed">
                     rain OS offers three ways to analyze content, each surfacing different signals.
                   </p>
 
@@ -344,11 +344,11 @@ export default function DocsPage() {
                         <div className="flex items-center gap-3 mb-2">
                           <m.Icon className="w-5 h-5" style={{ color: m.color }} />
                           <h3 className="font-semibold text-white">{m.name}</h3>
-                          <code className="text-xs font-mono text-slate-500 bg-white/[0.04] border border-white/8 px-2.5 py-0.5 rounded ml-auto">
+                          <code className="text-xs font-mono text-neutral-500 bg-white/[0.04] border border-white/8 px-2.5 py-0.5 rounded ml-auto">
                             {m.endpoint}
                           </code>
                         </div>
-                        <p className="text-slate-400 text-sm leading-relaxed">{m.desc}</p>
+                        <p className="text-neutral-400 text-sm leading-relaxed">{m.desc}</p>
                       </div>
                     ))}
                   </div>
@@ -356,7 +356,7 @@ export default function DocsPage() {
               </Section>
 
               <Section id="api-reference" title="API Reference">
-                <div className="space-y-8 text-slate-400">
+                <div className="space-y-8 text-neutral-400">
                   <div>
                     <h3 className="text-white font-semibold mb-2">Base URL</h3>
                     <CodeBlock lang="http" code={`https://api.getrainos.com`} />
@@ -434,13 +434,13 @@ export default function DocsPage() {
                             <p className="text-sm leading-relaxed">{ep.desc}</p>
                             {ep.body && (
                               <div>
-                                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Request body</p>
+                                <p className="text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2">Request body</p>
                                 <CodeBlock lang="json" code={ep.body} />
                               </div>
                             )}
                             {ep.response && (
                               <div>
-                                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Response</p>
+                                <p className="text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2">Response</p>
                                 <CodeBlock lang="json" code={ep.response} />
                               </div>
                             )}
@@ -455,7 +455,7 @@ export default function DocsPage() {
                     <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
                       <div className="flex items-start gap-4">
                         <code className="text-xs font-mono text-white shrink-0">X-Usage-Info</code>
-                        <p className="text-sm">JSON object returned on every authenticated request containing <code className="text-xs font-mono text-slate-300">count</code> and <code className="text-xs font-mono text-slate-300">limit</code> for the current billing period.</p>
+                        <p className="text-sm">JSON object returned on every authenticated request containing <code className="text-xs font-mono text-neutral-300">count</code> and <code className="text-xs font-mono text-neutral-300">limit</code> for the current billing period.</p>
                       </div>
                     </div>
                   </div>
@@ -463,7 +463,7 @@ export default function DocsPage() {
               </Section>
 
               <Section id="wordpress" title="WordPress Plugin">
-                <div className="space-y-6 text-slate-400">
+                <div className="space-y-6 text-neutral-400">
                   <p className="leading-relaxed">
                     The rain OS WordPress plugin brings full Rain Score analysis directly into your WordPress editor — both Gutenberg and Classic Editor.
                   </p>
@@ -477,7 +477,7 @@ export default function DocsPage() {
                         <h3 className="text-sm font-semibold text-white mb-3">{g.title}</h3>
                         <ul className="space-y-1.5">
                           {g.items.map((item) => (
-                            <li key={item} className="flex items-center gap-2 text-sm text-slate-400">
+                            <li key={item} className="flex items-center gap-2 text-sm text-neutral-400">
                               <span className="w-1 h-1 rounded-full bg-white shrink-0" />
                               {item}
                             </li>
@@ -497,7 +497,7 @@ export default function DocsPage() {
                         'Activate the plugin and go to Settings → rain OS',
                         'Enter your API key and save. The sidebar will appear in your next post.',
                       ].map((step, i) => (
-                        <li key={i} className="flex items-start gap-3 text-sm text-slate-400">
+                        <li key={i} className="flex items-start gap-3 text-sm text-neutral-400">
                           <span className="w-6 h-6 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center shrink-0 text-xs font-bold text-white mt-0.5">
                             {i + 1}
                           </span>
@@ -517,7 +517,7 @@ export default function DocsPage() {
                     </a>
                     <a
                       href="mailto:support@getrainos.com"
-                      className="text-sm text-slate-400 hover:text-white transition-colors"
+                      className="text-sm text-neutral-400 hover:text-white transition-colors"
                     >
                       Need help? Contact support →
                     </a>
@@ -534,12 +534,12 @@ export default function DocsPage() {
           <span className="font-bold text-3xl tracking-tighter text-white">
             r<span className="text-sky-400">ai</span>n
           </span>
-          <div className="flex items-center justify-center gap-6 text-sm text-slate-400">
+          <div className="flex items-center justify-center gap-6 text-sm text-neutral-400">
             <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
             <a href="/support" className="hover:text-white transition-colors">Support</a>
           </div>
-          <div className="text-right text-xs text-slate-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
+          <div className="text-right text-xs text-neutral-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
         </div>
       </footer>
     </div>

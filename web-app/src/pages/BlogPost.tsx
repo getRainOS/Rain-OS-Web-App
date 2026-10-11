@@ -12,7 +12,7 @@ export default function BlogPost() {
 
   if (!post) {
     return (
-      <div style={{ minHeight: '100vh', background: '#020410', color: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ minHeight: '100vh', background: '#000000', color: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '16px' }}>
         <h2 style={{ fontSize: '24px', fontWeight: 600 }}>Post not found</h2>
         <button
           onClick={() => navigate('/blog')}
@@ -32,14 +32,14 @@ export default function BlogPost() {
   const paragraphs = post.body.split('\n\n').filter(Boolean);
 
   return (
-    <div style={{ minHeight: '100vh', background: '#020410', color: '#f1f5f9' }}>
+    <div style={{ minHeight: '100vh', background: '#000000', color: '#f1f5f9' }}>
       <MarketingNav />
 
       {/* Hero */}
       <div style={{ padding: '140px 24px 60px', maxWidth: '760px', margin: '0 auto' }}>
         <button
           onClick={() => navigate('/blog')}
-          className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors mb-8"
+          className="flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors mb-8"
         >
           <ArrowLeft size={14} />
           All posts
@@ -56,7 +56,7 @@ export default function BlogPost() {
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
             {post.title}
           </h1>
-          <p className="text-lg text-slate-400 leading-relaxed mb-6">
+          <p className="text-lg text-neutral-400 leading-relaxed mb-6">
             {post.subtitle}
           </p>
         </motion.div>
@@ -75,11 +75,11 @@ export default function BlogPost() {
           <span className="text-xs font-semibold uppercase tracking-wider text-white px-3 py-1.5 rounded-md bg-white/[0.03] border border-white/10">
             {post.category}
           </span>
-          <span className="flex items-center gap-1 text-sm text-slate-400">
+          <span className="flex items-center gap-1 text-sm text-neutral-400">
             <Calendar size={14} />
             {post.date}
           </span>
-          <span className="flex items-center gap-1 text-sm text-slate-400">
+          <span className="flex items-center gap-1 text-sm text-neutral-400">
             <Clock size={14} />
             {post.readTime}
           </span>
@@ -87,7 +87,7 @@ export default function BlogPost() {
             <button
               onClick={copyLink}
               title="Copy link"
-              className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+              className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
             >
               <Link2 size={14} />
             </button>
@@ -96,7 +96,7 @@ export default function BlogPost() {
               target="_blank"
               rel="noopener noreferrer"
               title="Share on X"
-              className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all no-underline"
+              className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-white/10 transition-all no-underline"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             </a>
@@ -133,7 +133,7 @@ export default function BlogPost() {
           </div>
           <div>
             <div className="text-sm font-semibold text-white">{post.author}</div>
-            <div className="text-xs text-slate-400">{post.authorRole}</div>
+            <div className="text-xs text-neutral-400">{post.authorRole}</div>
           </div>
         </motion.div>
 
@@ -170,7 +170,7 @@ export default function BlogPost() {
                   className="pl-5 flex flex-col gap-2"
                 >
                   {items.map((item, j) => (
-                    <li key={j} className="text-[15px] leading-relaxed text-slate-300 flex items-start gap-2">
+                    <li key={j} className="text-[15px] leading-relaxed text-neutral-300 flex items-start gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-white mt-2 shrink-0" />
                       {item.replace('- ', '')}
                     </li>
@@ -187,7 +187,7 @@ export default function BlogPost() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4 }}
-                className="text-[15px] leading-relaxed text-slate-400"
+                className="text-[15px] leading-relaxed text-neutral-400"
               >
                 {parts.map((part, j) => {
                   if (part.startsWith('**') && part.endsWith('**')) {
@@ -211,7 +211,7 @@ export default function BlogPost() {
           <h3 className="text-xl font-semibold text-white mb-3">
             Ready to see how AI-readable your content is?
           </h3>
-          <p className="text-slate-400 mb-6 max-w-lg mx-auto leading-relaxed">
+          <p className="text-neutral-400 mb-6 max-w-lg mx-auto leading-relaxed">
             Run your first analysis free. No credit card. No setup. Just paste your content or enter a URL and see your score.
           </p>
           <button

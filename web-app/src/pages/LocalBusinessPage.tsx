@@ -10,7 +10,7 @@ import MarketingNav from '@/components/marketing/MarketingNav';
 
 export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
   return (
-    <div className="min-h-screen bg-[#020410] text-white">
+    <div className="min-h-screen bg-black text-white">
       <MarketingNav onLoginClick={onBack} onGetStartedClick={onBack} />
 
       {/* Hero */}
@@ -27,7 +27,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
               <span className="text-rose-400">"who's the best plumber near me?"</span><br />
               will they find you?
             </h1>
-            <p className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
+            <p className="text-neutral-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
               ChatGPT, Perplexity, and Google's AI are answering local business questions millions of times a day. rain OS helps your business show up — and get called.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -35,7 +35,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 Analyze my business site
                 <ArrowRight className="w-4 h-4" />
               </a>
-              <a href="/pricing" className="inline-flex items-center gap-2 border border-white/10 hover:border-white/20 text-slate-300 hover:text-white rounded-xl px-7 py-3.5 text-sm font-semibold transition-all">
+              <a href="/pricing" className="inline-flex items-center gap-2 border border-white/10 hover:border-white/20 text-neutral-300 hover:text-white rounded-xl px-7 py-3.5 text-sm font-semibold transition-all">
                 See pricing
               </a>
             </div>
@@ -49,7 +49,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
             <span className="text-rose-400 font-bold tracking-wider text-xs uppercase mb-3 block">The new reality</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">People stopped Googling. They're asking AI.</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">
+            <p className="text-neutral-400 max-w-2xl mx-auto text-lg leading-relaxed">
               Your customers used to type keywords into Google and scroll through results. Now they ask ChatGPT or their phone's AI assistant a full question — and get one answer back. If you're not in that answer, you don't exist.
             </p>
           </motion.div>
@@ -85,7 +85,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 className={`rounded-2xl p-7 border ${card.border} ${card.bg}`}>
                 <card.icon className={`w-7 h-7 ${card.color} mb-4`} />
                 <h3 className="text-lg font-bold text-white mb-3">{card.title}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">{card.body}</p>
+                <p className="text-neutral-400 text-sm leading-relaxed">{card.body}</p>
               </motion.div>
             ))}
           </div>
@@ -144,8 +144,8 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 <div className="pt-1 pb-8">
                   <span className={`text-xs font-bold uppercase tracking-widest ${step.color} mb-2 block`}>Step {step.step}</span>
                   <h3 className="text-xl font-bold text-white mb-3">{step.title}</h3>
-                  <p className="text-slate-400 leading-relaxed mb-3">{step.body}</p>
-                  <div className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-slate-400 ${step.bgColor} border ${step.borderColor}`}>
+                  <p className="text-neutral-400 leading-relaxed mb-3">{step.body}</p>
+                  <div className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-neutral-400 ${step.bgColor} border ${step.borderColor}`}>
                     <Sparkles className="w-3.5 h-3.5 shrink-0" style={{ color: step.color.replace('text-', '') }} />
                     {step.detail}
                   </div>
@@ -160,9 +160,9 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
       <section className="py-20 px-6 border-t border-white/[0.06]">
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-            <span className="text-slate-500 font-bold tracking-wider text-xs uppercase mb-3 block">Who this is for</span>
+            <span className="text-neutral-500 font-bold tracking-wider text-xs uppercase mb-3 block">Who this is for</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Built for every type of local business</h2>
-            <p className="text-slate-400 max-w-xl mx-auto">If customers search for your service in their area, you need this. It doesn't matter how big or small your business is.</p>
+            <p className="text-neutral-400 max-w-xl mx-auto">If customers search for your service in their area, you need this. It doesn't matter how big or small your business is.</p>
           </motion.div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
@@ -172,12 +172,12 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
               { icon: UtensilsCrossed, label: 'Restaurants & Cafes', color: 'text-amber-400' },
               { icon: Stethoscope, label: 'Dentists & Clinics', color: 'text-emerald-400' },
               { icon: Building2, label: 'Real Estate & Law', color: 'text-violet-400' },
-              { icon: Users, label: 'Any Local Service', color: 'text-slate-400' },
+              { icon: Users, label: 'Any Local Service', color: 'text-neutral-400' },
             ].map((type, i) => (
               <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
                 className="flex flex-col items-center text-center gap-3 bg-white/[0.03] border border-white/[0.07] rounded-2xl p-5 hover:border-white/15 transition-all">
                 <type.icon className={`w-6 h-6 ${type.color}`} />
-                <span className="text-xs text-slate-400 font-medium leading-tight">{type.label}</span>
+                <span className="text-xs text-neutral-400 font-medium leading-tight">{type.label}</span>
               </motion.div>
             ))}
           </div>
@@ -190,7 +190,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
             <span className="text-rose-400 font-bold tracking-wider text-xs uppercase mb-3 block">What we score</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Three things AI checks about your business</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">These are the exact signals that AI engines use when deciding whether to recommend your business. Most local business sites score poorly on all three — which means a huge opportunity for you.</p>
+            <p className="text-neutral-400 max-w-2xl mx-auto">These are the exact signals that AI engines use when deciding whether to recommend your business. Most local business sites score poorly on all three — which means a huge opportunity for you.</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -238,11 +238,11 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                   <span className={`text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-white/5 border border-white/10 ${pillar.color}`}>{pillar.weight} weight</span>
                 </div>
                 <h3 className={`text-xl font-bold ${pillar.color} mb-1`}>{pillar.title}</h3>
-                <p className="text-slate-500 text-xs font-medium italic mb-4">{pillar.tagline}</p>
-                <p className="text-slate-400 text-sm leading-relaxed mb-5">{pillar.body}</p>
+                <p className="text-neutral-500 text-xs font-medium italic mb-4">{pillar.tagline}</p>
+                <p className="text-neutral-400 text-sm leading-relaxed mb-5">{pillar.body}</p>
                 <div className="space-y-2">
                   {pillar.fixes.map((fix, j) => (
-                    <div key={j} className="flex items-start gap-2 text-xs text-slate-300">
+                    <div key={j} className="flex items-start gap-2 text-xs text-neutral-300">
                       <CheckCircle2 className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${pillar.color}`} />
                       {fix}
                     </div>
@@ -260,7 +260,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
             <span className="text-amber-400 font-bold tracking-wider text-xs uppercase mb-3 block">The bigger picture</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Google's AI ecosystem is already calling your customers</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-neutral-400 max-w-2xl mx-auto leading-relaxed">
               AI isn't just answering questions — it's actively contacting local businesses on behalf of customers. Here's what's happening right now, and how to stay ahead of it.
             </p>
           </motion.div>
@@ -310,8 +310,8 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                   <card.icon className={`w-5 h-5 ${card.color}`} />
                   <h3 className="text-base font-bold text-white">{card.title}</h3>
                 </div>
-                <p className="text-slate-400 text-sm leading-relaxed mb-4">{card.body}</p>
-                <div className={`flex items-start gap-2 rounded-lg p-3 bg-white/[0.03] border border-white/[0.07] text-xs text-slate-300`}>
+                <p className="text-neutral-400 text-sm leading-relaxed mb-4">{card.body}</p>
+                <div className={`flex items-start gap-2 rounded-lg p-3 bg-white/[0.03] border border-white/[0.07] text-xs text-neutral-300`}>
                   <Sparkles className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${card.color}`} />
                   <span className="leading-relaxed">{card.insight}</span>
                 </div>
@@ -330,7 +330,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
 
           <div className="bg-white/[0.03] border border-white/10 rounded-3xl overflow-hidden">
             <div className="grid grid-cols-2 border-b border-white/10 bg-white/5">
-              <div className="p-5 font-bold text-slate-400 text-sm">Without rain OS</div>
+              <div className="p-5 font-bold text-neutral-400 text-sm">Without rain OS</div>
               <div className="p-5 font-bold text-rose-400 text-sm border-l border-white/5">With rain OS</div>
             </div>
             {[
@@ -342,11 +342,11 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
               ['Customers land on your site and don\'t call', 'Conversion Readiness score shows you every reason they bounce'],
             ].map(([without, with_], i) => (
               <div key={i} className="grid grid-cols-2 border-b border-white/[0.05] last:border-0 hover:bg-white/[0.02] transition-colors">
-                <div className="p-5 flex items-start gap-2 text-sm text-slate-500">
+                <div className="p-5 flex items-start gap-2 text-sm text-neutral-500">
                   <span className="text-rose-900 mt-0.5 shrink-0">✕</span>
                   {without}
                 </div>
-                <div className="p-5 flex items-start gap-2 text-sm text-slate-300 border-l border-white/5">
+                <div className="p-5 flex items-start gap-2 text-sm text-neutral-300 border-l border-white/5">
                   <CheckCircle2 className="w-4 h-4 text-rose-400 mt-0.5 shrink-0" />
                   {with_}
                 </div>
@@ -367,7 +367,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
             <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
               className="bg-white/[0.03] border border-white/10 rounded-2xl p-7">
               <div className={`text-4xl font-bold mb-2 ${stat.color}`}>{stat.value}</div>
-              <div className="text-slate-400 text-sm leading-snug">{stat.label}</div>
+              <div className="text-neutral-400 text-sm leading-snug">{stat.label}</div>
             </motion.div>
           ))}
         </div>
@@ -383,14 +383,14 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-5">
               Start getting found by AI today
             </h2>
-            <p className="text-slate-400 text-lg mb-8 leading-relaxed">
+            <p className="text-neutral-400 text-lg mb-8 leading-relaxed">
               It takes two minutes to get your first score. Paste your homepage copy, pick "Local / service business" as your site type, and rain OS tells you exactly where you're losing customers to AI search — and how to fix it.
             </p>
             <a href="/" className="inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-400 text-white rounded-xl px-8 py-4 text-base font-bold shadow-xl shadow-rose-500/20 transition-all hover:scale-105 active:scale-95">
               Analyze my business free
               <ArrowRight className="w-5 h-5" />
             </a>
-            <p className="text-slate-600 text-xs mt-4">Free plan includes 5 analyses in total. No credit card required.</p>
+            <p className="text-neutral-600 text-xs mt-4">Free plan includes 5 analyses in total. No credit card required.</p>
           </motion.div>
         </div>
       </section>

@@ -13,14 +13,14 @@ export default function BlogIndex() {
   const remainingPosts = sortedPosts.slice(1);
 
   return (
-    <div style={{ minHeight: '100vh', background: '#020410', color: '#f1f5f9' }}>
+    <div style={{ minHeight: '100vh', background: '#000000', color: '#f1f5f9' }}>
       <MarketingNav />
 
       {/* Hero */}
       <div style={{ padding: '140px 24px 60px', maxWidth: '760px', margin: '0 auto' }}>
         <button
           onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors mb-8"
+          className="flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors mb-8"
         >
           <ArrowLeft size={14} />
           Back to home
@@ -109,10 +109,10 @@ function FeaturedCard({ post, onClick }: { post: BlogPost; onClick: () => void }
           <h3 className="text-xl md:text-2xl font-bold text-white mb-3 leading-tight">
             {post.title}
           </h3>
-          <p className="text-sm text-slate-400 leading-relaxed mb-4">
+          <p className="text-sm text-neutral-400 leading-relaxed mb-4">
             {post.subtitle}
           </p>
-          <div className="flex items-center gap-4 text-xs text-slate-500 mt-auto">
+          <div className="flex items-center gap-4 text-xs text-neutral-500 mt-auto">
             <span className="flex items-center gap-1">
               <Calendar size={12} />
               {post.date}
@@ -145,10 +145,10 @@ function PostRow({ post, onClick }: { post: BlogPost; onClick: () => void }) {
         <h3 className="text-base font-semibold text-white mb-1 leading-snug truncate">
           {post.title}
         </h3>
-        <p className="text-sm text-slate-400 leading-relaxed line-clamp-2 mb-2">
+        <p className="text-sm text-neutral-400 leading-relaxed line-clamp-2 mb-2">
           {post.subtitle}
         </p>
-        <div className="flex items-center gap-4 text-xs text-slate-500">
+        <div className="flex items-center gap-4 text-xs text-neutral-500">
           <span className="flex items-center gap-1">
             <Calendar size={11} />
             {post.date}
@@ -159,7 +159,7 @@ function PostRow({ post, onClick }: { post: BlogPost; onClick: () => void }) {
           </span>
         </div>
       </div>
-      <ChevronRight size={16} className="text-slate-600 shrink-0" />
+      <ChevronRight size={16} className="text-neutral-600 shrink-0" />
     </div>
   );
 }
