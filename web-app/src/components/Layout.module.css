@@ -179,7 +179,7 @@
 
 .navItemActive {
   color: var(--cyan) !important;
-  background: rgba(43,143,227,0.08) !important;
+  background: rgba(255,255,255,0.06) !important;
   font-weight: 600;
 }
 
@@ -192,7 +192,7 @@
   width: 3px;
   height: 16px;
   border-radius: 2px;
-  background: var(--cyan);
+  background: #ffffff;
 }
 
 .navIcon {
