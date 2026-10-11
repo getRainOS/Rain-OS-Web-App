@@ -101,6 +101,7 @@ function timeAgo(str) {
 export default function CitationMonitor() {
   const { refreshUser } = useApp();
   const formRef = useRef(null);
+  const checkRequestIdRef = useRef(0);
 
   const [name, setName] = useState('');
   const [topic, setTopic] = useState('');
@@ -150,11 +151,17 @@ export default function CitationMonitor() {
   async function handleCheck(e) {
     e.preventDefault();
     if (!name.trim() || !topic.trim()) return;
+    // Guards against a slower in-flight check (e.g. an accidental double
+    // submit, or just normal Gemini latency variance) resolving after a
+    // newer one and overwriting its result — only the most recently
+    // started request is allowed to update state.
+    const requestId = ++checkRequestIdRef.current;
     setLoading(true);
     setError('');
     setResult(null);
     try {
       const { data } = await api.citationCheck({ name: name.trim(), topic: topic.trim(), url: url.trim() || undefined });
+      if (requestId !== checkRequestIdRef.current) return;
       setResult(data);
       // Prefer the per-topic history payload that came back with the check; fall back to a fetch.
       if (Array.isArray(data?.history) && data.history.length > 0) {
@@ -166,9 +173,10 @@ export default function CitationMonitor() {
       fetchMapHistory();
       refreshUser();
     } catch (err) {
+      if (requestId !== checkRequestIdRef.current) return;
       setError(err.message || 'Citation check failed. Please try again.');
     } finally {
-      setLoading(false);
+      if (requestId === checkRequestIdRef.current) setLoading(false);
     }
   }
 
