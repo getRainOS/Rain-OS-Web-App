@@ -15,8 +15,6 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
 
       {/* Hero */}
       <section className="pt-36 pb-20 px-6 relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] pointer-events-none -z-10"
-          style={{ background: 'radial-gradient(ellipse at center, rgba(244,63,94,0.18) 0%, rgba(244,63,94,0.06) 40%, transparent 70%)' }} />
         <div className="max-w-4xl mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
             <div className="inline-flex items-center gap-2 rounded-full border border-rose-400/30 bg-rose-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-rose-300 mb-6">
@@ -93,7 +91,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
       </section>
 
       {/* How it works — visual flow */}
-      <section className="py-20 px-6 border-t border-white/[0.06]" style={{ background: 'radial-gradient(ellipse at center, rgba(14,165,233,0.04) 0%, transparent 70%)' }}>
+      <section className="py-20 px-6 border-t border-white/[0.06]">
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
             <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-3 block">How rain OS works for local businesses</span>
@@ -185,7 +183,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
       </section>
 
       {/* Feature breakdown */}
-      <section className="py-20 px-6 border-t border-white/[0.06]" style={{ background: 'radial-gradient(ellipse at bottom center, rgba(244,63,94,0.04) 0%, transparent 70%)' }}>
+      <section className="py-20 px-6 border-t border-white/[0.06]">
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
             <span className="text-rose-400 font-bold tracking-wider text-xs uppercase mb-3 block">What we score</span>
@@ -375,8 +373,6 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
 
       {/* CTA */}
       <section className="py-24 px-6 border-t border-white/[0.06] relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none -z-10"
-          style={{ background: 'radial-gradient(ellipse at center, rgba(244,63,94,0.08) 0%, transparent 70%)' }} />
         <div className="max-w-2xl mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <MapPin className="w-10 h-10 text-rose-400 mx-auto mb-6" />

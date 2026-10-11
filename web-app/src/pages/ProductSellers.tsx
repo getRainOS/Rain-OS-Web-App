@@ -97,13 +97,6 @@ export default function ProductSellers() {
 
       <main className="flex-grow">
         <section className="pt-44 pb-28 relative z-10 px-6 overflow-hidden">
-          <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] pointer-events-none -z-10"
-            style={{
-              background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.18) 0%, transparent 70%)',
-            }}
-          />
-
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
               <h1
@@ -156,9 +149,9 @@ export default function ProductSellers() {
               <button
                 onClick={() => navigate('/login')}
                 className="flex items-center gap-2 text-white rounded-xl px-8 py-3.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
-                style={{ background: '#2B8FE3' }}
+                style={{ background: 'var(--cyan)' }}
                 onMouseEnter={(e) => (e.currentTarget.style.background = '#1C73C4')}
-                onMouseLeave={(e) => (e.currentTarget.style.background = '#2B8FE3')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--cyan)')}
               >
                 Score your product page free
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -329,10 +322,6 @@ export default function ProductSellers() {
         </section>
 
         <section className="py-28 px-6 border-t border-white/[0.06] relative overflow-hidden">
-          <div
-            className="absolute inset-0 pointer-events-none -z-10"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.06) 0%, transparent 70%)' }}
-          />
           <div className="max-w-2xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -350,9 +339,9 @@ export default function ProductSellers() {
                 <button
                   onClick={() => navigate('/login')}
                   className="flex items-center gap-2 text-white rounded-xl px-8 py-4 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
-                  style={{ background: '#2B8FE3' }}
+                  style={{ background: 'var(--cyan)' }}
                   onMouseEnter={(e) => (e.currentTarget.style.background = '#1C73C4')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = '#2B8FE3')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--cyan)')}
                 >
                   Score your product page free
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

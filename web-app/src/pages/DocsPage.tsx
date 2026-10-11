@@ -75,7 +75,7 @@ export default function DocsPage() {
                   <button
                     onClick={() => navigate('/login')}
                     className="w-full text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-all"
-                    style={{ background: '#2B8FE3' }}
+                    style={{ background: 'var(--cyan)' }}
                   >
                     Get started free
                   </button>

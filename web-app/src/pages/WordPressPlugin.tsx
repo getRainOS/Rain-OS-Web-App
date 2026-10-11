@@ -216,9 +216,6 @@ export default function WordPressPlugin() {
 
         {/* Hero */}
         <section className="pt-32 md:pt-44 pb-16 md:pb-24 relative z-10 px-4 md:px-6 overflow-hidden">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] pointer-events-none -z-10"
-            style={{ background: 'radial-gradient(ellipse at top, rgba(255,255,255,0.18) 0%, transparent 65%)' }} />
-
           <div className="max-w-5xl mx-auto">
             <div className="flex flex-col lg:flex-row items-center gap-16">
               <div className="flex-1 text-center lg:text-left">
@@ -256,7 +253,7 @@ export default function WordPressPlugin() {
                     <button
                       onClick={() => navigate('/login')}
                       className="flex items-center gap-2 text-white rounded-xl px-7 py-3.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
-                      style={{ background: '#2B8FE3' }}
+                      style={{ background: 'var(--cyan)' }}
                     >
                       Get Started Free
                       <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -688,9 +685,6 @@ export default function WordPressPlugin() {
 
         {/* CTA */}
         <section className="py-28 px-6 border-t border-white/[0.06] relative overflow-hidden">
-          <div className="absolute inset-0 pointer-events-none -z-10"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.07) 0%, transparent 70%)' }} />
-
           <div className="max-w-2xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -708,7 +702,7 @@ export default function WordPressPlugin() {
                 <button
                   onClick={() => navigate('/login')}
                   className="flex items-center gap-2 text-white rounded-xl px-8 py-4 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
-                  style={{ background: '#2B8FE3' }}
+                  style={{ background: 'var(--cyan)' }}
                 >
                   Get Started Free
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

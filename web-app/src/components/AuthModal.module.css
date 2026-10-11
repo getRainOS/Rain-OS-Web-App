@@ -208,7 +208,7 @@
   text-underline-offset: 2px;
 }
 
-.switchLink:hover { color: #2B8FE3; }
+.switchLink:hover { color: var(--cyan); }
 
 .switchBtn {
   background: none;
