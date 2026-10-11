@@ -180,9 +180,9 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
             <button
               onClick={handleGetStarted}
               className="text-white rounded-lg px-4 md:px-5 py-2 text-sm font-semibold transition-all hover:scale-105 active:scale-95"
-              style={{ background: '#2B8FE3' }}
+              style={{ background: 'var(--cyan)' }}
               onMouseEnter={(e) => { e.currentTarget.style.background = '#1C73C4'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = '#2B8FE3'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--cyan)'; }}
             >
               Get started
             </button>
@@ -295,9 +295,9 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
                 <button
                   onClick={handleGetStarted}
                   className="mx-5 mt-2 text-white rounded-xl px-5 py-3 text-sm font-semibold transition-all active:scale-95"
-                  style={{ background: '#2B8FE3' }}
+                  style={{ background: 'var(--cyan)' }}
                   onMouseEnter={(e) => { e.currentTarget.style.background = '#1C73C4'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = '#2B8FE3'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--cyan)'; }}
                 >
                   Get Started
                 </button>

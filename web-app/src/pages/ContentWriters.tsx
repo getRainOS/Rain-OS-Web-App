@@ -111,9 +111,6 @@ export default function ContentWriters() {
       <main className="flex-grow">
         {/* Hero */}
         <section className="pt-40 pb-24 md:pt-52 md:pb-40 relative z-10 px-6 overflow-hidden" style={{ paddingTop: '10rem', paddingBottom: '6rem' }}>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] pointer-events-none -z-10"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.22) 0%, transparent 70%)' }} />
-
           <div className="max-w-5xl mx-auto flex flex-col gap-12 items-center">
             <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="text-center space-y-6">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.05] text-white"
@@ -175,7 +172,7 @@ export default function ContentWriters() {
                     <button
                       type="submit"
                       className="text-white rounded-xl px-6 py-2.5 text-sm font-bold transition-all flex items-center gap-2 group/btn"
-                      style={{ background: '#2B8FE3', boxShadow: '0 2px 8px rgba(0,0,0,0.4)' }}
+                      style={{ background: 'var(--cyan)', boxShadow: '0 2px 8px rgba(0,0,0,0.4)' }}
                     >
                       Analyze now
                       <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
@@ -384,9 +381,6 @@ export default function ContentWriters() {
 
         {/* CTA */}
         <section className="py-28 px-6 border-t border-white/[0.06] relative overflow-hidden">
-          <div className="absolute inset-0 pointer-events-none -z-10"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.07) 0%, transparent 70%)' }} />
-
           <div className="max-w-2xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -404,7 +398,7 @@ export default function ContentWriters() {
                 <button
                   onClick={() => navigate('/login')}
                   className="flex items-center gap-2 text-white rounded-xl px-8 py-4 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
-                  style={{ background: '#2B8FE3' }}
+                  style={{ background: 'var(--cyan)' }}
                 >
                   Score your content free
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

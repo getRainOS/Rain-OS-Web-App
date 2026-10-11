@@ -874,9 +874,9 @@ export default function VibeCoders() {
               <button
                 onClick={() => navigate('/login')}
                 className="flex items-center gap-2 text-white rounded-xl px-8 py-3.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
-                style={{ background: '#2B8FE3' }}
+                style={{ background: 'var(--cyan)' }}
                 onMouseEnter={(e) => (e.currentTarget.style.background = '#1C73C4')}
-                onMouseLeave={(e) => (e.currentTarget.style.background = '#2B8FE3')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--cyan)')}
               >
                 Scan my repo or URL free
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -894,10 +894,6 @@ export default function VibeCoders() {
             backgroundPosition: 'center',
           }}
         >
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(255,255,255,0.06), transparent 70%)' }}
-          />
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1231,9 +1227,9 @@ export default function VibeCoders() {
                 <button
                   onClick={() => navigate('/login')}
                   className="flex items-center gap-2 text-white rounded-xl px-8 py-3.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
-                style={{ background: '#2B8FE3' }}
+                style={{ background: 'var(--cyan)' }}
                 onMouseEnter={(e) => (e.currentTarget.style.background = '#1C73C4')}
-                onMouseLeave={(e) => (e.currentTarget.style.background = '#2B8FE3')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--cyan)')}
                 >
                   Scan my repo or URL free
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
