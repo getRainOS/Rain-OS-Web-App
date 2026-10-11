@@ -367,7 +367,7 @@ const p = parsed.pillarScores || {};
 // Module-specific pillar weights
 const moduleWeights = module === 'product_sellers'
   ? { ar: 0.20, da: 0.15, cr: 0.15, pd: 0.50, lp: 0.00, rr: 0.10 }
-  : module === 'developers'
+  : module === 'developers' || module === 'vibe_coders'
   ? { ar: 0.32, da: 0.32, cr: 0.26, pd: 0.00, lp: 0.00, rr: 0.10 }
   : module === 'local_business'
   ? { ar: 0.20, da: 0.20, cr: 0.20, pd: 0.00, lp: 0.30, rr: 0.10 }
