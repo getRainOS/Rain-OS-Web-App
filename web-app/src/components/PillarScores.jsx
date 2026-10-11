@@ -485,7 +485,8 @@ export default function PillarScores({ result, lane }) {
                   className={styles.barFill}
                   style={{
                     width: pct !== null ? `${pct}%` : '0%',
-                    background: p.color,
+                    background: `linear-gradient(90deg, ${p.color}99, ${p.color})`,
+                    boxShadow: pct ? `0 0 10px 0 ${p.color}66` : 'none',
                   }}
                 />
               </div>
