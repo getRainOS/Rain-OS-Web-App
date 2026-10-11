@@ -216,11 +216,8 @@ export default function BlogPost() {
           </p>
           <button
             onClick={() => navigate('/login')}
-            className="inline-flex items-center gap-2 text-white rounded-xl px-8 py-3.5 text-sm font-bold shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer"
-            style={{
-              background: 'linear-gradient(135deg, #e5e5e5, #e5e5e5)',
-              boxShadow: '0 8px 24px rgba(255,255,255,0.25)',
-            }}
+            className="inline-flex items-center gap-2 text-white rounded-xl px-8 py-3.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            style={{ background: '#38BDF8' }}
           >
             Scan my content free
             <ArrowLeft className="w-4 h-4 rotate-180" />

@@ -255,7 +255,8 @@ export default function WordPressPlugin() {
                   <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                     <button
                       onClick={() => navigate('/login')}
-                      className="flex items-center gap-2 bg-white hover:bg-white text-white rounded-xl px-7 py-3.5 text-sm font-bold shadow-lg shadow-sky-500/25 transition-all hover:scale-105 active:scale-95 group"
+                      className="flex items-center gap-2 text-white rounded-xl px-7 py-3.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
+                      style={{ background: '#38BDF8' }}
                     >
                       Get Started Free
                       <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -294,7 +295,7 @@ export default function WordPressPlugin() {
                           <svg className="w-full h-full -rotate-90" viewBox="0 0 64 64">
                             <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="5" />
                             <circle cx="32" cy="32" r="26" fill="none" stroke="#e5e5e5" strokeWidth="5" strokeLinecap="round"
-                              strokeDasharray="163.4" strokeDashoffset="32.7" style={{ filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.4))' }} />
+                              strokeDasharray="163.4" strokeDashoffset="32.7" />
                           </svg>
                           <span className="absolute inset-0 flex items-center justify-center text-lg font-bold text-white">82</span>
                         </div>
@@ -706,7 +707,8 @@ export default function WordPressPlugin() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button
                   onClick={() => navigate('/login')}
-                  className="flex items-center gap-2 bg-white hover:bg-white text-white rounded-xl px-8 py-4 text-sm font-bold shadow-xl shadow-sky-500/25 transition-all hover:scale-105 active:scale-95 group"
+                  className="flex items-center gap-2 text-white rounded-xl px-8 py-4 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
+                  style={{ background: '#38BDF8' }}
                 >
                   Get Started Free
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

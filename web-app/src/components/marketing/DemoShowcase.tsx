@@ -280,7 +280,6 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
                           animate={{ strokeDashoffset: dashOffset }}
                           exit={{ strokeDashoffset: circumference }}
                           transition={{ duration: 1.2, ease: 'easeOut' }}
-                          style={{ filter: `drop-shadow(0 0 8px ${data.glow})` }}
                         />
                       </AnimatePresence>
                     </svg>

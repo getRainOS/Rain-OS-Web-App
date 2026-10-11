@@ -155,13 +155,10 @@ export default function ProductSellers() {
             >
               <button
                 onClick={() => navigate('/login')}
-                className="flex items-center gap-2 text-white rounded-xl px-8 py-3.5 text-sm font-bold shadow-lg transition-all hover:scale-105 active:scale-95 group"
-                style={{
-                  background: '#e5e5e5',
-                  boxShadow: '0 8px 24px rgba(255,255,255,0.3)',
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = '#e5e5e5')}
-                onMouseLeave={(e) => (e.currentTarget.style.background = '#e5e5e5')}
+                className="flex items-center gap-2 text-white rounded-xl px-8 py-3.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
+                style={{ background: '#38BDF8' }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = '#0EA5E9')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = '#38BDF8')}
               >
                 Score your product page free
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -353,12 +350,9 @@ export default function ProductSellers() {
                 <button
                   onClick={() => navigate('/login')}
                   className="flex items-center gap-2 text-white rounded-xl px-8 py-4 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
-                  style={{
-                    background: '#e5e5e5',
-                    boxShadow: '0 8px 24px rgba(255,255,255,0.3)',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = '#e5e5e5')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = '#e5e5e5')}
+                  style={{ background: '#38BDF8' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = '#0EA5E9')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = '#38BDF8')}
                 >
                   Score your product page free
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

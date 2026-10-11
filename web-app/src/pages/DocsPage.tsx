@@ -74,7 +74,8 @@ export default function DocsPage() {
                 <div className="mt-8 pt-8 border-t border-white/[0.06]">
                   <button
                     onClick={() => navigate('/login')}
-                    className="w-full bg-white hover:bg-white text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-all"
+                    className="w-full text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-all"
+                    style={{ background: '#38BDF8' }}
                   >
                     Get started free
                   </button>

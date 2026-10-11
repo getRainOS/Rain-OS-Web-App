@@ -16,24 +16,22 @@ export const HybridFuture = () => {
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
           className="flex flex-col items-center mb-24 relative"
         >
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-white/10 blur-[100px] rounded-full pointer-events-none" />
-          
           <div className="relative flex items-center justify-center w-full max-w-2xl mx-auto">
             <div className="w-48 h-48 rounded-full border border-white/10 bg-white/[0.03] flex items-center justify-center absolute -translate-x-16 z-10">
-              <Users className="w-8 h-8 text-white" style={{ filter: 'drop-shadow(0 0 6px rgba(255,255,255,0.6))' }} />
+              <Users className="w-8 h-8 text-white" />
             </div>
             <div className="absolute -translate-x-16 -translate-y-28 z-20 flex flex-col items-center">
               <span className="text-white font-bold tracking-wider text-sm uppercase" style={{ textShadow: '0 0 10px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.7)' }}>Humans</span>
             </div>
 
             <div className="w-48 h-48 rounded-full border border-white/10 bg-white/[0.03] flex items-center justify-center absolute translate-x-16 z-10">
-              <Cpu className="w-8 h-8 text-white" style={{ filter: 'drop-shadow(0 0 6px rgba(255,255,255,0.6))' }} />
+              <Cpu className="w-8 h-8 text-white" />
             </div>
             <div className="absolute translate-x-16 -translate-y-28 z-20 flex flex-col items-center">
               <span className="text-white font-bold tracking-wider text-sm uppercase" style={{ textShadow: '0 0 10px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.7)' }}>Machines</span>
             </div>
             
-            <div className="z-20 flex flex-col items-center justify-center w-24 h-24 rounded-full bg-gradient-to-b from-[#262626] to-[#0a0a0a] border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.25)] backdrop-blur-sm">
+            <div className="z-20 flex flex-col items-center justify-center w-24 h-24 rounded-full bg-gradient-to-b from-[#262626] to-[#0a0a0a] border border-white/10 backdrop-blur-sm">
               <span className="text-sm font-bold leading-none">
                 <span className="text-white">rain</span>
                 <span className="text-white"> OS</span>
@@ -72,7 +70,8 @@ export const LocalBusinessBadge = () => {
   return (
     <a
       href="/local-business"
-      className="inline-flex items-center gap-2 rounded-xl bg-white hover:bg-white px-5 py-2.5 text-sm font-bold text-white transition-all shadow-lg shadow-rose-500/25 hover:scale-105 active:scale-95"
+      className="inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white transition-all hover:scale-105 active:scale-95"
+      style={{ background: '#38BDF8' }}
     >
       <MapPin className="w-4 h-4" />
       Local Businesses →
@@ -291,7 +290,7 @@ export const ReadabilityIntelligence = () => {
                   <span className="text-white font-mono font-bold">98% confidence</span>
                 </div>
                 <div className="w-full bg-white/5 rounded-full h-2 mb-2 relative">
-                  <div className="bg-white h-2 rounded-full shadow-[0_0_10px_rgba(255,255,255,0.5)]" style={{ width: '98%' }} />
+                  <div className="bg-white h-2 rounded-full" style={{ width: '98%' }} />
                 </div>
                 <p className="text-xs text-neutral-300 font-medium flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
@@ -304,12 +303,12 @@ export const ReadabilityIntelligence = () => {
           <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="relative h-[400px] flex items-center justify-center">
             <div className="absolute inset-0 border-2 border-dashed border-white/10 rounded-full animate-[spin_60s_linear_infinite]" />
             
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface border border-white/10 rounded-2xl p-4 shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface border border-white/10 rounded-2xl p-4">
               <Search className="w-6 h-6 text-white" />
               <div className="text-xs font-bold text-white mt-2 text-center">SEO</div>
             </div>
 
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-surface border border-white/10 rounded-2xl p-4 shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-surface border border-white/10 rounded-2xl p-4">
               <BrainCircuit className="w-6 h-6 text-white" />
               <div className="text-xs font-bold text-white mt-2 text-center">AEO</div>
             </div>
@@ -328,7 +327,7 @@ export const ReadabilityIntelligence = () => {
               <div className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Strengthens</div>
             </div>
 
-            <div className="w-32 h-32 bg-white rounded-full flex flex-col items-center justify-center shadow-[0_0_50px_rgba(255,255,255,0.2)] z-10">
+            <div className="w-32 h-32 bg-white rounded-full flex flex-col items-center justify-center z-10">
               <span className="font-bold text-midnight text-lg">rain OS</span>
               <div className="w-12 h-px bg-neutral-200 my-2" />
               <Sparkles className="w-5 h-5 text-white" />
@@ -465,7 +464,11 @@ export const Pricing = () => {
                 </div>
                 <p className="text-neutral-400 text-sm mb-6">{p.description}</p>
                 
-                <a href="/login" className={`block w-full text-center py-3 rounded-lg font-medium transition-colors mb-8 ${p.isPopular ? 'bg-white hover:bg-white text-white shadow-[0_0_20px_rgba(255,255,255,0.3)]' : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'}`}>
+                <a
+                  href="/login"
+                  className={`block w-full text-center py-3 rounded-lg font-medium transition-colors mb-8 ${p.isPopular ? 'text-white' : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'}`}
+                  style={p.isPopular ? { background: '#38BDF8' } : undefined}
+                >
                   {p.buttonText}
                 </a>
                 
@@ -552,8 +555,6 @@ export const CTA = () => {
     <section className="py-24 relative z-10">
       <div className="max-w-5xl mx-auto px-6">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="relative bg-gradient-to-r from-neutral-700/40 to-midnight border border-white/20 rounded-3xl p-8 md:p-16 text-center overflow-hidden">
-          <div className="absolute top-0 left-1/2 w-[600px] h-[300px] bg-white/20 blur-[100px] -translate-x-1/2 pointer-events-none" />
-          
           <div className="relative z-10 flex flex-col items-center">
             <div className="w-20 h-20 bg-white/10 rounded-2xl border border-white/10 flex items-center justify-center mb-8">
               <Sparkles className="w-10 h-10 text-white" />
@@ -564,7 +565,7 @@ export const CTA = () => {
             <p className="text-lg text-neutral-400 max-w-2xl mx-auto mb-10">
               Start optimizing for the future of search today. Join thousands of creators ensuring their content survives the AI shift.
             </p>
-            <a href="/login" className="bg-white hover:bg-white text-white px-8 py-4 rounded-xl font-medium shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all hover:scale-105">
+            <a href="/login" className="text-white px-8 py-4 rounded-xl font-medium transition-all hover:scale-105" style={{ background: '#38BDF8' }}>
               Get Started for Free
             </a>
           </div>
@@ -693,7 +694,8 @@ export const ThreeModesSection = ({ onGetStarted }: { onGetStarted?: () => void 
           <div className="mt-12 text-center">
             <button
               onClick={onGetStarted}
-              className="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-white hover:bg-white text-white text-sm font-bold shadow-lg shadow-sky-500/20 transition-all hover:scale-105 active:scale-95"
+              className="inline-flex items-center gap-2 px-7 py-3 rounded-xl text-white text-sm font-bold transition-all hover:scale-105 active:scale-95"
+              style={{ background: '#38BDF8' }}
             >
               Try all three free
               <ArrowRight className="w-4 h-4" />

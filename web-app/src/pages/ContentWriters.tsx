@@ -138,7 +138,7 @@ export default function ContentWriters() {
             >
               <div className="absolute -inset-[1px] rounded-[25px] pointer-events-none"
                 style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04), rgba(255,255,255,0.06))', filter: 'blur(0px)' }} />
-              <form onSubmit={handleSubmit} className="rounded-[24px] p-2 text-left relative group" style={{ background: 'rgba(4,7,20,0.65)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 40px rgba(255,255,255,0.07), 0 20px 60px -12px rgba(0,0,0,0.7)' }}>
+              <form onSubmit={handleSubmit} className="rounded-[24px] p-2 text-left relative group" style={{ background: 'rgba(4,7,20,0.65)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 20px 60px -12px rgba(0,0,0,0.7)' }}>
                 <div className="relative">
                   <TypewriterPlaceholder
                     value={content}
@@ -174,8 +174,8 @@ export default function ContentWriters() {
                   <div className="flex items-center gap-4">
                     <button
                       type="submit"
-                      className="bg-white hover:bg-white text-white rounded-xl px-6 py-2.5 text-sm font-bold transition-all flex items-center gap-2 group/btn"
-                      style={{ boxShadow: '0 0 16px rgba(255,255,255,0.25), 0 2px 8px rgba(0,0,0,0.4)' }}
+                      className="text-white rounded-xl px-6 py-2.5 text-sm font-bold transition-all flex items-center gap-2 group/btn"
+                      style={{ background: '#38BDF8', boxShadow: '0 2px 8px rgba(0,0,0,0.4)' }}
                     >
                       Analyze now
                       <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
@@ -403,7 +403,8 @@ export default function ContentWriters() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button
                   onClick={() => navigate('/login')}
-                  className="flex items-center gap-2 bg-white hover:bg-white text-white rounded-xl px-8 py-4 text-sm font-bold shadow-xl shadow-sky-500/25 transition-all hover:scale-105 active:scale-95 group"
+                  className="flex items-center gap-2 text-white rounded-xl px-8 py-4 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
+                  style={{ background: '#38BDF8' }}
                 >
                   Score your content free
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
