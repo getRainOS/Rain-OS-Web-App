@@ -4,6 +4,7 @@ import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
 import ArtifactBlock from '../components/ArtifactBlock.jsx';
+import GithubPushPanel from '../components/GithubPushPanel.jsx';
 import styles from './RepoAnalysis.module.css';
 
 // Hex literals, not var(--green)/var(--yellow)/var(--red): the jsRiskBanner
@@ -468,6 +469,14 @@ export default function RepoAnalysis() {
               </ul>
             </div>
           )}
+
+          {/* ─── Push fixes directly to GitHub ─── */}
+          <GithubPushPanel
+            fixableArtifacts={(result.recommendations || []).filter((r) => r?.artifact).map((r) => r.artifact)}
+            scannedUrl={repoUrl}
+            returnTo="/repo-analysis"
+            knownRepo={result.owner && result.repo ? `${result.owner}/${result.repo}` : undefined}
+          />
 
           {/* ─── Fix Prompt Generator ─── */}
           <FixPromptGenerator result={result} repoUrl={repoUrl} />

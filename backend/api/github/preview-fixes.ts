@@ -209,6 +209,20 @@ export default async function handler(req: express.Request, res: express.Respons
         }
         continue;
       }
+
+      if (artifact.type === 'markdown') {
+        // No safe assumption about where in a README/doc this belongs —
+        // always a manual paste, never auto-spliced.
+        manual.push({
+          id,
+          type: 'manual',
+          artifactType: artifact.type,
+          description: 'Add this section to your README (or other relevant doc)',
+          snippet: artifact.content,
+          filename,
+        });
+        continue;
+      }
     }
 
     return res.status(200).json({ toCreate, toPatch, manual });
