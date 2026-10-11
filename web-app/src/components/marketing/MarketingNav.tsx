@@ -179,7 +179,10 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
             </button>
             <button
               onClick={handleGetStarted}
-              className="bg-white hover:bg-neutral-200 text-black rounded-lg px-4 md:px-5 py-2 text-sm font-semibold transition-all hover:scale-105 active:scale-95"
+              className="bg-white text-black rounded-lg px-4 md:px-5 py-2 text-sm font-semibold transition-all hover:scale-105 active:scale-95"
+              style={{ boxShadow: '0 0 0 rgba(56,189,248,0)' }}
+              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 0 20px rgba(56,189,248,0.45)'; e.currentTarget.style.background = '#e0f4ff'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = '0 0 0 rgba(56,189,248,0)'; e.currentTarget.style.background = '#ffffff'; }}
             >
               Get started
             </button>
@@ -291,7 +294,9 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
                 </button>
                 <button
                   onClick={handleGetStarted}
-                  className="mx-5 mt-2 bg-white hover:bg-neutral-200 text-black rounded-xl px-5 py-3 text-sm font-semibold transition-all active:scale-95"
+                  className="mx-5 mt-2 bg-white text-black rounded-xl px-5 py-3 text-sm font-semibold transition-all active:scale-95"
+                  onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 0 20px rgba(56,189,248,0.45)'; e.currentTarget.style.background = '#e0f4ff'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.boxShadow = ''; e.currentTarget.style.background = '#ffffff'; }}
                 >
                   Get Started
                 </button>
