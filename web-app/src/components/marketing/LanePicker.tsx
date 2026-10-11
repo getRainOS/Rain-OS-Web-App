@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import RainBackground from './RainBackground';
 
 const SEEN_KEY = 'rain_os_seen_lane_picker';
 
@@ -81,6 +82,8 @@ export default function LanePicker() {
           className="fixed inset-0 z-[100] flex flex-col"
           style={{ background: '#000000', height: '100dvh' }}
         >
+          <RainBackground />
+
           {/* Minimal header — logo left, close right, same wordmark as the main nav */}
           <div className="flex items-center justify-between px-6 md:px-10 py-5 shrink-0">
             <span className="font-bold text-2xl tracking-tighter text-white">

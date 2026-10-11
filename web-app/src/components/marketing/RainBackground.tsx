@@ -20,14 +20,14 @@ const RainBackground: React.FC = () => {
 
     const initDrops = () => {
       drops = [];
-      const count = Math.floor(window.innerWidth * 0.1);
+      const count = Math.floor(window.innerWidth * 0.035);
       for (let i = 0; i < count; i++) {
         drops.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          speed: 0.5 + Math.random() * 1.5,
-          length: 10 + Math.random() * 20,
-          opacity: 0.1 + Math.random() * 0.2,
+          speed: 0.2 + Math.random() * 0.5,
+          length: 14 + Math.random() * 26,
+          opacity: 0.03 + Math.random() * 0.07,
         });
       }
     };
@@ -37,8 +37,8 @@ const RainBackground: React.FC = () => {
       drops.forEach((drop) => {
         ctx.beginPath();
         ctx.moveTo(drop.x, drop.y);
-        ctx.lineTo(drop.x - 2, drop.y + drop.length);
-        ctx.strokeStyle = `rgba(56, 189, 248, ${drop.opacity})`;
+        ctx.lineTo(drop.x - 1, drop.y + drop.length);
+        ctx.strokeStyle = `rgba(255, 255, 255, ${drop.opacity})`;
         ctx.lineWidth = 1;
         ctx.stroke();
         drop.y += drop.speed;
@@ -62,7 +62,7 @@ const RainBackground: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 z-[3] pointer-events-none opacity-60 mix-blend-screen"
+      className="fixed inset-0 z-[3] pointer-events-none opacity-70"
       style={{
         width: '100%',
         height: '100%',
