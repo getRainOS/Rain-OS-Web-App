@@ -87,7 +87,7 @@ export default function LanePicker() {
           {/* Minimal header — logo left, close right, same wordmark as the main nav */}
           <div className="flex items-center justify-between px-6 md:px-10 py-5 shrink-0">
             <span className="font-bold text-2xl tracking-tighter text-white">
-              r<span className="text-sky-400">ai</span>n
+              r<span style={{ color: 'var(--cyan)' }}>ai</span>n
             </span>
             <button
               onClick={dismiss}

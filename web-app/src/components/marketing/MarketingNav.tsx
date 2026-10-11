@@ -106,7 +106,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
           }`}
         >
           <a href="/" className={"font-bold text-2xl md:text-3xl tracking-tighter shrink-0 text-white"}>
-            r<span className={'text-sky-400'}>ai</span>n
+            r<span style={{ color: 'var(--cyan)' }}>ai</span>n
           </a>
 
           {/* Desktop nav */}
@@ -180,9 +180,9 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
             <button
               onClick={handleGetStarted}
               className="text-white rounded-lg px-4 md:px-5 py-2 text-sm font-semibold transition-all hover:scale-105 active:scale-95"
-              style={{ background: '#38BDF8' }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = '#0EA5E9'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = '#38BDF8'; }}
+              style={{ background: '#2B8FE3' }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = '#1C73C4'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = '#2B8FE3'; }}
             >
               Get started
             </button>
@@ -225,7 +225,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
               {/* Mobile menu header */}
               <div className={"flex items-center justify-between px-5 py-4 border-b border-white/[0.06]"}>
                 <span className={"font-bold text-xl tracking-tighter text-white"}>
-                  r<span className="text-sky-400">ai</span>n
+                  r<span style={{ color: 'var(--cyan)' }}>ai</span>n
                 </span>
                 <button
                   onClick={() => setMobileOpen(false)}
@@ -295,9 +295,9 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
                 <button
                   onClick={handleGetStarted}
                   className="mx-5 mt-2 text-white rounded-xl px-5 py-3 text-sm font-semibold transition-all active:scale-95"
-                  style={{ background: '#38BDF8' }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = '#0EA5E9'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = '#38BDF8'; }}
+                  style={{ background: '#2B8FE3' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = '#1C73C4'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = '#2B8FE3'; }}
                 >
                   Get Started
                 </button>

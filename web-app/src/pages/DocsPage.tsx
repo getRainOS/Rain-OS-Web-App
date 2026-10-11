@@ -75,7 +75,7 @@ export default function DocsPage() {
                   <button
                     onClick={() => navigate('/login')}
                     className="w-full text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-all"
-                    style={{ background: '#38BDF8' }}
+                    style={{ background: '#2B8FE3' }}
                   >
                     Get started free
                   </button>
@@ -533,7 +533,7 @@ export default function DocsPage() {
       <footer className="border-t border-white/10 bg-midnight py-12 relative z-10">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
           <span className="font-bold text-3xl tracking-tighter text-white">
-            r<span className="text-sky-400">ai</span>n
+            r<span style={{ color: 'var(--cyan)' }}>ai</span>n
           </span>
           <div className="flex items-center justify-center gap-6 text-sm text-neutral-400">
             <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
