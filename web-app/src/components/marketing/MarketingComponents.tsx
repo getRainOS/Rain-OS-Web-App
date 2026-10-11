@@ -33,7 +33,7 @@ export const HybridFuture = () => {
               <span className="text-white font-bold tracking-wider text-sm uppercase" style={{ textShadow: '0 0 10px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.7)' }}>Machines</span>
             </div>
             
-            <div className="z-20 flex flex-col items-center justify-center w-24 h-24 rounded-full bg-gradient-to-b from-[#0B1D35] to-[#040714] border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.25)] backdrop-blur-sm">
+            <div className="z-20 flex flex-col items-center justify-center w-24 h-24 rounded-full bg-gradient-to-b from-[#262626] to-[#0a0a0a] border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.25)] backdrop-blur-sm">
               <span className="text-sm font-bold leading-none">
                 <span className="text-white">rain</span>
                 <span className="text-white"> OS</span>
@@ -46,21 +46,21 @@ export const HybridFuture = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }} className="card-gradient rounded-3xl p-8 hover:border-white/20 transition-all">
-            <Globe2 className="w-8 h-8 text-slate-400 mb-6" />
+            <Globe2 className="w-8 h-8 text-neutral-400 mb-6" />
             <h3 className="text-2xl font-bold text-white mb-4">The Old Way (SEO)</h3>
-            <p className="text-slate-400 leading-relaxed">Traditional SEO focuses on keywords and backlinks. It works for Google, but fails when AI models try to extract facts and logic from your content.</p>
+            <p className="text-neutral-400 leading-relaxed">Traditional SEO focuses on keywords and backlinks. It works for Google, but fails when AI models try to extract facts and logic from your content.</p>
           </motion.div>
           
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="card-gradient rounded-3xl p-8 hover:border-white/20 transition-all relative overflow-hidden">
             <AlertTriangle className="w-8 h-8 text-white mb-6" />
             <h3 className="text-2xl font-bold text-white mb-4">The Hybrid Gap</h3>
-            <p className="text-slate-400 leading-relaxed relative z-10">Content that reads well to humans often falls apart when AI crawlers parse it. Long sentences, buried answers, missing structure, no clear entities — if LLMs can't extract your key points, they won't cite your article or recommend your landing page. Meanwhile, marketing agencies are churning out content that never gets found.</p>
+            <p className="text-neutral-400 leading-relaxed relative z-10">Content that reads well to humans often falls apart when AI crawlers parse it. Long sentences, buried answers, missing structure, no clear entities — if LLMs can't extract your key points, they won't cite your article or recommend your landing page. Meanwhile, marketing agencies are churning out content that never gets found.</p>
           </motion.div>
           
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }} className="card-gradient rounded-3xl p-8 hover:border-white/30 transition-all">
             <Shield className="w-8 h-8 text-white mb-6" />
             <h3 className="text-2xl font-bold text-white mb-4">The rain OS Standard</h3>
-            <p className="text-slate-400 leading-relaxed">We bridge the gap. We ensure your content is perfectly structured for AI extraction while maintaining all traditional SEO benefits.</p>
+            <p className="text-neutral-400 leading-relaxed">We bridge the gap. We ensure your content is perfectly structured for AI extraction while maintaining all traditional SEO benefits.</p>
           </motion.div>
         </div>
       </div>
@@ -146,7 +146,7 @@ export const FourPillars = () => {
         <div className="text-center mb-16">
           <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Your AI Built Your Product Or Website</span>
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Now Optimize For AI Search</h2>
-          <p className="text-slate-400 max-w-2xl mx-auto">AI Readability is how easily ChatGPT, Perplexity, and Gemini can extract answers from your raw content. It is the #1 factor in whether AI cites you or skips you. We score it — plus Authority and Conversion — so you own the answers that matter.</p>
+          <p className="text-neutral-400 max-w-2xl mx-auto">AI Readability is how easily ChatGPT, Perplexity, and Gemini can extract answers from your raw content. It is the #1 factor in whether AI cites you or skips you. We score it — plus Authority and Conversion — so you own the answers that matter.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -170,12 +170,12 @@ export const FourPillars = () => {
               </div>
 
               <h3 className={`text-2xl font-bold text-${p.color} mb-1`}>{p.name}</h3>
-              <p className="text-slate-500 text-sm font-medium mb-4 italic">{p.tagline}</p>
-              <p className="text-slate-400 mb-6 leading-relaxed text-sm">{p.description}</p>
+              <p className="text-neutral-500 text-sm font-medium mb-4 italic">{p.tagline}</p>
+              <p className="text-neutral-400 mb-6 leading-relaxed text-sm">{p.description}</p>
 
               <ul className="space-y-2">
                 {p.scores.map((s, j) => (
-                  <li key={j} className="flex items-center text-sm text-slate-300">
+                  <li key={j} className="flex items-center text-sm text-neutral-300">
                     <span className={`w-1.5 h-1.5 rounded-full ${p.dotColor} mr-3 shrink-0`} /> {s}
                   </li>
                 ))}
@@ -195,7 +195,7 @@ export const FeatureGrid = () => {
         <div className="text-center mb-16">
           <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Under the Hood</span>
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">What No Other Tool Measures</h2>
-          <p className="text-slate-400 max-w-2xl mx-auto">Beyond the five pillars, rain OS runs a deeper layer of signals that most tools don't even know exist.</p>
+          <p className="text-neutral-400 max-w-2xl mx-auto">Beyond the five pillars, rain OS runs a deeper layer of signals that most tools don't even know exist.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -203,7 +203,7 @@ export const FeatureGrid = () => {
             <BrainCircuit className="absolute -right-10 -bottom-10 w-64 h-64 text-white opacity-5 group-hover:opacity-10 transition-opacity duration-500" />
             <BrainCircuit className="w-8 h-8 text-white mb-6 relative z-10" />
             <h3 className="text-2xl font-bold text-white mb-4 relative z-10">Semantic Precision Scoring</h3>
-            <p className="text-slate-400 mb-6 relative z-10 max-w-md">LLMs don't read like humans — they extract facts. We score every sentence on how machine-extractable it is and flag anything too vague to be cited.</p>
+            <p className="text-neutral-400 mb-6 relative z-10 max-w-md">LLMs don't read like humans — they extract facts. We score every sentence on how machine-extractable it is and flag anything too vague to be cited.</p>
             <div className="bg-midnight/50 rounded-xl p-4 border border-white/5 relative z-10">
               <div className="flex items-center gap-2 text-sm text-white line-through mb-2"><span className="w-2 h-2 rounded-full bg-white" /> "We've seen some really significant growth recently"</div>
               <div className="flex items-center gap-2 text-sm text-white"><span className="w-2 h-2 rounded-full bg-white" /> "Revenue grew 34% quarter-over-quarter in Q2 2025"</div>
@@ -213,37 +213,37 @@ export const FeatureGrid = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
             <Layers className="w-8 h-8 text-white mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">RAG Chunking Quality</h3>
-            <p className="text-slate-400 text-sm">Most AI systems retrieve content in chunks. We score how cleanly your content breaks into standalone, answerable units — the way retrieval systems actually read it.</p>
+            <p className="text-neutral-400 text-sm">Most AI systems retrieve content in chunks. We score how cleanly your content breaks into standalone, answerable units — the way retrieval systems actually read it.</p>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
             <SearchCheck className="w-8 h-8 text-white mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">Information Gain Score</h3>
-            <p className="text-slate-400 text-sm">AI already knows what's common. This score measures how much genuinely new or specific information your content adds — the higher it is, the more likely AI is to quote you over a generic source.</p>
+            <p className="text-neutral-400 text-sm">AI already knows what's common. This score measures how much genuinely new or specific information your content adds — the higher it is, the more likely AI is to quote you over a generic source.</p>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
             <Network className="w-8 h-8 text-white mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">Query Alignment Score</h3>
-            <p className="text-slate-400 text-sm">Maps your content against the real questions people ask AI tools in your topic area. If your content doesn't match the query patterns AI sees, it won't get surfaced.</p>
+            <p className="text-neutral-400 text-sm">Maps your content against the real questions people ask AI tools in your topic area. If your content doesn't match the query patterns AI sees, it won't get surfaced.</p>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.4 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
             <Target className="w-8 h-8 text-white mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">Semantic Redundancy Detection</h3>
-            <p className="text-slate-400 text-sm">Repeated or padded content dilutes AI extraction confidence. We flag every redundant passage so you can cut it — tighter content scores higher.</p>
+            <p className="text-neutral-400 text-sm">Repeated or padded content dilutes AI extraction confidence. We flag every redundant passage so you can cut it — tighter content scores higher.</p>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.5 }} className="md:col-span-2 bg-gradient-to-br from-white/20/[0.05] to-surface/50 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
             <Sparkles className="w-8 h-8 text-white mb-6" />
             <h3 className="text-2xl font-bold text-white mb-4">AI-Powered Rewrite Tools</h3>
-            <p className="text-slate-400 max-w-md">Don't just see the problem — fix it. Built-in tools suggest improved titles, generate meta descriptions, summarize for AI snippets, and rewrite vague sentences into citable facts. All without losing your voice.</p>
+            <p className="text-neutral-400 max-w-md">Don't just see the problem — fix it. Built-in tools suggest improved titles, generate meta descriptions, summarize for AI snippets, and rewrite vague sentences into citable facts. All without losing your voice.</p>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.6 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
             <FileJson className="w-8 h-8 text-white mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">Multimodal Readiness</h3>
-            <p className="text-slate-400 text-sm">Images and tables are invisible to AI unless they're described in text. We flag every non-text element that's missing an AI-readable description.</p>
+            <p className="text-neutral-400 text-sm">Images and tables are invisible to AI unless they're described in text. We flag every non-text element that's missing an AI-readable description.</p>
           </motion.div>
         </div>
       </div>
@@ -261,28 +261,28 @@ export const ReadabilityIntelligence = () => {
               <Layers className="w-4 h-4" /> Readability Intelligence
             </span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-6 leading-[1.1]">
-              Built for the AI Era, <br/><span className="text-slate-500">Not 2015.</span>
+              Built for the AI Era, <br/><span className="text-neutral-500">Not 2015.</span>
             </h2>
-            <p className="text-slate-400 leading-relaxed mb-8">
+            <p className="text-neutral-400 leading-relaxed mb-8">
               Traditional SEO tools measure keyword density and Flesch-Kincaid reading scores. But LLMs don't read like humans. They process tokens, entities, and semantic relationships.
             </p>
             <div className="border-l-2 border-white pl-6 py-2 mb-12">
               <div className="flex items-center gap-2 text-white font-medium mb-2">
                 <Sparkles className="w-4 h-4 text-white" /> Good AI Readability = Good SEO.
               </div>
-              <p className="text-slate-400 text-sm">When you optimize for machine extraction, human readability naturally improves. It's a win-win.</p>
+              <p className="text-neutral-400 text-sm">When you optimize for machine extraction, human readability naturally improves. It's a win-win.</p>
             </div>
 
             <div className="space-y-6">
               <div>
                 <div className="flex justify-between text-sm mb-2">
-                  <span className="text-slate-300">Standard Content (Fluff)</span>
+                  <span className="text-neutral-300">Standard Content (Fluff)</span>
                   <span className="text-white font-mono">32% confidence</span>
                 </div>
                 <div className="w-full bg-white/5 rounded-full h-2 mb-2">
                   <div className="bg-white/[0.08] h-2 rounded-full" style={{ width: '32%' }} />
                 </div>
-                <p className="text-xs text-slate-500 italic">"We saw some significant growth recently..."</p>
+                <p className="text-xs text-neutral-500 italic">"We saw some significant growth recently..."</p>
               </div>
               
               <div>
@@ -293,7 +293,7 @@ export const ReadabilityIntelligence = () => {
                 <div className="w-full bg-white/5 rounded-full h-2 mb-2 relative">
                   <div className="bg-white h-2 rounded-full shadow-[0_0_10px_rgba(255,255,255,0.5)]" style={{ width: '98%' }} />
                 </div>
-                <p className="text-xs text-slate-300 font-medium flex items-center gap-2">
+                <p className="text-xs text-neutral-300 font-medium flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                   "Revenue increased by 24% in Q3 2024."
                 </p>
@@ -315,7 +315,7 @@ export const ReadabilityIntelligence = () => {
             </div>
 
             <div className="absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-              <div className="text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Feeds</div>
+              <div className="text-xs font-bold text-neutral-400 mb-2 uppercase tracking-wider">Feeds</div>
               <div className="w-px h-16 bg-gradient-to-b from-white to-white/20 relative">
                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 border-b-2 border-r-2 border-white/20 transform rotate-45" />
               </div>
@@ -325,12 +325,12 @@ export const ReadabilityIntelligence = () => {
               <div className="w-px h-16 bg-gradient-to-t from-white/20 to-white relative mb-2">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 border-t-2 border-l-2 border-white transform rotate-45" />
               </div>
-              <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Strengthens</div>
+              <div className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Strengthens</div>
             </div>
 
             <div className="w-32 h-32 bg-white rounded-full flex flex-col items-center justify-center shadow-[0_0_50px_rgba(255,255,255,0.2)] z-10">
               <span className="font-bold text-midnight text-lg">rain OS</span>
-              <div className="w-12 h-px bg-slate-200 my-2" />
+              <div className="w-12 h-px bg-neutral-200 my-2" />
               <Sparkles className="w-5 h-5 text-white" />
             </div>
           </motion.div>
@@ -361,20 +361,20 @@ export const ComparisonTable = () => {
           <div className="bg-surface/40 border border-white/10 rounded-3xl overflow-hidden backdrop-blur-sm">
             <div className="grid grid-cols-3 border-b border-white/10 bg-white/5">
               <div className="p-6 font-bold text-white">Feature</div>
-              <div className="p-6 font-bold text-slate-400 text-center">Traditional SEO</div>
+              <div className="p-6 font-bold text-neutral-400 text-center">Traditional SEO</div>
               <div className="p-6 font-bold text-white text-center bg-white/5 border-x border-white/5">rain OS</div>
             </div>
             
             {features.map((f, i) => (
               <div key={i} className="grid grid-cols-3 border-b border-white/5 last:border-0 group hover:bg-white/[0.02] transition-colors">
-                <div className="p-6 flex items-center gap-2 text-slate-300">
+                <div className="p-6 flex items-center gap-2 text-neutral-300">
                   {f.name}
                 </div>
                 <div className="p-6 flex items-center justify-center">
-                  {f.seo ? <span className="text-slate-500">✓</span> : <span className="text-slate-700">✕</span>}
+                  {f.seo ? <span className="text-neutral-500">✓</span> : <span className="text-neutral-700">✕</span>}
                 </div>
                 <div className="p-6 flex items-center justify-center bg-white/5 border-x border-white/5">
-                  {f.rain ? <span className="text-white font-bold">✓</span> : <span className="text-slate-700">✕</span>}
+                  {f.rain ? <span className="text-white font-bold">✓</span> : <span className="text-neutral-700">✕</span>}
                 </div>
               </div>
             ))}
@@ -395,7 +395,7 @@ export const Pricing = () => {
   const plans: Plan[] = [
     {
       plan: "Free", price: "Free", checkCount: "5 analyses / month",
-      accentColor: "#64748b",
+      accentColor: "#a3a3a3",
       description: "Try Rain OS and see how AI reads your content — no credit card needed.",
       buttonText: "Get Started",
       features: [
@@ -461,9 +461,9 @@ export const Pricing = () => {
                 <h3 className="text-xl font-bold text-white mb-2">{p.plan}</h3>
                 <div className="flex items-baseline gap-1 mb-4">
                   <span className="text-4xl font-bold text-white">{p.price}</span>
-                  {p.period && <span className="text-slate-500 text-sm">{p.period}</span>}
+                  {p.period && <span className="text-neutral-500 text-sm">{p.period}</span>}
                 </div>
-                <p className="text-slate-400 text-sm mb-6">{p.description}</p>
+                <p className="text-neutral-400 text-sm mb-6">{p.description}</p>
                 
                 <a href="/login" className={`block w-full text-center py-3 rounded-lg font-medium transition-colors mb-8 ${p.isPopular ? 'bg-white hover:bg-white text-white shadow-[0_0_20px_rgba(255,255,255,0.3)]' : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'}`}>
                   {p.buttonText}
@@ -474,10 +474,10 @@ export const Pricing = () => {
                 </div>
                 <ul className="space-y-3">
                   {p.features.map((f, j) => (
-                    <li key={j} className={`flex items-center text-sm ${f.included ? 'text-slate-300' : 'text-slate-600'}`}>
+                    <li key={j} className={`flex items-center text-sm ${f.included ? 'text-neutral-300' : 'text-neutral-600'}`}>
                       {f.included
                         ? <CheckCircle2 className="w-4 h-4 mr-3 shrink-0" style={{ color: p.accentColor }} />
-                        : <Minus className="w-4 h-4 mr-3 shrink-0 text-slate-700" />
+                        : <Minus className="w-4 h-4 mr-3 shrink-0 text-neutral-700" />
                       }
                       <span>{f.label}</span>
                     </li>
@@ -498,7 +498,7 @@ export const AccordionItem = ({ question, answer }: { question: string, answer: 
     <div className="border-b border-white/10">
       <button onClick={() => setIsOpen(!isOpen)} className="w-full py-6 flex items-center justify-between text-left focus:outline-none group">
         <span className="text-lg font-medium text-white pr-8 group-hover:text-white transition-colors">{question}</span>
-        <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${isOpen ? 'bg-white border-white text-white rotate-180' : 'border-white/10 text-slate-400 group-hover:border-white/50 group-hover:text-white'}`}>
+        <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${isOpen ? 'bg-white border-white text-white rotate-180' : 'border-white/10 text-neutral-400 group-hover:border-white/50 group-hover:text-white'}`}>
           {isOpen ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
         </div>
       </button>
@@ -511,7 +511,7 @@ export const AccordionItem = ({ question, answer }: { question: string, answer: 
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <p className="pb-6 text-slate-400 leading-relaxed text-lg font-light">{answer}</p>
+            <p className="pb-6 text-neutral-400 leading-relaxed text-lg font-light">{answer}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -559,9 +559,9 @@ export const CTA = () => {
               <Sparkles className="w-10 h-10 text-white" />
             </div>
             <h2 className="text-4xl md:text-5xl font-semibold text-white mb-6 leading-[1.05]">
-              Ready to <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-100 via-white/40 to-white/20">grow</span> your reach?
+              Ready to <span className="text-transparent bg-clip-text bg-gradient-to-r from-neutral-100 via-white/40 to-white/20">grow</span> your reach?
             </h2>
-            <p className="text-lg text-slate-400 max-w-2xl mx-auto mb-10">
+            <p className="text-lg text-neutral-400 max-w-2xl mx-auto mb-10">
               Start optimizing for the future of search today. Join thousands of creators ensuring their content survives the AI shift.
             </p>
             <a href="/login" className="bg-white hover:bg-white text-white px-8 py-4 rounded-xl font-medium shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all hover:scale-105">
@@ -631,14 +631,14 @@ export const ThreeModesSection = ({ onGetStarted }: { onGetStarted?: () => void 
           transition={{ duration: 0.6 }}
           className="text-center mb-14"
         >
-          <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-3 block">Three ways to analyze</span>
+          <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-500 mb-3 block">Three ways to analyze</span>
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4" style={{ letterSpacing: '-0.03em' }}>
             One platform.{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white/40 to-white/20">
               Three analysis modes.
             </span>
           </h2>
-          <p className="text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">
+          <p className="text-neutral-400 max-w-2xl mx-auto text-lg leading-relaxed">
             Whatever you built and wherever it lives — rain OS has the right tool. Each mode surfaces different signals, so use all three for complete coverage.
           </p>
         </motion.div>
@@ -670,13 +670,13 @@ export const ThreeModesSection = ({ onGetStarted }: { onGetStarted?: () => void 
 
               <div>
                 <h3 className="text-lg font-semibold text-white mb-2">{m.title}</h3>
-                <p className="text-sm text-slate-400 leading-relaxed">{m.description}</p>
+                <p className="text-sm text-neutral-400 leading-relaxed">{m.description}</p>
               </div>
 
-              <p className="text-xs text-slate-600 leading-relaxed italic">{m.detail}</p>
+              <p className="text-xs text-neutral-600 leading-relaxed italic">{m.detail}</p>
 
               <div className="mt-auto pt-4 border-t border-white/[0.06]">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600 block mb-2">Available on</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-600 block mb-2">Available on</span>
                 <div className="flex flex-wrap gap-2">
                   {m.availability.map((a) => (
                     <span key={a} className={`text-xs font-semibold px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/10 ${m.availColor}`}>
@@ -712,7 +712,7 @@ export const AIRewriteTools = () => {
         <div className="text-center mb-12">
           <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Built-in tools</span>
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Fix it without leaving the dashboard</h2>
-          <p className="text-slate-400 max-w-2xl mx-auto">Don&apos;t just see the problem. rain OS gives you one-click AI tools to rewrite, improve, and optimize the exact issues your score flags.</p>
+          <p className="text-neutral-400 max-w-2xl mx-auto">Don&apos;t just see the problem. rain OS gives you one-click AI tools to rewrite, improve, and optimize the exact issues your score flags.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {[
@@ -724,7 +724,7 @@ export const AIRewriteTools = () => {
             <motion.div key={t.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }}
               className={`${t.bg} border border-white/10 ${t.border} rounded-2xl p-6 transition-all duration-300`}>
               <h3 className={`text-base font-bold ${t.color} mb-3`}>{t.title}</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">{t.body}</p>
+              <p className="text-neutral-400 text-sm leading-relaxed">{t.body}</p>
             </motion.div>
           ))}
         </div>
@@ -753,7 +753,7 @@ export const VibeFAQ = () => {
         <div className="text-center mb-12">
           <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Got questions?</span>
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Frequently Asked Questions</h2>
-          <p className="text-slate-400 max-w-xl mx-auto">Common questions from developers and vibe coders getting their sites AI-ready.</p>
+          <p className="text-neutral-400 max-w-xl mx-auto">Common questions from developers and vibe coders getting their sites AI-ready.</p>
         </div>
         <div className="space-y-2">
           {faqs.map((faq, i) => <AccordionItem key={i} question={faq.q} answer={faq.a} />)}
@@ -782,7 +782,7 @@ export const VibeCoderBand = ({ onGetStarted }: { onGetStarted?: () => void }) =
           {platforms.map((p) => (
             <span
               key={p}
-              className="px-4 py-1.5 rounded-full text-sm font-medium text-slate-300 bg-white/[0.04] border border-white/10 tracking-wide"
+              className="px-4 py-1.5 rounded-full text-sm font-medium text-neutral-300 bg-white/[0.04] border border-white/10 tracking-wide"
             >
               {p}
             </span>
@@ -790,10 +790,10 @@ export const VibeCoderBand = ({ onGetStarted }: { onGetStarted?: () => void }) =
         </div>
 
         <div className="max-w-2xl space-y-3">
-          <p className="text-base text-slate-300 leading-relaxed">
+          <p className="text-base text-neutral-300 leading-relaxed">
             AI-generated sites have a blind spot: the rendered page looks fine, but the source is missing the signals that AI search engines actually look for — no llms.txt, no schema, JS-rendered content that crawlers can't parse.
           </p>
-          <p className="text-sm text-slate-500 leading-relaxed">
+          <p className="text-sm text-neutral-500 leading-relaxed">
             Connect your GitHub repo and rain OS reads your actual source files — README, package.json, robots.txt, index.html — and gives you a full AEO score at the code level. No URL parsing. No guessing. The real thing.
           </p>
         </div>

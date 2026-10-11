@@ -13,7 +13,7 @@ function AccordionItem({ question, answer }: { question: string; answer: string 
         className="w-full py-5 flex items-center justify-between text-left group"
       >
         <span className="text-base font-medium text-white pr-6 group-hover:text-white transition-colors">{question}</span>
-        <div className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all ${open ? 'bg-white border-white/20 text-white' : 'border-white/10 text-slate-400'}`}>
+        <div className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all ${open ? 'bg-white border-white/20 text-white' : 'border-white/10 text-neutral-400'}`}>
           {open ? <Minus className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
         </div>
       </button>
@@ -26,7 +26,7 @@ function AccordionItem({ question, answer }: { question: string; answer: string 
             transition={{ duration: 0.22 }}
             className="overflow-hidden"
           >
-            <p className="pb-5 text-slate-400 leading-relaxed text-sm">{answer}</p>
+            <p className="pb-5 text-neutral-400 leading-relaxed text-sm">{answer}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -167,14 +167,14 @@ const contactCards = [
 export default function SupportPage() {
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen text-slate-50 font-sans relative" style={{ background: '#020410' }}>
-      <div className="fixed inset-0 z-0" style={{ background: '#020410' }} />
+    <div className="min-h-screen text-neutral-50 font-sans relative" style={{ background: '#000000' }}>
+      <div className="fixed inset-0 z-0" style={{ background: '#000000' }} />
       <div className="fixed top-[-20%] left-[-10%] w-[800px] h-[800px] rounded-full pointer-events-none z-[2]"
         style={{ background: 'rgba(255,255,255,0.05)', filter: 'blur(150px)', mixBlendMode: 'screen' }} />
       <div className="fixed bottom-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full pointer-events-none z-[2]"
         style={{ background: 'rgba(255,255,255,0.05)', filter: 'blur(150px)', mixBlendMode: 'screen' }} />
       <div className="fixed inset-0 pointer-events-none z-[4]"
-        style={{ background: 'linear-gradient(to bottom, rgba(2,4,16,0.4), transparent, #020410)' }} />
+        style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.4), transparent, #000000)' }} />
 
       <MarketingNav onLoginClick={() => navigate('/login?mode=login')} onGetStartedClick={() => navigate('/login')} />
 
@@ -184,7 +184,7 @@ export default function SupportPage() {
         <div className="text-center mb-16">
           <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Help Center</span>
           <h1 className="text-4xl md:text-5xl font-semibold text-white mb-4" style={{ letterSpacing: '-0.03em' }}>How can we help?</h1>
-          <p className="text-slate-400 max-w-xl mx-auto">Find answers to common questions, or reach out directly. We respond to all support emails within one business day.</p>
+          <p className="text-neutral-400 max-w-xl mx-auto">Find answers to common questions, or reach out directly. We respond to all support emails within one business day.</p>
         </div>
 
         {/* Contact cards */}
@@ -201,11 +201,11 @@ export default function SupportPage() {
               </div>
               <div>
                 <div className="font-semibold text-white text-sm mb-1">{c.title}</div>
-                <div className="text-slate-500 text-xs leading-relaxed">{c.desc}</div>
+                <div className="text-neutral-500 text-xs leading-relaxed">{c.desc}</div>
               </div>
               <div className="mt-auto">
                 <div className="text-sm font-medium group-hover:underline" style={{ color: c.color }}>{c.cta}</div>
-                <div className="text-xs text-slate-600 mt-1">{c.response}</div>
+                <div className="text-xs text-neutral-600 mt-1">{c.response}</div>
               </div>
             </a>
           ))}
@@ -227,7 +227,7 @@ export default function SupportPage() {
         <div className="mt-16 p-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] text-center">
           <MessageSquare className="w-8 h-8 text-white mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-white mb-2">Still stuck?</h3>
-          <p className="text-slate-400 text-sm mb-6 max-w-md mx-auto">
+          <p className="text-neutral-400 text-sm mb-6 max-w-md mx-auto">
             If you can not find an answer here, send us an email and include your account email address and a description of the issue. Screenshots are helpful.
           </p>
           <a
@@ -243,12 +243,12 @@ export default function SupportPage() {
 
       <footer className="border-t border-white/10 py-10 relative z-10">
         <div className="max-w-6xl mx-auto px-6 flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-6 text-sm text-slate-500">
+          <div className="flex items-center gap-6 text-sm text-neutral-500">
             <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
             <a href="/support" className="text-white">Support</a>
           </div>
-          <div className="text-xs text-slate-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
+          <div className="text-xs text-neutral-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
         </div>
       </footer>
     </div>

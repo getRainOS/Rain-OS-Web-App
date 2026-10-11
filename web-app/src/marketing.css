@@ -20,26 +20,29 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  --color-rain-400: #38bdf8;
-  --color-rain-500: #5b5fc7;
-  --color-rain-900: #0c4a6e;
+  /* Neutral near-black palette — zero blue tint, matches index.css's
+     dashboard tokens. (rain-400/500/900, p1-p4 below are currently
+     unused but kept non-blue so nothing reaches for a stray blue again.) */
+  --color-rain-400: #e5e5e5;
+  --color-rain-500: #a3a3a3;
+  --color-rain-900: #404040;
 
-  --color-midnight: #030b18;
-  --color-surface: #0a1728;
+  --color-midnight: #0a0a0a;
+  --color-surface: #141414;
   --color-border: rgba(255, 255, 255, 0.08);
 
-  --color-primary: #5b5fc7;
-  --color-accent: #38bdf8;
+  --color-primary: #e5e5e5;
+  --color-accent: #a3a3a3;
 
-  --color-p1: #22d3ee;
-  --color-p2: #10b981;
-  --color-p3: #a855f7;
-  --color-p4: #f97316;
+  --color-p1: #e5e5e5;
+  --color-p2: #a3a3a3;
+  --color-p3: #737373;
+  --color-p4: #525252;
 }
 
 @layer utilities {
   .card-surface {
-    background: rgba(5, 18, 40, 0.75);
+    background: rgba(20, 20, 20, 0.75);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow:
@@ -49,18 +52,18 @@
   }
 
   .glass-nav {
-    background: rgba(3, 11, 24, 0.65);
+    background: rgba(10, 10, 10, 0.65);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   }
 
   .text-glow-blue {
-    text-shadow: 0 0 30px rgba(56, 189, 248, 0.4);
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
   }
 
   .bg-arc-glow {
-    background: radial-gradient(ellipse at center, rgba(20, 184, 166, 0.18) 0%, rgba(91,95,199, 0.08) 50%, transparent 70%);
+    background: radial-gradient(ellipse at center, rgba(255,255,255, 0.12) 0%, rgba(255,255,255, 0.05) 50%, transparent 70%);
   }
 
   .btn-pill {
@@ -74,7 +77,7 @@
   }
 
   .card-gradient {
-    background: linear-gradient(135deg, rgba(8, 22, 46, 0.8) 0%, rgba(3, 11, 26, 0.8) 100%);
+    background: linear-gradient(135deg, rgba(30, 30, 30, 0.8) 0%, rgba(10, 10, 10, 0.8) 100%);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
 

@@ -150,7 +150,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
                           <span className={"text-sm font-medium transition-colors text-white group-hover:text-white"}>
                             {s.label}
                           </span>
-                          <span className={"text-xs mt-0.5 text-slate-500"}>{s.desc}</span>
+                          <span className={"text-xs mt-0.5 text-neutral-500"}>{s.desc}</span>
                         </a>
                       ))}
                     </div>
@@ -173,7 +173,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
           <div className="flex items-center gap-3 md:gap-4">
             <button
               onClick={handleLogin}
-              className={"text-sm font-medium transition-colors hidden sm:block text-slate-400 hover:text-white"}
+              className={"text-sm font-medium transition-colors hidden sm:block text-neutral-400 hover:text-white"}
             >
               Login
             </button>
@@ -226,7 +226,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
                 </span>
                 <button
                   onClick={() => setMobileOpen(false)}
-                  className={"p-2 transition-colors text-slate-400 hover:text-white"}
+                  className={"p-2 transition-colors text-neutral-400 hover:text-white"}
                   aria-label="Close menu"
                 >
                   <X className="w-5 h-5" />
@@ -237,7 +237,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
               <div className="flex-1 overflow-y-auto py-4">
                 {/* Solutions section */}
                 <div className="px-5 mb-2">
-                  <span className={"text-[10px] font-bold uppercase tracking-widest text-slate-500"}>
+                  <span className={"text-[10px] font-bold uppercase tracking-widest text-neutral-500"}>
                     Solutions
                   </span>
                 </div>
@@ -254,7 +254,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
                     />
                     <div>
                       <div className={"text-sm font-medium text-white"}>{s.label}</div>
-                      <div className={"text-xs text-slate-500"}>{s.desc}</div>
+                      <div className={"text-xs text-neutral-500"}>{s.desc}</div>
                     </div>
                   </a>
                 ))}
@@ -264,7 +264,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
 
                 {/* Main links */}
                 <div className="px-5 mb-2">
-                  <span className={"text-[10px] font-bold uppercase tracking-widest text-slate-500"}>
+                  <span className={"text-[10px] font-bold uppercase tracking-widest text-neutral-500"}>
                     Pages
                   </span>
                 </div>
@@ -285,7 +285,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
                 {/* Auth links */}
                 <button
                   onClick={handleLogin}
-                  className={"flex items-center px-5 py-3 text-sm font-medium transition-colors w-full text-left text-slate-400 hover:text-white hover:bg-white/[0.03]"}
+                  className={"flex items-center px-5 py-3 text-sm font-medium transition-colors w-full text-left text-neutral-400 hover:text-white hover:bg-white/[0.03]"}
                 >
                   Login
                 </button>

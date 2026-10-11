@@ -101,12 +101,12 @@ const sections = [
 export default function TermsOfService() {
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen text-slate-50 font-sans relative" style={{ background: '#020410' }}>
-      <div className="fixed inset-0 z-0" style={{ background: '#020410' }} />
+    <div className="min-h-screen text-neutral-50 font-sans relative" style={{ background: '#000000' }}>
+      <div className="fixed inset-0 z-0" style={{ background: '#000000' }} />
       <div className="fixed top-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full pointer-events-none z-[2]"
         style={{ background: 'rgba(255,255,255,0.04)', filter: 'blur(150px)' }} />
       <div className="fixed inset-0 pointer-events-none z-[4]"
-        style={{ background: 'linear-gradient(to bottom, rgba(2,4,16,0.4), transparent, #020410)' }} />
+        style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.4), transparent, #000000)' }} />
 
       <MarketingNav onLoginClick={() => navigate('/login?mode=login')} onGetStartedClick={() => navigate('/login')} />
 
@@ -114,8 +114,8 @@ export default function TermsOfService() {
         <div className="mb-12">
           <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Legal</span>
           <h1 className="text-4xl font-semibold text-white mb-3" style={{ letterSpacing: '-0.03em' }}>Terms of Service</h1>
-          <p className="text-slate-500 text-sm">Last updated: {LAST_UPDATED}</p>
-          <p className="text-slate-400 mt-4 leading-relaxed">
+          <p className="text-neutral-500 text-sm">Last updated: {LAST_UPDATED}</p>
+          <p className="text-neutral-400 mt-4 leading-relaxed">
             Please read these Terms carefully before using rain OS. They govern your access to and use of our analysis
             tools, API, WordPress plugin, and all other parts of the Service.
           </p>
@@ -127,7 +127,7 @@ export default function TermsOfService() {
               <h2 className="text-lg font-semibold text-white mb-4">{s.title}</h2>
               <ul className="space-y-3">
                 {s.body.map((p, j) => (
-                  <li key={j} className="text-slate-400 leading-relaxed text-sm pl-4 border-l border-white/10">{p}</li>
+                  <li key={j} className="text-neutral-400 leading-relaxed text-sm pl-4 border-l border-white/10">{p}</li>
                 ))}
               </ul>
             </div>
@@ -137,12 +137,12 @@ export default function TermsOfService() {
 
       <footer className="border-t border-white/10 py-10 relative z-10">
         <div className="max-w-6xl mx-auto px-6 flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-6 text-sm text-slate-500">
+          <div className="flex items-center gap-6 text-sm text-neutral-500">
             <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="/terms" className="text-white">Terms of Service</a>
             <a href="/support" className="hover:text-white transition-colors">Support</a>
           </div>
-          <div className="text-xs text-slate-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
+          <div className="text-xs text-neutral-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
         </div>
       </footer>
     </div>

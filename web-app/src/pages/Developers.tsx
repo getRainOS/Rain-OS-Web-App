@@ -163,7 +163,7 @@ export default function Developers() {
                 </span>
               </h1>
 
-              <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto leading-relaxed">
                 You built something in Bolt, Lovable, or Cursor. Now developers ask AI about it. If your README and docs aren't AI-readable, your product is invisible. rain OS scores your docs and tells you exactly what's blocking a citation.
               </p>
             </motion.div>
@@ -208,7 +208,7 @@ export default function Developers() {
                 Score your docs free
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </button>
-              <a href="/repo-analysis" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
+              <a href="/repo-analysis" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">
                 Or connect your GitHub repo →
               </a>
             </motion.div>
@@ -227,7 +227,7 @@ export default function Developers() {
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">
                 Vibe coders ask AI first. Your docs are what it reads.
               </h2>
-              <p className="text-slate-400 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-neutral-400 max-w-2xl mx-auto leading-relaxed">
                 Independent developers ship fast with Cursor, Bolt, and Lovable. Then they ask AI to recommend tools. If your README isn't AI-readable, your product never gets mentioned. Even the best code is invisible without docs that AI can cite.
               </p>
             </motion.div>
@@ -252,10 +252,10 @@ export default function Developers() {
                       : 'border-white/10 bg-white/[0.03]'
                   }`}
                 >
-                  <p className={`text-sm font-bold mb-2 ${c.highlight ? 'text-white' : c.dim ? 'text-slate-600' : 'text-white'}`}>
+                  <p className={`text-sm font-bold mb-2 ${c.highlight ? 'text-white' : c.dim ? 'text-neutral-600' : 'text-white'}`}>
                     {c.label}
                   </p>
-                  <p className={`text-sm leading-relaxed ${c.dim ? 'text-slate-600' : 'text-slate-400'}`}>{c.body}</p>
+                  <p className={`text-sm leading-relaxed ${c.dim ? 'text-neutral-600' : 'text-neutral-400'}`}>{c.body}</p>
                 </motion.div>
               ))}
             </div>
@@ -277,7 +277,7 @@ export default function Developers() {
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
                 Four pillars, reweighted for developer docs.
               </h2>
-              <p className="text-slate-400 max-w-xl leading-relaxed">
+              <p className="text-neutral-400 max-w-xl leading-relaxed">
                 rain OS scores your docs using the same 5-pillar engine that powers all our analyses. For developer content, we reweight the pillars so structure and authority matter most — exactly what AI needs to cite your README, API docs, and guides.
               </p>
             </motion.div>
@@ -307,10 +307,10 @@ export default function Developers() {
                     </span>
                   </div>
                   <h3 className="text-lg font-bold text-white mb-1" style={{ color: p.color }}>{p.name}</h3>
-                  <p className="text-slate-400 text-sm leading-relaxed mb-5">{p.desc}</p>
+                  <p className="text-neutral-400 text-sm leading-relaxed mb-5">{p.desc}</p>
                   <ul className="space-y-2">
                     {p.scores.map((s, j) => (
-                      <li key={j} className="flex items-center text-sm text-slate-300">
+                      <li key={j} className="flex items-center text-sm text-neutral-300">
                         <span className="w-1.5 h-1.5 rounded-full mr-3 shrink-0" style={{ background: p.color }} />
                         {s}
                       </li>
@@ -333,7 +333,7 @@ export default function Developers() {
             >
               <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">8 signals scored</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">What we analyze</h2>
-              <p className="text-slate-400 max-w-xl leading-relaxed">
+              <p className="text-neutral-400 max-w-xl leading-relaxed">
                 Each of these signals has a measurable impact on whether AI cites your docs or guesses instead.
               </p>
             </motion.div>
@@ -356,7 +356,7 @@ export default function Developers() {
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-white mb-1">{p.name}</h3>
-                    <p className="text-sm text-slate-400 leading-relaxed">{p.desc}</p>
+                    <p className="text-sm text-neutral-400 leading-relaxed">{p.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -392,7 +392,7 @@ export default function Developers() {
                   </div>
                   <div>
                     <p className="text-xs font-bold text-white font-mono">{f.label}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">{f.desc}</p>
+                    <p className="text-xs text-neutral-500 mt-0.5">{f.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -425,7 +425,7 @@ export default function Developers() {
                 >
                   <span className="text-5xl font-bold text-white/[0.06] block mb-4">{s.num}</span>
                   <h3 className="text-base font-semibold text-white mb-2">{s.title}</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">{s.desc}</p>
+                  <p className="text-sm text-neutral-400 leading-relaxed">{s.desc}</p>
                 </motion.div>
               ))}
             </div>
@@ -447,7 +447,7 @@ export default function Developers() {
               <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
                 Ship docs that get your product cited.
               </h2>
-              <p className="text-slate-400 text-lg mb-8 leading-relaxed">
+              <p className="text-neutral-400 text-lg mb-8 leading-relaxed">
                 You shipped your app in a weekend. Now make sure AI can find it. Paste your README or connect your GitHub repo and get a full Documentation Score in seconds. Free to start.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -464,7 +464,7 @@ export default function Developers() {
                 </button>
                 <a
                   href="/repo-analysis"
-                  className="text-sm font-medium text-slate-400 hover:text-white transition-colors"
+                  className="text-sm font-medium text-neutral-400 hover:text-white transition-colors"
                 >
                   Connect your GitHub repo →
                 </a>
@@ -479,12 +479,12 @@ export default function Developers() {
           <span className="font-bold text-3xl tracking-tighter text-white">
             r<span className="text-sky-400">ai</span>n
           </span>
-          <div className="flex items-center justify-center gap-6 text-sm text-slate-400">
+          <div className="flex items-center justify-center gap-6 text-sm text-neutral-400">
             <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
             <a href="/support" className="hover:text-white transition-colors">Support</a>
           </div>
-          <div className="text-right text-xs text-slate-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
+          <div className="text-right text-xs text-neutral-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
         </div>
       </footer>
     </div>

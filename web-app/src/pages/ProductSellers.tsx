@@ -119,7 +119,7 @@ export default function ProductSellers() {
                 </span>
               </h1>
 
-              <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto leading-relaxed">
                 ChatGPT, Perplexity, and Gemini are now recommending products. rain OS scores your product pages against the exact signals AI shopping assistants use — so your products get recommended, not skipped.
               </p>
             </motion.div>
@@ -182,7 +182,7 @@ export default function ProductSellers() {
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">
                 AI shopping is here. Most product pages aren't ready.
               </h2>
-              <p className="text-slate-400 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-neutral-400 max-w-2xl mx-auto leading-relaxed">
                 When someone asks ChatGPT "what's the best X to buy?", AI engines surface products based on structured signals — schema markup, pricing clarity, variant coverage — not keyword density. Most product pages fail these checks invisibly.
               </p>
             </motion.div>
@@ -203,10 +203,10 @@ export default function ProductSellers() {
                       : 'border-white/10 bg-white/[0.03]'
                   }`}
                 >
-                  <p className={`text-sm font-bold mb-2 ${c.highlight ? 'text-white' : c.dim ? 'text-slate-600' : 'text-white'}`}>
+                  <p className={`text-sm font-bold mb-2 ${c.highlight ? 'text-white' : c.dim ? 'text-neutral-600' : 'text-white'}`}>
                     {c.label}
                   </p>
-                  <p className={`text-sm leading-relaxed ${c.dim ? 'text-slate-600' : 'text-slate-400'}`}>{c.body}</p>
+                  <p className={`text-sm leading-relaxed ${c.dim ? 'text-neutral-600' : 'text-neutral-400'}`}>{c.body}</p>
                 </motion.div>
               ))}
             </div>
@@ -231,7 +231,7 @@ export default function ProductSellers() {
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
                 5 signals. One Product Score.
               </h2>
-              <p className="text-slate-400 max-w-xl leading-relaxed">
+              <p className="text-neutral-400 max-w-xl leading-relaxed">
                 Every product page analysis returns a weighted score across the signals AI shopping assistants actually use when deciding what to recommend.
               </p>
             </motion.div>
@@ -254,7 +254,7 @@ export default function ProductSellers() {
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-white mb-1">{p.name}</h3>
-                    <p className="text-sm text-slate-400 leading-relaxed">{p.desc}</p>
+                    <p className="text-sm text-neutral-400 leading-relaxed">{p.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -287,7 +287,7 @@ export default function ProductSellers() {
                 >
                   <span className="text-5xl font-bold text-white/[0.06] block mb-4">{s.num}</span>
                   <h3 className="text-base font-semibold text-white mb-2">{s.title}</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">{s.desc}</p>
+                  <p className="text-sm text-neutral-400 leading-relaxed">{s.desc}</p>
                 </motion.div>
               ))}
             </div>
@@ -310,19 +310,19 @@ export default function ProductSellers() {
               <div className="bg-surface/40 border border-white/10 rounded-3xl overflow-hidden backdrop-blur-sm">
                 <div className="grid grid-cols-3 border-b border-white/10 bg-white/5">
                   <div className="p-5 font-bold text-white text-sm">Signal</div>
-                  <div className="p-5 font-bold text-slate-400 text-center text-sm">Standard SEO</div>
+                  <div className="p-5 font-bold text-neutral-400 text-center text-sm">Standard SEO</div>
                   <div className="p-5 font-bold text-center text-sm border-x border-white/5" style={{ color: '#e5e5e5', background: 'rgba(255,255,255,0.05)' }}>
                     rain OS
                   </div>
                 </div>
                 {comparisons.map((f, i) => (
                   <div key={i} className="grid grid-cols-3 border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors">
-                    <div className="p-5 flex items-center text-slate-300 text-sm">{f.signal}</div>
+                    <div className="p-5 flex items-center text-neutral-300 text-sm">{f.signal}</div>
                     <div className="p-5 flex items-center justify-center">
-                      {f.standard ? <span className="text-slate-500">✓</span> : <span className="text-slate-700">✕</span>}
+                      {f.standard ? <span className="text-neutral-500">✓</span> : <span className="text-neutral-700">✕</span>}
                     </div>
                     <div className="p-5 flex items-center justify-center border-x border-white/5" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                      {f.rain ? <span className="font-bold" style={{ color: '#e5e5e5' }}>✓</span> : <span className="text-slate-700">✕</span>}
+                      {f.rain ? <span className="font-bold" style={{ color: '#e5e5e5' }}>✓</span> : <span className="text-neutral-700">✕</span>}
                     </div>
                   </div>
                 ))}
@@ -346,7 +346,7 @@ export default function ProductSellers() {
               <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
                 Ready to get your products recommended?
               </h2>
-              <p className="text-slate-400 text-lg mb-8 leading-relaxed">
+              <p className="text-neutral-400 text-lg mb-8 leading-relaxed">
                 Paste your product page and get a full Product Discoverability score in seconds. Free to start.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -374,12 +374,12 @@ export default function ProductSellers() {
           <span className="font-bold text-3xl tracking-tighter text-white">
             r<span className="text-sky-400">ai</span>n
           </span>
-          <div className="flex items-center justify-center gap-6 text-sm text-slate-400">
+          <div className="flex items-center justify-center gap-6 text-sm text-neutral-400">
             <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
             <a href="/support" className="hover:text-white transition-colors">Support</a>
           </div>
-          <div className="text-right text-xs text-slate-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
+          <div className="text-right text-xs text-neutral-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
         </div>
       </footer>
     </div>

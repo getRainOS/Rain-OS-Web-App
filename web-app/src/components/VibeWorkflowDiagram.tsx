@@ -62,7 +62,7 @@ export default function VibeWorkflowDiagram() {
           <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
             Build. Optimize. Go live.
           </h2>
-          <p className="text-slate-400 max-w-xl mx-auto leading-relaxed">
+          <p className="text-neutral-400 max-w-xl mx-auto leading-relaxed">
             Rain is the optimization layer between your vibe-coded build and AI discoverability.
             Without it, your site is invisible.
           </p>
@@ -143,7 +143,7 @@ export default function VibeWorkflowDiagram() {
               </div>
 
               {/* OR */}
-              <div className="text-xs text-slate-400 font-medium uppercase tracking-wider">
+              <div className="text-xs text-neutral-400 font-medium uppercase tracking-wider">
                 or
               </div>
 
@@ -279,10 +279,10 @@ export default function VibeWorkflowDiagram() {
               { num: 6, text: "Your score climbs. AI can now read you." },
             ].map((item) => (
               <div key={item.num} className="flex items-start gap-3 text-left">
-                <span className="w-6 h-6 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-bold text-slate-400 shrink-0 mt-0.5">
+                <span className="w-6 h-6 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center text-xs font-bold text-neutral-400 shrink-0 mt-0.5">
                   {item.num}
                 </span>
-                <p className="text-sm text-slate-400 leading-relaxed">{item.text}</p>
+                <p className="text-sm text-neutral-400 leading-relaxed">{item.text}</p>
               </div>
             ))}
           </div>
@@ -292,13 +292,13 @@ export default function VibeWorkflowDiagram() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
           <button
             onClick={handleReplay}
-            className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
+            className="flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors"
           >
             <Zap className="w-4 h-4" />
             {isPlaying ? 'Watch the flow' : 'Replay'}
           </button>
           <div className="hidden sm:block w-px h-4 bg-white/10" />
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-neutral-400">
             Without Rain, your site is built but invisible. AI cannot find what it cannot read.
           </p>
         </div>
@@ -386,7 +386,7 @@ function WorkflowNode({
         {/* Text */}
         <div>
           <div className="text-sm font-semibold text-white">{label}</div>
-          <div className="text-[10px] text-slate-400">{description}</div>
+          <div className="text-[10px] text-neutral-400">{description}</div>
         </div>
 
         {/* Checkmark for completed steps */}

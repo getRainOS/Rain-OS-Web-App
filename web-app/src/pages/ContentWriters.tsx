@@ -124,7 +124,7 @@ export default function ContentWriters() {
                 </span>
               </h1>
 
-              <p className="text-slate-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
+              <p className="text-neutral-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
                 rain OS scores your articles, blog posts, and landing pages against the exact signals AI engines use to pick their sources — so you can optimize, then check whether AI cites you right away.
               </p>
             </motion.div>
@@ -154,7 +154,7 @@ export default function ContentWriters() {
                     onChange={(e) => setContent(e.target.value)}
                     onFocus={() => setHeroFocused(true)}
                     onBlur={() => setHeroFocused(false)}
-                    className="w-full h-40 bg-transparent border-0 resize-none p-6 text-slate-200 focus:ring-0 focus:outline-none text-lg leading-relaxed font-sans relative z-10"
+                    className="w-full h-40 bg-transparent border-0 resize-none p-6 text-neutral-200 focus:ring-0 focus:outline-none text-lg leading-relaxed font-sans relative z-10"
                     required
                   />
                 </div>
@@ -163,7 +163,7 @@ export default function ContentWriters() {
                   <div className="flex items-center gap-6">
                     <button
                       type="button"
-                      className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all active:scale-90"
+                      className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-white/10 transition-all active:scale-90"
                       onClick={() => setContent('')}
                       title="Clear"
                     >
@@ -200,7 +200,7 @@ export default function ContentWriters() {
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">
                 SEO alone won't get you cited
               </h2>
-              <p className="text-slate-400 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-neutral-400 max-w-2xl mx-auto leading-relaxed">
                 When someone asks ChatGPT or Perplexity a question, AI engines select sources based on structure, authority, and clarity — not keyword density. Most content fails these checks invisibly, even content that ranks well on Google.
               </p>
             </motion.div>
@@ -225,10 +225,10 @@ export default function ContentWriters() {
                       : 'border-white/10 bg-white/[0.03]'
                   }`}
                 >
-                  <p className={`text-sm font-bold mb-2 ${c.highlight ? 'text-white' : c.dim ? 'text-slate-600' : 'text-white'}`}>
+                  <p className={`text-sm font-bold mb-2 ${c.highlight ? 'text-white' : c.dim ? 'text-neutral-600' : 'text-white'}`}>
                     {c.label}
                   </p>
-                  <p className={`text-sm leading-relaxed ${c.dim ? 'text-slate-600' : 'text-slate-400'}`}>{c.body}</p>
+                  <p className={`text-sm leading-relaxed ${c.dim ? 'text-neutral-600' : 'text-neutral-400'}`}>{c.body}</p>
                 </motion.div>
               ))}
             </div>
@@ -247,7 +247,7 @@ export default function ContentWriters() {
             >
               <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">How we score</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Five pillars. One Rain Score.</h2>
-              <p className="text-slate-400 max-w-xl leading-relaxed">
+              <p className="text-neutral-400 max-w-xl leading-relaxed">
                 Every analysis returns a weighted score across the five dimensions that determine whether AI engines cite your content.
               </p>
             </motion.div>
@@ -268,7 +268,7 @@ export default function ContentWriters() {
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-white mb-1">{p.name}</h3>
-                    <p className="text-sm text-slate-400 leading-relaxed">{p.desc}</p>
+                    <p className="text-sm text-neutral-400 leading-relaxed">{p.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -302,7 +302,7 @@ export default function ContentWriters() {
                 >
                   <span className="text-5xl font-bold text-white/[0.06] block mb-4">{s.num}</span>
                   <h3 className="text-base font-semibold text-white mb-2">{s.title}</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">{s.desc}</p>
+                  <p className="text-sm text-neutral-400 leading-relaxed">{s.desc}</p>
                 </motion.div>
               ))}
             </div>
@@ -337,7 +337,7 @@ export default function ContentWriters() {
                     <f.Icon className="w-4.5 h-4.5" />
                   </div>
                   <h3 className="text-sm font-semibold text-white mb-2">{f.title}</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">{f.desc}</p>
+                  <p className="text-sm text-neutral-400 leading-relaxed">{f.desc}</p>
                 </motion.div>
               ))}
             </div>
@@ -376,7 +376,7 @@ export default function ContentWriters() {
                 </span>
               ))}
             </motion.div>
-            <p className="text-slate-500 text-sm mt-4 max-w-lg mx-auto">
+            <p className="text-neutral-500 text-sm mt-4 max-w-lg mx-auto">
               Every analysis scores across these five pillars. Plus, scan any URL to check technical AI-readiness signals.
             </p>
           </div>
@@ -397,7 +397,7 @@ export default function ContentWriters() {
               <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
                 Ready to get your content cited?
               </h2>
-              <p className="text-slate-400 text-lg mb-8 leading-relaxed">
+              <p className="text-neutral-400 text-lg mb-8 leading-relaxed">
                 Paste your content for a full AI readability score, or scan any URL to check technical signals. Free to start, no credit card required.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -418,12 +418,12 @@ export default function ContentWriters() {
       <footer className="border-t border-white/10 bg-midnight py-12 relative z-10">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
           <span className="font-bold text-3xl tracking-tighter text-white">r<span className="text-sky-400">ai</span>n</span>
-          <div className="flex items-center justify-center gap-6 text-sm text-slate-400">
+          <div className="flex items-center justify-center gap-6 text-sm text-neutral-400">
             <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
             <a href="/support" className="hover:text-white transition-colors">Support</a>
           </div>
-          <div className="text-right text-xs text-slate-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
+          <div className="text-right text-xs text-neutral-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
         </div>
       </footer>
     </div>

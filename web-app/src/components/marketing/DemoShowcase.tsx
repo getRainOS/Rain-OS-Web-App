@@ -130,7 +130,7 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4" style={{ letterSpacing: '-0.03em' }}>
             Your Rain Score, in real time
           </h2>
-          <p className="text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">
+          <p className="text-neutral-400 max-w-2xl mx-auto text-lg leading-relaxed">
             Every analysis mode returns the same five-pillar score — whether you paste content, scan a URL, or connect your GitHub repo. See what that looks like across the full platform.
           </p>
         </div>
@@ -148,7 +148,7 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
                 style={{
                   background: active ? s.modeBg : 'rgba(255,255,255,0.03)',
                   border: `1px solid ${active ? s.modeBorder : 'rgba(255,255,255,0.08)'}`,
-                  color: active ? s.modeColor : '#64748b',
+                  color: active ? s.modeColor : '#737373',
                 }}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -181,7 +181,7 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
                 {idx === 0 && (
                   <>
                     <h3 className="text-2xl font-semibold text-white mb-4 leading-snug">Your Bolt app is invisible to AI — here's why</h3>
-                    <p className="text-slate-400 leading-relaxed mb-6">Connect your GitHub repo and rain OS reads the actual source files your AI tool generated. Most vibe-coded apps score below 40 before optimization — missing llms.txt, no schema, JS-only rendering.</p>
+                    <p className="text-neutral-400 leading-relaxed mb-6">Connect your GitHub repo and rain OS reads the actual source files your AI tool generated. Most vibe-coded apps score below 40 before optimization — missing llms.txt, no schema, JS-only rendering.</p>
                     <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10">
                       <AlertTriangle className="w-5 h-5 text-white shrink-0" />
                       <span className="text-sm text-white">3 critical AEO gaps found in source</span>
@@ -191,7 +191,7 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
                 {idx === 1 && (
                   <>
                     <h3 className="text-2xl font-semibold text-white mb-4 leading-snug">Same repo. Fixed in one pass. Score jumped 58 points.</h3>
-                    <p className="text-slate-400 leading-relaxed mb-6">After acting on rain OS recommendations — adding llms.txt, schema markup, and a static HTML fallback — the same Bolt app went from invisible to highly citable.</p>
+                    <p className="text-neutral-400 leading-relaxed mb-6">After acting on rain OS recommendations — adding llms.txt, schema markup, and a static HTML fallback — the same Bolt app went from invisible to highly citable.</p>
                     <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10">
                       <CheckCircle2 className="w-5 h-5 text-white shrink-0" />
                       <span className="text-sm text-white">All critical gaps resolved</span>
@@ -201,7 +201,7 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
                 {idx === 2 && (
                   <>
                     <h3 className="text-2xl font-semibold text-white mb-4 leading-snug">Scan any live URL and see every technical AEO signal</h3>
-                    <p className="text-slate-400 leading-relaxed mb-6">Paste a URL and rain OS fetches the raw HTML — the same way AI crawlers see it. Surface missing schema, robots issues, open graph gaps, and llms.txt status in seconds.</p>
+                    <p className="text-neutral-400 leading-relaxed mb-6">Paste a URL and rain OS fetches the raw HTML — the same way AI crawlers see it. Surface missing schema, robots issues, open graph gaps, and llms.txt status in seconds.</p>
                     <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10">
                       <Zap className="w-5 h-5 text-white shrink-0" />
                       <span className="text-sm text-white">2 fixable issues found — score impact: +18pts</span>
@@ -211,7 +211,7 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
                 {idx === 3 && (
                   <>
                     <h3 className="text-2xl font-semibold text-white mb-4 leading-snug">Paste any content and watch it score across all five pillars</h3>
-                    <p className="text-slate-400 leading-relaxed mb-6">Works on blog posts, landing pages, product copy, or anything else. Get a weighted Rain Score with actionable recommendations — and built-in rewrite tools to fix issues without leaving the dashboard.</p>
+                    <p className="text-neutral-400 leading-relaxed mb-6">Works on blog posts, landing pages, product copy, or anything else. Get a weighted Rain Score with actionable recommendations — and built-in rewrite tools to fix issues without leaving the dashboard.</p>
                     <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10">
                       <Sparkles className="w-5 h-5 text-white shrink-0" />
                       <span className="text-sm text-white">Highly citable — AI engines will quote this</span>
@@ -244,7 +244,7 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center gap-2">
                     <span className="flex h-1.5 w-1.5 rounded-full animate-pulse" style={{ background: data.modeColor }} />
-                    <span className="text-xs font-semibold text-slate-400">Rain OS Analysis</span>
+                    <span className="text-xs font-semibold text-neutral-400">Rain OS Analysis</span>
                   </div>
                   <AnimatePresence mode="wait">
                     <motion.div
@@ -298,7 +298,7 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
                           {data.score}
                         </motion.span>
                       </AnimatePresence>
-                      <span className="text-[9px] text-slate-500 uppercase tracking-wide font-semibold">Rain Score</span>
+                      <span className="text-[9px] text-neutral-500 uppercase tracking-wide font-semibold">Rain Score</span>
                     </div>
                   </div>
 
@@ -308,7 +308,7 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
                         <p.Icon className="w-3 h-3 shrink-0" style={{ color: p.color }} />
                         <div className="flex-1 min-w-0">
                           <div className="flex justify-between mb-0.5">
-                            <span className="text-[10px] text-slate-400 truncate font-medium">{p.name}</span>
+                            <span className="text-[10px] text-neutral-400 truncate font-medium">{p.name}</span>
                             <AnimatePresence mode="wait">
                               <motion.span
                                 key={idx + '-' + i}
