@@ -118,13 +118,13 @@
 .bar {
   height: 8px;
   background: rgba(255,255,255,0.05);
-  border-radius: 999px;
-  overflow: visible;
+  border-radius: 3px;
+  overflow: hidden;
 }
 
 .barFill {
   height: 100%;
-  border-radius: 999px;
+  border-radius: 3px;
   transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
 }
 
