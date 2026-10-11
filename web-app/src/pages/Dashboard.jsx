@@ -136,7 +136,7 @@ function getItemType(item) {
 }
 
 /* ── Gas Gauge Arc ── */
-function GaugeArc({ score = 0, color = '#0ea5e9', size = 120 }) {
+function GaugeArc({ score = 0, color = '#1C73C4', size = 120 }) {
   const cx = size / 2;
   const cy = size * 0.54;
   const r = size * 0.36;

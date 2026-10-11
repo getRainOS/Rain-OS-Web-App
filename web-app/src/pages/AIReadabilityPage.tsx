@@ -297,7 +297,7 @@ export default function AIReadabilityPage() {
             <button
               onClick={() => navigate('/login')}
               className="inline-flex items-center gap-2 text-white rounded-xl px-8 py-3.5 text-sm font-bold transition-all hover:scale-105 active:scale-95"
-              style={{ background: '#38BDF8' }}
+              style={{ background: '#2B8FE3' }}
             >
               Scan my content free
               <ArrowLeft className="w-4 h-4 rotate-180" />

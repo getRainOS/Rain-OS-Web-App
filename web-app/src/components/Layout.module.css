@@ -179,7 +179,7 @@
 
 .navItemActive {
   color: var(--cyan) !important;
-  background: rgba(56,189,248,0.08) !important;
+  background: rgba(43,143,227,0.08) !important;
   font-weight: 600;
 }
 

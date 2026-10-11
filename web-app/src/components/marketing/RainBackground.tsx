@@ -10,7 +10,7 @@ const RainBackground: React.FC = () => {
     if (!ctx) return;
 
     let animationFrameId: number;
-    let drops: { x: number; y: number; speed: number; length: number; opacity: number }[] = [];
+    let drops: { x: number; y: number; speed: number; radius: number; opacity: number }[] = [];
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -18,16 +18,19 @@ const RainBackground: React.FC = () => {
       initDrops();
     };
 
+    // Sparse, slow-falling dots — not streak lines. Density is deliberately
+    // low (one drop per ~90px of width) so they read as a quiet, dispersed
+    // texture rather than a literal rainstorm.
     const initDrops = () => {
       drops = [];
-      const count = Math.floor(window.innerWidth * 0.1);
+      const count = Math.floor(window.innerWidth / 90);
       for (let i = 0; i < count; i++) {
         drops.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          speed: 0.5 + Math.random() * 1.5,
-          length: 10 + Math.random() * 20,
-          opacity: 0.1 + Math.random() * 0.2,
+          speed: 0.15 + Math.random() * 0.25,
+          radius: 1 + Math.random() * 1.5,
+          opacity: 0.12 + Math.random() * 0.18,
         });
       }
     };
@@ -36,15 +39,11 @@ const RainBackground: React.FC = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drops.forEach((drop) => {
         ctx.beginPath();
-        ctx.moveTo(drop.x, drop.y);
-        ctx.lineTo(drop.x - 2, drop.y + drop.length);
-        ctx.strokeStyle = `rgba(56, 189, 248, ${drop.opacity})`;
-        ctx.lineWidth = 1;
-        ctx.stroke();
+        ctx.arc(drop.x, drop.y, drop.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${drop.opacity})`;
+        ctx.fill();
         drop.y += drop.speed;
-        drop.x -= drop.speed * 0.2;
-        if (drop.y > canvas.height) { drop.y = -drop.length; drop.x = Math.random() * canvas.width; }
-        if (drop.x < 0) { drop.x = canvas.width; }
+        if (drop.y > canvas.height) { drop.y = -4; drop.x = Math.random() * canvas.width; }
       });
       animationFrameId = requestAnimationFrame(draw);
     };
@@ -62,12 +61,12 @@ const RainBackground: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 z-[3] pointer-events-none opacity-60 mix-blend-screen"
+      className="fixed inset-0 z-[3] pointer-events-none"
       style={{
         width: '100%',
         height: '100%',
-        maskImage: 'linear-gradient(to bottom, black 0%, black 40%, transparent 70%)',
-        WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 40%, transparent 70%)',
+        maskImage: 'linear-gradient(to bottom, black 0%, black 70%, transparent 100%)',
+        WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 70%, transparent 100%)',
       }}
     />
   );
