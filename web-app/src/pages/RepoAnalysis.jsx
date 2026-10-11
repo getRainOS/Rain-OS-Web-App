@@ -438,7 +438,6 @@ export default function RepoAnalysis() {
                     className={styles.signalDot}
                     style={{
                       background: s.pass ? 'var(--green)' : 'var(--red)',
-                      boxShadow: `0 0 6px ${s.pass ? 'var(--green)' : 'var(--red)'}`,
                     }}
                   />
                   <span className={styles.signalName}>{s.label}</span>
