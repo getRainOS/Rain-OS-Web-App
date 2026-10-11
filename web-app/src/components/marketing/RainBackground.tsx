@@ -20,14 +20,14 @@ const RainBackground: React.FC = () => {
 
     const initDrops = () => {
       drops = [];
-      const count = Math.floor(window.innerWidth * 0.035);
+      const count = Math.floor(window.innerWidth * 0.06);
       for (let i = 0; i < count; i++) {
         drops.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          speed: 0.2 + Math.random() * 0.5,
-          length: 14 + Math.random() * 26,
-          opacity: 0.03 + Math.random() * 0.07,
+          speed: 0.25 + Math.random() * 0.6,
+          length: 16 + Math.random() * 30,
+          opacity: 0.08 + Math.random() * 0.14,
         });
       }
     };
@@ -62,12 +62,12 @@ const RainBackground: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 z-[3] pointer-events-none opacity-70"
+      className="fixed inset-0 z-[3] pointer-events-none"
       style={{
         width: '100%',
         height: '100%',
-        maskImage: 'linear-gradient(to bottom, black 0%, black 40%, transparent 70%)',
-        WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 40%, transparent 70%)',
+        maskImage: 'linear-gradient(to bottom, black 0%, black 60%, transparent 95%)',
+        WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 60%, transparent 95%)',
       }}
     />
   );
