@@ -8,9 +8,10 @@ interface GitHubErrorBody {
   message?: string;
 }
 
-/** Artifact from a URL scan (mirrors urlScanService.UrlScanRecommendation.artifact) */
+/** Artifact from a URL scan or repo analysis (mirrors UrlScanRecommendation.artifact
+ *  / RepoRecommendation.artifact — same shape, shared by both push-fixes callers) */
 export interface ArtifactInput {
-  type: 'json-ld' | 'llms-txt' | 'robots-txt' | 'html';
+  type: 'json-ld' | 'llms-txt' | 'robots-txt' | 'html' | 'markdown';
   content: string;
   filename?: string;
 }
@@ -227,6 +228,14 @@ export async function computeApprovedFileChanges(
           snippet: artifact.content,
         });
       }
+
+    } else if (artifact.type === 'markdown') {
+      // No safe assumption about where in a README/doc this belongs —
+      // always a manual paste, never auto-spliced.
+      manualItems.push({
+        description: 'Add this section to your README (or other relevant doc)',
+        snippet: artifact.content,
+      });
     }
   }
 
