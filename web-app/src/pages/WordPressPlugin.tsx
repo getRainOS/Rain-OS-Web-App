@@ -14,8 +14,8 @@ const coreFeatures = [
     color: '#e5e5e5',
     bg: 'rgba(255,255,255,0.1)',
     border: 'rgba(255,255,255,0.2)',
-    title: 'Full 5-Pillar Rain Score',
-    desc: 'Every post gets scored across AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, and RAG Readiness — directly inside WordPress.',
+    title: 'Full 6-Pillar Rain Score',
+    desc: 'Every post gets scored across AI Readability, Digital Authority, Conversion Readiness, and RAG Readiness — plus Product Discoverability and Local Presence when they apply — directly inside WordPress.',
   },
   {
     Icon: Layers,
@@ -377,12 +377,12 @@ export default function WordPressPlugin() {
                   </div>
                 </div>
                 <p className="text-sm text-neutral-400 leading-relaxed">
-                  Score the post you're currently editing. The Gutenberg sidebar panel pulls the live content from the editor and sends it for a full 5-pillar analysis — AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, and RAG Readiness — without you leaving the screen.
+                  Score the post you're currently editing. The Gutenberg sidebar panel pulls the live content from the editor and sends it for a full six-pillar analysis — AI Readability, Digital Authority, Conversion Readiness, and RAG Readiness, plus Product Discoverability and Local Presence when they apply — without you leaving the screen.
                 </p>
                 <ul className="space-y-2">
                   {[
                     'Scores the active post in one click',
-                    'Full 5-pillar Rain Score with sub-scores',
+                    'Full 6-pillar Rain Score with sub-scores',
                     'Inline recommendations ranked by impact',
                     'Built-in rewrite tools: titles, meta, summarize, rewrite',
                     'Works on drafts before you publish',

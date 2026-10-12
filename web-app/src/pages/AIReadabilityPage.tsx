@@ -67,7 +67,7 @@ export default function AIReadabilityPage() {
           </div>
         </motion.div>
 
-        {/* The Five Pillars */}
+        {/* The Six Pillars */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}

@@ -1049,7 +1049,7 @@ export default function VibeCoders() {
               className="text-center mb-14"
             >
               <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Scoring breakdown</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Five pillars, granular signals</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Five of six pillars, granular signals</h2>
               <p className="text-neutral-400 max-w-xl mx-auto leading-relaxed mb-3">
                 Every repo scan and URL check breaks down into these five core areas.
               </p>
