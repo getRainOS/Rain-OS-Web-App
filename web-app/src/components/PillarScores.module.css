@@ -137,6 +137,7 @@
 .dotColumnValue {
   font-size: 13px;
   font-weight: 700;
+  color: var(--cyan);
 }
 
 .dotColumnValueNa {
@@ -160,7 +161,7 @@
 }
 
 .dotFilled {
-  background: var(--dot-color, var(--cyan));
+  background: var(--cyan);
 }
 
 .dotColumnLabel {
