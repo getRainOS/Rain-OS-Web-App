@@ -368,7 +368,7 @@ function PillarDotChart({ pillars, result }) {
         return (
           <div key={p.key} className={styles.dotColumn}>
             {pct !== null ? (
-              <span className={styles.dotColumnValue} style={{ color: p.color }}>{pct}%</span>
+              <span className={styles.dotColumnValue}>{pct}%</span>
             ) : (
               <span className={styles.dotColumnValueNa}>N/A</span>
             )}
@@ -377,7 +377,6 @@ function PillarDotChart({ pillars, result }) {
                 <div
                   key={i}
                   className={`${styles.dot} ${i < filledCount ? styles.dotFilled : ''}`}
-                  style={i < filledCount ? { '--dot-color': p.color } : undefined}
                 />
               ))}
             </div>
