@@ -354,6 +354,41 @@ function SubItemsList({ items }) {
   );
 }
 
+const DOT_COUNT = 24;
+
+/* ── Vertical dotted bar chart — one column per visible pillar ──────────── */
+function PillarDotChart({ pillars, result }) {
+  return (
+    <div className={styles.dotChart}>
+      {pillars.map(p => {
+        const score = resolveScore(result, p.key, p.camel);
+        const pct = score !== null ? Math.min(Math.round(score), 100) : null;
+        const filledCount = pct !== null ? Math.round((pct / 100) * DOT_COUNT) : 0;
+
+        return (
+          <div key={p.key} className={styles.dotColumn}>
+            {pct !== null ? (
+              <span className={styles.dotColumnValue} style={{ color: p.color }}>{pct}%</span>
+            ) : (
+              <span className={styles.dotColumnValueNa}>N/A</span>
+            )}
+            <div className={styles.dotTrack}>
+              {Array.from({ length: DOT_COUNT }, (_, i) => (
+                <div
+                  key={i}
+                  className={`${styles.dot} ${i < filledCount ? styles.dotFilled : ''}`}
+                  style={i < filledCount ? { '--dot-color': p.color } : undefined}
+                />
+              ))}
+            </div>
+            <span className={styles.dotColumnLabel}>{p.label}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 /**
  * Resolve a pillar score from any of the response shapes:
  *   - snake_case top-level (result.ai_readability)           — demo / history
@@ -441,6 +476,8 @@ export default function PillarScores({ result, lane }) {
         Gemini grades your content against this pillar's fixed rubric — a consistent AI judgment of how well an AI could use it, not a literal count like word count or load speed, so scores stay comparable across your pages and over time.
       </WhatDoesThisMean>
 
+      <PillarDotChart pillars={visiblePillars} result={result} />
+
       <div className={styles.pillars}>
         {visiblePillars.map(p => {
           const score = resolveScore(result, p.key, p.camel);
@@ -478,17 +515,6 @@ export default function PillarScores({ result, lane }) {
                     <span className={styles.pillarNa}>N/A</span>
                   )}
                 </div>
-              </div>
-
-              <div className={styles.bar}>
-                <div
-                  className={styles.barFill}
-                  style={{
-                    width: pct !== null ? `${pct}%` : '0%',
-                    background: `linear-gradient(90deg, ${p.color}99, ${p.color})`,
-                    boxShadow: pct ? `0 0 10px 0 ${p.color}66` : 'none',
-                  }}
-                />
               </div>
 
               <SubItemsList items={buildSubItems(p.key, p.detailKey, result)} />
