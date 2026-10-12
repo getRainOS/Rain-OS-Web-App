@@ -5,6 +5,7 @@ import { ArrowLeft, Calendar, Clock, Link2, FileText } from 'lucide-react';
 import { getPostBySlug } from '../data/blogPosts';
 import MarketingNav from '@/components/marketing/MarketingNav';
 
+import SiteFooter from '@/components/marketing/SiteFooter';
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
@@ -224,6 +225,7 @@ export default function BlogPost() {
           </button>
         </motion.div>
       </div>
+      <SiteFooter />
     </div>
   );
 }

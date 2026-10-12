@@ -5,6 +5,7 @@ import { ArrowLeft, Clock, Calendar, ChevronRight, BookOpen } from 'lucide-react
 import { BLOG_POSTS, BlogPost } from '../data/blogPosts';
 import MarketingNav from '@/components/marketing/MarketingNav';
 
+import SiteFooter from '@/components/marketing/SiteFooter';
 export default function BlogIndex() {
   const navigate = useNavigate();
 
@@ -87,6 +88,7 @@ export default function BlogIndex() {
           </div>
         </motion.div>
       </div>
+      <SiteFooter />
     </div>
   );
 }
