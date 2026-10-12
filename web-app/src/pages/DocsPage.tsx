@@ -339,7 +339,7 @@ export default function DocsPage() {
                         name: 'URL Scanner',
                         path: '/url-scanner',
                         desc: 'Enter any live URL. We fetch the page, parse the HTML, and surface every technical AEO signal: schema markup, llms.txt, JS rendering risk, open graph, and more.',
-                        endpoint: 'POST /api/scan',
+                        endpoint: 'POST /api/url-scan',
                       },
                       {
                         Icon: GitBranch,
@@ -414,18 +414,25 @@ export default function DocsPage() {
                         },
                         {
                           method: 'POST',
-                          path: '/api/scan',
+                          path: '/api/url-scan',
                           desc: 'Scan a live URL for technical AEO signals.',
                           body: `{
   "url": "https://example.com",
-  "industry": "string (optional)"
+  "industry": "string (optional)",
+  "module": "general | product_sellers | developers | vibe_coders | local_business (optional)"
 }`,
                         },
                         {
                           method: 'GET',
                           path: '/api/history',
                           desc: 'Retrieve past analyses for the authenticated user.',
-                          response: `[{ "id": "...", "title": "...", "overallScore": 74, "createdAt": "..." }]`,
+                          response: `{
+  "success": true,
+  "items": [
+    { "id": 1, "title": "...", "overall_score": 74, "analyzed_at": "..." }
+  ],
+  "totalCount": 1
+}`,
                         },
                       ].map((ep) => (
                         <div key={ep.path} className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
