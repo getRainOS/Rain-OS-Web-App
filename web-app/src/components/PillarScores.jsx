@@ -485,7 +485,7 @@ export default function PillarScores({ result, lane }) {
           return (
             <div key={p.key} className={styles.pillar}>
               <div className={styles.pillarHeader}>
-                <div className={styles.pillarDot} style={{ background: p.color }} />
+                <div className={styles.pillarDot} />
                 <div>
                   <div className={styles.pillarLabel}>{p.label}</div>
                   <div className={styles.pillarSub}>{p.sub}</div>
@@ -503,10 +503,7 @@ export default function PillarScores({ result, lane }) {
                         {pct}
                       </span>
                       <span className={styles.pillarMax}>/100</span>
-                      <span
-                        className={styles.pillarTag}
-                        style={{ color: p.color, borderColor: p.color }}
-                      >
+                      <span className={styles.pillarTag}>
                         {scoreLabel(pct)}
                       </span>
                     </>
