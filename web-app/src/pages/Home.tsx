@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import {
   ArrowRight, ArrowUpRight, Check, Search, Radar, Wand2, Gauge, CalendarClock,
   GitPullRequest, FileText, Globe, GitBranch, BarChart2, Eye, Mail, ShieldCheck,
+  MapPin, ShoppingBag, PenLine, Sparkles, Code2, HelpCircle,
 } from 'lucide-react';
 import MarketingNav from '@/components/marketing/MarketingNav';
 import RainBackground from '@/components/marketing/RainBackground';
@@ -202,7 +203,7 @@ const PLATFORM = [
     label: 'Measure',
     Icon: Gauge,
     title: 'Know how AI reads you',
-    body: 'One score from 0 to 100, built from six pillars and weighted for your kind of business. Every signal is explained, so you know what moved it.',
+    body: 'One score from 0 to 100, built from the six things AI looks at and adjusted for your kind of business. Every check is explained, so you know what moved it.',
     tools: [
       { Icon: FileText, name: 'Content Optimizer', desc: 'Score drafts before you publish' },
       { Icon: Globe, name: 'URL Scanner', desc: 'llms.txt, schema, crawler access, structure' },
@@ -214,7 +215,7 @@ const PLATFORM = [
     label: 'Monitor',
     Icon: Radar,
     title: 'See whether AI cites you',
-    body: 'Ask the questions your customers ask. We run them on Gemini with live Google Search grounding and show every source it cited.',
+    body: 'Ask the questions your customers ask. We put them to Google\'s Gemini, searching the live web, and show every website it pointed to.',
     tools: [
       { Icon: Radar, name: 'Citation Monitor', desc: 'Cited or not, with the full source list' },
       { Icon: CalendarClock, name: 'Weekly tracking', desc: 'Re-checked every week, alerts on change' },
@@ -227,7 +228,7 @@ const PLATFORM = [
     label: 'Fix',
     Icon: Wand2,
     title: 'Ship the fix, not a report',
-    body: 'Every finding comes with what to do in plain language and in code. Rewrite in one click, or let Rain OS open the pull request.',
+    body: 'Every problem comes with what to do in plain English, plus the technical version for whoever builds your site. Rewrite in one click, or let Rain OS make the code change for you.',
     tools: [
       { Icon: Wand2, name: 'Rewrite for AI', desc: 'Restructure content for extraction' },
       { Icon: FileText, name: 'Fix prompts', desc: 'Tailored to Bolt, Lovable, Cursor and more' },
@@ -381,19 +382,19 @@ const LANE_ROWS = [
 ];
 
 const SEG = ['#2B8FE3', '#5aa9ef', '#8ac2f4', '#c7b8ff', '#ffb86b', '#6b7280'];
-const SHORT = ['AI Readability', 'Authority', 'Conversion', 'Product', 'Local', 'RAG'];
+const SHORT = ['Easy for AI to read', 'Trust', 'Clear next step', 'Product details', 'Local info', 'Easy to quote'];
 
 function LanesSection() {
   return (
     <section className="relative z-10 py-28 border-t border-white/[0.06]">
       <div className="max-w-6xl mx-auto px-6">
         <Reveal>
-          <Eyebrow>Lane-weighted scoring</Eyebrow>
+          <Eyebrow>Scored for your kind of business</Eyebrow>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">
             A bakery and a SaaS company don't get found the same way.
           </h2>
           <p className="mt-5 text-neutral-400 text-lg max-w-2xl leading-relaxed">
-            So we don't score them the same way. Pick your lane and the Rain Score shifts its weight to what decides whether AI recommends you. These are the real weights.
+            So we don't score them the same way. Pick yours and the Rain Score focuses on what decides whether AI recommends you. These are the real percentages.
           </p>
         </Reveal>
 
@@ -433,7 +434,7 @@ function LanesSection() {
 
 function MethodSection() {
   const steps = [
-    { n: '01', title: 'We ask the engine', body: 'Your exact question goes to Gemini with live Google Search grounding, the same way a customer would ask it.' },
+    { n: '01', title: 'We ask the engine', body: 'Your exact question goes to Google\'s Gemini, searching the live web, the same way a customer would ask it.' },
     { n: '02', title: 'We read the sources', body: 'We collect every source the answer cites and match them against your domain. Cited or not is a fact, not an estimate.' },
     { n: '03', title: 'We show our work', body: 'You get the answer excerpt, the full source list and the competitors who were cited instead, saved so you can compare over time.' },
   ];
@@ -446,11 +447,11 @@ function MethodSection() {
             Real checks, not predictions.
           </h2>
           <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-xl">
-            Plenty of tools guess whether AI will mention you. Rain OS asks, then shows you the answer. When a number is a judgment, we tell you, and we show the evidence behind it.
+            Some tools guess whether AI will mention you. Rain OS asks, then shows you the answer. When a number is a judgment call, we say so and show the evidence.
           </p>
           <div className="mt-8 flex items-start gap-3 text-[13px] text-neutral-500 max-w-md">
             <ShieldCheck className="w-4 h-4 mt-0.5 shrink-0 text-neutral-400" />
-            Citation checks run on Gemini today. The Rain Score measures structural signals that ChatGPT, Perplexity and other engines rely on too.
+            Citation checks run on Google's Gemini today. The Rain Score looks at the same things ChatGPT, Perplexity and other assistants rely on.
           </div>
         </Reveal>
         <div className="space-y-3">
@@ -510,13 +511,102 @@ function TrackingSection() {
   );
 }
 
+/* ── Who it's for (lane picker) ─────────────────────────────────────────── */
+
+const WHO = [
+  { Icon: MapPin, title: 'I run a local business', body: 'Plumbers, salons, dentists, restaurants. Help AI recommend you when people ask who\'s best nearby.', to: '/local-business' },
+  { Icon: ShoppingBag, title: 'I sell products online', body: 'Shopify, Etsy, Amazon or your own store. Help AI suggest your products when people ask what to buy.', to: '/product-sellers' },
+  { Icon: PenLine, title: 'I write content', body: 'Blogs, newsletters and landing pages. Write things AI quotes and links to.', to: '/content-writers' },
+  { Icon: Sparkles, title: 'I build apps with AI tools', body: 'Bolt, Lovable, Replit, v0 or Cursor. Make sure AI can actually find what you built.', to: '/vibe-coders' },
+  { Icon: Code2, title: 'I write code and docs', body: 'READMEs, documentation and API references. Help AI explain your project correctly.', to: '/developers' },
+];
+
+function WhoSection({ onStart }: { onStart: () => void }) {
+  return (
+    <section id="who" className="relative z-10 py-24 border-t border-white/[0.06] scroll-mt-16">
+      <div className="max-w-6xl mx-auto px-6">
+        <Reveal className="text-center">
+          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
+            What are you working on?
+          </h2>
+          <p className="mt-4 text-neutral-400 text-lg max-w-xl mx-auto leading-relaxed">
+            Pick the one that sounds most like you. We'll show you what matters for your kind of business.
+          </p>
+        </Reveal>
+        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {WHO.map((w, k) => (
+            <Reveal key={w.title} delay={0.04 * k}>
+              <Link
+                to={w.to}
+                className="group flex h-full flex-col rounded-xl border border-white/10 bg-[#0a0a0a] p-6 hover:border-[#2B8FE3]/50 hover:bg-[#2B8FE3]/[0.04] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2B8FE3]"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03]">
+                    <w.Icon className="w-4 h-4 text-[#5aa9ef]" />
+                  </span>
+                  <ArrowRight className="w-4 h-4 text-neutral-600 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+                </div>
+                <div className="mt-5 text-[17px] font-medium text-white">{w.title}</div>
+                <p className="mt-1.5 text-[14px] text-neutral-400 leading-relaxed">{w.body}</p>
+              </Link>
+            </Reveal>
+          ))}
+          <Reveal delay={0.2}>
+            <button
+              onClick={onStart}
+              className="group flex h-full w-full flex-col rounded-xl border border-dashed border-white/15 p-6 text-left hover:border-white/30 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#2B8FE3]"
+            >
+              <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10">
+                <HelpCircle className="w-4 h-4 text-neutral-400" />
+              </span>
+              <div className="mt-5 text-[17px] font-medium text-white">Not sure?</div>
+              <p className="mt-1.5 text-[14px] text-neutral-400 leading-relaxed">Start free and choose inside the app. You can switch any time.</p>
+            </button>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── How it works ───────────────────────────────────────────────────────── */
+
+function HowItWorks() {
+  const steps = [
+    { n: '1', title: 'Add your website', body: 'Paste your web address, or paste the text of a page or post. Nothing to install.' },
+    { n: '2', title: 'Get your score', body: 'A number from 0 to 100, with what\'s helping you and what\'s holding you back.' },
+    { n: '3', title: 'Follow the fixes', body: 'Each fix is written in plain English, with a technical version you can hand to whoever builds your site.' },
+  ];
+  return (
+    <section className="relative z-10 py-24 border-t border-white/[0.06]">
+      <div className="max-w-6xl mx-auto px-6">
+        <Reveal>
+          <Eyebrow>How it works</Eyebrow>
+          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Three steps. No setup.</h2>
+        </Reveal>
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-3">
+          {steps.map((st, k) => (
+            <Reveal key={st.n} delay={0.06 * k}>
+              <div className="h-full rounded-xl border border-white/10 bg-[#0a0a0a] p-6">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#2B8FE3]/15 text-[13px] font-medium text-[#8ac2f4]">{st.n}</span>
+                <div className="mt-5 text-[17px] font-medium text-white">{st.title}</div>
+                <p className="mt-1.5 text-[14px] text-neutral-400 leading-relaxed">{st.body}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ── Page ───────────────────────────────────────────────────────────────── */
 
 const SPECS = [
-  { k: '6', v: 'scoring pillars' },
-  { k: '5', v: 'business lanes, each weighted' },
-  { k: 'Live', v: 'Google Search grounding' },
-  { k: 'Weekly', v: 'citation tracking' },
+  { k: '6', v: 'things AI checks on your site' },
+  { k: '5', v: 'business types, each scored its own way' },
+  { k: 'Live', v: 'checks against real AI answers' },
+  { k: 'Weekly', v: 're-checks with email alerts' },
 ];
 
 export default function Home() {
@@ -536,28 +626,32 @@ export default function Home() {
           />
           <div className="relative z-10 max-w-6xl mx-auto px-6 pt-36 md:pt-44 pb-20 text-center">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <Link to="/ai-readability" className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] pl-3 pr-2.5 h-7 text-[12px] text-neutral-300 hover:border-white/20 transition-colors">
+              <a href="#who" className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] pl-3 pr-2.5 h-7 text-[12px] text-neutral-300 hover:border-white/20 transition-colors">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#2B8FE3]" />
-                Answer Engine Optimization
+                For local businesses, sellers and builders
                 <ArrowRight className="w-3 h-3 text-neutral-500" />
-              </Link>
+              </a>
               <h1 className="mt-7 text-[44px] leading-[1.02] sm:text-6xl md:text-[84px] font-semibold tracking-[-0.045em] text-balance">
                 Be the answer
                 <br />
                 <span className="text-neutral-500">AI gives.</span>
               </h1>
               <p className="mt-7 text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto leading-relaxed text-balance">
-                Rain OS scores how AI reads your site, checks whether Gemini actually cites you, and shows you exactly what to fix.
+                More people now ask AI where to buy, who to hire and what to use. Rain OS shows whether AI recommends you, and walks you through fixing it in plain English.
               </p>
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button onClick={start} className="h-11 px-6 rounded-md bg-[#2B8FE3] text-white text-[15px] font-medium hover:bg-[#1C73C4] transition-colors inline-flex items-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
-                  Start free <ArrowRight className="w-4 h-4" />
+                  Check my site free <ArrowRight className="w-4 h-4" />
                 </button>
-                <a href="#product" className="h-11 px-6 rounded-md border border-white/15 text-[15px] text-white hover:bg-white/[0.05] transition-colors inline-flex items-center">
-                  See the platform
+                <a href="#who" className="h-11 px-6 rounded-md border border-white/15 text-[15px] text-white hover:bg-white/[0.05] transition-colors inline-flex items-center">
+                  Find what fits you
                 </a>
               </div>
-              <p className="mt-5 text-[13px] text-neutral-500">5 free analyses. No credit card.</p>
+              <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] text-neutral-400">
+                {['Free to start', 'No credit card', 'No technical skills needed'].map(t => (
+                  <li key={t} className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-[#2B8FE3]" />{t}</li>
+                ))}
+              </ul>
             </motion.div>
 
             <motion.div
@@ -570,6 +664,9 @@ export default function Home() {
             </motion.div>
           </div>
         </section>
+
+        <WhoSection onStart={start} />
+        <HowItWorks />
 
         <section className="relative z-10 border-y border-white/[0.06] bg-white/[0.01]">
           <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4">
