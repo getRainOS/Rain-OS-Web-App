@@ -499,7 +499,7 @@ export default function PillarScores({ result, lane }) {
                 <div className={styles.pillarRight}>
                   {pct !== null ? (
                     <>
-                      <span className={styles.pillarScore} style={{ color: p.color }}>
+                      <span className={styles.pillarScore}>
                         {pct}
                       </span>
                       <span className={styles.pillarMax}>/100</span>
