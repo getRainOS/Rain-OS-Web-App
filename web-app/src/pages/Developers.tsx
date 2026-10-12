@@ -157,7 +157,7 @@ export default function Developers() {
               </h1>
 
               <p className="text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto leading-relaxed">
-                You built something in Bolt, Lovable, or Cursor. Now developers ask AI about it. If your README and docs aren't AI-readable, your product is invisible. rain OS scores your docs and tells you exactly what's blocking a citation.
+                Technical readers ask AI about your project, and AI answers using your docs — without sending anyone back to you. rain OS scores your README, API references, and docs site against what actually earns a citation, so you stop losing traffic you already earned.
               </p>
             </motion.div>
 
