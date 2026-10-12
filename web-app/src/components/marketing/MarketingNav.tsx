@@ -58,14 +58,19 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
 
   const filteredSolutions = SOLUTIONS.filter((s) => {
     if (location.pathname === s.href) return false;
-    if (location.pathname === '/' && s.href === '/vibe-coders') return false;
     return true;
   });
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    // The page scrolls inside body (html/body are height: 100%), not the
+    // window, so read whichever element actually scrolled.
+    const handleScroll = () => {
+      const y = Math.max(window.scrollY, document.body.scrollTop, document.documentElement.scrollTop);
+      setIsScrolled(y > 20);
+    };
+    handleScroll();
+    document.addEventListener('scroll', handleScroll, { capture: true, passive: true });
+    return () => document.removeEventListener('scroll', handleScroll, { capture: true });
   }, []);
 
   // Lock body scroll when mobile menu is open
@@ -93,23 +98,17 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 flex justify-center border-b ${
-          'border-white/10'
-        } ${isScrolled ? 'py-3 md:py-4' : 'py-4 md:py-6'}`}
+        className={`fixed top-0 left-0 right-0 z-50 flex justify-center border-b transition-colors duration-300 ${
+          isScrolled ? 'bg-black/75 backdrop-blur-xl border-white/[0.08]' : 'bg-transparent border-transparent'
+        }`}
       >
-        <div
-          className={`flex items-center justify-between px-4 md:px-8 transition-all duration-500 ${
-            isScrolled
-              ? 'w-full max-w-5xl py-2 md:py-3 rounded-2xl md:rounded-full bg-[#000000]/90 backdrop-blur-2xl border border-white/5 shadow-2xl shadow-black/40'
-              : 'w-full max-w-7xl bg-transparent border-transparent'
-          }`}
-        >
-          <a href="/" className={"font-bold text-2xl md:text-3xl tracking-tighter shrink-0 text-white"}>
+        <div className="flex items-center justify-between w-full max-w-6xl px-6 h-16">
+          <a href="/" className={"font-bold text-2xl tracking-tighter shrink-0 text-white"}>
             r<span style={{ color: 'var(--cyan)' }}>ai</span>n
           </a>
 
           {/* Desktop nav */}
-          <nav className={"hidden md:flex items-center gap-8 lg:gap-10 text-sm font-medium text-white"}>
+          <nav className={"hidden md:flex items-center gap-8 text-[14px] text-neutral-300"}>
             <div
               className="relative"
               onMouseEnter={() => setSolutionsOpen(true)}
@@ -178,7 +177,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
             </button>
             <button
               onClick={handleGetStarted}
-              className="text-white rounded-lg px-4 md:px-5 py-2 text-sm font-semibold transition-all hover:scale-105 active:scale-95"
+              className="text-white rounded-md px-4 h-9 text-sm font-medium transition-colors"
               style={{ background: 'var(--cyan)' }}
               onMouseEnter={(e) => { e.currentTarget.style.background = '#1C73C4'; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--cyan)'; }}

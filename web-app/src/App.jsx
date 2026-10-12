@@ -17,7 +17,7 @@ import Upgrade from './pages/Upgrade.jsx';
 import Settings from './pages/Settings.jsx';
 import ConfirmEmail from './pages/ConfirmEmail.jsx';
 
-const LanePicker = lazy(() => import('./components/marketing/LanePicker.tsx'));
+const Home = lazy(() => import('./pages/Home.tsx'));
 const LocalBusinessPage = lazy(() => import('./pages/LocalBusinessPage.tsx'));
 const ContentWriters = lazy(() => import('./pages/ContentWriters.tsx'));
 const VibeCoders = lazy(() => import('./pages/VibeCoders.tsx'));
@@ -192,7 +192,7 @@ function AuthModalRoute({ onAuth }) {
 
   return (
     <LandingWrapper light>
-      <VibeCoders light />
+      <Home />
       <AuthModal
         onAuth={(key, userData) => {
           onAuth(key, userData);
@@ -221,8 +221,7 @@ function AppRoutes({ apiKey, onAuth }) {
             path="/"
             element={
               <LandingWrapper light>
-                <LanePicker />
-                <VibeCoders light />
+                <Home />
               </LandingWrapper>
             }
           />
@@ -233,7 +232,7 @@ function AppRoutes({ apiKey, onAuth }) {
           <Route path="/content-writers" element={<LandingWrapper><ContentWriters /></LandingWrapper>} />
           <Route path="/pricing" element={<LandingWrapper><PricingPage /></LandingWrapper>} />
           <Route path="/product-sellers" element={<LandingWrapper><ProductSellers /></LandingWrapper>} />
-          <Route path="/vibe-coders" element={<Navigate to="/" replace />} />
+          <Route path="/vibe-coders" element={<LandingWrapper light><VibeCoders light /></LandingWrapper>} />
           <Route path="/developers" element={<LandingWrapper><Developers /></LandingWrapper>} />
           <Route path="/docs" element={<LandingWrapper><DocsPage /></LandingWrapper>} />
           <Route path="/privacy" element={<LandingWrapper><PrivacyPolicy /></LandingWrapper>} />
@@ -269,7 +268,7 @@ function AppRoutes({ apiKey, onAuth }) {
         <Route path="/content-writers" element={<LandingWrapper><ContentWriters /></LandingWrapper>} />
         <Route path="/pricing" element={<LandingWrapper><PricingPage /></LandingWrapper>} />
         <Route path="/product-sellers" element={<LandingWrapper><ProductSellers /></LandingWrapper>} />
-        <Route path="/vibe-coders" element={<Navigate to="/" replace />} />
+        <Route path="/vibe-coders" element={<LandingWrapper light><VibeCoders light /></LandingWrapper>} />
         <Route path="/developers" element={<LandingWrapper><Developers /></LandingWrapper>} />
         <Route path="/docs" element={<LandingWrapper><DocsPage /></LandingWrapper>} />
         <Route path="/privacy" element={<LandingWrapper><PrivacyPolicy /></LandingWrapper>} />

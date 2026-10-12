@@ -4,6 +4,7 @@ import { Plus, Minus, Mail, MessageSquare, BookOpen } from 'lucide-react';
 import MarketingNav from '@/components/marketing/MarketingNav';
 import { useNavigate } from 'react-router-dom';
 
+import SiteFooter from '@/components/marketing/SiteFooter';
 function AccordionItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
   return (
@@ -207,16 +208,7 @@ export default function SupportPage() {
 
       </main>
 
-      <footer className="border-t border-white/10 py-10 relative z-10">
-        <div className="max-w-6xl mx-auto px-6 flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-6 text-sm text-neutral-500">
-            <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
-            <a href="/support" className="text-white">Support</a>
-          </div>
-          <div className="text-xs text-neutral-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

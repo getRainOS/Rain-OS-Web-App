@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Sparkles, BrainCircuit, ShieldCheck, FileSearch, CheckCircle } from 'lucide-react';
 import MarketingNav from '@/components/marketing/MarketingNav';
 
+import SiteFooter from '@/components/marketing/SiteFooter';
 export default function AIReadabilityPage() {
   const navigate = useNavigate();
 
@@ -338,6 +339,7 @@ export default function AIReadabilityPage() {
           </div>
         </motion.div>
       </div>
+      <SiteFooter />
     </div>
   );
 }

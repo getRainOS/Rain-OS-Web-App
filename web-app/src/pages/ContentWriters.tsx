@@ -10,6 +10,7 @@ import { HybridFuture, FeatureGrid, ReadabilityIntelligence, ComparisonTable, FA
 import MarketingNav from '@/components/marketing/MarketingNav';
 import TypewriterPlaceholder from '@/components/TypewriterPlaceholder';
 
+import SiteFooter from '@/components/marketing/SiteFooter';
 const pillars = [
   {
     color: '#e5e5e5',
@@ -410,17 +411,7 @@ export default function ContentWriters() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 bg-midnight py-12 relative z-10">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-          <span className="font-bold text-3xl tracking-tighter text-white">r<span style={{ color: 'var(--cyan)' }}>ai</span>n</span>
-          <div className="flex items-center justify-center gap-6 text-sm text-neutral-400">
-            <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
-            <a href="/support" className="hover:text-white transition-colors">Support</a>
-          </div>
-          <div className="text-right text-xs text-neutral-600">© {new Date().getFullYear()} rain OS. All rights reserved.</div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

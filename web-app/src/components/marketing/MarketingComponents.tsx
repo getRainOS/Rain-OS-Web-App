@@ -390,7 +390,7 @@ export const Pricing = () => {
   };
   const plans: Plan[] = [
     {
-      plan: "Free", price: "Free", checkCount: "5 analyses / month",
+      plan: "Free", price: "Free", checkCount: "5 analyses to start",
       accentColor: "#a3a3a3",
       description: "Try Rain OS and see how AI reads your content — no credit card needed.",
       buttonText: "Get Started",
@@ -521,18 +521,15 @@ export const AccordionItem = ({ question, answer }: { question: string, answer: 
 
 export const FAQ = () => {
   const faqs = [
-    { q: "Who is rain OS for?", a: "Anyone who relies on organic traffic. We're especially powerful for SaaS, E-commerce, and Tech Publishers..." },
-    { q: "Does rain OS replace Yoast or RankMath?", a: "No, rain OS is designed to work alongside your existing SEO plugins..." },
-    { q: "How does rain OS decide what to score?", a: "Every analysis runs your content through six weighted pillars — AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, Local Presence, and RAG Readiness. The weights change by lane: Writers get 36/27/27/0/0/10, Product Sellers get 20/15/15/50/0/10, Developers and Vibe Coders get 32/32/26/0/0/10, and Local Businesses get 20/20/20/0/30/10. Plus a deeper layer of Phase 2 signals covering chunking quality, information gain, and query alignment. The result is a single overall score from 0 to 100 with a breakdown for every dimension." },
-    { q: "How does the Authorship Proof work?", a: "We generate a SHA-256 cryptographic hash of your content at the time of publishing..." },
-    { q: "What is the 'Zero-Click Problem' and how does rain OS help?", a: "The Zero-Click Problem occurs when AI answers a user's query directly, resulting in no traffic to your site..." },
-    { q: "Will this slow down my site?", a: "Not at all. rain OS runs its analysis asynchronously in the cloud..." },
-    { q: "What is 'AI Readability' exactly?", a: "AI Readability measures how easily a Large Language Model (like ChatGPT or Google Gemini) can parse..." },
-    { q: "What does the 'AEO Alignment' score actually measure?", a: "It measures how 'citable' your content is..." },
-    { q: "Can rain OS fix my content, or just analyze it?", a: "Both. Every analysis includes a full six-pillar breakdown with actionable recommendations. We also offer built-in AI tools to rewrite sentences, generate better titles, create meta descriptions, and summarize content for AI snippet extraction — all without leaving the dashboard." },
-    { q: "Do you guarantee that I will be cited by AI models?", a: "Just like with traditional SEO, no one can guarantee specific rankings..." },
-    { q: "How does the pricing work? What is an 'Action'?", a: "We offer simple flat-rate monthly plans..." },
-    { q: "What happens to my content if I cancel?", a: "Your content remains 100% yours and stays exactly where it already lives..." },
+    { q: "Who is Rain OS for?", a: "Anyone whose customers now ask AI before they search: writers and marketers, online sellers, developers, people shipping apps with AI builders, and local service businesses. You pick the lane that fits, and Rain OS weights its scoring for the way that kind of business gets found." },
+    { q: "What is Answer Engine Optimization?", a: "Answer Engine Optimization (AEO) is the work of making your pages easy for AI assistants to read, trust and cite. When ChatGPT, Gemini or Perplexity answer a question, they draw on a handful of sources. AEO is about being one of them." },
+    { q: "How is the Rain Score calculated?", a: "Every analysis is scored across six pillars: AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, Local Presence and RAG Readiness. The weights depend on your lane. Writers & Marketers get 36/27/27/0/0/10, Product Sellers 20/15/15/50/0/10, Developers and Vibe Coders 32/32/26/0/0/10, and Local Businesses 20/20/20/0/30/10. The result is one score from 0 to 100 with a breakdown for every pillar." },
+    { q: "Which AI engines do you check?", a: "The Rain Score measures structural signals every AI engine relies on, such as headings, schema, llms.txt, crawler access and answer-ready content, so it applies to ChatGPT, Gemini, Perplexity and others. Live citation checks, Share of Voice and Brand Sentiment run on Gemini with live Google Search grounding today." },
+    { q: "How does weekly tracking work?", a: "On Pro and Business, choose Track weekly on any Citation Monitor result. Rain OS re-runs that question every week, keeps the history, and emails you only when Gemini starts or stops citing your site. Pro tracks up to 10 questions and Business up to 30. Scheduled checks don't use your monthly analyses." },
+    { q: "Can Rain OS fix my content, or just analyze it?", a: "Both. Every result comes with prioritized recommendations in plain language and in technical terms. You can rewrite content for AI in one click, generate titles and meta descriptions, copy a fix prompt tailored to Bolt, Lovable, Cursor and other builders, or have Rain OS open a pull request with the fixes on your GitHub repository." },
+    { q: "What counts as an analysis?", a: "A content analysis, URL scan, repo analysis, citation check, AI rewrite, Share of Voice check or Brand Sentiment check each use one analysis. Free includes 5 to start, Pro includes 200 a month and Business includes 500 a month." },
+    { q: "Do you guarantee that AI will cite me?", a: "No, and anyone who does is guessing. AI answers change with the question, the model and the day. What we guarantee is that every check is real, every score is explained, and you can see exactly what to improve." },
+    { q: "Is my data secure?", a: "Your API key is encrypted at rest with AES-256, payments are handled by Stripe, and GitHub access uses OAuth, so we never see your password. Content you analyze is sent to Google's Gemini API to run the analysis and saved to your account so you can see your history." },
   ];
 
   return (
