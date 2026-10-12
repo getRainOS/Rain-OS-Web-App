@@ -162,14 +162,14 @@ export default function VibeWorkflowDiagram() {
             </div>
           </div>
 
-          {/* Convergence: 5 Pillars */}
+          {/* Convergence: 6 Pillars */}
           <div className="flex justify-center mt-8">
             <div className="flex flex-col items-center gap-3">
               <FlowArrow visible={step >= 4} />
               <WorkflowNode
                 step={step}
                 targetStep={4}
-                label="5 Pillars"
+                label="6 Pillars"
                 icon={<Globe className="w-5 h-5" strokeWidth={1.5} />}
                 color="#ffffff"
                 description="Analyze signals"
@@ -273,7 +273,7 @@ export default function VibeWorkflowDiagram() {
             {[
               { num: 1, text: "Start with an idea and build fast with your favorite vibe tool" },
               { num: 2, text: "Rain scans your site for AI readiness — repo or live URL" },
-              { num: 3, text: "12 signals checked across 5 pillars for gaps" },
+              { num: 3, text: "12 signals checked across 5 of 6 pillars for gaps" },
               { num: 4, text: "Get a platform-specific fix prompt" },
               { num: 5, text: "Paste back into your builder and apply" },
               { num: 6, text: "Your score climbs. AI can now read you." },

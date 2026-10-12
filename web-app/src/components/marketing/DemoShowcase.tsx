@@ -131,7 +131,7 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
             Your Rain Score, in real time
           </h2>
           <p className="text-neutral-400 max-w-2xl mx-auto text-lg leading-relaxed">
-            Every analysis mode returns the same five-pillar score — whether you paste content, scan a URL, or connect your GitHub repo. See what that looks like across the full platform.
+            Every analysis mode returns the same six-pillar score — whether you paste content, scan a URL, or connect your GitHub repo. See what that looks like across the full platform.
           </p>
         </div>
 
@@ -210,7 +210,7 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
                 )}
                 {idx === 3 && (
                   <>
-                    <h3 className="text-2xl font-semibold text-white mb-4 leading-snug">Paste any content and watch it score across all five pillars</h3>
+                    <h3 className="text-2xl font-semibold text-white mb-4 leading-snug">Paste any content and watch it score across all six pillars</h3>
                     <p className="text-neutral-400 leading-relaxed mb-6">Works on blog posts, landing pages, product copy, or anything else. Get a weighted Rain Score with actionable recommendations — and built-in rewrite tools to fix issues without leaving the dashboard.</p>
                     <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10">
                       <Sparkles className="w-5 h-5 text-white shrink-0" />

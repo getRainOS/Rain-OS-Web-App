@@ -127,7 +127,7 @@ const fileTypes = [
 ];
 
 const steps = [
-  { num: '01', title: 'Paste your documentation', desc: 'Drop in your README, API reference, guide, or any technical documentation.' },
+  { num: '01', title: 'Paste your documentation', desc: 'Paste in your README, API reference, guide, or any technical documentation.' },
   { num: '02', title: 'Get your Documentation Score', desc: 'See structure, clarity, and retrievability scores with specific fixes ranked by impact.' },
   { num: '03', title: 'Ship docs that AI cites', desc: 'Apply the recommendations and watch your docs become the source AI points developers to.' },
 ];
@@ -265,10 +265,10 @@ export default function Developers() {
                 Documentation Scoring Framework
               </span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
-                Four pillars, reweighted for developer docs.
+                Four of six pillars, reweighted for developer docs.
               </h2>
               <p className="text-neutral-400 max-w-xl leading-relaxed">
-                rain OS scores your docs using the same 5-pillar engine that powers all our analyses. For developer content, we reweight the pillars so structure and authority matter most — exactly what AI needs to cite your README, API docs, and guides.
+                rain OS scores your docs using the same six-pillar engine that powers all our analyses. For developer content, we reweight the pillars so structure and authority matter most — exactly what AI needs to cite your README, API docs, and guides.
               </p>
             </motion.div>
 
