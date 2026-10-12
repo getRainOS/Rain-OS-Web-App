@@ -48,8 +48,8 @@ return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Usage limi
 const { content, industry, module, lane, title, url, contentType } = req.body as { content?: string; industry?: string; module?: string; lane?: string; title?: string; url?: string; contentType?: string };
   // Safeguard backend memory
   const safeContent = typeof content === "string" ? content.slice(0, 12000) : "";
-const analysisModule: 'general' | 'product_sellers' | 'developers' | 'local_business' =
-  module === 'product_sellers' || module === 'developers' || module === 'local_business' ? module : 'general';
+const analysisModule: 'general' | 'product_sellers' | 'developers' | 'local_business' | 'vibe_coders' =
+  module === 'product_sellers' || module === 'developers' || module === 'local_business' || module === 'vibe_coders' ? module : 'general';
 if (!content || typeof content !== 'string' || content.trim().length < 10) {
 return res.status(400).json({ error: 'bad_request', message: 'content is required (minimum 10 characters)' } as ApiError);
 }
