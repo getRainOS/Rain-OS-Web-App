@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import PageHeader from '../components/PageHeader.jsx';
 import styles from './BrandVisibility.module.css';
 
 function MentionBadge({ status }) {
@@ -79,48 +79,6 @@ function AlertIcon({ size = 14 }) {
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
     </svg>
-  );
-}
-
-/* ── Collapsible Disclaimer ─────────────────────────────────────────────── */
-function DisclaimerBox() {
-  const [collapsed, setCollapsed] = useState(true);
-  return (
-    <div className={styles.disclaimer} style={{ padding: collapsed ? '8px 16px' : '12px 16px' }}>
-      <div className={styles.disclaimerHeader}>
-        <strong className={styles.disclaimerTitle}>How this works — and its limits.</strong>
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          aria-expanded={!collapsed}
-          aria-label={collapsed ? 'Expand disclaimer' : 'Collapse disclaimer'}
-          className={styles.disclaimerToggle}
-        >
-          {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
-        </button>
-      </div>
-      {!collapsed && <p className={styles.disclaimerText} style={{ marginTop: 8 }}>We query Gemini with live Google Search grounding and report your brand's mention, citation, and tone exactly as given — a single-model, single-phrasing snapshot, so different wording can return different results, making this better for spot-checking than comprehensive brand monitoring.</p>}
-    </div>
-  );
-}
-
-/* ── Collapsible "What does this mean?" ──────────────────────────────────── */
-function WhatDoesThisMeanBox() {
-  const [collapsed, setCollapsed] = useState(true);
-  return (
-    <div className={styles.disclaimer} style={{ padding: collapsed ? '8px 16px' : '12px 16px' }}>
-      <div className={styles.disclaimerHeader}>
-        <strong className={styles.disclaimerTitle}>What does this mean?</strong>
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          aria-expanded={!collapsed}
-          aria-label={collapsed ? 'Expand explanation' : 'Collapse explanation'}
-          className={styles.disclaimerToggle}
-        >
-          {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
-        </button>
-      </div>
-      {!collapsed && <p className={styles.disclaimerText} style={{ marginTop: 8 }}>Whether you're mentioned is a direct check of Gemini's answer, not a guess, while the sentiment label is AI's judgment of the exact sentences that mention you — shown to you so you can judge the tone yourself too.</p>}
-    </div>
   );
 }
 
@@ -214,16 +172,14 @@ export default function BrandVisibility() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <div className={styles.titleRow}>
-          <h1 className={styles.title}>Brand Sentiment</h1>
-        </div>
-        <p className={styles.tagline}>A real mention check, plus AI's read on tone.</p>
-        <p className={styles.sub}>See how Gemini describes your brand, using live Google Search grounding — and what to do if it does not mention you.</p>
-      </div>
-
-      <WhatDoesThisMeanBox />
-      <DisclaimerBox />
+      <PageHeader
+        title="Brand Sentiment"
+        subtitle="See whether Gemini mentions your brand, how it describes you, and what to do if it doesn't."
+        about={[
+          { heading: 'What the result means', body: 'Whether you are mentioned is a direct check of Gemini\'s answer. The tone label is AI\'s judgment of the exact sentences that mention you, which we show so you can judge them yourself.' },
+          { heading: 'How the check works', body: 'We ask Gemini with live Google Search grounding and report mentions, citations and tone as given. One model and one phrasing, so it suits spot checks better than full brand monitoring.' },
+        ]}
+      />
 
       {/* Tabs */}
       <div className={styles.tabs} role="tablist">
