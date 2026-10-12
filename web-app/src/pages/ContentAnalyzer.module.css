@@ -106,8 +106,10 @@
 }
 
 .typePillIcon {
-  font-size: 13px;
-  line-height: 1;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  opacity: 0.75;
 }
 
 .label {
@@ -384,7 +386,8 @@
 }
 
 .rewriteSparkle {
-  font-size: 16px;
+  width: 16px;
+  height: 16px;
   color: var(--text);
 }
 
