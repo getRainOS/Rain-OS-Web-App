@@ -31,6 +31,12 @@ Set these in Railway → your service → **Variables**:
 | `GEMINI_API_KEY` | Google Gemini API key |
 | `GEMINI_MODEL` | Model name e.g. `gemini-1.5-flash` |
 
+### Weekly citation tracking (optional)
+| Variable | Description |
+|---|---|
+| `SCHEDULER_ENABLED` | Set to `false` to stop scheduled citation checks without a deploy. Default: on |
+| `SCHEDULER_MAX_DAILY_CHECKS` | Most scheduled checks per UTC day across all users, kept under Gemini's free grounding allowance. Default: `1200` |
+
 ### Supabase
 | Variable | Description |
 |---|---|

@@ -35,6 +35,7 @@ export default async function handler(req: express.Request, res: express.Respons
       subscriptionStatus: user.subscriptionStatus,
       stripePriceId: user.stripePriceId,
       usage: user.usage,
+      citationAlerts: user.citationAlerts !== false,
       createdAt: user.createdAt,
       apiKey: user?.apiKey,
       githubId: user.githubId,

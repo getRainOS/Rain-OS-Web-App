@@ -113,6 +113,7 @@ const mapRowToUser = (row: any, hashedApiKey?: string): User => {
         emailConfirmed: row.email_confirmed,
         confirmationToken: row.confirmation_token,
         usage: row.usage,
+        citationAlerts: row.citation_alerts !== false,
         createdAt: row.created_at,
     };
 };
@@ -510,6 +511,7 @@ export interface CitationCheckRecord {
   sources: any[];
   recommendations: string[];
   summary: string | null;
+  source: 'manual' | 'scheduled';
   checkedAt: string;
 }
 
@@ -523,6 +525,7 @@ const mapCitationRow = (row: any): CitationCheckRecord => ({
   sources: Array.isArray(row.sources) ? row.sources : [],
   recommendations: Array.isArray(row.recommendations) ? row.recommendations : [],
   summary: row.summary,
+  source: row.source === 'scheduled' ? 'scheduled' : 'manual',
   checkedAt: row.checked_at instanceof Date ? row.checked_at.toISOString() : row.checked_at,
 });
 
@@ -540,13 +543,15 @@ export const saveCitationCheck = async (
     sources: any[];
     recommendations: string[];
     summary?: string;
+    source?: 'manual' | 'scheduled';
+    trackedQueryId?: number | null;
   }
 ): Promise<CitationCheckRecord | null> => {
   const topicKey = normaliseTopicKey(data.topic);
   const res = await pool.query(
     `INSERT INTO citation_checks
-       (user_id, name, topic, topic_key, url, cited, alignment_score, sources, recommendations, summary)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+       (user_id, name, topic, topic_key, url, cited, alignment_score, sources, recommendations, summary, source, tracked_query_id)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
      RETURNING *`,
     [
       userId,
@@ -559,6 +564,8 @@ export const saveCitationCheck = async (
       JSON.stringify(data.sources || []),
       JSON.stringify(data.recommendations || []),
       data.summary || null,
+      data.source || 'manual',
+      data.trackedQueryId ?? null,
     ]
   );
   return res.rows[0] ? mapCitationRow(res.rows[0]) : null;
@@ -889,4 +896,8 @@ export const deleteAnalysis = async (
     [id, userId]
   );
   return (res.rowCount || 0) > 0;
+};
+
+export const setCitationAlerts = async (userId: string, enabled: boolean): Promise<void> => {
+  await pool.query('UPDATE users SET citation_alerts = $2 WHERE id = $1', [userId, enabled]);
 };
