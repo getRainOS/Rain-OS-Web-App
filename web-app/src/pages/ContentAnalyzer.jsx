@@ -20,17 +20,25 @@ const CONTENT_TYPES = [
   { id: 'social_post', label: 'Social Post', icon: '💬' },
 ];
 
-function defaultContentTypeForLane(lane) {
-  if (lane === 'product_sellers') return 'product_description';
-  if (lane === 'developers') return 'documentation';
-  if (lane === 'local_business' || lane === 'vibe_coders') return 'landing_page';
-  return 'article';
-}
+// Only the content types a given lane's user is actually likely to write —
+// showing all six to every lane is noise (a developer isn't writing a
+// product description; a product seller isn't writing documentation). First
+// entry in each list is that lane's default.
+const LANE_CONTENT_TYPES = {
+  general: ['article', 'blog_post', 'landing_page', 'social_post'],
+  product_sellers: ['product_description', 'landing_page', 'social_post'],
+  developers: ['documentation', 'article', 'landing_page'],
+  vibe_coders: ['landing_page', 'documentation', 'social_post'],
+  local_business: ['landing_page', 'blog_post', 'social_post'],
+};
 
 function contentTypesForLane(lane) {
-  const defaultId = defaultContentTypeForLane(lane);
-  const ordered = CONTENT_TYPES.filter(t => t.id === defaultId);
-  return ordered.concat(CONTENT_TYPES.filter(t => t.id !== defaultId));
+  const ids = LANE_CONTENT_TYPES[lane] || LANE_CONTENT_TYPES.general;
+  return ids.map(id => CONTENT_TYPES.find(t => t.id === id)).filter(Boolean);
+}
+
+function defaultContentTypeForLane(lane) {
+  return contentTypesForLane(lane)[0].id;
 }
 
 function readSavedDraft() {
