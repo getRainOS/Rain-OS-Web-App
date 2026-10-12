@@ -13,7 +13,7 @@ function AccordionItem({ question, answer }: { question: string; answer: string 
         className="w-full py-5 flex items-center justify-between text-left group"
       >
         <span className="text-base font-medium text-white pr-6 group-hover:text-white transition-colors">{question}</span>
-        <div className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all ${open ? 'bg-white border-white/20 text-white' : 'border-white/10 text-neutral-400'}`}>
+        <div className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all ${open ? 'bg-white border-white/20 text-black' : 'border-white/10 text-neutral-400'}`}>
           {open ? <Minus className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
         </div>
       </button>
