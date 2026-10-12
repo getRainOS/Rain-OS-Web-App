@@ -356,7 +356,7 @@ function technicalNote(whatToAdd: string): string {
 export async function scanUrlForTechnicalSignals(
   html: string,
   pageUrl: string,
-  module: 'general' | 'product_sellers' | 'developers' | 'local_business' = 'general',
+  module: 'general' | 'product_sellers' | 'developers' | 'local_business' | 'vibe_coders' = 'general',
 ): Promise<UrlScanResult> {
   const $ = cheerio.load(html);
   const parsedUrl = new URL(pageUrl);

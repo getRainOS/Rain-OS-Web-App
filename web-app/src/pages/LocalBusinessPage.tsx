@@ -187,8 +187,8 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
             <span className="text-rose-400 font-bold tracking-wider text-xs uppercase mb-3 block">What we score</span>
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Three things AI checks about your business</h2>
-            <p className="text-neutral-400 max-w-2xl mx-auto">These are the exact signals that AI engines use when deciding whether to recommend your business. Most local business sites score poorly on all three — which means a huge opportunity for you.</p>
+            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Three of six pillars AI checks about your business</h2>
+            <p className="text-neutral-400 max-w-2xl mx-auto">These are three of the six signals that AI engines use when deciding whether to recommend your business — alongside Local Presence (NAP consistency, service area, review signals), the single largest pillar in this lane at 30% weight. Most local business sites score poorly across the board — which means a huge opportunity for you.</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -198,7 +198,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 color: 'text-sky-400',
                 bg: 'bg-sky-500/10',
                 border: 'border-sky-500/20',
-                weight: '40%',
+                weight: '20%',
                 title: 'AI Readability',
                 tagline: 'Can AI actually understand your services?',
                 body: 'AI doesn\'t browse your website like a human — it reads raw text. If your services are buried in images, if your pages are vague ("we do it all!"), or if your site is mostly built with JavaScript that AI can\'t see, you score low here.',
@@ -209,7 +209,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 color: 'text-emerald-400',
                 bg: 'bg-emerald-500/10',
                 border: 'border-emerald-500/20',
-                weight: '30%',
+                weight: '20%',
                 title: 'Digital Authority',
                 tagline: 'Does AI trust your business?',
                 body: 'AI checks whether your business is a legitimate, trustworthy source. This means things like your NAP (Name, Address, Phone) being consistent, having reviews mentioned, having clear business details, and technical trust signals like schema markup.',
@@ -220,7 +220,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 color: 'text-violet-400',
                 bg: 'bg-violet-500/10',
                 border: 'border-violet-500/20',
-                weight: '30%',
+                weight: '20%',
                 title: 'Conversion Readiness',
                 tagline: 'When AI sends someone to your site, do they call?',
                 body: 'Getting traffic from AI is only half the battle. Your site also needs to immediately tell visitors how to contact you, what you offer, why to trust you, and make it effortless to book or call.',
@@ -359,7 +359,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
         <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
           {[
             { value: '2min', label: 'Average time to get your first score', color: 'text-rose-400' },
-            { value: '3', label: 'Pillars scored for every local business analysis', color: 'text-sky-400' },
+            { value: '6', label: 'Pillars scored for every local business analysis', color: 'text-sky-400' },
             { value: 'Free', label: 'to start — no credit card needed', color: 'text-emerald-400' },
           ].map((stat, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}

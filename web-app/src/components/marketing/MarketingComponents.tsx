@@ -396,7 +396,7 @@ export const Pricing = () => {
       buttonText: "Get Started",
       features: [
         { label: "Content Analyzer", included: true },
-        { label: "All 5 core scoring pillars", included: true },
+        { label: "All 6 core scoring pillars", included: true },
         { label: "Actionable recommendations", included: true },
         { label: "URL Scanner", included: false },
         { label: "Repo Analysis (GitHub)", included: false },

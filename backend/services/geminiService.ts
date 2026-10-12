@@ -247,7 +247,7 @@ function contentTypeRubric(contentType?: string): string | null {
 export async function analyzeContent(
 content: string,
 industry: string = 'General / Other',
-module: 'general' | 'product_sellers' | 'developers' | 'local_business' = 'general',
+module: 'general' | 'product_sellers' | 'developers' | 'local_business' | 'vibe_coders' = 'general',
 contentType?: string
 ): Promise<AnalysisResponse> {
 if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');

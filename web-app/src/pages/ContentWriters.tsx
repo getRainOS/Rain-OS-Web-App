@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import {
   ArrowRight, CheckCircle, FileText, Search, Zap,
   TrendingUp, Globe, Bot, BarChart3, BrainCircuit,
-  ShieldCheck, MousePointerClick, SearchCheck, Layers, Plus
+  ShieldCheck, MousePointerClick, SearchCheck, Layers, Plus, Radar
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { HybridFuture, FeatureGrid, ReadabilityIntelligence, ComparisonTable, FAQ } from '@/components/marketing/MarketingComponents';
@@ -57,7 +57,7 @@ const features = [
   {
     Icon: Bot,
     title: 'AI Engine Scoring',
-    desc: 'See exactly how ChatGPT, Perplexity, and Gemini read your content and score it across five weighted pillars.',
+    desc: 'See exactly how ChatGPT, Perplexity, and Gemini read your content and score it across six weighted pillars.',
   },
   {
     Icon: BarChart3,
@@ -70,9 +70,9 @@ const features = [
     desc: 'Surface the gaps between what search engines and AI engines need — and fix both in a single pass.',
   },
   {
-    Icon: FileText,
-    title: 'WordPress Integration',
-    desc: 'Score your posts directly inside the block editor. Optimize before you publish, not after traffic drops.',
+    Icon: Radar,
+    title: 'Citation Monitor',
+    desc: 'See whether Gemini already cites you for the topics you care about, and track it across every check you run.',
   },
   {
     Icon: TrendingUp,

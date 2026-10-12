@@ -163,7 +163,7 @@ Reviews still matter, but AI also looks for response patterns, years in business
 **Signal 4: Availability and action**
 AI favors businesses that make it easy to act. Click-to-call links, online booking, emergency service mentions, and clear service areas all increase the chance you get cited.
 
-At rain OS, we built our local business scoring lane specifically for this new reality. It weights Digital Authority at 40% because trust signals are everything in local. It checks for NAP consistency, schema completeness, and pricing clarity — the exact things AI models look for when recommending a local service.
+At rain OS, we built our local business scoring lane specifically for this new reality. It weights Local Presence at 30% — the largest single pillar in that lane — because trust and findability signals are everything in local. It checks for NAP consistency, schema completeness, and pricing clarity — the exact things AI models look for when recommending a local service.
 
 The businesses that adapt to AI search now will own local discovery for the next decade.`
   },
