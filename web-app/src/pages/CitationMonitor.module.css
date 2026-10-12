@@ -882,3 +882,7 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
+
+.resultActions {
+  margin-top: 14px;
+}

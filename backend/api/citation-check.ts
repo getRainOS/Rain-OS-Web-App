@@ -161,8 +161,9 @@ export default async function handler(req: express.Request, res: express.Respons
 
     // Persist to citation history (best-effort — never block the response on a save error)
     let history: any[] = [];
+    let checkId: number | null = null;
     try {
-      await saveCitationCheck(user.id, {
+      const saved = await saveCitationCheck(user.id, {
         name: name.trim(),
         topic: result.topic,
         url: result.url,
@@ -177,6 +178,7 @@ export default async function handler(req: express.Request, res: express.Respons
         recommendations: [],
         summary: result.summary,
       });
+      checkId = saved?.id ?? null;
       history = await getCitationChecksByTopic(user.id, result.topic, 20);
     } catch (saveErr) {
       console.error('Citation save error:', saveErr);
@@ -186,7 +188,7 @@ export default async function handler(req: express.Request, res: express.Respons
     const updated = await incrementUserUsage(user.id);
     if (updated) res.setHeader('X-Usage-Info', JSON.stringify(updated.usage));
 
-    return res.status(200).json({ success: true, data: { ...result, name: name.trim() }, history, ...result, name: name.trim() });
+    return res.status(200).json({ success: true, data: { ...result, name: name.trim(), checkId }, history, ...result, name: name.trim(), checkId });
   } catch (error) {
     const { status, body } = classifyGeminiError(error, 'citation-check');
     return res.status(status).json(body as ApiError);

@@ -41,6 +41,7 @@ count: number;
 limit: number;
 resetDate?: string;
 };
+citationAlerts?: boolean;
 createdAt: Date;
 }
 export interface ApiError {

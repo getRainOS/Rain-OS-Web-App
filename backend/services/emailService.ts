@@ -72,3 +72,36 @@ export const sendWelcomeEmail = async (to: string): Promise<void> => {
 
   await sendEmail(to, 'Welcome to Rain OS', html);
 };
+
+const escapeHtml = (s: string): string =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+// Sent only when a tracked query flips between cited and not cited.
+export const sendCitationStatusEmail = async (
+  to: string,
+  data: { name: string; topic: string; cited: boolean }
+): Promise<void> => {
+  const name = escapeHtml(data.name);
+  const topic = escapeHtml(data.topic);
+  const headline = data.cited
+    ? `Gemini now cites you for "${topic}"`
+    : `Gemini stopped citing you for "${topic}"`;
+  const body = data.cited
+    ? 'Your site appeared among the sources in this week\'s check. Keep the page that earned it up to date.'
+    : 'Your site was not among the sources in this week\'s check. Open Citation Monitor to see who was cited instead.';
+  const html = `
+    <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
+      <p style="color: #666; font-size: 13px; margin: 0 0 8px;">Weekly tracking · ${name}</p>
+      <h1 style="font-size: 20px;">${headline}</h1>
+      <p>${body}</p>
+      <p>
+        <a href="${getAppUrl()}/citation-monitor" style="display:inline-block; padding: 12px 20px; background: #2B8FE3; color: #fff; text-decoration: none; border-radius: 6px;">
+          Open Citation Monitor
+        </a>
+      </p>
+      <p style="color: #666; font-size: 13px;">You can turn these alerts off in Settings.</p>
+    </div>
+  `;
+  const subject = data.cited ? `Now cited: ${data.name}` : `No longer cited: ${data.name}`;
+  await sendEmail(to, subject, html);
+};

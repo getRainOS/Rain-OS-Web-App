@@ -181,6 +181,38 @@ CREATE TABLE IF NOT EXISTS domain_countries (
 );
 `;
 
+// Weekly citation tracking (additive)
+const createTrackedQueriesQuery = `
+CREATE TABLE IF NOT EXISTS tracked_queries (
+  id BIGSERIAL PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  topic TEXT NOT NULL,
+  topic_key TEXT NOT NULL,
+  url TEXT,
+  next_run_at TIMESTAMPTZ NOT NULL,
+  last_run_at TIMESTAMPTZ,
+  last_cited BOOLEAN,
+  consecutive_failures INTEGER NOT NULL DEFAULT 0,
+  paused_reason TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (user_id, topic_key)
+);
+CREATE INDEX IF NOT EXISTS idx_tracked_queries_due
+  ON tracked_queries(next_run_at) WHERE paused_reason IS NULL;
+CREATE INDEX IF NOT EXISTS idx_tracked_queries_user ON tracked_queries(user_id);
+
+ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS source TEXT NOT NULL DEFAULT 'manual';
+ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS tracked_query_id BIGINT
+  REFERENCES tracked_queries(id) ON DELETE SET NULL;
+CREATE INDEX IF NOT EXISTS idx_citation_checks_tracked
+  ON citation_checks(tracked_query_id, checked_at DESC);
+CREATE INDEX IF NOT EXISTS idx_citation_checks_source_checked_at
+  ON citation_checks(source, checked_at);
+
+ALTER TABLE users ADD COLUMN IF NOT EXISTS citation_alerts BOOLEAN NOT NULL DEFAULT TRUE;
+`;
+
 export const setupDatabase = async () => {
   try {
     await pool.query(createTableQuery);
@@ -189,6 +221,7 @@ export const setupDatabase = async () => {
     await pool.query(addNameColumnQuery);
     await pool.query(createOAuthStatesQuery);
     await pool.query(createDomainCountriesQuery);
+    await pool.query(createTrackedQueriesQuery);
     console.log('Database table "users" is ready.');
   } catch (error) {
     console.error('Error setting up database table:', error);

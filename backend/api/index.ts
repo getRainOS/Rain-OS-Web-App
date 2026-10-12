@@ -45,6 +45,14 @@ import { listReposHandler, analyzeRepoHandler, disconnectGithubHandler } from '.
 import githubPreviewFixesHandler from './github/preview-fixes';
 import githubPushFixesHandler from './github/push-fixes';
 import rewriteHandler from './rewrite';
+import {
+  listHandler as trackedListHandler,
+  createHandler as trackedCreateHandler,
+  updateHandler as trackedUpdateHandler,
+  deleteHandler as trackedDeleteHandler,
+  alertsHandler as citationAlertsHandler,
+} from './tracked-queries';
+import { startScheduler } from '../services/schedulerService';
 // ─── CORS configuration ───────────────────────────────────────────────────────
 // IMPORTANT: Keep origin: '*' so the WordPress plugin works from any site.
 // Restricting origin here would 403 every WP install that has the plugin.
@@ -53,7 +61,7 @@ import rewriteHandler from './rewrite';
 // add a separate router with a scoped CORS config — do not change this globalone.
 const corsOptions: cors.CorsOptions = {
 origin: '*',
-methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
 allowedHeaders: ['Content-Type', 'Authorization'],
 exposedHeaders: ['X-Usage-Info'],
 };
@@ -126,6 +134,12 @@ app.delete('/api/citation-checks/:id', citationCheckDeleteHandler);
 app.delete('/v1/api/citation-checks/:id', citationCheckDeleteHandler);
 app.post('/api/citation-checks/regions', citationRegionsHandler);
 app.post('/v1/api/citation-checks/regions', citationRegionsHandler);
+// ─── Weekly citation tracking ───────────────────────────────────────────────
+app.get('/api/tracked-queries', trackedListHandler);
+app.post('/api/tracked-queries', trackedCreateHandler);
+app.patch('/api/tracked-queries/:id', trackedUpdateHandler);
+app.delete('/api/tracked-queries/:id', trackedDeleteHandler);
+app.patch('/api/citation-alerts', citationAlertsHandler);
 // ─── Content analysis history ───────────────────────────────────────────────
 app.get('/api/history', historyListHandler);
 app.get('/v1/api/history', historyListHandler);
@@ -168,6 +182,7 @@ app.get( '/v1/ai/diagnostics/:contentId', aiDiagnosticsHandler);
 // in the original index.ts and had no legitimate callers.
 app.listen(port, () => {
 console.log(`Rain OS backend listening on port ${port}`);
+startScheduler();
 });
 };
 startServer().catch((err) => {
