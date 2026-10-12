@@ -113,7 +113,7 @@ export default function ProductSellers() {
               </h1>
 
               <p className="text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto leading-relaxed">
-                ChatGPT, Perplexity, and Gemini are now recommending products. rain OS scores your product pages against the exact signals AI shopping assistants use — so your products get recommended, not skipped.
+                Shopping bots can't recommend what they can't parse. If your pricing, variants, and availability aren't in structured schema, AI shopping assistants skip you for a competitor who is. rain OS scores your product pages against exactly what agentic commerce needs — then shows you what to fix.
               </p>
             </motion.div>
 

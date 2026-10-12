@@ -122,7 +122,7 @@ export default function ContentWriters() {
               </h1>
 
               <p className="text-neutral-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
-                rain OS scores your articles, blog posts, and landing pages against the exact signals AI engines use to pick their sources — so you can optimize, then check whether AI cites you right away.
+                AI engines read your best work, answer the question, and the reader never clicks through. rain OS scores your content against what actually earns a citation — and Citation Monitor shows you exactly which topics AI is already citing you for, and which it's giving to a competitor instead.
               </p>
             </motion.div>
 
