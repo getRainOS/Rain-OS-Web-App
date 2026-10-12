@@ -20,6 +20,29 @@ export default function Settings() {
   const [nameInput, setNameInput] = useState('');
   const [savingName, setSavingName] = useState(false);
   const [nameError, setNameError] = useState('');
+  const [alertsEnabled, setAlertsEnabled] = useState(true);
+  const [savingAlerts, setSavingAlerts] = useState(false);
+  const [alertsError, setAlertsError] = useState('');
+
+  useEffect(() => {
+    if (typeof user?.citationAlerts === 'boolean') setAlertsEnabled(user.citationAlerts);
+  }, [user?.citationAlerts]);
+
+  async function handleAlertsChange(e) {
+    const next = e.target.checked;
+    setAlertsEnabled(next);
+    setSavingAlerts(true);
+    setAlertsError('');
+    try {
+      await api.setCitationAlerts(next);
+      refreshUser?.();
+    } catch (err) {
+      setAlertsEnabled(!next);
+      setAlertsError(err.message || 'Could not save. Try again.');
+    } finally {
+      setSavingAlerts(false);
+    }
+  }
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -343,6 +366,26 @@ export default function Settings() {
               </button>
             ))}
           </div>
+        </div>
+
+        <div className="card">
+          <h2 className={styles.sectionTitle}>Citation alerts</h2>
+          <label className={styles.switchRow} htmlFor="citation-alerts">
+            <span className={styles.switchText}>
+              <span className={styles.switchLabel}>Email me when a tracked question changes</span>
+              <span className={styles.switchHint}>Sent only when Gemini starts or stops citing you in a weekly check.</span>
+            </span>
+            <input
+              id="citation-alerts"
+              type="checkbox"
+              role="switch"
+              className={styles.switch}
+              checked={alertsEnabled}
+              onChange={handleAlertsChange}
+              disabled={savingAlerts}
+            />
+          </label>
+          {alertsError && <p className={styles.switchError} role="alert">{alertsError}</p>}
         </div>
 
         <div className="card">

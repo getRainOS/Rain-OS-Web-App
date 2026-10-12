@@ -12,6 +12,7 @@ import {
 } from 'recharts';
 import { buildCompetitorMap } from '../lib/citationHistory.js';
 import PageHeader from '../components/PageHeader.jsx';
+import TrackedQueriesPanel, { useTrackedQueries, TrackWeeklyButton } from '../components/TrackedQueries.jsx';
 import styles from './CitationMonitor.module.css';
 
 // Lazy: react-simple-maps + d3-geo only need to load for whoever actually
@@ -58,6 +59,7 @@ function timeAgo(str) {
 
 export default function CitationMonitor() {
   const { refreshUser } = useApp();
+  const tracking = useTrackedQueries();
   const formRef = useRef(null);
   const checkRequestIdRef = useRef(0);
 
@@ -348,6 +350,9 @@ export default function CitationMonitor() {
                       {result.topic || topic}
                     </div>
                     <div className={styles.resultSummary}>{result.summary}</div>
+                    <div className={styles.resultActions}>
+                      <TrackWeeklyButton tracking={tracking} result={{ ...result, name: result.name || name }} />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -440,6 +445,8 @@ export default function CitationMonitor() {
       {hasMapDetail && (
         <MapDetailSection map={competitorMap} />
       )}
+
+      <TrackedQueriesPanel tracking={tracking} />
 
       <RecentAnalysesSection
         analyses={recentAnalyses}
@@ -638,7 +645,7 @@ function MapSummaryPanel({ map, history, loading }) {
 
       <div className={styles.mapStatsRow}>
         <div className={styles.mapStat}>
-          <div className={styles.mapStatLabel}>Tracked queries</div>
+          <div className={styles.mapStatLabel}>Questions checked</div>
           <div className={styles.mapStatValue}>{totalQueries}</div>
         </div>
         <div className={styles.mapStat}>
