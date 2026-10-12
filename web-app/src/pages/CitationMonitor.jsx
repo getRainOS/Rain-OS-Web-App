@@ -263,7 +263,7 @@ export default function CitationMonitor() {
         </div>
         <p className={styles.tagline}>A real check against live AI answers — not a prediction.</p>
         <p className={styles.sub}>
-          See whether Gemini cites your brand for the topics that matter to you — powered by real Google Search grounding, not a simulation.
+          See whether Gemini cites your brand for the topics that matter to you.
         </p>
       </div>
 
