@@ -2,13 +2,14 @@ import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   BarChart2, Search, CheckCircle2, AlertCircle,
-  Clock, Trash2, Info, ChevronDown, ChevronUp,
+  Clock, Trash2,
   ExternalLink,
 } from 'lucide-react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import { buildCitationShare } from '../lib/citationShare.js';
+import PageHeader from '../components/PageHeader.jsx';
 import styles from './ShareOfVoice.module.css';
 
 /* ── Per-prompt card ──────────────────────────────────────────────────────── */
@@ -99,54 +100,6 @@ function timeAgo(str) {
   if (days === 1) return 'Yesterday';
   if (days < 30)  return `${days}d ago`;
   return new Date(str).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
-
-/* ── Collapsible Info Box ───────────────────────────────────────────────── */
-function InfoBox() {
-  const [collapsed, setCollapsed] = useState(true);
-  return (
-    <div className={styles.infoBox} style={{ padding: collapsed ? '8px 16px' : '12px 16px' }}>
-      <div className={styles.infoBoxHeader}>
-        <div className={styles.infoBoxHeadLeft}>
-          <Info size={15} className={styles.infoBoxIcon} />
-          <strong>How this works — and its limits.</strong>
-        </div>
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          aria-expanded={!collapsed}
-          aria-label={collapsed ? 'Expand disclaimer' : 'Collapse disclaimer'}
-          className={styles.infoBoxToggle}
-        >
-          {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
-        </button>
-      </div>
-      {!collapsed && <span className={styles.infoBoxText}>We ask Gemini your topic three different ways with live Google Search grounding and report exactly what came back — real mention and domain-share counts, not scores or guesses — but it's Gemini only, three phrasings, one moment in time, so treat it as a trend signal rather than ground-truth market share.</span>}
-    </div>
-  );
-}
-
-/* ── Collapsible "What does this mean?" ──────────────────────────────────── */
-function WhatDoesThisMeanBox() {
-  const [collapsed, setCollapsed] = useState(true);
-  return (
-    <div className={styles.infoBox} style={{ padding: collapsed ? '8px 16px' : '12px 16px' }}>
-      <div className={styles.infoBoxHeader}>
-        <div className={styles.infoBoxHeadLeft}>
-          <Info size={15} className={styles.infoBoxIcon} />
-          <strong>What does this mean?</strong>
-        </div>
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          aria-expanded={!collapsed}
-          aria-label={collapsed ? 'Expand explanation' : 'Collapse explanation'}
-          className={styles.infoBoxToggle}
-        >
-          {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
-        </button>
-      </div>
-      {!collapsed && <span className={styles.infoBoxText}>Unlike the pillar scores, this isn't a judgment — "mentioned in 2 of 3" and your citation share are literal counts from three real Gemini prompts, worth re-running over time to see whether your presence is growing.</span>}
-    </div>
-  );
 }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
@@ -243,23 +196,14 @@ export default function ShareOfVoice() {
   return (
     <div className={`${styles.page} fade-in`}>
 
-      {/* Header */}
-      <div className={styles.header}>
-        <div className={styles.titleRow}>
-          <BarChart2 size={22} style={{ color: 'var(--text)' }} />
-          <h1 className={styles.title}>Share of Voice</h1>
-        </div>
-        <p className={styles.tagline}>Real counts across 3 real prompts — not an estimate.</p>
-        <p className={styles.sub}>
-          See whether Gemini cites your brand for any topic — checked three ways, powered by real Google Search grounding.
-          Track your visibility over time and see which competitors show up in the answers instead.
-        </p>
-      </div>
-
-      {/* What does this mean? */}
-      <WhatDoesThisMeanBox />
-      {/* Info box */}
-      <InfoBox />
+      <PageHeader
+        title="Share of Voice"
+        subtitle="See how often Gemini mentions and cites you for a topic, and which competitors show up instead."
+        about={[
+          { heading: 'What the numbers mean', body: 'Mentions and citation share are literal counts from three real Gemini prompts, not a score. Re-run over time to see whether your presence is growing.' },
+          { heading: 'How the check works', body: 'We ask Gemini your topic three different ways with live Google Search grounding. It covers Gemini only, at one moment, so treat it as a trend signal rather than true market share.' },
+        ]}
+      />
 
       {/* Tabs */}
       <div className={styles.tabs} role="tablist">

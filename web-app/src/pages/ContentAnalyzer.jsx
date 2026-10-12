@@ -7,17 +7,18 @@ import QuickTools from '../components/QuickTools.jsx';
 import ArtifactBlock from '../components/ArtifactBlock.jsx';
 import TypewriterPlaceholder from '../components/TypewriterPlaceholder.jsx';
 import CitationCrossPromo from '../components/CitationCrossPromo.jsx';
+import { FileText, PenLine, ShoppingBag, LayoutTemplate, BookOpen, MessageSquare, Sparkles } from 'lucide-react';
 import styles from './ContentAnalyzer.module.css';
 
 const DRAFT_STORAGE_KEY = 'rain_os_content_analyzer_draft';
 
 const CONTENT_TYPES = [
-  { id: 'article', label: 'Article', icon: '📄' },
-  { id: 'blog_post', label: 'Blog Post', icon: '✏️' },
-  { id: 'product_description', label: 'Product Description', icon: '🛒' },
-  { id: 'landing_page', label: 'Landing Page', icon: '🪧' },
-  { id: 'documentation', label: 'Documentation', icon: '📘' },
-  { id: 'social_post', label: 'Social Post', icon: '💬' },
+  { id: 'article', label: 'Article', Icon: FileText },
+  { id: 'blog_post', label: 'Blog Post', Icon: PenLine },
+  { id: 'product_description', label: 'Product Description', Icon: ShoppingBag },
+  { id: 'landing_page', label: 'Landing Page', Icon: LayoutTemplate },
+  { id: 'documentation', label: 'Documentation', Icon: BookOpen },
+  { id: 'social_post', label: 'Social Post', Icon: MessageSquare },
 ];
 
 // Only the content types a given lane's user is actually likely to write —
@@ -272,7 +273,7 @@ export default function ContentAnalyzer() {
                   className={`${styles.typePill} ${contentType === t.id ? styles.typePillActive : ''}`}
                   onClick={() => setContentType(t.id)}
                 >
-                  <span className={styles.typePillIcon}>{t.icon}</span>
+                  <t.Icon className={styles.typePillIcon} aria-hidden="true" />
                   {t.label}
                 </button>
               ))}
@@ -309,7 +310,7 @@ export default function ContentAnalyzer() {
               className="btn btn-primary"
               disabled={loading || isAtLimit || !title.trim() || (!content.trim() && !url.trim())}
             >
-              {loading ? <><span className="spinner" /> {result ? 'Re-analyzing…' : 'Analyzing…'}</> : (result ? '↻ Re-analyze' : '✦ Analyze Content')}
+              {loading ? <><span className="spinner" /> {result ? 'Re-analyzing…' : 'Analyzing…'}</> : (result ? 'Re-analyze' : 'Analyze content')}
             </button>
             {!result && (
               <button
@@ -318,7 +319,7 @@ export default function ContentAnalyzer() {
                 disabled={rewriteLoading || isAtLimit || !content.trim()}
                 onClick={handleRewrite}
               >
-                {rewriteLoading ? <><span className="spinner" style={{ width: 14, height: 14 }} /> Rewriting…</> : '✦ Rewrite for AI'}
+                {rewriteLoading ? <><span className="spinner" style={{ width: 14, height: 14 }} /> Rewriting…</> : 'Rewrite for AI'}
               </button>
             )}
             {!loading && !title.trim() && (content.trim() || url.trim()) && (
@@ -361,7 +362,7 @@ export default function ContentAnalyzer() {
                 disabled={rewriteLoading || !content.trim()}
                 onClick={handleRewrite}
               >
-                {rewriteLoading ? <><span className="spinner" style={{ width: 14, height: 14 }} /> Rewriting…</> : '✦ Rewrite for AI'}
+                {rewriteLoading ? <><span className="spinner" style={{ width: 14, height: 14 }} /> Rewriting…</> : 'Rewrite for AI'}
               </button>
               <button onClick={handleReset} className="btn btn-ghost">
                 ← New Analysis
@@ -456,7 +457,7 @@ function RewritePanel({ rewriteResult, onAccept, onDiscard }) {
     <div className={styles.rewritePanel}>
       <div className={styles.rewritePanelHeader}>
         <div className={styles.rewritePanelTitle}>
-          <span className={styles.rewriteSparkle}>✦</span>
+          <Sparkles className={styles.rewriteSparkle} aria-hidden="true" />
           AI-Optimized Rewrite
         </div>
         <div className={styles.rewriteTabs}>

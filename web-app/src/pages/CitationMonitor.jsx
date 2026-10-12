@@ -6,12 +6,12 @@ import {
   Radar, ExternalLink, CheckCircle2, AlertCircle,
   Map as MapIcon, Trophy, Trash2, Info, Globe,
   History as HistoryIcon,
-  ChevronDown, ChevronUp,
 } from 'lucide-react';
 import {
   ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { buildCompetitorMap } from '../lib/citationHistory.js';
+import PageHeader from '../components/PageHeader.jsx';
 import styles from './CitationMonitor.module.css';
 
 // Lazy: react-simple-maps + d3-geo only need to load for whoever actually
@@ -25,48 +25,6 @@ const EXAMPLE_TOPICS = [
 ];
 
 const RECENT_PAGE_SIZE = 10;
-
-/* ── Collapsible Disclaimer ─────────────────────────────────────────────── */
-function DisclaimerBlock() {
-  const [collapsed, setCollapsed] = useState(true);
-  return (
-    <div className={styles.disclaimer} style={{ padding: collapsed ? '8px 16px' : '12px 16px' }}>
-      <div className={styles.disclaimerHeader}>
-        <strong className={styles.disclaimerTitle}>How this works — and its limits.</strong>
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          aria-expanded={!collapsed}
-          aria-label={collapsed ? 'Expand disclaimer' : 'Collapse disclaimer'}
-          className={styles.disclaimerToggle}
-        >
-          {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
-        </button>
-      </div>
-      {!collapsed && <p className={styles.disclaimerText} style={{ marginTop: 8 }}>We query Gemini with live Google Search grounding for your exact topic and report, as a real factual snapshot, whether your domain is among the sources it cited — but that reflects only one model and one phrasing at one moment, so run multiple variations over time rather than treating a single check as a verdict.</p>}
-    </div>
-  );
-}
-
-/* ── Collapsible "What does this mean?" ──────────────────────────────────── */
-function WhatDoesThisMeanBlock() {
-  const [collapsed, setCollapsed] = useState(true);
-  return (
-    <div className={styles.disclaimer} style={{ padding: collapsed ? '8px 16px' : '12px 16px' }}>
-      <div className={styles.disclaimerHeader}>
-        <strong className={styles.disclaimerTitle}>What does this mean?</strong>
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          aria-expanded={!collapsed}
-          aria-label={collapsed ? 'Expand explanation' : 'Collapse explanation'}
-          className={styles.disclaimerToggle}
-        >
-          {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
-        </button>
-      </div>
-      {!collapsed && <p className={styles.disclaimerText} style={{ marginTop: 8 }}>"Cited" or "Not cited" reflects one real Gemini answer at that moment, not a guess or a lasting rank, so treat each check as a snapshot worth tracking over time rather than a single verdict.</p>}
-    </div>
-  );
-}
 
 function getFavicon(domain) {
   if (!domain) return '';
@@ -256,19 +214,14 @@ export default function CitationMonitor() {
 
   return (
     <div className={`${styles.page} fade-in`}>
-      <div className={styles.header}>
-        <div className={styles.titleRow}>
-          <Radar className={styles.iconTitle} />
-          <h1 className={styles.title}>Citation Monitor</h1>
-        </div>
-        <p className={styles.tagline}>A real check against live AI answers — not a prediction.</p>
-        <p className={styles.sub}>
-          See whether Gemini cites your brand for the topics that matter to you.
-        </p>
-      </div>
-
-      <WhatDoesThisMeanBlock />
-      <DisclaimerBlock />
+      <PageHeader
+        title="Citation Monitor"
+        subtitle="Check whether Gemini cites your site when people ask about the topics you care about."
+        about={[
+          { heading: 'What the result means', body: '"Cited" or "Not cited" is what one real Gemini answer did at that moment. It is a snapshot to track over time, not a lasting rank.' },
+          { heading: 'How the check works', body: 'We ask Gemini your exact question with live Google Search grounding and look for your domain among the sources it cites. One model and one phrasing, so run a few variations before drawing conclusions.' },
+        ]}
+      />
 
       <div className={styles.workspace}>
         <div className={styles.formColumn} ref={formRef}>
