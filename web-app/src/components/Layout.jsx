@@ -6,7 +6,7 @@ import { supabase } from '../lib/supabase.js';
 import {
   LayoutDashboard, FileText, Globe, GitBranch, Radar, Eye,
   BarChart2, Settings, ArrowUp, LogOut, Wand2, Menu, X,
-  ChevronLeft, ChevronRight,
+  ChevronLeft, ChevronRight, ChevronsUpDown,
 } from 'lucide-react';
 import KnowledgeBase from './KnowledgeBase.jsx';
 import { urlScannerLabel } from '../lib/laneLabels.js';
@@ -148,11 +148,15 @@ export default function Layout({ children }) {
 
           {/* Lane indicator */}
           {laneMeta ? (
-            <div className={styles.laneChip} style={{ borderColor: laneMeta.color + '40', background: laneMeta.color + '0d' }}>
+            <button
+              className={styles.laneChip}
+              onClick={() => navigate('/dashboard?selectLane=1')}
+              title="Change lane"
+            >
               <span className={styles.laneDot} style={{ background: laneMeta.color }} />
-              <span className={styles.laneChipLabel} style={{ color: laneMeta.color }}>{laneMeta.label}</span>
-              <button className={styles.laneChangeBtn} onClick={() => navigate('/dashboard?selectLane=1')}>change</button>
-            </div>
+              <span className={styles.laneChipLabel}>{laneMeta.label}</span>
+              <ChevronsUpDown className={styles.laneChangeIcon} />
+            </button>
           ) : (
             <button className={styles.lanePrompt} onClick={() => navigate('/dashboard?selectLane=1')}>
               <Wand2 style={{ width: 13, height: 13, opacity: 0.6 }} />
@@ -191,30 +195,15 @@ export default function Layout({ children }) {
         {!collapsed && <KnowledgeBase />}
 
         <div className={styles.bottom}>
-          <button
-            className={styles.collapseBtn}
-            onClick={toggleCollapsed}
-            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          >
-            {collapsed
-              ? <ChevronRight style={{ width: 14, height: 14 }} />
-              : <ChevronLeft style={{ width: 14, height: 14 }} />}
-            <span>{collapsed ? 'Expand' : 'Collapse'}</span>
-          </button>
-
           {usage && !collapsed && (
             <div className={styles.usageBox}>
               <div className={styles.usageRow}>
-                <span className={styles.usageLabel}>
-                  {isFree ? 'Free analyses' : 'API Usage'}
-                </span>
+                <span className={styles.usageLabel}>{isFree ? 'Free analyses' : 'Analyses this month'}</span>
                 <span
                   className={styles.usageCount}
                   style={{ color: isAtLimit ? 'var(--red)' : isNearLimit ? 'var(--yellow)' : undefined }}
                 >
-                  {isFree
-                    ? `${remaining} remaining`
-                    : `${Math.max(0, usage.limit - usage.count)} remaining`}
+                  {isFree ? `${remaining} left` : `${Math.max(0, usage.limit - usage.count)} left`}
                 </span>
               </div>
               <div className={styles.usageTrack}>
@@ -227,37 +216,45 @@ export default function Layout({ children }) {
                 />
               </div>
               {isAtLimit && (
-                <button
-                  className={styles.limitCta}
-                  onClick={() => navigate('/upgrade')}
-                >
-                  Upgrade to continue →
+                <button className={styles.limitCta} onClick={() => navigate('/upgrade')}>
+                  Upgrade to continue
                 </button>
               )}
             </div>
           )}
 
-          {user?.email && (
-            <div className={styles.userRow}>
-              <div className={styles.avatar}>{user.email[0].toUpperCase()}</div>
-              <div className={styles.userInfo}>
-                <span className={styles.userEmail}>{user.email}</span>
-                <span className={styles.userTier}>{tier} Plan</span>
-              </div>
-            </div>
+          {isFree && (
+            <NavLink to="/upgrade" className={styles.upgradeBtn} title="Upgrade">
+              <ArrowUp style={{ width: 12, height: 12 }} />
+              <span>Upgrade</span>
+            </NavLink>
           )}
 
-          <div className={styles.sidebarActions}>
-            {isFree && (
-              <NavLink to="/upgrade" className={styles.upgradeBtn}>
-                <ArrowUp style={{ width: 12, height: 12 }} />
-                <span>Upgrade</span>
-              </NavLink>
+          <div className={styles.accountRow}>
+            {user?.email && (
+              <div className={styles.userRow}>
+                <div className={styles.avatar}>{user.email[0].toUpperCase()}</div>
+                <div className={styles.userInfo}>
+                  <span className={styles.userEmail}>{user.email}</span>
+                  <span className={styles.userTier}>{tier} plan</span>
+                </div>
+              </div>
             )}
-            <button onClick={handleLogout} className={styles.logoutBtn}>
-              <LogOut style={{ width: 12, height: 12, opacity: 0.6 }} />
-              <span>Sign out</span>
-            </button>
+            <div className={styles.iconActions}>
+              <button onClick={handleLogout} className={styles.iconBtn} aria-label="Sign out" title="Sign out">
+                <LogOut style={{ width: 14, height: 14 }} />
+              </button>
+              <button
+                className={`${styles.iconBtn} ${styles.collapseBtn}`}
+                onClick={toggleCollapsed}
+                aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              >
+                {collapsed
+                  ? <ChevronRight style={{ width: 14, height: 14 }} />
+                  : <ChevronLeft style={{ width: 14, height: 14 }} />}
+              </button>
+            </div>
           </div>
         </div>
       </aside>
