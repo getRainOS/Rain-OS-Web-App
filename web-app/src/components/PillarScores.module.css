@@ -86,10 +86,11 @@
 }
 
 .pillarScore {
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
   line-height: 1;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.3px;
 }
 
 .pillarMax {
@@ -135,14 +136,14 @@
 }
 
 .dotColumnValue {
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
   color: var(--cyan);
 }
 
 .dotColumnValueNa {
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
   color: var(--text-dim);
 }
 
