@@ -100,9 +100,9 @@ export const FourPillars = () => {
       weight: '27%',
       tagline: 'Is your site a source AI will quote?',
       description: 'AI tools built your site fast, but they skipped the trust markup. This pillar scores the schema, entity clarity, and credibility signals that make AI engines treat your domain as a quotable source.',
-      color: 'emerald-400',
+      color: 'white',
       glowColor: 'rgba(255,255,255,0.25)',
-      borderColor: 'emerald-400/50',
+      borderColor: 'white/50',
       viaColor: 'via-white/20',
       bgColor: 'bg-white/[0.05]',
       dotColor: 'bg-white',
@@ -114,9 +114,9 @@ export const FourPillars = () => {
       weight: '27%',
       tagline: 'Does your site convert AI-referred visitors?',
       description: "Getting traffic from AI is only half the job. This pillar scores whether your site's copy actually converts that traffic — CTA clarity, trust proof, and friction that vibe-coded landing pages routinely miss.",
-      color: 'violet-400',
+      color: 'white',
       glowColor: 'rgba(255,255,255,0.2)',
-      borderColor: 'violet-400/50',
+      borderColor: 'white/50',
       viaColor: 'via-white/20',
       bgColor: 'bg-white/[0.05]',
       dotColor: 'bg-white',
@@ -128,9 +128,9 @@ export const FourPillars = () => {
       weight: '10%',
       tagline: 'Can AI retrieval systems find and synthesize your content?',
       description: 'RAG Readiness measures how well your content is optimized for Retrieval-Augmented Generation (RAG) systems \u2014 vector databases, embedding models, and chunk-based retrieval. It checks information density, semantic mapping, hierarchical formatting, and structured Q&A.',
-      color: 'pink-400',
+      color: 'white',
       glowColor: 'rgba(255,255,255,0.2)',
-      borderColor: 'pink-400/50',
+      borderColor: 'white/50',
       viaColor: 'via-white/20',
       bgColor: 'bg-white/[0.05]',
       dotColor: 'bg-white',
@@ -495,7 +495,7 @@ export const AccordionItem = ({ question, answer }: { question: string, answer: 
     <div className="border-b border-white/10">
       <button onClick={() => setIsOpen(!isOpen)} className="w-full py-6 flex items-center justify-between text-left focus:outline-none group">
         <span className="text-lg font-medium text-white pr-8 group-hover:text-white transition-colors">{question}</span>
-        <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${isOpen ? 'bg-white border-white text-white rotate-180' : 'border-white/10 text-neutral-400 group-hover:border-white/50 group-hover:text-white'}`}>
+        <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${isOpen ? 'bg-white border-white text-black rotate-180' : 'border-white/10 text-neutral-400 group-hover:border-white/50 group-hover:text-white'}`}>
           {isOpen ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
         </div>
       </button>
