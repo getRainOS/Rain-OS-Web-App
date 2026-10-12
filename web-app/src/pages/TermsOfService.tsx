@@ -15,7 +15,7 @@ const sections = [
     title: 'Description of Service',
     body: [
       'rain OS provides Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO) analysis tools that score your content, URLs, and source code repositories for AI readability, citation authority, and conversion readiness.',
-      'The Service is offered as a web application at getrainos.com, a WordPress plugin, and (in future) a Chrome extension. These Terms apply to all clients and access methods.',
+      'The Service is offered as a web application at getrainos.com and (in future) a Chrome extension. These Terms apply to all clients and access methods.',
     ],
   },
   {
@@ -117,7 +117,7 @@ export default function TermsOfService() {
           <p className="text-neutral-500 text-sm">Last updated: {LAST_UPDATED}</p>
           <p className="text-neutral-400 mt-4 leading-relaxed">
             Please read these Terms carefully before using rain OS. They govern your access to and use of our analysis
-            tools, API, WordPress plugin, and all other parts of the Service.
+            tools, API, and all other parts of the Service.
           </p>
         </div>
 

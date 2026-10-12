@@ -21,7 +21,6 @@ const LanePicker = lazy(() => import('./components/marketing/LanePicker.tsx'));
 const LocalBusinessPage = lazy(() => import('./pages/LocalBusinessPage.tsx'));
 const ContentWriters = lazy(() => import('./pages/ContentWriters.tsx'));
 const VibeCoders = lazy(() => import('./pages/VibeCoders.tsx'));
-const WordPressPlugin = lazy(() => import('./pages/WordPressPlugin.tsx'));
 const PricingPage = lazy(() => import('./pages/PricingPage.tsx'));
 const ProductSellers = lazy(() => import('./pages/ProductSellers.tsx'));
 const Developers = lazy(() => import('./pages/Developers.tsx'));
@@ -232,7 +231,6 @@ function AppRoutes({ apiKey, onAuth }) {
             <Route path="/confirm" element={<ConfirmEmail />} />
           <Route path="/auth/callback" element={<AuthCallbackRoute onAuth={onAuth} />} />
           <Route path="/content-writers" element={<LandingWrapper><ContentWriters /></LandingWrapper>} />
-          <Route path="/wordpress-plugin" element={<LandingWrapper><WordPressPlugin /></LandingWrapper>} />
           <Route path="/pricing" element={<LandingWrapper><PricingPage /></LandingWrapper>} />
           <Route path="/product-sellers" element={<LandingWrapper><ProductSellers /></LandingWrapper>} />
           <Route path="/vibe-coders" element={<Navigate to="/" replace />} />
@@ -269,7 +267,6 @@ function AppRoutes({ apiKey, onAuth }) {
         <Route path="/settings" element={<Settings />} />
         <Route path="/local-business" element={<Navigate to="/dashboard" replace />} />
         <Route path="/content-writers" element={<LandingWrapper><ContentWriters /></LandingWrapper>} />
-        <Route path="/wordpress-plugin" element={<LandingWrapper><WordPressPlugin /></LandingWrapper>} />
         <Route path="/pricing" element={<LandingWrapper><PricingPage /></LandingWrapper>} />
         <Route path="/product-sellers" element={<LandingWrapper><ProductSellers /></LandingWrapper>} />
         <Route path="/vibe-coders" element={<Navigate to="/" replace />} />

@@ -14,7 +14,6 @@ const sections = [
   { id: 'solutions', label: 'Solution Modules' },
   { id: 'analysis-modes', label: 'Analysis Modes' },
   { id: 'api-reference', label: 'API Reference' },
-  { id: 'wordpress', label: 'WordPress Plugin' },
 ];
 
 function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
@@ -470,69 +469,6 @@ export default function DocsPage() {
                         <p className="text-sm">JSON object returned on every authenticated request containing <code className="text-xs font-mono text-neutral-300">count</code> and <code className="text-xs font-mono text-neutral-300">limit</code> for the current billing period.</p>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </Section>
-
-              <Section id="wordpress" title="WordPress Plugin">
-                <div className="space-y-6 text-neutral-400">
-                  <p className="leading-relaxed">
-                    The rain OS WordPress plugin brings full Rain Score analysis directly into your WordPress editor — both Gutenberg and Classic Editor.
-                  </p>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {[
-                      { title: 'Requirements', items: ['WordPress 5.8+', 'PHP 7.4+', 'curl, json, mbstring extensions', 'Active rain OS API key'] },
-                      { title: 'Features', items: ['Gutenberg sidebar panel', 'Classic editor meta box', 'URL Scanner', 'Built-in rewrite tools', 'Product Discoverability toggle'] },
-                    ].map((g) => (
-                      <div key={g.title} className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
-                        <h3 className="text-sm font-semibold text-white mb-3">{g.title}</h3>
-                        <ul className="space-y-1.5">
-                          {g.items.map((item) => (
-                            <li key={item} className="flex items-center gap-2 text-sm text-neutral-400">
-                              <span className="w-1 h-1 rounded-full bg-white shrink-0" />
-                              {item}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div>
-                    <h3 className="text-white font-semibold mb-3">Installation</h3>
-                    <ol className="space-y-3">
-                      {[
-                        'Download the latest plugin ZIP from the WordPress Plugin page',
-                        'Go to Plugins → Add New → Upload Plugin in your WordPress admin',
-                        'Upload the ZIP file and click Install Now',
-                        'Activate the plugin and go to Settings → rain OS',
-                        'Enter your API key and save. The sidebar will appear in your next post.',
-                      ].map((step, i) => (
-                        <li key={i} className="flex items-start gap-3 text-sm text-neutral-400">
-                          <span className="w-6 h-6 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center shrink-0 text-xs font-bold text-white mt-0.5">
-                            {i + 1}
-                          </span>
-                          {step}
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
-
-                  <div className="flex items-center gap-4 pt-2">
-                    <a
-                      href="/wordpress-plugin"
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/[0.03] border border-white/10 text-white text-sm font-semibold hover:bg-white/[0.05] transition-all"
-                    >
-                      WordPress Plugin page
-                      <ChevronRight className="w-4 h-4" />
-                    </a>
-                    <a
-                      href="mailto:support@getrainos.com"
-                      className="text-sm text-neutral-400 hover:text-white transition-colors"
-                    >
-                      Need help? Contact support →
-                    </a>
                   </div>
                 </div>
               </Section>

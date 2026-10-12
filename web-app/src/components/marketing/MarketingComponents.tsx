@@ -520,16 +520,16 @@ export const FAQ = () => {
   const faqs = [
     { q: "Who is rain OS for?", a: "Anyone who relies on organic traffic. We're especially powerful for SaaS, E-commerce, and Tech Publishers..." },
     { q: "Does rain OS replace Yoast or RankMath?", a: "No, rain OS is designed to work alongside your existing SEO plugins..." },
-    { q: "How does rain OS decide what to score?", a: "Every analysis runs your content through five weighted pillars — AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, and RAG Readiness. The weights change by lane: Writers get 36/27/27/0/10, Product Sellers get 20/15/15/50/10, Developers and Vibe Coders get 32/32/26/0/10, and Local Businesses get 27/36/27/0/10. Plus a deeper layer of Phase 2 signals covering chunking quality, information gain, and query alignment. The result is a single overall score from 0 to 100 with a breakdown for every dimension." },
+    { q: "How does rain OS decide what to score?", a: "Every analysis runs your content through six weighted pillars — AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, Local Presence, and RAG Readiness. The weights change by lane: Writers get 36/27/27/0/0/10, Product Sellers get 20/15/15/50/0/10, Developers and Vibe Coders get 32/32/26/0/0/10, and Local Businesses get 20/20/20/0/30/10. Plus a deeper layer of Phase 2 signals covering chunking quality, information gain, and query alignment. The result is a single overall score from 0 to 100 with a breakdown for every dimension." },
     { q: "How does the Authorship Proof work?", a: "We generate a SHA-256 cryptographic hash of your content at the time of publishing..." },
     { q: "What is the 'Zero-Click Problem' and how does rain OS help?", a: "The Zero-Click Problem occurs when AI answers a user's query directly, resulting in no traffic to your site..." },
-    { q: "Will this slow down my WordPress site?", a: "Not at all. rain OS runs its analysis asynchronously in the cloud..." },
+    { q: "Will this slow down my site?", a: "Not at all. rain OS runs its analysis asynchronously in the cloud..." },
     { q: "What is 'AI Readability' exactly?", a: "AI Readability measures how easily a Large Language Model (like ChatGPT or Google Gemini) can parse..." },
     { q: "What does the 'AEO Alignment' score actually measure?", a: "It measures how 'citable' your content is..." },
     { q: "Can rain OS fix my content, or just analyze it?", a: "Both. Every analysis includes a full six-pillar breakdown with actionable recommendations. We also offer built-in AI tools to rewrite sentences, generate better titles, create meta descriptions, and summarize content for AI snippet extraction — all without leaving the dashboard." },
     { q: "Do you guarantee that I will be cited by AI models?", a: "Just like with traditional SEO, no one can guarantee specific rankings..." },
     { q: "How does the pricing work? What is an 'Action'?", a: "We offer simple flat-rate monthly plans..." },
-    { q: "What happens to my content if I cancel?", a: "Your content remains 100% yours and stays on your WordPress site..." },
+    { q: "What happens to my content if I cancel?", a: "Your content remains 100% yours and stays exactly where it already lives..." },
   ];
 
   return (
@@ -581,7 +581,7 @@ export const ThreeModesSection = ({ onGetStarted }: { onGetStarted?: () => void 
       tagColor: 'text-white bg-white/[0.03] border-white/10',
       title: 'Content Analysis',
       description: 'Paste any content — a blog post, product page, or landing copy — and get a full Rain Score with actionable recommendations in seconds.',
-      availability: ['WordPress Plugin', 'Web App'],
+      availability: ['Web App'],
       availColor: 'text-white',
       detail: 'The fastest way to go from draft to AI-optimized. Works on any text, any format.',
     },
@@ -595,7 +595,7 @@ export const ThreeModesSection = ({ onGetStarted }: { onGetStarted?: () => void 
       tagColor: 'text-white bg-white/[0.03] border-white/10',
       title: 'URL Scanner',
       description: 'Enter any live URL. We fetch the page, parse the HTML, and surface every technical AEO signal: schema markup, llms.txt, JS rendering risk, open graph, and more.',
-      availability: ['WordPress Plugin', 'Web App'],
+      availability: ['Web App'],
       availColor: 'text-white',
       detail: 'Spot what\'s invisible in the rendered page — because AI crawlers see the raw HTML, not what your browser shows.',
     },

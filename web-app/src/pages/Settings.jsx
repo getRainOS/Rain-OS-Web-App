@@ -235,10 +235,9 @@ export default function Settings() {
         </div>
 
         <div className="card">
-          <h2 className={styles.sectionTitle}>WordPress Plugin Connection</h2>
+          <h2 className={styles.sectionTitle}>API Key</h2>
           <p className={styles.wpDesc}>
-            To connect Rain OS to your WordPress site, copy the key below and paste it into the
-            Rain OS plugin settings inside your WordPress admin panel.
+            Use this key to authenticate direct API calls to rain OS.
           </p>
 
           <div className={styles.keyBox}>
@@ -255,10 +254,6 @@ export default function Settings() {
               {copied ? '✓ Copied!' : 'Copy key'}
             </button>
           </div>
-
-          <p className={styles.wpHint}>
-            In WordPress: go to <strong>Rain OS → Settings</strong> and paste your key in the API Key field.
-          </p>
         </div>
 
         <div className="card">

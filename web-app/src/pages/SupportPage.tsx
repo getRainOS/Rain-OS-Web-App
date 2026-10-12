@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Plus, Minus, Mail, MessageSquare, BookOpen, Plug } from 'lucide-react';
+import { Plus, Minus, Mail, MessageSquare, BookOpen } from 'lucide-react';
 import MarketingNav from '@/components/marketing/MarketingNav';
 import { useNavigate } from 'react-router-dom';
 
@@ -40,11 +40,7 @@ const faqGroups = [
     items: [
       {
         q: 'How do I get my API key?',
-        a: 'After signing up at getrainos.com, your API key is shown on the Settings page under "WordPress Plugin Connection." Copy it from there. The same key works in the web app, the WordPress plugin, and any direct API calls.',
-      },
-      {
-        q: 'How do I connect the WordPress plugin to rain OS?',
-        a: 'Install and activate the rain OS plugin in WordPress. Go to rain OS → Settings in your WP admin, paste your API key in the API Key field, and click Save. The plugin will verify the key and show your plan status. Once connected, you can analyze any post or page directly from the editor.',
+        a: 'After signing up at getrainos.com, your API key is shown on the Settings page. Copy it from there to use in any direct API calls.',
       },
       {
         q: 'I signed up but my API key is not working — what should I do?',
@@ -74,27 +70,6 @@ const faqGroups = [
       {
         q: 'How often should I re-analyze after making changes?',
         a: 'Re-analyze after any significant content or structural update. Most users run a content analysis before and after revising a page, and a URL scan after deploying changes. The Score History tab tracks every run so you can see what improved and what did not.',
-      },
-    ],
-  },
-  {
-    label: 'WordPress Plugin',
-    items: [
-      {
-        q: 'The Gutenberg sidebar is not appearing — how do I fix it?',
-        a: 'Make sure your API key is saved in rain OS → Settings. Then open a post or page in the block editor and look for the rain OS panel in the right sidebar (you may need to expand it). If it is missing, try disabling other plugins temporarily to check for conflicts, and ensure the plugin is up to date.',
-      },
-      {
-        q: 'The plugin says "API key invalid" but I am sure it is correct.',
-        a: 'Check for hidden whitespace — the key field can sometimes capture a trailing space when pasting. Also confirm you are using the key from your rain OS account Settings page, not a WordPress application password. If the issue continues, email support@getrainos.com.',
-      },
-      {
-        q: 'Can I use the plugin with Classic Editor?',
-        a: 'Yes. If the Gutenberg block editor is not active, rain OS adds a meta box to the Classic Editor below your post content. You will see the Rain Score panel with Analyze and URL Scan buttons in the post edit screen.',
-      },
-      {
-        q: 'Does the plugin work with product pages?',
-        a: 'Yes — it works on any public post type including product pages and custom post types. Product Discoverability scoring is especially useful for e-commerce: it checks whether AI shopping assistants can surface your products when users ask for recommendations in natural language.',
       },
     ],
   },
@@ -147,20 +122,11 @@ const contactCards = [
   {
     icon: BookOpen,
     title: 'Documentation',
-    desc: 'API reference, plugin setup guide, and integration docs.',
+    desc: 'API reference and integration docs.',
     cta: 'Browse the docs →',
     href: '/docs',
     color: '#e5e5e5',
     response: 'Self-serve, available 24/7',
-  },
-  {
-    icon: Plug,
-    title: 'WordPress Plugin',
-    desc: 'Plugin-specific help, changelog, and installation guide.',
-    cta: 'Plugin page →',
-    href: '/wordpress-plugin',
-    color: '#e5e5e5',
-    response: 'Plugin v1.x documentation',
   },
 ];
 
