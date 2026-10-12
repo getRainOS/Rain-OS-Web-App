@@ -401,6 +401,7 @@ export const Pricing = () => {
         { label: "URL Scanner", included: false },
         { label: "Repo Analysis (GitHub)", included: false },
         { label: "Citation Monitor", included: false },
+        { label: "Weekly citation tracking", included: false },
         { label: "Brand Sentiment", included: false },
         { label: "Share of Voice", included: false },
       ]
@@ -416,6 +417,7 @@ export const Pricing = () => {
         { label: "URL Scanner", included: true },
         { label: "Repo Analysis (GitHub)", included: true },
         { label: "Citation Monitor", included: true },
+        { label: "Weekly citation tracking (10 questions)", included: true },
         { label: "Quick Tools — titles, meta, summarize", included: true },
         { label: "Score History", included: true },
         { label: "Brand Sentiment", included: false },
@@ -430,6 +432,7 @@ export const Pricing = () => {
       features: [
         { label: "Everything in Pro", included: true },
         { label: "Citation Monitor", included: true },
+        { label: "Weekly citation tracking (30 questions)", included: true },
         { label: "Brand Sentiment", included: true },
         { label: "Share of Voice", included: true },
       ]
