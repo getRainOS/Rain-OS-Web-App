@@ -325,7 +325,7 @@ export default function CitationMonitor() {
                 {loading ? (
                   <>
                     <span className="spinner" />
-                    Checking Gemini…
+                    Running citations check…
                   </>
                 ) : (
                   <>
@@ -582,10 +582,35 @@ function ScatterTooltip({ active, payload }) {
       <div className={styles.scatterTooltipDomain}>
         {d.domain}{d.isOwn ? ' (you)' : ''}
       </div>
-      <div className={styles.scatterTooltipStat}>{d.x}% of tracked queries</div>
+      <div className={styles.scatterTooltipStat}>{d.trueX ?? d.x}% of tracked queries</div>
       <div className={styles.scatterTooltipStat}>avg rank {d.y}</div>
     </div>
   );
+}
+
+// Coverage only takes as many distinct values as there are tracked queries
+// (e.g. with 2 tracked queries, every domain lands at exactly 50% or 100%),
+// so points routinely land on the exact same (x, y) and stack invisibly on
+// top of each other. Fan out exact duplicates with a small, deterministic
+// horizontal offset so each one stays visible — the tooltip still shows the
+// real, unjittered coverage percentage via `trueX`.
+function jitterOverlappingPoints(points) {
+  const groups = new Map();
+  for (const p of points) {
+    const key = `${p.x}:${p.y}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(p);
+  }
+  const out = [];
+  for (const group of groups.values()) {
+    const n = group.length;
+    group.forEach((p, i) => {
+      const spread = Math.min(4, n - 1); // cap total fan-out width in x-axis %
+      const offset = n > 1 ? (i - (n - 1) / 2) * (spread / Math.max(n - 1, 1)) : 0;
+      out.push({ ...p, trueX: p.x, x: Math.min(100, Math.max(0, p.x + offset)) });
+    });
+  }
+  return out;
 }
 
 /* ── Decorative "what this will look like" visual for the map empty state ── */
@@ -641,11 +666,11 @@ function MapSummaryPanel({ map, history, loading }) {
   const { totalQueries, domains, ownPoint } = map;
   const topDomain = domains[0];
 
-  const scatterData = domains.map(d => ({
+  const scatterData = jitterOverlappingPoints(domains.map(d => ({
     domain: d.domain,
     x: Math.round(d.coverage * 1000) / 10,
     y: d.avgRank,
-  }));
+  })));
   const ownScatterData = ownPoint
     ? [{ domain: ownPoint.domain, x: Math.round(ownPoint.coverage * 1000) / 10, y: ownPoint.avgRank, isOwn: true }]
     : [];
