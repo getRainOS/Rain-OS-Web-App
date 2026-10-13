@@ -5,8 +5,11 @@ import { useApp } from '../context/AppContext.jsx';
 import {
   Radar, ExternalLink, CheckCircle2, AlertCircle,
   Map as MapIcon, Trophy, Trash2, Globe,
-  History as HistoryIcon, Search,
+  History as HistoryIcon, Search, Plus,
 } from 'lucide-react';
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+} from 'recharts';
 import { buildCompetitorMap } from '../lib/citationHistory.js';
 import PageHeader from '../components/PageHeader.jsx';
 import TrackedQueriesPanel, { useTrackedQueries, TrackWeeklyButton } from '../components/TrackedQueries.jsx';
@@ -97,6 +100,8 @@ export default function CitationMonitor() {
   const [topicHistory, setTopicHistory] = useState([]);
   const [visibleCount, setVisibleCount] = useState(RECENT_PAGE_SIZE);
   const [view, setView] = useState('new');
+  const [resultTab, setResultTab] = useState('result');
+  const [pastTab, setPastTab] = useState('overview');
   const [mapFilter, setMapFilter] = useState(null);
 
   async function fetchMapHistory() {
@@ -146,6 +151,7 @@ export default function CitationMonitor() {
       const { data } = await api.citationCheck({ name: name.trim(), topic: topic.trim(), url: url.trim() || undefined });
       if (requestId !== checkRequestIdRef.current) return;
       setResult(data);
+      setResultTab('result');
       setMapFilter(topicKey(data?.topic || topic));
       // Prefer the per-topic history payload that came back with the check; fall back to a fetch.
       if (Array.isArray(data?.history) && data.history.length > 0) {
@@ -278,6 +284,11 @@ export default function CitationMonitor() {
           { heading: 'What the result means', body: '"Cited" or "Not cited" is what one real Gemini answer did at that moment. It is a snapshot to track over time, not a lasting rank.' },
           { heading: 'How the check works', body: 'We ask Gemini your exact question with live Google Search grounding and look for your domain among the sources it cites. One model and one phrasing, so run a few variations before drawing conclusions.' },
         ]}
+        actions={view !== 'new' && (
+          <button type="button" className={styles.newCheckBtn} onClick={() => setView('new')}>
+            <Plus size={14} aria-hidden="true" /> New check
+          </button>
+        )}
       />
 
       <div className={styles.viewTabs} role="tablist" aria-label="Citation Monitor views">
@@ -299,6 +310,16 @@ export default function CitationMonitor() {
         >
           Past checks
           {mapHistory.length > 0 && <span className={styles.sectionCount}>{mapHistory.length}</span>}
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={view === 'tracked'}
+          className={`${styles.viewTab} ${view === 'tracked' ? styles.viewTabActive : ''}`}
+          onClick={() => setView('tracked')}
+        >
+          Tracked weekly
+          {tracking.items.length > 0 && <span className={styles.sectionCount}>{tracking.items.length}</span>}
         </button>
       </div>
 
@@ -402,16 +423,29 @@ export default function CitationMonitor() {
             </div>
           ) : result ? (
             <div className={styles.resultsWrap}>
-              <ResultConsole result={result} name={name} topicHistory={topicHistory} tracking={tracking} />
-              {/* AI answer excerpt */}
-              {result.answerExcerpt && (
+              <SubTabs
+                label="Result views"
+                value={resultTab}
+                onChange={setResultTab}
+                items={[
+                  { id: 'result', label: 'Result' },
+                  { id: 'competitors', label: 'Competitors', count: competitorMap.domains.length },
+                  { id: 'map', label: 'World map', count: competitorMap.regions.length },
+                  ...(result.answerExcerpt ? [{ id: 'answer', label: 'What AI said' }] : []),
+                ]}
+              />
+              {resultTab === 'result' && (
+                <ResultConsole result={result} name={name} topicHistory={topicHistory} tracking={tracking} />
+              )}
+              {resultTab === 'competitors' && <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} part="domains" />}
+              {resultTab === 'map' && <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} part="regions" />}
+              {resultTab === 'answer' && result.answerExcerpt && (
                 <div className={`card ${styles.answerCard}`}>
-                  <h3 className={styles.sectionTitle}>What AI Actually Said</h3>
-                  <p className={styles.sectionSub}>The grounded answer Gemini gave for your query.</p>
+                  <h3 className={styles.sectionTitle}>What AI actually said</h3>
+                  <p className={styles.sectionSub}>The grounded answer Gemini gave for your question.</p>
                   <blockquote className={styles.answerQuote}>{result.answerExcerpt}</blockquote>
                 </div>
               )}
-
             </div>
           ) : (
             <div className={`card ${styles.consoleEmpty}`}>
@@ -426,13 +460,10 @@ export default function CitationMonitor() {
         </div>
       </div>
 
-      {result && hasMapDetail && (
-        <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} />
-      )}
       </>)}
 
       {view === 'past' && (<>
-        {questionOptions.length > 0 && (
+        {questionOptions.length > 0 && pastTab !== 'all' && (
           <div className={styles.filterBar}>
             <label htmlFor="cm-scope" className={styles.filterLabel}>Question</label>
             <select
@@ -450,25 +481,125 @@ export default function CitationMonitor() {
           </div>
         )}
 
-        <div className={styles.pastMap}>
-          <MapSummaryPanel map={competitorMap} history={scopedHistory} loading={mapLoading} />
-        </div>
-
-        {hasMapDetail && (
-          <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} />
+        {mapHistory.length > 0 && (
+          <SubTabs
+            label="Past check views"
+            value={pastTab}
+            onChange={setPastTab}
+            items={[
+              { id: 'overview', label: 'Overview' },
+              { id: 'competitors', label: 'Competitors', count: competitorMap.domains.length },
+              { id: 'rankings', label: 'Rankings' },
+              { id: 'map', label: 'World map', count: competitorMap.regions.length },
+              { id: 'all', label: 'All checks', count: mapHistory.length },
+            ]}
+          />
         )}
 
-        <TrackedQueriesPanel tracking={tracking} />
-
-        <RecentAnalysesSection
-          analyses={recentAnalyses}
-          loading={mapLoading}
-          visibleCount={visibleCount}
-          onShowMore={() => setVisibleCount(v => v + RECENT_PAGE_SIZE)}
-          onClearHistory={handleClearHistory}
-          onSelect={handlePickRecent}
-        />
+        {(pastTab === 'overview' || mapHistory.length === 0) && (
+          <MapSummaryPanel map={competitorMap} history={scopedHistory} loading={mapLoading} />
+        )}
+        {mapHistory.length > 0 && pastTab === 'competitors' && <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} part="domains" />}
+        {mapHistory.length > 0 && pastTab === 'rankings' && <RankingsChart history={scopedHistory} map={competitorMap} />}
+        {mapHistory.length > 0 && pastTab === 'map' && <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} part="regions" />}
+        {mapHistory.length > 0 && pastTab === 'all' && (
+          <RecentAnalysesSection
+            analyses={recentAnalyses}
+            loading={mapLoading}
+            visibleCount={visibleCount}
+            onShowMore={() => setVisibleCount(v => v + RECENT_PAGE_SIZE)}
+            onClearHistory={handleClearHistory}
+            onSelect={handlePickRecent}
+          />
+        )}
       </>)}
+
+      {view === 'tracked' && <TrackedQueriesPanel tracking={tracking} />}
+    </div>
+  );
+}
+
+function SubTabs({ items, value, onChange, label }) {
+  return (
+    <div className={styles.subTabs} role="tablist" aria-label={label}>
+      {items.map(it => (
+        <button
+          key={it.id}
+          type="button"
+          role="tab"
+          aria-selected={value === it.id}
+          className={`${styles.subTab} ${value === it.id ? styles.subTabActive : ''}`}
+          onClick={() => onChange(it.id)}
+        >
+          {it.label}
+          {typeof it.count === 'number' && it.count > 0 && <span className={styles.subTabCount}>{it.count}</span>}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+const RANK_LINE_COLORS = ['#e5e5e5', '#a3a3a3', '#737373'];
+
+function RankingsChart({ history, map }) {
+  const checks = [...history].sort(byCheckedAtAsc);
+  if (checks.length < 2) {
+    return (
+      <div className={`card ${styles.tabEmpty}`}>
+        Rankings over time appear after this question has been checked twice. Run it again, or track it weekly.
+      </div>
+    );
+  }
+  const rivals = [...map.domains].sort((x, y) => x.avgRank - y.avgRank).slice(0, 3).map(d => d.domain);
+  const data = checks.map(h => {
+    const row = { date: shortDate(h.checkedAt || h.checked_at), You: ownPositionOf(h).rank };
+    const sources = Array.isArray(h.sources) ? h.sources : [];
+    for (const d of rivals) {
+      const idx = sources.findIndex(src => normalizeDomain(src?.domain || src?.url || '') === d);
+      row[d] = idx >= 0 ? idx + 1 : null;
+    }
+    return row;
+  });
+  const maxRank = Math.max(3, ...data.flatMap(r => [r.You, ...rivals.map(d => r[d])]).filter(v => typeof v === 'number'));
+
+  return (
+    <div className={`card ${styles.mapCard}`}>
+      <h3 className={styles.sectionTitle}>Position over time</h3>
+      <p className={styles.sectionSub}>
+        Where you and the top competitors appeared in Gemini's sources on each check (1 is cited first).
+        Gaps mean that site wasn't cited that time.
+      </p>
+      <div className={styles.rankChart}>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={data} margin={{ top: 12, right: 32, bottom: 8, left: 8 }}>
+            <CartesianGrid stroke="rgba(255,255,255,0.06)" vertical={false} />
+            <XAxis dataKey="date" padding={{ left: 24, right: 24 }} tick={{ fill: 'rgba(255,255,255,0.45)', fontSize: 11 }} axisLine={false} tickLine={false} />
+            <YAxis
+              reversed
+              allowDecimals={false}
+              domain={[0.5, maxRank + 0.5]}
+              ticks={Array.from({ length: maxRank }, (_, i) => i + 1)}
+              tickFormatter={v => `#${v}`}
+              tick={{ fill: 'rgba(255,255,255,0.45)', fontSize: 11 }}
+              axisLine={false}
+              tickLine={false}
+              width={36}
+            />
+            <Tooltip
+              contentStyle={{ background: '#0a0a0a', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, fontSize: 12 }}
+              formatter={(v, n) => [v == null ? 'Not cited' : `#${v}`, n]}
+            />
+            {rivals.map((d, i) => (
+              <Line key={d} type="monotone" dataKey={d} stroke={RANK_LINE_COLORS[i]} strokeWidth={1.5} strokeDasharray="4 3" dot={{ r: 3.5, fill: RANK_LINE_COLORS[i], strokeWidth: 0 }} connectNulls={false} isAnimationActive={false} />
+            ))}
+            <Line type="monotone" dataKey="You" stroke="#2B8FE3" strokeWidth={2.5} dot={{ r: 5, fill: '#2B8FE3', strokeWidth: 0 }} connectNulls={false} isAnimationActive={false} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+      <div className={styles.rankLegend}>
+        <span><i style={{ background: '#2B8FE3' }} />You</span>
+        {rivals.map((d, i) => <span key={d}><i style={{ background: RANK_LINE_COLORS[i] }} />{d}</span>)}
+      </div>
     </div>
   );
 }
@@ -755,13 +886,19 @@ function MapSummaryPanel({ map, history, loading }) {
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  Competitor Map — full-width detail (domain list + regional breakdown)     */
 /* ══════════════════════════════════════════════════════════════════════════ */
-function MapDetailSection({ map, scopeLabel }) {
+function MapDetailSection({ map, scopeLabel, part }) {
   const { regions, unknownCount } = map;
   const domains = [...map.domains].sort((x, y) => x.avgRank - y.avgRank || (x.bestRank ?? 99) - (y.bestRank ?? 99));
 
   return (
     <div className={`${styles.mapWrap} fade-in`}>
-      {domains.length > 0 && (
+      {part === 'domains' && domains.length === 0 && (
+        <div className={`card ${styles.tabEmpty}`}>No competing sources were cited for this question.</div>
+      )}
+      {part === 'regions' && regions.length === 0 && (
+        <div className={`card ${styles.tabEmpty}`}>None of the cited sites could be placed on the map yet.</div>
+      )}
+      {part !== 'regions' && domains.length > 0 && (
         <div className={`card ${styles.mapCard}`}>
           <div className={styles.mapCardHeader}>
             <h3 className={styles.sectionTitle}>
@@ -827,7 +964,7 @@ function MapDetailSection({ map, scopeLabel }) {
         </div>
       )}
 
-      {regions.length > 0 && (
+      {part !== 'domains' && regions.length > 0 && (
         <div className={`card ${styles.mapCard}`}>
           <div className={styles.mapCardHeader}>
             <h3 className={styles.sectionTitle}>
