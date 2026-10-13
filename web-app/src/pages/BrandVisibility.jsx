@@ -268,7 +268,10 @@ export default function BrandVisibility() {
               value={url}
               onChange={e => setUrl(e.target.value)}
               placeholder="https://yourdomain.com"
-              type="url"
+              type="text"
+              inputMode="url"
+              autoComplete="url"
+              spellCheck={false}
             />
           </div>
           <div className={styles.submitRow}>
