@@ -8,19 +8,19 @@ import { inferCountry } from './domainCountry.js';
 function insightFor({ queryCount, totalQueries, avgRank, citedAsTop }) {
   const dominanceRatio = queryCount / Math.max(totalQueries, 1);
   if (dominanceRatio >= 0.6 && totalQueries >= 3) {
-    return 'Dominant authority across your tracked topics — earning a guest post or editorial mention here is your highest-leverage citation play.';
+    return 'Cited in most checks of this question — earning a guest post or editorial mention here is your highest-leverage citation play.';
   }
   if (citedAsTop && queryCount >= 2) {
-    return 'Cited as a top-ranked source on multiple queries — AI engines treat this domain as a primary reference for your niche.';
+    return 'Cited as a top source in more than one check — Gemini treats this domain as a primary reference for this question.';
   }
   if (queryCount >= 3) {
-    return 'Recurring competitor across several of your queries — overlapping topical authority worth monitoring closely.';
+    return 'Keeps coming back across checks of this question — a steady competitor worth watching.';
   }
   if (avgRank <= 2) {
     return 'Cited near the top when it appears — high-trust source for this specific topic.';
   }
   if (queryCount >= 2) {
-    return 'Appears across more than one of your queries — a secondary voice in your topic cluster.';
+    return 'Cited in more than one check of this question — a secondary voice here.';
   }
   return 'Cited once so far — lower priority, but worth tracking as you add more checks.';
 }

@@ -26,6 +26,7 @@ const EXAMPLE_TOPICS = [
 ];
 
 const RECENT_PAGE_SIZE = 10;
+const MIN_CHECKS_FOR_SPREAD = 3;
 
 function topicKey(t) {
   return (t || '').trim().toLowerCase().replace(/\s+/g, ' ');
@@ -80,7 +81,7 @@ export default function CitationMonitor() {
   const [topicHistory, setTopicHistory] = useState([]);
   const [visibleCount, setVisibleCount] = useState(RECENT_PAGE_SIZE);
   const [view, setView] = useState('new');
-  const [mapFilter, setMapFilter] = useState('all');
+  const [mapFilter, setMapFilter] = useState(null);
 
   async function fetchMapHistory() {
     setMapLoading(true);
@@ -191,13 +192,15 @@ export default function CitationMonitor() {
 
   // "New check" only ever shows the question just run; "Past checks" shows
   // whichever question the filter picks, or everything.
-  const scopeKey = view === 'new' ? (result ? topicKey(result.topic || topic) : null) : mapFilter;
+  // Checks of different questions are never blended: coverage only means
+  // something across repeated checks of the same question.
+  const pastKey = questionOptions.some(o => o.key === mapFilter) ? mapFilter : (questionOptions[0]?.key ?? null);
+  const scopeKey = view === 'new' ? (result ? topicKey(result.topic || topic) : null) : pastKey;
   const scopedHistory = useMemo(() => {
     if (scopeKey === null) return [];
-    if (scopeKey === 'all') return mapHistory;
     return mapHistory.filter(h => topicKey(h.topic) === scopeKey);
   }, [mapHistory, scopeKey]);
-  const scopeLabel = scopeKey && scopeKey !== 'all'
+  const scopeLabel = scopeKey
     ? (questionOptions.find(o => o.key === scopeKey)?.label || result?.name || topic)
     : null;
 
@@ -509,14 +512,13 @@ export default function CitationMonitor() {
       {view === 'past' && (<>
         {questionOptions.length > 0 && (
           <div className={styles.filterBar}>
-            <label htmlFor="cm-scope" className={styles.filterLabel}>Showing</label>
+            <label htmlFor="cm-scope" className={styles.filterLabel}>Question</label>
             <select
               id="cm-scope"
               className={styles.filterSelect}
-              value={mapFilter}
+              value={pastKey ?? ''}
               onChange={e => setMapFilter(e.target.value)}
             >
-              <option value="all">All questions ({mapHistory.length} checks)</option>
               {questionOptions.map(o => (
                 <option key={o.key} value={o.key}>
                   {o.label} ({o.count} {o.count === 1 ? 'check' : 'checks'})
@@ -631,7 +633,7 @@ function ScatterTooltip({ active, payload }) {
       <div className={styles.scatterTooltipDomain}>
         {d.domain}{d.isOwn ? ' (you)' : ''}
       </div>
-      <div className={styles.scatterTooltipStat}>{d.trueX ?? d.x}% of tracked queries</div>
+      <div className={styles.scatterTooltipStat}>{d.trueX ?? d.x}% of this question's checks</div>
       <div className={styles.scatterTooltipStat}>avg rank {d.y}</div>
     </div>
   );
@@ -749,7 +751,13 @@ function MapSummaryPanel({ map, history, loading }) {
         </div>
       </div>
 
-      {(domains.length > 0 || ownScatterData.length > 0) && (
+      {(domains.length > 0 || ownScatterData.length > 0) && history.length < MIN_CHECKS_FOR_SPREAD && (
+        <p className={styles.spreadNote}>
+          The spread chart appears once this question has {MIN_CHECKS_FOR_SPREAD} checks. With {history.length === 1 ? 'one check, every cited domain is at 100%' : 'two checks, every domain sits at 50% or 100%'}, so it wouldn't tell you anything yet. Track it weekly to build that up.
+        </p>
+      )}
+
+      {(domains.length > 0 || ownScatterData.length > 0) && history.length >= MIN_CHECKS_FOR_SPREAD && (
         <div className={styles.scatterWrap}>
           <ResponsiveContainer width="100%" height={220}>
             <ScatterChart margin={{ top: 16, right: 16, bottom: 20, left: 4 }}>
@@ -779,6 +787,7 @@ function MapSummaryPanel({ map, history, loading }) {
               )}
             </ScatterChart>
           </ResponsiveContainer>
+          <p className={styles.scatterAxes}>Across: share of this question's checks that cited the domain. Down: its average position in Gemini's sources (1 is first).</p>
           {ownScatterData.length > 0 && (
             <div className={styles.scatterLegend}>
               <span className={styles.scatterLegendDot} style={{ background: 'var(--accent)' }} />
@@ -807,14 +816,12 @@ function MapDetailSection({ map, scopeLabel }) {
           <div className={styles.mapCardHeader}>
             <h3 className={styles.sectionTitle}>
               <Trophy style={{ width: 14, height: 14, color: 'var(--text)' }} />
-              Domains dominating your topics
+              Domains Gemini cited for this question
               <span className={styles.sectionCount}>{domains.length}</span>
             </h3>
           </div>
           <p className={styles.sectionSub}>
-            {scopeLabel
-              ? <>From your checks of "{scopeLabel}", ranked by how many of those checks each domain appears in.</>
-              : <>Across all your saved citation checks, ranked by how many of your questions each domain appears in.</>} Earning a mention or guest post on the top domains is the highest-leverage path to
+            From your checks of "{scopeLabel}", ranked by how many of those checks each domain appears in. Earning a mention or guest post on the top domains is the highest-leverage path to
             AI citations in your niche.
           </p>
 
@@ -845,7 +852,7 @@ function MapDetailSection({ map, scopeLabel }) {
                       </a>
                       <div className={styles.domainMetrics}>
                         <span className={styles.metric} title="Queries citing this domain">
-                          <strong>{d.queryCount}</strong>/{totalQueries} queries
+                          <strong>{d.queryCount}</strong>/{totalQueries} checks
                         </span>
                         <span className={styles.metricDot}>·</span>
                         <span className={styles.metric} title="Average rank in cited sources">
@@ -869,7 +876,7 @@ function MapDetailSection({ map, scopeLabel }) {
                     </div>
                     <div className={styles.domainMeta}>
                       <span className={styles.domainMetaLabel}>
-                        appears in {coveragePct}% of your tracked queries
+                        cited in {coveragePct}% of this question's checks
                       </span>
                       {d.sampleUrl && (
                         <span className={styles.domainMetaLink}>
