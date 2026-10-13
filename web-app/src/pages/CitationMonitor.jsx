@@ -27,6 +27,10 @@ const EXAMPLE_TOPICS = [
 
 const RECENT_PAGE_SIZE = 10;
 
+function topicKey(t) {
+  return (t || '').trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
 function getFavicon(domain) {
   if (!domain) return '';
   return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
@@ -75,6 +79,8 @@ export default function CitationMonitor() {
   // Backend per-topic timeline (drives "Previous checks for this topic")
   const [topicHistory, setTopicHistory] = useState([]);
   const [visibleCount, setVisibleCount] = useState(RECENT_PAGE_SIZE);
+  const [view, setView] = useState('new');
+  const [mapFilter, setMapFilter] = useState('all');
 
   async function fetchMapHistory() {
     setMapLoading(true);
@@ -123,6 +129,7 @@ export default function CitationMonitor() {
       const { data } = await api.citationCheck({ name: name.trim(), topic: topic.trim(), url: url.trim() || undefined });
       if (requestId !== checkRequestIdRef.current) return;
       setResult(data);
+      setMapFilter(topicKey(data?.topic || topic));
       // Prefer the per-topic history payload that came back with the check; fall back to a fetch.
       if (Array.isArray(data?.history) && data.history.length > 0) {
         setTopicHistory(data.history);
@@ -146,6 +153,7 @@ export default function CitationMonitor() {
     setUrl(h.url || '');
     setResult(null);
     setError('');
+    setView('new');
     formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
@@ -165,9 +173,37 @@ export default function CitationMonitor() {
   // land here and override the TLD guess on the next render.
   const [resolvedCountries, setResolvedCountries] = useState(() => new Map());
 
+  const questionOptions = useMemo(() => {
+    const seen = new Map();
+    const sorted = [...mapHistory].sort((a, b) =>
+      new Date(b.checkedAt || b.checked_at) - new Date(a.checkedAt || a.checked_at));
+    for (const h of sorted) {
+      const key = topicKey(h.topic);
+      if (!key || seen.has(key)) continue;
+      seen.set(key, { key, label: h.name || h.topic, count: 0 });
+    }
+    for (const h of mapHistory) {
+      const o = seen.get(topicKey(h.topic));
+      if (o) o.count += 1;
+    }
+    return [...seen.values()];
+  }, [mapHistory]);
+
+  // "New check" only ever shows the question just run; "Past checks" shows
+  // whichever question the filter picks, or everything.
+  const scopeKey = view === 'new' ? (result ? topicKey(result.topic || topic) : null) : mapFilter;
+  const scopedHistory = useMemo(() => {
+    if (scopeKey === null) return [];
+    if (scopeKey === 'all') return mapHistory;
+    return mapHistory.filter(h => topicKey(h.topic) === scopeKey);
+  }, [mapHistory, scopeKey]);
+  const scopeLabel = scopeKey && scopeKey !== 'all'
+    ? (questionOptions.find(o => o.key === scopeKey)?.label || result?.name || topic)
+    : null;
+
   const competitorMap = useMemo(
-    () => buildCompetitorMap(mapHistory, ownDomain, resolvedCountries),
-    [mapHistory, ownDomain, resolvedCountries]
+    () => buildCompetitorMap(scopedHistory, ownDomain, resolvedCountries),
+    [scopedHistory, ownDomain, resolvedCountries]
   );
 
   useEffect(() => {
@@ -225,6 +261,29 @@ export default function CitationMonitor() {
         ]}
       />
 
+      <div className={styles.viewTabs} role="tablist" aria-label="Citation Monitor views">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={view === 'new'}
+          className={`${styles.viewTab} ${view === 'new' ? styles.viewTabActive : ''}`}
+          onClick={() => setView('new')}
+        >
+          New check
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={view === 'past'}
+          className={`${styles.viewTab} ${view === 'past' ? styles.viewTabActive : ''}`}
+          onClick={() => setView('past')}
+        >
+          Past checks
+          {mapHistory.length > 0 && <span className={styles.sectionCount}>{mapHistory.length}</span>}
+        </button>
+      </div>
+
+      {view === 'new' && (<>
       <div className={styles.workspace}>
         <div className={styles.formColumn} ref={formRef}>
           <form onSubmit={handleCheck} className={`card ${styles.formCard}`}>
@@ -438,24 +497,54 @@ export default function CitationMonitor() {
         </div>
 
         <div className={styles.mapColumn}>
-          <MapSummaryPanel map={competitorMap} history={mapHistory} loading={mapLoading} />
+          <MapSummaryPanel map={competitorMap} history={scopedHistory} loading={false} />
         </div>
       </div>
 
-      {hasMapDetail && (
-        <MapDetailSection map={competitorMap} />
+      {result && hasMapDetail && (
+        <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} />
       )}
+      </>)}
 
-      <TrackedQueriesPanel tracking={tracking} />
+      {view === 'past' && (<>
+        {questionOptions.length > 0 && (
+          <div className={styles.filterBar}>
+            <label htmlFor="cm-scope" className={styles.filterLabel}>Showing</label>
+            <select
+              id="cm-scope"
+              className={styles.filterSelect}
+              value={mapFilter}
+              onChange={e => setMapFilter(e.target.value)}
+            >
+              <option value="all">All questions ({mapHistory.length} checks)</option>
+              {questionOptions.map(o => (
+                <option key={o.key} value={o.key}>
+                  {o.label} ({o.count} {o.count === 1 ? 'check' : 'checks'})
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
-      <RecentAnalysesSection
-        analyses={recentAnalyses}
-        loading={mapLoading}
-        visibleCount={visibleCount}
-        onShowMore={() => setVisibleCount(v => v + RECENT_PAGE_SIZE)}
-        onClearHistory={handleClearHistory}
-        onSelect={handlePickRecent}
-      />
+        <div className={styles.pastMap}>
+          <MapSummaryPanel map={competitorMap} history={scopedHistory} loading={mapLoading} />
+        </div>
+
+        {hasMapDetail && (
+          <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} />
+        )}
+
+        <TrackedQueriesPanel tracking={tracking} />
+
+        <RecentAnalysesSection
+          analyses={recentAnalyses}
+          loading={mapLoading}
+          visibleCount={visibleCount}
+          onShowMore={() => setVisibleCount(v => v + RECENT_PAGE_SIZE)}
+          onClearHistory={handleClearHistory}
+          onSelect={handlePickRecent}
+        />
+      </>)}
     </div>
   );
 }
@@ -616,8 +705,8 @@ function MapSummaryPanel({ map, history, loading }) {
         <MapIcon className={styles.emptyMapIcon} />
         <h3 className={styles.emptyMapTitle}>Your competitor map starts here</h3>
         <p className={styles.emptyMapDesc}>
-          Run your first named check on the left. Every topic you track plots the domains Gemini cites
-          instead of you — so you can see exactly who's winning the citations you want.
+          Run a check and we'll plot the domains Gemini cites for that question, so you can see exactly
+          who's winning the citations you want.
         </p>
       </div>
     );
@@ -645,7 +734,7 @@ function MapSummaryPanel({ map, history, loading }) {
 
       <div className={styles.mapStatsRow}>
         <div className={styles.mapStat}>
-          <div className={styles.mapStatLabel}>Questions checked</div>
+          <div className={styles.mapStatLabel}>Checks run</div>
           <div className={styles.mapStatValue}>{totalQueries}</div>
         </div>
         <div className={styles.mapStat}>
@@ -707,7 +796,7 @@ function MapSummaryPanel({ map, history, loading }) {
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  Competitor Map — full-width detail (domain list + regional breakdown)     */
 /* ══════════════════════════════════════════════════════════════════════════ */
-function MapDetailSection({ map }) {
+function MapDetailSection({ map, scopeLabel }) {
   const { totalQueries, domains, regions, unknownCount } = map;
   const maxCount = domains[0]?.queryCount || 1;
 
@@ -723,8 +812,9 @@ function MapDetailSection({ map }) {
             </h3>
           </div>
           <p className={styles.sectionSub}>
-            Aggregated across all your saved citation checks — ranked by how many of your queries each domain
-            appears in. Earning a mention or guest post on the top domains is the highest-leverage path to
+            {scopeLabel
+              ? <>From your checks of "{scopeLabel}", ranked by how many of those checks each domain appears in.</>
+              : <>Across all your saved citation checks, ranked by how many of your questions each domain appears in.</>} Earning a mention or guest post on the top domains is the highest-leverage path to
             AI citations in your niche.
           </p>
 
