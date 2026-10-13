@@ -13,6 +13,7 @@ import {
 import { buildCompetitorMap } from '../lib/citationHistory.js';
 import PageHeader from '../components/PageHeader.jsx';
 import { ViewTabs, SubTabs, NewCheckButton, QuestionPicker } from '../components/MonitorTabs.jsx';
+import PromptSuggestions from '../components/PromptSuggestions.jsx';
 import TrackedQueriesPanel, { useTrackedQueries, TrackWeeklyButton } from '../components/TrackedQueries.jsx';
 import styles from './CitationMonitor.module.css';
 
@@ -83,7 +84,7 @@ function timeAgo(str) {
 }
 
 export default function CitationMonitor() {
-  const { refreshUser } = useApp();
+  const { refreshUser, userLane } = useApp();
   const tracking = useTrackedQueries();
   const formRef = useRef(null);
   const checkRequestIdRef = useRef(0);
@@ -179,6 +180,14 @@ export default function CitationMonitor() {
     setError('');
     setView('new');
     formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function handleUseSuggestion(q, site) {
+    setTopic(q);
+    setName(q.length > 48 ? `${q.slice(0, 45)}…` : q);
+    if (site && !url.trim()) setUrl(site);
+    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('cm-topic')?.focus();
   }
 
   function handleExampleClick(t) {
@@ -424,12 +433,10 @@ export default function CitationMonitor() {
               )}
             </div>
           ) : (
-            <div className={`card ${styles.consoleEmpty}`}>
-              <MapEmptyViz />
-              <h3 className={styles.emptyMapTitle}>Your result appears here</h3>
-              <p className={styles.emptyMapDesc}>
-                You'll see every source Gemini cited for your question, where your site ranked among them,
-                and how that changes each time you check.
+            <div className={styles.resultsWrap}>
+              <PromptSuggestions url={url} lane={userLane || 'general'} tracking={tracking} onUse={handleUseSuggestion} />
+              <p className={styles.emptyHint}>
+                Run a check and your result appears here: every source Gemini cited for your question and where your site ranked.
               </p>
             </div>
           )}
