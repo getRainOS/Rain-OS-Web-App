@@ -2,14 +2,15 @@ import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   BarChart2, Search, CheckCircle2, AlertCircle,
-  Clock, Trash2,
+  Trash2,
   ExternalLink,
 } from 'lucide-react';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import { buildCitationShare } from '../lib/citationShare.js';
 import PageHeader from '../components/PageHeader.jsx';
+import { ViewTabs, SubTabs, NewCheckButton, QuestionPicker, CheckChips, TabEmpty, shortDate } from '../components/MonitorTabs.jsx';
 import styles from './ShareOfVoice.module.css';
 
 /* ── Per-prompt card ──────────────────────────────────────────────────────── */
@@ -117,6 +118,9 @@ export default function ShareOfVoice() {
   const [history, setHistory]         = useState([]);
   const [histLoading, setHistLoading] = useState(true);
   const [tab, setTab]                 = useState('check'); // 'check' | 'history'
+  const [resultTab, setResultTab]     = useState('summary');
+  const [pastTab, setPastTab]         = useState('overview');
+  const [pastKey, setPastKey]         = useState(null);
 
   useEffect(() => {
     api.sovHistory()
@@ -159,7 +163,7 @@ export default function ShareOfVoice() {
     }
   }
 
-  function handleReset() { setResult(null); setError(''); }
+  function handleReset() { setResult(null); setError(''); setResultTab('summary'); }
 
   const citationShare = useMemo(() => buildCitationShare(result), [result]);
 
@@ -182,11 +186,14 @@ export default function ShareOfVoice() {
       const latest = arr[arr.length - 1];
       const mentionedCount = latest.mentionedCount ?? latest.citedCount ?? latest.cited_count ?? 0;
       out.push({
+        key: `${(latest.brand || '').toLowerCase()}:::${(latest.topic || '').toLowerCase()}`,
+        name: latest.name,
         brand: latest.brand,
         topic: latest.topic,
         mentionedCount,
         checkedAt: latest.checkedAt || latest.checked_at,
         checks: arr.length,
+        list: arr,
       });
     }
     out.sort((a, b) => new Date(b.checkedAt) - new Date(a.checkedAt));
@@ -203,30 +210,18 @@ export default function ShareOfVoice() {
           { heading: 'What the numbers mean', body: 'Mentions and citation share are literal counts from three real Gemini prompts, not a score. Re-run over time to see whether your presence is growing.' },
           { heading: 'How the check works', body: 'We ask Gemini your topic three different ways with live Google Search grounding. It covers Gemini only, at one moment, so treat it as a trend signal rather than true market share.' },
         ]}
+        actions={(tab !== 'check' || result) && <NewCheckButton onClick={() => { handleReset(); setTab('check'); }} />}
       />
 
-      {/* Tabs */}
-      <div className={styles.tabs} role="tablist">
-        <button
-          role="tab"
-          aria-selected={tab === 'check'}
-          onClick={() => setTab('check')}
-          className={`${styles.tab} ${tab === 'check' ? styles.tabActive : ''}`}
-        >
-          <Search size={13} />
-          New Check
-        </button>
-        <button
-          role="tab"
-          aria-selected={tab === 'history'}
-          onClick={() => setTab('history')}
-          className={`${styles.tab} ${tab === 'history' ? styles.tabActive : ''}`}
-        >
-          <Clock size={13} />
-          Trend History
-          {history.length > 0 && <span className={styles.tabCount}>{trendGroups.length}</span>}
-        </button>
-      </div>
+      <ViewTabs
+        label="Share of Voice views"
+        value={tab}
+        onChange={setTab}
+        items={[
+          { id: 'check', label: 'New check' },
+          { id: 'history', label: 'Past checks', count: trendGroups.length },
+        ]}
+      />
 
       {/* ── Check tab ─────────────────────────────────────────────────────── */}
       {tab === 'check' && (
@@ -283,7 +278,18 @@ export default function ShareOfVoice() {
           ) : (
             /* ── Results ─────────────────────────────────────────────────── */
             <>
-              {/* Overview card */}
+              <SubTabs
+                label="Result views"
+                value={resultTab}
+                onChange={setResultTab}
+                items={[
+                  { id: 'summary', label: 'Summary' },
+                  { id: 'prompts', label: 'Prompts', count: result.modelResults.length },
+                  { id: 'competitors', label: 'Competitors', count: citationShare.length },
+                  ...(result.recommendations?.length ? [{ id: 'actions', label: 'What to do', count: result.recommendations.length }] : []),
+                ]}
+              />
+              {resultTab === 'summary' && (
               <div className={styles.card}>
                 <div className={styles.field}>
                   {result.name && (
@@ -322,11 +328,11 @@ export default function ShareOfVoice() {
                   )}
                 </div>
 
-                <button onClick={handleReset} className={styles.btnSecondary}>← Run another check</button>
               </div>
+              )}
 
               {/* What you can do about it */}
-              {result.recommendations?.length > 0 && (
+              {resultTab === 'actions' && result.recommendations?.length > 0 && (
                 <div className={styles.card}>
                   <p className={styles.sectionTitle}>What you can do about it</p>
                   <ul className={styles.recommendationsList}>
@@ -338,13 +344,17 @@ export default function ShareOfVoice() {
               )}
 
               {/* Per-prompt cards */}
-              <h3 className={styles.sectionTitle} style={{ marginBottom: 16 }}>Results by query phrasing</h3>
-              <div className={styles.resultsGrid3}>
-                {result.modelResults.map(m => <ModelCard key={m.modelKey} m={m} />)}
-              </div>
+              {resultTab === 'prompts' && (
+                <div className={styles.resultsGrid3}>
+                  {result.modelResults.map(m => <ModelCard key={m.modelKey} m={m} />)}
+                </div>
+              )}
 
               {/* Citation share */}
-              {citationShare.length > 0 && (
+              {resultTab === 'competitors' && citationShare.length === 0 && (
+                <TabEmpty>Gemini didn't cite any sources across the three prompts.</TabEmpty>
+              )}
+              {resultTab === 'competitors' && citationShare.length > 0 && (
                 <div className={styles.card}>
                   <p className={styles.sectionTitle}>Citation share</p>
                   <div className={styles.shareHeadline}>
@@ -394,7 +404,7 @@ export default function ShareOfVoice() {
         </>
       )}
 
-      {/* ── History tab ───────────────────────────────────────────────────── */}
+      {/* ── Past checks ───────────────────────────────────────────────── */}
       {tab === 'history' && (
         <>
           {histLoading ? (
@@ -407,34 +417,99 @@ export default function ShareOfVoice() {
               <p className={styles.emptyDesc}>No Share of Voice checks yet. Run your first check to start tracking trends.</p>
               <button onClick={() => setTab('check')} className={styles.btn}><Search size={13} /> Run first check</button>
             </div>
-          ) : (
-            <>
-              <div className={styles.clearRow}>
-                <button onClick={handleClear} className={styles.btnSecondary} style={{ color: 'var(--red)' }}>
-                  <Trash2 size={12} /> Clear history
-                </button>
-              </div>
+          ) : (() => {
+            const group = trendGroups.find(g => g.key === pastKey) || trendGroups[0];
+            const checks = group.list;
+            const mentionsOf = h => h.mentionedCount ?? h.citedCount ?? h.cited_count ?? 0;
+            const chartData = checks.map(h => ({ date: shortDate(h.checkedAt || h.checked_at), mentions: mentionsOf(h) }));
+            return (
+              <>
+                {pastTab !== 'all' && (
+                  <QuestionPicker
+                    id="sov-scope"
+                    label="Topic"
+                    options={trendGroups.map(g => ({ key: g.key, label: `${g.brand} · ${g.topic} (${g.checks} ${g.checks === 1 ? 'check' : 'checks'})` }))}
+                    value={group.key}
+                    onChange={setPastKey}
+                  />
+                )}
+                <SubTabs
+                  label="Past check views"
+                  value={pastTab}
+                  onChange={setPastTab}
+                  items={[
+                    { id: 'overview', label: 'Overview' },
+                    { id: 'trend', label: 'Trend' },
+                    { id: 'all', label: 'All checks', count: trendGroups.length },
+                  ]}
+                />
 
-              {trendGroups.map((g, i) => (
-                <div
-                  key={i}
-                  className={styles.trendRow}
-                  onClick={() => { setBrand(g.brand); setTopic(g.topic); setTab('check'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                >
-                  <div style={{ flexShrink: 0 }}>
-                    <MentionCountBadge count={g.mentionedCount} />
+                {pastTab === 'overview' && (
+                  <div className={styles.card}>
+                    <div className={styles.resultBrand}>{group.brand}</div>
+                    <div className={styles.resultTopic}>"{group.topic}"</div>
+                    <div className={styles.resultHeadline}>Latest: mentioned in {group.mentionedCount} of 3 prompts</div>
+                    <p className={styles.shareFootnote} style={{ marginBottom: 14, textAlign: 'left' }}>{group.checks} {group.checks === 1 ? 'check' : 'checks'} so far · last run {timeAgo(group.checkedAt)}</p>
+                    <CheckChips
+                      items={checks.slice(-12).map(h => {
+                        const n = mentionsOf(h);
+                        return { date: shortDate(h.checkedAt || h.checked_at), label: `${n} of 3`, tone: n === 3 ? 'good' : n === 0 ? 'bad' : 'strong' };
+                      })}
+                    />
                   </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div className={styles.trendBrand}>{g.brand}</div>
-                    <div className={styles.trendMeta}>
-                      "{g.topic}" · {g.checks} check{g.checks > 1 ? 's' : ''}
+                )}
+
+                {pastTab === 'trend' && (checks.length < 2 ? (
+                  <TabEmpty>The trend appears after this topic has been checked twice. Run it again to start the line.</TabEmpty>
+                ) : (
+                  <div className={styles.card}>
+                    <p className={styles.sectionTitle}>Mentions over time</p>
+                    <p className={styles.shareFootnote} style={{ marginBottom: 12, textAlign: 'left' }}>How many of the 3 prompts mentioned {group.brand} on each check.</p>
+                    <ResponsiveContainer width="100%" height={260}>
+                      <LineChart data={chartData} margin={{ top: 12, right: 24, bottom: 8, left: 0 }}>
+                        <CartesianGrid stroke="rgba(255,255,255,0.06)" vertical={false} />
+                        <XAxis dataKey="date" padding={{ left: 24, right: 24 }} tick={{ fill: 'rgba(255,255,255,0.45)', fontSize: 11 }} axisLine={false} tickLine={false} />
+                        <YAxis domain={[0, 3]} ticks={[0, 1, 2, 3]} allowDecimals={false} tickFormatter={v => `${v}/3`} tick={{ fill: 'rgba(255,255,255,0.45)', fontSize: 11 }} axisLine={false} tickLine={false} width={36} />
+                        <Tooltip
+                          contentStyle={{ background: '#0a0a0a', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, fontSize: 12 }}
+                          formatter={v => [`${v} of 3 prompts`, 'Mentioned']}
+                        />
+                        <Line type="monotone" dataKey="mentions" stroke="#2B8FE3" strokeWidth={2.5} dot={{ r: 5, fill: '#2B8FE3', strokeWidth: 0 }} isAnimationActive={false} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                ))}
+
+                {pastTab === 'all' && (
+                  <>
+                    <div className={styles.clearRow}>
+                      <button onClick={handleClear} className={styles.btnSecondary} style={{ color: 'var(--red)' }}>
+                        <Trash2 size={12} /> Clear history
+                      </button>
                     </div>
-                  </div>
-                  <div className={styles.trendTime}>{timeAgo(g.checkedAt)}</div>
-                </div>
-              ))}
-            </>
-          )}
+                    {trendGroups.map(g => (
+                      <div
+                        key={g.key}
+                        className={styles.trendRow}
+                        onClick={() => { setPastKey(g.key); setPastTab('overview'); }}
+                      >
+                        <div style={{ flexShrink: 0 }}>
+                          <MentionCountBadge count={g.mentionedCount} />
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div className={styles.trendBrand}>{g.brand}</div>
+                          <div className={styles.trendMeta}>
+                            "{g.topic}" · {g.checks} check{g.checks > 1 ? 's' : ''}
+                          </div>
+                        </div>
+                        <div className={styles.trendTime}>{timeAgo(g.checkedAt)}</div>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </>
+            );
+          })()}
         </>
       )}
     </div>
