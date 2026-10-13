@@ -5,7 +5,7 @@ import { useApp } from '../context/AppContext.jsx';
 import {
   Radar, ExternalLink, CheckCircle2, AlertCircle,
   Map as MapIcon, Trophy, Trash2, Globe,
-  History as HistoryIcon, Search,
+  History as HistoryIcon, Search, ArrowRight,
 } from 'lucide-react';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -13,6 +13,7 @@ import {
 import { buildCompetitorMap } from '../lib/citationHistory.js';
 import PageHeader from '../components/PageHeader.jsx';
 import { ViewTabs, SubTabs, NewCheckButton, QuestionPicker } from '../components/MonitorTabs.jsx';
+import PromptSuggestions from '../components/PromptSuggestions.jsx';
 import TrackedQueriesPanel, { useTrackedQueries, TrackWeeklyButton } from '../components/TrackedQueries.jsx';
 import styles from './CitationMonitor.module.css';
 
@@ -83,7 +84,7 @@ function timeAgo(str) {
 }
 
 export default function CitationMonitor() {
-  const { refreshUser } = useApp();
+  const { refreshUser, userLane } = useApp();
   const tracking = useTrackedQueries();
   const formRef = useRef(null);
   const checkRequestIdRef = useRef(0);
@@ -139,7 +140,8 @@ export default function CitationMonitor() {
 
   async function handleCheck(e) {
     e.preventDefault();
-    if (!name.trim() || !topic.trim()) return;
+    if (!topic.trim()) return;
+    const checkName = name.trim() || (topic.trim().length > 60 ? `${topic.trim().slice(0, 57)}…` : topic.trim());
     // Guards against a slower in-flight check (e.g. an accidental double
     // submit, or just normal Gemini latency variance) resolving after a
     // newer one and overwriting its result — only the most recently
@@ -149,7 +151,7 @@ export default function CitationMonitor() {
     setError('');
     setResult(null);
     try {
-      const { data } = await api.citationCheck({ name: name.trim(), topic: topic.trim(), url: url.trim() || undefined });
+      const { data } = await api.citationCheck({ name: checkName, topic: topic.trim(), url: url.trim() || undefined });
       if (requestId !== checkRequestIdRef.current) return;
       setResult(data);
       setResultTab('result');
@@ -179,6 +181,14 @@ export default function CitationMonitor() {
     setError('');
     setView('new');
     formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function handleUseSuggestion(q, site) {
+    setTopic(q);
+    setName(q.length > 48 ? `${q.slice(0, 45)}…` : q);
+    if (site && !url.trim()) setUrl(site);
+    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('cm-topic')?.focus();
   }
 
   function handleExampleClick(t) {
@@ -303,82 +313,85 @@ export default function CitationMonitor() {
       <div className={styles.workspace}>
         <div className={styles.formColumn} ref={formRef}>
           <form onSubmit={handleCheck} className={`card ${styles.formCard}`}>
-            <label className={styles.label} htmlFor="cm-name">
-              Analysis name
-              <span className={styles.labelHint}>Required — so you can find this check again later.</span>
-            </label>
-            <input
-              id="cm-name"
-              type="text"
-              className={styles.input}
-              placeholder="e.g. Blog AEO guide — Q1 check"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              maxLength={120}
-              required
-            />
+            <div className={styles.formHead}>
+              <h2 className={styles.formTitle}>Check a question</h2>
+              <p className={styles.formSub}>See which sites Gemini cites when a customer asks it, and whether yours is one of them.</p>
+            </div>
 
-            <label className={styles.label} htmlFor="cm-topic">
-              Question or Prompt to Be Cited For
-              <span className={styles.labelHint}>The exact question or prompt you want AI to cite your site for when answering.</span>
-            </label>
-            <input
-              id="cm-topic"
-              type="text"
-              className={styles.input}
-              placeholder="e.g. best AI content optimizer for bloggers"
-              value={topic}
-              onChange={e => setTopic(e.target.value)}
-              maxLength={500}
-              required
-            />
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="cm-topic">Question</label>
+              <textarea
+                id="cm-topic"
+                rows={2}
+                className={`${styles.input} ${styles.textarea}`}
+                placeholder="What would a customer ask AI? e.g. best AI content optimizer for bloggers"
+                value={topic}
+                onChange={e => setTopic(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); e.currentTarget.form?.requestSubmit(); } }}
+                maxLength={500}
+                required
+              />
+            </div>
 
-            <label className={styles.label} htmlFor="cm-url">
-              Your website URL
-              <span className={styles.labelHint}>Optional — we'll check if your domain appears in cited sources</span>
-            </label>
-            <input
-              id="cm-url"
-              type="text"
-              inputMode="url"
-              autoComplete="url"
-              spellCheck={false}
-              className={styles.input}
-              placeholder="https://yourdomain.com"
-              value={url}
-              onChange={e => setUrl(e.target.value)}
-            />
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="cm-url">
+                Your website <span className={styles.optional}>Optional</span>
+              </label>
+              <input
+                id="cm-url"
+                type="text"
+                inputMode="url"
+                autoComplete="url"
+                spellCheck={false}
+                className={styles.input}
+                placeholder="yourdomain.com"
+                value={url}
+                onChange={e => setUrl(e.target.value)}
+              />
+              <p className={styles.fieldHint}>So we can find you among the sources.</p>
+            </div>
 
-            <div className={styles.formRow}>
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <span className="spinner" />
-                    Running citations check…
-                  </>
-                ) : (
-                  <>
-                    <Radar style={{ width: 14, height: 14 }} />
-                    Check citations
-                  </>
-                )}
-              </button>
-              <div className={styles.examples}>
-                Try: {EXAMPLE_TOPICS.map((t, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    className={styles.exampleLink}
-                    onClick={() => handleExampleClick(t)}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="cm-name">
+                Name <span className={styles.optional}>Optional</span>
+              </label>
+              <input
+                id="cm-name"
+                type="text"
+                className={styles.input}
+                placeholder="Defaults to the question"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                maxLength={120}
+              />
+            </div>
+
+            <button type="submit" className={styles.submitBtn} disabled={loading || !topic.trim()}>
+              {loading ? (
+                <>
+                  <span className="spinner" style={{ width: 14, height: 14 }} />
+                  Checking…
+                </>
+              ) : (
+                <>
+                  Check citations
+                  <ArrowRight size={15} aria-hidden="true" />
+                </>
+              )}
+            </button>
+
+            <div className={styles.examples}>
+              <span className={styles.examplesLabel}>Examples</span>
+              {EXAMPLE_TOPICS.map((t, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className={styles.exampleLink}
+                  onClick={() => handleExampleClick(t)}
+                >
+                  {t}
+                </button>
+              ))}
             </div>
           </form>
 
@@ -424,12 +437,10 @@ export default function CitationMonitor() {
               )}
             </div>
           ) : (
-            <div className={`card ${styles.consoleEmpty}`}>
-              <MapEmptyViz />
-              <h3 className={styles.emptyMapTitle}>Your result appears here</h3>
-              <p className={styles.emptyMapDesc}>
-                You'll see every source Gemini cited for your question, where your site ranked among them,
-                and how that changes each time you check.
+            <div className={styles.resultsWrap}>
+              <PromptSuggestions url={url} lane={userLane || 'general'} tracking={tracking} onUse={handleUseSuggestion} />
+              <p className={styles.emptyHint}>
+                Run a check and your result appears here: every source Gemini cited for your question and where your site ranked.
               </p>
             </div>
           )}
