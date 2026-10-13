@@ -5,6 +5,8 @@ import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
 import ArtifactBlock from '../components/ArtifactBlock.jsx';
 import GithubPushPanel from '../components/GithubPushPanel.jsx';
+import { Wand2 } from 'lucide-react';
+import PageHeader from '../components/PageHeader.jsx';
 import styles from './RepoAnalysis.module.css';
 
 // Hex literals, not var(--green)/var(--yellow)/var(--red): the jsRiskBanner
@@ -108,7 +110,7 @@ function FixPromptGenerator({ result, repoUrl }) {
   return (
     <div className={`card ${styles.fixPromptCard}`}>
       <h3 className={styles.sectionTitle}>
-        <span style={{ marginRight: 8 }}>✨</span> Fix with AI
+        <Wand2 size={16} style={{ marginRight: 8, verticalAlign: '-2px' }} aria-hidden="true" /> Fix with AI
       </h3>
       <p className={styles.fixPromptDesc}>
         Pick your vibe platform and get a prompt you can paste straight into its AI assistant. It will fix the exact issues we found — no manual editing required.
@@ -166,7 +168,7 @@ export default function RepoAnalysis() {
     ? { title: 'Check what AI shopping agents can see in your storefront code', desc: "Link your GitHub account to fetch source files from your storefront repo and score product discoverability signals AI shopping assistants rely on. This is the only way to analyze JavaScript-rendered storefronts." }
     : userLane === 'local_business'
     ? { title: 'Check what AI assistants can see in your site\'s source', desc: "Link your GitHub account to fetch source files from your website repo and score the local-presence signals AI assistants rely on. This is the only way to analyze JavaScript-rendered sites." }
-    : { title: "See your codebase through an AI's eyes", desc: "Link your GitHub account to fetch source files (package.json, index.html, llms.txt, robots.txt) and score them against all 5 AEO pillars. This is the only way to analyze JavaScript-rendered apps." };
+    : { title: "See your codebase through an AI's eyes", desc: "Link your GitHub account to fetch source files (package.json, index.html, llms.txt, robots.txt) and score them against the same pillars AI uses to judge a project. This is the only way to analyze JavaScript-rendered apps." };
 
   useEffect(() => {
     api.github.repos()
@@ -240,9 +242,7 @@ export default function RepoAnalysis() {
   if (reposLoading) {
     return (
       <div className={styles.root}>
-        <div className={styles.header}>
-          <h1 className={styles.title}>Repo Analysis</h1>
-        </div>
+        <PageHeader title="Repo Analysis" subtitle="Connect a GitHub repository and see how easily AI can read and explain your project." />
         <div className={styles.loadingState}>
           <span className="spinner" />
         </div>
@@ -255,12 +255,7 @@ export default function RepoAnalysis() {
 
   return (
     <div className={`${styles.root} fade-in`}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Repo Analysis</h1>
-        <p className={styles.sub}>
-          Analyze your GitHub repository's source code for AI readability and AEO performance
-        </p>
-      </div>
+      <PageHeader title="Repo Analysis" subtitle="Connect a GitHub repository and see how easily AI can read and explain your project." />
 
       {connectSuccess && (
         <div className={styles.connectSuccessBanner}>

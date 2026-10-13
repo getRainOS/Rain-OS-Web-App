@@ -3,6 +3,7 @@ import { api } from '../api/client.js';
 import PillarScores from '../components/PillarScores.jsx';
 import { PILLAR_COLORS } from '../lib/pillarColors.js';
 import { CheckCircle2, AlertCircle, ExternalLink, Trash2, Search, X } from 'lucide-react';
+import PageHeader from '../components/PageHeader.jsx';
 import styles from './History.module.css';
 
 const UNDO_DELAY_MS = 5000;
@@ -390,10 +391,7 @@ export default function History() {
 
   return (
     <div className={`${styles.root} fade-in`}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Score History</h1>
-        <p className={styles.sub}>All past content analyses, citation checks, brand sentiment, and share of voice history</p>
-      </div>
+      <PageHeader title="History" subtitle="Every analysis and check you've run, in one place." />
 
       <div className={styles.tabs} role="tablist">
         <button

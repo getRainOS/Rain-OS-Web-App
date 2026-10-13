@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { api } from '../api/client.js';
+import { Heading, FileText, AlignLeft } from 'lucide-react';
 import styles from './QuickTools.module.css';
 
 const TOOLS = [
-  { action: 'suggest_titles',      label: 'Suggest Titles',       icon: '✎' },
-  { action: 'generate_description', label: 'Meta Description',     icon: '◷' },
-  { action: 'summarize_content',   label: 'Summarize',            icon: '≡' },
+  { action: 'suggest_titles',      label: 'Suggest Titles',       Icon: Heading },
+  { action: 'generate_description', label: 'Meta Description',     Icon: FileText },
+  { action: 'summarize_content',   label: 'Summarize',            Icon: AlignLeft },
 ];
 
 export default function QuickTools({ content, title }) {
@@ -52,7 +53,7 @@ export default function QuickTools({ content, title }) {
             }}
             disabled={loading || !content?.trim()}
           >
-            <span className={styles.toolIcon}>{t.icon}</span>
+            <t.Icon className={styles.toolIcon} size={14} aria-hidden="true" />
             {t.label}
           </button>
         ))}
