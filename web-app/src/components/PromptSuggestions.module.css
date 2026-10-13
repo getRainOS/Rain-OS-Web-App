@@ -1,5 +1,5 @@
 .panel {
-  padding: 20px;
+  padding: 24px;
 }
 
 .head {
@@ -42,10 +42,10 @@
 }
 
 .label {
-  margin-top: 6px;
+  margin-top: 8px;
   font-size: 12.5px;
   font-weight: 500;
-  color: var(--text);
+  color: var(--text-muted);
 }
 
 .optional {
@@ -54,17 +54,27 @@
 }
 
 .input {
-  height: 38px;
+  height: 40px;
   padding: 0 12px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--surface-2, rgba(255, 255, 255, 0.03));
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.35);
   color: var(--text);
   font: inherit;
-  font-size: 13.5px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
-.input:focus-visible,
+.input:hover { border-color: rgba(255, 255, 255, 0.18); }
+
+.input:focus {
+  border-color: rgba(43, 143, 227, 0.7);
+  box-shadow: 0 0 0 3px rgba(43, 143, 227, 0.18);
+}
+
+.input::placeholder { color: rgba(255, 255, 255, 0.28); }
+
 .btn:focus-visible,
 .useBtn:focus-visible,
 .trackBtn:focus-visible {
@@ -78,10 +88,10 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 36px;
+  height: 38px;
   padding: 0 14px;
   border: 0;
-  border-radius: var(--radius-sm);
+  border-radius: 8px;
   background: var(--cyan);
   color: #fff;
   font: inherit;

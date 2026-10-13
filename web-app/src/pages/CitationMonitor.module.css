@@ -116,78 +116,154 @@
 .formCard {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 18px;
+  padding: 24px;
+}
+
+.formHead {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.formTitle {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.formSub {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
 }
 
 .label {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-  margin-top: 8px;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-muted);
 }
 
-.labelHint {
+.optional {
   font-size: 11.5px;
   font-weight: 400;
   color: var(--text-dim);
 }
 
+.fieldHint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
 .input {
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  padding: 0 12px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
   color: var(--text);
-  font-size: 14px;
-  padding: 11px 14px;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
   font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.textarea {
+  height: auto;
+  min-height: 64px;
+  padding: 10px 12px;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.input:hover {
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .input:focus {
-  border-color: var(--text);
-  box-shadow: 0 0 0 3px rgba(255,255,255,0.12);
+  border-color: rgba(43, 143, 227, 0.7);
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 3px rgba(43, 143, 227, 0.18);
 }
 
-.input::placeholder { color: var(--text-dim); }
+.input::placeholder { color: rgba(255, 255, 255, 0.28); }
 
-.formRow {
-  display: flex;
+.submitBtn {
+  display: inline-flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-top: 16px;
+  justify-content: center;
+  gap: 8px;
+  height: 42px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--cyan);
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
 }
+
+.submitBtn:hover:not(:disabled) { background: #1C73C4; }
+.submitBtn:disabled { opacity: 0.45; cursor: default; }
+.submitBtn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
 .examples {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.examplesLabel {
+  margin-bottom: 4px;
+  font-family: 'Geist Mono', ui-monospace, Menlo, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--text-dim);
-  font-size: 11.5px;
 }
 
 .exampleLink {
-  font-size: 11.5px;
-  padding: 4px 10px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 5px;
-  color: var(--text);
-  cursor: pointer;
+  padding: 4px 0;
+  background: none;
+  border: 0;
+  color: var(--text-muted);
   font-family: inherit;
-  transition: background 0.15s, border-color 0.15s;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.15s;
 }
 
-.exampleLink:hover:not(:disabled) {
-  background: rgba(255,255,255,0.12);
-  border-color: rgba(255,255,255,0.35);
+.exampleLink::before {
+  content: '→';
+  margin-right: 8px;
+  color: var(--text-dim);
 }
 
+.exampleLink:hover:not(:disabled) { color: var(--text); }
+.exampleLink:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; border-radius: 4px; }
 .exampleLink:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .errorBox {
