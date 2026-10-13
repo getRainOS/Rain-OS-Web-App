@@ -4,12 +4,9 @@ import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import {
   Radar, ExternalLink, CheckCircle2, AlertCircle,
-  Map as MapIcon, Trophy, Trash2, Info, Globe,
-  History as HistoryIcon,
+  Map as MapIcon, Trophy, Trash2, Globe,
+  History as HistoryIcon, Search,
 } from 'lucide-react';
-import {
-  ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-} from 'recharts';
 import { buildCompetitorMap } from '../lib/citationHistory.js';
 import PageHeader from '../components/PageHeader.jsx';
 import TrackedQueriesPanel, { useTrackedQueries, TrackWeeklyButton } from '../components/TrackedQueries.jsx';
@@ -26,7 +23,6 @@ const EXAMPLE_TOPICS = [
 ];
 
 const RECENT_PAGE_SIZE = 10;
-const MIN_CHECKS_FOR_SPREAD = 3;
 
 function topicKey(t) {
   return (t || '').trim().toLowerCase().replace(/\s+/g, ' ');
@@ -48,6 +44,26 @@ function normalizeDomain(input) {
   } catch {
     return null;
   }
+}
+
+// Where the user's own site sat in one check's ordered source list.
+function ownPositionOf(entry) {
+  const sources = Array.isArray(entry?.sources) ? entry.sources : [];
+  const own = normalizeDomain(entry?.url || '');
+  if (!own) return { hasUrl: false, rank: null, total: sources.length };
+  const idx = sources.findIndex(src => {
+    const d = normalizeDomain(src?.domain || src?.url || '');
+    return d && (d === own || d.endsWith('.' + own));
+  });
+  return { hasUrl: true, rank: idx >= 0 ? idx + 1 : null, total: sources.length };
+}
+
+function byCheckedAtAsc(a, b) {
+  return new Date(a.checkedAt || a.checked_at) - new Date(b.checkedAt || b.checked_at);
+}
+
+function shortDate(str) {
+  return new Date(str).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
 function timeAgo(str) {
@@ -326,7 +342,10 @@ export default function CitationMonitor() {
             </label>
             <input
               id="cm-url"
-              type="url"
+              type="text"
+              inputMode="url"
+              autoComplete="url"
+              spellCheck={false}
               className={styles.input}
               placeholder="https://yourdomain.com"
               value={url}
@@ -373,84 +392,17 @@ export default function CitationMonitor() {
             </div>
           )}
 
-          {result && (
+        </div>
+
+        <div className={styles.mapColumn}>
+          {loading ? (
+            <div className={`card ${styles.consolePending}`}>
+              <span className="spinner" />
+              <p>Asking Gemini your question and reading the sources it cites…</p>
+            </div>
+          ) : result ? (
             <div className={styles.resultsWrap}>
-              <button
-                type="button"
-                className="btn btn-ghost"
-                style={{ alignSelf: 'flex-start' }}
-                onClick={() => { setResult(null); setError(''); }}
-              >
-                ← Dismiss result
-              </button>
-              <div className={`card ${styles.resultCard}`}>
-                <div className={styles.resultMain}>
-                  <div className={styles.resultCite}>
-                    {!result.url ? (
-                      <div className={styles.resultCiteNeutral}>
-                        <Info style={{ width: 18, height: 18 }} />
-                        <span>Enter your website above to check citation status</span>
-                      </div>
-                    ) : result.cited ? (
-                      <div className={styles.resultCiteGood}>
-                        <CheckCircle2 style={{ width: 18, height: 18 }} />
-                        <span>Cited</span>
-                      </div>
-                    ) : (
-                      <div className={styles.resultCiteBad}>
-                        <AlertCircle style={{ width: 18, height: 18 }} />
-                        <span>Not cited</span>
-                      </div>
-                    )}
-                    {result.url && !result.cited && (
-                      <Link to={`/url-scanner?url=${encodeURIComponent(result.url)}`} className={styles.urlScannerCta}>
-                        Check what your page needs in URL Scanner →
-                      </Link>
-                    )}
-                    <div className={styles.resultName}>{result.name || name}</div>
-                    <div className={styles.resultTopic}>
-                      {result.topic || topic}
-                    </div>
-                    <div className={styles.resultSummary}>{result.summary}</div>
-                    <div className={styles.resultActions}>
-                      <TrackWeeklyButton tracking={tracking} result={{ ...result, name: result.name || name }} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {result.sources && result.sources.length > 0 && (
-                <div className={`card ${styles.sourcesCard}`}>
-                  <h3 className={styles.sectionTitle}>
-                    Sources Gemini cited
-                    <span className={styles.sectionCount}>{result.sources.length}</span>
-                  </h3>
-                  <div className={styles.sourceGrid}>
-                    {result.sources.map((s, i) => (
-                      <a
-                        key={i}
-                        href={s.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.sourceItem}
-                      >
-                        <img
-                          src={getFavicon(s.domain)}
-                          alt=""
-                          className={styles.sourceFavicon}
-                          loading="lazy"
-                          onError={e => { e.target.style.visibility = 'hidden'; }}
-                        />
-                        <div className={styles.sourceBody}>
-                          <span className={styles.sourceTitle}>{s.title || s.domain}</span>
-                        </div>
-                        <ExternalLink style={{ width: 12, height: 12, opacity: 0.5, flexShrink: 0 }} />
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              )}
-
+              <ResultConsole result={result} name={name} topicHistory={topicHistory} tracking={tracking} />
               {/* AI answer excerpt */}
               {result.answerExcerpt && (
                 <div className={`card ${styles.answerCard}`}>
@@ -460,47 +412,17 @@ export default function CitationMonitor() {
                 </div>
               )}
 
-              {/* Previous checks for this topic (backend-driven per-topic timeline) */}
-              {topicHistory.length > 1 && (
-                <div className={`card ${styles.timelineCard}`}>
-                  <h3 className={styles.sectionTitle}>
-                    <HistoryIcon style={{ width: 14, height: 14, marginRight: 6, verticalAlign: '-2px' }} />
-                    Previous checks for this topic
-                    <span className={styles.sectionCount}>{topicHistory.length}</span>
-                  </h3>
-                  <p className={styles.sectionSub}>
-                    Track how your citation status has changed over time for this query.
-                  </p>
-                  <ol className={styles.timelineList}>
-                    {topicHistory.map((h, i) => (
-                      <li key={h.id ?? i} className={styles.timelineItem}>
-                        <div className={styles.timelineDot} style={{ background: h.cited ? 'var(--green)' : 'var(--red)' }} />
-                        <div className={styles.timelineMain}>
-                          <div className={styles.timelineRow}>
-                            <span className={styles.timelineDate}>
-                              {new Date(h.checkedAt).toLocaleDateString(undefined, {
-                                year: 'numeric', month: 'short', day: 'numeric',
-                              })}
-                            </span>
-                            <span
-                              className={styles.timelineStatus}
-                              style={{ color: h.cited ? 'var(--green)' : 'var(--red)' }}
-                            >
-                              {h.cited ? 'Cited' : 'Not cited'}
-                            </span>
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              )}
+            </div>
+          ) : (
+            <div className={`card ${styles.consoleEmpty}`}>
+              <MapEmptyViz />
+              <h3 className={styles.emptyMapTitle}>Your result appears here</h3>
+              <p className={styles.emptyMapDesc}>
+                You'll see every source Gemini cited for your question, where your site ranked among them,
+                and how that changes each time you check.
+              </p>
             </div>
           )}
-        </div>
-
-        <div className={styles.mapColumn}>
-          <MapSummaryPanel map={competitorMap} history={scopedHistory} loading={false} />
         </div>
       </div>
 
@@ -547,6 +469,119 @@ export default function CitationMonitor() {
           onSelect={handlePickRecent}
         />
       </>)}
+    </div>
+  );
+}
+
+function ResultConsole({ result, name, topicHistory, tracking }) {
+  const sources = Array.isArray(result.sources) ? result.sources : [];
+  const rank = result.citedSourceIndex != null ? result.citedSourceIndex + 1 : null;
+  const history = [...topicHistory].sort(byCheckedAtAsc).slice(-12);
+
+  let badge;
+  if (!result.url) badge = <span className={`${styles.consoleBadge} ${styles.consoleBadgeMuted}`}>No URL to match</span>;
+  else if (rank) badge = <span className={`${styles.consoleBadge} ${styles.consoleBadgeGood}`}>Cited · source {rank}</span>;
+  else badge = <span className={`${styles.consoleBadge} ${styles.consoleBadgeBad}`}>Not cited</span>;
+
+  return (
+    <div className={`card ${styles.console}`}>
+      <div className={styles.consoleBar}>
+        <span className={styles.consoleDots}><i /><i /><i /></span>
+        <span className={styles.consoleName}>{result.name || name}</span>
+        <span className={styles.consoleWhen}>Just now</span>
+      </div>
+      <div className={styles.consoleGrid}>
+        <div className={styles.consoleLeft}>
+          <div className={styles.consoleLabel}>Question</div>
+          <div className={styles.consoleQuestion}>
+            <Search size={14} aria-hidden="true" />
+            <span>{result.topic}</span>
+          </div>
+          <div className={styles.consoleLabelRow}>
+            <span className={styles.consoleLabel}>Sources Gemini cited</span>
+            {badge}
+          </div>
+          {sources.length ? (
+            <ol className={styles.consoleSources}>
+              {sources.map((src, i) => {
+                const mine = rank === i + 1;
+                return (
+                  <li key={i}>
+                    <a
+                      href={src.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${styles.consoleSource} ${mine ? styles.consoleSourceMine : ''}`}
+                      title={src.title || src.domain}
+                    >
+                      <span className={styles.consoleSourceNum}>{i + 1}</span>
+                      <img
+                        src={getFavicon(src.domain)}
+                        alt=""
+                        className={styles.consoleFavicon}
+                        loading="lazy"
+                        onError={e => { e.target.style.visibility = 'hidden'; }}
+                      />
+                      <span className={styles.consoleSourceDomain}>{src.domain}</span>
+                      {mine
+                        ? <span className={styles.consoleYou}>YOU</span>
+                        : <ExternalLink size={12} className={styles.consoleSourceIcon} aria-hidden="true" />}
+                    </a>
+                  </li>
+                );
+              })}
+            </ol>
+          ) : (
+            <p className={styles.consoleEmptyText}>Gemini answered without citing any sources for this question.</p>
+          )}
+        </div>
+
+        <div className={styles.consoleRight}>
+          <div className={styles.consoleLabel}>Your position</div>
+          {!result.url ? (
+            <>
+              <div className={styles.positionBig}>—</div>
+              <p className={styles.positionNote}>Add your website URL and run it again to see where you rank.</p>
+            </>
+          ) : rank ? (
+            <>
+              <div className={styles.positionBig}>#{rank}<span className={styles.positionOf}>of {sources.length}</span></div>
+              <p className={styles.positionNote}>Gemini cited your site as source {rank} for this question.</p>
+            </>
+          ) : (
+            <>
+              <div className={`${styles.positionBig} ${styles.positionMissText}`}>Not cited</div>
+              <p className={styles.positionNote}>
+                Your site wasn't among the {sources.length} sources.{' '}
+                <Link to={`/url-scanner?url=${encodeURIComponent(result.url)}`} className={styles.positionLink}>
+                  See what your page needs
+                </Link>
+              </p>
+            </>
+          )}
+
+          <div className={`${styles.consoleLabel} ${styles.consoleLabelSpaced}`}>This question over time</div>
+          <div className={styles.historySquares}>
+            {history.map((h, i) => {
+              const pos = ownPositionOf(h);
+              return (
+                <span
+                  key={h.id ?? i}
+                  className={pos.rank ? styles.historyHit : styles.historyMiss}
+                  title={`${shortDate(h.checkedAt || h.checked_at)}: ${pos.rank ? `#${pos.rank}` : 'not cited'}`}
+                />
+              );
+            })}
+          </div>
+          <p className={styles.historyCaption}>
+            {history.length} {history.length === 1 ? 'check' : 'checks'} so far
+          </p>
+          <div className={styles.consoleTrack}>
+            <TrackWeeklyButton tracking={tracking} result={{ ...result, name: result.name || name }} />
+          </div>
+        </div>
+      </div>
+      {result.summary && <p className={styles.consoleSummary}>{result.summary}</p>}
     </div>
   );
 }
@@ -625,46 +660,6 @@ function RecentAnalysesSection({ analyses, loading, visibleCount, onShowMore, on
 }
 
 /* ── Competitor scatter tooltip ──────────────────────────────────────────── */
-function ScatterTooltip({ active, payload }) {
-  if (!active || !payload?.length) return null;
-  const d = payload[0].payload;
-  return (
-    <div className={styles.scatterTooltip}>
-      <div className={styles.scatterTooltipDomain}>
-        {d.domain}{d.isOwn ? ' (you)' : ''}
-      </div>
-      <div className={styles.scatterTooltipStat}>{d.trueX ?? d.x}% of this question's checks</div>
-      <div className={styles.scatterTooltipStat}>avg rank {d.y}</div>
-    </div>
-  );
-}
-
-// Coverage only takes as many distinct values as there are tracked queries
-// (e.g. with 2 tracked queries, every domain lands at exactly 50% or 100%),
-// so points routinely land on the exact same (x, y) and stack invisibly on
-// top of each other. Fan out exact duplicates with a small, deterministic
-// horizontal offset so each one stays visible — the tooltip still shows the
-// real, unjittered coverage percentage via `trueX`.
-function jitterOverlappingPoints(points) {
-  const groups = new Map();
-  for (const p of points) {
-    const key = `${p.x}:${p.y}`;
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key).push(p);
-  }
-  const out = [];
-  for (const group of groups.values()) {
-    const n = group.length;
-    group.forEach((p, i) => {
-      const spread = Math.min(4, n - 1); // cap total fan-out width in x-axis %
-      const offset = n > 1 ? (i - (n - 1) / 2) * (spread / Math.max(n - 1, 1)) : 0;
-      out.push({ ...p, trueX: p.x, x: Math.min(100, Math.max(0, p.x + offset)) });
-    });
-  }
-  return out;
-}
-
-/* ── Decorative "what this will look like" visual for the map empty state ── */
 function MapEmptyViz() {
   const dots = [
     { x: 18, y: 58, big: false },
@@ -714,90 +709,45 @@ function MapSummaryPanel({ map, history, loading }) {
     );
   }
 
-  const { totalQueries, domains, ownPoint } = map;
-  const topDomain = domains[0];
-
-  const scatterData = jitterOverlappingPoints(domains.map(d => ({
-    domain: d.domain,
-    x: Math.round(d.coverage * 1000) / 10,
-    y: d.avgRank,
-  })));
-  const ownScatterData = ownPoint
-    ? [{ domain: ownPoint.domain, x: Math.round(ownPoint.coverage * 1000) / 10, y: ownPoint.avgRank, isOwn: true }]
-    : [];
+  const checks = [...history].sort(byCheckedAtAsc);
+  const latest = ownPositionOf(checks[checks.length - 1]);
+  const topSource = [...map.domains].sort((x, y) => x.avgRank - y.avgRank)[0];
+  const latestLabel = !latest.hasUrl ? '—' : latest.rank ? `#${latest.rank}` : 'Not cited';
 
   return (
     <div className={`card ${styles.mapSummaryCard}`}>
       <h3 className={styles.sectionTitle}>
         <MapIcon style={{ width: 14, height: 14, color: 'var(--text)' }} />
-        Competitor Map
-        <span className={styles.sectionCount}>{domains.length}</span>
+        Your position
       </h3>
 
       <div className={styles.mapStatsRow}>
         <div className={styles.mapStat}>
+          <div className={styles.mapStatLabel}>Latest check</div>
+          <div className={`${styles.mapStatValue} ${latest.hasUrl && !latest.rank ? styles.positionMissText : ''}`}>{latestLabel}</div>
+        </div>
+        <div className={styles.mapStat}>
           <div className={styles.mapStatLabel}>Checks run</div>
-          <div className={styles.mapStatValue}>{totalQueries}</div>
+          <div className={styles.mapStatValue}>{checks.length}</div>
         </div>
         <div className={styles.mapStat}>
-          <div className={styles.mapStatLabel}>Domains cited</div>
-          <div className={styles.mapStatValue}>{domains.length}</div>
-        </div>
-        <div className={styles.mapStat}>
-          <div className={styles.mapStatLabel}>Top competitor</div>
-          <div className={styles.mapStatValueSm}>
-            {topDomain ? topDomain.domain : '—'}
-          </div>
+          <div className={styles.mapStatLabel}>Usually cited first</div>
+          <div className={styles.mapStatValueSm}>{topSource ? topSource.domain : '—'}</div>
         </div>
       </div>
 
-      {(domains.length > 0 || ownScatterData.length > 0) && history.length < MIN_CHECKS_FOR_SPREAD && (
-        <p className={styles.spreadNote}>
-          The spread chart appears once this question has {MIN_CHECKS_FOR_SPREAD} checks. With {history.length === 1 ? 'one check, every cited domain is at 100%' : 'two checks, every domain sits at 50% or 100%'}, so it wouldn't tell you anything yet. Track it weekly to build that up.
-        </p>
-      )}
-
-      {(domains.length > 0 || ownScatterData.length > 0) && history.length >= MIN_CHECKS_FOR_SPREAD && (
-        <div className={styles.scatterWrap}>
-          <ResponsiveContainer width="100%" height={220}>
-            <ScatterChart margin={{ top: 16, right: 16, bottom: 20, left: 4 }}>
-              <CartesianGrid stroke="rgba(255,255,255,0.06)" />
-              <XAxis
-                type="number"
-                dataKey="x"
-                domain={[0, 100]}
-                stroke="transparent"
-                tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10 }}
-                tickLine={false}
-                axisLine={false}
-              />
-              <YAxis
-                type="number"
-                dataKey="y"
-                reversed
-                stroke="transparent"
-                tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10 }}
-                tickLine={false}
-                axisLine={false}
-              />
-              <Tooltip content={<ScatterTooltip />} cursor={{ strokeDasharray: '3 3', stroke: 'rgba(255,255,255,0.15)' }} />
-              <Scatter name="Competitors" data={scatterData} fill="var(--accent)" />
-              {ownScatterData.length > 0 && (
-                <Scatter name="You" data={ownScatterData} fill="var(--text)" shape="star" />
-              )}
-            </ScatterChart>
-          </ResponsiveContainer>
-          <p className={styles.scatterAxes}>Across: share of this question's checks that cited the domain. Down: its average position in Gemini's sources (1 is first).</p>
-          {ownScatterData.length > 0 && (
-            <div className={styles.scatterLegend}>
-              <span className={styles.scatterLegendDot} style={{ background: 'var(--accent)' }} />
-              Competitors
-              <span className={styles.scatterLegendDot} style={{ background: 'var(--text)', marginLeft: 14 }} />
-              You
+      <div className={styles.positionTimeline}>
+        {checks.slice(-12).map((h, i) => {
+          const pos = ownPositionOf(h);
+          const label = !pos.hasUrl ? 'No URL' : pos.rank ? `#${pos.rank} of ${pos.total}` : 'Not cited';
+          return (
+            <div key={h.id ?? i} className={styles.positionChip}>
+              <span className={styles.positionChipDate}>{shortDate(h.checkedAt || h.checked_at)}</span>
+              <span className={pos.rank ? styles.positionChipHit : pos.hasUrl ? styles.positionChipMiss : styles.positionChipNone}>{label}</span>
             </div>
-          )}
-        </div>
-      )}
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -806,8 +756,8 @@ function MapSummaryPanel({ map, history, loading }) {
 /*  Competitor Map — full-width detail (domain list + regional breakdown)     */
 /* ══════════════════════════════════════════════════════════════════════════ */
 function MapDetailSection({ map, scopeLabel }) {
-  const { totalQueries, domains, regions, unknownCount } = map;
-  const maxCount = domains[0]?.queryCount || 1;
+  const { regions, unknownCount } = map;
+  const domains = [...map.domains].sort((x, y) => x.avgRank - y.avgRank || (x.bestRank ?? 99) - (y.bestRank ?? 99));
 
   return (
     <div className={`${styles.mapWrap} fade-in`}>
@@ -821,14 +771,12 @@ function MapDetailSection({ map, scopeLabel }) {
             </h3>
           </div>
           <p className={styles.sectionSub}>
-            From your checks of "{scopeLabel}", ranked by how many of those checks each domain appears in. Earning a mention or guest post on the top domains is the highest-leverage path to
-            AI citations in your niche.
+            Ranked by their average position in Gemini's sources for "{scopeLabel}" (1 is cited first).
+            Earning a mention or guest post on the top sites is the most direct path to being cited yourself.
           </p>
 
           <ul className={styles.domainList}>
             {domains.map((d, i) => {
-              const widthPct = Math.max(8, Math.round((d.queryCount / maxCount) * 100));
-              const coveragePct = Math.round(d.coverage * 100);
               return (
                 <li key={d.domain} className={styles.domainItem}>
                   <div className={styles.domainRank}>{i + 1}</div>
@@ -851,12 +799,8 @@ function MapDetailSection({ map, scopeLabel }) {
                         <ExternalLink style={{ width: 11, height: 11 }} />
                       </a>
                       <div className={styles.domainMetrics}>
-                        <span className={styles.metric} title="Queries citing this domain">
-                          <strong>{d.queryCount}</strong>/{totalQueries} checks
-                        </span>
-                        <span className={styles.metricDot}>·</span>
-                        <span className={styles.metric} title="Average rank in cited sources">
-                          avg rank <strong>{d.avgRank}</strong>
+                        <span className={styles.metric} title="Average position in Gemini's sources">
+                          avg position <strong>{d.avgRank}</strong>
                         </span>
                         {d.bestRank && (
                           <>
@@ -868,16 +812,7 @@ function MapDetailSection({ map, scopeLabel }) {
                         )}
                       </div>
                     </div>
-                    <div className={styles.domainBarWrap}>
-                      <div
-                        className={styles.domainBar}
-                        style={{ width: `${widthPct}%` }}
-                      />
-                    </div>
                     <div className={styles.domainMeta}>
-                      <span className={styles.domainMetaLabel}>
-                        cited in {coveragePct}% of this question's checks
-                      </span>
                       {d.sampleUrl && (
                         <span className={styles.domainMetaLink}>
                           cited page: <a href={d.sampleUrl} target="_blank" rel="noopener noreferrer">{d.sampleTitle || 'View'}</a>

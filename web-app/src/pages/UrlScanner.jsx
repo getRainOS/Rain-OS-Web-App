@@ -190,8 +190,9 @@ export default function UrlScanner() {
     setErrorCode('');
     setResult(null);
     try {
-      const analysisModule = userLane === 'product_sellers' ? 'product_sellers' : userLane === 'developers' ? 'developers' : userLane === 'local_business' ? 'local_business' : 'general';
-      const { data } = await api.scanUrl(url.trim(), { module: analysisModule });
+      const analysisModule = ['product_sellers', 'developers', 'local_business', 'vibe_coders'].includes(userLane) ? userLane : 'general';
+      const target = /^https?:\/\//i.test(url.trim()) ? url.trim() : `https://${url.trim()}`;
+      const { data } = await api.scanUrl(target, { module: analysisModule });
       setResult(data);
       setScannedUrl(url.trim());
       refreshUser();
@@ -304,7 +305,10 @@ export default function UrlScanner() {
       <form onSubmit={handleScan} className={styles.form}>
         <div className={styles.inputRow}>
           <input
-            type="url"
+            type="text"
+              inputMode="url"
+              autoComplete="url"
+              spellCheck={false}
             className={styles.urlInput}
             placeholder="https://example.com/page"
             value={url}
