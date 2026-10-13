@@ -5,13 +5,14 @@ import { useApp } from '../context/AppContext.jsx';
 import {
   Radar, ExternalLink, CheckCircle2, AlertCircle,
   Map as MapIcon, Trophy, Trash2, Globe,
-  History as HistoryIcon, Search, Plus,
+  History as HistoryIcon, Search,
 } from 'lucide-react';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { buildCompetitorMap } from '../lib/citationHistory.js';
 import PageHeader from '../components/PageHeader.jsx';
+import { ViewTabs, SubTabs, NewCheckButton, QuestionPicker } from '../components/MonitorTabs.jsx';
 import TrackedQueriesPanel, { useTrackedQueries, TrackWeeklyButton } from '../components/TrackedQueries.jsx';
 import styles from './CitationMonitor.module.css';
 
@@ -284,44 +285,19 @@ export default function CitationMonitor() {
           { heading: 'What the result means', body: '"Cited" or "Not cited" is what one real Gemini answer did at that moment. It is a snapshot to track over time, not a lasting rank.' },
           { heading: 'How the check works', body: 'We ask Gemini your exact question with live Google Search grounding and look for your domain among the sources it cites. One model and one phrasing, so run a few variations before drawing conclusions.' },
         ]}
-        actions={view !== 'new' && (
-          <button type="button" className={styles.newCheckBtn} onClick={() => setView('new')}>
-            <Plus size={14} aria-hidden="true" /> New check
-          </button>
-        )}
+        actions={view !== 'new' && <NewCheckButton onClick={() => setView('new')} />}
       />
 
-      <div className={styles.viewTabs} role="tablist" aria-label="Citation Monitor views">
-        <button
-          type="button"
-          role="tab"
-          aria-selected={view === 'new'}
-          className={`${styles.viewTab} ${view === 'new' ? styles.viewTabActive : ''}`}
-          onClick={() => setView('new')}
-        >
-          New check
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={view === 'past'}
-          className={`${styles.viewTab} ${view === 'past' ? styles.viewTabActive : ''}`}
-          onClick={() => setView('past')}
-        >
-          Past checks
-          {mapHistory.length > 0 && <span className={styles.sectionCount}>{mapHistory.length}</span>}
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={view === 'tracked'}
-          className={`${styles.viewTab} ${view === 'tracked' ? styles.viewTabActive : ''}`}
-          onClick={() => setView('tracked')}
-        >
-          Tracked weekly
-          {tracking.items.length > 0 && <span className={styles.sectionCount}>{tracking.items.length}</span>}
-        </button>
-      </div>
+      <ViewTabs
+        label="Citation Monitor views"
+        value={view}
+        onChange={setView}
+        items={[
+          { id: 'new', label: 'New check' },
+          { id: 'past', label: 'Past checks', count: mapHistory.length },
+          { id: 'tracked', label: 'Tracked weekly', count: tracking.items.length },
+        ]}
+      />
 
       {view === 'new' && (<>
       <div className={styles.workspace}>
@@ -464,21 +440,12 @@ export default function CitationMonitor() {
 
       {view === 'past' && (<>
         {questionOptions.length > 0 && pastTab !== 'all' && (
-          <div className={styles.filterBar}>
-            <label htmlFor="cm-scope" className={styles.filterLabel}>Question</label>
-            <select
-              id="cm-scope"
-              className={styles.filterSelect}
-              value={pastKey ?? ''}
-              onChange={e => setMapFilter(e.target.value)}
-            >
-              {questionOptions.map(o => (
-                <option key={o.key} value={o.key}>
-                  {o.label} ({o.count} {o.count === 1 ? 'check' : 'checks'})
-                </option>
-              ))}
-            </select>
-          </div>
+          <QuestionPicker
+            id="cm-scope"
+            options={questionOptions.map(o => ({ key: o.key, label: `${o.label} (${o.count} ${o.count === 1 ? 'check' : 'checks'})` }))}
+            value={pastKey}
+            onChange={setMapFilter}
+          />
         )}
 
         {mapHistory.length > 0 && (
@@ -515,26 +482,6 @@ export default function CitationMonitor() {
       </>)}
 
       {view === 'tracked' && <TrackedQueriesPanel tracking={tracking} />}
-    </div>
-  );
-}
-
-function SubTabs({ items, value, onChange, label }) {
-  return (
-    <div className={styles.subTabs} role="tablist" aria-label={label}>
-      {items.map(it => (
-        <button
-          key={it.id}
-          type="button"
-          role="tab"
-          aria-selected={value === it.id}
-          className={`${styles.subTab} ${value === it.id ? styles.subTabActive : ''}`}
-          onClick={() => onChange(it.id)}
-        >
-          {it.label}
-          {typeof it.count === 'number' && it.count > 0 && <span className={styles.subTabCount}>{it.count}</span>}
-        </button>
-      ))}
     </div>
   );
 }
