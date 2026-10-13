@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import {
   BarChart2, Search, CheckCircle2, AlertCircle,
   Trash2,
@@ -108,8 +108,9 @@ export default function ShareOfVoice() {
   const { refreshUser } = useApp();
   const [name,  setName]    = useState('');
   const [brand, setBrand]   = useState('');
-  const [topic, setTopic]   = useState('');
-  const [url,   setUrl]     = useState('');
+  const [searchParams] = useSearchParams();
+  const [topic, setTopic] = useState(() => searchParams.get('q') || '');
+  const [url,   setUrl]     = useState(() => searchParams.get('url') || '');
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState('');
   const [planGated, setPlanGated] = useState(false);

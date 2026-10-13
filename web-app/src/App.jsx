@@ -10,6 +10,7 @@ import ContentAnalyzer from './pages/ContentAnalyzer.jsx';
 import UrlScanner from './pages/UrlScanner.jsx';
 import RepoAnalysis from './pages/RepoAnalysis.jsx';
 import CitationMonitor from './pages/CitationMonitor.jsx';
+import Questions from './pages/Questions.jsx';
 import BrandVisibility from './pages/BrandVisibility.jsx';
 import ShareOfVoice from './pages/ShareOfVoice.jsx';
 import History from './pages/History.jsx';
@@ -258,6 +259,7 @@ function AppRoutes({ apiKey, onAuth }) {
           <Route path="/analyze/:id" element={<ContentAnalyzer />} />
         <Route path="/url-scanner" element={<UrlScanner />} />
         <Route path="/repo-analysis" element={<RepoAnalysis />} />
+        <Route path="/questions" element={<Questions />} />
         <Route path="/citation-monitor" element={<CitationMonitor />} />
         <Route path="/brand-visibility" element={<BrandVisibility />} />
         <Route path="/share-of-voice" element={<ShareOfVoice />} />

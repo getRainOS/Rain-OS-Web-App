@@ -5,7 +5,7 @@ import styles from './PromptSuggestions.module.css';
 
 const INTENT_LABEL = { discover: 'Discover', compare: 'Compare', decide: 'Decide', learn: 'Learn' };
 
-export default function PromptSuggestions({ url, lane, tracking, onUse }) {
+export default function PromptSuggestions({ url, lane, tracking, onUse, renderUse, title = 'Not sure what to ask?' }) {
   const [site, setSite] = useState(url || '');
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
@@ -55,7 +55,7 @@ export default function PromptSuggestions({ url, lane, tracking, onUse }) {
       <div className={styles.head}>
         <span className={styles.iconWrap}><Sparkles size={15} aria-hidden="true" /></span>
         <div>
-          <h3 className={styles.title}>Not sure what to ask?</h3>
+          <h3 className={styles.title}>{title}</h3>
           <p className={styles.sub}>We'll suggest the questions your customers are likely asking AI. Free, and it doesn't use your analyses.</p>
         </div>
       </div>
@@ -112,9 +112,11 @@ export default function PromptSuggestions({ url, lane, tracking, onUse }) {
                 <span className={styles.question}>{s.question}</span>
               </div>
               <div className={styles.actions}>
-                <button type="button" className={styles.useBtn} onClick={() => onUse(s.question, site.trim())}>
-                  Use <ArrowRight size={13} aria-hidden="true" />
-                </button>
+                {renderUse ? renderUse(s.question, site.trim()) : (
+                  <button type="button" className={styles.useBtn} onClick={() => onUse(s.question, site.trim())}>
+                    Use <ArrowRight size={13} aria-hidden="true" />
+                  </button>
+                )}
                 {canTrack && (tracked[s.question] || tracking.isTracked(s.question) ? (
                   <span className={styles.trackedNote}><Check size={13} aria-hidden="true" /> Tracking</span>
                 ) : (

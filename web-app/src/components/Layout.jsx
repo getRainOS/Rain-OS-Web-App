@@ -6,7 +6,7 @@ import { supabase } from '../lib/supabase.js';
 import {
   LayoutDashboard, FileText, Globe, GitBranch, Radar, Eye,
   BarChart2, Settings, ArrowUp, LogOut, Wand2, Menu, X,
-  ChevronLeft, ChevronRight, ChevronsUpDown,
+  ChevronLeft, ChevronRight, ChevronsUpDown, MessageSquareText,
 } from 'lucide-react';
 import KnowledgeBase from './KnowledgeBase.jsx';
 import { urlScannerLabel } from '../lib/laneLabels.js';
@@ -26,6 +26,7 @@ const TOOLS = {
   analyze:    { to: '/analyze',          label: 'Content Optimizer',   Icon: FileText,         tooltip: 'Paste your content and get an AI readability score plus fix recommendations.' },
   urlScanner: { to: '/url-scanner',      label: 'URL Scanner',         Icon: Globe,            tooltip: 'Enter a website URL to check how well AI can read and understand your pages.' },
   repo:       { to: '/repo-analysis',    label: 'Repo Analysis',       Icon: GitBranch,        tooltip: 'Connect your GitHub repo to score docs and source code for AI readability.' },
+  questions:  { to: '/questions',        label: 'Questions',           Icon: MessageSquareText, tooltip: 'Find the questions your customers ask AI, then check or track them.' },
   citation:   { to: '/citation-monitor', label: 'Citation Monitor',    Icon: Radar,            tooltip: 'Check whether Gemini cites your brand for your topics, using live Google Search grounding.' },
   visibility: { to: '/brand-visibility', label: 'Brand Sentiment',       Icon: Eye,              tooltip: 'See how Gemini describes your brand, using live Google Search grounding — is the sentiment positive and are the facts correct?' },
   sov:        { to: '/share-of-voice',   label: 'Share of Voice',      Icon: BarChart2,        tooltip: 'See how visible your brand is when Gemini answers your topic three ways, using live Google Search grounding.' },
@@ -41,23 +42,23 @@ const TOOLS = {
 const LANE_GROUPS = {
   general: [
     { label: 'Optimize',  tools: ['analyze', 'urlScanner', 'repo'] },
-    { label: 'Monitor',   tools: ['citation', 'visibility', 'sov'] },
+    { label: 'Monitor',   tools: ['questions', 'citation', 'visibility', 'sov'] },
   ],
   product_sellers: [
     { label: 'Optimize',  tools: ['urlScanner', 'analyze', 'repo'] },
-    { label: 'Monitor',   tools: ['citation', 'visibility', 'sov'] },
+    { label: 'Monitor',   tools: ['questions', 'citation', 'visibility', 'sov'] },
   ],
   developers: [
     { label: 'Optimize',  tools: ['repo', 'urlScanner', 'analyze'] },
-    { label: 'Monitor',   tools: ['citation', 'visibility', 'sov'] },
+    { label: 'Monitor',   tools: ['questions', 'citation', 'visibility', 'sov'] },
   ],
   local_business: [
     { label: 'Optimize',  tools: ['urlScanner', 'analyze', 'repo'] },
-    { label: 'Monitor',   tools: ['citation', 'visibility', 'sov'] },
+    { label: 'Monitor',   tools: ['questions', 'citation', 'visibility', 'sov'] },
   ],
   vibe_coders: [
     { label: 'Optimize',  tools: ['repo', 'urlScanner', 'analyze'] },
-    { label: 'Monitor',   tools: ['citation', 'visibility', 'sov'] },
+    { label: 'Monitor',   tools: ['questions', 'citation', 'visibility', 'sov'] },
   ],
 };
 

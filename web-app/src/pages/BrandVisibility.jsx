@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import PageHeader from '../components/PageHeader.jsx';
@@ -87,8 +87,9 @@ export default function BrandVisibility() {
   const { refreshUser } = useApp();
   const [name, setName] = useState('');
   const [brand, setBrand] = useState('');
-  const [topic, setTopic] = useState('');
-  const [url, setUrl] = useState('');
+  const [searchParams] = useSearchParams();
+  const [topic, setTopic] = useState(() => searchParams.get('q') || '');
+  const [url, setUrl] = useState(() => searchParams.get('url') || '');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
