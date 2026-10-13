@@ -53,6 +53,7 @@ import {
   alertsHandler as citationAlertsHandler,
 } from './tracked-queries';
 import { startScheduler } from '../services/schedulerService';
+import promptSuggestionsHandler from './prompt-suggestions';
 // ─── CORS configuration ───────────────────────────────────────────────────────
 // IMPORTANT: Keep origin: '*' so the WordPress plugin works from any site.
 // Restricting origin here would 403 every WP install that has the plugin.
@@ -140,6 +141,7 @@ app.post('/api/tracked-queries', trackedCreateHandler);
 app.patch('/api/tracked-queries/:id', trackedUpdateHandler);
 app.delete('/api/tracked-queries/:id', trackedDeleteHandler);
 app.patch('/api/citation-alerts', citationAlertsHandler);
+app.post('/api/prompt-suggestions', promptSuggestionsHandler);
 // ─── Content analysis history ───────────────────────────────────────────────
 app.get('/api/history', historyListHandler);
 app.get('/v1/api/history', historyListHandler);
