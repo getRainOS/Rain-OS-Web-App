@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import PageHeader from '../components/PageHeader.jsx';
+import { ViewTabs, SubTabs, NewCheckButton, QuestionPicker, CheckChips, TabEmpty, shortDate } from '../components/MonitorTabs.jsx';
 import styles from './BrandVisibility.module.css';
 
 function MentionBadge({ status }) {
@@ -96,6 +97,9 @@ export default function BrandVisibility() {
   const [history, setHistory] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [tab, setTab] = useState('check'); // 'check' | 'history'
+  const [resultTab, setResultTab] = useState('summary');
+  const [pastTab, setPastTab] = useState('overview');
+  const [pastKey, setPastKey] = useState(null);
 
   useEffect(() => {
     setHistoryLoading(true);
@@ -115,6 +119,7 @@ export default function BrandVisibility() {
     try {
       const { data } = await api.brandVisibility({ name: name.trim(), brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined });
       setResult(data.data || data);
+      setResultTab('summary');
       // Refresh history
       const h = await api.brandVisHistory();
       setHistory(Array.isArray(h.data.data) ? h.data.data : Array.isArray(h.data) ? h.data : []);
@@ -158,6 +163,9 @@ export default function BrandVisibility() {
       arr.sort((a, b) => new Date(a.checked_at || a.checkedAt) - new Date(b.checked_at || b.checkedAt));
       const latest = arr[arr.length - 1];
       out.push({
+        key: `${(latest.brand || '').toLowerCase().trim()}::${(latest.topic || '').toLowerCase().trim()}`,
+        list: arr,
+        latest,
         brand: latest.brand,
         topic: latest.topic,
         latestSentiment: latest.sentiment || 'not_applicable',
@@ -179,30 +187,18 @@ export default function BrandVisibility() {
           { heading: 'What the result means', body: 'Whether you are mentioned is a direct check of Gemini\'s answer. The tone label is AI\'s judgment of the exact sentences that mention you, which we show so you can judge them yourself.' },
           { heading: 'How the check works', body: 'We ask Gemini with live Google Search grounding and report mentions, citations and tone as given. One model and one phrasing, so it suits spot checks better than full brand monitoring.' },
         ]}
+        actions={(tab !== 'check' || result) && <NewCheckButton onClick={() => { setResult(null); setError(''); setTab('check'); }} />}
       />
 
-      {/* Tabs */}
-      <div className={styles.tabs} role="tablist">
-        <button
-          role="tab"
-          aria-selected={tab === 'check'}
-          onClick={() => setTab('check')}
-          className={`${styles.tab} ${tab === 'check' ? styles.tabActive : ''}`}
-        >
-          <SearchIcon size={13} />
-          New Check
-        </button>
-        <button
-          role="tab"
-          aria-selected={tab === 'history'}
-          onClick={() => setTab('history')}
-          className={`${styles.tab} ${tab === 'history' ? styles.tabActive : ''}`}
-        >
-          <ClockIcon size={13} />
-          Trend History
-          {history.length > 0 && <span className={styles.tabCount}>{trendGroups.length}</span>}
-        </button>
-      </div>
+      <ViewTabs
+        label="Brand Sentiment views"
+        value={tab}
+        onChange={setTab}
+        items={[
+          { id: 'check', label: 'New check' },
+          { id: 'history', label: 'Past checks', count: trendGroups.length },
+        ]}
+      />
 
       {/* ── Check tab ─────────────────────────────────────────────────────────────────── */}
       {tab === 'check' && (
@@ -222,6 +218,7 @@ export default function BrandVisibility() {
       )}
       {error && <div className={styles.errorBox}>{error}</div>}
 
+      {!result && (
       <div className={styles.card}>
         <form onSubmit={handleCheck}>
           <div className={styles.field}>
@@ -287,9 +284,22 @@ export default function BrandVisibility() {
           </div>
         </form>
       </div>
+      )}
 
       {result && (
         <div>
+          <SubTabs
+            label="Result views"
+            value={resultTab}
+            onChange={setResultTab}
+            items={[
+              { id: 'summary', label: 'Summary' },
+              ...(result.answerExcerpt ? [{ id: 'answer', label: 'What AI said' }] : []),
+              { id: 'sources', label: 'Sources', count: result.sources?.length || 0 },
+              ...(result.recommendations?.length ? [{ id: 'actions', label: 'What to do', count: result.recommendations.length }] : []),
+            ]}
+          />
+          {resultTab === 'summary' && (
           <div className={styles.card}>
             <div className={styles.resultMeta}>
               {result.name && <div className={styles.resultName}>{result.name}</div>}
@@ -316,15 +326,16 @@ export default function BrandVisibility() {
               </div>
             )}
           </div>
+          )}
 
-          {result.answerExcerpt && (
+          {resultTab === 'answer' && result.answerExcerpt && (
             <div className={styles.card}>
               <div className={styles.sectionTitle}>What AI answered for "{result.topic}"</div>
               <div className={styles.excerpt}>"{result.answerExcerpt}"</div>
             </div>
           )}
 
-          {result.recommendations && result.recommendations.length > 0 && (
+          {resultTab === 'actions' && result.recommendations && result.recommendations.length > 0 && (
             <div className={styles.card}>
               <div className={styles.sectionTitle}>What you can do about it</div>
               <ul className={styles.recommendationsList}>
@@ -335,7 +346,11 @@ export default function BrandVisibility() {
             </div>
           )}
 
-          {result.competitors && result.competitors.length > 0 && (
+          {resultTab === 'sources' && !(result.sources?.length) && (
+            <TabEmpty>Gemini answered without citing any sources.</TabEmpty>
+          )}
+
+          {resultTab === 'sources' && result.competitors && result.competitors.length > 0 && (
             <div className={styles.card}>
               <div className={styles.sectionTitle}>Sites Gemini cited</div>
               <div className={styles.competitorGrid}>
@@ -346,7 +361,7 @@ export default function BrandVisibility() {
             </div>
           )}
 
-          {result.sources && result.sources.length > 0 && (
+          {resultTab === 'sources' && result.sources && result.sources.length > 0 && (
             <div className={styles.card}>
               <div className={styles.sectionTitle}>Sources AI cited ({result.sources.length})</div>
               {result.sources.map((s, i) => (
@@ -388,36 +403,105 @@ export default function BrandVisibility() {
               <p className={styles.emptyDesc}>No Brand Sentiment checks yet. Run your first check to start tracking trends.</p>
               <button onClick={() => setTab('check')} className={styles.btn}><SearchIcon size={13} /> Run first check</button>
             </div>
-          ) : (
-            <>
-              <div className={styles.clearRow}>
-                <button onClick={clearHistory} className={styles.btnSecondary} style={{ color: 'var(--red)' }}>
-                  <TrashIcon size={12} /> Clear history
-                </button>
-              </div>
+          ) : (() => {
+            const group = trendGroups.find(g => g.key === pastKey) || trendGroups[0];
+            const latest = group.latest;
+            const toneOf = h => {
+              const mention = h.mention_status || h.mentionStatus || 'not_mentioned';
+              if (mention !== 'mentioned') return { label: 'Not mentioned', tone: 'bad' };
+              const sent = h.sentiment || 'not_applicable';
+              if (sent === 'positive') return { label: 'Positive', tone: 'good' };
+              if (sent === 'negative') return { label: 'Negative', tone: 'bad' };
+              if (sent === 'mixed') return { label: 'Mixed', tone: 'warn' };
+              if (sent === 'neutral') return { label: 'Neutral', tone: 'strong' };
+              return { label: 'Mentioned', tone: 'strong' };
+            };
+            return (
+              <>
+                {pastTab !== 'all' && (
+                  <QuestionPicker
+                    id="bv-scope"
+                    label="Topic"
+                    options={trendGroups.map(g => ({ key: g.key, label: `${g.brand} · ${g.topic} (${g.checks} ${g.checks === 1 ? 'check' : 'checks'})` }))}
+                    value={group.key}
+                    onChange={setPastKey}
+                  />
+                )}
+                <SubTabs
+                  label="Past check views"
+                  value={pastTab}
+                  onChange={setPastTab}
+                  items={[
+                    { id: 'overview', label: 'Overview' },
+                    { id: 'tone', label: 'Tone over time' },
+                    { id: 'all', label: 'All checks', count: trendGroups.length },
+                  ]}
+                />
 
-              {trendGroups.map((g, i) => (
-                <div
-                  key={i}
-                  className={styles.trendRow}
-                  onClick={() => { setBrand(g.brand); setTopic(g.topic); setTab('check'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                >
-                  <div style={{ flexShrink: 0 }}>
-                    <MentionBadge status={g.latestMention} />
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div className={styles.trendTitle}>
-                      {g.brand} — {g.topic}
+                {pastTab === 'overview' && (
+                  <div className={styles.card}>
+                    <div className={styles.resultMeta}>
+                      <div className={styles.resultTitle}>{group.brand}</div>
+                      <p className={styles.resultSub}>"{group.topic}" · {group.checks} {group.checks === 1 ? 'check' : 'checks'} · last run {timeAgo(group.checkedAt)}</p>
+                      <div className={styles.badgeRow}>
+                        <MentionBadge status={group.latestMention} />
+                        {group.latestMention === 'mentioned' && <SentimentBadge sentiment={group.latestSentiment} />}
+                      </div>
+                      {latest.summary && <p className={styles.resultSub}>{latest.summary}</p>}
                     </div>
-                    <div className={styles.trendMeta}>
-                      {g.latestSentiment.replace('_', ' ')} sentiment · {g.checks} check{g.checks > 1 ? 's' : ''}
-                    </div>
+                    {latest.sentiment_explanation && (
+                      <div className={styles.sentimentBlock}>
+                        <div className={styles.sectionTitle}>AI's read</div>
+                        <p className={styles.resultSub}>{latest.sentiment_explanation}</p>
+                      </div>
+                    )}
                   </div>
-                  <div className={styles.trendTime}>{timeAgo(g.checkedAt)}</div>
-                </div>
-              ))}
-            </>
-          )}
+                )}
+
+                {pastTab === 'tone' && (
+                  <div className={styles.card}>
+                    <div className={styles.sectionTitle}>How Gemini described {group.brand} on each check</div>
+                    <CheckChips
+                      items={group.list.slice(-16).map(h => ({ date: shortDate(h.checked_at || h.checkedAt), ...toneOf(h) }))}
+                    />
+                    {group.list.length < 2 && (
+                      <p className={styles.resultSub} style={{ marginTop: 12 }}>Run this topic again to see how the tone changes over time.</p>
+                    )}
+                  </div>
+                )}
+
+                {pastTab === 'all' && (
+                  <>
+                    <div className={styles.clearRow}>
+                      <button onClick={clearHistory} className={styles.btnSecondary} style={{ color: 'var(--red)' }}>
+                        <TrashIcon size={12} /> Clear history
+                      </button>
+                    </div>
+                    {trendGroups.map(g => (
+                      <div
+                        key={g.key}
+                        className={styles.trendRow}
+                        onClick={() => { setPastKey(g.key); setPastTab('overview'); }}
+                      >
+                        <div style={{ flexShrink: 0 }}>
+                          <MentionBadge status={g.latestMention} />
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div className={styles.trendTitle}>
+                            {g.brand} — {g.topic}
+                          </div>
+                          <div className={styles.trendMeta}>
+                            {g.latestSentiment.replace('_', ' ')} sentiment · {g.checks} check{g.checks > 1 ? 's' : ''}
+                          </div>
+                        </div>
+                        <div className={styles.trendTime}>{timeAgo(g.checkedAt)}</div>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </>
+            );
+          })()}
         </>
       )}
     </div>
