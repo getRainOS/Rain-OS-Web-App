@@ -5,6 +5,7 @@ import { api, getApiKey, clearApiKey } from '../api/client.js';
 import { supabase } from '../lib/supabase.js';
 import { LANES } from '../lib/lanes.js';
 import { PRICE_TO_PLAN } from '../lib/plans.js';
+import PageHeader from '../components/PageHeader.jsx';
 import styles from './Settings.module.css';
 
 export default function Settings() {
@@ -151,10 +152,7 @@ export default function Settings() {
 
   return (
     <div className={`${styles.root} fade-in`}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Account Settings</h1>
-        <p className={styles.sub}>Manage your Rain OS account and plan</p>
-      </div>
+      <PageHeader title="Settings" subtitle="Your account, plan, API key and alerts." />
 
       {error && <p className={styles.errorBanner}>{error}</p>}
 

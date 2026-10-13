@@ -7,6 +7,8 @@ import ArtifactBlock from '../components/ArtifactBlock.jsx';
 import CitationCrossPromo from '../components/CitationCrossPromo.jsx';
 import GithubPushPanel from '../components/GithubPushPanel.jsx';
 import { urlScannerLabel } from '../lib/laneLabels.js';
+import { ShoppingBag, MapPin, Code2, Sparkles, ScanSearch, Wand2, AlertTriangle } from 'lucide-react';
+import PageHeader from '../components/PageHeader.jsx';
 import styles from './UrlScanner.module.css';
 
 // ─── GitHub push panel ───────────────────────────────────────────────────────
@@ -100,7 +102,7 @@ function FixPromptGenerator({ recommendations, url, overallScore }) {
   return (
     <div className={`card ${styles.recoCard}`}>
       <h3 className={styles.sectionTitle}>
-        <span style={{ marginRight: 8 }}>✨</span> Fix with AI
+        <Wand2 size={16} style={{ marginRight: 8, verticalAlign: '-2px' }} aria-hidden="true" /> Fix with AI
       </h3>
       <p style={{ fontSize: '13px', color: 'var(--text-dim)', marginBottom: '12px' }}>
         Pick your vibe platform and get a prompt you can paste straight into its AI assistant. It will fix the exact issues we found — no manual editing required.
@@ -228,25 +230,22 @@ export default function UrlScanner() {
     : 'Scan any URL to analyze its AI readability and AEO performance';
 
   const heroCopy = userLane === 'product_sellers'
-    ? { icon: '🛒', title: "Scan your product page and see exactly what's missing", sub: "We'll check whether AI shopping assistants like ChatGPT and Perplexity can actually read your pricing, availability, specs, and reviews — then tell you precisely what to fix." }
+    ? { Icon: ShoppingBag, title: "Scan your product page and see exactly what's missing", sub: "We'll check whether AI shopping assistants like ChatGPT and Perplexity can actually read your pricing, availability, specs, and reviews — then tell you precisely what to fix." }
     : userLane === 'local_business'
-    ? { icon: '📍', title: 'Scan your site and see if AI can find your business', sub: "We'll check whether AI assistants can surface your name, address, phone, hours, and reviews when someone nearby asks — then tell you precisely what to fix." }
+    ? { Icon: MapPin, title: 'Scan your site and see if AI can find your business', sub: "We'll check whether AI assistants can surface your name, address, phone, hours, and reviews when someone nearby asks — then tell you precisely what to fix." }
     : userLane === 'developers'
-    ? { icon: '⌁', title: 'Scan your app and see what AI tools can actually parse', sub: "We'll check whether AI coding assistants and crawlers can read your rendered markup, metadata, and structured data — then tell you precisely what to fix." }
+    ? { Icon: Code2, title: 'Scan your app and see what AI tools can actually parse', sub: "We'll check whether AI coding assistants and crawlers can read your rendered markup, metadata, and structured data — then tell you precisely what to fix." }
     : userLane === 'vibe_coders'
-    ? { icon: '✦', title: 'Scan your build before you ship it', sub: "We'll check whether AI assistants can read your landing page or app copy — then tell you precisely what to fix before launch." }
-    : { icon: '◎', title: 'Scan any page and see what AI actually sees', sub: "We'll check whether AI assistants can extract, cite, and trust what's on this page — then tell you precisely what to fix." };
+    ? { Icon: Sparkles, title: 'Scan your build before you ship it', sub: "We'll check whether AI assistants can read your landing page or app copy — then tell you precisely what to fix before launch." }
+    : { Icon: ScanSearch, title: 'Scan any page and see what AI actually sees', sub: "We'll check whether AI assistants can extract, cite, and trust what's on this page — then tell you precisely what to fix." };
 
   return (
     <div className={`${styles.root} fade-in`}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>{urlScannerLabel(userLane)}</h1>
-        <p className={styles.sub}>{pageSub}</p>
-      </div>
+      <PageHeader title={urlScannerLabel(userLane)} subtitle={pageSub} />
 
       {!heroSeen && (
         <div className={styles.hero}>
-          <div className={styles.heroIcon}>{heroCopy.icon}</div>
+          <div className={styles.heroIcon}><heroCopy.Icon size={20} aria-hidden="true" /></div>
           <div>
             <div className={styles.heroTitle}>{heroCopy.title}</div>
             <div className={styles.heroSub}>{heroCopy.sub}</div>
@@ -355,7 +354,7 @@ export default function UrlScanner() {
 
           {(result.technical_signals?.isJsRendered || result.signals?.isJsRendered) && (
             <div className={styles.jsWarningBanner}>
-              <div className={styles.jsWarningIcon}>⚠</div>
+              <div className={styles.jsWarningIcon}><AlertTriangle size={18} aria-hidden="true" /></div>
               <div className={styles.jsWarningBody}>
                 <strong className={styles.jsWarningTitle}>JavaScript-rendered site detected</strong>
                 <p className={styles.jsWarningText}>

@@ -23,9 +23,9 @@
 }
 
 .greeting {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.4px;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
   color: var(--text);
   margin-bottom: 4px;
 }

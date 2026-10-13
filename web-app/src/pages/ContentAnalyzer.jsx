@@ -7,7 +7,8 @@ import QuickTools from '../components/QuickTools.jsx';
 import ArtifactBlock from '../components/ArtifactBlock.jsx';
 import TypewriterPlaceholder from '../components/TypewriterPlaceholder.jsx';
 import CitationCrossPromo from '../components/CitationCrossPromo.jsx';
-import { FileText, PenLine, ShoppingBag, LayoutTemplate, BookOpen, MessageSquare, Sparkles } from 'lucide-react';
+import { FileText, PenLine, ShoppingBag, LayoutTemplate, BookOpen, MessageSquare, Sparkles, Lock } from 'lucide-react';
+import PageHeader from '../components/PageHeader.jsx';
 import styles from './ContentAnalyzer.module.css';
 
 const DRAFT_STORAGE_KEY = 'rain_os_content_analyzer_draft';
@@ -219,14 +220,11 @@ export default function ContentAnalyzer() {
 
   return (
     <div className={`${styles.root} fade-in`}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>{pageLabel}</h1>
-        <p className={styles.sub}>{pageSub}</p>
-      </div>
+      <PageHeader title={pageLabel} subtitle={pageSub} />
 
       {isAtLimit && (
         <div className={styles.upgradeGate}>
-          <span className={styles.upgradeGateIcon}>⚡</span>
+          <Lock className={styles.upgradeGateIcon} size={18} aria-hidden="true" />
           <p className={styles.upgradeGateText}>
             You've used all {usageLimit} free analyses.
           </p>

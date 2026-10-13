@@ -742,27 +742,6 @@ export default function Dashboard() {
       <div ref={laneSectionRef}>
         {showLaneSelector ? (
           <LaneSelector onSelect={(id) => { setUserLane(id); setShowLaneSelector(false); }} />
-        ) : userLane ? (
-          <div className={styles.laneBanner}>
-            {(() => {
-              const lane = LANES.find(l => l.id === userLane);
-              if (!lane) return null;
-              return (
-                <>
-                  <div className={styles.laneBadge}>
-                    <lane.Icon size={13} style={{ color: '#94a3b8' }} />
-                    <span className={styles.laneBadgeLabel}>{lane.label}</span>
-                  </div>
-                  <p className={styles.laneBannerSub}>
-                    {userLane === 'local_business'
-                      ? 'Scoring tuned for local trust signals, AI findability, and getting customers to call or book.'
-                      : 'Your scoring weights and KPIs are optimized for this lane.'}
-                  </p>
-                  <button className={styles.laneChangeBtn} onClick={() => setShowLaneSelector(true)}>Change lane</button>
-                </>
-              );
-            })()}
-          </div>
         ) : null}
       </div>
 

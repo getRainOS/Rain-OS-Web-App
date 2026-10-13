@@ -220,10 +220,10 @@ export default function ProductSellers() {
                 Product Discoverability Module
               </span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
-                5 signals. One Product Score.
+                5 signals AI shopping assistants look for.
               </h2>
               <p className="text-neutral-400 max-w-xl leading-relaxed">
-                Every product page analysis returns a weighted score across the signals AI shopping assistants actually use when deciding what to recommend.
+                Paste your product copy into the Content Optimizer and we score it on these five signals. Together they make up Product Discoverability, which is half of a seller's Rain Score. Scan a product page link and we also check the product data behind it: price, availability, brand, SKU and image.
               </p>
             </motion.div>
 
