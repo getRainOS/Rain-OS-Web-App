@@ -1,25 +1,22 @@
-import { useState, useEffect, useMemo, lazy, Suspense, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import {
   Radar, ExternalLink, CheckCircle2, AlertCircle,
-  Map as MapIcon, Trophy, Trash2, Globe,
+  Map as MapIcon, Trophy, Trash2, Layers,
   History as HistoryIcon, Search, ArrowRight,
 } from 'lucide-react';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { buildCompetitorMap } from '../lib/citationHistory.js';
+import { buildSourceTypes } from '../lib/sourceTypes.js';
 import PageHeader from '../components/PageHeader.jsx';
 import { ViewTabs, SubTabs, NewCheckButton, QuestionPicker } from '../components/MonitorTabs.jsx';
 import PromptSuggestions from '../components/PromptSuggestions.jsx';
 import TrackedQueriesPanel, { useTrackedQueries, TrackWeeklyButton } from '../components/TrackedQueries.jsx';
 import styles from './CitationMonitor.module.css';
-
-// Lazy: react-simple-maps + d3-geo only need to load for whoever actually
-// has region data to render, not on every page in the app.
-const CitationWorldMap = lazy(() => import('../components/CitationWorldMap.jsx'));
 
 const EXAMPLE_TOPICS = [
   'best AI content optimizer for bloggers',
@@ -206,7 +203,6 @@ export default function CitationMonitor() {
   // Once we know which domains TLD inference couldn't place, we ask the
   // backend (Gemini HQ lookup, cached server-side) for just those — results
   // land here and override the TLD guess on the next render.
-  const [resolvedCountries, setResolvedCountries] = useState(() => new Map());
 
   const questionOptions = useMemo(() => {
     const seen = new Map();
@@ -239,33 +235,13 @@ export default function CitationMonitor() {
     : null;
 
   const competitorMap = useMemo(
-    () => buildCompetitorMap(scopedHistory, ownDomain, resolvedCountries),
-    [scopedHistory, ownDomain, resolvedCountries]
+    () => buildCompetitorMap(scopedHistory, ownDomain),
+    [scopedHistory, ownDomain]
   );
-
-  useEffect(() => {
-    const needsLookup = competitorMap.domains
-      .filter(d => d.country === null && !resolvedCountries.has(d.domain))
-      .map(d => d.domain);
-    if (needsLookup.length === 0) return;
-    let cancelled = false;
-    api.resolveDomainCountries(needsLookup)
-      .then(({ data }) => {
-        if (cancelled || !data?.domains) return;
-        setResolvedCountries(prev => {
-          const next = new Map(prev);
-          for (const [domain, country] of Object.entries(data.domains)) {
-            next.set(domain, country);
-          }
-          return next;
-        });
-      })
-      .catch(() => {
-        // Best-effort only — the map still works with TLD-only inference.
-      });
-    return () => { cancelled = true; };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [competitorMap.domains]);
+  const sourceTypes = useMemo(
+    () => buildSourceTypes(competitorMap.domains, competitorMap.ownPoint),
+    [competitorMap]
+  );
 
   async function handleClearHistory() {
     if (!window.confirm('Clear all saved citation checks? This permanently deletes your citation history from your account.')) return;
@@ -420,15 +396,15 @@ export default function CitationMonitor() {
                 items={[
                   { id: 'result', label: 'Result' },
                   { id: 'competitors', label: 'Competitors', count: competitorMap.domains.length },
-                  { id: 'map', label: 'World map', count: competitorMap.regions.length },
+                  { id: 'types', label: 'Source types', count: sourceTypes.types.length },
                   ...(result.answerExcerpt ? [{ id: 'answer', label: 'What AI said' }] : []),
                 ]}
               />
               {resultTab === 'result' && (
                 <ResultConsole result={result} name={name} topicHistory={topicHistory} tracking={tracking} />
               )}
-              {resultTab === 'competitors' && <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} part="domains" />}
-              {resultTab === 'map' && <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} part="regions" />}
+              {resultTab === 'competitors' && <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} />}
+              {resultTab === 'types' && <SourceTypesSection data={sourceTypes} scopeLabel={scopeLabel} />}
               {resultTab === 'answer' && result.answerExcerpt && (
                 <div className={`card ${styles.answerCard}`}>
                   <h3 className={styles.sectionTitle}>What AI actually said</h3>
@@ -469,7 +445,7 @@ export default function CitationMonitor() {
               { id: 'overview', label: 'Overview' },
               { id: 'competitors', label: 'Competitors', count: competitorMap.domains.length },
               { id: 'rankings', label: 'Rankings' },
-              { id: 'map', label: 'World map', count: competitorMap.regions.length },
+              { id: 'types', label: 'Source types', count: sourceTypes.types.length },
               { id: 'all', label: 'All checks', count: mapHistory.length },
             ]}
           />
@@ -478,9 +454,9 @@ export default function CitationMonitor() {
         {(pastTab === 'overview' || mapHistory.length === 0) && (
           <MapSummaryPanel map={competitorMap} history={scopedHistory} loading={mapLoading} />
         )}
-        {mapHistory.length > 0 && pastTab === 'competitors' && <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} part="domains" />}
+        {mapHistory.length > 0 && pastTab === 'competitors' && <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} />}
         {mapHistory.length > 0 && pastTab === 'rankings' && <RankingsChart history={scopedHistory} map={competitorMap} />}
-        {mapHistory.length > 0 && pastTab === 'map' && <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} part="regions" />}
+        {mapHistory.length > 0 && pastTab === 'types' && <SourceTypesSection data={sourceTypes} scopeLabel={scopeLabel} />}
         {mapHistory.length > 0 && pastTab === 'all' && (
           <RecentAnalysesSection
             analyses={recentAnalyses}
@@ -845,19 +821,15 @@ function MapSummaryPanel({ map, history, loading }) {
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  Competitor Map — full-width detail (domain list + regional breakdown)     */
 /* ══════════════════════════════════════════════════════════════════════════ */
-function MapDetailSection({ map, scopeLabel, part }) {
-  const { regions, unknownCount } = map;
+function MapDetailSection({ map, scopeLabel }) {
   const domains = [...map.domains].sort((x, y) => x.avgRank - y.avgRank || (x.bestRank ?? 99) - (y.bestRank ?? 99));
 
   return (
     <div className={`${styles.mapWrap} fade-in`}>
-      {part === 'domains' && domains.length === 0 && (
+      {domains.length === 0 && (
         <div className={`card ${styles.tabEmpty}`}>No competing sources were cited for this question.</div>
       )}
-      {part === 'regions' && regions.length === 0 && (
-        <div className={`card ${styles.tabEmpty}`}>None of the cited sites could be placed on the map yet.</div>
-      )}
-      {part !== 'regions' && domains.length > 0 && (
+      {domains.length > 0 && (
         <div className={`card ${styles.mapCard}`}>
           <div className={styles.mapCardHeader}>
             <h3 className={styles.sectionTitle}>
@@ -923,44 +895,70 @@ function MapDetailSection({ map, scopeLabel, part }) {
         </div>
       )}
 
-      {part !== 'domains' && regions.length > 0 && (
-        <div className={`card ${styles.mapCard}`}>
-          <div className={styles.mapCardHeader}>
-            <h3 className={styles.sectionTitle}>
-              <Globe style={{ width: 14, height: 14, color: 'var(--text)' }} />
-              Where citations come from
-              <span className={styles.sectionCount}>{regions.length}</span>
-            </h3>
-          </div>
-          <p className={styles.sectionSub}>
-            Inferred from competitor domains' country-code TLDs (e.g. .de, .jp) — most domains use generic
-            TLDs like .com that carry no geographic signal, so this is a partial, directional read, not a
-            full regional breakdown.
-          </p>
-          <Suspense fallback={<div className={styles.mapLoadingFallback}><span className="spinner" /></div>}>
-            <CitationWorldMap regions={regions} unknownCount={unknownCount} />
-          </Suspense>
-          <ul className={styles.regionList}>
-            {regions.map(r => {
-              const widthPct = Math.max(8, Math.round((r.queryCount / regions[0].queryCount) * 100));
-              return (
-                <li key={r.name} className={styles.regionItem}>
-                  <span className={styles.regionFlag}>{r.flag}</span>
-                  <div className={styles.regionBody}>
-                    <div className={styles.regionHeadRow}>
-                      <span className={styles.regionName}>{r.name}</span>
-                      <span className={styles.regionCount}>{r.domainCount} domain{r.domainCount !== 1 ? 's' : ''}</span>
-                    </div>
-                    <div className={styles.domainBarWrap}>
-                      <div className={styles.domainBar} style={{ width: `${widthPct}%` }} />
-                    </div>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      )}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  Source types — what kinds of sites AI leans on for this question          */
+/* ══════════════════════════════════════════════════════════════════════════ */
+const pct = n => `${Math.round(n * 100)}%`;
+
+function SourceTypesSection({ data, scopeLabel }) {
+  const { total, ownCitations, ownShare, types } = data;
+  if (!total) {
+    return <div className={`card ${styles.tabEmpty}`}>No sources were cited for this question yet.</div>;
+  }
+  return (
+    <div className={`card ${styles.mapCard} fade-in`}>
+      <div className={styles.mapCardHeader}>
+        <h3 className={styles.sectionTitle}>
+          <Layers style={{ width: 14, height: 14, color: 'var(--text)' }} />
+          What kinds of sites AI cites
+          <span className={styles.sectionCount}>{total} citation{total !== 1 ? 's' : ''}</span>
+        </h3>
+      </div>
+      <p className={styles.sectionSub}>
+        Every source Gemini cited for "{scopeLabel}", grouped by type. The biggest groups show where to show up next.
+      </p>
+
+      <div className={styles.typeStack} role="img" aria-label="Share of citations by source type">
+        {types.map(t => (
+          <span key={t.id} className={styles.typeSeg} data-type={t.id} style={{ flexGrow: t.citations }} title={`${t.label}: ${pct(t.share)}`} />
+        ))}
+        {ownCitations > 0 && <span className={styles.typeSeg} data-type="you" style={{ flexGrow: ownCitations }} title={`Your site: ${pct(ownShare)}`} />}
+      </div>
+
+      <ul className={styles.typeList}>
+        {ownCitations > 0 && (
+          <li className={styles.typeItem}>
+            <div className={styles.typeHead}>
+              <span className={styles.typeDot} data-type="you" />
+              <span className={styles.typeLabel}>Your site</span>
+              <span className={styles.typeShare}>{pct(ownShare)}</span>
+            </div>
+          </li>
+        )}
+        {types.map(t => (
+          <li key={t.id} className={styles.typeItem}>
+            <div className={styles.typeHead}>
+              <span className={styles.typeDot} data-type={t.id} />
+              <span className={styles.typeLabel}>{t.label}</span>
+              <span className={styles.typeShare}>{pct(t.share)}</span>
+            </div>
+            <div className={styles.typeDomains}>
+              {t.domains.slice(0, 5).map(d => (
+                <a key={d.domain} href={d.sampleUrl || `https://${d.domain}`} target="_blank" rel="noopener noreferrer" className={styles.typeDomain}>
+                  <img src={getFavicon(d.domain)} alt="" loading="lazy" onError={e => { e.target.style.visibility = 'hidden'; }} />
+                  {d.domain}
+                </a>
+              ))}
+              {t.domains.length > 5 && <span className={styles.typeMore}>+{t.domains.length - 5} more</span>}
+            </div>
+            <p className={styles.typeAction}>{t.action}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

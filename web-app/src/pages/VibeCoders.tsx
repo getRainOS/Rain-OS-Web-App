@@ -1198,7 +1198,7 @@ export default function VibeCoders() {
               >
                 <h3 className="text-base font-semibold text-white mb-3">You shipped it in an afternoon. Now find out if AI can even see it.</h3>
                 <p className="text-sm text-neutral-400 leading-relaxed mb-4">
-                  Repo scans, live-site checks, citation tracking, and a world map of where your domain actually gets cited — the same dashboard whether you vibe-coded it in Bolt or hand-wrote every line.
+                  Repo scans, live-site checks, citation tracking, and a breakdown of the kinds of sites AI cites for your questions — the same dashboard whether you vibe-coded it in Bolt or hand-wrote every line.
                 </p>
                 <a href="/login" className="inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:text-neutral-300 transition-colors">
                   Scan your build free
