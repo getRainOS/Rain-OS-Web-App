@@ -395,7 +395,7 @@ export const Pricing = () => {
       description: "Try Rain OS and see how AI reads your content — no credit card needed.",
       buttonText: "Get Started",
       features: [
-        { label: "Content Analyzer", included: true },
+        { label: "Content Optimizer", included: true },
         { label: "All 6 core scoring pillars", included: true },
         { label: "Actionable recommendations", included: true },
         { label: "URL Scanner", included: false },
@@ -413,7 +413,7 @@ export const Pricing = () => {
       buttonText: "Get Started",
       features: [
         { label: "Everything in Free", included: true },
-        { label: "Content Analyzer", included: true },
+        { label: "Content Optimizer", included: true },
         { label: "URL Scanner", included: true },
         { label: "Repo Analysis (GitHub)", included: true },
         { label: "Citation Monitor", included: true },

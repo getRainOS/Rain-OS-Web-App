@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext.jsx';
 import { api } from '../api/client.js';
 import { PRICE_IDS, PRICE_TO_PLAN } from '../lib/plans.js';
+import PageHeader from '../components/PageHeader.jsx';
 import styles from './Upgrade.module.css';
 
 
@@ -14,13 +15,12 @@ const PLANS = [
     priceId: PRICE_IDS.FREE,
     description: 'Try Rain OS and see how AI reads your content.',
     color: 'var(--text-muted)',
-    limit: '5 checks total',
+    limit: '5 analyses total',
     features: [
       { label: '5 content analyses (one-time)', included: true },
       { label: 'All 6 core scoring pillars', included: true },
-      { label: 'Content Analyzer', included: true },
+      { label: 'Content Optimizer', included: true },
       { label: 'Basic recommendations', included: true },
-      { label: 'Product Visibility pillar', included: false },
       { label: 'URL Scanner', included: false },
       { label: 'Repo Analysis', included: false },
       { label: 'Citation Monitor', included: false },
@@ -37,11 +37,11 @@ const PLANS = [
     description: 'Everything in Free, plus the full AEO suite for content creators and growing brands.',
     color: 'var(--text)',
     featured: true,
-    limit: '200 checks / month',
+    limit: '200 analyses / month',
     features: [
       { label: '200 analyses / month', included: true },
       { label: 'Everything in Free', included: true },
-      { label: 'Content Analyzer', included: true },
+      { label: 'Content Optimizer', included: true },
       { label: 'URL Scanner', included: true },
       { label: 'Repo Analysis (GitHub)', included: true },
       { label: 'Citation Monitor', included: true },
@@ -59,7 +59,7 @@ const PLANS = [
     priceId: PRICE_IDS.BUSINESS,
     description: 'Premium AI intelligence for scaling brands and agencies.',
     color: 'var(--text)',
-    limit: '500 checks / month',
+    limit: '500 analyses / month',
     features: [
       { label: '500 analyses / month', included: true },
       { label: 'Everything in Pro', included: true },
@@ -136,10 +136,7 @@ export default function Upgrade() {
 
   return (
     <div className={`${styles.root} fade-in`}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Upgrade Your Plan</h1>
-        <p className={styles.sub}>Choose the plan that fits your AEO optimization needs</p>
-      </div>
+      <PageHeader title="Plans" subtitle="Pick the plan that fits how much you check. Change or cancel any time." />
 
       {error && <p className={styles.error}>{error}</p>}
 
