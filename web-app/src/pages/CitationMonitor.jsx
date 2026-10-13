@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, lazy, Suspense, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import {
@@ -90,8 +90,9 @@ export default function CitationMonitor() {
   const checkRequestIdRef = useRef(0);
 
   const [name, setName] = useState('');
-  const [topic, setTopic] = useState('');
-  const [url, setUrl] = useState('');
+  const [searchParams] = useSearchParams();
+  const [topic, setTopic] = useState(() => searchParams.get('q') || '');
+  const [url, setUrl] = useState(() => searchParams.get('url') || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
