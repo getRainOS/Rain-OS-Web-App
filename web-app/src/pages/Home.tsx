@@ -39,7 +39,6 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
 
 /* ── Hero product frame ─────────────────────────────────────────────────── */
 
-const PILLARS = ['AI Readability', 'Digital Authority', 'Conversion Readiness', 'Product Discoverability', 'Local Presence', 'RAG Readiness'];
 
 const HERO_EXAMPLES = [
   {
@@ -47,8 +46,6 @@ const HERO_EXAMPLES = [
     cited: true,
     rank: 2,
     sources: ['g2.com', 'yourbrand.com', 'zapier.com', 'reddit.com'],
-    score: 81,
-    pillars: [86, 78, 80, 0, 0, 74],
     history: [0, 0, 1, 0, 1, 1, 1, 1],
   },
   {
@@ -56,8 +53,6 @@ const HERO_EXAMPLES = [
     cited: false,
     rank: 0,
     sources: ['shopify.com', 'wired.com', 'theverge.com', 'competitor.co'],
-    score: 58,
-    pillars: [64, 55, 61, 49, 0, 52],
     history: [1, 1, 0, 0, 0, 1, 0, 0],
   },
   {
@@ -65,8 +60,6 @@ const HERO_EXAMPLES = [
     cited: true,
     rank: 1,
     sources: ['yourbrand.com', 'yelp.com', 'angi.com', 'bbb.org'],
-    score: 74,
-    pillars: [71, 76, 70, 0, 82, 63],
     history: [0, 1, 1, 1, 0, 1, 1, 1],
   },
 ];
@@ -145,39 +138,25 @@ function HeroConsole() {
         </div>
 
         <div className="p-5 md:p-6 min-w-0">
-          <div className="flex items-end justify-between mb-4">
-            <div>
-              <div className="text-[10px] uppercase tracking-[0.14em] text-neutral-500 mb-1" style={MONO}>Rain Score</div>
-              <div className="flex items-baseline gap-1">
-                <AnimatePresence mode="wait">
-                  <motion.span key={ex.score} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-4xl font-semibold tracking-tight text-white tabular-nums">
-                    {ex.score}
-                  </motion.span>
-                </AnimatePresence>
-                <span className="text-sm text-neutral-600">/100</span>
-              </div>
-            </div>
-          </div>
-          <div className="space-y-2.5 mb-6">
-            {PILLARS.map((p, k) => (
-              <div key={p} className="grid grid-cols-[1fr_28px] items-center gap-3">
-                <div className="min-w-0">
-                  <div className="text-[11px] text-neutral-400 mb-1 truncate">{p}</div>
-                  <div className="h-[3px] rounded-full bg-white/[0.06] overflow-hidden">
-                    <motion.div
-                      className="h-full rounded-full"
-                      style={{ background: ex.pillars[k] ? '#2B8FE3' : 'transparent' }}
-                      initial={false}
-                      animate={{ width: `${ex.pillars[k]}%` }}
-                      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                    />
-                  </div>
+          <div className="text-[10px] uppercase tracking-[0.14em] text-neutral-500 mb-2" style={MONO}>Your position</div>
+          <AnimatePresence mode="wait">
+            <motion.div key={ex.query} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mb-8">
+              {ex.cited ? (
+                <div className="flex items-baseline gap-2">
+                  <span className="text-[44px] leading-none font-semibold tracking-[-0.03em] text-white tabular-nums">#{ex.rank}</span>
+                  <span className="text-sm text-neutral-500">of {ex.sources.length}</span>
                 </div>
-                <span className="text-[11px] text-neutral-500 text-right tabular-nums" style={MONO}>{ex.pillars[k] || '—'}</span>
-              </div>
-            ))}
-          </div>
-          <div className="text-[10px] uppercase tracking-[0.14em] text-neutral-500 mb-2" style={MONO}>Tracked weekly</div>
+              ) : (
+                <div className="text-[32px] leading-none font-semibold tracking-[-0.02em] text-[#f87171]">Not cited</div>
+              )}
+              <p className="mt-3 text-[13px] text-neutral-400 leading-relaxed">
+                {ex.cited
+                  ? `Gemini cited your site as source ${ex.rank} for this question.`
+                  : `Your site wasn't among the ${ex.sources.length} sources. Rain OS shows what your page needs.`}
+              </p>
+            </motion.div>
+          </AnimatePresence>
+          <div className="text-[10px] uppercase tracking-[0.14em] text-neutral-500 mb-2" style={MONO}>This question over time</div>
           <div className="flex gap-1.5">
             {ex.history.map((c, k) => (
               <motion.span
