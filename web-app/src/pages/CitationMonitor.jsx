@@ -1,10 +1,10 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, lazy, Suspense, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import {
   Radar, ExternalLink, CheckCircle2, AlertCircle,
-  Map as MapIcon, Trophy, Trash2, Layers,
+  Map as MapIcon, Trophy, Trash2, Globe, Layers,
   History as HistoryIcon, Search, ArrowRight,
 } from 'lucide-react';
 import {
@@ -17,6 +17,10 @@ import { ViewTabs, SubTabs, NewCheckButton, QuestionPicker } from '../components
 import PromptSuggestions from '../components/PromptSuggestions.jsx';
 import TrackedQueriesPanel, { useTrackedQueries, TrackWeeklyButton } from '../components/TrackedQueries.jsx';
 import styles from './CitationMonitor.module.css';
+
+// Lazy: react-simple-maps + d3-geo only need to load for whoever actually
+// has region data to render, not on every page in the app.
+const CitationWorldMap = lazy(() => import('../components/CitationWorldMap.jsx'));
 
 const EXAMPLE_TOPICS = [
   'best AI content optimizer for bloggers',
@@ -203,6 +207,7 @@ export default function CitationMonitor() {
   // Once we know which domains TLD inference couldn't place, we ask the
   // backend (Gemini HQ lookup, cached server-side) for just those — results
   // land here and override the TLD guess on the next render.
+  const [resolvedCountries, setResolvedCountries] = useState(() => new Map());
 
   const questionOptions = useMemo(() => {
     const seen = new Map();
@@ -235,13 +240,37 @@ export default function CitationMonitor() {
     : null;
 
   const competitorMap = useMemo(
-    () => buildCompetitorMap(scopedHistory, ownDomain),
-    [scopedHistory, ownDomain]
+    () => buildCompetitorMap(scopedHistory, ownDomain, resolvedCountries),
+    [scopedHistory, ownDomain, resolvedCountries]
   );
   const sourceTypes = useMemo(
     () => buildSourceTypes(competitorMap.domains, competitorMap.ownPoint),
     [competitorMap]
   );
+
+  useEffect(() => {
+    const needsLookup = competitorMap.domains
+      .filter(d => d.country === null && !resolvedCountries.has(d.domain))
+      .map(d => d.domain);
+    if (needsLookup.length === 0) return;
+    let cancelled = false;
+    api.resolveDomainCountries(needsLookup)
+      .then(({ data }) => {
+        if (cancelled || !data?.domains) return;
+        setResolvedCountries(prev => {
+          const next = new Map(prev);
+          for (const [domain, country] of Object.entries(data.domains)) {
+            next.set(domain, country);
+          }
+          return next;
+        });
+      })
+      .catch(() => {
+        // Best-effort only — the map still works with TLD-only inference.
+      });
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [competitorMap.domains]);
 
   async function handleClearHistory() {
     if (!window.confirm('Clear all saved citation checks? This permanently deletes your citation history from your account.')) return;
@@ -396,6 +425,7 @@ export default function CitationMonitor() {
                 items={[
                   { id: 'result', label: 'Result' },
                   { id: 'competitors', label: 'Competitors', count: competitorMap.domains.length },
+                  { id: 'map', label: 'Citation distribution', count: competitorMap.regions.length },
                   { id: 'types', label: 'Source types', count: sourceTypes.types.length },
                   ...(result.answerExcerpt ? [{ id: 'answer', label: 'What AI said' }] : []),
                 ]}
@@ -403,7 +433,8 @@ export default function CitationMonitor() {
               {resultTab === 'result' && (
                 <ResultConsole result={result} name={name} topicHistory={topicHistory} tracking={tracking} />
               )}
-              {resultTab === 'competitors' && <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} />}
+              {resultTab === 'competitors' && <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} part="domains" />}
+              {resultTab === 'map' && <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} part="regions" />}
               {resultTab === 'types' && <SourceTypesSection data={sourceTypes} scopeLabel={scopeLabel} />}
               {resultTab === 'answer' && result.answerExcerpt && (
                 <div className={`card ${styles.answerCard}`}>
@@ -445,7 +476,8 @@ export default function CitationMonitor() {
               { id: 'overview', label: 'Overview' },
               { id: 'competitors', label: 'Competitors', count: competitorMap.domains.length },
               { id: 'rankings', label: 'Rankings' },
-              { id: 'types', label: 'Source types', count: sourceTypes.types.length },
+              { id: 'map', label: 'Citation distribution', count: competitorMap.regions.length },
+                  { id: 'types', label: 'Source types', count: sourceTypes.types.length },
               { id: 'all', label: 'All checks', count: mapHistory.length },
             ]}
           />
@@ -454,8 +486,9 @@ export default function CitationMonitor() {
         {(pastTab === 'overview' || mapHistory.length === 0) && (
           <MapSummaryPanel map={competitorMap} history={scopedHistory} loading={mapLoading} />
         )}
-        {mapHistory.length > 0 && pastTab === 'competitors' && <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} />}
+        {mapHistory.length > 0 && pastTab === 'competitors' && <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} part="domains" />}
         {mapHistory.length > 0 && pastTab === 'rankings' && <RankingsChart history={scopedHistory} map={competitorMap} />}
+        {mapHistory.length > 0 && pastTab === 'map' && <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} part="regions" />}
         {mapHistory.length > 0 && pastTab === 'types' && <SourceTypesSection data={sourceTypes} scopeLabel={scopeLabel} />}
         {mapHistory.length > 0 && pastTab === 'all' && (
           <RecentAnalysesSection
@@ -821,15 +854,19 @@ function MapSummaryPanel({ map, history, loading }) {
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  Competitor Map — full-width detail (domain list + regional breakdown)     */
 /* ══════════════════════════════════════════════════════════════════════════ */
-function MapDetailSection({ map, scopeLabel }) {
+function MapDetailSection({ map, scopeLabel, part }) {
+  const { regions, unknownCount } = map;
   const domains = [...map.domains].sort((x, y) => x.avgRank - y.avgRank || (x.bestRank ?? 99) - (y.bestRank ?? 99));
 
   return (
     <div className={`${styles.mapWrap} fade-in`}>
-      {domains.length === 0 && (
+      {part === 'domains' && domains.length === 0 && (
         <div className={`card ${styles.tabEmpty}`}>No competing sources were cited for this question.</div>
       )}
-      {domains.length > 0 && (
+      {part === 'regions' && regions.length === 0 && (
+        <div className={`card ${styles.tabEmpty}`}>None of the cited sites could be placed on the map yet.</div>
+      )}
+      {part !== 'regions' && domains.length > 0 && (
         <div className={`card ${styles.mapCard}`}>
           <div className={styles.mapCardHeader}>
             <h3 className={styles.sectionTitle}>
@@ -895,6 +932,44 @@ function MapDetailSection({ map, scopeLabel }) {
         </div>
       )}
 
+      {part !== 'domains' && regions.length > 0 && (
+        <div className={`card ${styles.mapCard}`}>
+          <div className={styles.mapCardHeader}>
+            <h3 className={styles.sectionTitle}>
+              <Globe style={{ width: 14, height: 14, color: 'var(--text)' }} />
+              Where citations come from
+              <span className={styles.sectionCount}>{regions.length}</span>
+            </h3>
+          </div>
+          <p className={styles.sectionSub}>
+            Inferred from competitor domains' country-code TLDs (e.g. .de, .jp) — most domains use generic
+            TLDs like .com that carry no geographic signal, so this is a partial, directional read, not a
+            full regional breakdown.
+          </p>
+          <Suspense fallback={<div className={styles.mapLoadingFallback}><span className="spinner" /></div>}>
+            <CitationWorldMap regions={regions} unknownCount={unknownCount} />
+          </Suspense>
+          <ul className={styles.regionList}>
+            {regions.map(r => {
+              const widthPct = Math.max(8, Math.round((r.queryCount / regions[0].queryCount) * 100));
+              return (
+                <li key={r.name} className={styles.regionItem}>
+                  <span className={styles.regionFlag}>{r.flag}</span>
+                  <div className={styles.regionBody}>
+                    <div className={styles.regionHeadRow}>
+                      <span className={styles.regionName}>{r.name}</span>
+                      <span className={styles.regionCount}>{r.domainCount} domain{r.domainCount !== 1 ? 's' : ''}</span>
+                    </div>
+                    <div className={styles.domainBarWrap}>
+                      <div className={styles.domainBar} style={{ width: `${widthPct}%` }} />
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
