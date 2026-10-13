@@ -6,7 +6,7 @@ import { supabase } from '../lib/supabase.js';
 import {
   LayoutDashboard, FileText, Globe, GitBranch, Radar, Eye,
   BarChart2, Settings, ArrowUp, LogOut, Wand2, Menu, X,
-  ChevronLeft, ChevronRight, ChevronsUpDown, MessageSquareText,
+  ChevronLeft, ChevronRight, ChevronsUpDown, MessageSquareText, Lightbulb,
 } from 'lucide-react';
 import KnowledgeBase from './KnowledgeBase.jsx';
 import { urlScannerLabel } from '../lib/laneLabels.js';
@@ -26,7 +26,8 @@ const TOOLS = {
   analyze:    { to: '/analyze',          label: 'Content Optimizer',   Icon: FileText,         tooltip: 'Paste your content and get an AI readability score plus fix recommendations.' },
   urlScanner: { to: '/url-scanner',      label: 'URL Scanner',         Icon: Globe,            tooltip: 'Enter a website URL to check how well AI can read and understand your pages.' },
   repo:       { to: '/repo-analysis',    label: 'Repo Analysis',       Icon: GitBranch,        tooltip: 'Connect your GitHub repo to score docs and source code for AI readability.' },
-  questions:  { to: '/questions',        label: 'Questions',           Icon: MessageSquareText, tooltip: 'Find the questions your customers ask AI, then check or track them.' },
+  questions:  { to: '/prompt-research',  label: 'Prompt Research',     Icon: MessageSquareText, tooltip: 'Find the questions your customers ask AI, then check or track them.' },
+  opportunities: { to: '/opportunities', label: 'Opportunities',    Icon: Lightbulb,        tooltip: 'Your to-do list for showing up in AI answers, built from your checks and scans.' },
   citation:   { to: '/citation-monitor', label: 'Citation Monitor',    Icon: Radar,            tooltip: 'Check whether Gemini cites your brand for your topics, using live Google Search grounding.' },
   visibility: { to: '/brand-visibility', label: 'Brand Sentiment',       Icon: Eye,              tooltip: 'See how Gemini describes your brand, using live Google Search grounding — is the sentiment positive and are the facts correct?' },
   sov:        { to: '/share-of-voice',   label: 'Share of Voice',      Icon: BarChart2,        tooltip: 'See how visible your brand is when Gemini answers your topic three ways, using live Google Search grounding.' },
@@ -41,43 +42,50 @@ const TOOLS = {
 // lane first.
 const LANE_GROUPS = {
   general: [
-    { label: 'Optimize',  tools: ['analyze', 'urlScanner', 'repo'] },
-    { label: 'Monitor',   tools: ['questions', 'citation', 'visibility', 'sov'] },
+    { label: 'Prompts',    tools: ['questions'] },
+    { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
+    { label: 'Actions',    tools: ['opportunities', 'analyze', 'urlScanner', 'repo'] },
   ],
   product_sellers: [
-    { label: 'Optimize',  tools: ['urlScanner', 'analyze', 'repo'] },
-    { label: 'Monitor',   tools: ['questions', 'citation', 'visibility', 'sov'] },
+    { label: 'Prompts',    tools: ['questions'] },
+    { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
+    { label: 'Actions',    tools: ['opportunities', 'urlScanner', 'analyze', 'repo'] },
   ],
   developers: [
-    { label: 'Optimize',  tools: ['repo', 'urlScanner', 'analyze'] },
-    { label: 'Monitor',   tools: ['questions', 'citation', 'visibility', 'sov'] },
+    { label: 'Prompts',    tools: ['questions'] },
+    { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
+    { label: 'Actions',    tools: ['opportunities', 'repo', 'urlScanner', 'analyze'] },
   ],
   local_business: [
-    { label: 'Optimize',  tools: ['urlScanner', 'analyze', 'repo'] },
-    { label: 'Monitor',   tools: ['questions', 'citation', 'visibility', 'sov'] },
+    { label: 'Prompts',    tools: ['questions'] },
+    { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
+    { label: 'Actions',    tools: ['opportunities', 'urlScanner', 'analyze', 'repo'] },
   ],
   vibe_coders: [
-    { label: 'Optimize',  tools: ['repo', 'urlScanner', 'analyze'] },
-    { label: 'Monitor',   tools: ['questions', 'citation', 'visibility', 'sov'] },
+    { label: 'Prompts',    tools: ['questions'] },
+    { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
+    { label: 'Actions',    tools: ['opportunities', 'repo', 'urlScanner', 'analyze'] },
   ],
 };
 
 const GROUP_TOOLTIPS = {
-  Optimize:  'Tools to improve how AI reads and presents your content.',
-  Monitor:   'Track where and how you appear in AI-generated answers.',
+  Prompts:    'Find the questions your customers ask AI.',
+  Visibility: 'See whether and how AI mentions you for those questions.',
+  Actions:    'Fix what is holding you back, starting with the biggest gaps.',
 };
 
 const LOCAL_GROUP_TOOLTIPS = {
-  Optimize:  'Paste your website content to score it for local AI visibility and get plain-English fixes.',
-  Monitor:   'Check if AI tools are recommending your business when local customers ask questions.',
+  Prompts:    'Find the questions local customers ask AI about businesses like yours.',
+  Visibility: 'Check if AI tools recommend your business when local customers ask.',
+  Actions:    'Plain-English fixes to get your business recommended more often.',
 };
 
 // Local Service Business gets its own section labels in the sidebar — not
 // just reworded tooltips — so the lane reads as a distinct experience
 // rather than the generic tool groups with a relabeled pillar or two.
 const LOCAL_GROUP_LABELS = {
-  Optimize:  'Get Found',
-  Monitor:   'Reputation',
+  Visibility: 'Reputation',
+  Actions:    'Get Found',
 };
 
 export default function Layout({ children }) {
