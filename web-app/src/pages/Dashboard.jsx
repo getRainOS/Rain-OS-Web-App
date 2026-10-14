@@ -6,6 +6,7 @@ import { PILLAR_COLORS } from '../lib/pillarColors.js';
 import { buildCitationShare } from '../lib/citationShare.js';
 import { urlScannerLabel } from '../lib/laneLabels.js';
 import { LANES as LANE_META } from '../lib/lanes.js';
+import { groupPieces, pieceName } from '../lib/analysisSeries.js';
 import {
   AreaChart, Area, XAxis, YAxis,
   Tooltip, ResponsiveContainer,
@@ -209,10 +210,24 @@ function CustomTooltip({ active, payload }) {
 }
 
 /* ── Pillar line chart tooltip — one row per pillar at the hovered point ── */
+/* ── Change since the previous run of the same piece, in points ── */
+function DeltaPts({ value }) {
+  if (value === null || value === undefined) return null;
+  const color = value === 0 ? 'var(--text-muted)' : value > 0 ? 'var(--success)' : 'var(--danger)';
+  return <span className={styles.deltaPts} style={{ color }}>{value > 0 ? '+' : ''}{value} pts</span>;
+}
+
 function PillarLineTooltip({ active, payload, pillars }) {
   if (!active || !payload?.length) return null;
+  const point = payload[0]?.payload || {};
   return (
     <div className={styles.chartTooltip} style={{ minWidth: 150 }}>
+      {point.label && (
+        <div className={styles.pieceTooltipHead}>
+          <strong>{point.label}</strong>{point.date ? ` · ${point.date}` : ''}
+          {point.title && <div className={styles.pieceTooltipTitle}>{point.title}</div>}
+        </div>
+      )}
       {pillars.map(p => {
         const entry = payload.find(pl => pl.dataKey === p.key);
         if (!entry) return null;
@@ -377,6 +392,7 @@ export default function Dashboard() {
   const [totalCount, setTotalCount] = useState(null);
   const [loading, setLoading] = useState(true);
   const [chartRange, setChartRange] = useState(14);
+  const [pieceSel, setPieceSel] = useState(null);
   const [citations, setCitations] = useState([]);
   const [brandVisHistory, setBrandVisHistory] = useState([]);
   const [brandVisLoading, setBrandVisLoading] = useState(true);
@@ -539,11 +555,7 @@ export default function Dashboard() {
   const displayName = rawName ? (user?.name ? rawName.split(' ')[0] : rawName.charAt(0).toUpperCase() + rawName.slice(1)) : '';
 
   const totalAnalyses = filtersActive ? filteredHistory.length : (totalCount ?? history.length);
-  const avgScore = filteredHistory.length > 0
-    ? Math.round(filteredHistory.reduce((s, h) => s + (h.overall_score ?? 0), 0) / filteredHistory.length)
-    : 0;
 
-  const scoreTrend = computeTrend(filteredHistory, 'overall_score');
   const usagePct = user ? Math.round(((user.usage?.count ?? 0) / (user.usage?.limit ?? 100)) * 100) : 0;
 
   const tier = (user?.subscriptionStatus === 'active' && user?.stripePriceId)
@@ -592,14 +604,28 @@ export default function Dashboard() {
       date: h.analyzed_at ? timeAgo(h.analyzed_at) : '',
     }));
 
-  const pillarChartData = [...filteredHistory]
-    .slice(0, chartRange)
-    .reverse()
-    .map((h, i) => {
-      const point = { idx: i + 1, date: h.analyzed_at ? timeAgo(h.analyzed_at) : '' };
-      activePillars.forEach(p => { point[p.key] = h[p.key] ?? 0; });
-      return point;
-    });
+  // Pillar Breakdown follows one piece at a time: the same repo, URL, or
+  // re-analysis chain. Unrelated analyses are never drawn on one line.
+  const pieces = useMemo(() => groupPieces(filteredHistory), [filteredHistory]);
+  const selectedPiece = pieces.find(p => p.key === pieceSel) || pieces[0] || null;
+  const pieceRuns = selectedPiece ? selectedPiece.runs : [];
+  const shownRuns = pieceRuns.slice(-chartRange);
+  const firstShownNumber = pieceRuns.length - shownRuns.length + 1;
+  const piecePoints = shownRuns.map((h, i) => {
+    const n = firstShownNumber + i;
+    const point = { idx: n, label: `Analysis ${n}`, date: h.analyzed_at ? timeAgo(h.analyzed_at) : '', title: pieceName(h) };
+    activePillars.forEach(p => { point[p.key] = h[p.key] ?? 0; });
+    return point;
+  });
+  const latestRun = pieceRuns[pieceRuns.length - 1] || null;
+  const prevRun = pieceRuns.length > 1 ? pieceRuns[pieceRuns.length - 2] : null;
+  const ptsDelta = (key) => (latestRun && prevRun && latestRun[key] != null && prevRun[key] != null)
+    ? Math.round(latestRun[key] - prevRun[key]) : null;
+  const piecePillars = activePillars.map(p => ({
+    ...p,
+    score: latestRun ? Math.round(latestRun[p.key] ?? 0) : 0,
+    delta: ptsDelta(p.key),
+  }));
 
   const citationTotal = citations.length;
   const citationCitedCount = citations.filter(c => c.cited).length;
@@ -768,7 +794,7 @@ export default function Dashboard() {
         <div className={styles.chartHeader}>
           <div>
             <h2 className={styles.chartTitle}>Pillar Breakdown</h2>
-            <p className={styles.chartSub}>How your content performs across each AEO pillar, over time.</p>
+            <p className={styles.chartSub}>How one piece scores on each AEO pillar, analysis by analysis.</p>
             <span className={styles.chartHelp} title={`How your scores are distributed across your ${activePillars.length} pillars: ${joinWithAnd(activePillars.map(p => p.label))}.`}>
               <HelpCircle size={11} />
             </span>
@@ -781,7 +807,7 @@ export default function Dashboard() {
                 role="tab"
                 aria-selected={typeFilter === ct.id}
                 className={`${styles.framingBtn} ${typeFilter === ct.id ? styles.framingBtnActive : ''}`}
-                onClick={() => { setTypeFilter(ct.id); setShowAllFixes(false); typeFilterAutoSet.current = true; }}
+                onClick={() => { setTypeFilter(ct.id); setPieceSel(null); setShowAllFixes(false); typeFilterAutoSet.current = true; }}
               >
                 {ct.label}
               </button>
@@ -822,48 +848,81 @@ export default function Dashboard() {
             </div>
           </div>
         ) : (
+          <>
+          <div className={styles.pieceBar}>
+            <div className={styles.pieceNameWrap}>
+              <span className={styles.pieceEyebrow}>
+                {pieceRuns.length === 1 ? 'Analysis 1' : `${pieceRuns.length} analyses`}
+              </span>
+              <h3 className={styles.pieceName} title={selectedPiece?.name}>{selectedPiece?.name}</h3>
+            </div>
+            {pieces.length > 1 && (
+              <select
+                className={styles.pieceSelect}
+                value={selectedPiece?.key || ''}
+                onChange={e => setPieceSel(e.target.value)}
+                aria-label="Choose which piece to show"
+              >
+                {pieces.map(p => (
+                  <option key={p.key} value={p.key}>
+                    {p.name.length > 48 ? `${p.name.slice(0, 45)}…` : p.name}{p.runs.length > 1 ? ` (${p.runs.length} runs)` : ''}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
           <div className={styles.heroGrid}>
             <div className={styles.heroMain}>
               <div className={styles.heroStatRow}>
-                <span className={styles.heroStatValue}>{avgScore}</span>
+                <span className={styles.heroStatValue}>{latestRun ? Math.round(latestRun.overall_score ?? 0) : 0}</span>
                 <span className={styles.heroStatMax}>/100</span>
-                <TrendBadge pct={scoreTrend} />
+                <DeltaPts value={ptsDelta('overall_score')} />
+                {prevRun && <span className={styles.deltaNote}>since the last analysis</span>}
               </div>
               <div className={styles.heroChartBg}>
                 <ResponsiveContainer width="100%" height={200}>
-                  <LineChart data={pillarChartData} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
-                    <XAxis dataKey="idx" stroke="transparent"
+                  <LineChart data={piecePoints} margin={{ top: 8, right: 16, bottom: 0, left: -24 }}>
+                    <XAxis dataKey="idx" stroke="transparent" type="category"
+                      tickFormatter={n => `Analysis ${n}`} padding={{ left: 24, right: 24 }}
                       tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
                     <YAxis domain={[0, 100]} stroke="transparent"
                       tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
                     <Tooltip content={<PillarLineTooltip pillars={activePillars} />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
                     {activePillars.map(p => (
                       <Line key={p.key} type="monotone" dataKey={p.key} stroke={p.color} strokeWidth={2}
-                        dot={false} activeDot={{ r: 4, strokeWidth: 0 }} />
+                        isAnimationActive={false}
+                        dot={piecePoints.length === 1 ? { r: 5, strokeWidth: 0, fill: p.color } : false}
+                        activeDot={{ r: 4, strokeWidth: 0 }} />
                     ))}
                   </LineChart>
                 </ResponsiveContainer>
               </div>
+              {pieceRuns.length === 1 && (
+                <p className={styles.pieceHint}>
+                  This is the first analysis of this piece. Make your changes, then choose <strong>Re-analyze</strong> on the result to see each pillar's trend here.
+                </p>
+              )}
             </div>
 
             <div className={styles.heroRank}>
               <div className={styles.heroRankHeader}>
                 <span>Pillars ranked by score</span>
               </div>
-              {[...pillarAvgs].sort((a, b) => b.avg - a.avg).map(p => (
+              {[...piecePillars].sort((a, b) => b.score - a.score).map(p => (
                 <div key={p.key} className={styles.heroRankRow}>
                   <div className={styles.heroRankLabelRow}>
                     <span className={styles.pillarTableDot} style={{ background: p.color }} />
                     <span className={styles.heroRankLabel}>{p.label}</span>
                   </div>
                   <div className={styles.heroRankValueRow}>
-                    <span className={styles.heroRankScore}>{p.avg}</span>
-                    <TrendBadge pct={p.trend} />
+                    <span className={styles.heroRankScore}>{p.score}</span>
+                    <DeltaPts value={p.delta} />
                   </div>
                 </div>
               ))}
             </div>
           </div>
+          </>
         )}
       </div>
 
