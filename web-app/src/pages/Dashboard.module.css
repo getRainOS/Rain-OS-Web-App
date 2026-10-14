@@ -1357,3 +1357,84 @@ button.emptyLink {
 .laneChangeBtn:hover {
   color: var(--text);
 }
+
+/* ── Pillar Breakdown: one piece at a time ── */
+.pieceBar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 16px 0 12px;
+  flex-wrap: wrap;
+}
+
+.pieceNameWrap { min-width: 0; flex: 1 1 240px; }
+
+.pieceEyebrow {
+  display: block;
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.pieceName {
+  margin: 4px 0 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pieceSelect {
+  max-width: 320px;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+}
+
+.pieceSelect:focus-visible { outline: 2px solid #2B8FE3; outline-offset: 2px; }
+
+.deltaPts {
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.heroStatRow .deltaPts { margin-left: 10px; font-size: 13px; }
+
+.deltaNote { margin-left: 6px; font-size: 12px; color: var(--text-dim); }
+
+.pieceHint {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.pieceTooltipHead {
+  margin-bottom: 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.pieceTooltipHead strong { color: var(--text); font-weight: 600; }
+
+.pieceTooltipTitle {
+  margin-top: 2px;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

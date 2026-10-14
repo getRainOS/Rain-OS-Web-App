@@ -451,6 +451,57 @@ function MethodSection() {
   );
 }
 
+/* ── Why Google Gemini ───────────────────────────────────────────────────── */
+
+function WhyGoogleSection() {
+  const points = [
+    {
+      Icon: Search,
+      title: 'Where your customers already are',
+      body: 'Most people still start with Google, and Google now answers many searches with AI before showing a single link. Those answers, including AI Overviews and AI Mode, are built on Gemini.',
+    },
+    {
+      Icon: Globe,
+      title: 'Live search, not memory',
+      body: 'Every check uses Google Search grounding: Gemini searches the web at that moment and answers from what it finds today, not from training data that may be a year old.',
+    },
+    {
+      Icon: ShieldCheck,
+      title: 'Proof you can click',
+      body: 'Grounding returns the exact pages the answer relied on. So "cited" or "not cited" is a fact with links, not a guess, and you can open every source yourself.',
+    },
+  ];
+  return (
+    <section id="why-google" className="relative z-10 py-28 border-t border-white/[0.06]">
+      <div className="max-w-6xl mx-auto px-6">
+        <Reveal>
+          <Eyebrow>Why Google Gemini</Eyebrow>
+          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance max-w-3xl">
+            We check the AI that sits on top of Google.
+          </h2>
+          <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-2xl">
+            Rain OS asks your questions through Gemini with live Google Search, the same search engine behind the AI answers your customers see first. One engine, checked properly, beats five checked by guesswork.
+          </p>
+        </Reveal>
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-3">
+          {points.map(({ Icon, title, body }, k) => (
+            <Reveal key={title} delay={0.08 * k}>
+              <div className="h-full rounded-xl border border-white/10 bg-[#0a0a0a] p-6">
+                <Icon className="w-5 h-5 text-[#2B8FE3]" />
+                <div className="mt-4 text-[17px] text-white font-medium">{title}</div>
+                <p className="mt-2 text-[14px] text-neutral-400 leading-relaxed">{body}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+        <p className="mt-6 text-[13px] text-neutral-500 max-w-3xl leading-relaxed">
+          To be clear about scope: our checks run on Gemini and won't exactly match every Google results page, ChatGPT or Perplexity. The Rain Score itself measures what all of them rely on, like clear answers, structure and schema, so the fixes apply everywhere.
+        </p>
+      </div>
+    </section>
+  );
+}
+
 /* ── Weekly tracking spotlight ──────────────────────────────────────────── */
 
 function TrackingSection() {
@@ -627,7 +678,7 @@ export default function Home() {
                 </a>
               </div>
               <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] text-neutral-400">
-                {['Free to start', 'No credit card', 'No technical skills needed'].map(t => (
+                {['Checked live on Google Search', 'Free to start', 'No credit card', 'No technical skills needed'].map(t => (
                   <li key={t} className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-[#2B8FE3]" />{t}</li>
                 ))}
               </ul>
@@ -681,6 +732,7 @@ export default function Home() {
           </div>
         </section>
 
+        <WhyGoogleSection />
         <PlatformSection />
         <LanesSection />
         <MethodSection />

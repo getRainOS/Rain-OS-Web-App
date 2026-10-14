@@ -1,3 +1,4 @@
+import { generateContentWithRetry } from './geminiRetry';
 // services/geminiService.ts — Rain OS AEO Scoring Engine v2.4
 // 5-pillar scoring (general) + module-specific scoring (product_sellers, developers, local_business)
 // Algorithmic readability pre-analysis grounding.
@@ -34,29 +35,6 @@ _model = _client.getGenerativeModel({ model: MODEL });
 return _model;
 }
 
-async function generateContentWithRetry(model: GenerativeModel, request: any) {
-  const MAX_RETRIES = 2;
-  const TIMEOUT_MS = 30000;
-  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-    try {
-      return await Promise.race([
-        model.generateContent(request),
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Gemini request timed out')), TIMEOUT_MS)
-        ),
-      ]) as Awaited<ReturnType<typeof model.generateContent>>;
-    } catch (err: any) {
-      const status = err?.status ?? err?.response?.status;
-      const isRetryable = status === 429 || status === 503 || /timed out/i.test(err?.message ?? '');
-      if (attempt < MAX_RETRIES && isRetryable) {
-        await new Promise((r) => setTimeout(r, 500 * 2 ** attempt));
-        continue;
-      }
-      throw err;
-    }
-  }
-  throw new Error('Gemini request failed after retries');
-}
 // ─── System instruction ───────────────────────────────────────────────────────
 const SYSTEM_INSTRUCTION = `You are an AEO (Answer Engine Optimization) and GEO
 (Generative Engine Optimization) scoring engine.

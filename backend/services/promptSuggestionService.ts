@@ -1,3 +1,4 @@
+import { generateContentWithRetry } from './geminiRetry';
 // services/promptSuggestionService.ts — suggest questions a business's customers ask AI.
 import { GoogleGenerativeAI, type GenerativeModel, type Tool } from '@google/generative-ai';
 
@@ -96,13 +97,13 @@ export async function suggestPrompts(input: {
     model: MODEL,
     ...(grounded ? { tools: [{ googleSearch: {} }] as unknown as Tool[] } : {}),
   });
-  const result = await model.generateContent({
+  const result = await generateContentWithRetry(model, {
     contents: [{ role: 'user', parts: [{ text: buildPrompt({ domain, description: input.description, location: input.location, lane: input.lane }) }] }],
     generationConfig: {
       temperature: 0.7,
       maxOutputTokens: 1024,
       ...(grounded ? {} : { responseMimeType: 'application/json' }),
     },
-  });
+  }, { timeoutMs: grounded ? 60000 : 30000 });
   return parseSuggestions(result.response.text());
 }

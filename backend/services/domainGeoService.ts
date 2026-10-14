@@ -1,3 +1,4 @@
+import { generateContentWithRetry } from './geminiRetry';
 // services/domainGeoService.ts — Domain -> HQ country inference for the
 // Citation Monitor's world map.
 //
@@ -97,7 +98,7 @@ async function lookupDomainWithGrounding(domain: string): Promise<DomainCountry 
   ].join('\n');
 
   try {
-    const result = await model.generateContent({
+    const result = await generateContentWithRetry(model, {
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
       generationConfig: { temperature: 0, maxOutputTokens: 1024 },
     });

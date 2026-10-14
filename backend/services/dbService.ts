@@ -379,6 +379,7 @@ export const resetAllUsersUsage = async (): Promise<number> => {
 // Consolidates two N+1 queries (incrementUserUsage + saveAnalysis) into a single
 // transaction for better performance and consistency.
 export interface AnalysisData {
+    previous_analysis_id?: number | null;
     title?: string | null;
     url?: string | null;
     repo?: string | null;
@@ -414,11 +415,22 @@ const incrementUsageAndSaveAnalysisAttempt = async (
         const updatedUser = usageRes.rows[0] ? mapRowToUser(usageRes.rows[0]) : null;
 
         // Save analysis in the same transaction
+        // A re-analysis joins the series of the run it follows. The lookup is
+        // scoped to the user, so another user's id can never be linked.
+        let seriesId: number | null = null;
+        if (analysisData.previous_analysis_id) {
+            const prevRes = await client.query(
+                `SELECT COALESCE(series_id, id) AS series FROM content_analyses WHERE id = $1 AND user_id = $2`,
+                [analysisData.previous_analysis_id, userId]
+            );
+            seriesId = prevRes.rows[0] ? Number(prevRes.rows[0].series) : null;
+        }
+
         const analysisRes = await client.query(
             `INSERT INTO content_analyses
           (user_id, title, url, repo, overall_score, ai_readability, digital_authority,
-          conversion_readiness, product_discoverability, rag_readiness, local_presence, summary, result_json, lane, content)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+          conversion_readiness, product_discoverability, rag_readiness, local_presence, summary, result_json, lane, content, series_id)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
           RETURNING id`,
             [
                 userId,
@@ -436,6 +448,7 @@ const incrementUsageAndSaveAnalysisAttempt = async (
                 analysisData.result_json ? JSON.stringify(analysisData.result_json) : null,
                 analysisData.lane ?? null,
           analysisData.content ?? null,
+                seriesId,
             ]
         );
         const analysisId = analysisRes.rows[0]?.id ?? null;
@@ -765,6 +778,7 @@ export interface AnalysisRecord {
   lane: string | null;
   content: string | null;
   recommendations: PillarRecommendation[];
+  series_id: number | null;
 }
 
 const mapAnalysisRow = (row: any): AnalysisRecord => ({
@@ -783,6 +797,7 @@ const mapAnalysisRow = (row: any): AnalysisRecord => ({
   analyzed_at: row.analyzed_at instanceof Date ? row.analyzed_at.toISOString() : row.analyzed_at,
   lane: row.lane ?? null,
   content: row.content ?? null,
+  series_id: row.series_id != null ? Number(row.series_id) : null,
   recommendations: (() => {
     try {
       const parsed = typeof row.result_json === 'string' ? JSON.parse(row.result_json) : row.result_json;
@@ -862,7 +877,7 @@ export const getAnalysesByUser = async (
   const params = lane ? [userId, limit, lane] : [userId, limit];
   const res = await pool.query(
     `SELECT id, title, url, repo, overall_score, ai_readability, digital_authority,
-            conversion_readiness, product_discoverability, rag_readiness, local_presence, summary, analyzed_at, lane, result_json
+            conversion_readiness, product_discoverability, rag_readiness, local_presence, summary, analyzed_at, lane, result_json, series_id
      FROM content_analyses
      WHERE user_id = $1 ${laneFilter}
      ORDER BY analyzed_at DESC
@@ -879,7 +894,7 @@ export const getAnalysisById = async (
   const res = await pool.query(
     `SELECT id, title, url, repo, overall_score, ai_readability, digital_authority,
       conversion_readiness, product_discoverability, rag_readiness, local_presence,
-      summary, analyzed_at, lane, result_json, content
+      summary, analyzed_at, lane, result_json, series_id, content
       FROM content_analyses
       WHERE id = $1 AND user_id = $2`,
     [id, userId]

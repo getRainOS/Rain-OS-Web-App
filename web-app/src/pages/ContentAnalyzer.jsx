@@ -169,7 +169,10 @@ export default function ContentAnalyzer() {
     setRewriteResult(null);
     try {
       const contentTypeLabel = CONTENT_TYPES.find(t => t.id === contentType)?.label || '';
-      const { data } = await api.analyze({ title, content, url, module: analysisModule, lane: userLane, contentType: contentTypeLabel });
+      // Re-analyzing an open past result continues that piece's series, so the
+      // dashboard can show its trend. A fresh analysis starts a new piece.
+      const previousAnalysisId = id && result ? Number(id) : undefined;
+      const { data } = await api.analyze({ title, content, url, module: analysisModule, lane: userLane, contentType: contentTypeLabel, previousAnalysisId });
       setResult(data);
       refreshUser();
       if (data?.analysisId) {
@@ -310,6 +313,20 @@ export default function ContentAnalyzer() {
             >
               {loading ? <><span className="spinner" /> {result ? 'Re-analyzing…' : 'Analyzing…'}</> : (result ? 'Re-analyze' : 'Analyze content')}
             </button>
+            {result && id && (
+              <button
+                type="button"
+                className={styles.rewriteBtn}
+                disabled={loading}
+                onClick={() => {
+                  saveDraft({ title: '', content: '', url: '', contentType, analysisId: null });
+                  setTitle(''); setContent(''); setUrl(''); setResult(null); setRewriteResult(null);
+                  navigate('/analyze');
+                }}
+              >
+                Start a new piece
+              </button>
+            )}
             {!result && (
               <button
                 type="button"
