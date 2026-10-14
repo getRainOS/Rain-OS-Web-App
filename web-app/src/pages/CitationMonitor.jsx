@@ -15,6 +15,7 @@ import { buildSourceTypes } from '../lib/sourceTypes.js';
 import PageHeader from '../components/PageHeader.jsx';
 import { ViewTabs, SubTabs, NewCheckButton, QuestionPicker } from '../components/MonitorTabs.jsx';
 import PromptSuggestions from '../components/PromptSuggestions.jsx';
+import CheckProgress from '../components/CheckProgress.jsx';
 import TrackedQueriesPanel, { useTrackedQueries, TrackWeeklyButton } from '../components/TrackedQueries.jsx';
 import styles from './CitationMonitor.module.css';
 
@@ -412,10 +413,16 @@ export default function CitationMonitor() {
 
         <div className={styles.mapColumn}>
           {loading ? (
-            <div className={`card ${styles.consolePending}`}>
-              <span className="spinner" />
-              <p>Asking Gemini your question and reading the sources it cites…</p>
-            </div>
+            <CheckProgress
+              title="Checking your question"
+              skeleton="sources"
+              steps={[
+                { label: 'Asking Gemini your question', ms: 2500 },
+                { label: 'Searching Google live', ms: 6000 },
+                { label: 'Reading the sources it cited', ms: 5000 },
+                { label: 'Finding your site among them' },
+              ]}
+            />
           ) : result ? (
             <div className={styles.resultsWrap}>
               <SubTabs

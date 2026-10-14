@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import CheckProgress from '../components/CheckProgress.jsx';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
@@ -332,6 +333,21 @@ export default function UrlScanner() {
           </p>
         )}
       </form>
+
+      {loading && (
+        <div style={{ marginTop: 20 }}>
+          <CheckProgress
+            title="Scanning your page"
+            skeleton="report"
+            steps={[
+              { label: 'Fetching the page', ms: 3000 },
+              { label: 'Checking structure, schema and AI crawler access', ms: 4000 },
+              { label: 'Scoring each pillar', ms: 8000 },
+              { label: 'Writing your fixes' },
+            ]}
+          />
+        </div>
+      )}
 
       {result && (
         <div className={`${styles.results} fade-in`}>

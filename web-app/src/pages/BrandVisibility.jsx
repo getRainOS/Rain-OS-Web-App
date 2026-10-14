@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import CheckProgress from '../components/CheckProgress.jsx';
 import { Link, useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
@@ -281,8 +282,21 @@ export default function BrandVisibility() {
               {loading && <span className={styles.spinner} />}
               {loading ? 'Checking AI answers…' : 'Check brand sentiment'}
             </button>
-            {loading && <span className={styles.loadingHint}>This takes ~20 seconds — we run multiple AI checks.</span>}
           </div>
+          {loading && (
+            <div style={{ marginTop: 20 }}>
+              <CheckProgress
+                title="Checking what AI says about you"
+                skeleton="list"
+                steps={[
+                  { label: 'Asking Gemini about your brand', ms: 3000 },
+                  { label: 'Searching Google live', ms: 7000 },
+                  { label: 'Reading the answer and its sources', ms: 5000 },
+                  { label: 'Judging the tone' },
+                ]}
+              />
+            </div>
+          )}
         </form>
       </div>
       )}
