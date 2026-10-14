@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import CheckProgress from '../components/CheckProgress.jsx';
 import ImproveCta from '../components/ImproveCta.jsx';
+import SiteNote from '../components/SiteNote.jsx';
 import { improveLink } from '../lib/improveLink.js';
 import { getMySite, setMySite } from '../lib/mySite.js';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -276,6 +277,7 @@ export default function BrandVisibility() {
               autoComplete="url"
               spellCheck={false}
             />
+            <SiteNote url={url} blankText="Add your website to see whether your site is cited. Without it we can still tell whether AI names your brand." />
           </div>
           <div className={styles.submitRow}>
             <button
@@ -324,6 +326,9 @@ export default function BrandVisibility() {
               {result.name && <div className={styles.resultName}>{result.name}</div>}
               <div className={styles.resultTitle}>{result.brand}</div>
               <p className={styles.resultSub}>{result.summary}</p>
+              {result.siteShared && (
+                <p style={{ fontSize: 12.5, color: 'var(--text-dim)', margin: '8px 0 0' }}>Your site is on a platform many businesses share, so we can’t tell whether a cited page is yours.</p>
+              )}
               <div className={styles.badgeRow}>
                 <MentionBadge status={result.mentionStatus} />
                 {result.mentionStatus === 'mentioned' && <SentimentBadge sentiment={result.sentiment} />}

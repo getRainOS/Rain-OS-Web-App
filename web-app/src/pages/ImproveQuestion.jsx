@@ -7,6 +7,7 @@ import CheckProgress from '../components/CheckProgress.jsx';
 import { SubTabs, TabEmpty } from '../components/MonitorTabs.jsx';
 import { PILLAR_COLORS } from '../lib/pillarColors.js';
 import { getMySite, setMySite } from '../lib/mySite.js';
+import SiteNote from '../components/SiteNote.jsx';
 import styles from './ImproveQuestion.module.css';
 
 const MODES = [
@@ -138,6 +139,7 @@ export default function ImproveQuestion() {
               ? 'We read your page through Google and compare it with the cited sources.'
               : 'Without your website we cannot tell where you rank, so the advice is more general.'}
           </p>
+          <SiteNote url={url} />
 
           <button type="button" className={styles.linkBtn} onClick={() => setShowPaste(s => !s)} aria-expanded={showPaste}>
             {showPaste ? 'Hide pasted page text' : 'Or paste your page text for a closer comparison'}
@@ -204,7 +206,8 @@ export default function ImproveQuestion() {
 
 function Result({ result, copied, onCopy, recheck, hasUrl }) {
   const status =
-    result.cited === null ? { tone: 'muted', text: 'Add your website to see where you rank' }
+    result.siteShared ? { tone: 'muted', text: 'We can’t tell which page on that site is yours' }
+    : result.cited === null ? { tone: 'muted', text: 'Add your website to see where you rank' }
     : result.cited ? { tone: 'good', text: result.rank ? `You are cited at #${result.rank}` : 'You are cited' }
     : { tone: 'bad', text: 'You are not cited yet' };
 

@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import CheckProgress from '../components/CheckProgress.jsx';
 import ImproveCta from '../components/ImproveCta.jsx';
+import SiteNote from '../components/SiteNote.jsx';
 import { improveLink } from '../lib/improveLink.js';
 import { getMySite, setMySite } from '../lib/mySite.js';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -272,6 +273,7 @@ export default function ShareOfVoice() {
                 <label className={styles.label}>Your website URL <span className={styles.optionalHint}>(optional — used to check if your domain is in cited sources)</span></label>
                 <input className={styles.input} type="text" value={url} onChange={e => setUrl(e.target.value)}
                   placeholder="https://yourdomain.com" />
+                <SiteNote url={url} blankText="Add your website to see your share of the sources Gemini cites. Without it we can still tell whether AI names your brand." />
               </div>
 
               <div className={styles.submitRow}>
@@ -316,6 +318,9 @@ export default function ShareOfVoice() {
                   )}
                   <div className={styles.resultBrand}>{result.brand}</div>
                   <div className={styles.resultTopic}>"{result.topic}"</div>
+                  {result.siteShared && (
+                    <p style={{ fontSize: 12.5, color: 'var(--text-dim)', margin: '0 0 8px' }}>Your site is on a platform many businesses share, so we can’t work out your share of the cited sources.</p>
+                  )}
 
                   <div className={styles.resultHeadline} style={{ marginBottom: result.domainSharePercent !== null ? 4 : 12 }}>
                     Mentioned in {result.mentionedCount} of 3 prompts

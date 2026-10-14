@@ -16,6 +16,8 @@ import PageHeader from '../components/PageHeader.jsx';
 import { ViewTabs, SubTabs, NewCheckButton, QuestionPicker, TabEmpty } from '../components/MonitorTabs.jsx';
 import PromptSuggestions from '../components/PromptSuggestions.jsx';
 import ImproveCta from '../components/ImproveCta.jsx';
+import SiteNote from '../components/SiteNote.jsx';
+import { isSharedPlatform } from '../lib/sharedPlatforms.js';
 import { improveLink } from '../lib/improveLink.js';
 import { getMySite, setMySite } from '../lib/mySite.js';
 import CheckProgress from '../components/CheckProgress.jsx';
@@ -60,7 +62,8 @@ function normalizeDomain(input) {
 function ownPositionOf(entry) {
   const sources = Array.isArray(entry?.sources) ? entry.sources : [];
   const own = normalizeDomain(entry?.url || '');
-  if (!own) return { hasUrl: false, rank: null, total: sources.length };
+  // A page on a shared platform (facebook.com...) cannot be matched to a cited source.
+  if (!own || isSharedPlatform(own)) return { hasUrl: false, rank: null, total: sources.length };
   const idx = sources.findIndex(src => {
     const d = normalizeDomain(src?.domain || src?.url || '');
     return d && (d === own || d.endsWith('.' + own));
@@ -98,6 +101,7 @@ export default function CitationMonitor() {
   const [searchParams] = useSearchParams();
   const [topic, setTopic] = useState(() => searchParams.get('q') || '');
   const [url, setUrl] = useState(() => searchParams.get('url') || getMySite());
+  const [noSite, setNoSite] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
@@ -147,6 +151,10 @@ export default function CitationMonitor() {
   async function handleCheck(e) {
     e.preventDefault();
     if (!topic.trim()) return;
+    if (!noSite && !url.trim()) {
+      setError('Enter your website, or tick “I don’t have a website”. Without it we can’t tell whether you’re cited.');
+      return;
+    }
     const checkName = name.trim() || (topic.trim().length > 60 ? `${topic.trim().slice(0, 57)}…` : topic.trim());
     // Guards against a slower in-flight check (e.g. an accidental double
     // submit, or just normal Gemini latency variance) resolving after a
@@ -157,7 +165,7 @@ export default function CitationMonitor() {
     setError('');
     setResult(null);
     try {
-      const { data } = await api.citationCheck({ name: checkName, topic: topic.trim(), url: url.trim() || undefined });
+      const { data } = await api.citationCheck({ name: checkName, topic: topic.trim(), url: noSite ? undefined : (url.trim() || undefined) });
       if (requestId !== checkRequestIdRef.current) return;
       setResult(data);
       setMySite(url);
@@ -205,7 +213,7 @@ export default function CitationMonitor() {
     }
   }
 
-  const ownDomain = normalizeDomain(url);
+  const ownDomain = (d => (d && !isSharedPlatform(d) ? d : null))(normalizeDomain(url));
 
   // Most competitor domains use generic TLDs (.com, .io) that carry no
   // geographic signal, so TLD inference alone leaves the map mostly empty.
@@ -346,7 +354,7 @@ export default function CitationMonitor() {
 
             <div className={styles.field}>
               <label className={styles.label} htmlFor="cm-url">
-                Your website <span className={styles.optional}>Optional</span>
+                Your website {!noSite && <span className={styles.optional}>Required</span>}
               </label>
               <input
                 id="cm-url"
@@ -356,10 +364,22 @@ export default function CitationMonitor() {
                 spellCheck={false}
                 className={styles.input}
                 placeholder="yourdomain.com"
-                value={url}
+                value={noSite ? '' : url}
+                disabled={noSite}
                 onChange={e => setUrl(e.target.value)}
               />
-              <p className={styles.fieldHint}>So we can find you among the sources.</p>
+              <label className={styles.noSite}>
+                <input type="checkbox" checked={noSite} onChange={e => { setNoSite(e.target.checked); setError(''); }} />
+                I don’t have a website
+              </label>
+              {noSite ? (
+                <p className={styles.fieldHint}>You’ll see which sites Gemini cites, but we can’t tell whether you’re among them or where you rank.</p>
+              ) : (
+                <>
+                  <p className={styles.fieldHint}>So we can find you among the sources.</p>
+                  <SiteNote url={url} />
+                </>
+              )}
             </div>
 
             <div className={styles.field}>
@@ -377,7 +397,7 @@ export default function CitationMonitor() {
               />
             </div>
 
-            <button type="submit" className={styles.submitBtn} disabled={loading || !topic.trim()}>
+            <button type="submit" className={styles.submitBtn} disabled={loading || !topic.trim() || (!noSite && !url.trim())}>
               {loading ? (
                 <>
                   <span className="spinner" style={{ width: 14, height: 14 }} />
@@ -447,10 +467,13 @@ export default function CitationMonitor() {
                   {(() => {
                     const rank = result.citedSourceIndex != null ? result.citedSourceIndex + 1 : null;
                     if (rank === 1) return null;
-                    const title = !result.url ? 'Add your website to see where you rank'
+                    const title = result.siteShared ? 'We can’t tell which page is yours'
+                      : !result.url ? 'Add your website to see where you rank'
                       : rank ? `You are cited at #${rank}. See how to move up.`
                       : 'Not cited yet. See what the cited pages do that you do not.';
-                    const body = !result.url
+                    const body = result.siteShared
+                      ? 'Your site is on a platform many businesses share. Use your own website if you have one. You can still see how to improve.'
+                      : !result.url
                       ? 'Without your website we cannot tell if you are cited. Add it and we will compare your page with the sources Gemini used.'
                       : 'We compare your page with the sources Gemini cited for this question and list the changes to make first.';
                     return (
@@ -608,7 +631,8 @@ function ResultConsole({ result, name, topicHistory, tracking }) {
   const history = [...topicHistory].sort(byCheckedAtAsc).slice(-12);
 
   let badge;
-  if (!result.url) badge = <span className={`${styles.consoleBadge} ${styles.consoleBadgeMuted}`}>No URL to match</span>;
+  if (result.siteShared) badge = <span className={`${styles.consoleBadge} ${styles.consoleBadgeMuted}`}>Can’t match your page</span>;
+  else if (!result.url) badge = <span className={`${styles.consoleBadge} ${styles.consoleBadgeMuted}`}>No website given</span>;
   else if (rank) badge = <span className={`${styles.consoleBadge} ${styles.consoleBadgeGood}`}>Cited · source {rank}</span>;
   else badge = <span className={`${styles.consoleBadge} ${styles.consoleBadgeBad}`}>Not cited</span>;
 
