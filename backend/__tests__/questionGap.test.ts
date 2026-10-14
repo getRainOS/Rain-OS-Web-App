@@ -151,6 +151,17 @@ describe('POST /api/question-gap', () => {
     expect(res.body.cited).toBeNull();
   });
 
+  it('does not claim a match when the site is a page on a shared platform', async () => {
+    findUserByApiKey.mockResolvedValue(user);
+    const res = await request(app).post('/api/question-gap').set('Authorization', 'Bearer k').send({
+      question: 'best bakery for weddings', url: 'https://www.facebook.com/theirbakery',
+      sources: [{ domain: 'facebook.com' }, { domain: 'theknot.com' }],
+    });
+    expect(res.status).toBe(200);
+    expect(res.body.cited).toBeNull();
+    expect(res.body.siteShared).toBe(true);
+  });
+
   it('uses grounding only when a site is given without pasted content', async () => {
     findUserByApiKey.mockResolvedValue(user);
     await request(app).post('/api/question-gap').set('Authorization', 'Bearer k')

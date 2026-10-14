@@ -6,6 +6,7 @@ import {
   type GapMode, type GapSource,
 } from '../services/questionGapService';
 import { createDailyLimiter } from '../services/dailyLimiter';
+import { isSharedPlatform } from '../services/sharedPlatforms';
 import { classifyGeminiError } from '../services/geminiErrors';
 import type { ApiError } from '../types';
 
@@ -37,7 +38,10 @@ export default async function handler(req: express.Request, res: express.Respons
     return res.status(400).json({ error: 'bad_request', message: 'question is required' } as ApiError);
   }
   const mode: GapMode = MODES.includes(b.mode) ? b.mode : 'citation';
-  const domain = domainOf(clean(b.url, 300));
+  const givenDomain = domainOf(clean(b.url, 300));
+  // A page on a shared platform (facebook.com...) cannot be matched to cited sources.
+  const siteShared = !!givenDomain && isSharedPlatform(givenDomain);
+  const domain = siteShared ? null : givenDomain;
   const content = clean(b.content, MAX_CONTENT_CHARS);
 
   const sources: GapSource[] = (Array.isArray(b.sources) ? b.sources : []).slice(0, MAX_SOURCES)
@@ -68,12 +72,14 @@ export default async function handler(req: express.Request, res: express.Respons
     const gap = await analyzeQuestionGap({
       question, mode, domain, content, sources, competitors, cited, rank,
       brand: clean(b.brand, 120),
-      note: clean(b.note, 300),
+      note: siteShared
+        ? `They gave a page on ${givenDomain}, a platform many businesses share, so it cannot be told whether a cited source is theirs. Do not claim whether they were cited.`
+        : clean(b.note, 300),
     });
     if (!gap) {
       return res.status(502).json({ error: 'no_advice', message: 'Could not put advice together this time. Try again.' } as ApiError);
     }
-    return res.status(200).json({ success: true, cited, rank, ...gap });
+    return res.status(200).json({ success: true, cited, rank, siteShared, ...gap });
   } catch (error) {
     const { status, body } = classifyGeminiError(error, 'question-gap');
     return res.status(status).json(body as ApiError);

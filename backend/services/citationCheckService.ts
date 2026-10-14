@@ -1,4 +1,5 @@
 import { generateContentWithRetry } from './geminiRetry';
+import { isSharedPlatform, matchableDomain } from './sharedPlatforms';
 // services/citationCheckService.ts — Rain OS AI Citation Monitor
 // Uses Gemini with Google Search grounding to test whether a user's content
 // would be cited by AI engines when answering a given topic/question.
@@ -62,6 +63,9 @@ export interface CitationCheckResult {
   competitorDomains: string[];
   summary: string;
   answerExcerpt: string;
+  // True when the site given is a page on a shared platform (facebook.com,
+  // yelp.com, ...): a domain match would not mean the cited page was theirs.
+  siteShared?: boolean;
 }
 
 export function extractDomain(rawUrl: string): string {
@@ -120,7 +124,7 @@ export function findCitedSourceIndex(
   sources: Array<{ domain: string }>,
   userDomain: string | null
 ): number {
-  if (!userDomain) return -1;
+  if (!userDomain || isSharedPlatform(userDomain)) return -1;
   return sources.findIndex(s => isSameDomain(s.domain, userDomain));
 }
 
@@ -221,7 +225,8 @@ export async function runCitationCheck(
     citedSourceIndex,
     sources,
     competitorDomains: dedupedCompetitors,
-    summary: buildSummary(!!userUrl, cited, sources.length, dedupedCompetitors),
+    siteShared: !!userDomain && !matchableDomain(userDomain),
+    summary: buildSummary(!!matchableDomain(userDomain), cited, sources.length, dedupedCompetitors),
     answerExcerpt: buildAnswerExcerpt(answerText),
   };
 }

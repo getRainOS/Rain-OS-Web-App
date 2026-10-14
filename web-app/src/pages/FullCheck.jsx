@@ -10,6 +10,8 @@ import { SubTabs, TabEmpty } from '../components/MonitorTabs.jsx';
 import { improveLink } from '../lib/improveLink.js';
 import { getMySite, setMySite } from '../lib/mySite.js';
 import { PLANS, costOf, siteFromUrl, guessBrand } from '../lib/fullCheck.js';
+import { isSharedPlatform } from '../lib/sharedPlatforms.js';
+import SiteNote from '../components/SiteNote.jsx';
 import styles from './FullCheck.module.css';
 
 const MODULE_LANES = ['product_sellers', 'developers', 'local_business', 'vibe_coders'];
@@ -39,6 +41,10 @@ export default function FullCheck() {
   async function findQuestions(e) {
     e.preventDefault();
     if (!domain) { setError('Enter your website, like yourdomain.com.'); return; }
+    if (isSharedPlatform(domain)) {
+      setError(`That’s a page on ${domain}, which many businesses share, so we can’t tell whether a cited page is yours. Use your own website, or run Brand Sentiment to see whether AI names your business.`);
+      return;
+    }
     setLoading(true);
     setError('');
     try {
@@ -155,6 +161,7 @@ export default function FullCheck() {
           <label className={styles.label} htmlFor="fc-url">Your website</label>
           <input id="fc-url" className={styles.input} type="text" inputMode="url" spellCheck={false}
             placeholder="yourdomain.com" value={url} onChange={e => setUrl(e.target.value)} />
+          <SiteNote url={url} />
 
           <label className={styles.label} htmlFor="fc-brand">Your business or brand name <span className={styles.opt}>Optional</span></label>
           <input id="fc-brand" className={styles.input} type="text" maxLength={120}
