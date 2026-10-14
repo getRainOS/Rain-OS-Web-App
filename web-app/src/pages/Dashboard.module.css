@@ -1505,3 +1505,21 @@ button.emptyLink {
 .focusSelect { width: 320px; max-width: 100%; }
 
 .focusNote { flex: 1 1 260px; min-width: 0; font-size: 12.5px; line-height: 1.5; color: var(--text-dim); }
+
+.headerBtns { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.fullBtn {
+  height: 36px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 8px;
+  background: #2B8FE3;
+  color: #fff;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.fullBtn:hover { background: #1C73C4; }
+.fullBtn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
