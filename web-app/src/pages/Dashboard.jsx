@@ -74,13 +74,6 @@ const SAMPLE_PILLAR_TREND = [
   { idx: 6, ai_readability: 71, digital_authority: 63, conversion_readiness: 68, rag_readiness: 60 },
 ];
 
-const DATE_FILTERS = [
-  { id: 'all', label: 'All time' },
-  { id: '7', label: '7d' },
-  { id: '30', label: '30d' },
-  { id: '90', label: '90d' },
-];
-
 const CONTENT_TYPE_TOGGLES = [
   { id: 'content', label: 'Content' },
   { id: 'url', label: 'URL' },
@@ -400,7 +393,6 @@ export default function Dashboard() {
   const [sovLoading, setSovLoading] = useState(true);
   const urlWantsLaneSelect = searchParams.get('selectLane') === '1';
   const [showLaneSelector, setShowLaneSelector] = useState(!userLane || urlWantsLaneSelect);
-  const [dateFilter, setDateFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
   const [metricsFraming, setMetricsFraming] = useState(() => {
     const stored = localStorage.getItem('rain_os_metrics_framing');
@@ -452,18 +444,14 @@ export default function Dashboard() {
 
   const filteredHistory = useMemo(() => {
     let out = history;
-    if (dateFilter !== 'all') {
-      const cutoff = Date.now() - Number(dateFilter) * 86400000;
-      out = out.filter(h => h.analyzed_at && new Date(h.analyzed_at).getTime() >= cutoff);
-    }
     if (typeFilter !== 'all') {
       out = out.filter(h => getItemType(h).toLowerCase() === typeFilter);
     }
     return out;
-  }, [history, dateFilter, typeFilter]);
+  }, [history, typeFilter]);
 
-  const filtersActive = dateFilter !== 'all' || typeFilter !== 'all';
-  const clearFilters = () => { setDateFilter('all'); setTypeFilter('all'); };
+  const filtersActive = typeFilter !== 'all';
+  const clearFilters = () => { setTypeFilter('all'); };
   const typeRoute = CONTENT_TYPE_ROUTES[typeFilter] || LANE_DEFAULT_ROUTES[userLane] || '/analyze';
 
   const dashboardHeroCopy = userLane === 'product_sellers'
@@ -590,10 +578,6 @@ export default function Dashboard() {
   }, [latestTypedAnalysis]);
 
   const quickWins = showAllFixes ? allFixes : allFixes.slice(0, 3);
-
-  const weakestPillar = totalAnalyses >= 3
-    ? [...pillarAvgs].sort((a, b) => a.avg - b.avg)[0]
-    : null;
 
   const chartData = [...filteredHistory]
     .slice(0, chartRange)
@@ -1065,39 +1049,6 @@ export default function Dashboard() {
           </Link>
         ))}
       </div>
-
-      {/* ── Filters ── */}
-      {!loading && history.length > 0 && (
-        <div className={styles.filterBar}>
-          <div className={styles.filterGroup}>
-            {DATE_FILTERS.map(f => (
-              <button key={f.id} type="button"
-                className={`${styles.filterBtn} ${dateFilter === f.id ? styles.filterBtnActive : ''}`}
-                onClick={() => setDateFilter(f.id)}>
-                {f.label}
-              </button>
-            ))}
-          </div>
-          {filtersActive && (
-            <span className={styles.filterSummary}>
-              {filteredHistory.length} of {history.length}
-              <button type="button" className={styles.filterClear} onClick={clearFilters}>Clear</button>
-            </span>
-          )}
-        </div>
-      )}
-
-      {/* ── Insight callout ── */}
-      {weakestPillar && weakestPillar.avg < 70 && (
-        <div className={styles.insight}>
-          <div className={styles.insightDot} style={{ background: '#94a3b8' }} />
-          <span className={styles.insightText}>
-            <strong>{weakestPillar.label}</strong> is your weakest pillar — averaging{' '}
-            <strong>{weakestPillar.avg}/100</strong> across recent analyses.
-          </span>
-          <Link to={typeRoute} className={styles.insightAction}>Improve it →</Link>
-        </div>
-      )}
 
       {/* ── Quick Wins ── */}
       {quickWins.length > 0 && (
