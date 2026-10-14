@@ -45,7 +45,9 @@ return res.status(402).json({ error: 'payment_required', message: 'Active subscr
 if (user.usage.count >= user.usage.limit) {
 return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Usage limit reached. Upgrade to continue.' } as ApiError);
 }
-const { content, industry, module, lane, title, url, contentType } = req.body as { content?: string; industry?: string; module?: string; lane?: string; title?: string; url?: string; contentType?: string };
+const { content, industry, module, lane, title, url, contentType, previousAnalysisId } = req.body as { content?: string; industry?: string; module?: string; lane?: string; title?: string; url?: string; contentType?: string; previousAnalysisId?: unknown };
+const prevId = Number(previousAnalysisId);
+const previous_analysis_id = Number.isInteger(prevId) && prevId > 0 ? prevId : null;
   // Safeguard backend memory
   const safeContent = typeof content === "string" ? content.slice(0, 12000) : "";
 const analysisModule: 'general' | 'product_sellers' | 'developers' | 'local_business' | 'vibe_coders' =
@@ -67,6 +69,7 @@ const typedResult = result as AnalysisResponse;
 const pillar = typedResult.pillarScores || { aiReadability: 0, digitalAuthority: 0, contentQuality: 0, technicalSymmetry: 0 };
 
 const { updatedUser, analysisId } = await incrementUsageAndSaveAnalysis(user.id, {
+  previous_analysis_id,
   title: title.trim(),
   url: typeof url === 'string' && url.trim() ? url.trim() : null,
   overall_score: typeof typedResult.overallScore === 'number' ? typedResult.overallScore : null,

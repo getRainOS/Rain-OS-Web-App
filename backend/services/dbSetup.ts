@@ -77,6 +77,9 @@ ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS lane TEXT;
 ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS content TEXT;
 ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS repo TEXT;
 ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS local_presence NUMERIC;
+-- Re-analyses of the same piece share a series_id (the first run's id), so
+-- the dashboard can trend one piece instead of blending unrelated ones.
+ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS series_id BIGINT;
 
 CREATE INDEX IF NOT EXISTS idx_content_analyses_user_analyzed_at
   ON content_analyses(user_id, analyzed_at DESC);

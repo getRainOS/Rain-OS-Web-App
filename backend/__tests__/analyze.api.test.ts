@@ -253,6 +253,26 @@ describe('POST /api/analyze — happy path', () => {
     expect(payload.content).toBe('This is a sufficiently long piece of content for analysis.');
   });
 
+  it('links a re-analysis to the run it follows', async () => {
+    await request(app)
+      .post('/api/analyze')
+      .set('Authorization', 'Bearer k')
+      .send({ title: 'My article', content: 'This is a sufficiently long piece of content for analysis.', previousAnalysisId: '42' });
+
+    const [, payload] = incrementUsageAndSaveAnalysis.mock.calls[0];
+    expect(payload.previous_analysis_id).toBe(42);
+  });
+
+  it('ignores an invalid previousAnalysisId', async () => {
+    await request(app)
+      .post('/api/analyze')
+      .set('Authorization', 'Bearer k')
+      .send({ title: 'My article', content: 'This is a sufficiently long piece of content for analysis.', previousAnalysisId: 'abc' });
+
+    const [, payload] = incrementUsageAndSaveAnalysis.mock.calls[0];
+    expect(payload.previous_analysis_id).toBeNull();
+  });
+
   it('still returns 200 even when saveAnalysis throws (best-effort persistence)', async () => {
     saveAnalysis.mockRejectedValueOnce(new Error('db failure'));
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
