@@ -1493,3 +1493,15 @@ button.emptyLink {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.focusBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.focusSelect { width: 320px; max-width: 100%; }
+
+.focusNote { flex: 1 1 260px; min-width: 0; font-size: 12.5px; line-height: 1.5; color: var(--text-dim); }
