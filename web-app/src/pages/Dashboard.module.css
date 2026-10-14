@@ -119,16 +119,16 @@
 /* ── Tool Snapshot Cards ── */
 .toolCards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 }
 
 @media (min-width: 1280px) {
-  .toolCards { grid-template-columns: repeat(6, 1fr); }
+  .toolCards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
 @media (max-width: 900px) {
-  .toolCards { grid-template-columns: repeat(2, 1fr); }
+  .toolCards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 480px) {
@@ -136,6 +136,7 @@
 }
 
 .toolCard {
+  min-width: 0;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -1492,3 +1493,13 @@ button.emptyLink {
 
 .improveBtn:hover { background: #1C73C4; }
 .improveBtn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+.toolCardSubject {
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
