@@ -627,8 +627,18 @@ export default function Dashboard() {
     delta: ptsDelta(p.key),
   }));
 
-  const citationTotal = citations.length;
-  const citationCitedCount = citations.filter(c => c.cited).length;
+  // Mentions follows one question (the most recently checked), capped at
+  // its last 10 checks, so unrelated questions are never blended.
+  const citationSorted = [...citations].sort(
+    (a, b) => new Date(b.checkedAt || b.checked_at) - new Date(a.checkedAt || a.checked_at)
+  );
+  const topicKeyOf = t => (t || '').trim().toLowerCase().replace(/\s+/g, ' ');
+  const citationLatestTopic = citationSorted[0]?.topic || null;
+  const citationScoped = citationLatestTopic
+    ? citationSorted.filter(c => topicKeyOf(c.topic) === topicKeyOf(citationLatestTopic)).slice(0, 10)
+    : [];
+  const citationTotal = citationScoped.length;
+  const citationCitedCount = citationScoped.filter(c => c.cited).length;
   const citationRate = citationTotal > 0 ? Math.round((citationCitedCount / citationTotal) * 100) : null;
 
   // Brand Sentiment: mention rate scoped to the most recently checked brand
@@ -676,25 +686,27 @@ export default function Dashboard() {
   const toolCards = [
     {
       key: 'citation',
+      subject: citationLatestTopic ? `“${citationLatestTopic}”` : null,
       label: isBusinessFraming ? 'Mentions' : 'Citation Monitor',
       to: '/citation-monitor',
       hasData: citationTotal > 0,
       value: citationTotal > 0 ? `${citationRate}%` : null,
       sub: citationTotal > 0
         ? (isBusinessFraming
-          ? `${citationCitedCount}/${citationTotal} customer questions you showed up for`
-          : `${citationCitedCount}/${citationTotal} topics cited`)
+          ? `AI cited you in ${citationCitedCount} of your last ${citationTotal} check${citationTotal > 1 ? 's' : ''}`
+          : `Cited in ${citationCitedCount} of your last ${citationTotal} check${citationTotal > 1 ? 's' : ''}`)
         : (isBusinessFraming
           ? 'No data yet — check a question your customers ask to see if AI recommends you'
           : 'No citation data yet — run a topic check to see if AI cites you'),
       Icon: Radar,
-      dots: citationTotal > 0 ? citations.slice(0, 8).reverse().map(c => !!c.cited) : null,
+      dots: citationTotal > 0 ? citationScoped.slice(0, 8).reverse().map(c => !!c.cited) : null,
       tooltip: isBusinessFraming
         ? 'Percentage of the questions your customers ask AI where your business gets recommended by name. The higher the number, the more often AI sends customers your way.'
         : 'Percentage of tracked topics where Gemini cites your brand, using live Google Search grounding. The higher the number, the more often Gemini treats you as a source.',
     },
     {
       key: 'brand',
+      subject: brandVisLatestBrand,
       label: isBusinessFraming ? 'Reputation' : 'Brand Sentiment',
       to: '/brand-visibility',
       hasData: brandVisTotal > 0,
@@ -713,6 +725,7 @@ export default function Dashboard() {
     },
     {
       key: 'sov',
+      subject: sovLatestBrand,
       label: isBusinessFraming ? 'Vs. Competitors' : 'Share of Voice',
       to: '/share-of-voice',
       hasData: sovTotal > 0,
@@ -732,6 +745,7 @@ export default function Dashboard() {
     },
     {
       key: 'usage',
+      subject: 'This month',
       label: 'API Usage',
       to: '/upgrade',
       hasData: !!user,
@@ -1002,6 +1016,10 @@ export default function Dashboard() {
                 <t.Icon className={styles.kpiIcon} />
               </div>
             </div>
+
+            {t.hasData && t.subject && (
+              <div className={styles.toolCardSubject} title={t.subject}>{t.subject}</div>
+            )}
 
             <div className={styles.toolCardValueRow}>
               {t.hasData && t.value !== null ? (
