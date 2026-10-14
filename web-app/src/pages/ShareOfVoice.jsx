@@ -1,5 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import CheckProgress from '../components/CheckProgress.jsx';
+import ImproveCta from '../components/ImproveCta.jsx';
+import { improveLink } from '../lib/improveLink.js';
+import { getMySite, setMySite } from '../lib/mySite.js';
 import { Link, useSearchParams } from 'react-router-dom';
 import {
   BarChart2, Search, CheckCircle2, AlertCircle,
@@ -111,7 +114,7 @@ export default function ShareOfVoice() {
   const [brand, setBrand]   = useState('');
   const [searchParams] = useSearchParams();
   const [topic, setTopic] = useState(() => searchParams.get('q') || '');
-  const [url,   setUrl]     = useState(() => searchParams.get('url') || '');
+  const [url,   setUrl]     = useState(() => searchParams.get('url') || getMySite());
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState('');
   const [planGated, setPlanGated] = useState(false);
@@ -141,6 +144,7 @@ export default function ShareOfVoice() {
     try {
       const { data } = await api.shareOfVoice({ name: name.trim(), brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined });
       setResult(data?.data ?? data);
+      setMySite(url);
       // prepend to history without refetch
       setHistory(prev => [{ ...(data?.data ?? data), checkedAt: new Date().toISOString(), id: Date.now() }, ...prev]);
       refreshUser();
@@ -347,6 +351,17 @@ export default function ShareOfVoice() {
               )}
 
               {/* What you can do about it */}
+              {resultTab === 'summary' && !(result.mentionedCount === 3 && (result.domainSharePercent == null || result.domainSharePercent >= 50)) && (() => {
+                const seen = new Set();
+                const pooled = (result.modelResults || []).flatMap(m => m.sources || []).filter(src => src.domain && !seen.has(src.domain) && seen.add(src.domain));
+                return (
+                  <ImproveCta
+                    title={result.mentionedCount === 0 ? 'AI did not name you. See how to get mentioned.' : 'AI names you only some of the time. See how to get mentioned more.'}
+                    body="We compare what you publish with the sources Gemini leaned on for this topic and list the changes to make first."
+                    link={improveLink({ question: result.topic, url: result.url || url, mode: 'share_of_voice', brand: result.brand, sources: pooled, competitors: result.competitors || [], note: result.summary })}
+                  />
+                );
+              })()}
               {resultTab === 'actions' && result.recommendations?.length > 0 && (
                 <div className={styles.card}>
                   <p className={styles.sectionTitle}>What you can do about it</p>

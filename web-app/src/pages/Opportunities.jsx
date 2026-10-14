@@ -1,16 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ArrowRight, ExternalLink, PenLine, RefreshCw, ScanSearch, CheckCircle2 } from 'lucide-react';
 import { api } from '../api/client.js';
 import PageHeader from '../components/PageHeader.jsx';
 import { buildOpportunities } from '../lib/opportunities.js';
+import { improveLink } from '../lib/improveLink.js';
 import styles from './Opportunities.module.css';
 
 const PRIORITY_LABEL = { high: 'High impact', medium: 'Worth doing', low: 'Quick win' };
 const listOf = data => (Array.isArray(data) ? data : data?.items ?? []);
 
 export default function Opportunities() {
-  const navigate = useNavigate();
   const [checks, setChecks] = useState([]);
   const [scans, setScans] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,9 +29,7 @@ export default function Opportunities() {
   const items = useMemo(() => buildOpportunities({ checks, scans }), [checks, scans]);
   const nothingYet = !loading && checks.length === 0 && scans.length === 0;
 
-  function writePage(question) {
-    navigate('/analyze', { state: { pendingTitle: question } });
-  }
+  const improveFor = item => improveLink({ question: item.question, url: item.url, mode: 'citation' });
 
   function recheckHref(item) {
     const p = new URLSearchParams({ q: item.question });
@@ -86,9 +84,9 @@ export default function Opportunities() {
                 <div className={styles.actions}>
                   {(item.kind === 'uncited' || item.kind === 'lowrank') && (
                     <>
-                      <button type="button" className={styles.primary} onClick={() => writePage(item.question)}>
-                        <PenLine size={14} /> {item.kind === 'uncited' ? 'Write a page for this' : 'Improve my page'}
-                      </button>
+                      <Link to={improveFor(item).to} state={improveFor(item).state} className={styles.primary}>
+                        <PenLine size={14} /> {item.kind === 'uncited' ? 'Show me how to get cited' : 'Show me how to move up'}
+                      </Link>
                       <Link to={recheckHref(item)} className={styles.secondary}><RefreshCw size={13} /> Re-check</Link>
                     </>
                   )}

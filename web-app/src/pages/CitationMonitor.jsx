@@ -15,6 +15,9 @@ import { buildSourceTypes } from '../lib/sourceTypes.js';
 import PageHeader from '../components/PageHeader.jsx';
 import { ViewTabs, SubTabs, NewCheckButton, QuestionPicker, TabEmpty } from '../components/MonitorTabs.jsx';
 import PromptSuggestions from '../components/PromptSuggestions.jsx';
+import ImproveCta from '../components/ImproveCta.jsx';
+import { improveLink } from '../lib/improveLink.js';
+import { getMySite, setMySite } from '../lib/mySite.js';
 import CheckProgress from '../components/CheckProgress.jsx';
 import TrackedQueriesPanel, { useTrackedQueries, TrackWeeklyButton } from '../components/TrackedQueries.jsx';
 import styles from './CitationMonitor.module.css';
@@ -94,7 +97,7 @@ export default function CitationMonitor() {
   const [name, setName] = useState('');
   const [searchParams] = useSearchParams();
   const [topic, setTopic] = useState(() => searchParams.get('q') || '');
-  const [url, setUrl] = useState(() => searchParams.get('url') || '');
+  const [url, setUrl] = useState(() => searchParams.get('url') || getMySite());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
@@ -157,6 +160,7 @@ export default function CitationMonitor() {
       const { data } = await api.citationCheck({ name: checkName, topic: topic.trim(), url: url.trim() || undefined });
       if (requestId !== checkRequestIdRef.current) return;
       setResult(data);
+      setMySite(url);
       setResultTab('result');
       setMapFilter(topicKey(data?.topic || topic));
       // Prefer the per-topic history payload that came back with the check; fall back to a fetch.
@@ -438,7 +442,26 @@ export default function CitationMonitor() {
                 ]}
               />
               {resultTab === 'result' && (
-                <ResultConsole result={result} name={name} topicHistory={topicHistory} tracking={tracking} />
+                <>
+                  <ResultConsole result={result} name={name} topicHistory={topicHistory} tracking={tracking} />
+                  {(() => {
+                    const rank = result.citedSourceIndex != null ? result.citedSourceIndex + 1 : null;
+                    if (rank === 1) return null;
+                    const title = !result.url ? 'Add your website to see where you rank'
+                      : rank ? `You are cited at #${rank}. See how to move up.`
+                      : 'Not cited yet. See what the cited pages do that you do not.';
+                    const body = !result.url
+                      ? 'Without your website we cannot tell if you are cited. Add it and we will compare your page with the sources Gemini used.'
+                      : 'We compare your page with the sources Gemini cited for this question and list the changes to make first.';
+                    return (
+                      <ImproveCta
+                        title={title}
+                        body={body}
+                        link={improveLink({ question: result.topic || topic, url: result.url || url, mode: 'citation', sources: result.sources || [], competitors: result.competitorDomains || [] })}
+                      />
+                    );
+                  })()}
+                </>
               )}
               {resultTab === 'competitors' && <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} part="domains" />}
               {resultTab === 'map' && <MapDetailSection map={competitorMap} scopeLabel={scopeLabel} part="regions" />}
