@@ -777,10 +777,13 @@ export default function Dashboard() {
             <Link to="/history" style={{ color: 'var(--text)', textDecoration: 'underline', textUnderlineOffset: '2px' }} title="Every saved analysis in your history — separate from 'API Usage', which counts billed API calls and may exclude imports or manual inserts.">You have a library of {totalCount ?? history.length} pieces analyzed</Link>
           </p>
         </div>
-        <button onClick={() => navigate(typeRoute)} className={styles.newBtn}>
-          <Plus className={styles.newBtnIcon} />
-          New Analysis
-        </button>
+        <div className={styles.headerBtns}>
+          <button onClick={() => navigate('/full-check')} className={styles.fullBtn}>Full check</button>
+          <button onClick={() => navigate(typeRoute)} className={styles.newBtn}>
+            <Plus className={styles.newBtnIcon} />
+            New Analysis
+          </button>
+        </div>
       </div>
 
       {/* ── Lane Banner / Selector ── */}

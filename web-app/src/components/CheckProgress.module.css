@@ -49,6 +49,8 @@
 }
 
 .step[data-state="done"] .marker { background: #2B8FE3; border-color: #2B8FE3; color: #fff; }
+.step[data-state="error"] { color: var(--text-muted); }
+.step[data-state="error"] .marker { background: rgba(235, 87, 87, 0.15); border-color: rgba(235, 87, 87, 0.5); color: #eb5757; }
 .step[data-state="active"] .marker { border-color: rgba(43, 143, 227, 0.7); }
 
 .pulse {

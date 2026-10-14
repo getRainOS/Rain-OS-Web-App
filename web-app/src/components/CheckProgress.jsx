@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Check } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import styles from './CheckProgress.module.css';
 
 // Live progress for slow checks: the steps the check works through plus a
 // skeleton in the shape of the result. The server answers once at the end,
 // so steps advance on typical timings and the last one stays "in progress"
 // until the real result arrives. It never shows done before it is.
-export default function CheckProgress({ title, steps, skeleton = 'sources', compact = false }) {
+export default function CheckProgress({ title, steps, skeleton = 'sources', compact = false, states }) {
   const [elapsed, setElapsed] = useState(0);
 
   useEffect(() => {
@@ -31,11 +31,13 @@ export default function CheckProgress({ title, steps, skeleton = 'sources', comp
       </div>
       <ol className={styles.steps}>
         {steps.map((s, i) => {
-          const state = i < active ? 'done' : i === active ? 'active' : 'todo';
+          // `states` ('todo' | 'active' | 'done' | 'error' per step) lets a caller
+          // that really knows each step's status drive it; otherwise timings decide.
+          const state = states ? (states[i] || 'todo') : i < active ? 'done' : i === active ? 'active' : 'todo';
           return (
             <li key={s.label} className={styles.step} data-state={state}>
               <span className={styles.marker} aria-hidden="true">
-                {state === 'done' ? <Check size={11} strokeWidth={3} /> : state === 'active' ? <span className={styles.pulse} /> : null}
+                {state === 'done' ? <Check size={11} strokeWidth={3} /> : state === 'error' ? <X size={11} strokeWidth={3} /> : state === 'active' ? <span className={styles.pulse} /> : null}
               </span>
               <span className={styles.label}>{s.label}</span>
             </li>
@@ -43,7 +45,7 @@ export default function CheckProgress({ title, steps, skeleton = 'sources', comp
         })}
       </ol>
       {skeleton && <Skeleton kind={skeleton} />}
-      <span className={styles.srOnly}>{steps[active]?.label}</span>
+      <span className={styles.srOnly}>{states ? '' : steps[active]?.label}</span>
     </div>
   );
 }

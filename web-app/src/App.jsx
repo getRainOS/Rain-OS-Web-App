@@ -13,6 +13,7 @@ import CitationMonitor from './pages/CitationMonitor.jsx';
 import Questions from './pages/Questions.jsx';
 import Opportunities from './pages/Opportunities.jsx';
 import ImproveQuestion from './pages/ImproveQuestion.jsx';
+import FullCheck from './pages/FullCheck.jsx';
 import BrandVisibility from './pages/BrandVisibility.jsx';
 import ShareOfVoice from './pages/ShareOfVoice.jsx';
 import History from './pages/History.jsx';
@@ -265,6 +266,7 @@ function AppRoutes({ apiKey, onAuth }) {
         <Route path="/questions" element={<Navigate to="/prompt-research" replace />} />
         <Route path="/opportunities" element={<Opportunities />} />
         <Route path="/improve" element={<ImproveQuestion />} />
+        <Route path="/full-check" element={<FullCheck />} />
         <Route path="/citation-monitor" element={<CitationMonitor />} />
         <Route path="/brand-visibility" element={<BrandVisibility />} />
         <Route path="/share-of-voice" element={<ShareOfVoice />} />
