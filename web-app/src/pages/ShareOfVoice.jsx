@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import CheckProgress from '../components/CheckProgress.jsx';
 import { Link, useSearchParams } from 'react-router-dom';
 import {
   BarChart2, Search, CheckCircle2, AlertCircle,
@@ -273,8 +274,21 @@ export default function ShareOfVoice() {
                 <button type="submit" className={styles.btn} style={{ opacity: loading ? 0.6 : 1 }} disabled={loading}>
                   {loading ? <><span className="spinner" style={{ width: 14, height: 14, borderWidth: 2 }} /> Asking Gemini 3 different ways…</> : <><BarChart2 size={14} /> Check Share of Voice</>}
                 </button>
-                {loading && <span className={styles.loadingHint}>This takes about 30 seconds. We ask Gemini your topic 3 different ways, each with a live Google search.</span>}
               </div>
+              {loading && (
+                <div style={{ marginTop: 20 }}>
+                  <CheckProgress
+                    title="Asking Gemini 3 different ways"
+                    skeleton="cards"
+                    steps={[
+                      { label: 'Asking for the best options', ms: 7000 },
+                      { label: 'Asking for a recommendation', ms: 7000 },
+                      { label: 'Asking for a comparison', ms: 7000 },
+                      { label: 'Counting mentions and sources' },
+                    ]}
+                  />
+                </div>
+              )}
             </form>
           ) : (
             /* ── Results ─────────────────────────────────────────────────── */

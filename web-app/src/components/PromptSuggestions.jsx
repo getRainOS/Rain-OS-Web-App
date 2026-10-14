@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Sparkles, ArrowRight, CalendarClock, Check } from 'lucide-react';
 import { api } from '../api/client.js';
+import CheckProgress from './CheckProgress.jsx';
 import styles from './PromptSuggestions.module.css';
 
 const INTENT_LABEL = { discover: 'Discover', compare: 'Compare', decide: 'Decide', learn: 'Learn' };
@@ -102,6 +103,18 @@ export default function PromptSuggestions({ url, lane, tracking, onUse, renderUs
       </form>
 
       {error && <p className={styles.error} role="alert">{error}</p>}
+
+      {loading && (
+        <CheckProgress
+          compact
+          title="Finding questions"
+          skeleton="list"
+          steps={[
+            { label: site.trim() && !description.trim() ? 'Looking up your site on Google' : 'Reading what you do', ms: 4000 },
+            { label: 'Thinking like your customers' },
+          ]}
+        />
+      )}
 
       {items.length > 0 && (
         <ul className={styles.list}>
