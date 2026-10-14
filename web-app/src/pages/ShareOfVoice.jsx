@@ -15,19 +15,19 @@ import styles from './ShareOfVoice.module.css';
 
 /* ── Per-prompt card ──────────────────────────────────────────────────────── */
 const MODEL_META = {
-  gemini:          { label: 'Informational question' },
-  chatgpt_style:   { label: 'Conversational request' },
-  perplexity_style:{ label: 'Research comparison' },
+  gemini:          { label: 'Asking for the best options', ask: t => `What are the best tools, products, or services for "${t}"?` },
+  chatgpt_style:   { label: 'Asking for a recommendation', ask: t => `I need help with "${t}". What would you personally recommend?` },
+  perplexity_style:{ label: 'Asking for a comparison',     ask: t => `Research and compare the leading solutions for "${t}". Which brands or tools dominate this space?` },
 };
 
-function ModelCard({ m }) {
+function ModelCard({ m, topic }) {
   const meta  = MODEL_META[m.modelKey] || MODEL_META.gemini;
   const mentioned = m.mentioned ?? m.cited ?? false;
   return (
     <div className={styles.modelCard}>
       <div className={styles.modelHead}>
         <div className={styles.modelTitle}>{meta.label}</div>
-        <div className={styles.modelPromptStyle}>{m.promptStyle}</div>
+        <div className={styles.modelPromptStyle}>{topic ? `“${meta.ask(topic)}”` : m.promptStyle}</div>
       </div>
 
       {/* Mentioned status */}
@@ -209,7 +209,7 @@ export default function ShareOfVoice() {
         subtitle="See how often Gemini mentions and cites you for a topic, and which competitors show up instead."
         about={[
           { heading: 'What the numbers mean', body: 'Mentions and citation share are literal counts from three real Gemini prompts, not a score. Re-run over time to see whether your presence is growing.' },
-          { heading: 'How the check works', body: 'We ask Gemini your topic three different ways with live Google Search grounding. It covers Gemini only, at one moment, so treat it as a trend signal rather than true market share.' },
+          { heading: 'How the check works', body: 'We ask Gemini about your topic 3 different ways (best options, a recommendation, and a comparison), each with a live Google search. The 3 questions tab shows exactly what was asked. It covers Gemini only, at one moment, so treat it as a trend signal rather than true market share.' },
         ]}
         actions={(tab !== 'check' || result) && <NewCheckButton onClick={() => { handleReset(); setTab('check'); }} />}
       />
@@ -271,9 +271,9 @@ export default function ShareOfVoice() {
 
               <div className={styles.submitRow}>
                 <button type="submit" className={styles.btn} style={{ opacity: loading ? 0.6 : 1 }} disabled={loading}>
-                  {loading ? <><span className="spinner" style={{ width: 14, height: 14, borderWidth: 2 }} /> Checking 3 query phrasings…</> : <><BarChart2 size={14} /> Check Share of Voice</>}
+                  {loading ? <><span className="spinner" style={{ width: 14, height: 14, borderWidth: 2 }} /> Asking Gemini 3 different ways…</> : <><BarChart2 size={14} /> Check Share of Voice</>}
                 </button>
-                {loading && <span className={styles.loadingHint}>This takes ~30 seconds — we run three separate grounded Gemini checks.</span>}
+                {loading && <span className={styles.loadingHint}>This takes about 30 seconds. We ask Gemini your topic 3 different ways, each with a live Google search.</span>}
               </div>
             </form>
           ) : (
@@ -285,7 +285,7 @@ export default function ShareOfVoice() {
                 onChange={setResultTab}
                 items={[
                   { id: 'summary', label: 'Summary' },
-                  { id: 'prompts', label: 'Prompts', count: result.modelResults.length },
+                  { id: 'prompts', label: 'The 3 questions', count: result.modelResults.length },
                   { id: 'competitors', label: 'Competitors', count: citationShare.length },
                   ...(result.recommendations?.length ? [{ id: 'actions', label: 'What to do', count: result.recommendations.length }] : []),
                 ]}
@@ -347,7 +347,7 @@ export default function ShareOfVoice() {
               {/* Per-prompt cards */}
               {resultTab === 'prompts' && (
                 <div className={styles.resultsGrid3}>
-                  {result.modelResults.map(m => <ModelCard key={m.modelKey} m={m} />)}
+                  {result.modelResults.map(m => <ModelCard key={m.modelKey} m={m} topic={result.topic} />)}
                 </div>
               )}
 
@@ -396,7 +396,7 @@ export default function ShareOfVoice() {
                   </div>
 
                   <p className={styles.shareFootnote}>
-                    Share of all sources cited across the 3 query phrasings for this topic — real counts, not an estimate.
+                    Share of all sources Gemini cited across the 3 questions for this topic — real counts, not an estimate.
                   </p>
                 </div>
               )}
