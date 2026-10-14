@@ -897,6 +897,30 @@ export default function Dashboard() {
                   </LineChart>
                 </ResponsiveContainer>
               </div>
+              {latestRun && (() => {
+                const weakest = [...piecePillars].sort((a, b) => a.score - b.score)[0];
+                const fixCount = (latestRun.recommendations || []).length;
+                const href = latestRun.repo
+                  ? '/repo-analysis'
+                  : latestRun.url && !latestRun.series_id
+                  ? `/url-scanner?url=${encodeURIComponent(latestRun.url)}`
+                  : `/analyze/${latestRun.id}`;
+                return (
+                  <div className={styles.improveBar}>
+                    <div className={styles.improveText}>
+                      <span className={styles.improveLabel}>Biggest opportunity</span>
+                      <span className={styles.improveValue}>
+                        <span className={styles.pillarTableDot} style={{ background: weakest?.color }} />
+                        {weakest?.label} <strong>{weakest?.score}/100</strong>
+                        {fixCount > 0 && <span className={styles.improveFixes}> · {fixCount} fix{fixCount !== 1 ? 'es' : ''} ready</span>}
+                      </span>
+                    </div>
+                    <Link to={href} className={styles.improveBtn}>
+                      Improve this score <ArrowRight size={14} />
+                    </Link>
+                  </div>
+                );
+              })()}
               {pieceRuns.length === 1 && (
                 <p className={styles.pieceHint}>
                   This is the first analysis of this piece. Make your changes, then choose <strong>Re-analyze</strong> on the result to see each pillar's trend here.
