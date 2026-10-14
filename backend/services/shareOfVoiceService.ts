@@ -12,6 +12,7 @@ import {
 import { resolveSourceDomain } from './groundingSources';
 import { brandInText } from './brandMatch';
 import { extractDomain, isSameDomain } from './citationCheckService';
+import { matchableDomain } from './sharedPlatforms';
 import { buildAnswerExcerpt } from './textExcerpt';
 
 const API_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
@@ -55,6 +56,7 @@ export interface SovResult {
   competitors: string[];              // source domains, ranked by frequency across the 3 prompts
   recommendations: string[];          // deterministic next-step advice — see buildRecommendations()
   summary:     string;
+  siteShared?: boolean;               // the site given is a page on a shared platform
 }
 
 function extractSources(chunks: GroundingChunk[]): SovSource[] {
@@ -240,7 +242,10 @@ export async function runShareOfVoice(
   const client = new GoogleGenerativeAI(API_KEY);
   const b = brand.trim();
   const t = topic.trim();
-  const userDomain = url ? extractDomain(url) : null;
+  const siteDomain = url ? extractDomain(url) : null;
+  // On a shared platform (facebook.com, yelp.com...) a domain match says nothing
+  // about whose page it was, so domain share is not computed.
+  const userDomain = matchableDomain(siteDomain);
 
   const modelConfigs = [
     {
@@ -287,6 +292,7 @@ export async function runShareOfVoice(
     domainCitedCount,
     domainSourceCount,
     domainSharePercent,
+    siteShared: !!siteDomain && !userDomain,
     competitors,
     recommendations,
     summary: buildSummary(b, t, mentionedCount, domainSharePercent, domainCitedCount, domainSourceCount),

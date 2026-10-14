@@ -12,6 +12,7 @@ import {
 import { resolveSourceDomain } from './groundingSources';
 import { brandInText, tokenizeBrand } from './brandMatch';
 import { extractDomain, findCitedSourceIndex } from './citationCheckService';
+import { matchableDomain } from './sharedPlatforms';
 import { splitSentences, buildAnswerExcerpt } from './textExcerpt';
 
 const API_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
@@ -81,6 +82,7 @@ export interface BrandVisibilityResult {
   recommendations: string[];
   summary: string;
   notMentionedHint: string | null;
+  siteShared?: boolean;     // the site given is a page on a shared platform, so cited cannot be judged
 }
 
 interface SentimentJson {
@@ -352,7 +354,8 @@ export async function runBrandVisibilityCheck(
     answerExcerpt: buildAnswerExcerpt(answerText),
     sources,
     competitors,
-    recommendations: buildRecommendations(mentioned, cited, sentiment, competitors, !!userDomain),
+    recommendations: buildRecommendations(mentioned, cited, sentiment, competitors, !!matchableDomain(userDomain)),
+    siteShared: !!userDomain && !matchableDomain(userDomain),
     summary: buildSummary(trimmedBrand, mentioned, cited, competitors),
     notMentionedHint,
   };
