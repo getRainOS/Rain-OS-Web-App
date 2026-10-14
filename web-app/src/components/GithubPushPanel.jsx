@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Select from './Select.jsx';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import styles from './GithubPushPanel.module.css';
@@ -198,17 +199,14 @@ export default function GithubPushPanel({ fixableArtifacts, scannedUrl, returnTo
         <div className={styles.ghPickRepo}>
           <label className={styles.ghLabel} htmlFor="gh-repo-select">Select repository</label>
           <div className={styles.ghRepoRow}>
-            <select
+            <Select
               id="gh-repo-select"
               className={styles.ghSelect}
               value={selectedRepo}
-              onChange={(e) => setSelectedRepo(e.target.value)}
-            >
-              <option value="">— pick a repo —</option>
-              {repos.map((r) => (
-                <option key={r.id} value={r.fullName}>{r.fullName}</option>
-              ))}
-            </select>
+              onChange={setSelectedRepo}
+              placeholder="Pick a repo"
+              options={repos.map(r => ({ value: r.fullName, label: r.fullName }))}
+            />
             <button
               className="btn btn-primary"
               disabled={!selectedRepo}

@@ -13,7 +13,7 @@ import {
 import { buildCompetitorMap } from '../lib/citationHistory.js';
 import { buildSourceTypes } from '../lib/sourceTypes.js';
 import PageHeader from '../components/PageHeader.jsx';
-import { ViewTabs, SubTabs, NewCheckButton, QuestionPicker } from '../components/MonitorTabs.jsx';
+import { ViewTabs, SubTabs, NewCheckButton, QuestionPicker, TabEmpty } from '../components/MonitorTabs.jsx';
 import PromptSuggestions from '../components/PromptSuggestions.jsx';
 import CheckProgress from '../components/CheckProgress.jsx';
 import TrackedQueriesPanel, { useTrackedQueries, TrackWeeklyButton } from '../components/TrackedQueries.jsx';
@@ -520,9 +520,9 @@ function RankingsChart({ history, map }) {
   const checks = [...history].sort(byCheckedAtAsc);
   if (checks.length < 2) {
     return (
-      <div className={`card ${styles.tabEmpty}`}>
+      <TabEmpty icon={Layers} title="Your trend starts with a second check">
         Rankings over time appear after this question has been checked twice. Run it again, or track it weekly.
-      </div>
+      </TabEmpty>
     );
   }
   const rivals = [...map.domains].sort((x, y) => x.avgRank - y.avgRank).slice(0, 3).map(d => d.domain);
@@ -617,7 +617,8 @@ function ResultConsole({ result, name, topicHistory, tracking }) {
                       href={src.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`${styles.consoleSource} ${mine ? styles.consoleSourceMine : ''}`}
+                      className={`reveal ${styles.consoleSource} ${mine ? styles.consoleSourceMine : ''}`}
+                      style={{ '--i': i }}
                       title={src.title || src.domain}
                     >
                       <span className={styles.consoleSourceNum}>{i + 1}</span>
@@ -868,10 +869,10 @@ function MapDetailSection({ map, scopeLabel, part }) {
   return (
     <div className={`${styles.mapWrap} fade-in`}>
       {part === 'domains' && domains.length === 0 && (
-        <div className={`card ${styles.tabEmpty}`}>No competing sources were cited for this question.</div>
+        <TabEmpty icon={Trophy} title="No competing sources">No competing sources were cited for this question.</TabEmpty>
       )}
       {part === 'regions' && regions.length === 0 && (
-        <div className={`card ${styles.tabEmpty}`}>None of the cited sites could be placed on the map yet.</div>
+        <TabEmpty icon={Globe} title="Nothing to place yet">None of the cited sites could be placed on the map yet.</TabEmpty>
       )}
       {part !== 'regions' && domains.length > 0 && (
         <div className={`card ${styles.mapCard}`}>
@@ -989,7 +990,7 @@ const pct = n => `${Math.round(n * 100)}%`;
 function SourceTypesSection({ data, scopeLabel }) {
   const { total, ownCitations, ownShare, types } = data;
   if (!total) {
-    return <div className={`card ${styles.tabEmpty}`}>No sources were cited for this question yet.</div>;
+    return <TabEmpty icon={Layers} title="No sources yet">No sources were cited for this question yet.</TabEmpty>;
   }
   return (
     <div className={`card ${styles.mapCard} fade-in`}>

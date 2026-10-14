@@ -371,3 +371,5 @@
 /* ─── GitHub Push Panel ─────────────────────────────────────────────────────── */
 
 /* GitHub push-fixes panel styles moved to components/GithubPushPanel.module.css */
+
+.platformSelect { flex: 1; min-width: 180px; }
