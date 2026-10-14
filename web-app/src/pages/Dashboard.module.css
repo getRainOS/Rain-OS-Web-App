@@ -1438,3 +1438,57 @@ button.emptyLink {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.improveBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(43, 143, 227, 0.25);
+  border-radius: 10px;
+  background: rgba(43, 143, 227, 0.06);
+}
+
+.improveText { display: grid; gap: 3px; min-width: 0; }
+
+.improveLabel {
+  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.improveValue {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 13.5px;
+  color: var(--text);
+}
+
+.improveValue strong { font-variant-numeric: tabular-nums; }
+.improveFixes { color: var(--text-muted); }
+
+.improveBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 8px;
+  background: #2B8FE3;
+  color: #fff;
+  font-size: 13.5px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.improveBtn:hover { background: #1C73C4; }
+.improveBtn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
