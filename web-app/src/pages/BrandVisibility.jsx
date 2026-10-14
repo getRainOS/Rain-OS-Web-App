@@ -1,5 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import CheckProgress from '../components/CheckProgress.jsx';
+import ImproveCta from '../components/ImproveCta.jsx';
+import { improveLink } from '../lib/improveLink.js';
+import { getMySite, setMySite } from '../lib/mySite.js';
 import { Link, useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
@@ -90,7 +93,7 @@ export default function BrandVisibility() {
   const [brand, setBrand] = useState('');
   const [searchParams] = useSearchParams();
   const [topic, setTopic] = useState(() => searchParams.get('q') || '');
-  const [url, setUrl] = useState(() => searchParams.get('url') || '');
+  const [url, setUrl] = useState(() => searchParams.get('url') || getMySite());
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
@@ -121,6 +124,7 @@ export default function BrandVisibility() {
     try {
       const { data } = await api.brandVisibility({ name: name.trim(), brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined });
       setResult(data.data || data);
+      setMySite(url);
       setResultTab('summary');
       // Refresh history
       const h = await api.brandVisHistory();
@@ -343,6 +347,23 @@ export default function BrandVisibility() {
           </div>
           )}
 
+          {resultTab === 'summary' && (() => {
+            const mentioned = result.mentionStatus === 'mentioned';
+            const good = mentioned && result.sentiment === 'positive' && (result.cited || !(result.url || url));
+            if (good) return null;
+            const mode = !mentioned ? 'share_of_voice' : result.sentiment !== 'positive' ? 'sentiment' : 'citation';
+            const title = !mentioned ? 'AI did not name you. See how to get mentioned.'
+              : result.sentiment === 'negative' ? 'AI described you negatively. See what to fix.'
+              : result.sentiment !== 'positive' ? 'AI mentions you without much warmth. See how to improve it.'
+              : 'AI names you but does not cite your site. See how to get cited.';
+            return (
+              <ImproveCta
+                title={title}
+                body="We compare your page with the sources Gemini used and list the changes to make first."
+                link={improveLink({ question: result.topic, url: result.url || url, mode, brand: result.brand, sources: result.sources || [], competitors: result.competitors || [], note: result.sentimentExplanation })}
+              />
+            );
+          })()}
           {resultTab === 'answer' && result.answerExcerpt && (
             <div className={styles.card}>
               <div className={styles.sectionTitle}>What AI answered for "{result.topic}"</div>

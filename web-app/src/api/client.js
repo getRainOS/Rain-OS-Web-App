@@ -69,6 +69,7 @@ export const api = {
   deleteCitationCheck: (id) => request('DELETE', `/api/citation-checks/${id}`),
   deleteCitationHistory: () => request('DELETE', '/api/citation-checks'),
   suggestPrompts: (body) => request('POST', '/api/prompt-suggestions', body),
+  questionGap: (body) => request('POST', '/api/question-gap', body),
   trackedQueries: () => request('GET', '/api/tracked-queries'),
   trackQuery: (body) => request('POST', '/api/tracked-queries', body),
   setTrackedQueryPaused: (id, paused) => request('PATCH', `/api/tracked-queries/${id}`, { paused }),

@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { Sparkles, ArrowRight, CalendarClock, Check } from 'lucide-react';
 import { api } from '../api/client.js';
 import CheckProgress from './CheckProgress.jsx';
+import { getMySite } from '../lib/mySite.js';
 import styles from './PromptSuggestions.module.css';
 
 const INTENT_LABEL = { discover: 'Discover', compare: 'Compare', decide: 'Decide', learn: 'Learn' };
 
 export default function PromptSuggestions({ url, lane, tracking, onUse, renderUse, title = 'Not sure what to ask?' }) {
-  const [site, setSite] = useState(url || '');
+  const [site, setSite] = useState(url || getMySite());
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
   const [loading, setLoading] = useState(false);
