@@ -8,8 +8,9 @@
 .sidebar {
   width: var(--sidebar-w);
   flex-shrink: 0;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
+  /* Darkest layer: the page and cards sit on top of it. */
+  background: #000;
+  border-right: 1px solid var(--border-strong);
   display: flex;
   flex-direction: column;
   padding: 20px 0;
