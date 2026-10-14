@@ -6,7 +6,8 @@ import { PILLAR_COLORS } from '../lib/pillarColors.js';
 import { buildCitationShare } from '../lib/citationShare.js';
 import { urlScannerLabel } from '../lib/laneLabels.js';
 import { LANES as LANE_META } from '../lib/lanes.js';
-import { groupPieces, pieceName } from '../lib/analysisSeries.js';
+import { groupPieces, pieceName, pieceKey } from '../lib/analysisSeries.js';
+import { domainOf } from '../lib/opportunities.js';
 import Select from '../components/Select.jsx';
 import {
   AreaChart, Area, XAxis, YAxis,
@@ -387,6 +388,11 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [chartRange, setChartRange] = useState(14);
   const [pieceSel, setPieceSel] = useState(null);
+  // What the whole dashboard is about: '' (each tool's latest), 'site:<domain>'
+  // (that site's pages plus every check run for it) or 'piece:<key>'.
+  const [focus, setFocus] = useState(() => {
+    try { return localStorage.getItem('rain_os_dash_focus') || ''; } catch { return ''; }
+  });
   const [citations, setCitations] = useState([]);
   const [brandVisHistory, setBrandVisHistory] = useState([]);
   const [brandVisLoading, setBrandVisLoading] = useState(true);
@@ -431,13 +437,60 @@ export default function Dashboard() {
       .finally(() => setLoading(false));
   }, [userLane]);
 
+  const siteOfItem = h => (h.repo ? null : domainOf(h.url));
+
+  const focusOptions = useMemo(() => {
+    const sites = new Map();
+    const site = d => {
+      if (!sites.has(d)) sites.set(d, { pieces: new Set(), checks: 0 });
+      return sites.get(d);
+    };
+    for (const h of history) {
+      const d = siteOfItem(h);
+      if (d) site(d).pieces.add(pieceKey(h));
+    }
+    for (const c of [...citations, ...brandVisHistory, ...sovHistory]) {
+      const d = domainOf(c.url);
+      if (d) site(d).checks += 1;
+    }
+    const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+    const siteOpts = [...sites].map(([d, v]) => ({
+      value: `site:${d}`,
+      label: d,
+      hint: `${plural(v.pieces.size, 'page')} · ${plural(v.checks, 'check')}`,
+    }));
+    const loose = groupPieces(history.filter(h => !siteOfItem(h))).map(p => ({
+      value: `piece:${p.key}`,
+      label: p.name.length > 48 ? `${p.name.slice(0, 45)}…` : p.name,
+      hint: p.latest.repo ? 'Repo' : 'Content',
+    }));
+    return [{ value: '', label: 'Latest of each tool' }, ...siteOpts.slice(0, 30), ...loose.slice(0, 30)];
+  }, [history, citations, brandVisHistory, sovHistory]);
+
+  // A remembered focus that no longer exists (data cleared) falls back quietly.
+  const activeFocus = focusOptions.some(o => o.value === focus) ? focus : '';
+  const focusSite = activeFocus.startsWith('site:') ? activeFocus.slice(5) : null;
+
+  function changeFocus(next) {
+    setFocus(next);
+    setPieceSel(next.startsWith('piece:') ? next.slice(6) : null);
+    try { localStorage.setItem('rain_os_dash_focus', next); } catch { /* not remembered */ }
+  }
+
+  const scopeChecks = rows => (focusSite ? rows.filter(r => domainOf(r.url) === focusSite) : activeFocus ? [] : rows);
+
   const filteredHistory = useMemo(() => {
     let out = history;
-    if (typeFilter !== 'all') {
-      out = out.filter(h => getItemType(h).toLowerCase() === typeFilter);
-    }
+    if (focusSite) out = out.filter(h => siteOfItem(h) === focusSite);
+    else if (activeFocus.startsWith('piece:')) out = out.filter(h => pieceKey(h) === activeFocus.slice(6));
+    else if (typeFilter !== 'all') out = out.filter(h => getItemType(h).toLowerCase() === typeFilter);
     return out;
-  }, [history, typeFilter]);
+  }, [history, typeFilter, activeFocus, focusSite]);
+
+  // Pillar Breakdown follows one piece at a time: the same repo, URL, or
+  // re-analysis chain. Unrelated analyses are never drawn on one line.
+  const pieces = useMemo(() => groupPieces(filteredHistory), [filteredHistory]);
+  const selectedPiece = pieces.find(p => p.key === pieceSel) || pieces[0] || null;
 
   const filtersActive = typeFilter !== 'all';
   const clearFilters = () => { setTypeFilter('all'); };
@@ -549,7 +602,7 @@ export default function Dashboard() {
 
   // The single most recent analysis for the selected type — fixes shown
   // below are scoped to this one scan, not blended across several.
-  const latestTypedAnalysis = filteredHistory[0] || null;
+  const latestTypedAnalysis = selectedPiece?.latest ?? filteredHistory[0] ?? null;
 
   const allFixes = useMemo(() => {
     if (!latestTypedAnalysis) return [];
@@ -577,10 +630,6 @@ export default function Dashboard() {
       date: h.analyzed_at ? timeAgo(h.analyzed_at) : '',
     }));
 
-  // Pillar Breakdown follows one piece at a time: the same repo, URL, or
-  // re-analysis chain. Unrelated analyses are never drawn on one line.
-  const pieces = useMemo(() => groupPieces(filteredHistory), [filteredHistory]);
-  const selectedPiece = pieces.find(p => p.key === pieceSel) || pieces[0] || null;
   const pieceRuns = selectedPiece ? selectedPiece.runs : [];
   const shownRuns = pieceRuns.slice(-chartRange);
   const firstShownNumber = pieceRuns.length - shownRuns.length + 1;
@@ -602,7 +651,7 @@ export default function Dashboard() {
 
   // Mentions follows one question (the most recently checked), capped at
   // its last 10 checks, so unrelated questions are never blended.
-  const citationSorted = [...citations].sort(
+  const citationSorted = [...scopeChecks(citations)].sort(
     (a, b) => new Date(b.checkedAt || b.checked_at) - new Date(a.checkedAt || a.checked_at)
   );
   const topicKeyOf = t => (t || '').trim().toLowerCase().replace(/\s+/g, ' ');
@@ -619,7 +668,7 @@ export default function Dashboard() {
   // is read directly off each row so old rows (saved before this was
   // deterministic) still count correctly; only 'mentioned' counts as a hit
   // — 'ambiguous' and 'not_mentioned' both count as not mentioned.
-  const brandVisSorted = [...brandVisHistory].sort(
+  const brandVisSorted = [...scopeChecks(brandVisHistory)].sort(
     (a, b) => new Date(b.checked_at || b.checkedAt) - new Date(a.checked_at || a.checkedAt)
   );
   const brandVisLatestBrand = brandVisSorted[0]?.brand || null;
@@ -638,7 +687,7 @@ export default function Dashboard() {
   // (case-insensitive match), capped at its last 10 checks — same pattern
   // as the Brand Sentiment tile. mentionedCount/cited_count is read
   // directly off each row so old rows still count correctly.
-  const sovSorted = [...sovHistory].sort(
+  const sovSorted = [...scopeChecks(sovHistory)].sort(
     (a, b) => new Date(b.checkedAt || b.checked_at) - new Date(a.checkedAt || a.checked_at)
   );
   const sovLatestBrand = sovSorted[0]?.brand || null;
@@ -759,6 +808,26 @@ export default function Dashboard() {
         </div>
       )}
 
+      {!loading && focusOptions.length > 1 && (
+        <div className={styles.focusBar}>
+          <span className="eyebrow">Showing</span>
+          <Select
+            className={styles.focusSelect}
+            value={activeFocus}
+            onChange={changeFocus}
+            ariaLabel="Choose what the dashboard shows"
+            options={focusOptions}
+          />
+          <span className={styles.focusNote}>
+            {focusSite
+              ? `Everything below is for ${focusSite}: its pages, and every check run for it.`
+              : activeFocus
+              ? "Pasted content and repos aren't tied to a website, so checks aren't shown. Add your website when you analyze content to link them."
+              : 'Each tool below shows its own latest result. Choose a site to see them all together.'}
+          </span>
+        </div>
+      )}
+
       {/* ── Pillar Breakdown (above the fold, full-width hero) ── */}
       <div className={`${styles.chartCard} ${styles.dottedBg}`} style={{ marginBottom: 12 }}>
         <div className={styles.chartHeader}>
@@ -769,7 +838,7 @@ export default function Dashboard() {
               <HelpCircle size={11} />
             </span>
           </div>
-          <div className={styles.framingToggle} role="tablist" aria-label="Analysis type">
+          {!activeFocus && (<div className={styles.framingToggle} role="tablist" aria-label="Analysis type">
             {CONTENT_TYPE_TOGGLES.map(ct => (
               <button
                 key={ct.id}
@@ -782,7 +851,7 @@ export default function Dashboard() {
                 {ct.label}
               </button>
             ))}
-          </div>
+          </div>)}
         </div>
 
         <WhatDoesThisMean tagline="AI's structured read of your content.">
