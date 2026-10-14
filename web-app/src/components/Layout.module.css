@@ -49,8 +49,16 @@
   .sidebar.collapsed .bottom {
     padding: 16px 8px 0;
   }
-  .sidebar.collapsed .userRow {
+  .sidebar.collapsed .accountChevron {
     display: none;
+  }
+  .sidebar.collapsed button.userRow {
+    margin: 0;
+    flex: 0 0 auto;
+  }
+  .sidebar.collapsed .accountMenu {
+    right: auto;
+    width: 220px;
   }
   .sidebar.collapsed .accountRow,
   .sidebar.collapsed .iconActions {
@@ -572,3 +580,76 @@
   pointer-events: none;
   white-space: normal;
 }
+
+/* ── Account menu ── */
+.accountRow { position: relative; }
+
+button.userRow {
+  padding: 6px;
+  margin: -6px 0 -6px -6px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+button.userRow:hover,
+button.userRow[aria-expanded="true"] { background: rgba(255, 255, 255, 0.05); }
+
+button.userRow:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }
+
+.accountChevron {
+  width: 14px;
+  height: 14px;
+  margin-left: auto;
+  flex-shrink: 0;
+  color: var(--text-dim);
+}
+
+.accountMenu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 8px);
+  z-index: 50;
+  min-width: 200px;
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  background: #141414;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+.accountMenuEmail {
+  padding: 8px 10px 6px;
+  font-size: 12px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.accountMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 34px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.accountMenuItem:hover { background: rgba(255, 255, 255, 0.06); }
+.accountMenuItem:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; }
+
+.accountMenuDivider { height: 1px; margin: 6px 4px; background: rgba(255, 255, 255, 0.08); }

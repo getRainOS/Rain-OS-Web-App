@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext.jsx';
 import { api, clearApiKey } from '../api/client.js';
@@ -6,7 +6,7 @@ import { supabase } from '../lib/supabase.js';
 import {
   LayoutDashboard, FileText, Globe, GitBranch, Radar, Eye,
   BarChart2, Settings, ArrowUp, LogOut, Wand2, Menu, X,
-  ChevronLeft, ChevronRight, ChevronsUpDown, MessageSquareText, Lightbulb,
+  ChevronLeft, ChevronRight, ChevronsUpDown, MessageSquareText, Lightbulb, CreditCard,
 } from 'lucide-react';
 import KnowledgeBase from './KnowledgeBase.jsx';
 import { urlScannerLabel } from '../lib/laneLabels.js';
@@ -93,6 +93,17 @@ export default function Layout({ children }) {
   const navigate = useNavigate();
   const [usage, setUsage] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const accountRef = useRef(null);
+
+  useEffect(() => {
+    if (!accountOpen) return;
+    const onDown = e => { if (accountRef.current && !accountRef.current.contains(e.target)) setAccountOpen(false); };
+    const onKey = e => { if (e.key === 'Escape') setAccountOpen(false); };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => { document.removeEventListener('mousedown', onDown); document.removeEventListener('keydown', onKey); };
+  }, [accountOpen]);
   const [collapsed, setCollapsed] = useState(() => {
     try { return localStorage.getItem('rain_os_sidebar_collapsed') === '1'; } catch { return false; }
   });
@@ -239,20 +250,38 @@ export default function Layout({ children }) {
             </NavLink>
           )}
 
-          <div className={styles.accountRow}>
-            {user?.email && (
-              <div className={styles.userRow}>
-                <div className={styles.avatar}>{user.email[0].toUpperCase()}</div>
-                <div className={styles.userInfo}>
-                  <span className={styles.userEmail}>{user.email}</span>
-                  <span className={styles.userTier}>{tier} plan</span>
-                </div>
+          <div className={styles.accountRow} ref={accountRef}>
+            {accountOpen && (
+              <div className={styles.accountMenu} role="menu">
+                {user?.email && <div className={styles.accountMenuEmail}>{user.email}</div>}
+                <NavLink to="/settings" role="menuitem" className={styles.accountMenuItem} onClick={() => { setAccountOpen(false); setMenuOpen(false); }}>
+                  <Settings size={14} /> Settings
+                </NavLink>
+                <NavLink to="/upgrade" role="menuitem" className={styles.accountMenuItem} onClick={() => { setAccountOpen(false); setMenuOpen(false); }}>
+                  <CreditCard size={14} /> Plan &amp; billing
+                </NavLink>
+                <div className={styles.accountMenuDivider} />
+                <button type="button" role="menuitem" className={styles.accountMenuItem} onClick={handleLogout}>
+                  <LogOut size={14} /> Log out
+                </button>
               </div>
             )}
+            <button
+              type="button"
+              className={styles.userRow}
+              onClick={() => setAccountOpen(o => !o)}
+              aria-haspopup="menu"
+              aria-expanded={accountOpen}
+              title="Account"
+            >
+              <div className={styles.avatar}>{(user?.email?.[0] || '?').toUpperCase()}</div>
+              <div className={styles.userInfo}>
+                <span className={styles.userEmail}>{user?.email || 'Account'}</span>
+                <span className={styles.userTier}>{tier} plan</span>
+              </div>
+              <ChevronsUpDown className={styles.accountChevron} />
+            </button>
             <div className={styles.iconActions}>
-              <button onClick={handleLogout} className={styles.iconBtn} aria-label="Sign out" title="Sign out">
-                <LogOut style={{ width: 14, height: 14 }} />
-              </button>
               <button
                 className={`${styles.iconBtn} ${styles.collapseBtn}`}
                 onClick={toggleCollapsed}
