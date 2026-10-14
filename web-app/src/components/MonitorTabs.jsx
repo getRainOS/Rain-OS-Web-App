@@ -1,4 +1,5 @@
 import { Plus } from 'lucide-react';
+import Select from './Select.jsx';
 import styles from './MonitorTabs.module.css';
 
 export function ViewTabs({ items, value, onChange, label }) {
@@ -53,11 +54,13 @@ export function QuestionPicker({ id, label = 'Question', options, value, onChang
   return (
     <div className={styles.filterBar}>
       <label htmlFor={id} className={styles.filterLabel}>{label}</label>
-      <select id={id} className={styles.filterSelect} value={value ?? ''} onChange={e => onChange(e.target.value)}>
-        {options.map(o => (
-          <option key={o.key} value={o.key}>{o.label}</option>
-        ))}
-      </select>
+      <Select
+        id={id}
+        className={styles.filterSelect}
+        value={value ?? ''}
+        onChange={onChange}
+        options={options.map(o => ({ value: o.key, label: o.label }))}
+      />
     </div>
   );
 }
@@ -75,8 +78,14 @@ export function CheckChips({ items }) {
   );
 }
 
-export function TabEmpty({ children }) {
-  return <div className={styles.tabEmpty}>{children}</div>;
+export function TabEmpty({ children, icon: Icon, title }) {
+  return (
+    <div className={styles.tabEmpty}>
+      {Icon && <span className={styles.tabEmptyIcon}><Icon size={18} aria-hidden="true" /></span>}
+      {title && <div className={styles.tabEmptyTitle}>{title}</div>}
+      <div>{children}</div>
+    </div>
+  );
 }
 
 export function shortDate(str) {

@@ -202,3 +202,28 @@ input, textarea, select {
 .fade-in {
   animation: fadeIn 0.2s ease forwards;
 }
+
+/* ── Shared polish primitives (match the marketing site) ── */
+.eyebrow {
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* Fade-up with a stagger: give each item style={{ '--i': index }}. */
+.reveal {
+  opacity: 0;
+  animation: revealUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { animation: none; opacity: 1; }
+}

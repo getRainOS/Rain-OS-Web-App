@@ -7,6 +7,7 @@ import { buildCitationShare } from '../lib/citationShare.js';
 import { urlScannerLabel } from '../lib/laneLabels.js';
 import { LANES as LANE_META } from '../lib/lanes.js';
 import { groupPieces, pieceName } from '../lib/analysisSeries.js';
+import Select from '../components/Select.jsx';
 import {
   AreaChart, Area, XAxis, YAxis,
   Tooltip, ResponsiveContainer,
@@ -826,18 +827,18 @@ export default function Dashboard() {
               <h3 className={styles.pieceName} title={selectedPiece?.name}>{selectedPiece?.name}</h3>
             </div>
             {pieces.length > 1 && (
-              <select
+              <Select
                 className={styles.pieceSelect}
                 value={selectedPiece?.key || ''}
-                onChange={e => setPieceSel(e.target.value)}
-                aria-label="Choose which piece to show"
-              >
-                {pieces.map(p => (
-                  <option key={p.key} value={p.key}>
-                    {p.name.length > 48 ? `${p.name.slice(0, 45)}…` : p.name}{p.runs.length > 1 ? ` (${p.runs.length} runs)` : ''}
-                  </option>
-                ))}
-              </select>
+                onChange={setPieceSel}
+                ariaLabel="Choose which piece to show"
+                menuAlign="right"
+                options={pieces.map(p => ({
+                  value: p.key,
+                  label: p.name.length > 48 ? `${p.name.slice(0, 45)}…` : p.name,
+                  hint: p.runs.length > 1 ? `${p.runs.length} runs` : undefined,
+                }))}
+              />
             )}
           </div>
           <div className={styles.heroGrid}>
@@ -931,8 +932,8 @@ export default function Dashboard() {
         </div>
       </div>
       <div className={styles.toolCards}>
-        {toolCards.map(t => (
-          <Link key={t.key} to={t.to} className={`${styles.toolCard} ${!t.hasData ? styles.toolCardEmpty : ''}`}>
+        {toolCards.map((t, idx) => (
+          <Link key={t.key} to={t.to} style={{ '--i': idx }} className={`reveal ${styles.toolCard} ${!t.hasData ? styles.toolCardEmpty : ''}`}>
             <div className={styles.toolCardTop}>
               <div className={styles.toolCardLabelRow}>
                 <span className={styles.toolCardLabel}>{t.label}</span>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Select from '../components/Select.jsx';
 import { useLocation, Link } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
@@ -117,16 +118,14 @@ function FixPromptGenerator({ result, repoUrl }) {
       </p>
 
       <div className={styles.platformRow}>
-        <select
+        <Select
           className={styles.platformSelect}
           value={platform}
-          onChange={e => { setPlatform(e.target.value); setCopied(false); }}
-        >
-          <option value="">Select your platform...</option>
-          {PLATFORMS.map(p => (
-            <option key={p.value} value={p.value}>{p.label}</option>
-          ))}
-        </select>
+          onChange={v => { setPlatform(v); setCopied(false); }}
+          placeholder="Select your platform..."
+          ariaLabel="Your platform"
+          options={PLATFORMS.map(p => ({ value: p.value, label: p.label }))}
+        />
         <button
           className="btn btn-primary"
           disabled={!prompt}

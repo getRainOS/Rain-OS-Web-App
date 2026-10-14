@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import CheckProgress from '../components/CheckProgress.jsx';
+import Select from '../components/Select.jsx';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
@@ -110,24 +111,14 @@ function FixPromptGenerator({ recommendations, url, overallScore }) {
       </p>
 
       <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-        <select
+        <Select
+          className={styles.platformSelect}
           value={platform}
-          onChange={e => { setPlatform(e.target.value); setCopied(false); }}
-          style={{
-            flex: 1,
-            minWidth: '180px',
-            padding: '8px 12px',
-            borderRadius: 'var(--radius-sm)',
-            border: '1px solid var(--border)',
-            background: 'var(--surface-2)',
-            color: 'inherit',
-          }}
-        >
-          <option value="">Select your platform...</option>
-          {PLATFORMS.map(p => (
-            <option key={p.value} value={p.value}>{p.label}</option>
-          ))}
-        </select>
+          onChange={v => { setPlatform(v); setCopied(false); }}
+          placeholder="Select your platform..."
+          ariaLabel="Your platform"
+          options={PLATFORMS.map(p => ({ value: p.value, label: p.label }))}
+        />
         <button
           className="btn btn-primary"
           disabled={!prompt}
@@ -398,7 +389,7 @@ export default function UrlScanner() {
               <h3 className={styles.sectionTitle}>Technical Signals</h3>
               <div className={styles.signalGrid}>
                 {(result.signals ?? result.technical_signals).map((s, i) => (
-                  <div key={i} className={styles.signal}>
+                  <div key={i} className={`reveal ${styles.signal}`} style={{ '--i': i }}>
                     <span
                       className={styles.signalDot}
                       style={{

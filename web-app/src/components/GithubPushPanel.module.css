@@ -69,28 +69,7 @@
   flex-wrap: wrap;
 }
 
-.ghSelect {
-  flex: 1;
-  min-width: 200px;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  color: var(--text);
-  font-size: 14px;
-  padding: 9px 12px;
-  outline: none;
-  font-family: inherit;
-  cursor: pointer;
-  transition: border-color 0.2s;
-}
-
-.ghSelect:focus {
-  border-color: var(--text);
-}
-
-.ghSelect option {
-  background: var(--surface-2);
-}
+.ghSelect { flex: 1; min-width: 200px; }
 
 .ghReview {
   margin-top: 16px;

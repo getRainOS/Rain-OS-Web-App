@@ -493,26 +493,7 @@
   margin-bottom: 16px;
 }
 
-.platformSelect {
-  flex: 1;
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--surface-2);
-  color: var(--text);
-  font-size: 14px;
-  outline: none;
-  cursor: pointer;
-}
-
-.platformSelect option {
-  background: var(--surface-3);
-  color: var(--text);
-}
-
-.platformSelect:focus {
-  border-color: var(--text);
-}
+.platformSelect { flex: 1; min-width: 180px; }
 
 .promptPreview {
   border: 1px solid var(--border);
