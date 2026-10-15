@@ -196,6 +196,7 @@ CREATE TABLE IF NOT EXISTS tracked_queries (
   next_run_at TIMESTAMPTZ NOT NULL,
   last_run_at TIMESTAMPTZ,
   last_cited BOOLEAN,
+  pending_cited BOOLEAN,
   consecutive_failures INTEGER NOT NULL DEFAULT 0,
   paused_reason TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -204,6 +205,10 @@ CREATE TABLE IF NOT EXISTS tracked_queries (
 CREATE INDEX IF NOT EXISTS idx_tracked_queries_due
   ON tracked_queries(next_run_at) WHERE paused_reason IS NULL;
 CREATE INDEX IF NOT EXISTS idx_tracked_queries_user ON tracked_queries(user_id);
+ALTER TABLE tracked_queries ADD COLUMN IF NOT EXISTS pending_cited BOOLEAN;
+-- Without a website there is nothing to match sources against, so every check
+-- would report "not cited". Pause those until a website is added.
+UPDATE tracked_queries SET paused_reason = 'no_site' WHERE url IS NULL AND paused_reason IS NULL;
 
 ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS source TEXT NOT NULL DEFAULT 'manual';
 ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS tracked_query_id BIGINT

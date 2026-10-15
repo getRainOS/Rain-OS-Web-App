@@ -1,14 +1,29 @@
 // services/trackedQueryService.ts — tracked queries for weekly citation re-checks.
 import { pool } from './db';
 import { normaliseTopicKey } from './dbService';
+import { extractDomain } from './citationCheckService';
+import { matchableDomain } from './sharedPlatforms';
 import type { User } from '../types';
 
 export const PRO_TRACKING_CAP = 10;
 export const BUSINESS_TRACKING_CAP = 30;
+// True when the URL points at a site we can match cited sources against.
+export function hasMatchableSite(url: string | null | undefined): boolean {
+  if (!url) return false;
+  try {
+    return !!matchableDomain(extractDomain(url));
+  } catch {
+    return false;
+  }
+}
+
+export const NO_SITE_MESSAGE =
+  'Add your own website to track this question. Without one we cannot tell whether you were cited, and social or review pages are shared with other businesses.';
+
 export const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 export const MAX_JITTER_MS = 6 * 60 * 60 * 1000;
 
-export type PausedReason = 'user' | 'plan_limit' | 'failures';
+export type PausedReason = 'user' | 'plan_limit' | 'failures' | 'no_site';
 
 export interface TrackedQuery {
   id: number;
@@ -18,6 +33,8 @@ export interface TrackedQuery {
   nextRunAt: string;
   lastRunAt: string | null;
   lastCited: boolean | null;
+  // A different result seen once, waiting for a second check to confirm it.
+  pendingCited: boolean | null;
   consecutiveFailures: number;
   pausedReason: PausedReason | null;
   createdAt: string;
@@ -25,7 +42,7 @@ export interface TrackedQuery {
 }
 
 export class TrackingError extends Error {
-  constructor(public code: 'plan_required' | 'cap_reached' | 'duplicate' | 'not_found', message: string) {
+  constructor(public code: 'plan_required' | 'cap_reached' | 'duplicate' | 'not_found' | 'no_site', message: string) {
     super(message);
   }
 }
@@ -40,6 +57,7 @@ const mapRow = (row: any): TrackedQuery => ({
   nextRunAt: iso(row.next_run_at) as string,
   lastRunAt: iso(row.last_run_at),
   lastCited: row.last_cited,
+  pendingCited: row.pending_cited ?? null,
   consecutiveFailures: row.consecutive_failures,
   pausedReason: row.paused_reason,
   createdAt: iso(row.created_at) as string,
@@ -120,6 +138,7 @@ export async function createTrackedQuery(
 ): Promise<TrackedQuery> {
   const cap = planTrackingCap(user);
   if (cap === 0) throw new TrackingError('plan_required', 'Weekly tracking is available on Pro and Business plans.');
+  if (!hasMatchableSite(data.url)) throw new TrackingError('no_site', NO_SITE_MESSAGE);
 
   const countRes = await pool.query(
     `SELECT COUNT(*)::int AS n FROM tracked_queries WHERE user_id = $1 AND paused_reason IS DISTINCT FROM 'plan_limit'`,
@@ -157,6 +176,9 @@ export async function setTrackedQueryPaused(user: User, id: number, paused: bool
     return;
   }
   const cap = planTrackingCap(user);
+  const own = await pool.query(`SELECT url FROM tracked_queries WHERE id = $1 AND user_id = $2`, [id, user.id]);
+  if (!own.rows[0]) throw new TrackingError('not_found', 'Tracked query not found.');
+  if (!hasMatchableSite(own.rows[0].url)) throw new TrackingError('no_site', NO_SITE_MESSAGE);
   const active = await pool.query(
     `SELECT COUNT(*)::int AS n FROM tracked_queries WHERE user_id = $1 AND paused_reason IS NULL AND id <> $2`,
     [user.id, id]

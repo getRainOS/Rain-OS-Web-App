@@ -87,8 +87,8 @@ export const sendCitationStatusEmail = async (
     ? `Gemini now cites you for "${topic}"`
     : `Gemini stopped citing you for "${topic}"`;
   const body = data.cited
-    ? 'Your site appeared among the sources in this week\'s check. Keep the page that earned it up to date.'
-    : 'Your site was not among the sources in this week\'s check. Open Citation Monitor to see who was cited instead.';
+    ? 'Your site appeared among the sources in two checks in a row, so this is a real change. Keep the page that earned it up to date.'
+    : 'Your site was missing from the sources in two checks in a row, so this is a real change. Open Citation Monitor to see who was cited instead.';
   const html = `
     <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
       <p style="color: #666; font-size: 13px; margin: 0 0 8px;">Weekly tracking · ${name}</p>
@@ -99,7 +99,7 @@ export const sendCitationStatusEmail = async (
           Open Citation Monitor
         </a>
       </p>
-      <p style="color: #666; font-size: 13px;">You can turn these alerts off in Settings.</p>
+      <p style="color: #666; font-size: 13px;">We only email when two checks in a row agree. <a href="${getAppUrl()}/settings" style="color:#666;">Turn these alerts off in Settings</a>.</p>
     </div>
   `;
   const subject = data.cited ? `Now cited: ${data.name}` : `No longer cited: ${data.name}`;
