@@ -325,7 +325,17 @@ function PlatformSection() {
             })}
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-[#0a0a0a] overflow-hidden min-w-0">
+          {/* The product floats on a soft, out-of-focus backdrop: crisp UI over a muted horizon. */}
+          <div
+            className="rounded-2xl p-4 sm:p-8 min-w-0 self-start"
+            style={{
+              background:
+                'radial-gradient(120% 90% at 85% 0%, rgba(43,143,227,0.55) 0%, rgba(43,143,227,0) 55%),' +
+                'radial-gradient(90% 70% at 0% 100%, rgba(199,120,70,0.40) 0%, rgba(199,120,70,0) 60%),' +
+                'linear-gradient(180deg, #16313f 0%, #10222b 55%, #1a1410 100%)',
+            }}
+          >
+          <div className="rounded-xl border border-white/10 bg-[#0a0a0a] overflow-hidden min-w-0 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.65)]">
             <AnimatePresence mode="wait">
               <motion.div key={active} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
                 <p className="px-6 pt-6 text-[14px] text-neutral-400 leading-relaxed lg:hidden">{current.body}</p>
@@ -343,6 +353,7 @@ function PlatformSection() {
                 </div>
               </motion.div>
             </AnimatePresence>
+          </div>
           </div>
         </div>
       </div>
