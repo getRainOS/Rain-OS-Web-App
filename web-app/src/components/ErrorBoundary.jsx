@@ -3,7 +3,7 @@ import { Component } from 'react';
 // Without this, any render error unmounts the whole app and leaves a blank
 // black screen. Show a way out instead.
 export default class ErrorBoundary extends Component {
-  state = { error: null };
+  state = { error: null, where: '' };
 
   static getDerivedStateFromError(error) {
     return { error };
@@ -11,6 +11,8 @@ export default class ErrorBoundary extends Component {
 
   componentDidCatch(error, info) {
     console.error('[ui] render error:', error, info?.componentStack);
+    const where = (info?.componentStack || '').split('\n').map(l => l.trim()).filter(Boolean).slice(0, 3).join(' < ');
+    this.setState({ where });
   }
 
   render() {
@@ -21,6 +23,9 @@ export default class ErrorBoundary extends Component {
           <h2 style={{ fontSize: 20, margin: '0 0 8px' }}>Something went wrong on this page</h2>
           <p style={{ color: 'var(--text-muted, #999)', fontSize: 14, margin: '0 0 16px' }}>
             Your data is safe. Reload to try again, or go back to the dashboard.
+          </p>
+          <p style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 11, color: 'var(--text-dim, #777)', margin: '0 0 16px', wordBreak: 'break-word' }}>
+            {String(this.state.error?.message || this.state.error).slice(0, 200)}{this.state.where ? ` — ${this.state.where}` : ''}
           </p>
           <button type="button" onClick={() => window.location.reload()} style={{ padding: '8px 16px', marginRight: 8, borderRadius: 6, border: 0, background: '#f5f5f5', color: '#0d0d0d', fontWeight: 600, cursor: 'pointer' }}>Reload</button>
           <a href="/dashboard" style={{ color: 'inherit', fontSize: 14 }}>Dashboard</a>
