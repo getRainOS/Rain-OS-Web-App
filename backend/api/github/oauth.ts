@@ -50,6 +50,11 @@ export default async function handler(req: express.Request, res: express.Respons
       scope: 'repo read:user',
       state,
     });
+    // Ask GitHub to show its account chooser instead of silently reusing the
+    // account the browser is already signed in to.
+    if ((req.body as { switchAccount?: unknown })?.switchAccount === true) {
+      params.set('prompt', 'select_account');
+    }
 
     const url = `https://github.com/login/oauth/authorize?${params}`;
     return res.status(200).json({ url });

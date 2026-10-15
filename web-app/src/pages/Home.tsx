@@ -46,23 +46,49 @@ const HERO_EXAMPLES = [
     cited: true,
     rank: 2,
     sources: ['g2.com', 'yourbrand.com', 'zapier.com', 'reddit.com'],
-    history: [0, 0, 1, 0, 1, 1, 1, 1],
+    history: [null, null, 3, null, 2, 2, 3, 2] as (number | null)[],
   },
   {
     query: 'how do I make my Shopify store show up in AI shopping answers',
     cited: false,
     rank: 0,
     sources: ['shopify.com', 'wired.com', 'theverge.com', 'competitor.co'],
-    history: [1, 1, 0, 0, 0, 1, 0, 0],
+    history: [2, 3, null, null, null, 4, null, null] as (number | null)[],
   },
   {
     query: 'emergency plumber open now near Austin',
     cited: true,
     rank: 1,
     sources: ['yourbrand.com', 'yelp.com', 'angi.com', 'bbb.org'],
-    history: [0, 1, 1, 1, 0, 1, 1, 1],
+    history: [null, 2, 1, 1, null, 1, 1, 1] as (number | null)[],
   },
 ];
+
+// Where your site ranked in Gemini's sources on each check (1 is the top).
+// Gaps are checks where it wasn't cited. Same idea as the app's "Position over time" chart.
+function PositionLine({ history }: { history: (number | null)[] }) {
+  const W = 220, H = 64, padX = 10, padY = 8, maxRank = 4;
+  const x = (k: number) => padX + (k * (W - padX * 2)) / (history.length - 1);
+  const y = (r: number) => padY + ((r - 1) * (H - padY * 2)) / (maxRank - 1);
+  const segments: string[] = [];
+  let cur: string[] = [];
+  history.forEach((r, k) => {
+    if (r == null) { if (cur.length > 1) segments.push(cur.join(' ')); cur = []; return; }
+    cur.push(`${x(k)},${y(r)}`);
+  });
+  if (cur.length > 1) segments.push(cur.join(' '));
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full max-w-[260px]" role="img" aria-label="Your position over the last 8 checks">
+      {[1, 2, 3, 4].map(r => (
+        <line key={r} x1={padX} x2={W - padX} y1={y(r)} y2={y(r)} stroke="rgba(255,255,255,0.07)" />
+      ))}
+      {segments.map((pts, k) => (
+        <polyline key={k} points={pts} fill="none" stroke="#2B8FE3" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+      ))}
+      {history.map((r, k) => r == null ? null : <circle key={k} cx={x(k)} cy={y(r)} r="3" fill="#2B8FE3" />)}
+    </svg>
+  );
+}
 
 function HeroConsole() {
   const reduce = useReducedMotion();
@@ -156,18 +182,8 @@ function HeroConsole() {
               </p>
             </motion.div>
           </AnimatePresence>
-          <div className="text-[10px] uppercase tracking-[0.14em] text-neutral-500 mb-2" style={MONO}>This question over time</div>
-          <div className="flex gap-1.5">
-            {ex.history.map((c, k) => (
-              <motion.span
-                key={k}
-                initial={false}
-                animate={{ backgroundColor: c ? '#2B8FE3' : 'rgba(255,255,255,0.1)' }}
-                transition={{ delay: 0.04 * k }}
-                className="w-3.5 h-3.5 rounded-[3px]"
-              />
-            ))}
-          </div>
+          <div className="text-[10px] uppercase tracking-[0.14em] text-neutral-500 mb-2" style={MONO}>Your position over time</div>
+          <PositionLine history={ex.history} />
         </div>
       </div>
     </div>

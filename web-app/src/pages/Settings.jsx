@@ -84,9 +84,9 @@ export default function Settings() {
     navigate('/');
   }
 
-  async function handleConnectGithub() {
+  async function handleConnectGithub(switchAccount = false) {
     try {
-      const { data } = await api.github.connect('/settings');
+      const { data } = await api.github.connect('/settings', switchAccount);
       if (data?.url) {
         window.location.href = data.url;
       } else {
@@ -330,14 +330,22 @@ export default function Settings() {
           ) : (
             <button
               className="btn btn-primary"
-              onClick={handleConnectGithub}
+              onClick={() => handleConnectGithub(false)}
             >
               Connect GitHub
             </button>
           )}
 
-          <p className={styles.wpHint}>
+          <p className={`${styles.wpHint} ${styles.githubHint}`}>
             You'll authorize access on GitHub's site — nothing to configure here.
+            {!user?.githubLogin && (
+              <>
+                {' '}Signed in to the wrong GitHub account?{' '}
+                <button type="button" className={styles.linkBtn} onClick={() => handleConnectGithub(true)}>
+                  Choose a different account
+                </button>
+              </>
+            )}
           </p>
         </div>
 
