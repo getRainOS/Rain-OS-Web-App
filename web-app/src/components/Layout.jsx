@@ -46,40 +46,47 @@ const LANE_GROUPS = {
   general: [
     { label: 'Prompts',    tools: ['questions'] },
     { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
-    { label: 'Actions',    tools: ['fullcheck', 'opportunities', 'improve', 'analyze', 'urlScanner', 'repo'] },
+    { label: 'Actions',    tools: ['fullcheck', 'opportunities', 'improve'] },
+    { label: 'Optimize',   tools: ['analyze', 'urlScanner', 'repo'] },
   ],
   product_sellers: [
     { label: 'Prompts',    tools: ['questions'] },
     { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
-    { label: 'Actions',    tools: ['fullcheck', 'opportunities', 'improve', 'urlScanner', 'analyze', 'repo'] },
+    { label: 'Actions',    tools: ['fullcheck', 'opportunities', 'improve'] },
+    { label: 'Optimize',   tools: ['urlScanner', 'analyze', 'repo'] },
   ],
   developers: [
     { label: 'Prompts',    tools: ['questions'] },
     { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
-    { label: 'Actions',    tools: ['fullcheck', 'opportunities', 'improve', 'repo', 'urlScanner', 'analyze'] },
+    { label: 'Actions',    tools: ['fullcheck', 'opportunities', 'improve'] },
+    { label: 'Optimize',   tools: ['repo', 'urlScanner', 'analyze'] },
   ],
   local_business: [
     { label: 'Prompts',    tools: ['questions'] },
     { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
-    { label: 'Actions',    tools: ['fullcheck', 'opportunities', 'improve', 'urlScanner', 'analyze', 'repo'] },
+    { label: 'Actions',    tools: ['fullcheck', 'opportunities', 'improve'] },
+    { label: 'Optimize',   tools: ['urlScanner', 'analyze', 'repo'] },
   ],
   vibe_coders: [
     { label: 'Prompts',    tools: ['questions'] },
     { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
-    { label: 'Actions',    tools: ['fullcheck', 'opportunities', 'improve', 'repo', 'urlScanner', 'analyze'] },
+    { label: 'Actions',    tools: ['fullcheck', 'opportunities', 'improve'] },
+    { label: 'Optimize',   tools: ['repo', 'urlScanner', 'analyze'] },
   ],
 };
 
 const GROUP_TOOLTIPS = {
   Prompts:    'Find the questions your customers ask AI.',
   Visibility: 'See whether and how AI mentions you for those questions.',
-  Actions:    'Fix what is holding you back, starting with the biggest gaps.',
+  Actions:    'Check where you stand and find the biggest gaps to fix first.',
+  Optimize:   'Make your content, pages and code easy for AI to read and quote.',
 };
 
 const LOCAL_GROUP_TOOLTIPS = {
   Prompts:    'Find the questions local customers ask AI about businesses like yours.',
   Visibility: 'Check if AI tools recommend your business when local customers ask.',
-  Actions:    'Plain-English fixes to get your business recommended more often.',
+  Actions:    'Plain-English checks to get your business recommended more often.',
+  Optimize:   'Make your site easy for AI to read, so it can recommend you.',
 };
 
 // Local Service Business gets its own section labels in the sidebar — not
