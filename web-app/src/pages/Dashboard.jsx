@@ -9,6 +9,7 @@ import { LANES as LANE_META } from '../lib/lanes.js';
 import { groupPieces, pieceName, pieceKey } from '../lib/analysisSeries.js';
 import { domainOf } from '../lib/opportunities.js';
 import Select from '../components/Select.jsx';
+import NewAnalysisMenu from '../components/NewAnalysisMenu.jsx';
 import {
   AreaChart, Area, XAxis, YAxis,
   Tooltip, ResponsiveContainer,
@@ -779,10 +780,7 @@ export default function Dashboard() {
         </div>
         <div className={styles.headerBtns}>
           <button onClick={() => navigate('/full-check')} className={styles.fullBtn}>Full check</button>
-          <button onClick={() => navigate(typeRoute)} className={styles.newBtn}>
-            <Plus className={styles.newBtnIcon} />
-            New Analysis
-          </button>
+          <NewAnalysisMenu lane={userLane} firstTime={!loading && history.length === 0} />
         </div>
       </div>
 
