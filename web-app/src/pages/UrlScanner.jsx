@@ -28,6 +28,19 @@ function UrlScannerGithubPushPanel({ result, scannedUrl }) {
   return <GithubPushPanel fixableArtifacts={fixableArtifacts} scannedUrl={scannedUrl} returnTo={returnTo} />;
 }
 
+function SignalRow({ s }) {
+  return (
+    <li className={styles.signalRow}>
+      <span className={styles.signalDot} style={{ background: s.pass ? 'var(--green)' : 'var(--red)' }} aria-hidden="true" />
+      <div className={styles.signalText}>
+        <div className={styles.signalName}>{s.label || s.name}</div>
+        {s.detail && <div className={styles.signalDetail}>{s.detail}</div>}
+      </div>
+      <span className={s.pass ? styles.statusPass : styles.statusFix}>{s.pass ? 'Pass' : 'Fix'}</span>
+    </li>
+  );
+}
+
 // ─── Main page ───────────────────────────────────────────────────────────────
 
 const PLATFORM_DISPLAY_NAME = {
@@ -216,6 +229,12 @@ export default function UrlScanner() {
       ? geminiRecs
       : [];
 
+  const signalList = Array.isArray(result?.signals) ? result.signals
+    : Array.isArray(result?.technical_signals) ? result.technical_signals : [];
+  const failing = signalList.filter(s => !s.pass);
+  const passing = signalList.filter(s => s.pass);
+  const overall = result?.overallScore ?? result?.overall_score ?? result?.rain_score;
+
   const pageSub = userLane === 'product_sellers'
     ? 'Scan your product page to see if AI shopping assistants can find your pricing, availability, and details'
     : userLane === 'local_business'
@@ -348,7 +367,7 @@ export default function UrlScanner() {
               <p className={styles.resultsUrl}>{result.url || url}</p>
             </div>
             <a
-              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I scanned ${result.url || url} on rain OS and scored ${result.overall_score ?? result.rain_score ?? '—'}/100 for AI readability.`)}
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I scanned ${result.url || url} on rain OS and scored ${overall ?? '—'}/100 for AI readability.`)}
 &url=${encodeURIComponent(window.location.origin + '/url-scanner')}`}
               target="_blank"
               rel="noopener noreferrer"
@@ -382,27 +401,35 @@ export default function UrlScanner() {
             </div>
           )}
 
+          {signalList.length > 0 && (
+            <div className={`card ${styles.verdict}`}>
+              <p className={styles.verdictText}>
+                <strong>{passing.length} of {signalList.length}</strong> technical checks pass.{' '}
+                {failing.length > 0 ? `${failing.length} need fixing, listed below the scores.` : 'Nothing technical is holding you back.'}
+              </p>
+            </div>
+          )}
+
           <PillarScores result={result} lane={userLane} />
 
-          {(result.signals ?? result.technical_signals)?.length > 0 && (
+          {signalList.length > 0 && (
             <div className={`card ${styles.signalsCard}`}>
-              <h3 className={styles.sectionTitle}>Technical Signals</h3>
-              <div className={styles.signalGrid}>
-                {(result.signals ?? result.technical_signals).map((s, i) => (
-                  <div key={i} className={`reveal ${styles.signal}`} style={{ '--i': i }}>
-                    <span
-                      className={styles.signalDot}
-                      style={{
-                        background: s.pass ? 'var(--green)' : 'var(--red)',
-                      }}
-                    />
-                    <div>
-                      <div className={styles.signalName}>{s.label || s.name}</div>
-                      {s.detail && <div className={styles.signalDetail}>{s.detail}</div>}
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <h3 className={styles.sectionTitle}>Technical checks</h3>
+              {failing.length > 0 ? (
+                <ul className={styles.signalList}>
+                  {failing.map((s, i) => <SignalRow key={s.label || s.name || i} s={s} />)}
+                </ul>
+              ) : (
+                <p className={styles.allPass}>Every technical check passed.</p>
+              )}
+              {passing.length > 0 && (
+                <details className={styles.passDetails}>
+                  <summary>Passing checks ({passing.length})</summary>
+                  <ul className={styles.signalList}>
+                    {passing.map((s, i) => <SignalRow key={s.label || s.name || i} s={s} />)}
+                  </ul>
+                </details>
+              )}
             </div>
           )}
 
