@@ -44,48 +44,48 @@ const TOOLS = {
 // lane first.
 const LANE_GROUPS = {
   general: [
+    { label: 'Optimize',   tools: ['analyze', 'urlScanner', 'repo'] },
     { label: 'Prompts',    tools: ['questions'] },
     { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
-    { label: 'Actions',    tools: ['fullcheck', 'opportunities', 'improve'] },
-    { label: 'Optimize',   tools: ['analyze', 'urlScanner', 'repo'] },
+    { label: 'Improve',    tools: ['fullcheck', 'opportunities', 'improve'] },
   ],
   product_sellers: [
+    { label: 'Optimize',   tools: ['urlScanner', 'analyze', 'repo'] },
     { label: 'Prompts',    tools: ['questions'] },
     { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
-    { label: 'Actions',    tools: ['fullcheck', 'opportunities', 'improve'] },
-    { label: 'Optimize',   tools: ['urlScanner', 'analyze', 'repo'] },
+    { label: 'Improve',    tools: ['fullcheck', 'opportunities', 'improve'] },
   ],
   developers: [
+    { label: 'Optimize',   tools: ['repo', 'urlScanner', 'analyze'] },
     { label: 'Prompts',    tools: ['questions'] },
     { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
-    { label: 'Actions',    tools: ['fullcheck', 'opportunities', 'improve'] },
-    { label: 'Optimize',   tools: ['repo', 'urlScanner', 'analyze'] },
+    { label: 'Improve',    tools: ['fullcheck', 'opportunities', 'improve'] },
   ],
   local_business: [
+    { label: 'Optimize',   tools: ['urlScanner', 'analyze', 'repo'] },
     { label: 'Prompts',    tools: ['questions'] },
     { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
-    { label: 'Actions',    tools: ['fullcheck', 'opportunities', 'improve'] },
-    { label: 'Optimize',   tools: ['urlScanner', 'analyze', 'repo'] },
+    { label: 'Improve',    tools: ['fullcheck', 'opportunities', 'improve'] },
   ],
   vibe_coders: [
+    { label: 'Optimize',   tools: ['repo', 'urlScanner', 'analyze'] },
     { label: 'Prompts',    tools: ['questions'] },
     { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
-    { label: 'Actions',    tools: ['fullcheck', 'opportunities', 'improve'] },
-    { label: 'Optimize',   tools: ['repo', 'urlScanner', 'analyze'] },
+    { label: 'Improve',    tools: ['fullcheck', 'opportunities', 'improve'] },
   ],
 };
 
 const GROUP_TOOLTIPS = {
   Prompts:    'Find the questions your customers ask AI.',
   Visibility: 'See whether and how AI mentions you for those questions.',
-  Actions:    'Check where you stand and find the biggest gaps to fix first.',
+  Improve:    'Check where you stand and find the biggest gaps to fix first.',
   Optimize:   'Make your content, pages and code easy for AI to read and quote.',
 };
 
 const LOCAL_GROUP_TOOLTIPS = {
   Prompts:    'Find the questions local customers ask AI about businesses like yours.',
   Visibility: 'Check if AI tools recommend your business when local customers ask.',
-  Actions:    'Plain-English checks to get your business recommended more often.',
+  Improve:    'Plain-English checks to get your business recommended more often.',
   Optimize:   'Make your site easy for AI to read, so it can recommend you.',
 };
 
@@ -94,7 +94,7 @@ const LOCAL_GROUP_TOOLTIPS = {
 // rather than the generic tool groups with a relabeled pillar or two.
 const LOCAL_GROUP_LABELS = {
   Visibility: 'Reputation',
-  Actions:    'Get Found',
+  Improve:    'Get Found',
 };
 
 export default function Layout({ children }) {
