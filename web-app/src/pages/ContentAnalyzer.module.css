@@ -22,9 +22,10 @@
 
 .upgradeGateText {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: var(--display-weight);
   color: var(--text);
   margin: 0;
+  letter-spacing: var(--display-tracking);
 }
 
 .upgradeGateSub {
@@ -39,8 +40,8 @@
 
 .title {
   font-size: 26px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
   margin-bottom: 6px;
 }
 
@@ -218,8 +219,8 @@
 
 .resultsTitle {
   font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.4px;
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
   margin-bottom: 4px;
 }
 
@@ -322,10 +323,11 @@
 
 .authorshipScoreValue {
   font-size: 20px;
-  font-weight: 700;
+  font-weight: var(--display-weight);
   color: var(--accent);
   line-height: 1;
   font-variant-numeric: tabular-nums;
+  letter-spacing: var(--display-tracking);
 }
 
 /* ── Rewrite button ─────────────────────────────────────────────────────────── */

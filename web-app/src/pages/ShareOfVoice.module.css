@@ -38,9 +38,10 @@
 
 .title {
   font-size: 22px;
-  font-weight: 700;
+  font-weight: var(--display-weight);
   color: var(--text);
   margin: 0;
+  letter-spacing: var(--display-tracking);
 }
 
 .sub {
@@ -464,9 +465,10 @@
 
 .shareHeadline {
   font-size: 20px;
-  font-weight: 600;
+  font-weight: var(--display-weight);
   color: var(--text);
   font-variant-numeric: tabular-nums;
+  letter-spacing: var(--display-tracking);
 }
 
 .shareHeadlinePct {
@@ -514,9 +516,10 @@
 
 .resultHeadline {
   font-size: 20px;
-  font-weight: 600;
+  font-weight: var(--display-weight);
   color: var(--text);
   font-variant-numeric: tabular-nums;
+  letter-spacing: var(--display-tracking);
 }
 
 .resultDomainShare {

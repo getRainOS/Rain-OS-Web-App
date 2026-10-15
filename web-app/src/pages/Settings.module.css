@@ -8,8 +8,8 @@
 
 .title {
   font-size: 26px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
   margin-bottom: 6px;
 }
 

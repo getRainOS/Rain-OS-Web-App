@@ -48,9 +48,10 @@
 .title {
   text-align: center;
   font-size: 17px;
-  font-weight: 600;
+  font-weight: var(--display-weight);
   color: var(--text);
   margin-bottom: 6px;
+  letter-spacing: var(--display-tracking);
 }
 
 .sub {

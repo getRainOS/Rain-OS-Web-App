@@ -17,9 +17,10 @@
 
 .title {
   font-size: 22px;
-  font-weight: 600;
+  font-weight: var(--display-weight);
   color: var(--text);
   margin: 0;
+  letter-spacing: var(--display-tracking);
 }
 
 .sub {
@@ -294,9 +295,10 @@
 
 .resultTitle {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: var(--display-weight);
   color: var(--text);
   margin-bottom: 6px;
+  letter-spacing: var(--display-tracking);
 }
 
 .resultSub {
