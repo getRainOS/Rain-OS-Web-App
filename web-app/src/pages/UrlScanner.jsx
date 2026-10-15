@@ -8,6 +8,7 @@ import PillarScores from '../components/PillarScores.jsx';
 import ArtifactBlock from '../components/ArtifactBlock.jsx';
 import CitationCrossPromo from '../components/CitationCrossPromo.jsx';
 import GithubPushPanel from '../components/GithubPushPanel.jsx';
+import { normalizeUrlInput, hasUrlBody } from '../lib/urlInput.js';
 import { urlScannerLabel } from '../lib/laneLabels.js';
 import { ShoppingBag, MapPin, Code2, Sparkles, ScanSearch, Wand2, AlertTriangle } from 'lucide-react';
 import PageHeader from '../components/PageHeader.jsx';
@@ -165,7 +166,7 @@ export default function UrlScanner() {
   const { refreshUser, userLane } = useApp();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [url, setUrl] = useState(() => searchParams.get('url') || '');
+  const [url, setUrl] = useState(() => normalizeUrlInput(searchParams.get('url') || ''));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [errorCode, setErrorCode] = useState('');
@@ -189,7 +190,7 @@ export default function UrlScanner() {
 
   async function handleScan(e) {
     e.preventDefault();
-    if (!url.trim()) return;
+    if (!hasUrlBody(url)) return;
     setLoading(true);
     setError('');
     setErrorCode('');
@@ -321,15 +322,16 @@ export default function UrlScanner() {
               autoComplete="url"
               spellCheck={false}
             className={styles.urlInput}
-            placeholder="https://example.com/page"
+            placeholder="https://yourstore.com/product"
             value={url}
-            onChange={e => setUrl(e.target.value)}
-            required
+            onChange={e => setUrl(normalizeUrlInput(e.target.value))}
+            onFocus={e => { const el = e.target; setTimeout(() => el.setSelectionRange(el.value.length, el.value.length), 0); }}
+            
           />
           <button
             type="submit"
             className="btn btn-primary"
-            disabled={loading || !url.trim()}
+            disabled={loading || !hasUrlBody(url)}
           >
             {loading ? <><span className="spinner" /> Scanning…</> : '◎ Scan URL'}
           </button>
