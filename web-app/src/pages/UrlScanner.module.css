@@ -185,8 +185,8 @@
 
 .recoItem {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  flex-direction: row;
+  gap: 12px;
   font-size: 13.5px;
   color: var(--text-muted);
   line-height: 1.5;
@@ -409,3 +409,10 @@
 .passDetails summary { cursor: pointer; font-size: 13px; color: var(--text-muted); }
 .passDetails summary:hover { color: var(--text); }
 .passDetails .signalList { margin-top: 8px; }
+
+.moreFixes { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 12px; }
+.moreFixes summary { cursor: pointer; font-size: 13px; color: var(--text-muted); }
+.moreFixes summary:hover { color: var(--text); }
+.moreFixes .recoList { margin-top: 12px; }
+
+.recoText { display: block; color: var(--text); font-weight: 500; margin-bottom: 2px; }

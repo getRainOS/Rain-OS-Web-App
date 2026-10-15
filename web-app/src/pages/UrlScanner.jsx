@@ -29,6 +29,42 @@ function UrlScannerGithubPushPanel({ result, scannedUrl }) {
   return <GithubPushPanel fixableArtifacts={fixableArtifacts} scannedUrl={scannedUrl} returnTo={returnTo} />;
 }
 
+
+const TOP_FIXES = 3;
+
+function RecoItem({ r, i }) {
+  const isObj = typeof r === 'object' && r !== null;
+  const text = isObj ? (r.recommendation || r.text) : r;
+  const artifact = isObj ? r.artifact : null;
+  const nonTechnicalFix = isObj ? r.nonTechnicalFix : null;
+  const technicalFix = isObj ? r.technicalFix : null;
+  return (
+    <li className={styles.recoItem}>
+      <span className={styles.recoNum}>{i + 1}</span>
+      <div className={styles.recoContent}>
+        <span className={styles.recoText}>{text}</span>
+        {(nonTechnicalFix || technicalFix || artifact) && (
+          <div className={styles.fixGroup}>
+            {nonTechnicalFix && (
+              <div className={styles.fixBlock}>
+                <span className={`${styles.fixLabel} ${styles.fixLabelNonTechnical}`}>Do it yourself — no code</span>
+                <p className={styles.fixText}>{nonTechnicalFix}</p>
+              </div>
+            )}
+            {(technicalFix || artifact) && (
+              <div className={styles.fixBlock}>
+                <span className={`${styles.fixLabel} ${styles.fixLabelTechnical}`}>Technical fix</span>
+                {technicalFix && <p className={styles.fixText}>{technicalFix}</p>}
+                {artifact && <ArtifactBlock artifact={artifact} />}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </li>
+  );
+}
+
 function SignalRow({ s }) {
   return (
     <li className={styles.signalRow}>
@@ -444,39 +480,16 @@ export default function UrlScanner() {
                 </p>
               )}
               <ul className={styles.recoList}>
-                {recommendations.map((r, i) => {
-                  const isObj = typeof r === 'object' && r !== null;
-                  const text = isObj ? (r.recommendation || r.text) : r;
-                  const artifact = isObj ? r.artifact : null;
-                  const nonTechnicalFix = isObj ? r.nonTechnicalFix : null;
-                  const technicalFix = isObj ? r.technicalFix : null;
-                  return (
-                    <li key={i} className={styles.recoItem}>
-                      <span className={styles.recoNum}>{i + 1}</span>
-                      <div className={styles.recoContent}>
-                        <span>{text}</span>
-                        {(nonTechnicalFix || technicalFix || artifact) && (
-                          <div className={styles.fixGroup}>
-                            {nonTechnicalFix && (
-                              <div className={styles.fixBlock}>
-                                <span className={`${styles.fixLabel} ${styles.fixLabelNonTechnical}`}>Do it yourself — no code</span>
-                                <p className={styles.fixText}>{nonTechnicalFix}</p>
-                              </div>
-                            )}
-                            {(technicalFix || artifact) && (
-                              <div className={styles.fixBlock}>
-                                <span className={`${styles.fixLabel} ${styles.fixLabelTechnical}`}>Technical fix</span>
-                                {technicalFix && <p className={styles.fixText}>{technicalFix}</p>}
-                                {artifact && <ArtifactBlock artifact={artifact} />}
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </li>
-                  );
-                })}
+                {recommendations.slice(0, TOP_FIXES).map((r, i) => <RecoItem key={i} r={r} i={i} />)}
               </ul>
+              {recommendations.length > TOP_FIXES && (
+                <details className={styles.moreFixes}>
+                  <summary>{recommendations.length - TOP_FIXES} more fixes</summary>
+                  <ul className={styles.recoList}>
+                    {recommendations.slice(TOP_FIXES).map((r, i) => <RecoItem key={i} r={r} i={i + TOP_FIXES} />)}
+                  </ul>
+                </details>
+              )}
             </div>
           )}
 

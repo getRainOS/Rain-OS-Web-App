@@ -65,7 +65,7 @@
 
 .row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 140px 150px 80px auto;
+  grid-template-columns: minmax(0, 1fr) 130px 120px 170px auto;
   align-items: center;
   gap: 16px;
   padding: 12px 0;
@@ -134,7 +134,7 @@
   font-size: 12px;
   color: var(--text-dim);
   font-variant-numeric: tabular-nums;
-  white-space: nowrap;
+  line-height: 1.35;
 }
 
 .rowActions {
@@ -225,17 +225,17 @@
   color: var(--red);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1100px) {
   .row {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 6px 12px;
+    grid-template-columns: auto auto 1fr auto;
+    grid-template-areas:
+      "main main main act"
+      "status hist next next";
+    gap: 6px 16px;
   }
-  .history,
-  .next {
-    grid-column: 1;
-  }
-  .rowActions {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-  }
+  .rowMain { grid-area: main; }
+  .status { grid-area: status; min-width: 92px; }
+  .history { grid-area: hist; }
+  .next { grid-area: next; }
+  .rowActions { grid-area: act; }
 }

@@ -180,7 +180,9 @@ export default function TrackedQueriesPanel({ tracking }) {
               <li key={item.id} className={styles.row}>
                 <div className={styles.rowMain}>
                   <span className={styles.rowName}>{item.name}</span>
-                  <span className={styles.rowTopic}>{item.topic}</span>
+                  {item.topic.trim().toLowerCase() !== item.name.trim().toLowerCase() && (
+                    <span className={styles.rowTopic}>{item.topic}</span>
+                  )}
                 </div>
                 <span className={`${styles.status} ${styles[status.tone]}`}>{status.label}</span>
                 <History history={item.history} />
