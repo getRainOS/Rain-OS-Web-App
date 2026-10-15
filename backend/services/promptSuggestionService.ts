@@ -101,7 +101,9 @@ export async function suggestPrompts(input: {
     contents: [{ role: 'user', parts: [{ text: buildPrompt({ domain, description: input.description, location: input.location, lane: input.lane }) }] }],
     generationConfig: {
       temperature: 0.7,
-      maxOutputTokens: 1024,
+      maxOutputTokens: 2048,
+      // Hidden thinking tokens share this limit and can cut the JSON list off.
+      thinkingConfig: { thinkingBudget: 0 },
       ...(grounded ? {} : { responseMimeType: 'application/json' }),
     },
   }, { timeoutMs: grounded ? 60000 : 30000 });

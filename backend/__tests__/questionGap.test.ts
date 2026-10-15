@@ -11,8 +11,9 @@ vi.mock('../services/dbService', () => ({
 }));
 
 let replyText = '';
+const replyQueue: string[] = [];
 const getGenerativeModel = vi.fn();
-const generateContent = vi.fn(async () => ({ response: { text: () => replyText } }));
+const generateContent = vi.fn(async () => ({ response: { text: () => (replyQueue.length ? (replyQueue.shift() as string) : replyText) } }));
 vi.mock('@google/generative-ai', () => ({
   GoogleGenerativeAI: class {
     getGenerativeModel(opts: unknown) {
@@ -117,6 +118,7 @@ describe('POST /api/question-gap', () => {
     findUserByApiKey.mockReset();
     getGenerativeModel.mockReset();
     generateContent.mockClear();
+    replyQueue.length = 0;
     replyText = goodReply;
   });
 
@@ -171,6 +173,37 @@ describe('POST /api/question-gap', () => {
     await request(app).post('/api/question-gap').set('Authorization', 'Bearer k')
       .send({ question: 'best bakery for weddings', url: 'acme.com', content: 'We bake cakes.' });
     expect(getGenerativeModel.mock.calls[0][0]).not.toHaveProperty('tools');
+  });
+
+  it('asks for enough output room and disables hidden thinking tokens', async () => {
+    findUserByApiKey.mockResolvedValue(user);
+    await request(app).post('/api/question-gap').set('Authorization', 'Bearer k')
+      .send({ question: 'best bakery for weddings', content: 'We bake cakes.' });
+    const cfg = (generateContent.mock.calls[0] as any)[0].generationConfig;
+    expect(cfg.maxOutputTokens).toBeGreaterThanOrEqual(4096);
+    expect(cfg.thinkingConfig).toEqual({ thinkingBudget: 0 });
+  });
+
+  it('falls back to an answer without the page lookup when the grounded reply is unusable', async () => {
+    findUserByApiKey.mockResolvedValue(user);
+    replyQueue.push('Sure! Here is what I found about the page...', goodReply);
+    const res = await request(app).post('/api/question-gap').set('Authorization', 'Bearer k')
+      .send({ question: 'best bakery for weddings', url: 'acme.com' });
+    expect(res.status).toBe(200);
+    expect(generateContent).toHaveBeenCalledTimes(2);
+    expect(getGenerativeModel.mock.calls[0][0]).toHaveProperty('tools');
+    expect(getGenerativeModel.mock.calls[1][0]).not.toHaveProperty('tools');
+    expect(res.body.pageRead).toBe(false);
+    expect(res.body.actions.length).toBeGreaterThan(0);
+  });
+
+  it('does not retry when the reply was already ungrounded', async () => {
+    findUserByApiKey.mockResolvedValue(user);
+    replyText = 'sorry';
+    const res = await request(app).post('/api/question-gap').set('Authorization', 'Bearer k')
+      .send({ question: 'best bakery for weddings' });
+    expect(res.status).toBe(502);
+    expect(generateContent).toHaveBeenCalledTimes(1);
   });
 
   it('returns 502 when the model reply has no usable advice', async () => {

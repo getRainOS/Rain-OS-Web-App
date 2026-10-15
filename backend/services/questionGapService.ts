@@ -137,11 +137,9 @@ export function buildPrompt(i: GapInput): string {
   ].filter(Boolean).join('\n');
 }
 
-export async function analyzeQuestionGap(input: GapInput): Promise<QuestionGap | null> {
+async function callModel(input: GapInput, grounded: boolean): Promise<QuestionGap | null> {
   const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
   if (!apiKey) throw new Error('GEMINI_API_KEY environment variable is not set');
-  // Google fetches their page through grounding, so our server never requests user URLs.
-  const grounded = !input.content && !!input.domain;
   const client = new GoogleGenerativeAI(apiKey);
   const model: GenerativeModel = client.getGenerativeModel({
     model: MODEL,
@@ -151,9 +149,31 @@ export async function analyzeQuestionGap(input: GapInput): Promise<QuestionGap |
     contents: [{ role: 'user', parts: [{ text: buildPrompt(input) }] }],
     generationConfig: {
       temperature: 0.4,
-      maxOutputTokens: 2048,
+      // Room for the whole JSON answer, and no hidden "thinking" tokens eating
+      // the budget: with a small limit they truncated the JSON mid-way.
+      maxOutputTokens: 4096,
+      thinkingConfig: { thinkingBudget: 0 },
       ...(grounded ? {} : { responseMimeType: 'application/json' }),
     },
   }, { timeoutMs: grounded ? 60000 : 30000 });
-  return parseQuestionGap(result.response.text());
+  const text = result.response.text();
+  const gap = parseQuestionGap(text);
+  if (!gap) {
+    const finish = (result.response as any)?.candidates?.[0]?.finishReason;
+    console.error(`[question-gap] unusable reply grounded=${grounded} finishReason=${finish ?? 'unknown'} length=${text.length} head=${JSON.stringify(text.slice(0, 200))}`);
+  }
+  return gap;
+}
+
+export async function analyzeQuestionGap(input: GapInput): Promise<QuestionGap | null> {
+  // Google fetches their page through grounding, so our server never requests user URLs.
+  const grounded = !input.content && !!input.domain;
+  const first = await callModel(input, grounded);
+  if (first || !grounded) return first;
+  // A grounded reply can come back wrapped in prose or cut off. Rather than
+  // fail, answer again without the page lookup (JSON mode is reliable); the
+  // result then says the page was not read.
+  const fallback = await callModel(input, false);
+  // We never read their page on this path, whatever the model claims.
+  return fallback ? { ...fallback, pageRead: false } : null;
 }
