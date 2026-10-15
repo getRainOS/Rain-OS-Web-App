@@ -20,6 +20,7 @@ vi.mock('../services/dbService', () => ({
 const runCitationCheck = vi.fn();
 vi.mock('../services/citationCheckService', () => ({
   runCitationCheck: (...a: unknown[]) => runCitationCheck(...a),
+  extractDomain: (u: string) => new URL(/^https?:/i.test(u) ? u : 'https://' + u).hostname.replace(/^www\./, ''),
 }));
 
 const sendCitationStatusEmail = vi.fn();
@@ -36,7 +37,7 @@ const proUser: User = {
 };
 const freeUser: User = { ...proUser, usage: { count: 0, limit: 5 } };
 
-const row = { id: 7, user_id: 'u1', name: 'Q', topic: 'best widgets', url: 'https://me.com', last_cited: false, consecutive_failures: 0 };
+const row = { id: 7, user_id: 'u1', name: 'Q', topic: 'best widgets', url: 'https://me.com', last_cited: false, pending_cited: null, consecutive_failures: 0 };
 
 function sqlRouter(pausedReason: string | null = null) {
   query.mockImplementation(async (sql: string) => {
@@ -78,13 +79,51 @@ describe('firstRunAt', () => {
 });
 
 describe('runTrackedQuery', () => {
-  it('records a scheduled check and emails when citation status changes', async () => {
+  it('records a scheduled check', async () => {
+    sqlRouter();
+    findUserById.mockResolvedValue(proUser);
+    runCitationCheck.mockResolvedValue({ topic: 'best widgets', url: 'https://me.com', cited: false, sources: [], summary: '' });
+    expect(await runTrackedQuery(row)).toBe('ran');
+    expect(saveCitationCheck).toHaveBeenCalledWith('u1', expect.objectContaining({ source: 'scheduled', trackedQueryId: 7, cited: false }));
+  });
+
+  it('does not email on the first differing result; re-checks tomorrow instead', async () => {
     sqlRouter();
     findUserById.mockResolvedValue(proUser);
     runCitationCheck.mockResolvedValue({ topic: 'best widgets', url: 'https://me.com', cited: true, sources: [], summary: '' });
-    expect(await runTrackedQuery(row)).toBe('ran');
-    expect(saveCitationCheck).toHaveBeenCalledWith('u1', expect.objectContaining({ source: 'scheduled', trackedQueryId: 7, cited: true }));
+    await runTrackedQuery(row);
+    expect(sendCitationStatusEmail).not.toHaveBeenCalled();
+    const upd = query.mock.calls.find(c => String(c[0]).includes('pending_cited = $2'));
+    expect(upd![1]).toEqual([7, true, 24 * 60 * 60 * 1000]);
+  });
+
+  it('emails once a second check confirms the change', async () => {
+    sqlRouter();
+    findUserById.mockResolvedValue(proUser);
+    runCitationCheck.mockResolvedValue({ topic: 'best widgets', url: 'https://me.com', cited: true, sources: [], summary: '' });
+    await runTrackedQuery({ ...row, pending_cited: true });
     expect(sendCitationStatusEmail).toHaveBeenCalledWith('u@example.com', { name: 'Q', topic: 'best widgets', cited: true });
+    const upd = query.mock.calls.find(c => String(c[0]).includes('pending_cited = NULL'));
+    expect(upd![1]).toEqual([7, true]);
+  });
+
+  it('drops a pending change when the next check goes back to the old result', async () => {
+    sqlRouter();
+    findUserById.mockResolvedValue(proUser);
+    runCitationCheck.mockResolvedValue({ topic: 'best widgets', url: 'https://me.com', cited: false, sources: [], summary: '' });
+    await runTrackedQuery({ ...row, pending_cited: true });
+    expect(sendCitationStatusEmail).not.toHaveBeenCalled();
+    const upd = query.mock.calls.find(c => String(c[0]).includes('pending_cited = NULL'));
+    expect(upd![1]).toEqual([7, false]);
+  });
+
+  it('pauses a query with no usable website without calling Gemini', async () => {
+    sqlRouter();
+    findUserById.mockResolvedValue(proUser);
+    expect(await runTrackedQuery({ ...row, url: null })).toBe('skipped');
+    expect(await runTrackedQuery({ ...row, url: 'https://facebook.com/mybakery' })).toBe('skipped');
+    expect(runCitationCheck).not.toHaveBeenCalled();
+    expect(query.mock.calls.some(c => String(c[0]).includes("paused_reason = 'no_site'"))).toBe(true);
   });
 
   it('does not email when status is unchanged', async () => {
@@ -107,7 +146,7 @@ describe('runTrackedQuery', () => {
     sqlRouter();
     findUserById.mockResolvedValue({ ...proUser, citationAlerts: false });
     runCitationCheck.mockResolvedValue({ topic: 'best widgets', url: null, cited: true, sources: [], summary: '' });
-    await runTrackedQuery(row);
+    await runTrackedQuery({ ...row, pending_cited: true });
     expect(sendCitationStatusEmail).not.toHaveBeenCalled();
   });
 
@@ -163,7 +202,7 @@ describe('tracked-queries API', () => {
   it('returns 402 for Free users', async () => {
     findUserByApiKey.mockResolvedValue(freeUser);
     const res = await request(app).post('/api/tracked-queries').set('Authorization', 'Bearer k')
-      .send({ name: 'Q', topic: 'best widgets' });
+      .send({ name: 'Q', topic: 'best widgets', url: 'me.com' });
     expect(res.status).toBe(402);
     expect(res.body.error).toBe('plan_required');
   });
@@ -172,9 +211,30 @@ describe('tracked-queries API', () => {
     findUserByApiKey.mockResolvedValue(proUser);
     query.mockResolvedValue({ rows: [{ n: 10 }] });
     const res = await request(app).post('/api/tracked-queries').set('Authorization', 'Bearer k')
-      .send({ name: 'Q', topic: 'best widgets' });
+      .send({ name: 'Q', topic: 'best widgets', url: 'me.com' });
     expect(res.status).toBe(409);
     expect(res.body.error).toBe('cap_reached');
+  });
+
+  it('requires a website to track', async () => {
+    findUserByApiKey.mockResolvedValue(proUser);
+    const none = await request(app).post('/api/tracked-queries').set('Authorization', 'Bearer k')
+      .send({ name: 'Q', topic: 'best widgets' });
+    expect(none.status).toBe(400);
+    expect(none.body.error).toBe('no_site');
+    query.mockResolvedValue({ rows: [{ n: 0 }] });
+    const shared = await request(app).post('/api/tracked-queries').set('Authorization', 'Bearer k')
+      .send({ name: 'Q', topic: 'best widgets', url: 'https://yelp.com/biz/mine' });
+    expect(shared.status).toBe(400);
+    expect(shared.body.error).toBe('no_site');
+  });
+
+  it('will not resume a query that has no website', async () => {
+    findUserByApiKey.mockResolvedValue(proUser);
+    query.mockResolvedValue({ rows: [{ url: null, n: 0 }], rowCount: 1 });
+    const res = await request(app).patch('/api/tracked-queries/3').set('Authorization', 'Bearer k').send({ paused: false });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('no_site');
   });
 
   it('validates the topic', async () => {

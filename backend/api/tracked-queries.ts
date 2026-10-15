@@ -9,6 +9,7 @@ import {
   planTrackingCap,
   enforcePlanCap,
   TrackingError,
+  NO_SITE_MESSAGE,
 } from '../services/trackedQueryService';
 import type { ApiError, User } from '../types';
 
@@ -37,6 +38,7 @@ const TRACKING_STATUS: Record<TrackingError['code'], number> = {
   cap_reached: 409,
   duplicate: 409,
   not_found: 404,
+  no_site: 400,
 };
 
 function sendError(res: express.Response, err: unknown, where: string) {
@@ -71,6 +73,9 @@ export async function createHandler(req: express.Request, res: express.Response)
   }
   if (typeof topic !== 'string' || topic.trim().length < 3 || topic.length > 500) {
     return res.status(400).json({ error: 'bad_request', message: 'topic is required (3 to 500 characters)' } as ApiError);
+  }
+  if (typeof url !== 'string' || !url.trim()) {
+    return res.status(400).json({ error: 'no_site', message: NO_SITE_MESSAGE } as ApiError);
   }
   let normalisedUrl: string | null = null;
   if (typeof url === 'string' && url.trim()) {

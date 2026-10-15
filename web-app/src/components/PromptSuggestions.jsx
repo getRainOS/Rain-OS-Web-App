@@ -3,6 +3,7 @@ import { Sparkles, ArrowRight, CalendarClock, Check } from 'lucide-react';
 import { api } from '../api/client.js';
 import CheckProgress from './CheckProgress.jsx';
 import { getMySite } from '../lib/mySite.js';
+import { trackableSite } from './TrackedQueries.jsx';
 import styles from './PromptSuggestions.module.css';
 
 const INTENT_LABEL = { discover: 'Discover', compare: 'Compare', decide: 'Decide', learn: 'Learn' };
@@ -42,8 +43,12 @@ export default function PromptSuggestions({ url, lane, tracking, onUse, renderUs
   }
 
   async function handleTrack(q) {
+    if (!trackableSite(site)) {
+      setError('Weekly tracking needs your own website (not a Facebook, Yelp or similar page). Add it above first.');
+      return;
+    }
     try {
-      await tracking.track({ name: q.length > 60 ? `${q.slice(0, 57)}…` : q, topic: q, url: site.trim() || undefined });
+      await tracking.track({ name: q.length > 60 ? `${q.slice(0, 57)}…` : q, topic: q, url: site.trim() });
       setTracked(t => ({ ...t, [q]: true }));
     } catch (err) {
       setError(err.message || 'Could not start tracking.');

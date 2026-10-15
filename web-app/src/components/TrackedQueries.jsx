@@ -2,7 +2,16 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CalendarClock, Pause, Play, Trash2, Lock, Check } from 'lucide-react';
 import { api } from '../api/client.js';
+import { isSharedPlatform } from '../lib/sharedPlatforms.js';
+import { siteFromUrl } from '../lib/fullCheck.js';
 import styles from './TrackedQueries.module.css';
+
+// Tracking compares cited sources to your own site, so it needs one that is
+// really yours: not blank, and not a page on a shared site like Facebook or Yelp.
+export function trackableSite(url) {
+  const d = url ? siteFromUrl(url) : '';
+  return !!d && !isSharedPlatform(d);
+}
 
 export function useTrackedQueries() {
   const [items, setItems] = useState([]);
@@ -57,6 +66,13 @@ export function TrackWeeklyButton({ tracking, result }) {
       </span>
     );
   }
+  if (!trackableSite(result.url)) {
+    return (
+      <span className={styles.trackMsg}>
+        Weekly tracking needs your own website. Add one above and run the check again.
+      </span>
+    );
+  }
   async function onClick() {
     setBusy(true);
     setMsg('');
@@ -64,8 +80,8 @@ export function TrackWeeklyButton({ tracking, result }) {
       await tracking.track({
         name: result.name,
         topic: result.topic,
-        url: result.url || undefined,
-        lastCited: result.url ? !!result.cited : undefined,
+        url: result.url,
+        lastCited: !!result.cited,
         checkId: result.checkId || undefined,
       });
     } catch (err) {
@@ -94,10 +110,13 @@ function statusFor(item) {
   if (item.pausedReason === 'failures') return { label: 'Paused after errors', tone: 'warn' };
   if (item.pausedReason === 'plan_limit') return { label: 'Over plan limit', tone: 'warn' };
   if (item.pausedReason === 'user') return { label: 'Paused', tone: 'muted' };
-  if (!item.url) return { label: 'No URL to match', tone: 'muted' };
+  if (item.pausedReason === 'no_site') return { label: 'Needs your website', tone: 'warn' };
+  if (item.pendingCited !== null && item.pendingCited !== undefined) {
+    return { label: item.pendingCited ? 'Cited? confirming' : 'Not cited? confirming', tone: 'warn' };
+  }
   if (item.lastCited === true) return { label: 'Cited', tone: 'good' };
   if (item.lastCited === false) return { label: 'Not cited', tone: 'bad' };
-  return { label: 'First check pending', tone: 'muted' };
+  return { label: 'Baseline check pending', tone: 'muted' };
 }
 
 function History({ history }) {
@@ -150,12 +169,13 @@ export default function TrackedQueriesPanel({ tracking }) {
           <Link to="/upgrade" className={styles.upgradeLink}>See plans</Link>
         </div>
       ) : items.length === 0 ? (
-        <p className={styles.empty}>Run a check, then choose <strong>Track weekly</strong> on the result. We re-check it every week and email you if your citation status changes.</p>
+        <p className={styles.empty}>Run a check, then choose <strong>Track weekly</strong> on the result. We re-check it every week and email you when two checks in a row agree your citation status changed.</p>
       ) : (
         <ul className={styles.list}>
           {items.map(item => {
             const status = statusFor(item);
             const paused = !!item.pausedReason;
+            const noSite = item.pausedReason === 'no_site';
             return (
               <li key={item.id} className={styles.row}>
                 <div className={styles.rowMain}>
@@ -165,13 +185,16 @@ export default function TrackedQueriesPanel({ tracking }) {
                 <span className={`${styles.status} ${styles[status.tone]}`}>{status.label}</span>
                 <History history={item.history} />
                 <span className={styles.next}>
-                  {paused ? '—' : `Next ${formatDate(item.nextRunAt)}`}
+                  {item.pausedReason === 'no_site'
+                    ? 'Add a website to resume'
+                    : paused ? '—'
+                    : `Next check ${formatDate(item.nextRunAt)}${item.lastCited === null ? ' (sets baseline)' : item.pendingCited !== null && item.pendingCited !== undefined ? ' (confirms change)' : ''}`}
                 </span>
                 <span className={styles.rowActions}>
                   <button
                     type="button"
                     className={styles.iconBtn}
-                    disabled={pendingId === item.id}
+                    disabled={pendingId === item.id || noSite}
                     onClick={() => act(item.id, () => api.setTrackedQueryPaused(item.id, !paused))}
                     aria-label={paused ? `Resume ${item.name}` : `Pause ${item.name}`}
                     title={paused ? 'Resume' : 'Pause'}

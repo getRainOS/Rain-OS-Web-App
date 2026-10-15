@@ -3,12 +3,13 @@ import { pool } from './db';
 import { findUserById, saveCitationCheck } from './dbService';
 import { runCitationCheck } from './citationCheckService';
 import { sendCitationStatusEmail } from './emailService';
-import { planTrackingCap, enforcePlanCap, WEEK_MS, MAX_JITTER_MS } from './trackedQueryService';
+import { planTrackingCap, enforcePlanCap, hasMatchableSite, WEEK_MS, MAX_JITTER_MS } from './trackedQueryService';
 
 const TICK_MS = 10 * 60 * 1000;
 const BATCH_SIZE = 20;
 const RETRY_MS = 60 * 60 * 1000;
 const MAX_FAILURES = 3;
+const CONFIRM_MS = 24 * 60 * 60 * 1000;
 const DEFAULT_DAILY_CEILING = 1200;
 
 export function dailyCeiling(): number {
@@ -54,6 +55,13 @@ export async function runTrackedQuery(row: any): Promise<'ran' | 'skipped' | 'fa
   const still = await pool.query(`SELECT paused_reason FROM tracked_queries WHERE id = $1`, [row.id]);
   if (!still.rows[0] || still.rows[0].paused_reason) return 'skipped';
 
+  // No matchable website means every check would say "not cited". Don't spend
+  // a Gemini call on it; pause until the user adds a site.
+  if (!hasMatchableSite(row.url)) {
+    await pool.query(`UPDATE tracked_queries SET paused_reason = 'no_site' WHERE id = $1`, [row.id]);
+    return 'skipped';
+  }
+
   try {
     const result = await runCitationCheck(row.topic, row.url);
     await saveCitationCheck(user.id, {
@@ -68,13 +76,29 @@ export async function runTrackedQuery(row: any): Promise<'ran' | 'skipped' | 'fa
       source: 'scheduled',
       trackedQueryId: Number(row.id),
     });
-    await pool.query(
-      `UPDATE tracked_queries SET last_run_at = NOW(), last_cited = $2, consecutive_failures = 0 WHERE id = $1`,
-      [row.id, result.cited]
-    );
-    const changed = row.last_cited !== null && row.last_cited !== undefined && row.last_cited !== result.cited;
-    if (changed && user.citationAlerts !== false) {
-      await sendCitationStatusEmail(user.email, { name: row.name, topic: row.topic, cited: result.cited });
+    // One check is a single noisy sample, so a change is only believed (and
+    // emailed) when the next check, a day later, agrees. The first result
+    // is the baseline and never alerts.
+    const previous: boolean | null = row.last_cited ?? null;
+    if (previous === null || previous === result.cited) {
+      await pool.query(
+        `UPDATE tracked_queries SET last_run_at = NOW(), last_cited = $2, pending_cited = NULL, consecutive_failures = 0 WHERE id = $1`,
+        [row.id, result.cited]
+      );
+    } else if (row.pending_cited === result.cited) {
+      await pool.query(
+        `UPDATE tracked_queries SET last_run_at = NOW(), last_cited = $2, pending_cited = NULL, consecutive_failures = 0 WHERE id = $1`,
+        [row.id, result.cited]
+      );
+      if (user.citationAlerts !== false) {
+        await sendCitationStatusEmail(user.email, { name: row.name, topic: row.topic, cited: result.cited });
+      }
+    } else {
+      await pool.query(
+        `UPDATE tracked_queries SET last_run_at = NOW(), pending_cited = $2, consecutive_failures = 0,
+           next_run_at = NOW() + ($3::float8 * INTERVAL '1 millisecond') WHERE id = $1`,
+        [row.id, result.cited, CONFIRM_MS]
+      );
     }
     return 'ran';
   } catch (err) {
