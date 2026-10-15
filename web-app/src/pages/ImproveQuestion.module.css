@@ -13,7 +13,7 @@
 .formTitle { margin: 0 0 6px; font-size: 15px; font-weight: 600; color: var(--text); }
 
 .label { margin-top: 10px; display: flex; justify-content: space-between; font-size: 12.5px; font-weight: 500; color: var(--text-muted); }
-.opt { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-dim); }
+.opt { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: var(--label-tracking); text-transform: uppercase; color: var(--text-dim); }
 
 .input, .textarea {
   width: 100%;
@@ -53,7 +53,7 @@
 
 .sourcesBox { margin-top: 12px; padding-top: 14px; border-top: 1px solid var(--border); }
 .sourceList { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; font-size: 13px; color: var(--text-muted); }
-.rank { display: inline-block; width: 18px; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; color: var(--text-dim); }
+.rank { display: inline-block; width: 18px; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); }
 
 .submit {
   margin-top: 12px;
@@ -86,7 +86,9 @@
 .status_bad { color: var(--red); border-color: rgba(235, 87, 87, 0.35); background: rgba(235, 87, 87, 0.08); }
 .status_muted { color: var(--text-muted); }
 
-.headline { margin: 12px 0 0; font-size: 16px; font-weight: 600; line-height: 1.45; color: var(--text); }
+.headline { margin: 12px 0 0; font-size: 16px; font-weight: var(--display-weight); line-height: 1.45; color: var(--text); 
+  letter-spacing: var(--display-tracking);
+}
 
 .patterns { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 6px; font-size: 13.5px; line-height: 1.55; color: var(--text-muted); }
 
@@ -96,7 +98,7 @@
 .step {
   display: inline-flex; align-items: center; justify-content: center;
   width: 22px; height: 22px; border-radius: 50%;
-  font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px;
+  font-family: var(--font-mono); font-size: 11px;
   border: 1px solid var(--border-strong); color: var(--text-muted);
 }
 .pillar { padding: 2px 8px; border-radius: 4px; font-size: 11.5px; font-weight: 600; border: 1px solid; }

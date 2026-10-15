@@ -9,8 +9,8 @@
 
 .title {
   font-size: 30px;
-  font-weight: 700;
-  letter-spacing: -0.7px;
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
   margin-bottom: 8px;
 }
 
@@ -76,10 +76,11 @@
 
 .planPrice {
   font-size: 38px;
-  font-weight: 700;
-  letter-spacing: -1.5px;
+  font-weight: var(--number-weight);
+  letter-spacing: var(--number-tracking);
   line-height: 1;
   margin-bottom: 8px;
+  font-variant-numeric: tabular-nums;
 }
 
 .planPeriod {

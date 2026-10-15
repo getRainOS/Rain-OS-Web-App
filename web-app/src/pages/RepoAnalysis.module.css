@@ -8,8 +8,8 @@
 
 .title {
   font-size: 26px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
   margin-bottom: 6px;
 }
 
@@ -60,8 +60,8 @@
 
 .connectTitle {
   font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.3px;
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
 }
 
 .connectDesc {
@@ -238,8 +238,8 @@
 
 .resultsTitle {
   font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.4px;
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
   margin-bottom: 4px;
 }
 

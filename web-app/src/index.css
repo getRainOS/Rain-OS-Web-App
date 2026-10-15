@@ -57,7 +57,7 @@ html, body {
   height: 100%;
   background: var(--bg);
   color: var(--text);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -203,11 +203,40 @@ input, textarea, select {
   animation: fadeIn 0.2s ease forwards;
 }
 
+/* ══ Type system ═════════════════════════════════════════════════════════════
+   Three tiers. Change them here, not in individual files.
+   - Display: page and card titles (16–26px). Semibold, slightly tightened.
+   - Number:  big figures (28px and up). Bold, tighter still, tabular digits.
+   - Label:   small monospace capitals (see .eyebrow).
+   Body text and anything under 16px keeps normal tracking: tight spacing
+   makes small text harder to read. */
+:root {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --display-weight: 600;
+  --display-tracking: -0.02em;
+
+  --number-weight: 700;
+  --number-tracking: -0.03em;
+
+  --label-tracking: 0.06em;
+}
+
+.t-display { font-weight: var(--display-weight); letter-spacing: var(--display-tracking); color: var(--text); }
+.t-number {
+  font-weight: var(--number-weight);
+  letter-spacing: var(--number-tracking);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--text);
+}
+
 /* ── Shared polish primitives (match the marketing site) ── */
 .eyebrow {
-  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
-  letter-spacing: 0.06em;
+  letter-spacing: var(--label-tracking);
   text-transform: uppercase;
   color: var(--text-dim);
 }

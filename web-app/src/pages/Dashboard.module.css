@@ -24,8 +24,8 @@
 
 .greeting {
   font-size: 24px;
-  font-weight: 600;
-  letter-spacing: -0.015em;
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
   color: var(--text);
   margin-bottom: 4px;
 }
@@ -89,8 +89,8 @@
 
 .contentHeroTitle {
   font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.4px;
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
   color: var(--text);
   max-width: 480px;
   line-height: 1.25;
@@ -178,11 +178,11 @@
 }
 
 .toolCardLabel {
-  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 400;
   color: var(--text-dim);
-  letter-spacing: 0.06em;
+  letter-spacing: var(--label-tracking);
   text-transform: uppercase;
 }
 
@@ -363,8 +363,8 @@
 
 .kpiValue {
   font-size: 30px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+  font-weight: var(--number-weight);
+  letter-spacing: var(--number-tracking);
   color: var(--text);
   font-variant-numeric: tabular-nums;
 }
@@ -518,10 +518,10 @@
 
 .chartTitle {
   font-size: 18px;
-  font-weight: 700;
+  font-weight: var(--display-weight);
   color: var(--text);
   margin-bottom: 2px;
-  letter-spacing: -0.3px;
+  letter-spacing: var(--display-tracking);
 }
 
 .chartSub {
@@ -1087,8 +1087,8 @@ button.emptyLink {
 
 .heroStatValue {
   font-size: 46px;
-  font-weight: 700;
-  letter-spacing: -1px;
+  font-weight: var(--number-weight);
+  letter-spacing: var(--number-tracking);
   line-height: 1;
   color: var(--text);
   font-variant-numeric: tabular-nums;
@@ -1232,10 +1232,10 @@ button.emptyLink {
 
 .laneSelectorTitle {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: var(--display-weight);
   color: var(--text);
   margin-bottom: 4px;
-  letter-spacing: -0.2px;
+  letter-spacing: var(--display-tracking);
 }
 
 .laneSelectorSub {
@@ -1375,9 +1375,9 @@ button.emptyLink {
 
 .pieceEyebrow {
   display: block;
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--label-tracking);
   text-transform: uppercase;
   color: var(--text-dim);
 }
@@ -1385,17 +1385,18 @@ button.emptyLink {
 .pieceName {
   margin: 4px 0 0;
   font-size: 17px;
-  font-weight: 600;
+  font-weight: var(--display-weight);
   color: var(--text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  letter-spacing: var(--display-tracking);
 }
 
 .pieceSelect { width: 300px; max-width: 100%; }
 
 .deltaPts {
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 12px;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -1446,9 +1447,9 @@ button.emptyLink {
 .improveText { display: grid; gap: 3px; min-width: 0; }
 
 .improveLabel {
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 10.5px;
-  letter-spacing: 0.06em;
+  letter-spacing: var(--label-tracking);
   text-transform: uppercase;
   color: var(--text-dim);
 }

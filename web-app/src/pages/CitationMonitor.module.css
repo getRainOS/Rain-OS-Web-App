@@ -21,8 +21,8 @@
 
 .title {
   font-size: 26px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
   margin: 0;
 }
 
@@ -237,9 +237,9 @@
 
 .examplesLabel {
   margin-bottom: 4px;
-  font-family: 'Geist Mono', ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 10.5px;
-  letter-spacing: 0.12em;
+  letter-spacing: var(--label-tracking);
   text-transform: uppercase;
   color: var(--text-dim);
 }
@@ -457,8 +457,9 @@
 
 .emptyMapTitle {
   font-size: 16px;
-  font-weight: 700;
+  font-weight: var(--display-weight);
   margin: 0;
+  letter-spacing: var(--display-tracking);
 }
 
 .emptyMapDesc {
@@ -590,8 +591,8 @@
 
 .mapStatValue {
   font-size: 22px;
-  font-weight: 600;
-  letter-spacing: -0.3px;
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
   color: var(--text);
   font-variant-numeric: tabular-nums;
 }
@@ -1020,7 +1021,7 @@
 }
 
 .consoleName {
-  font-family: 'Geist Mono', ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 11.5px;
   color: var(--text-muted);
   overflow: hidden;
@@ -1031,9 +1032,9 @@
 
 .consoleWhen {
   margin-left: auto;
-  font-family: 'Geist Mono', ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 10.5px;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--label-tracking);
   text-transform: uppercase;
   color: var(--text-dim);
   white-space: nowrap;
@@ -1056,9 +1057,9 @@
 }
 
 .consoleLabel {
-  font-family: 'Geist Mono', ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 10.5px;
-  letter-spacing: 0.14em;
+  letter-spacing: var(--label-tracking);
   text-transform: uppercase;
   color: var(--text-dim);
   margin-bottom: 8px;
@@ -1161,7 +1162,7 @@
 
 .consoleSourceNum {
   width: 14px;
-  font-family: 'Geist Mono', ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
   color: var(--text-dim);
 }
@@ -1188,7 +1189,7 @@
 
 .consoleYou {
   margin-left: auto;
-  font-family: 'Geist Mono', ui-monospace, Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 10.5px;
   color: var(--cyan);
 }
@@ -1201,8 +1202,8 @@
 
 .positionBig {
   font-size: 40px;
-  font-weight: 600;
-  letter-spacing: -0.03em;
+  font-weight: var(--number-weight);
+  letter-spacing: var(--number-tracking);
   line-height: 1.1;
   color: var(--text);
   font-variant-numeric: tabular-nums;
@@ -1434,7 +1435,7 @@
 
 .typeShare {
   margin-left: auto;
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 13px;
   color: var(--text);
   font-variant-numeric: tabular-nums;
