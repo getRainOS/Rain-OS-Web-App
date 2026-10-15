@@ -16,6 +16,7 @@ export default function Settings() {
   const [portalLoading, setPortalLoading] = useState(false);
   const [error, setError] = useState('');
   const [githubStatus, setGithubStatus] = useState(null);
+  const [githubReason, setGithubReason] = useState('');
   const [disconnecting, setDisconnecting] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState('');
@@ -55,6 +56,7 @@ export default function Settings() {
       setGithubStatus('cancelled');
     } else if (ghParam === 'error') {
       setGithubStatus('error');
+      setGithubReason(params.get('reason') || '');
     }
   }, [location.search]);
 
@@ -287,7 +289,11 @@ export default function Settings() {
             <p className={styles.successBanner}>✓ GitHub connected successfully!</p>
           )}
           {githubStatus === 'error' && (
-            <p className={styles.errorBanner}>GitHub connection failed. Please try again.</p>
+            <p className={styles.errorBanner}>
+              {githubReason === 'already_linked'
+                ? 'That GitHub account is already connected to a different Rain OS account. Sign in to that account and disconnect it first, or connect a different GitHub account.'
+                : 'GitHub connection failed. Please try again.'}
+            </p>
           )}
           {githubStatus === 'cancelled' && (
             <p className={styles.warningBanner}>GitHub connection was cancelled.</p>
