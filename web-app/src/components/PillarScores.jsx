@@ -258,7 +258,10 @@ function buildSubItems(pillarKey, detailKey, result) {
   if (pillarKey === 'ai_readability' && result?.readability_metrics) {
     const m = result.readability_metrics;
     items = READABILITY_METRIC_ITEMS.map(item => {
-      const raw = item.raw(m);
+      // NaN (e.g. no sentences found) arrives from JSON as null/undefined;
+      // treat anything non-numeric as 0 so one bad metric can't blank the page.
+      const rawValue = item.raw(m);
+      const raw = Number.isFinite(rawValue) ? rawValue : 0;
       return { label: item.label, value: gradedScore(raw, item.threshold, item.higherIsBetter), caption: item.format(raw) };
     });
     return items.concat(
