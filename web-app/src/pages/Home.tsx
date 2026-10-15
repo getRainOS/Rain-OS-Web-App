@@ -216,71 +216,24 @@ const PLATFORM = [
   },
 ];
 
+const SHOTS: Record<string, { src: string; alt: string; label: string; w: number; h: number }> = {
+  measure: { src: '/screens/measure.png', alt: 'Rain OS URL Scanner results: overall score, four pillar scores and the technical checks that need fixing', label: 'URL SCANNER', w: 1072, h: 1066 },
+  monitor: { src: '/screens/monitor.png', alt: 'Rain OS Tracked weekly list: each question, whether you were cited, and a history of past checks', label: 'TRACKED WEEKLY', w: 1072, h: 756 },
+  fix: { src: '/screens/fix.png', alt: 'Rain OS recommendation with a plain-English fix and a copy-ready technical fix', label: 'RECOMMENDATIONS', w: 1072, h: 1080 },
+};
+
+// Screenshots of the real app, rendered with example data.
 function PlatformVisual({ id }: { id: string }) {
-  if (id === 'measure') {
-    const rows = [
-      ['llms.txt', true], ['Schema Markup', true], ['JavaScript Rendering', false],
-      ['Heading Hierarchy', true], ['FAQ Schema', false], ['Canonical Tag', true],
-    ] as const;
-    return (
-      <div className="p-6">
-        <div className="flex items-center justify-between mb-5">
-          <span className="text-[11px] text-neutral-500" style={MONO}>yourbrand.com/pricing</span>
-          <span className="text-[11px] text-neutral-500" style={MONO}>URL SCAN</span>
-        </div>
-        <ul className="divide-y divide-white/[0.06]">
-          {rows.map(([label, ok]) => (
-            <li key={label} className="flex items-center justify-between py-2.5 text-[13px]">
-              <span className="text-neutral-300">{label}</span>
-              <span className={ok ? 'text-[#4ade80]' : 'text-[#fbbf24]'} style={MONO}>{ok ? 'PASS' : 'FIX'}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  }
-  if (id === 'monitor') {
-    const qs = [
-      ['best crm for freelancers', true, [0, 1, 1, 1, 1, 1]],
-      ['crm with invoicing built in', false, [1, 1, 0, 0, 1, 0]],
-      ['hubspot alternatives cheap', true, [0, 0, 0, 1, 1, 1]],
-      ['simple crm for consultants', true, [1, 1, 1, 1, 1, 1]],
-    ] as const;
-    return (
-      <div className="p-6">
-        <div className="flex items-center justify-between mb-5">
-          <span className="text-[11px] text-neutral-500" style={MONO}>TRACKED WEEKLY</span>
-          <span className="text-[11px] text-neutral-500" style={MONO}>4 OF 10</span>
-        </div>
-        <ul className="divide-y divide-white/[0.06]">
-          {qs.map(([q, cited, h]) => (
-            <li key={q} className="grid grid-cols-[1fr_auto] sm:grid-cols-[1fr_80px_auto] items-center gap-4 py-3 text-[13px]">
-              <span className="text-neutral-300 truncate">{q}</span>
-              <span className={`hidden sm:inline text-[12px] ${cited ? 'text-[#4ade80]' : 'text-[#f87171]'}`}>{cited ? 'Cited' : 'Not cited'}</span>
-              <span className="flex gap-1">
-                {h.map((c, k) => <span key={k} className="w-2.5 h-2.5 rounded-[2px]" style={{ background: c ? '#2B8FE3' : 'rgba(255,255,255,0.1)' }} />)}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  }
+  const shot = SHOTS[id];
   return (
     <div className="p-6">
-      <div className="flex items-center gap-2 mb-4">
-        <GitPullRequest className="w-4 h-4 text-[#4ade80]" />
-        <span className="text-[13px] text-white font-medium">rain-os/ai-readiness-fixes</span>
-        <span className="ml-auto text-[11px] text-neutral-500" style={MONO}>OPEN</span>
+      <div className="flex items-center justify-between mb-4">
+        <span className="text-[11px] text-neutral-500" style={MONO}>{shot.label}</span>
+        <span className="text-[11px] text-neutral-500" style={MONO}>EXAMPLE DATA</span>
       </div>
-      <div className="rounded-md border border-white/[0.07] bg-black overflow-hidden text-[12px]" style={MONO}>
-        <div className="px-3 py-2 border-b border-white/[0.07] text-neutral-500">public/llms.txt</div>
-        <div className="px-3 py-1.5 bg-[#4ade80]/[0.06] text-[#86efac]">+ # Your Brand</div>
-        <div className="px-3 py-1.5 bg-[#4ade80]/[0.06] text-[#86efac]">+ &gt; Scheduling software for clinics.</div>
-        <div className="px-3 py-1.5 bg-[#4ade80]/[0.06] text-[#86efac]">+ - [Pricing](/pricing): plans and limits</div>
-        <div className="px-3 py-2 border-y border-white/[0.07] text-neutral-500">index.html</div>
-        <div className="px-3 py-1.5 bg-[#f87171]/[0.06] text-[#fca5a5]">- &lt;title&gt;Vite + React&lt;/title&gt;</div>
-        <div className="px-3 py-1.5 bg-[#4ade80]/[0.06] text-[#86efac]">+ &lt;title&gt;Clinic scheduling | Your Brand&lt;/title&gt;</div>
+      <div className="relative rounded-md overflow-hidden border border-white/[0.07] max-h-[420px]">
+        <img src={shot.src} alt={shot.alt} width={shot.w} height={shot.h} loading="lazy" className="w-full h-auto block" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
       </div>
     </div>
   );
