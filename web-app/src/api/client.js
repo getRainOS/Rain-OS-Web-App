@@ -94,7 +94,8 @@ export const api = {
   createBillingPortal: (returnUrl) =>
     request('POST', '/api/stripe/create-portal-session', { returnUrl }),
   github: {
-    connect: (returnTo) => request('POST', '/api/github/oauth/init', returnTo ? { returnTo } : undefined),
+    connect: (returnTo, switchAccount = false) =>
+      request('POST', '/api/github/oauth/init', returnTo || switchAccount ? { returnTo, switchAccount } : undefined),
     repos: () => request('GET', '/api/github/repos'),
     analyze: (repoUrl, opts = {}) => request('POST', '/api/github/analyze', { repoUrl, ...opts }),
     disconnect: () => request('DELETE', '/api/github/disconnect'),
