@@ -144,13 +144,19 @@ function FixPromptGenerator({ result, repoUrl }) {
   );
 }
 
+const GH = 'https://github.com/';
+// The field starts as "https://github.com/", so people only type owner/repo.
+// Pasting a full URL, or github.com/owner/repo, still works.
+const toGithubUrl = (raw) => GH + (raw || '').trim().replace(/^https?:\/\//i, '').replace(/^(www\.)?github\.com\/?/i, '');
+
 export default function RepoAnalysis() {
   const { user, userLane, refreshUser } = useApp();
   const location = useLocation();
   const [repos, setRepos] = useState([]);
   const [connected, setConnected] = useState(false);
   const [reposLoading, setReposLoading] = useState(true);
-  const [repoUrl, setRepoUrl] = useState('');
+  const [repoUrl, setRepoUrl] = useState(GH);
+  const [expired, setExpired] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [error, setError] = useState('');
   const [errorCode, setErrorCode] = useState('');
@@ -174,6 +180,7 @@ export default function RepoAnalysis() {
       .then(({ data }) => {
         setConnected(data.connected);
         setRepos(data.repos || []);
+        setExpired(data.reason === 'github_token_invalid');
       })
       .catch(() => setConnected(false))
       .finally(() => setReposLoading(false));
@@ -192,7 +199,7 @@ export default function RepoAnalysis() {
 
   async function handleAnalyze(e) {
     e.preventDefault();
-    if (!repoUrl.trim()) return;
+    if (repoUrl.trim().length <= GH.length) return;
     setAnalyzing(true);
     setError('');
     setErrorCode('');
@@ -221,11 +228,11 @@ export default function RepoAnalysis() {
     setError('');
   }
 
-  async function handleConnect() {
+  async function handleConnect(switchAccount = false) {
     setConnecting(true);
     setConnectError('');
     try {
-      const { data } = await api.github.connect('/repo-analysis');
+      const { data } = await api.github.connect('/repo-analysis', switchAccount);
       if (data?.url) {
         window.location.href = data.url;
       } else {
@@ -270,17 +277,35 @@ export default function RepoAnalysis() {
           {connectError && <p style={{ color: 'var(--red)', fontSize: 13, marginBottom: 8 }}>{connectError}</p>}
           <button
             className="btn btn-primary"
-            onClick={handleConnect}
+            onClick={() => handleConnect(false)}
             disabled={connecting}
             style={{ opacity: connecting ? 0.6 : 1 }}
           >
             {connecting ? 'Connecting…' : 'Connect GitHub →'}
           </button>
+          {expired && (
+            <p className={styles.accountHint}>Your GitHub connection expired or lost access, so please connect again.</p>
+          )}
+          <p className={styles.accountHint}>
+            Signed in to the wrong GitHub account?{' '}
+            <button type="button" className={styles.linkBtn} onClick={() => handleConnect(true)} disabled={connecting}>
+              Choose a different account
+            </button>
+          </p>
         </div>
       )}
 
       {connected && (
         <>
+          <div className={styles.accountBar}>
+            <span>{user?.githubLogin ? <>Connected as <strong>@{user.githubLogin}</strong></> : 'GitHub connected'}</span>
+            <span className={styles.accountBarActions}>
+              <button type="button" className={styles.linkBtn} onClick={() => handleConnect(true)} disabled={connecting}>
+                Switch GitHub account
+              </button>
+              <Link to="/settings" className={styles.linkBtn}>Manage</Link>
+            </span>
+          </div>
           {repos.length > 0 && !result && (
             <div className={`card ${styles.repoListCard}`}>
               <h3 className={styles.sectionTitle}>Your Repositories</h3>
@@ -326,17 +351,19 @@ export default function RepoAnalysis() {
           <form onSubmit={handleAnalyze} className={styles.form}>
             <div className={styles.inputRow}>
               <input
-                type="url"
+                type="text"
+                inputMode="url"
+                spellCheck={false}
+                autoComplete="off"
                 className={styles.urlInput}
-                placeholder="https://github.com/owner/repository"
+                placeholder="owner/repository"
                 value={repoUrl}
-                onChange={e => setRepoUrl(e.target.value)}
-                required
+                onChange={e => setRepoUrl(toGithubUrl(e.target.value))}
               />
               <button
                 type="submit"
                 className="btn btn-primary"
-                disabled={analyzing || !repoUrl.trim()}
+                disabled={analyzing || repoUrl.trim().length <= GH.length}
               >
                 {analyzing ? <><span className="spinner" /> Analyzing…</> : '⊕ Analyze Repo'}
               </button>
