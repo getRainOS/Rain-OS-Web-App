@@ -215,13 +215,6 @@ export default function ContentAnalyzer() {
     }
   }
 
-  function handleReset() {
-    setResult(null);
-    setError('');
-    setRewriteResult(null);
-    setRewriteError('');
-  }
-
   return (
     <div className={`${styles.root} fade-in`}>
       <PageHeader title={pageLabel} subtitle={pageSub} />
@@ -314,6 +307,14 @@ export default function ContentAnalyzer() {
             >
               {loading ? (result ? 'Re-analyzing…' : 'Analyzing…') : (result ? 'Re-analyze' : 'Analyze content')}
             </button>
+            <button
+              type="button"
+              className={styles.rewriteBtn}
+              disabled={rewriteLoading || loading || isAtLimit || !content.trim()}
+              onClick={handleRewrite}
+            >
+              {rewriteLoading ? 'Rewriting…' : 'Rewrite for AI'}
+            </button>
             {result && id && (
               <button
                 type="button"
@@ -328,24 +329,14 @@ export default function ContentAnalyzer() {
                 Start a new piece
               </button>
             )}
-            {!result && (
-              <button
-                type="button"
-                className={styles.rewriteBtn}
-                disabled={rewriteLoading || isAtLimit || !content.trim()}
-                onClick={handleRewrite}
-              >
-                {rewriteLoading ? 'Rewriting…' : 'Rewrite for AI'}
-              </button>
-            )}
             {!loading && !title.trim() && (content.trim() || url.trim()) && (
               <span className={styles.actionHint}>Add a title above to analyze</span>
             )}
           </div>
 
-          {!result && rewriteError && <p className={styles.error}>{rewriteError}</p>}
+          {rewriteError && <p className={styles.error}>{rewriteError}</p>}
 
-          {!result && rewriteResult && (
+          {rewriteResult && (
             <RewritePanel
               rewriteResult={rewriteResult}
               onAccept={handleAcceptRewrite}
@@ -399,28 +390,8 @@ export default function ContentAnalyzer() {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                 Share
               </a>
-              <button
-                className={styles.rewriteBtn}
-                disabled={rewriteLoading || !content.trim()}
-                onClick={handleRewrite}
-              >
-                {rewriteLoading ? 'Rewriting…' : 'Rewrite for AI'}
-              </button>
-              <button onClick={handleReset} className="btn btn-ghost">
-                ← New Analysis
-              </button>
             </div>
           </div>
-
-          {rewriteError && <p className={styles.error}>{rewriteError}</p>}
-
-          {rewriteResult && (
-            <RewritePanel
-              rewriteResult={rewriteResult}
-              onAccept={handleAcceptRewrite}
-              onDiscard={() => setRewriteResult(null)}
-            />
-          )}
 
           <PillarScores result={result} lane={userLane} />
 
