@@ -128,6 +128,8 @@ export default function ContentAnalyzer() {
 
   const [rewriteLoading, setRewriteLoading] = useState(false);
   const [rewriteResult, setRewriteResult] = useState(null);
+  // True after "Use this version": the results below are for the old text.
+  const [stale, setStale] = useState(false);
   const [rewriteError, setRewriteError] = useState('');
 
   const usageCount = user?.usage?.count ?? 0;
@@ -173,6 +175,7 @@ export default function ContentAnalyzer() {
       // Re-analyzing an open past result continues that piece's series, so the
       // dashboard can show its trend. A fresh analysis starts a new piece.
       const previousAnalysisId = id && result ? Number(id) : undefined;
+      setStale(false);
       const { data } = await api.analyze({ title, content, url, module: analysisModule, lane: userLane, contentType: contentTypeLabel, previousAnalysisId });
       setResult(data);
       refreshUser();
@@ -211,7 +214,9 @@ export default function ContentAnalyzer() {
     if (rewriteResult?.rewritten) {
       setContent(rewriteResult.rewritten);
       setRewriteResult(null);
-      setResult(null);
+      // Keep the old results (and the piece's link to them) so a re-analysis
+      // joins the same series and the dashboard can show before and after.
+      if (result) setStale(true);
     }
   }
 
@@ -322,7 +327,7 @@ export default function ContentAnalyzer() {
                 disabled={loading}
                 onClick={() => {
                   saveDraft({ title: '', content: '', url: '', contentType, analysisId: null });
-                  setTitle(''); setContent(''); setUrl(''); setResult(null); setRewriteResult(null);
+                  setTitle(''); setContent(''); setUrl(''); setResult(null); setRewriteResult(null); setStale(false);
                   navigate('/analyze');
                 }}
               >
@@ -372,7 +377,12 @@ export default function ContentAnalyzer() {
         </div>
       )}
       {result && (
-        <div className={styles.results}>
+        <div className={styles.results} style={stale ? { opacity: 0.55 } : undefined}>
+          {stale && (
+            <p className={styles.error} style={{ marginBottom: 12 }} role="status">
+              You swapped in the rewrite, so these scores are for your old text. Choose Re-analyze to score the new version (uses 1 analysis).
+            </p>
+          )}
           <div className={styles.resultsHeader}>
             <div>
               <h2 className={styles.resultsTitle}>Analysis Results</h2>
@@ -464,8 +474,7 @@ export default function ContentAnalyzer() {
 }
 
 function RewritePanel({ rewriteResult, onAccept, onDiscard }) {
-  const [tab, setTab] = useState('rewritten');
-
+  const changes = rewriteResult.changes || [];
   return (
     <div className={styles.rewritePanel}>
       <div className={styles.rewritePanelHeader}>
@@ -473,37 +482,28 @@ function RewritePanel({ rewriteResult, onAccept, onDiscard }) {
           <Sparkles className={styles.rewriteSparkle} aria-hidden="true" />
           AI-Optimized Rewrite
         </div>
-        <div className={styles.rewriteTabs}>
-          <button
-            className={`${styles.rewriteTab} ${tab === 'rewritten' ? styles.rewriteTabActive : ''}`}
-            onClick={() => setTab('rewritten')}
-          >
-            Rewritten
-          </button>
-          <button
-            className={`${styles.rewriteTab} ${tab === 'changes' ? styles.rewriteTabActive : ''}`}
-            onClick={() => setTab('changes')}
-          >
-            Changes ({rewriteResult.changes?.length ?? 0})
-          </button>
-        </div>
       </div>
 
-      {tab === 'rewritten' && (
-        <div className={styles.rewriteContent}>
-          <pre className={styles.rewriteText}>{rewriteResult.rewritten}</pre>
-        </div>
+      {rewriteResult.truncated && (
+        <p className={styles.error} style={{ margin: '12px 16px 0' }}>
+          Your piece is very long, so only the first 24,000 characters were rewritten. Rewrite the rest as a separate piece.
+        </p>
       )}
 
-      {tab === 'changes' && (
-        <div className={styles.rewriteChangesList}>
-          {(rewriteResult.changes || []).map((change, i) => (
+      <div className={styles.rewriteContent}>
+        <pre className={styles.rewriteText}>{rewriteResult.rewritten}</pre>
+      </div>
+
+      {changes.length > 0 && (
+        <details className={styles.rewriteChangesList}>
+          <summary style={{ cursor: 'pointer', fontWeight: 600, padding: '4px 0' }}>What changed ({changes.length})</summary>
+          {changes.map((change, i) => (
             <div key={i} className={styles.rewriteChange}>
               <span className={styles.rewriteChangeTick}>✓</span>
               <span>{change}</span>
             </div>
           ))}
-        </div>
+        </details>
       )}
 
       <div className={styles.rewriteActions}>
