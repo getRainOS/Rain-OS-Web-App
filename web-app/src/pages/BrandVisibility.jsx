@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import CheckProgress from '../components/CheckProgress.jsx';
 import ImproveCta from '../components/ImproveCta.jsx';
 import SiteNote from '../components/SiteNote.jsx';
+import RecentPicker from '../components/RecentPicker.jsx';
 import { improveLink } from '../lib/improveLink.js';
 import { getMySite, setMySite } from '../lib/mySite.js';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -277,6 +278,7 @@ export default function BrandVisibility() {
               autoComplete="url"
               spellCheck={false}
             />
+            <RecentPicker mode="site" onPick={setUrl} />
             <SiteNote url={url} blankText="Add your website to see whether your site is cited. Without it we can still tell whether AI names your brand." />
           </div>
           <div className={styles.submitRow}>

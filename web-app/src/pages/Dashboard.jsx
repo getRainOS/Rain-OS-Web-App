@@ -489,10 +489,22 @@ export default function Dashboard() {
     return out;
   }, [history, typeFilter, activeFocus, focusSite, keyOf]);
 
+  // Recent Analyses lists every type (content, URL, repo), narrowed only by the
+  // site or piece chosen in "Showing", not by the Content / URL / Repo switch.
+  const recentHistory = useMemo(() => {
+    if (focusSite) return history.filter(h => siteOfItem(h) === focusSite);
+    if (activeFocus.startsWith('piece:')) return history.filter(h => keyOf(h) === activeFocus.slice(6));
+    return history;
+  }, [history, activeFocus, focusSite, keyOf]);
+
   // Pillar Breakdown follows one piece at a time: the same repo, URL, or
   // re-analysis chain. Unrelated analyses are never drawn on one line.
   const pieces = useMemo(() => groupPieces(filteredHistory, keyOf), [filteredHistory, keyOf]);
   const selectedPiece = pieces.find(p => p.key === pieceSel) || pieces[0] || null;
+
+  // The switch highlights the type of what is shown: the chosen type, or, when
+  // a site or piece is selected, that site's page scans or that piece's type.
+  const shownType = focusSite ? 'url' : activeFocus ? (pieces[0] ? getItemType(pieces[0].latest).toLowerCase() : typeFilter) : typeFilter;
 
   const filtersActive = typeFilter !== 'all';
   const clearFilters = () => { setTypeFilter('all'); };
@@ -847,8 +859,8 @@ export default function Dashboard() {
                 key={ct.id}
                 type="button"
                 role="tab"
-                aria-selected={!activeFocus && typeFilter === ct.id}
-                className={`${styles.framingBtn} ${!activeFocus && typeFilter === ct.id ? styles.framingBtnActive : ''}`}
+                aria-selected={shownType === ct.id}
+                className={`${styles.framingBtn} ${shownType === ct.id ? styles.framingBtnActive : ''}`}
                 title={activeFocus ? 'Switches back to the latest of each tool, filtered to this type' : undefined}
                 onClick={() => {
                   // Picking a type leaves any single site or piece and shows that type's latest.
@@ -886,8 +898,10 @@ export default function Dashboard() {
             </div>
             <div className={styles.emptyStateOverlay}>
               <Activity className={styles.emptyIcon} />
-              <p>{filtersActive && history.length > 0 ? 'No analyses match these filters' : 'No pillar data yet'}</p>
-              {filtersActive && history.length > 0 ? (
+              <p>{focusSite ? `No page scans for ${focusSite} yet` : filtersActive && history.length > 0 ? 'No analyses match these filters' : 'No pillar data yet'}</p>
+              {focusSite ? (
+                <Link to={`/url-scanner?url=${encodeURIComponent(focusSite)}`} className={styles.emptyLink}>Scan a page on {focusSite} →</Link>
+              ) : filtersActive && history.length > 0 ? (
                 <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
               ) : (
                 <Link to={typeRoute} className={styles.emptyLink}>Run analysis →</Link>
@@ -1167,8 +1181,10 @@ export default function Dashboard() {
               </div>
               <div className={styles.emptyStateOverlay}>
                 <Activity className={styles.emptyIcon} />
-                <p>{filtersActive && history.length > 0 ? 'No analyses match these filters' : 'Run your first analysis to see trends here'}</p>
-                {filtersActive && history.length > 0 ? (
+                <p>{focusSite ? `No page scans for ${focusSite} yet` : filtersActive && history.length > 0 ? 'No analyses match these filters' : 'Run your first analysis to see trends here'}</p>
+                {focusSite ? (
+                  <Link to={`/url-scanner?url=${encodeURIComponent(focusSite)}`} className={styles.emptyLink}>Scan a page →</Link>
+                ) : filtersActive && history.length > 0 ? (
                   <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
                 ) : (
                   <Link to={typeRoute} className={styles.emptyLink}>Get started →</Link>
@@ -1202,7 +1218,7 @@ export default function Dashboard() {
           <div className={styles.chartHeader}>
             <div>
               <h2 className={styles.chartTitle}>Recent Analyses</h2>
-              <p className={styles.chartSub}>Your latest content scores</p>
+              <p className={styles.chartSub}>Your latest scores, across content, URLs and repos</p>
               <span className={styles.chartHelp} title="Your latest analyses with overall scores and pillar breakdowns — click any row to view the full analysis.">
                 <HelpCircle size={11} />
               </span>
@@ -1212,13 +1228,13 @@ export default function Dashboard() {
 
           {loading ? (
             <div className={styles.chartEmpty}><span className="spinner" /></div>
-          ) : filteredHistory.length === 0 ? (
+          ) : recentHistory.length === 0 ? (
             <div className={styles.chartEmpty}>
               <div className={styles.emptyState}>
                 <FileText className={styles.emptyIcon} />
-                <p>{filtersActive && history.length > 0 ? 'No analyses match these filters' : 'No analyses yet'}</p>
-                {filtersActive && history.length > 0 ? (
-                  <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
+                <p>{history.length > 0 ? 'No analyses for this selection' : 'No analyses yet'}</p>
+                {history.length > 0 ? (
+                  <button type="button" className={styles.emptyLink} onClick={() => changeFocus('')}>Show everything →</button>
                 ) : (
                   <Link to={typeRoute} className={styles.emptyLink}>Run your first →</Link>
                 )}
@@ -1226,7 +1242,7 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className={styles.analysesList}>
-              {filteredHistory.slice(0, 7).map((item, i) => {
+              {recentHistory.slice(0, 7).map((item, i) => {
                 const type = getItemType(item);
                 const typeColor = type === 'URL' ? '#8f93c7' : type === 'Repo' ? '#7cae8f' : '#6b9bc4';
                 const TypeIcon = type === 'URL' ? Globe : type === 'Repo' ? GitBranch : FileText;

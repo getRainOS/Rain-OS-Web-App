@@ -8,6 +8,7 @@ import { SubTabs, TabEmpty } from '../components/MonitorTabs.jsx';
 import { PILLAR_COLORS } from '../lib/pillarColors.js';
 import { getMySite, setMySite } from '../lib/mySite.js';
 import SiteNote from '../components/SiteNote.jsx';
+import RecentPicker from '../components/RecentPicker.jsx';
 import styles from './ImproveQuestion.module.css';
 
 const MODES = [
@@ -139,6 +140,7 @@ export default function ImproveQuestion() {
               ? 'We read your page through Google and compare it with the cited sources.'
               : 'Without your website we cannot tell where you rank, so the advice is more general.'}
           </p>
+          <RecentPicker mode="site" onPick={setUrl} />
           <SiteNote url={url} />
 
           <button type="button" className={styles.linkBtn} onClick={() => setShowPaste(s => !s)} aria-expanded={showPaste}>

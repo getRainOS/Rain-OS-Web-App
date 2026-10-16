@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import CheckProgress from '../components/CheckProgress.jsx';
 import ImproveCta from '../components/ImproveCta.jsx';
 import SiteNote from '../components/SiteNote.jsx';
+import RecentPicker from '../components/RecentPicker.jsx';
 import { improveLink } from '../lib/improveLink.js';
 import { getMySite, setMySite } from '../lib/mySite.js';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -273,6 +274,7 @@ export default function ShareOfVoice() {
                 <label className={styles.label}>Your website URL <span className={styles.optionalHint}>(optional — used to check if your domain is in cited sources)</span></label>
                 <input className={styles.input} type="text" value={url} onChange={e => setUrl(e.target.value)}
                   placeholder="https://yourdomain.com" />
+                <RecentPicker mode="site" onPick={setUrl} />
                 <SiteNote url={url} blankText="Add your website to see your share of the sources Gemini cites. Without it we can still tell whether AI names your brand." />
               </div>
 
