@@ -170,6 +170,7 @@ export default async function handler(req: express.Request, res: express.Respons
       local_presence: result.pillarScores?.localPresence ?? null,
       summary: result.summary ?? null,
       result_json: result,
+      lane: analysisModule,
     });
     const updated = saveResult.updatedUser;
     if (updated) res.setHeader('X-Usage-Info', JSON.stringify(updated.usage));
