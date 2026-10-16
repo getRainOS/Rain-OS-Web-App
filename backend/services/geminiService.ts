@@ -546,11 +546,20 @@ Respond with valid JSON only (no markdown fences):
     contents: [{ role: 'user', parts: [{ text: prompt }] }],
     generationConfig: {
       temperature: 0.2,
-      maxOutputTokens: 4096,
+      // Same cause as the scoring and Improve a Question failures: gemini-2.5-flash
+      // "thinks" by default and those tokens share maxOutputTokens, so a full
+      // article rewrite (thousands of tokens) got cut off mid-JSON. Thinking off,
+      // and room for ~10,000 characters of rewritten text plus the change list.
+      thinkingConfig: { thinkingBudget: 0 },
+      maxOutputTokens: 16384,
       responseMimeType: 'application/json',
     },
   });
 
+  if (result.response.candidates?.[0]?.finishReason === 'MAX_TOKENS') {
+    console.error('Rewrite response truncated (MAX_TOKENS).');
+    throw new Error('The rewrite was too long to finish. Try rewriting a shorter section.');
+  }
   const raw = result.response.text();
   try {
     const clean = raw.replace(/```json|```/g, '').trim();
