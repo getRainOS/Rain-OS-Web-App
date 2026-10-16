@@ -253,6 +253,7 @@ export default function BrandVisibility() {
                 maxLength={200}
               />
               <div className={styles.hint}>Use your name as people write it publicly.</div>
+              <RecentPicker mode="brand" onPick={setBrand} />
             </div>
             <div>
               <label className={styles.label}>Question or Prompt to View Sentiment For</label>
@@ -264,6 +265,7 @@ export default function BrandVisibility() {
                 required
                 maxLength={300}
               />
+              <RecentPicker mode="question" onPick={setTopic} />
             </div>
           </div>
           <div className={styles.field}>

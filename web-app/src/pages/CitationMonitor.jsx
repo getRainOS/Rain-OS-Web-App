@@ -351,6 +351,7 @@ export default function CitationMonitor() {
                 maxLength={500}
                 required
               />
+              <RecentPicker mode="question" onPick={setTopic} />
             </div>
 
             <div className={styles.field}>

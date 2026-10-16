@@ -168,6 +168,7 @@ export default function FullCheck() {
           <label className={styles.label} htmlFor="fc-brand">Your business or brand name <span className={styles.opt}>Optional</span></label>
           <input id="fc-brand" className={styles.input} type="text" maxLength={120}
             placeholder={domain ? guessBrand(domain) : 'e.g. Acme Bakery'} value={brand} onChange={e => setBrand(e.target.value)} />
+          <RecentPicker mode="brand" onPick={setBrand} />
           <p className={styles.hint}>As people write it publicly. We use it to see whether AI names you.</p>
 
           <div className={styles.label}>How thorough</div>
