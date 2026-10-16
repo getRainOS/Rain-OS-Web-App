@@ -26,7 +26,7 @@ const TOOLS = {
   analyze:    { to: '/analyze',          label: 'Content Optimizer',   Icon: FileText,         tooltip: 'Paste your content and get an AI readability score plus fix recommendations.' },
   urlScanner: { to: '/url-scanner',      label: 'URL Scanner',         Icon: Globe,            tooltip: 'Enter a website URL to check how well AI can read and understand your pages.' },
   repo:       { to: '/repo-analysis',    label: 'Repo Analysis',       Icon: GitBranch,        tooltip: 'Connect your GitHub repo to score docs and source code for AI readability.' },
-  questions:  { to: '/prompt-research',  label: 'Prompt Research',     Icon: MessageSquareText, tooltip: 'Find the questions your customers ask AI, then check or track them.' },
+  questions:  { to: '/prompt-research',  label: 'AI Question Research', Icon: MessageSquareText, tooltip: 'Find the questions your customers ask AI, then check or track them.' },
   fullcheck:  { to: '/full-check',       label: 'Full Check',          Icon: ScanSearch,       tooltip: 'Enter your website and run the page scan and the AI visibility checks together, with one report.' },
   improve:    { to: '/improve',         label: 'Improve a Question',  Icon: Target,           tooltip: 'Pick a question, compare your page with the sources Gemini cited, and get the specific changes that help you get chosen.' },
   opportunities: { to: '/opportunities', label: 'Opportunities',    Icon: Lightbulb,        tooltip: 'Your to-do list for showing up in AI answers, built from your checks and scans.' },

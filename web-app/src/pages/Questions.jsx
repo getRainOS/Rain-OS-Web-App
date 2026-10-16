@@ -5,6 +5,7 @@ import { useApp } from '../context/AppContext.jsx';
 import PageHeader from '../components/PageHeader.jsx';
 import PromptSuggestions from '../components/PromptSuggestions.jsx';
 import ContentIdeas from '../components/ContentIdeas.jsx';
+import TopicPlanner from '../components/TopicPlanner.jsx';
 import { ViewTabs } from '../components/MonitorTabs.jsx';
 import TrackedQueriesPanel, { useTrackedQueries } from '../components/TrackedQueries.jsx';
 import styles from './Questions.module.css';
@@ -43,7 +44,7 @@ export default function Questions() {
   return (
     <div className={`${styles.page} fade-in`}>
       <PageHeader
-        title="Prompt Research"
+        title="AI Question Research"
         subtitle="Start with the questions your customers ask AI. Check any of them in one click, or track the important ones every week."
         about={[
           { heading: 'Why questions come first', body: 'People ask ChatGPT, Gemini and Google AI questions in plain language. Whether you show up depends on the exact question, so every check in Rain OS starts from one.' },
@@ -55,10 +56,14 @@ export default function Questions() {
         label="Prompt Research"
         value={tab}
         onChange={setTab}
-        items={[{ id: 'questions', label: 'Questions' }, { id: 'ideas', label: 'Content ideas' }]}
+        items={[{ id: 'questions', label: 'Questions' }, { id: 'topic', label: 'Your topic' }, { id: 'ideas', label: 'Content ideas' }]}
       />
 
-      {tab === 'ideas' ? (
+      {tab === 'topic' ? (
+        <div className={styles.main}>
+          <TopicPlanner lane={userLane || 'general'} tracking={tracking} renderCheck={(q, site) => <CheckLinks question={q} site={site} />} />
+        </div>
+      ) : tab === 'ideas' ? (
         <div className={styles.main}><ContentIdeas /></div>
       ) : (
       <div className={styles.grid}>
