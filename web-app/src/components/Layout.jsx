@@ -45,45 +45,45 @@ const TOOLS = {
 const LANE_GROUPS = {
   general: [
     { label: 'Optimize',   tools: ['analyze', 'urlScanner', 'repo'] },
-    { label: 'Prompts',    tools: ['questions'] },
+    { label: 'Prompts',    tools: ['questions', 'improve'] },
     { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
-    { label: 'Improve',    tools: ['fullcheck', 'opportunities', 'improve'] },
+    { label: 'Improve',    tools: ['fullcheck', 'opportunities'] },
   ],
   product_sellers: [
     { label: 'Optimize',   tools: ['urlScanner', 'analyze', 'repo'] },
-    { label: 'Prompts',    tools: ['questions'] },
+    { label: 'Prompts',    tools: ['questions', 'improve'] },
     { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
-    { label: 'Improve',    tools: ['fullcheck', 'opportunities', 'improve'] },
+    { label: 'Improve',    tools: ['fullcheck', 'opportunities'] },
   ],
   developers: [
     { label: 'Optimize',   tools: ['repo', 'urlScanner', 'analyze'] },
-    { label: 'Prompts',    tools: ['questions'] },
+    { label: 'Prompts',    tools: ['questions', 'improve'] },
     { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
-    { label: 'Improve',    tools: ['fullcheck', 'opportunities', 'improve'] },
+    { label: 'Improve',    tools: ['fullcheck', 'opportunities'] },
   ],
   local_business: [
     { label: 'Optimize',   tools: ['urlScanner', 'analyze', 'repo'] },
-    { label: 'Prompts',    tools: ['questions'] },
+    { label: 'Prompts',    tools: ['questions', 'improve'] },
     { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
-    { label: 'Improve',    tools: ['fullcheck', 'opportunities', 'improve'] },
+    { label: 'Improve',    tools: ['fullcheck', 'opportunities'] },
   ],
   vibe_coders: [
     { label: 'Optimize',   tools: ['repo', 'urlScanner', 'analyze'] },
-    { label: 'Prompts',    tools: ['questions'] },
+    { label: 'Prompts',    tools: ['questions', 'improve'] },
     { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
-    { label: 'Improve',    tools: ['fullcheck', 'opportunities', 'improve'] },
+    { label: 'Improve',    tools: ['fullcheck', 'opportunities'] },
   ],
 };
 
 const GROUP_TOOLTIPS = {
-  Prompts:    'Find the questions your customers ask AI.',
+  Prompts:    'Find the questions your customers ask AI, and improve your page for a specific one.',
   Visibility: 'See whether and how AI mentions you for those questions.',
   Improve:    'Check where you stand and find the biggest gaps to fix first.',
   Optimize:   'Make your content, pages and code easy for AI to read and quote.',
 };
 
 const LOCAL_GROUP_TOOLTIPS = {
-  Prompts:    'Find the questions local customers ask AI about businesses like yours.',
+  Prompts:    'Find the questions local customers ask AI about businesses like yours, and improve your page for a specific one.',
   Visibility: 'Check if AI tools recommend your business when local customers ask.',
   Improve:    'Plain-English checks to get your business recommended more often.',
   Optimize:   'Make your site easy for AI to read, so it can recommend you.',
