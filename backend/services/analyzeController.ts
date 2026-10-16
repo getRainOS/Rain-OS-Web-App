@@ -3,7 +3,8 @@
 // Auth, usage-check, and incrementing all live here — keeping api/index.ts thin.
 import express from 'express';
 import { analyzeContent, API_VERSION, generateTitles, generateDescription, summarizeContent } from './geminiService';
-import { findUserByApiKey, incrementUsageAndSaveAnalysis } from './dbService';
+import { createHash } from 'crypto';
+import { findUserByApiKey, incrementUsageAndSaveAnalysis, findAnalysisByContentHash } from './dbService';
 import { classifyGeminiError } from './geminiErrors';
 import type { ApiError, CapabilitiesResponse, AnalysisResponse } from '../types';
 const PHASE2_SUB_SCORES = [
@@ -60,6 +61,15 @@ return res.status(400).json({ error: 'bad_request', message: 'title is required'
 }
 try {
 const safeContentType = typeof contentType === 'string' && contentType.trim() ? contentType.trim().slice(0, 60) : undefined;
+// Same content, module, industry and content type as an earlier run: reuse that
+// result. No Gemini call, no credit spent, and no new point on the trend line.
+const contentHash = createHash('sha256')
+  .update(JSON.stringify([safeContent.trim(), analysisModule, industry || '', safeContentType || '']))
+  .digest('hex');
+const earlier = await findAnalysisByContentHash(user.id, contentHash, API_VERSION);
+if (earlier) {
+  return res.status(200).json({ success: true, data: earlier.result, ...earlier.result, analysisId: earlier.id, reused: true });
+}
 const result = await analyzeContent(content, industry || 'General / Other', analysisModule, safeContentType);
 
 // ─── Batched Transaction: Increment Usage + Save Analysis ─────────────────────
@@ -81,6 +91,7 @@ const { updatedUser, analysisId } = await incrementUsageAndSaveAnalysis(user.id,
   local_presence: typeof pillar?.localPresence === 'number' ? pillar.localPresence : null,
   summary: typeof typedResult.summary === 'string' ? typedResult.summary : null,
   result_json: result,
+  content_hash: contentHash,
   content: safeContent,
   lane: lane ?? null,
 });

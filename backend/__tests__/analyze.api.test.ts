@@ -8,11 +8,13 @@ const findUserByApiKey = vi.fn();
 const incrementUserUsage = vi.fn();
 const saveAnalysis = vi.fn();
 const incrementUsageAndSaveAnalysis = vi.fn().mockResolvedValue({ updatedUser: null, analysisId: 'mock-analysis-id' });
+const findAnalysisByContentHash = vi.fn().mockResolvedValue(null);
 vi.mock('../services/dbService', () => ({
   findUserByApiKey: (...args: unknown[]) => findUserByApiKey(...args),
   incrementUserUsage: (...args: unknown[]) => incrementUserUsage(...args),
   saveAnalysis: (...args: unknown[]) => saveAnalysis(...args),
   incrementUsageAndSaveAnalysis: (...args: unknown[]) => incrementUsageAndSaveAnalysis(...args),
+  findAnalysisByContentHash: (...args: unknown[]) => findAnalysisByContentHash(...args),
 }));
 
 // ─── Mock geminiService so analyzeContent is deterministic ───────────────────
@@ -196,6 +198,29 @@ describe('POST /api/analyze — happy path', () => {
       updatedUser: { ...baseUser, usage: { count: 1, limit: 100 } },
       analysisId: 'mock-analysis-id',
     });
+    findAnalysisByContentHash.mockResolvedValue(null);
+  });
+
+  it('reuses an earlier result for identical content: no Gemini call, no credit spent', async () => {
+    findAnalysisByContentHash.mockResolvedValue({ id: 42, result: { overallScore: 61, pillarScores: {}, api_version: '2.3' } });
+    const res = await request(app)
+      .post('/api/analyze')
+      .set('Authorization', 'Bearer k')
+      .send({ title: 'My article', content: 'This is a sufficiently long piece of content for analysis.', industry: 'SaaS' });
+    expect(res.status).toBe(200);
+    expect(res.body.reused).toBe(true);
+    expect(res.body.analysisId).toBe(42);
+    expect(res.body.overallScore).toBe(61);
+    expect(analyzeContent).not.toHaveBeenCalled();
+    expect(incrementUsageAndSaveAnalysis).not.toHaveBeenCalled();
+  });
+
+  it('saves a content hash with a fresh analysis', async () => {
+    await request(app)
+      .post('/api/analyze')
+      .set('Authorization', 'Bearer k')
+      .send({ title: 'My article', content: 'This is a sufficiently long piece of content for analysis.', industry: 'SaaS' });
+    expect(incrementUsageAndSaveAnalysis.mock.calls[0][1].content_hash).toMatch(/^[0-9a-f]{64}$/);
   });
 
   it('returns 200, increments usage, sets X-Usage-Info, and returns success shape', async () => {

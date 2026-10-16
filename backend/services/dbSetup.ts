@@ -80,6 +80,9 @@ ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS local_presence NUMERIC;
 -- Re-analyses of the same piece share a series_id (the first run's id), so
 -- the dashboard can trend one piece instead of blending unrelated ones.
 ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS series_id BIGINT;
+-- Hash of (content, module, industry, content type) so an unchanged piece can reuse its last result.
+ALTER TABLE content_analyses ADD COLUMN IF NOT EXISTS content_hash TEXT;
+CREATE INDEX IF NOT EXISTS idx_content_analyses_hash ON content_analyses(user_id, content_hash);
 
 CREATE INDEX IF NOT EXISTS idx_content_analyses_user_analyzed_at
   ON content_analyses(user_id, analyzed_at DESC);
