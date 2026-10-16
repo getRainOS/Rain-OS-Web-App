@@ -123,6 +123,7 @@ export default function ImproveQuestion() {
             value={question}
             onChange={e => setQuestion(e.target.value)}
           />
+          <RecentPicker mode="question" onPick={setQuestion} />
 
           <label className={styles.label} htmlFor="iq-url">Your website <span className={styles.opt}>Recommended</span></label>
           <input
