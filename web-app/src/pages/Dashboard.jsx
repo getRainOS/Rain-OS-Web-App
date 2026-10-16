@@ -206,9 +206,23 @@ function CustomTooltip({ active, payload }) {
 
 /* ── Pillar line chart tooltip — one row per pillar at the hovered point ── */
 /* ── Change since the previous run of the same piece, in points ── */
-function DeltaPts({ value }) {
+// Gemini scores the same text a few points apart from run to run, so a move
+// this small is not treated as a real change.
+const NOISE_PTS = 3;
+function DeltaPts({ value, noise = NOISE_PTS }) {
   if (value === null || value === undefined) return null;
-  const color = value === 0 ? 'var(--text-muted)' : value > 0 ? 'var(--success)' : 'var(--danger)';
+  if (Math.abs(value) <= noise) {
+    return (
+      <span
+        className={styles.deltaPts}
+        style={{ color: 'var(--text-muted)' }}
+        title={`A change of ${noise} points or less is within normal scoring variation, so it isn't counted as a real change.`}
+      >
+        no change
+      </span>
+    );
+  }
+  const color = value > 0 ? 'var(--success)' : 'var(--danger)';
   return <span className={styles.deltaPts} style={{ color }}>{value > 0 ? '+' : ''}{value} pts</span>;
 }
 
@@ -902,7 +916,7 @@ export default function Dashboard() {
               <div className={styles.heroStatRow}>
                 <span className={styles.heroStatValue}>{latestRun ? Math.round(latestRun.overall_score ?? 0) : 0}</span>
                 <span className={styles.heroStatMax}>/100</span>
-                <DeltaPts value={ptsDelta('overall_score')} />
+                <DeltaPts value={ptsDelta('overall_score')} noise={2} />
                 {prevRun && <span className={styles.deltaNote}>since the last analysis</span>}
               </div>
               <div className={styles.heroChartBg}>

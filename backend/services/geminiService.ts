@@ -294,7 +294,11 @@ const result = await generateContentWithRetry(model, {
 systemInstruction: SYSTEM_INSTRUCTION,
 contents: [{ role: 'user', parts: [{ text: prompt }] }],
 generationConfig: {
-temperature: 0.1, // low temp for consistent scoring
+// Zero temperature plus a fixed seed: the same content should score the
+// same on a rerun. Gemini-judged pillars (like RAG Readiness) otherwise
+// drift by a few points between identical runs.
+temperature: 0,
+seed: 7,
 // Root cause of the truncation (confirmed it happened even on short
 // content, which ruled out "response too long for the schema"):
 // gemini-2.5-flash has "thinking" enabled by default with a dynamic

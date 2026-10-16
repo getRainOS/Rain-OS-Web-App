@@ -379,6 +379,7 @@ export const resetAllUsersUsage = async (): Promise<number> => {
 // Consolidates two N+1 queries (incrementUserUsage + saveAnalysis) into a single
 // transaction for better performance and consistency.
 export interface AnalysisData {
+    content_hash?: string | null;
     previous_analysis_id?: number | null;
     title?: string | null;
     url?: string | null;
@@ -395,6 +396,26 @@ export interface AnalysisData {
   summary?: string | null;
   content?: string | null;
 }
+
+// The user's most recent saved analysis of exactly this content, scored by
+// the same engine version. Lets an unchanged piece reuse its result instead
+// of asking Gemini again (and instead of spending a credit).
+export const findAnalysisByContentHash = async (
+    userId: string,
+    contentHash: string,
+    apiVersion: string
+): Promise<{ id: number; result: any } | null> => {
+    const res = await pool.query(
+        `SELECT id, result_json FROM content_analyses
+         WHERE user_id = $1 AND content_hash = $2 AND result_json->>'api_version' = $3
+         ORDER BY id DESC LIMIT 1`,
+        [userId, contentHash, apiVersion]
+    );
+    const row = res.rows[0];
+    if (!row?.result_json) return null;
+    const result = typeof row.result_json === 'string' ? JSON.parse(row.result_json) : row.result_json;
+    return { id: Number(row.id), result };
+};
 
 const incrementUsageAndSaveAnalysisAttempt = async (
     userId: string,
@@ -429,8 +450,8 @@ const incrementUsageAndSaveAnalysisAttempt = async (
         const analysisRes = await client.query(
             `INSERT INTO content_analyses
           (user_id, title, url, repo, overall_score, ai_readability, digital_authority,
-          conversion_readiness, product_discoverability, rag_readiness, local_presence, summary, result_json, lane, content, series_id)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+          conversion_readiness, product_discoverability, rag_readiness, local_presence, summary, result_json, lane, content, series_id, content_hash)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
           RETURNING id`,
             [
                 userId,
@@ -449,6 +470,7 @@ const incrementUsageAndSaveAnalysisAttempt = async (
                 analysisData.lane ?? null,
           analysisData.content ?? null,
                 seriesId,
+                analysisData.content_hash ?? null,
             ]
         );
         const analysisId = analysisRes.rows[0]?.id ?? null;
