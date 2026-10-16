@@ -54,6 +54,7 @@ import {
 } from './tracked-queries';
 import { startScheduler } from '../services/schedulerService';
 import promptSuggestionsHandler from './prompt-suggestions';
+import contentIdeasHandler from './content-ideas';
 import questionGapHandler from './question-gap';
 // ─── CORS configuration ───────────────────────────────────────────────────────
 // IMPORTANT: Keep origin: '*' so the WordPress plugin works from any site.
@@ -143,6 +144,7 @@ app.patch('/api/tracked-queries/:id', trackedUpdateHandler);
 app.delete('/api/tracked-queries/:id', trackedDeleteHandler);
 app.patch('/api/citation-alerts', citationAlertsHandler);
 app.post('/api/prompt-suggestions', promptSuggestionsHandler);
+app.post('/api/content-ideas', contentIdeasHandler);
 app.post('/api/question-gap', questionGapHandler);
 // ─── Content analysis history ───────────────────────────────────────────────
 app.get('/api/history', historyListHandler);
