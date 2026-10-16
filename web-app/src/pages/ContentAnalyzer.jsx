@@ -83,11 +83,14 @@ export default function ContentAnalyzer() {
   const prefill = location.state || {};
   const savedDraft = readSavedDraft();
   const savedDraftMatchesAnalysis = !id || !savedDraft.analysisId || savedDraft.analysisId === String(id);
+  // A content idea sent over from Prompt Research starts a fresh piece with that title.
+  const fromIdea = !!prefill.freshIdea;
   const [title, setTitle] = useState(prefill.pendingTitle || (savedDraftMatchesAnalysis ? savedDraft.title : '') || '');
-  const [content, setContent] = useState(prefill.pendingContent || (savedDraftMatchesAnalysis ? savedDraft.content : '') || '');
-  const [url, setUrl] = useState(prefill.pendingUrl || (savedDraftMatchesAnalysis ? savedDraft.url : '') || '');
+  const [content, setContent] = useState(prefill.pendingContent || (!fromIdea && savedDraftMatchesAnalysis ? savedDraft.content : '') || '');
+  const [url, setUrl] = useState(prefill.pendingUrl || (!fromIdea && savedDraftMatchesAnalysis ? savedDraft.url : '') || '');
   const [contentType, setContentType] = useState(
-    (savedDraftMatchesAnalysis ? savedDraft.contentType : '') || defaultContentTypeForLane(userLane)
+    (fromIdea && contentTypesForLane(userLane).some(t => t.id === prefill.contentType) ? prefill.contentType : '')
+      || (savedDraftMatchesAnalysis ? savedDraft.contentType : '') || defaultContentTypeForLane(userLane)
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
