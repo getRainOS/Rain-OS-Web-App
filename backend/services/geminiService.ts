@@ -506,9 +506,10 @@ return parseQuickToolJson(raw, 'Rewrite', { rewritten: sentence });
 };
 
 // ─── Document rewrite for AI readability ──────────────────────────────────────
-export async function rewriteDocumentForAI(
+async function rewriteChunkForAI(
   content: string,
-  module: 'general' | 'product_sellers' | 'developers' = 'general'
+  module: 'general' | 'product_sellers' | 'developers' = 'general',
+  part?: { index: number; total: number }
 ): Promise<{ rewritten: string; changes: string[] }> {
   if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
 
@@ -532,8 +533,8 @@ REWRITING RULES:
 7. Preserve ALL facts, data, figures, and meaning — do not add new information or hallucinate
 8. Instructions: Number all steps explicitly; make each step independently executable
 
-CONTENT TO REWRITE:
-${content.slice(0, 10000)}
+${part && part.total > 1 ? `This is part ${part.index} of ${part.total} of a longer document. Rewrite only this part. Do not add an introduction, conclusion or summary that is not already here, and keep heading levels consistent.\n\n` : ''}CONTENT TO REWRITE:
+${content}
 
 Respond with valid JSON only (no markdown fences):
 {
@@ -572,4 +573,43 @@ Respond with valid JSON only (no markdown fences):
     console.error('Rewrite parse error:', raw.slice(0, 500));
     throw new Error('Failed to parse rewrite response');
   }
+}
+
+// Long documents are rewritten in parts (split on paragraph breaks) and
+// stitched back together, so the whole piece is rewritten instead of only the
+// first few thousand characters. One credit covers the whole rewrite.
+const REWRITE_CHUNK_CHARS = 7000;
+export const REWRITE_MAX_CHARS = 24000;
+
+export function splitForRewrite(content: string, chunkChars = REWRITE_CHUNK_CHARS): string[] {
+  const paragraphs = content.split(/\n{2,}/);
+  const chunks: string[] = [];
+  let current = '';
+  for (const p of paragraphs) {
+    // A single paragraph longer than the limit is cut on a sentence boundary.
+    const pieces = p.length > chunkChars ? (p.match(/[^.!?]+[.!?]*\s*/g) || [p]) : [p];
+    for (const piece of pieces) {
+      if (current && current.length + piece.length + 2 > chunkChars) {
+        chunks.push(current.trim());
+        current = '';
+      }
+      current += (current ? '\n\n' : '') + piece;
+    }
+  }
+  if (current.trim()) chunks.push(current.trim());
+  return chunks;
+}
+
+export async function rewriteDocumentForAI(
+  content: string,
+  module: 'general' | 'product_sellers' | 'developers' = 'general'
+): Promise<{ rewritten: string; changes: string[]; truncated: boolean }> {
+  if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
+  const truncated = content.length > REWRITE_MAX_CHARS;
+  const chunks = splitForRewrite(content.slice(0, REWRITE_MAX_CHARS));
+  const parts = await Promise.all(
+    chunks.map((c, i) => rewriteChunkForAI(c, module, { index: i + 1, total: chunks.length }))
+  );
+  const changes = Array.from(new Set(parts.flatMap(p => p.changes))).slice(0, 10);
+  return { rewritten: parts.map(p => p.rewritten.trim()).join('\n\n'), changes, truncated };
 }
