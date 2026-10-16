@@ -9,6 +9,7 @@ import TypewriterPlaceholder from '../components/TypewriterPlaceholder.jsx';
 import CitationCrossPromo from '../components/CitationCrossPromo.jsx';
 import { FileText, PenLine, ShoppingBag, LayoutTemplate, BookOpen, MessageSquare, Sparkles, Lock } from 'lucide-react';
 import PageHeader from '../components/PageHeader.jsx';
+import CheckProgress from '../components/CheckProgress.jsx';
 import styles from './ContentAnalyzer.module.css';
 
 const DRAFT_STORAGE_KEY = 'rain_os_content_analyzer_draft';
@@ -311,7 +312,7 @@ export default function ContentAnalyzer() {
               className="btn btn-primary"
               disabled={loading || isAtLimit || !title.trim() || (!content.trim() && !url.trim())}
             >
-              {loading ? <><span className="spinner" /> {result ? 'Re-analyzing…' : 'Analyzing…'}</> : (result ? 'Re-analyze' : 'Analyze content')}
+              {loading ? (result ? 'Re-analyzing…' : 'Analyzing…') : (result ? 'Re-analyze' : 'Analyze content')}
             </button>
             {result && id && (
               <button
@@ -334,7 +335,7 @@ export default function ContentAnalyzer() {
                 disabled={rewriteLoading || isAtLimit || !content.trim()}
                 onClick={handleRewrite}
               >
-                {rewriteLoading ? <><span className="spinner" style={{ width: 14, height: 14 }} /> Rewriting…</> : 'Rewrite for AI'}
+                {rewriteLoading ? 'Rewriting…' : 'Rewrite for AI'}
               </button>
             )}
             {!loading && !title.trim() && (content.trim() || url.trim()) && (
@@ -353,6 +354,32 @@ export default function ContentAnalyzer() {
           )}
         </form>
       }
+      {loading && (
+        <div style={{ marginTop: 20 }}>
+          <CheckProgress
+            title={result ? 'Re-analyzing your content' : 'Analyzing your content'}
+            skeleton="report"
+            steps={[
+              { label: 'Reading your content', ms: 2500 },
+              { label: 'Measuring structure and readability', ms: 4000 },
+              { label: 'Scoring each pillar', ms: 8000 },
+              { label: 'Writing your fixes' },
+            ]}
+          />
+        </div>
+      )}
+      {rewriteLoading && (
+        <div style={{ marginTop: 20 }}>
+          <CheckProgress
+            title="Rewriting for AI"
+            compact
+            steps={[
+              { label: 'Reading your draft', ms: 2500 },
+              { label: 'Restructuring it so AI can quote it' },
+            ]}
+          />
+        </div>
+      )}
       {result && (
         <div className={styles.results}>
           <div className={styles.resultsHeader}>
@@ -377,7 +404,7 @@ export default function ContentAnalyzer() {
                 disabled={rewriteLoading || !content.trim()}
                 onClick={handleRewrite}
               >
-                {rewriteLoading ? <><span className="spinner" style={{ width: 14, height: 14 }} /> Rewriting…</> : 'Rewrite for AI'}
+                {rewriteLoading ? 'Rewriting…' : 'Rewrite for AI'}
               </button>
               <button onClick={handleReset} className="btn btn-ghost">
                 ← New Analysis

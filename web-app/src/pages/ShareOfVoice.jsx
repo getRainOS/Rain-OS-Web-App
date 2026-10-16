@@ -278,7 +278,7 @@ export default function ShareOfVoice() {
 
               <div className={styles.submitRow}>
                 <button type="submit" className={styles.btn} style={{ opacity: loading ? 0.6 : 1 }} disabled={loading}>
-                  {loading ? <><span className="spinner" style={{ width: 14, height: 14, borderWidth: 2 }} /> Asking Gemini 3 different ways…</> : <><BarChart2 size={14} /> Check Share of Voice</>}
+                  {loading ? 'Asking Gemini 3 different ways…' : <><BarChart2 size={14} /> Check Share of Voice</>}
                 </button>
               </div>
               {loading && (

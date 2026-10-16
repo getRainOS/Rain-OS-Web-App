@@ -369,7 +369,7 @@ export default function UrlScanner() {
             className="btn btn-primary"
             disabled={loading || !hasUrlBody(url)}
           >
-            {loading ? <><span className="spinner" /> Scanning…</> : '◎ Scan URL'}
+            {loading ? 'Scanning…' : '◎ Scan URL'}
           </button>
         </div>
         {error && (
