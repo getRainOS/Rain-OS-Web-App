@@ -839,20 +839,25 @@ export default function Dashboard() {
               <HelpCircle size={11} />
             </span>
           </div>
-          {!activeFocus && (<div className={styles.framingToggle} role="tablist" aria-label="Analysis type">
+          <div className={styles.framingToggle} role="tablist" aria-label="Analysis type">
             {CONTENT_TYPE_TOGGLES.map(ct => (
               <button
                 key={ct.id}
                 type="button"
                 role="tab"
-                aria-selected={typeFilter === ct.id}
-                className={`${styles.framingBtn} ${typeFilter === ct.id ? styles.framingBtnActive : ''}`}
-                onClick={() => { setTypeFilter(ct.id); setPieceSel(null); setShowAllFixes(false); typeFilterAutoSet.current = true; }}
+                aria-selected={!activeFocus && typeFilter === ct.id}
+                className={`${styles.framingBtn} ${!activeFocus && typeFilter === ct.id ? styles.framingBtnActive : ''}`}
+                title={activeFocus ? 'Switches back to the latest of each tool, filtered to this type' : undefined}
+                onClick={() => {
+                  // Picking a type leaves any single site or piece and shows that type's latest.
+                  if (activeFocus) changeFocus('');
+                  setTypeFilter(ct.id); setPieceSel(null); setShowAllFixes(false); typeFilterAutoSet.current = true;
+                }}
               >
                 {ct.label}
               </button>
             ))}
-          </div>)}
+          </div>
         </div>
 
         <WhatDoesThisMean tagline="AI's structured read of your content.">
