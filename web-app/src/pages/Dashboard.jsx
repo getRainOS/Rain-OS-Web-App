@@ -3,7 +3,6 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import { PILLAR_COLORS } from '../lib/pillarColors.js';
-import { buildCitationShare } from '../lib/citationShare.js';
 import { urlScannerLabel } from '../lib/laneLabels.js';
 import { LANES as LANE_META } from '../lib/lanes.js';
 import { groupPieces, pieceName, pieceKey } from '../lib/analysisSeries.js';
@@ -14,7 +13,6 @@ import {
   AreaChart, Area, XAxis, YAxis,
   Tooltip, ResponsiveContainer,
   LineChart, Line,
-  PieChart, Pie, Cell,
 } from 'recharts';
 import {
   Plus, TrendingUp, TrendingDown,
@@ -319,20 +317,6 @@ function WhatDoesThisMean({ tagline, children }) {
   );
 }
 
-/* ── Mini citation-share donut (tool card accent) ── */
-function MiniDonut({ data, size = 28 }) {
-  if (!data || data.length === 0) {
-    return <span className={styles.sparkPlaceholder}>—</span>;
-  }
-  return (
-    <PieChart width={size} height={size}>
-      <Pie data={data} dataKey="value" innerRadius={size * 0.3} outerRadius={size * 0.48} paddingAngle={3} stroke="none" isAnimationActive={false}>
-        {data.map((d, i) => <Cell key={i} fill={d.color} />)}
-      </Pie>
-    </PieChart>
-  );
-}
-
 /* ── Mini hit/miss dot row (tool card accent) ── */
 function DotRow({ values }) {
   if (!values || values.length === 0) {
@@ -344,7 +328,7 @@ function DotRow({ values }) {
         <span
           key={i}
           className={styles.dot}
-          style={{ background: hit ? 'var(--accent)' : 'rgba(255,255,255,0.12)' }}
+          style={{ background: hit ? '#2B8FE3' : 'rgba(255,255,255,0.12)' }}
         />
       ))}
     </div>
@@ -702,7 +686,6 @@ export default function Dashboard() {
     h => (h.mentionedCount ?? h.citedCount ?? h.cited_count ?? 0) > 0
   ).length;
   const sovRate = sovTotal > 0 ? Math.round((sovMentionedCount / sovTotal) * 100) : null;
-  const sovShare = sovScoped.length > 0 ? buildCitationShare(sovScoped[0]) : [];
 
   // One set of cards, each named after the tool its number comes from.
   // Local businesses get plainer names for the same three numbers.
@@ -746,7 +729,9 @@ export default function Dashboard() {
         ? `Mentioned in ${sovMentionedCount} of your last ${sovTotal} check${sovTotal > 1 ? 's' : ''}`
         : 'No data yet. Run a check to see how often Gemini mentions your brand.',
       Icon: BarChart2,
-      donut: sovShare.length > 0 ? sovShare : null,
+      dots: sovTotal > 0
+        ? sovScoped.slice(0, 8).reverse().map(h => (h.mentionedCount ?? h.citedCount ?? h.cited_count ?? 0) > 0)
+        : null,
       tooltip: 'How many of your recent Share of Voice checks had Gemini mention your brand in at least one of the 3 different ways we ask about your topic.',
     },
     {
@@ -1046,10 +1031,6 @@ export default function Dashboard() {
             {t.pillars && t.pillars.length > 0 ? (
               <div className={styles.toolCardSpark}>
                 <PillarBars pillars={t.pillars} />
-              </div>
-            ) : t.donut && t.donut.length > 0 ? (
-              <div className={styles.toolCardSpark}>
-                <MiniDonut data={t.donut} />
               </div>
             ) : t.dots && t.dots.length > 0 ? (
               <div className={styles.toolCardSpark}>

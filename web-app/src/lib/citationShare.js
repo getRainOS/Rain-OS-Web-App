@@ -1,4 +1,5 @@
-export const SHARE_COLORS = ['#00F0FF', '#39FF88', '#FF9D00', '#B026FF', '#FF2E9A', '#FFEE00'];
+// Your own site is the brightest blue; everyone else steps down through muted blue-grays.
+export const SHARE_COLORS = ['#2B8FE3', '#8ac2f4', '#6b8fb0', '#4d6a88', '#38506a', '#2b3d50'];
 export const SHARE_OTHER_COLOR = 'var(--text-dim)';
 
 export function buildCitationShare(result) {
