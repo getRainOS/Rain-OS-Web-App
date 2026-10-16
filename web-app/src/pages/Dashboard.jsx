@@ -9,6 +9,7 @@ import { groupPieces, pieceName, pieceKey } from '../lib/analysisSeries.js';
 import { domainOf } from '../lib/opportunities.js';
 import Select from '../components/Select.jsx';
 import NewAnalysisMenu from '../components/NewAnalysisMenu.jsx';
+import CitationMapCard from '../components/CitationMapCard.jsx';
 import {
   AreaChart, Area, XAxis, YAxis,
   Tooltip, ResponsiveContainer,
@@ -1052,6 +1053,9 @@ export default function Dashboard() {
           </Link>
         ))}
       </div>
+
+      {/* ── Where AI's sources are based ── */}
+      <CitationMapCard checks={citationSorted.slice(0, 50)} ownDomain={focusSite} />
 
       {/* ── Quick Wins ── */}
       {quickWins.length > 0 && (
