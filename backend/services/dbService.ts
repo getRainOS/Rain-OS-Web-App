@@ -881,7 +881,8 @@ export const getAnalysesCountByUser = async (
   userId: string,
   lane?: string | null
 ): Promise<number> => {
-  const laneFilter = lane ? 'AND lane = $2' : '';
+  // Scans and repo runs saved before they recorded a lane have none; they show in every lane.
+  const laneFilter = lane ? 'AND (lane = $2 OR lane IS NULL)' : '';
   const params = lane ? [userId, lane] : [userId];
   const res = await pool.query(
     `SELECT COUNT(*) FROM content_analyses WHERE user_id = $1 ${laneFilter}`,
@@ -895,7 +896,7 @@ export const getAnalysesByUser = async (
   limit = 50,
   lane?: string | null
 ): Promise<AnalysisRecord[]> => {
-  const laneFilter = lane ? 'AND lane = $3' : '';
+  const laneFilter = lane ? 'AND (lane = $3 OR lane IS NULL)' : '';
   const params = lane ? [userId, limit, lane] : [userId, limit];
   const res = await pool.query(
     `SELECT id, title, url, repo, overall_score, ai_readability, digital_authority,

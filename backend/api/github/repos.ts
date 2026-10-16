@@ -108,7 +108,8 @@ export async function analyzeRepoHandler(req: express.Request, res: express.Resp
     return res.status(400).json({ error: 'not_connected', message: "Your GitHub account isn't connected. Click Connect GitHub above to link it before analyzing a repo." });
   }
 
-  const { repoUrl } = req.body as { repoUrl?: string };
+  const { repoUrl, module: laneModule } = req.body as { repoUrl?: string; module?: string };
+  const lane = ['product_sellers', 'developers', 'local_business', 'vibe_coders'].includes(laneModule ?? '') ? laneModule! : 'general';
   if (!repoUrl) {
     return res.status(400).json({ error: 'bad_request', message: 'repoUrl is required' });
   }
@@ -152,6 +153,7 @@ export async function analyzeRepoHandler(req: express.Request, res: express.Resp
       product_discoverability: result.pillarScores?.productDiscoverability ?? null,
       rag_readiness: result.pillarScores?.ragReadiness ?? null,
       result_json: result,
+      lane,
     });
     if (updatedUser) res.setHeader('X-Usage-Info', JSON.stringify(updatedUser.usage));
     return res.status(200).json(result);

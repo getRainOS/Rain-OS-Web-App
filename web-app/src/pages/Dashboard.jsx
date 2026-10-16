@@ -5,7 +5,7 @@ import { useApp } from '../context/AppContext.jsx';
 import { PILLAR_COLORS } from '../lib/pillarColors.js';
 import { urlScannerLabel } from '../lib/laneLabels.js';
 import { LANES as LANE_META } from '../lib/lanes.js';
-import { groupPieces, pieceName, pieceKey } from '../lib/analysisSeries.js';
+import { groupPieces, pieceName, pieceKey, buildPieceKeyer } from '../lib/analysisSeries.js';
 import { domainOf } from '../lib/opportunities.js';
 import Select from '../components/Select.jsx';
 import NewAnalysisMenu from '../components/NewAnalysisMenu.jsx';
@@ -438,6 +438,8 @@ export default function Dashboard() {
   }, [userLane]);
 
   const siteOfItem = h => (h.repo ? null : domainOf(h.url));
+  // One key per piece, so re-analyses of the same text count as one piece.
+  const keyOf = useMemo(() => buildPieceKeyer(history), [history]);
 
   const focusOptions = useMemo(() => {
     const sites = new Map();
@@ -447,7 +449,7 @@ export default function Dashboard() {
     };
     for (const h of history) {
       const d = siteOfItem(h);
-      if (d) site(d).pieces.add(pieceKey(h));
+      if (d) site(d).pieces.add(keyOf(h));
     }
     for (const c of [...citations, ...brandVisHistory, ...sovHistory]) {
       const d = domainOf(c.url);
@@ -459,13 +461,13 @@ export default function Dashboard() {
       label: d,
       hint: `${plural(v.pieces.size, 'page')} · ${plural(v.checks, 'check')}`,
     }));
-    const loose = groupPieces(history.filter(h => !siteOfItem(h))).map(p => ({
+    const loose = groupPieces(history.filter(h => !siteOfItem(h)), keyOf).map(p => ({
       value: `piece:${p.key}`,
       label: p.name.length > 48 ? `${p.name.slice(0, 45)}…` : p.name,
-      hint: p.latest.repo ? 'Repo' : 'Content',
+      hint: `${p.latest.repo ? 'Repo' : 'Content'} · ${p.runs.length} ${p.runs.length === 1 ? 'analysis' : 'analyses'}`,
     }));
     return [{ value: '', label: 'Latest of each tool' }, ...siteOpts.slice(0, 30), ...loose.slice(0, 30)];
-  }, [history, citations, brandVisHistory, sovHistory]);
+  }, [history, citations, brandVisHistory, sovHistory, keyOf]);
 
   // A remembered focus that no longer exists (data cleared) falls back quietly.
   const activeFocus = focusOptions.some(o => o.value === focus) ? focus : '';
@@ -482,14 +484,14 @@ export default function Dashboard() {
   const filteredHistory = useMemo(() => {
     let out = history;
     if (focusSite) out = out.filter(h => siteOfItem(h) === focusSite);
-    else if (activeFocus.startsWith('piece:')) out = out.filter(h => pieceKey(h) === activeFocus.slice(6));
+    else if (activeFocus.startsWith('piece:')) out = out.filter(h => keyOf(h) === activeFocus.slice(6));
     else if (typeFilter !== 'all') out = out.filter(h => getItemType(h).toLowerCase() === typeFilter);
     return out;
-  }, [history, typeFilter, activeFocus, focusSite]);
+  }, [history, typeFilter, activeFocus, focusSite, keyOf]);
 
   // Pillar Breakdown follows one piece at a time: the same repo, URL, or
   // re-analysis chain. Unrelated analyses are never drawn on one line.
-  const pieces = useMemo(() => groupPieces(filteredHistory), [filteredHistory]);
+  const pieces = useMemo(() => groupPieces(filteredHistory, keyOf), [filteredHistory, keyOf]);
   const selectedPiece = pieces.find(p => p.key === pieceSel) || pieces[0] || null;
 
   const filtersActive = typeFilter !== 'all';
