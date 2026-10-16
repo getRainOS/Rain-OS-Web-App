@@ -4,6 +4,8 @@ import { Radar, BarChart2, Eye, ArrowRight } from 'lucide-react';
 import { useApp } from '../context/AppContext.jsx';
 import PageHeader from '../components/PageHeader.jsx';
 import PromptSuggestions from '../components/PromptSuggestions.jsx';
+import ContentIdeas from '../components/ContentIdeas.jsx';
+import { ViewTabs } from '../components/MonitorTabs.jsx';
 import TrackedQueriesPanel, { useTrackedQueries } from '../components/TrackedQueries.jsx';
 import styles from './Questions.module.css';
 
@@ -35,6 +37,7 @@ export default function Questions() {
   const { userLane } = useApp();
   const tracking = useTrackedQueries();
   const [own, setOwn] = useState('');
+  const [tab, setTab] = useState('questions');
   const question = own.trim();
 
   return (
@@ -48,6 +51,16 @@ export default function Questions() {
         ]}
       />
 
+      <ViewTabs
+        label="Prompt Research"
+        value={tab}
+        onChange={setTab}
+        items={[{ id: 'questions', label: 'Questions' }, { id: 'ideas', label: 'Content ideas' }]}
+      />
+
+      {tab === 'ideas' ? (
+        <div className={styles.main}><ContentIdeas /></div>
+      ) : (
       <div className={styles.grid}>
         <div className={styles.main}>
           <PromptSuggestions
@@ -83,6 +96,7 @@ export default function Questions() {
           <TrackedQueriesPanel tracking={tracking} />
         </aside>
       </div>
+      )}
     </div>
   );
 }
