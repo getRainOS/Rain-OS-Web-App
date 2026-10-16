@@ -7,6 +7,7 @@ import PillarScores from '../components/PillarScores.jsx';
 import ArtifactBlock from '../components/ArtifactBlock.jsx';
 import GithubPushPanel from '../components/GithubPushPanel.jsx';
 import { Wand2 } from 'lucide-react';
+import CheckProgress from '../components/CheckProgress.jsx';
 import PageHeader from '../components/PageHeader.jsx';
 import styles from './RepoAnalysis.module.css';
 
@@ -365,7 +366,7 @@ export default function RepoAnalysis() {
                 className="btn btn-primary"
                 disabled={analyzing || repoUrl.trim().length <= GH.length}
               >
-                {analyzing ? <><span className="spinner" /> Analyzing…</> : '⊕ Analyze Repo'}
+                {analyzing ? 'Analyzing…' : '⊕ Analyze Repo'}
               </button>
             </div>
             {error && (
@@ -377,6 +378,21 @@ export default function RepoAnalysis() {
               </p>
             )}
           </form>
+
+          {analyzing && (
+            <div style={{ marginTop: 20 }}>
+              <CheckProgress
+                title="Analyzing your repository"
+                skeleton="report"
+                steps={[
+                  { label: 'Fetching files from GitHub', ms: 3000 },
+                  { label: 'Checking structure and crawler access', ms: 4000 },
+                  { label: 'Scoring each pillar', ms: 8000 },
+                  { label: 'Writing your fixes' },
+                ]}
+              />
+            </div>
+          )}
         </>
       )}
 

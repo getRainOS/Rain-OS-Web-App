@@ -185,13 +185,22 @@ input, textarea, select {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+/* Loading mark: a soft pulsing dot, same as the step markers in CheckProgress. */
 .spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255,255,255,0.08);
-  border-top-color: var(--text);
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: 0;
   border-radius: 50%;
-  animation: spin 0.7s linear infinite;
+  background: #2B8FE3;
+  animation: softPulse 1.2s ease-in-out infinite;
+}
+@keyframes softPulse {
+  0%, 100% { opacity: 0.35; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation: none; opacity: 0.8; }
 }
 
 /* ── Fade in ── */

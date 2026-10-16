@@ -104,7 +104,7 @@ export default function PromptSuggestions({ url, lane, tracking, onUse, renderUs
           </>
         )}
         <button type="submit" className={styles.btn} disabled={loading}>
-          {loading ? <><span className="spinner" style={{ width: 14, height: 14 }} /> Thinking…</> : <>Suggest questions</>}
+          {loading ? 'Thinking…' : <>Suggest questions</>}
         </button>
       </form>
 
