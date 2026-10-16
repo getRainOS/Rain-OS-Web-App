@@ -17,6 +17,7 @@ import { ViewTabs, SubTabs, NewCheckButton, QuestionPicker, TabEmpty } from '../
 import PromptSuggestions from '../components/PromptSuggestions.jsx';
 import ImproveCta from '../components/ImproveCta.jsx';
 import SiteNote from '../components/SiteNote.jsx';
+import RecentPicker from '../components/RecentPicker.jsx';
 import { isSharedPlatform } from '../lib/sharedPlatforms.js';
 import { improveLink } from '../lib/improveLink.js';
 import { getMySite, setMySite } from '../lib/mySite.js';
@@ -377,6 +378,7 @@ export default function CitationMonitor() {
               ) : (
                 <>
                   <p className={styles.fieldHint}>So we can find you among the sources.</p>
+                  <RecentPicker mode="site" onPick={setUrl} />
                   <SiteNote url={url} />
                 </>
               )}

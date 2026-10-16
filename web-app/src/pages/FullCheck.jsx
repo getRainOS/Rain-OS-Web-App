@@ -12,6 +12,7 @@ import { getMySite, setMySite } from '../lib/mySite.js';
 import { PLANS, costOf, siteFromUrl, guessBrand } from '../lib/fullCheck.js';
 import { isSharedPlatform } from '../lib/sharedPlatforms.js';
 import SiteNote from '../components/SiteNote.jsx';
+import RecentPicker from '../components/RecentPicker.jsx';
 import styles from './FullCheck.module.css';
 
 const MODULE_LANES = ['product_sellers', 'developers', 'local_business', 'vibe_coders'];
@@ -161,6 +162,7 @@ export default function FullCheck() {
           <label className={styles.label} htmlFor="fc-url">Your website</label>
           <input id="fc-url" className={styles.input} type="text" inputMode="url" spellCheck={false}
             placeholder="yourdomain.com" value={url} onChange={e => setUrl(e.target.value)} />
+          <RecentPicker mode="site" onPick={setUrl} />
           <SiteNote url={url} />
 
           <label className={styles.label} htmlFor="fc-brand">Your business or brand name <span className={styles.opt}>Optional</span></label>

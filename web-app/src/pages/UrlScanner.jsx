@@ -9,6 +9,7 @@ import ArtifactBlock from '../components/ArtifactBlock.jsx';
 import CitationCrossPromo from '../components/CitationCrossPromo.jsx';
 import GithubPushPanel from '../components/GithubPushPanel.jsx';
 import { normalizeUrlInput, hasUrlBody } from '../lib/urlInput.js';
+import RecentPicker from '../components/RecentPicker.jsx';
 import { urlScannerLabel } from '../lib/laneLabels.js';
 import { ShoppingBag, MapPin, Code2, Sparkles, ScanSearch, Wand2, AlertTriangle } from 'lucide-react';
 import PageHeader from '../components/PageHeader.jsx';
@@ -372,6 +373,7 @@ export default function UrlScanner() {
             {loading ? 'Scanning…' : '◎ Scan URL'}
           </button>
         </div>
+        <RecentPicker mode="page" onPick={v => setUrl(normalizeUrlInput(v))} />
         {error && (
           <p className={styles.error}>
             {error}
