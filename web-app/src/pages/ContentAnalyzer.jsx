@@ -54,6 +54,7 @@ function readSavedDraft() {
       url: typeof saved.url === 'string' ? saved.url : '',
       contentType: typeof saved.contentType === 'string' ? saved.contentType : '',
       analysisId: saved.analysisId != null ? String(saved.analysisId) : null,
+      lastAnalysisId: saved.lastAnalysisId != null ? String(saved.lastAnalysisId) : null,
     };
   } catch {
     return {};
@@ -68,6 +69,8 @@ function saveDraft(draft) {
       url: draft.url || '',
       contentType: draft.contentType || '',
       analysisId: draft.analysisId != null ? String(draft.analysisId) : null,
+      // The last analysis you were looking at, so coming back reopens its results.
+      lastAnalysisId: draft.lastAnalysisId != null ? String(draft.lastAnalysisId) : null,
       savedAt: new Date().toISOString(),
     }));
   } catch {
@@ -99,8 +102,17 @@ export default function ContentAnalyzer() {
   // Keep the editor draft across refreshes and route changes. This is intentionally
   // separate from analysis history so an in-progress edit is never lost.
   useEffect(() => {
-    saveDraft({ title, content, url, contentType, analysisId: id || null });
+    saveDraft({ title, content, url, contentType, analysisId: id || null, lastAnalysisId: id || readSavedDraft().lastAnalysisId || null });
   }, [title, content, url, contentType, id]);
+
+  // Coming back to the editor (for example from the sidebar) reopens the
+  // results of the analysis you were last on, instead of showing the text alone.
+  useEffect(() => {
+    if (id || fromIdea) return;
+    const last = readSavedDraft().lastAnalysisId;
+    if (last) navigate(`/analyze/${last}`, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (!id) return;
@@ -329,7 +341,7 @@ export default function ContentAnalyzer() {
                 className={styles.rewriteBtn}
                 disabled={loading}
                 onClick={() => {
-                  saveDraft({ title: '', content: '', url: '', contentType, analysisId: null });
+                  saveDraft({ title: '', content: '', url: '', contentType, analysisId: null, lastAnalysisId: null });
                   setTitle(''); setContent(''); setUrl(''); setResult(null); setRewriteResult(null); setStale(false);
                   navigate('/analyze');
                 }}

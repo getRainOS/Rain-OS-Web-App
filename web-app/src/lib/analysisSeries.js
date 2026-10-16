@@ -12,6 +12,27 @@ export function pieceKey(h) {
   return `series:${h.id}`;
 }
 
+const normTitle = t => (t || '').trim().toLowerCase().replace(/\s+/g, ' ');
+
+// Pasted content with the same title is the same piece, even when its
+// re-analyses were not chained (for example it was analyzed again from
+// scratch). Runs sharing a chain id also stay together, so renaming a piece
+// does not split its history. Returns a function that maps a run to its piece key.
+export function buildPieceKeyer(items) {
+  const parent = new Map();
+  const find = k => { while (parent.get(k) !== k) { parent.set(k, parent.get(parent.get(k))); k = parent.get(k); } return k; };
+  const add = k => { if (!parent.has(k)) parent.set(k, k); return k; };
+  const union = (x, y) => { const rx = find(add(x)), ry = find(add(y)); if (rx !== ry) parent.set(ry, rx); };
+  const titleOwner = new Map();
+  for (const h of items) {
+    const raw = add(pieceKey(h));
+    if (h.repo || h.url || !normTitle(h.title)) continue;
+    const t = normTitle(h.title);
+    if (titleOwner.has(t)) union(titleOwner.get(t), raw); else titleOwner.set(t, raw);
+  }
+  return h => { const raw = pieceKey(h); return parent.has(raw) ? find(raw) : raw; };
+}
+
 export function pieceName(h) {
   if (h.title && h.title.trim()) return h.title.trim();
   if (h.repo) return h.repo.replace(/^https?:\/\/(www\.)?github\.com\//, '');
@@ -23,10 +44,10 @@ const time = h => new Date(h.analyzed_at || 0).getTime();
 
 // items: analyses (any order). Returns pieces sorted by most recent run,
 // each with runs oldest → newest.
-export function groupPieces(items) {
+export function groupPieces(items, keyOf = buildPieceKeyer(items)) {
   const map = new Map();
   for (const h of items) {
-    const k = pieceKey(h);
+    const k = keyOf(h);
     if (!map.has(k)) map.set(k, []);
     map.get(k).push(h);
   }
