@@ -225,6 +225,12 @@ CREATE INDEX IF NOT EXISTS idx_citation_checks_source_checked_at
 
 ALTER TABLE users ADD COLUMN IF NOT EXISTS citation_alerts BOOLEAN NOT NULL DEFAULT TRUE;
 
+-- Which AI engine produced each visibility check. Everything so far ran on
+-- Gemini with Google Search; ChatGPT and Claude will write their own ids.
+ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS engine TEXT NOT NULL DEFAULT 'gemini';
+ALTER TABLE brand_visibility_checks ADD COLUMN IF NOT EXISTS engine TEXT NOT NULL DEFAULT 'gemini';
+ALTER TABLE sov_checks ADD COLUMN IF NOT EXISTS engine TEXT NOT NULL DEFAULT 'gemini';
+
 -- Which brand names belong to which website, so the dashboard can show every
 -- result for a site even when the brand name differs from the domain.
 CREATE TABLE IF NOT EXISTS brand_site_links (

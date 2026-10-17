@@ -548,6 +548,7 @@ export interface CitationCheckRecord {
   recommendations: string[];
   summary: string | null;
   source: 'manual' | 'scheduled';
+  engine: string;
   checkedAt: string;
 }
 
@@ -562,6 +563,7 @@ const mapCitationRow = (row: any): CitationCheckRecord => ({
   recommendations: Array.isArray(row.recommendations) ? row.recommendations : [],
   summary: row.summary,
   source: row.source === 'scheduled' ? 'scheduled' : 'manual',
+  engine: row.engine || 'gemini',
   checkedAt: row.checked_at instanceof Date ? row.checked_at.toISOString() : row.checked_at,
 });
 
@@ -687,6 +689,7 @@ export interface BrandVisibilityRecord {
   competitors: string[];
   recommendations: string[];
   summary: string | null;
+  engine: string;
   checked_at: string;
 }
 
@@ -706,6 +709,7 @@ const mapBrandVisRow = (row: any): BrandVisibilityRecord => ({
   competitors: Array.isArray(row.competitors) ? row.competitors : (typeof row.competitors === 'string' ? JSON.parse(row.competitors) : []),
   recommendations: Array.isArray(row.recommendations) ? row.recommendations : (typeof row.recommendations === 'string' ? JSON.parse(row.recommendations) : []),
   summary: row.summary ?? null,
+  engine: row.engine || 'gemini',
   checked_at: row.checked_at instanceof Date ? row.checked_at.toISOString() : row.checked_at,
 });
 
@@ -762,7 +766,7 @@ export const getBrandVisibilityChecksByUser = async (
   const res = await pool.query(
     `SELECT id, name, brand, topic, url, visibility_score, mention_status, mention_position,
             sentiment, sentiment_explanation, answer_excerpt, sources, competitors,
-            recommendations, summary, checked_at
+            recommendations, summary, engine, checked_at
      FROM brand_visibility_checks
      WHERE user_id = $1
      ORDER BY checked_at DESC
