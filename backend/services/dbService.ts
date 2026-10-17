@@ -940,3 +940,20 @@ export const deleteAnalysis = async (
 export const setCitationAlerts = async (userId: string, enabled: boolean): Promise<void> => {
   await pool.query('UPDATE users SET citation_alerts = $2 WHERE id = $1', [userId, enabled]);
 };
+
+// Permanently removes an account. Every table keyed to the user cascades from
+// users; oauth_states has no foreign key, so it is cleared explicitly.
+export const deleteUserAccount = async (userId: string): Promise<void> => {
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query('DELETE FROM oauth_states WHERE user_id = $1', [userId]);
+    await client.query('DELETE FROM users WHERE id = $1', [userId]);
+    await client.query('COMMIT');
+  } catch (err) {
+    await client.query('ROLLBACK').catch(() => {});
+    throw err;
+  } finally {
+    client.release();
+  }
+};

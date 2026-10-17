@@ -51,7 +51,7 @@ const sections = [
       'Your account data (email, API key, subscription status) is retained for as long as your account exists.',
       'Your analysis history (scores, pillar breakdowns, timestamps) is retained for as long as your account exists so you can review progress over time.',
       'Text pasted into Content Optimizer is kept with its analysis until you delete the analysis or your account. Repository files fetched for Repo Analysis are not kept.',
-      'You may request deletion of your account and all associated data by emailing support@getrainos.com. We will complete deletion within 30 days.',
+      'You can delete your account and all associated data at any time from Settings, or by emailing support@getrainos.com, in which case we complete deletion within 30 days.',
     ],
   },
   {

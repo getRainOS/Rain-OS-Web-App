@@ -302,3 +302,13 @@ export const handleWebhookEvent = async (event: Stripe.Event) => {
       console.log(`Unhandled Stripe event: ${event.type}`);
   }
 };
+
+// Ends billing before an account is deleted: cancels every subscription that
+// could still charge the customer. Throws if Stripe cannot be reached, so the
+// caller can stop rather than delete an account that is still being billed.
+export async function cancelAllSubscriptions(customerId: string): Promise<number> {
+  const subs = await stripe.subscriptions.list({ customer: customerId, status: 'all', limit: 100 });
+  const live = subs.data.filter(s => !['canceled', 'incomplete_expired'].includes(s.status));
+  for (const s of live) await stripe.subscriptions.cancel(s.id);
+  return live.length;
+}

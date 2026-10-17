@@ -53,6 +53,7 @@ async function request(method, path, body) {
 export const api = {
   me: () => request('GET', '/api/users/me'),
   updateName: (name) => request('POST', '/api/users/me/update-name', { name }),
+  deleteAccount: (confirm) => request('POST', '/api/users/me/delete-account', { confirm }),
   analyze: (body) => request('POST', '/api/analyze', body),
   quickTool: (body) => request('POST', '/api/quick-tool', body),
   history: (params) => {

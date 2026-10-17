@@ -29,6 +29,7 @@ import syncHandler from './auth/sync';
 import usersMeHandler from './users/me';
 import regenerateKeyHandler from './users/me/regenerate-key';
 import updateNameHandler from './users/me/update-name';
+import deleteAccountHandler from './users/me/delete-account';
 // Stripe
 import createCheckoutSessionHandler from './stripe/create-checkout-session';
 import createPortalSessionHandler from './stripe/create-portal-session';
@@ -170,6 +171,7 @@ app.post('/api/auth/sync', syncHandler);
 app.get( '/api/users/me', usersMeHandler);
 app.post('/api/users/me/regenerate-key', regenerateKeyHandler);
 app.post('/api/users/me/update-name', updateNameHandler);
+app.post('/api/users/me/delete-account', deleteAccountHandler);
 // ─── Stripe ────────────────────────────────────────────────────────────────
 app.post('/api/stripe/create-checkout-session', createCheckoutSessionHandler);
 app.post('/api/stripe/create-portal-session', createPortalSessionHandler);
