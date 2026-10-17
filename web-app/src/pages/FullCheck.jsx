@@ -9,7 +9,7 @@ import ImproveCta from '../components/ImproveCta.jsx';
 import { SubTabs, TabEmpty } from '../components/MonitorTabs.jsx';
 import { improveLink } from '../lib/improveLink.js';
 import { getMySite, setMySite } from '../lib/mySite.js';
-import { PLANS, costOf, siteFromUrl, guessBrand } from '../lib/fullCheck.js';
+import { PLANS, SOV_COST, costOf, siteFromUrl, guessBrand } from '../lib/fullCheck.js';
 import { isSharedPlatform } from '../lib/sharedPlatforms.js';
 import SiteNote from '../components/SiteNote.jsx';
 import RecentPicker from '../components/RecentPicker.jsx';
@@ -102,9 +102,9 @@ export default function FullCheck() {
     setMySite(url);
 
     const out = { domain, brand: brandName, plan, questions: [], scan: null, sov: null, bv: null, used: 0 };
-    const attempt = async (idx, fn, onOk) => {
+    const attempt = async (idx, fn, onOk, uses = 1) => {
       mark(idx, 'active');
-      try { onOk(await fn()); mark(idx, 'done'); out.used += 1; }
+      try { onOk(await fn()); mark(idx, 'done'); out.used += uses; }
       catch (err) { mark(idx, 'error'); return err.message || 'Something went wrong.'; }
       return null;
     };
@@ -129,7 +129,7 @@ export default function FullCheck() {
       full ? attempt(base, async () => {
         const { data } = await api.shareOfVoice({ name: `${brandName} full check`, brand: brandName, topic, url: target });
         return data?.data ?? data;
-      }, d => { out.sov = d; }).then(e => { out.sovError = e; }) : null,
+      }, d => { out.sov = d; }, SOV_COST).then(e => { out.sovError = e; }) : null,
       attempt(base + (full ? 1 : 0), async () => {
         const { data } = await api.brandVisibility({ name: `${brandName} full check`, brand: brandName, topic, url: target });
         return data.data || data;
@@ -153,7 +153,7 @@ export default function FullCheck() {
         subtitle="Enter your website and we run the page scan and the AI visibility checks together, then show one report."
         about={[
           { heading: 'What runs', body: 'A scan of your page, then Citation Monitor on the questions your customers ask, plus Brand Sentiment, and on Full also Share of Voice. Each result is saved, so it shows up in the dashboard under your site.' },
-          { heading: 'What it costs', body: 'Each tool run uses one analysis, the same as running it yourself. You see the total before anything runs. Suggesting questions is free.' },
+          { heading: 'What it costs', body: 'Each tool run uses one analysis, the same as running it yourself, except Share of Voice, which asks the AI 3 questions and uses 3. You see the total before anything runs. Suggesting questions is free.' },
         ]}
       />
 

@@ -1,4 +1,5 @@
 import { generateContentWithRetry } from './geminiRetry';
+import { recordGroundedCall } from './groundingUsage';
 import { isSharedPlatform, matchableDomain } from './sharedPlatforms';
 // services/citationCheckService.ts — rain OS AI Citation Monitor
 // Uses Gemini with Google Search grounding to test whether a user's content
@@ -168,6 +169,7 @@ export async function runCitationCheck(
     },
   };
   const groundedResult = await generateContentWithRetry(groundedModel, groundedRequest, { timeoutMs: 60000 });
+  recordGroundedCall('citation');
 
   const answerText = groundedResult.response.text();
   const candidate = (groundedResult.response.candidates?.[0] || {}) as CandidateWithGrounding;

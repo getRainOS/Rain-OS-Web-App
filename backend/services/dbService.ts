@@ -353,14 +353,14 @@ export const updateUserSubscription = async (
 
 // --- Usage Management ---
 
-export const incrementUserUsage = async (userId: string): Promise<User | null> => {
+export const incrementUserUsage = async (userId: string, by: number = 1): Promise<User | null> => {
     const query = `
         UPDATE users
-        SET usage = jsonb_set(usage, '{count}', ((usage->>'count')::int + 1)::text::jsonb)
+        SET usage = jsonb_set(usage, '{count}', ((usage->>'count')::int + $2)::text::jsonb)
         WHERE id = $1
         RETURNING *
     `;
-    const res = await pool.query(query, [userId]);
+    const res = await pool.query(query, [userId, by]);
     return res.rows[0] ? mapRowToUser(res.rows[0]) : null;
 };
 

@@ -19,6 +19,7 @@ import { generateContentWithRetry } from './geminiRetry';
 // domain, so lookups are capped per call and the result is cached forever
 // (including a confident "couldn't find it") in a shared, cross-user table
 // so no domain is ever searched for twice.
+import { recordGroundedCall } from './groundingUsage';
 import { GoogleGenerativeAI, type GenerativeModel, type Tool } from '@google/generative-ai';
 import { pool } from './db';
 
@@ -102,6 +103,7 @@ async function lookupDomainWithGrounding(domain: string): Promise<DomainCountry 
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
       generationConfig: { temperature: 0, maxOutputTokens: 1024 },
     });
+    recordGroundedCall('world_map');
     const raw = result.response.text();
     // Grounded responses can include stray markdown fences or trailing prose
     // despite the instruction — pull out the first {...} block rather than

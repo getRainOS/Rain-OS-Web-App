@@ -1,5 +1,6 @@
 // services/questionGapService.ts — question-targeted advice: compare a business
 // with the sources Gemini actually cited for one question, and say what to change.
+import { recordGroundedCall } from './groundingUsage';
 import { GoogleGenerativeAI, type GenerativeModel, type Tool } from '@google/generative-ai';
 import { generateContentWithRetry } from './geminiRetry';
 
@@ -156,6 +157,7 @@ async function callModel(input: GapInput, grounded: boolean): Promise<QuestionGa
       ...(grounded ? {} : { responseMimeType: 'application/json' }),
     },
   }, { timeoutMs: grounded ? 60000 : 30000 });
+  if (grounded) recordGroundedCall('improve_question');
   const text = result.response.text();
   const gap = parseQuestionGap(text);
   if (!gap) {

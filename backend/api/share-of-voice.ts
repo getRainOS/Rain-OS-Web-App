@@ -6,6 +6,8 @@ import { classifyGeminiError } from '../services/geminiErrors';
 import { pool } from '../services/db';
 import type { ApiError } from '../types';
 
+export const SOV_COST = 3;
+
 function getApiKey(req: express.Request): string | null {
   const h = req.headers.authorization;
   if (!h) return null;
@@ -33,8 +35,9 @@ export async function sovHandler(req: express.Request, res: express.Response) {
   if (user.stripePriceId !== businessPriceId) {
     return res.status(403).json({ error: 'plan_required', message: 'Share of Voice requires a Business plan. Upgrade to track how often Gemini cites your brand.' } as ApiError);
   }
-  if (user.usage.count >= user.usage.limit) {
-    return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Usage limit reached. Upgrade to continue.' } as ApiError);
+  // Share of Voice asks the AI 3 separate questions, so it costs 3 analyses.
+  if (user.usage.count + SOV_COST > user.usage.limit) {
+    return res.status(429).json({ error: 'rate_limit_exceeded', message: `Share of Voice uses ${SOV_COST} analyses and you have ${Math.max(user.usage.limit - user.usage.count, 0)} left. Upgrade to continue.` } as ApiError);
   }
 
   const { name, brand, topic, url, competitors } = req.body as { name?: string; brand?: string; topic?: string; url?: string; competitors?: unknown };
@@ -99,7 +102,7 @@ export async function sovHandler(req: express.Request, res: express.Response) {
       ]
     );
 
-    const updated = await incrementUserUsage(user.id);
+    const updated = await incrementUserUsage(user.id, SOV_COST);
     if (updated) res.setHeader('X-Usage-Info', JSON.stringify(updated.usage));
 
     return res.status(200).json({ success: true, data: { ...result, name: name.trim() } });

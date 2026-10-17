@@ -1,6 +1,7 @@
 import { generateContentWithRetry } from './geminiRetry';
 // services/brandVisibilityService.ts — rain OS AI Brand Visibility Checker
 // Uses Gemini with Google Search grounding to check how AI engines see a brand.
+import { recordGroundedCall } from './groundingUsage';
 import {
   GoogleGenerativeAI,
   FinishReason,
@@ -233,6 +234,7 @@ export async function runBrandVisibilityCheck(
     },
   };
   const groundedResult = await generateContentWithRetry(groundedModel, groundedRequest, { timeoutMs: 60000 });
+  recordGroundedCall('brand_sentiment');
 
   const answerText = groundedResult.response.text();
   const candidate = (groundedResult.response.candidates?.[0] || {}) as CandidateWithGrounding;
