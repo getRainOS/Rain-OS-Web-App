@@ -459,7 +459,7 @@ export default function Dashboard() {
     const siteOpts = [...sites].map(([d, v]) => ({
       value: `site:${d}`,
       label: d,
-      hint: `${plural(v.pieces.size, 'page')} · ${plural(v.checks, 'check')}`,
+      hint: `URL · ${plural(v.pieces.size, 'page')} · ${plural(v.checks, 'check')}`,
     }));
     const loose = groupPieces(history.filter(h => !siteOfItem(h)), keyOf).filter(p => p.name !== 'Untitled').map(p => ({
       value: `piece:${p.key}`,
