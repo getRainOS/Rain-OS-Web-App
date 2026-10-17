@@ -1,4 +1,4 @@
-// api/brand-links.ts — GET/PUT/DELETE /api/brand-links
+// api/brand-links.ts — GET/POST/DELETE /api/brand-links
 import express from 'express';
 import { findUserByApiKey } from '../services/dbService';
 import { listBrandLinks, saveBrandLink, deleteBrandLink } from '../services/brandLinkService';
