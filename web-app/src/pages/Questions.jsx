@@ -47,7 +47,7 @@ export default function Questions() {
         title="AI Question Research"
         subtitle="Start with the questions your customers ask AI. Check any of them in one click, or track the important ones every week."
         about={[
-          { heading: 'Why questions come first', body: 'People ask ChatGPT, Gemini and Google AI questions in plain language. Whether you show up depends on the exact question, so every check in Rain OS starts from one.' },
+          { heading: 'Why questions come first', body: 'People ask ChatGPT, Gemini and Google AI questions in plain language. Whether you show up depends on the exact question, so every check in rain OS starts from one.' },
           { heading: 'Suggestions are free', body: 'Suggested questions do not use your analyses. Running a check on one does, the same as running it from the tool directly.' },
         ]}
       />

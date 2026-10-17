@@ -913,7 +913,7 @@ export default function Dashboard() {
               ? "Pasted content and repos aren't tied to a website, so AI results aren't shown. Add your website when you analyze content to link them."
               : 'Each tool below shows its own latest result. Choose a site to see them all together.'}</p>
                 {focusSite && (
-                  <p><strong>Why link a brand?</strong> Brand checks are saved under a brand name, not a website. Linking tells Rain OS that a brand belongs to this site, so its sentiment, citation and share of voice results show up here with the page scores.</p>
+                  <p><strong>Why link a brand?</strong> Brand checks are saved under a brand name, not a website. Linking tells rain OS that a brand belongs to this site, so its sentiment, citation and share of voice results show up here with the page scores.</p>
                 )}
               </div>
             )}

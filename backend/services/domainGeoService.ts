@@ -8,7 +8,7 @@ import { generateContentWithRetry } from './geminiRetry';
 // the map was empty for most accounts.
 //
 // A first pass asked Gemini to classify domains from parametric knowledge
-// alone — but Rain OS's actual users are small businesses, indie
+// alone — but rain OS's actual users are small businesses, indie
 // freelancers, and writers, whose competitors are equally small and
 // obscure. Gemini has no memorized knowledge of who they are, so that
 // approach degraded to "null for almost everyone" for exactly this

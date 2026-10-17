@@ -109,7 +109,7 @@ export default function AuthModal({ onAuth, onBack, initialMode = 'signup', pend
             ? "Enter your email and we'll send a reset link"
             : isSignup
             ? '5 free analyses — no credit card needed'
-            : 'Sign in to your Rain OS account'}
+            : 'Sign in to your rain OS account'}
         </p>
 
         {!isReset && (

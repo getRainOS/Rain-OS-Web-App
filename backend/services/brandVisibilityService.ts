@@ -1,5 +1,5 @@
 import { generateContentWithRetry } from './geminiRetry';
-// services/brandVisibilityService.ts — Rain OS AI Brand Visibility Checker
+// services/brandVisibilityService.ts — rain OS AI Brand Visibility Checker
 // Uses Gemini with Google Search grounding to check how AI engines see a brand.
 import {
   GoogleGenerativeAI,

@@ -178,7 +178,7 @@ function HeroConsole() {
               <p className="mt-3 text-[13px] text-neutral-400 leading-relaxed">
                 {ex.cited
                   ? `Gemini cited your site as source ${ex.rank} for this question.`
-                  : `Your site wasn't among the ${ex.sources.length} sources. Rain OS shows what your page needs.`}
+                  : `Your site wasn't among the ${ex.sources.length} sources. rain OS shows what your page needs.`}
               </p>
             </motion.div>
           </AnimatePresence>
@@ -223,7 +223,7 @@ const PLATFORM = [
     label: 'Fix',
     Icon: Wand2,
     title: 'Ship the fix, not a report',
-    body: 'Every problem comes with what to do in plain English, plus the technical version for whoever builds your site. Rewrite in one click, or let Rain OS make the code change for you.',
+    body: 'Every problem comes with what to do in plain English, plus the technical version for whoever builds your site. Rewrite in one click, or let rain OS make the code change for you.',
     tools: [
       { Icon: Wand2, name: 'Rewrite for AI', desc: 'Restructure content for extraction' },
       { Icon: FileText, name: 'Fix prompts', desc: 'Tailored to Bolt, Lovable, Cursor and more' },
@@ -233,9 +233,9 @@ const PLATFORM = [
 ];
 
 const SHOTS: Record<string, { src: string; alt: string; label: string; w: number; h: number }> = {
-  measure: { src: '/screens/measure.png', alt: 'Rain OS URL Scanner results: overall score, four pillar scores and the technical checks that need fixing', label: 'URL SCANNER', w: 1072, h: 1066 },
-  monitor: { src: '/screens/monitor.png', alt: 'Rain OS Tracked weekly list: each question, whether you were cited, and a history of past checks', label: 'TRACKED WEEKLY', w: 1072, h: 756 },
-  fix: { src: '/screens/fix.png', alt: 'Rain OS recommendation with a plain-English fix and a copy-ready technical fix', label: 'RECOMMENDATIONS', w: 1072, h: 1080 },
+  measure: { src: '/screens/measure.png', alt: 'rain OS URL Scanner results: overall score, four pillar scores and the technical checks that need fixing', label: 'URL SCANNER', w: 1072, h: 1066 },
+  monitor: { src: '/screens/monitor.png', alt: 'rain OS Tracked weekly list: each question, whether you were cited, and a history of past checks', label: 'TRACKED WEEKLY', w: 1072, h: 756 },
+  fix: { src: '/screens/fix.png', alt: 'rain OS recommendation with a plain-English fix and a copy-ready technical fix', label: 'RECOMMENDATIONS', w: 1072, h: 1080 },
 };
 
 // Screenshots of the real app, rendered with example data.
@@ -267,7 +267,7 @@ function PlatformSection() {
             Measure it. Monitor it. Fix it.
           </h2>
           <p className="mt-5 text-neutral-400 text-lg max-w-2xl leading-relaxed">
-            Most tools stop at a dashboard. Rain OS closes the loop, from the first score to the change that earns the citation.
+            Most tools stop at a dashboard. rain OS closes the loop, from the first score to the change that earns the citation.
           </p>
         </Reveal>
 
@@ -406,7 +406,7 @@ function MethodSection() {
             Real checks, not predictions.
           </h2>
           <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-xl">
-            Some tools guess whether AI will mention you. Rain OS asks, then shows you the answer. When a number is a judgment call, we say so and show the evidence.
+            Some tools guess whether AI will mention you. rain OS asks, then shows you the answer. When a number is a judgment call, we say so and show the evidence.
           </p>
           <div className="mt-8 flex items-start gap-3 text-[13px] text-neutral-500 max-w-md">
             <ShieldCheck className="w-4 h-4 mt-0.5 shrink-0 text-neutral-400" />
@@ -460,7 +460,7 @@ function WhyGoogleSection() {
             We check the AI that sits on top of Google.
           </h2>
           <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-2xl">
-            Rain OS asks your questions through Gemini with live Google Search, the same search engine behind the AI answers your customers see first. One engine, checked properly, beats five checked by guesswork.
+            rain OS asks your questions through Gemini with live Google Search, the same search engine behind the AI answers your customers see first. One engine, checked properly, beats five checked by guesswork.
           </p>
         </Reveal>
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -508,7 +508,7 @@ function TrackingSection() {
             Know the week it changes.
           </h2>
           <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-xl">
-            Pick the questions that matter to your business. Rain OS re-checks them every week, keeps the history, and emails you only when you gain or lose a citation.
+            Pick the questions that matter to your business. rain OS re-checks them every week, keeps the history, and emails you only when you gain or lose a citation.
           </p>
           <ul className="mt-8 space-y-3 text-[15px] text-neutral-300">
             {['Up to 10 questions on Pro, 30 on Business', 'Email only when your status changes', 'Doesn\'t use your monthly analyses'].map(t => (
@@ -647,7 +647,7 @@ export default function Home() {
                 <span className="text-neutral-500">AI gives.</span>
               </h1>
               <p className="mt-7 text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto leading-relaxed text-balance">
-                More people now ask AI where to buy, who to hire and what to use. Rain OS shows whether AI recommends you, and walks you through fixing it in plain English.
+                More people now ask AI where to buy, who to hire and what to use. rain OS shows whether AI recommends you, and walks you through fixing it in plain English.
               </p>
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button onClick={start} className="h-11 px-6 rounded-md bg-[#2B8FE3] text-white text-[15px] font-medium hover:bg-[#1C73C4] transition-colors inline-flex items-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">

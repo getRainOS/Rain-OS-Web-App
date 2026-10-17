@@ -1,4 +1,4 @@
-// types.ts — Rain OS API v2.4
+// types.ts — rain OS API v2.4
 // 5-pillar scoring: AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, RAG Readiness
 import type { ReadabilityMetrics } from './services/readability';
 // ─── Auth / User types ───────────────────────────────────────────────────────

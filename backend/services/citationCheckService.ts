@@ -1,6 +1,6 @@
 import { generateContentWithRetry } from './geminiRetry';
 import { isSharedPlatform, matchableDomain } from './sharedPlatforms';
-// services/citationCheckService.ts — Rain OS AI Citation Monitor
+// services/citationCheckService.ts — rain OS AI Citation Monitor
 // Uses Gemini with Google Search grounding to test whether a user's content
 // would be cited by AI engines when answering a given topic/question.
 import {

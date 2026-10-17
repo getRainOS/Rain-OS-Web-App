@@ -46,7 +46,7 @@ export default function SiteFooter() {
       <div className="max-w-6xl mx-auto px-6 pt-16 pb-10">
         <div className="grid grid-cols-2 md:grid-cols-[1.4fr_repeat(4,1fr)] gap-10">
           <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="font-bold text-2xl tracking-tighter text-white" aria-label="Rain OS home">
+            <Link to="/" className="font-bold text-2xl tracking-tighter text-white" aria-label="rain OS home">
               r<span style={{ color: 'var(--cyan)' }}>ai</span>n
             </Link>
             <p className="mt-4 text-[13px] text-neutral-500 leading-relaxed max-w-[240px]">
@@ -69,7 +69,7 @@ export default function SiteFooter() {
           ))}
         </div>
         <div className="mt-14 pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row gap-3 sm:items-center justify-between text-[12px] text-neutral-600">
-          <span>© {new Date().getFullYear()} Rain OS. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} rain OS. All rights reserved.</span>
           <span>support@getrainos.com</span>
         </div>
       </div>

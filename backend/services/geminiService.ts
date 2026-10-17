@@ -1,5 +1,5 @@
 import { generateContentWithRetry } from './geminiRetry';
-// services/geminiService.ts — Rain OS AEO Scoring Engine v2.4
+// services/geminiService.ts — rain OS AEO Scoring Engine v2.4
 // 5-pillar scoring (general) + module-specific scoring (product_sellers, developers, local_business)
 // Algorithmic readability pre-analysis grounding.
 // SDK: @google/generative-ai

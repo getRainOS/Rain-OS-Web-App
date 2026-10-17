@@ -165,7 +165,7 @@ export default function TrackedQueriesPanel({ tracking }) {
 
       {cap === 0 ? (
         <div className={styles.locked}>
-          <p>Rain OS can re-run your most important questions every week and email you when Gemini starts or stops citing you. Weekly tracking is included with Pro and Business.</p>
+          <p>rain OS can re-run your most important questions every week and email you when Gemini starts or stops citing you. Weekly tracking is included with Pro and Business.</p>
           <Link to="/upgrade" className={styles.upgradeLink}>See plans</Link>
         </div>
       ) : items.length === 0 ? (

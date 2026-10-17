@@ -115,11 +115,11 @@ export default function VibeWorkflowDiagram() {
             {/* Arrow */}
             <FlowArrow visible={step >= 2} />
 
-            {/* Step 3: Rain OS - The Critical Layer */}
+            {/* Step 3: rain OS - The Critical Layer */}
             <WorkflowNode
               step={step}
               targetStep={2}
-              label="Rain OS"
+              label="rain OS"
               icon={<Zap className="w-5 h-5" strokeWidth={1.5} />}
               color="#ffffff"
               description="Optimize for AI"

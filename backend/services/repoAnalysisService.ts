@@ -470,7 +470,7 @@ function buildRecommendations(signals: RepoSignals, owner: string, repo: string)
 
 function buildVibeCodePrompt(recs: RepoRecommendation[], owner: string, repo: string): string {
   if (recs.length === 0) {
-    return `Nice — ${owner}/${repo} already passes Rain OS's AI-readability checks. No fixes needed right now.`;
+    return `Nice — ${owner}/${repo} already passes rain OS's AI-readability checks. No fixes needed right now.`;
   }
 
   const lines: string[] = [
@@ -491,7 +491,7 @@ function buildVibeCodePrompt(recs: RepoRecommendation[], owner: string, repo: st
     lines.push('');
   });
 
-  lines.push(`After making these changes, this project should score higher on AI Readability, Digital Authority, and Product Discoverability in Rain OS.`);
+  lines.push(`After making these changes, this project should score higher on AI Readability, Digital Authority, and Product Discoverability in rain OS.`);
 
   return lines.join('\n');
 }

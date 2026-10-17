@@ -1147,7 +1147,7 @@ export default function VibeCoders() {
               transition={{ duration: 0.6 }}
               className="text-center mb-14"
             >
-              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Inside Rain OS</span>
+              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Inside rain OS</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Built for people who ship fast</h2>
               <p className="text-neutral-400 max-w-xl mx-auto leading-relaxed">
                 You already watch your build's deploy logs. This is the same instinct, pointed at whether AI can actually read what you shipped — real trendlines, not a vibe check.
@@ -1168,7 +1168,7 @@ export default function VibeCoders() {
                 <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
                 <span className="ml-3 text-xs text-neutral-500 font-mono">app.getrainos.com/dashboard</span>
               </div>
-              <img src="/screenshots/dashboard-chart.png" alt="Rain OS pillar breakdown dashboard showing AI Readability, Digital Authority, Conversion Readiness, and RAG Readiness trendlines" className="w-full block" />
+              <img src="/screenshots/dashboard-chart.png" alt="rain OS pillar breakdown dashboard showing AI Readability, Digital Authority, Conversion Readiness, and RAG Readiness trendlines" className="w-full block" />
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-start">
@@ -1186,7 +1186,7 @@ export default function VibeCoders() {
                   <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
                   <span className="ml-3 text-xs text-neutral-500 font-mono">app.getrainos.com/citation-monitor</span>
                 </div>
-                <img src="/screenshots/citation-map.png" alt="Rain OS citation map showing which countries AI engines are citing your domain from" className="w-full block" />
+                <img src="/screenshots/citation-map.png" alt="rain OS citation map showing which countries AI engines are citing your domain from" className="w-full block" />
               </motion.div>
 
               <motion.div

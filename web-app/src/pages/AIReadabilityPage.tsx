@@ -63,7 +63,7 @@ export default function AIReadabilityPage() {
               Think of it like this: an AI needs to do two things to use your content. First, it needs to read and understand it clearly. Second, it needs to explain that understanding to the person asking the question. We call the first step <strong className="text-white">translation</strong> and the second step <strong className="text-white">interpretation</strong>.
             </p>
             <p>
-              Rain OS makes sure your content is translated well so the AI can interpret it accurately. If your content is poorly structured, ambiguous, or missing key signals, the AI either skips it or misrepresents it.
+              rain OS makes sure your content is translated well so the AI can interpret it accurately. If your content is poorly structured, ambiguous, or missing key signals, the AI either skips it or misrepresents it.
             </p>
           </div>
         </motion.div>
@@ -298,7 +298,7 @@ export default function AIReadabilityPage() {
           </div>
         </motion.div>
 
-        {/* What Rain OS Does */}
+        {/* What rain OS Does */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -310,11 +310,11 @@ export default function AIReadabilityPage() {
             <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center shrink-0">
               <FileSearch className="w-5 h-5 text-white" />
             </div>
-            What Rain OS does about it
+            What rain OS does about it
           </h2>
           <div className="space-y-4 text-neutral-400 leading-relaxed">
             <p>
-              Rain OS scans your content, URL, or repository and scores it across all six pillars — using the right weights for your lane. You get a single number — your Rain Score — plus a breakdown of exactly which signals are strong and which are missing.
+              rain OS scans your content, URL, or repository and scores it across all six pillars — using the right weights for your lane. You get a single number — your Rain Score — plus a breakdown of exactly which signals are strong and which are missing.
             </p>
             <p>
               More importantly, you get specific recommendations. Not vague advice like "improve your SEO." Exact, actionable steps like "Add an FAQ section with these questions" or "Your H2 structure is missing — add these three subheadings."

@@ -1,5 +1,5 @@
 import { generateContentWithRetry } from './geminiRetry';
-// services/shareOfVoiceService.ts — Rain OS AI Share of Voice
+// services/shareOfVoiceService.ts — rain OS AI Share of Voice
 // Runs 3 prompt phrasings through Google Search-grounded Gemini
 // answering behaviour and measures brand visibility across each.
 import {
@@ -244,7 +244,7 @@ export function buildSummary(
 /**
  * Deterministic next-step advice built only from facts this check already
  * produced — no extra LLM call, same "no guessing" rule as buildSummary().
- * Each string names a concrete cause and, where relevant, which Rain OS
+ * Each string names a concrete cause and, where relevant, which rain OS
  * tool addresses it, so a low share never dead-ends with just a number.
  */
 export function buildRecommendations(
