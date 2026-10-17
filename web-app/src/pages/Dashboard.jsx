@@ -399,6 +399,7 @@ export default function Dashboard() {
   const [linkPick, setLinkPick] = useState('');
   const [recentType, setRecentType] = useState('all');
   const [recentMore, setRecentMore] = useState(false);
+  const [focusHelpOpen, setFocusHelpOpen] = useState(false);
   const [brandVisLoading, setBrandVisLoading] = useState(true);
   const [sovHistory, setSovHistory] = useState([]);
   const [sovLoading, setSovLoading] = useState(true);
@@ -865,13 +866,24 @@ export default function Dashboard() {
             ariaLabel="Choose what the dashboard shows"
             options={focusOptions}
           />
-          <span className={styles.focusNote}>
-            {focusSite
+          <div className={styles.focusHelp}>
+            <button type="button" className={styles.focusHelpBtn} aria-label="What does this selector do?" aria-expanded={focusHelpOpen}
+              onClick={() => setFocusHelpOpen(o => !o)}>
+              <HelpCircle size={20} />
+            </button>
+            {focusHelpOpen && (
+              <div className={styles.focusHelpPop} role="note">
+                <p>{focusSite
               ? `Everything below is for ${focusSite}: its page analyses and every AI result (sentiment, citations, share of voice) for it.`
               : activeFocus
               ? "Pasted content and repos aren't tied to a website, so AI results aren't shown. Add your website when you analyze content to link them."
-              : 'Each tool below shows its own latest result. Choose a site to see them all together.'}
-          </span>
+              : 'Each tool below shows its own latest result. Choose a site to see them all together.'}</p>
+                {focusSite && (
+                  <p><strong>Why link a brand?</strong> Brand checks are saved under a brand name, not a website. Linking tells Rain OS that a brand belongs to this site, so its sentiment, citation and share of voice results show up here with the page scores.</p>
+                )}
+              </div>
+            )}
+          </div>
         </div>
         {focusSite && (
           <div className={styles.brandLinkRow}>
@@ -900,9 +912,6 @@ export default function Dashboard() {
             ) : (
               <span className={styles.brandLinkHint}>Run Brand Sentiment or Share of Voice for a brand to link it here.</span>
             )}
-            <span className={styles.brandLinkWhy}>
-              Why link? Brand checks are saved under a brand name, not a website. Linking tells Rain OS that a brand belongs to this site, so its sentiment, citation and share of voice results show up here with the page scores.
-            </span>
           </div>
         )}
         </>
