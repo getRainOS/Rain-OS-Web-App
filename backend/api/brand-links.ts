@@ -38,7 +38,8 @@ export async function deleteHandler(req: express.Request, res: express.Response)
   const user = await authUser(req, res);
   if (!user) return;
   const brand = cleanBrand(req.body?.brand ?? req.query.brand);
-  if (!brandKey(brand)) return res.status(400).json({ error: 'bad_request', message: 'Which brand?' } as ApiError);
-  await deleteBrandLink(user.id, brand);
+  const site = normalizeSite(String(req.body?.site ?? req.query.site ?? ''));
+  if (!brandKey(brand) || !site) return res.status(400).json({ error: 'bad_request', message: 'Which brand and site?' } as ApiError);
+  await deleteBrandLink(user.id, brand, site);
   return res.status(200).json({ success: true, links: await listBrandLinks(user.id) });
 }

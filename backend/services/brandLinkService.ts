@@ -15,11 +15,11 @@ export async function listBrandLinks(userId: string): Promise<BrandLink[]> {
 export async function saveBrandLink(userId: string, brand: string, site: string): Promise<void> {
   await pool.query(
     `INSERT INTO brand_site_links (user_id, brand_key, brand, site) VALUES ($1, $2, $3, $4)
-     ON CONFLICT (user_id, brand_key) DO UPDATE SET brand = EXCLUDED.brand, site = EXCLUDED.site`,
+     ON CONFLICT (user_id, brand_key, site) DO UPDATE SET brand = EXCLUDED.brand`,
     [userId, brandKey(brand), brand, site]
   );
 }
 
-export async function deleteBrandLink(userId: string, brand: string): Promise<void> {
-  await pool.query('DELETE FROM brand_site_links WHERE user_id = $1 AND brand_key = $2', [userId, brandKey(brand)]);
+export async function deleteBrandLink(userId: string, brand: string, site: string): Promise<void> {
+  await pool.query('DELETE FROM brand_site_links WHERE user_id = $1 AND brand_key = $2 AND site = $3', [userId, brandKey(brand), site]);
 }

@@ -231,8 +231,23 @@ CREATE TABLE IF NOT EXISTS brand_site_links (
   brand TEXT NOT NULL,
   site TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  PRIMARY KEY (user_id, brand_key)
+  PRIMARY KEY (user_id, brand_key, site)
 );
+
+-- A brand can belong to several sites. Tables made with the earlier
+-- (user_id, brand_key) key are widened once.
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'brand_site_links_pkey'
+      AND conrelid = 'brand_site_links'::regclass
+      AND array_length(conkey, 1) = 2
+  ) THEN
+    ALTER TABLE brand_site_links DROP CONSTRAINT brand_site_links_pkey;
+    ALTER TABLE brand_site_links ADD PRIMARY KEY (user_id, brand_key, site);
+  END IF;
+END $$;
 `;
 
 export const setupDatabase = async () => {
