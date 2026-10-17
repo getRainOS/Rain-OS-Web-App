@@ -34,6 +34,7 @@ const COLUMNS = [
   {
     title: 'Company',
     links: [
+      { label: 'Security & trust', to: '/trust' },
       { label: 'Privacy Policy', to: '/privacy' },
       { label: 'Terms of Service', to: '/terms' },
     ],
