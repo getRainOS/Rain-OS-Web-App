@@ -56,6 +56,7 @@ import {
 import { startScheduler } from '../services/schedulerService';
 import promptSuggestionsHandler from './prompt-suggestions';
 import contentIdeasHandler from './content-ideas';
+import { questionsHandler as interviewQuestionsHandler, draftHandler as interviewDraftHandler } from './interview';
 import { listHandler as brandLinksListHandler, saveHandler as brandLinksSaveHandler, deleteHandler as brandLinksDeleteHandler } from './brand-links';
 import { optionsHandler as topicOptionsHandler, questionsHandler as topicQuestionsHandler } from './topic';
 import questionGapHandler from './question-gap';
@@ -148,6 +149,8 @@ app.delete('/api/tracked-queries/:id', trackedDeleteHandler);
 app.patch('/api/citation-alerts', citationAlertsHandler);
 app.post('/api/prompt-suggestions', promptSuggestionsHandler);
 app.post('/api/content-ideas', contentIdeasHandler);
+app.post('/api/interview/questions', interviewQuestionsHandler);
+app.post('/api/interview/draft', interviewDraftHandler);
 app.get('/api/brand-links', brandLinksListHandler);
 app.post('/api/brand-links', brandLinksSaveHandler);
 app.delete('/api/brand-links', brandLinksDeleteHandler);

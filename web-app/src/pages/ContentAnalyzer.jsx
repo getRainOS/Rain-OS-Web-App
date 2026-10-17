@@ -10,6 +10,7 @@ import CitationCrossPromo from '../components/CitationCrossPromo.jsx';
 import { FileText, PenLine, ShoppingBag, LayoutTemplate, BookOpen, MessageSquare, Sparkles, Lock } from 'lucide-react';
 import PageHeader from '../components/PageHeader.jsx';
 import CheckProgress from '../components/CheckProgress.jsx';
+import InterviewDraft from '../components/InterviewDraft.jsx';
 import styles from './ContentAnalyzer.module.css';
 
 const DRAFT_STORAGE_KEY = 'rain_os_content_analyzer_draft';
@@ -95,6 +96,7 @@ export default function ContentAnalyzer() {
     (fromIdea && contentTypesForLane(userLane).some(t => t.id === prefill.contentType) ? prefill.contentType : '')
       || (savedDraftMatchesAnalysis ? savedDraft.contentType : '') || defaultContentTypeForLane(userLane)
   );
+  const [interviewOpen, setInterviewOpen] = useState(fromIdea && !prefill.pendingContent);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
@@ -294,6 +296,15 @@ export default function ContentAnalyzer() {
               ))}
             </div>
           </div>
+
+          {interviewOpen && !content.trim() && (
+            <InterviewDraft
+              question={prefill.question || title}
+              kind={contentType === 'article' ? 'article' : 'blog'}
+              onDraft={(t, d) => { if (t) setTitle(t); setContent(d); setInterviewOpen(false); refreshUser?.(); }}
+              onSkip={() => setInterviewOpen(false)}
+            />
+          )}
 
           <div className={styles.field}>
             <label className={styles.label}>Content</label>
