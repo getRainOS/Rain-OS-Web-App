@@ -27,6 +27,8 @@ export function downloadCsv(filename, rows, columns) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+const ENGINE_LABELS = { gemini: 'Gemini with Google Search', chatgpt: 'ChatGPT with web search', claude: 'Claude with web search' };
+const engineCol = { label: 'AI engine', get: r => ENGINE_LABELS[r.engine || 'gemini'] || r.engine };
 const day = d => (d ? new Date(d).toISOString().slice(0, 10) : '');
 const stamp = () => new Date().toISOString().slice(0, 10);
 
@@ -55,6 +57,7 @@ export const EXPORTS = {
       { label: 'Website', get: r => r.url || '' },
       { label: 'Cited', get: r => (r.cited ? 'Yes' : 'No') },
       { label: 'Cited sources', get: r => (r.sources || []).map(s => s.domain || s.uri || s.url).filter(Boolean) },
+      engineCol,
     ],
   },
   brandSentiment: {
@@ -68,6 +71,7 @@ export const EXPORTS = {
       { label: 'Mentioned', get: r => ((r.mentionStatus || r.mention_status) === 'mentioned' ? 'Yes' : 'No') },
       { label: 'Position', get: r => r.mentionPosition ?? r.mention_position ?? '' },
       { label: 'Sentiment', get: r => r.sentiment || '' },
+      engineCol,
     ],
   },
   sov: {
@@ -81,6 +85,7 @@ export const EXPORTS = {
       { label: 'Share of Voice %', get: r => r.sharePercent ?? '' },
       { label: 'Answers mentioning you (of 3)', get: r => r.mentionedCount ?? r.citedCount ?? '' },
       { label: 'Competitors', get: r => (r.brandShares || []).filter(b => !b.isYou).map(b => `${b.brand} ${b.sharePercent}%`) },
+      engineCol,
     ],
   },
 };

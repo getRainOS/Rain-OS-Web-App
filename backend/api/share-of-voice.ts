@@ -132,6 +132,7 @@ export async function sovHistoryHandler(req: express.Request, res: express.Respo
     topCompetitors:   typeof r.top_competitors === 'string' ? JSON.parse(r.top_competitors) : r.top_competitors,
     recommendations:  typeof r.recommendations === 'string' ? JSON.parse(r.recommendations) : r.recommendations,
     summary:          r.summary,
+    engine:           r.engine || 'gemini',
     brandShares:      typeof r.brand_shares === 'string' ? JSON.parse(r.brand_shares) : (r.brand_shares || []),
     sharePercent:     r.share_percent ?? null,
     checkedAt:        r.checked_at instanceof Date ? r.checked_at.toISOString() : r.checked_at,
