@@ -112,6 +112,8 @@ CREATE INDEX IF NOT EXISTS idx_sov_checks_user_checked_at
   ON sov_checks(user_id, checked_at DESC);
 -- Additive migration for existing deployments (idempotent)
 ALTER TABLE sov_checks ADD COLUMN IF NOT EXISTS name TEXT;
+ALTER TABLE sov_checks ADD COLUMN IF NOT EXISTS brand_shares JSONB NOT NULL DEFAULT '[]';
+ALTER TABLE sov_checks ADD COLUMN IF NOT EXISTS share_percent INTEGER;
 
 -- Brand Visibility / Sentiment history (additive)
 CREATE TABLE IF NOT EXISTS brand_visibility_checks (

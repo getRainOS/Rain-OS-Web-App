@@ -36,3 +36,13 @@ export function brandInText(brand: string, text: string): boolean {
   const pattern = buildBrandPattern(brand);
   return pattern ? pattern.test(text) : false;
 }
+
+// Character offset of the first mention of the brand in the text, or -1.
+// Used to rank brands by the order an answer names them.
+export function brandIndex(brand: string, text: string): number {
+  if (!brand || !text) return -1;
+  const pattern = buildBrandPattern(brand);
+  if (!pattern) return -1;
+  const m = pattern.exec(text);
+  return m ? m.index : -1;
+}

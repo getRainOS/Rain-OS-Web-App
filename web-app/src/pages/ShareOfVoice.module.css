@@ -615,3 +615,22 @@
   color: var(--text-dim);
   font-variant-numeric: tabular-nums;
 }
+
+.sovHero { display: flex; align-items: baseline; gap: 12px; margin: 4px 0 10px; }
+.sovHeroPct { font-size: 44px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); line-height: 1; }
+.sovHeroLabel { font-size: 13px; color: var(--text-dim); }
+.shareTable { margin-top: 18px; border-top: 1px solid var(--border); }
+.shareTableHead, .shareRow { display: grid; grid-template-columns: minmax(120px, 1.2fr) 2fr 90px; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.shareTableHead { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dim); }
+.shareTableHead span:last-child, .sharePos { text-align: right; }
+.shareRow { font-size: 13.5px; }
+.shareRowYou { background: rgba(59, 156, 245, 0.06); }
+.shareBrand { display: flex; align-items: center; gap: 8px; color: var(--text); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.youTag { font-size: 10.5px; padding: 1px 6px; border: 1px solid var(--border); border-radius: 4px; color: var(--text-dim); }
+.shareBarCell { display: flex; align-items: center; gap: 10px; }
+.shareBar { flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+.shareBar span { display: block; height: 100%; background: #3b9cf5; border-radius: 3px; }
+.sharePct { width: 40px; text-align: right; font-variant-numeric: tabular-nums; color: var(--text); }
+.sharePos { font-variant-numeric: tabular-nums; color: var(--text-dim); }
+.shareNote { margin: 10px 0 16px; font-size: 12px; color: var(--text-dim); }
+@media (max-width: 560px) { .shareTableHead, .shareRow { grid-template-columns: 1fr 1.4fr 56px; } }

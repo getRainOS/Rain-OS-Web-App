@@ -75,6 +75,33 @@ function ModelCard({ m, topic }) {
   );
 }
 
+function BrandShareTable({ result }) {
+  const rows = result.brandShares || [];
+  if (!rows.length) return null;
+  const top = Math.max(...rows.map(r => r.sharePercent), 1);
+  return (
+    <div className={styles.shareTable}>
+      <div className={styles.shareTableHead}>
+        <span>Brand</span><span>Share of Voice</span><span title="Average order in which the answers name this brand. 1 means named first.">Avg. position</span>
+      </div>
+      {rows.map(r => (
+        <div key={r.brand} className={`${styles.shareRow} ${r.isYou ? styles.shareRowYou : ''}`}>
+          <span className={styles.shareBrand}>{r.brand}{r.isYou && <span className={styles.youTag}>You</span>}</span>
+          <span className={styles.shareBarCell}>
+            <span className={styles.shareBar}><span style={{ width: `${(r.sharePercent / top) * 100}%` }} /></span>
+            <span className={styles.sharePct}>{r.sharePercent}%</span>
+          </span>
+          <span className={styles.sharePos}>{r.avgPosition ?? '—'}</span>
+        </div>
+      ))}
+      <p className={styles.shareNote}>
+        {result.competitorsFrom === 'detected' ? 'Competitors were taken from the brands the answers recommend. ' : ''}
+        Based on 3 answers from Gemini with Google Search. Each answer counts once per brand.
+      </p>
+    </div>
+  );
+}
+
 function MentionCountBadge({ count }) {
   const allGood = count === 3;
   const none    = count === 0;
@@ -114,6 +141,7 @@ export default function ShareOfVoice() {
   const { refreshUser } = useApp();
   const [name,  setName]    = useState('');
   const [brand, setBrand]   = useState('');
+  const [rivals, setRivals] = useState('');
   const [searchParams] = useSearchParams();
   const [topic, setTopic] = useState(() => searchParams.get('q') || '');
   const [url,   setUrl]     = useState(() => searchParams.get('url') || getMySite());
@@ -144,7 +172,10 @@ export default function ShareOfVoice() {
     setResult(null);
     setPlanGated(false);
     try {
-      const { data } = await api.shareOfVoice({ name: name.trim(), brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined });
+      const { data } = await api.shareOfVoice({
+        name: name.trim(), brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined,
+        competitors: rivals.split(',').map(c => c.trim()).filter(Boolean).slice(0, 5),
+      });
       setResult(data?.data ?? data);
       setMySite(url);
       // prepend to history without refetch
@@ -273,6 +304,12 @@ export default function ShareOfVoice() {
                 </div>
               </div>
               <div className={styles.field}>
+                <label className={styles.label}>Competitors <span className={styles.optionalHint}>(optional — up to 5, separated by commas)</span></label>
+                <input className={styles.input} type="text" value={rivals} onChange={e => setRivals(e.target.value)}
+                  placeholder="e.g. Profound, Peec AI, Semrush" maxLength={400} />
+                <div className={styles.hint}>Leave blank and we'll use the brands the AI answers actually recommend.</div>
+              </div>
+              <div className={styles.field}>
                 <label className={styles.label}>Your website URL <span className={styles.optionalHint}>(optional — used to check if your domain is in cited sources)</span></label>
                 <input className={styles.input} type="text" value={url} onChange={e => setUrl(e.target.value)}
                   placeholder="https://yourdomain.com" />
@@ -326,14 +363,21 @@ export default function ShareOfVoice() {
                     <p style={{ fontSize: 12.5, color: 'var(--text-dim)', margin: '0 0 8px' }}>Your site is on a platform many businesses share, so we can’t work out your share of the cited sources.</p>
                   )}
 
+                  {result.sharePercent != null && (
+                    <div className={styles.sovHero}>
+                      <span className={styles.sovHeroPct}>{result.sharePercent}%</span>
+                      <span className={styles.sovHeroLabel}>Share of Voice: your share of all brand mentions</span>
+                    </div>
+                  )}
                   <div className={styles.resultHeadline} style={{ marginBottom: result.domainSharePercent !== null ? 4 : 12 }}>
-                    Mentioned in {result.mentionedCount} of 3 prompts
+                    Mentioned in {result.mentionedCount} of 3 answers
                   </div>
                   {result.domainSharePercent !== null && (
                     <div className={styles.resultDomainShare}>
-                      Your domain is {result.domainCitedCount} of {result.domainSourceCount} cited sources ({result.domainSharePercent}%)
+                      Source share: your domain is {result.domainCitedCount} of {result.domainSourceCount} cited sources ({result.domainSharePercent}%)
                     </div>
                   )}
+                  <BrandShareTable result={result} />
 
                   <div className={styles.resultModelsRow}>
                     {result.modelResults.map(m => {

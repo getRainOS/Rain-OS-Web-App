@@ -813,15 +813,19 @@ export default function Dashboard() {
       label: isLocal ? 'Mentioned in 3 asks' : 'Share of Voice',
       to: '/share-of-voice',
       hasData: sovTotal > 0,
-      value: sovTotal > 0 ? `${sovRate}%` : null,
+      // Newer checks carry a real share against competitors; older ones only
+      // say whether the brand was mentioned.
+      value: sovTotal > 0 ? `${sovScoped[0]?.sharePercent ?? sovRate}%` : null,
       sub: sovTotal > 0
-        ? `Mentioned in ${sovMentionedCount} of your last ${sovTotal} check${sovTotal > 1 ? 's' : ''}`
+        ? sovScoped[0]?.sharePercent != null
+          ? `Your share of brand mentions vs ${Math.max((sovScoped[0].brandShares || []).length - 1, 0)} competitors, latest check`
+          : `Mentioned in ${sovMentionedCount} of your last ${sovTotal} check${sovTotal > 1 ? 's' : ''}`
         : 'No data yet. Run a check to see how often Gemini mentions your brand.',
       Icon: BarChart2,
       dots: sovTotal > 0
         ? sovScoped.slice(0, 8).reverse().map(h => (h.mentionedCount ?? h.citedCount ?? h.cited_count ?? 0) > 0)
         : null,
-      tooltip: 'How many of your recent Share of Voice checks had Gemini mention your brand in at least one of the 3 different ways we ask about your topic.',
+      tooltip: 'Your share of all brand mentions across the answers in your latest Share of Voice check, compared with competitors. Older checks without competitors show how often you were mentioned instead.',
     },
     {
       key: 'usage',
