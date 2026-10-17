@@ -92,15 +92,15 @@
   padding: 0 14px;
   border: 0;
   border-radius: 8px;
-  background: var(--cyan);
-  color: #fff;
+  background: var(--text);
+  color: var(--bg);
   font: inherit;
   font-size: 13.5px;
   font-weight: 500;
   cursor: pointer;
 }
 
-.btn:hover:not(:disabled) { background: #1C73C4; }
+.btn:hover:not(:disabled) { background: rgba(255,255,255,0.82); }
 .btn:disabled { opacity: 0.7; cursor: default; }
 
 .error {

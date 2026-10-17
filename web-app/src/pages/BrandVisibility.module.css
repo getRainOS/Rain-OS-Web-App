@@ -1,8 +1,4 @@
-.page {
-  padding: 32px 40px;
-  max-width: 900px;
-  margin: 0 auto;
-}
+.page { max-width: 1160px; }
 
 .header {
   margin-bottom: 32px;
@@ -84,11 +80,9 @@
 }
 
 .label {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 12.5px;
+  font-weight: 500;
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   margin-bottom: 8px;
   display: block;
 }

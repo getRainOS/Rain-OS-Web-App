@@ -243,7 +243,7 @@ export default function BrandVisibility() {
           </div>
           <div className={styles.formGrid2}>
             <div>
-              <label className={styles.label}>Brand or product name</label>
+              <label className={styles.label}>Your brand or product</label>
               <input
                 className={styles.input}
                 value={brand}
@@ -256,7 +256,7 @@ export default function BrandVisibility() {
               <RecentPicker mode="brand" onPick={setBrand} />
             </div>
             <div>
-              <label className={styles.label}>Question or Prompt to View Sentiment For</label>
+              <label className={styles.label}>Question to check</label>
               <input
                 className={styles.input}
                 value={topic}

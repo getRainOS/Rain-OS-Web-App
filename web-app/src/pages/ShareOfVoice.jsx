@@ -290,14 +290,14 @@ export default function ShareOfVoice() {
               </div>
               <div className={styles.formGrid2}>
                 <div>
-                  <label className={styles.label}>Brand / product name</label>
+                  <label className={styles.label}>Your brand or product</label>
                   <input className={styles.input} type="text" value={brand} onChange={e => setBrand(e.target.value)}
                     placeholder="e.g. Rain OS" maxLength={200} required />
                   <div className={styles.hint}>Use your name as people write it publicly.</div>
                   <RecentPicker mode="brand" onPick={setBrand} />
                 </div>
                 <div>
-                  <label className={styles.label}>Question or Prompt to Determine Share of Voice For</label>
+                  <label className={styles.label}>Question to check</label>
                   <input className={styles.input} type="text" value={topic} onChange={e => setTopic(e.target.value)}
                     placeholder="e.g. AI content optimization tools" maxLength={300} required />
                   <RecentPicker mode="question" onPick={setTopic} />

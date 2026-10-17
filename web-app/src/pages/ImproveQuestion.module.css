@@ -64,15 +64,15 @@
   height: 42px;
   border: 0;
   border-radius: 8px;
-  background: #2B8FE3;
-  color: #fff;
+  background: var(--text);
+  color: var(--bg);
   font: inherit;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: background 0.15s;
 }
-.submit:hover:not(:disabled) { background: #1C73C4; }
+.submit:hover:not(:disabled) { background: rgba(255,255,255,0.82); }
 .submit:disabled { opacity: 0.6; cursor: default; }
 .submit:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 

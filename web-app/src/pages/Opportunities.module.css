@@ -1,4 +1,4 @@
-.page { max-width: 880px; }
+.page { max-width: 1160px; }
 
 .loading { display: flex; justify-content: center; padding: 64px 0; }
 
@@ -67,8 +67,8 @@
   cursor: pointer;
 }
 
-.primary { border: 1px solid #2B8FE3; background: #2B8FE3; color: #fff; }
-.primary:hover { background: #1C73C4; border-color: #1C73C4; }
+.primary { border: 1px solid var(--text); background: var(--text); color: var(--bg); }
+.primary:hover { background: rgba(255,255,255,0.82); border-color: rgba(255,255,255,0.82); }
 
 .secondary { border: 1px solid var(--border); background: rgba(255, 255, 255, 0.03); color: var(--text); }
 .secondary:hover { border-color: rgba(255, 255, 255, 0.22); }

@@ -29,8 +29,8 @@
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   height: 40px; padding: 0 18px; border-radius: 8px; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap;
 }
-.primary { border: 0; background: #2B8FE3; color: #fff; transition: background 0.15s; }
-.primary:hover:not(:disabled) { background: #1C73C4; }
+.primary { border: 0; background: var(--text); color: var(--bg); transition: background 0.15s; }
+.primary:hover:not(:disabled) { background: rgba(255,255,255,0.82); }
 .primary:disabled { opacity: 0.5; cursor: default; }
 .secondary { border: 1px solid var(--border-strong); background: transparent; color: var(--text); }
 .secondary:hover:not(:disabled) { background: rgba(255, 255, 255, 0.06); }

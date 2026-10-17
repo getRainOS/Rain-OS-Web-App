@@ -213,8 +213,8 @@
   height: 42px;
   border: 0;
   border-radius: 8px;
-  background: var(--cyan);
-  color: #fff;
+  background: var(--text);
+  color: var(--bg);
   font-family: inherit;
   font-size: 14px;
   font-weight: 500;
@@ -222,7 +222,7 @@
   transition: background 0.15s, opacity 0.15s;
 }
 
-.submitBtn:hover:not(:disabled) { background: #1C73C4; }
+.submitBtn:hover:not(:disabled) { background: rgba(255,255,255,0.82); }
 .submitBtn:disabled { opacity: 0.45; cursor: default; }
 .submitBtn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
