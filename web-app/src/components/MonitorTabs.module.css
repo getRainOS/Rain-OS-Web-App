@@ -92,15 +92,15 @@
   padding: 0 12px;
   border: 0;
   border-radius: var(--radius-sm);
-  background: var(--cyan);
-  color: #fff;
+  background: var(--text);
+  color: var(--bg);
   font: inherit;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
 }
 
-.newCheckBtn:hover { background: #1C73C4; }
+.newCheckBtn:hover { background: rgba(255,255,255,0.82); }
 
 .viewTab:focus-visible,
 .subTab:focus-visible,

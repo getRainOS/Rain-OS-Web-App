@@ -418,7 +418,9 @@
 
 .tabs {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
   gap: 4px;
   margin-bottom: 16px;
   border-bottom: 1px solid var(--border);
@@ -499,3 +501,5 @@
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
+
+.tabs > * { flex-shrink: 0; white-space: nowrap; }

@@ -5,6 +5,7 @@ import { supabase } from './lib/supabase.js';
 import { AppContext } from './context/AppContext.jsx';
 import AuthModal from './components/AuthModal.jsx';
 import Layout from './components/Layout.jsx';
+import { LANES } from './lib/lanes.js';
 import Dashboard from './pages/Dashboard.jsx';
 import ContentAnalyzer from './pages/ContentAnalyzer.jsx';
 import UrlScanner from './pages/UrlScanner.jsx';
@@ -54,7 +55,11 @@ export default function App() {
   const [apiKey, setApiKeyState] = useState(() => getApiKey());
   const [user, setUser] = useState(null);
   const [authChecked, setAuthChecked] = useState(true);
-  const [userLane, setUserLaneState] = useState(() => localStorage.getItem('rain_os_user_lane') || null);
+  const [userLane, setUserLaneState] = useState(() => {
+    // A saved lane that no longer exists would hide every tool in the menu.
+    const saved = localStorage.getItem('rain_os_user_lane');
+    return LANES.some(l => l.id === saved) ? saved : null;
+  });
 
   function setUserLane(lane) {
     if (lane) localStorage.setItem('rain_os_user_lane', lane);

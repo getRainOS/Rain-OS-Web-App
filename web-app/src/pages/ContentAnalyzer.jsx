@@ -279,7 +279,7 @@ export default function ContentAnalyzer() {
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label}>Content Type</label>
+            <label className={styles.label}>Content type</label>
             <div className={styles.typePills}>
               {contentTypesForLane(userLane).map(t => (
                 <button
