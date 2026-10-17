@@ -113,7 +113,7 @@ export default function TopicPlanner({ lane, tracking, renderCheck }) {
 
   function write(q, kind) {
     const title = q.charAt(0).toUpperCase() + q.slice(1).replace(/\?*$/, '');
-    navigate('/analyze', { state: { pendingTitle: title, freshIdea: true, contentType: kind === 'article' ? 'article' : 'blog_post' } });
+    navigate('/analyze', { state: { pendingTitle: title, question: q, freshIdea: true, contentType: kind === 'article' ? 'article' : 'blog_post' } });
   }
 
   const step = Math.min(path.length, MAX_STEPS - 1);

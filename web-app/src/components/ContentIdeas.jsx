@@ -41,7 +41,7 @@ export default function ContentIdeas() {
   }
 
   function write(idea) {
-    navigate('/analyze', { state: { pendingTitle: idea.title, freshIdea: true, contentType: idea.format === 'article' ? 'article' : 'blog_post' } });
+    navigate('/analyze', { state: { pendingTitle: idea.title, question: idea.question || idea.title, freshIdea: true, contentType: idea.format === 'article' ? 'article' : 'blog_post' } });
   }
 
   return (
