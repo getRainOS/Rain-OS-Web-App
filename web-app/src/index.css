@@ -265,3 +265,12 @@ input, textarea, select {
 @media (prefers-reduced-motion: reduce) {
   .reveal { animation: none; opacity: 1; }
 }
+
+/* Printing the report: only the report paper goes on the page. */
+@media print {
+  @page { margin: 14mm; }
+  body { background: #fff !important; }
+  body * { visibility: hidden; }
+  .printArea, .printArea * { visibility: visible; }
+  .printArea { position: absolute; left: 0; top: 0; width: 100%; padding: 0 !important; border-radius: 0 !important; }
+}

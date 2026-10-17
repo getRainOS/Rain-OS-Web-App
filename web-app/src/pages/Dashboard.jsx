@@ -857,6 +857,7 @@ export default function Dashboard() {
           </p>
         </div>
         <div className={styles.headerBtns}>
+          <button onClick={() => navigate('/report')} className={styles.fullBtn}>Report</button>
           <button onClick={() => navigate('/full-check')} className={styles.fullBtn}>Full check</button>
           <NewAnalysisMenu lane={userLane} firstTime={!loading && history.length === 0} />
         </div>

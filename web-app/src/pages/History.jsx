@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
+import { Download } from 'lucide-react';
+import { downloadCsv, EXPORTS } from '../lib/exportCsv.js';
 import { api } from '../api/client.js';
 import PillarScores from '../components/PillarScores.jsx';
 import { PILLAR_COLORS } from '../lib/pillarColors.js';
@@ -389,9 +391,21 @@ export default function History() {
     );
   }
 
+  const exportKey = { analyses: 'analyses', citations: 'citations', 'brand-sentiment': 'brandSentiment', 'share-of-voice': 'sov' }[tab] || 'analyses';
+  const exportSpec = EXPORTS[exportKey];
+  const exportRows = { analyses: history, citations, brandSentiment: brandVis, sov }[exportKey] || [];
+
   return (
     <div className={`${styles.root} fade-in`}>
-      <PageHeader title="History" subtitle="Every analysis and check you've run, in one place." />
+      <PageHeader
+        title="History"
+        subtitle="Every analysis and check you've run, in one place."
+        actions={exportRows.length > 0 && (
+          <button type="button" className="btn btn-ghost" onClick={() => downloadCsv(exportSpec.file(), exportRows, exportSpec.columns)}>
+            <Download size={14} /> Export CSV
+          </button>
+        )}
+      />
 
       <div className={styles.tabs} role="tablist">
         <button
