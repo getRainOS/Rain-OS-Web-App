@@ -213,3 +213,41 @@ describe('buildRecommendations', () => {
     expect(recs).toContain('Add your website URL next time you run this check — without it, we can only tell you whether you were mentioned by name, not whether your domain is actually among the cited sources.');
   });
 });
+
+import { computeBrandShares, parseBrandList } from '../services/shareOfVoiceService';
+
+describe('computeBrandShares', () => {
+  const answers = [
+    'Top picks: Notion, then Rain OS and Asana.',
+    'I recommend Asana first. Notion is good too.',
+    'Rain OS leads here, followed by Notion.',
+  ];
+  it('counts answers per brand and divides by all brand mentions', () => {
+    const s = computeBrandShares('Rain OS', ['Notion', 'Asana'], answers);
+    const by = Object.fromEntries(s.map(x => [x.brand, x]));
+    expect(by['Notion'].mentions).toBe(3);
+    expect(by['Rain OS'].mentions).toBe(2);
+    expect(by['Asana'].mentions).toBe(2);
+    expect(by['Rain OS'].sharePercent).toBe(29); // 2 of 7
+    expect(s[0].brand).toBe('Notion');
+  });
+  it('ranks by order of first mention within each answer', () => {
+    const s = computeBrandShares('Rain OS', ['Notion', 'Asana'], answers);
+    const by = Object.fromEntries(s.map(x => [x.brand, x]));
+    expect(by['Rain OS'].avgPosition).toBe(1.5); // 2nd, then 1st
+    expect(by['Asana'].avgPosition).toBe(2);     // 3rd, then 1st
+  });
+  it('drops a competitor that is the same brand as you', () => {
+    const s = computeBrandShares('Rain OS', ['rain-os', 'Notion'], answers);
+    expect(s).toHaveLength(2);
+    expect(s.filter(x => x.isYou)).toHaveLength(1);
+  });
+});
+
+describe('parseBrandList', () => {
+  it('reads names, removes you and duplicates, and caps the list', () => {
+    expect(parseBrandList('["Notion","notion","Rain OS","Asana","x"]', 'Rain OS')).toEqual(['Notion', 'Asana']);
+    expect(parseBrandList('not json', 'Rain OS')).toEqual([]);
+    expect(parseBrandList(JSON.stringify(Array.from({ length: 12 }, (_, i) => `Brand ${i}`)), 'Rain OS')).toHaveLength(6);
+  });
+});

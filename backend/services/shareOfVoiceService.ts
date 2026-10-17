@@ -10,7 +10,7 @@ import {
   type GroundingChunk,
 } from '@google/generative-ai';
 import { resolveSourceDomain } from './groundingSources';
-import { brandInText } from './brandMatch';
+import { brandInText, brandIndex, tokenizeBrand } from './brandMatch';
 import { extractDomain, isSameDomain } from './citationCheckService';
 import { matchableDomain } from './sharedPlatforms';
 import { buildAnswerExcerpt } from './textExcerpt';
@@ -42,6 +42,17 @@ export interface ModelResult {
   mentioned:   boolean;          // brand found in this prompt's answer text
   answerExcerpt: string;
   sources:     SovSource[];
+  answerText?: string;           // full answer, used for counting; not stored
+}
+
+// One brand's standing across the answers: how many answers named it, its
+// share of all brand mentions, and its average rank within those answers.
+export interface BrandShare {
+  brand: string;
+  isYou: boolean;
+  mentions: number;
+  sharePercent: number;
+  avgPosition: number | null;
 }
 
 export interface SovResult {
@@ -57,6 +68,9 @@ export interface SovResult {
   recommendations: string[];          // deterministic next-step advice — see buildRecommendations()
   summary:     string;
   siteShared?: boolean;               // the site given is a page on a shared platform
+  brandShares: BrandShare[];          // you + competitors, most mentioned first
+  sharePercent: number | null;        // your share of all brand mentions; null without competitors to compare
+  competitorsFrom: 'you' | 'detected' | 'none';
 }
 
 function extractSources(chunks: GroundingChunk[]): SovSource[] {
@@ -120,6 +134,84 @@ export function computeDomainShare(sources: SovSource[], userDomain: string | nu
   const domainCitedCount = sources.filter(s => isSameDomain(s.domain, userDomain)).length;
   const domainSharePercent = domainSourceCount > 0 ? Math.round((domainCitedCount / domainSourceCount) * 100) : 0;
   return { domainCitedCount, domainSourceCount, domainSharePercent };
+}
+
+const squashBrand = (b: string) => tokenizeBrand(b).join('').toLowerCase();
+
+/**
+ * Share of Voice the way the industry defines it: each brand's mentions
+ * divided by all tracked brands' mentions, counted per answer (a brand named
+ * in an answer counts once for that answer). Position is the brand's rank
+ * among the tracked brands an answer names, by order of first mention.
+ */
+export function computeBrandShares(you: string, competitors: string[], answers: string[]): BrandShare[] {
+  const youKey = squashBrand(you);
+  const seen = new Set([youKey]);
+  const brands = [you];
+  for (const c of competitors) {
+    const k = squashBrand(c);
+    if (k && !seen.has(k)) { seen.add(k); brands.push(c.trim()); }
+  }
+  const mentions = brands.map(() => 0);
+  const ranks: number[][] = brands.map(() => []);
+  for (const text of answers) {
+    const found = brands
+      .map((b, i) => ({ i, at: brandIndex(b, text) }))
+      .filter(f => f.at >= 0)
+      .sort((a, b) => a.at - b.at);
+    found.forEach((f, r) => { mentions[f.i] += 1; ranks[f.i].push(r + 1); });
+  }
+  const total = mentions.reduce((a, b) => a + b, 0);
+  return brands
+    .map((brand, i) => ({
+      brand,
+      isYou: i === 0,
+      mentions: mentions[i],
+      sharePercent: total > 0 ? Math.round((mentions[i] / total) * 100) : 0,
+      avgPosition: ranks[i].length ? Math.round((ranks[i].reduce((a, b) => a + b, 0) / ranks[i].length) * 10) / 10 : null,
+    }))
+    .sort((a, b) => b.mentions - a.mentions || Number(b.isYou) - Number(a.isYou));
+}
+
+// Reads the brand list from the detection call: a JSON array of names.
+export function parseBrandList(raw: string, you: string, max = 6): string[] {
+  let arr: unknown;
+  try { arr = JSON.parse(raw.trim().replace(/^```(?:json)?|```$/g, '')); } catch { return []; }
+  if (!Array.isArray(arr)) return [];
+  const youKey = squashBrand(you);
+  const seen = new Set<string>([youKey]);
+  const out: string[] = [];
+  for (const v of arr) {
+    const name = typeof v === 'string' ? v.trim() : typeof (v as any)?.name === 'string' ? (v as any).name.trim() : '';
+    const k = squashBrand(name);
+    if (name.length < 2 || name.length > 60 || !k || seen.has(k)) continue;
+    seen.add(k);
+    out.push(name);
+    if (out.length >= max) break;
+  }
+  return out;
+}
+
+// When the user names no competitors, one small extra call lists the brands
+// the answers actually recommend. Failure just means no comparison.
+async function detectCompetitors(client: GoogleGenerativeAI, you: string, answers: string[]): Promise<string[]> {
+  try {
+    const model = client.getGenerativeModel({ model: MODEL });
+    const prompt = [
+      'Below are AI answers. List the distinct brands, companies or named products they recommend or mention, most prominent first.',
+      'Only proper names that appear in the text. No generic categories, no websites that are only cited as sources.',
+      'Return a JSON array of strings, at most 8.',
+      ...answers.map((a, i) => `--- Answer ${i + 1} ---\n${a.slice(0, 6000)}`),
+    ].join('\n\n');
+    const res = await generateContentWithRetry(model, {
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0, maxOutputTokens: 512, responseMimeType: 'application/json', thinkingConfig: { thinkingBudget: 0 } } as any,
+    });
+    return parseBrandList(res.response.text(), you);
+  } catch (err) {
+    console.error('Share of Voice competitor detection failed:', err);
+    return [];
+  }
 }
 
 /**
@@ -226,6 +318,7 @@ async function runOneModel(
     mentioned: brandInText(brand, answerText),
     answerExcerpt: buildAnswerExcerpt(answerText),
     sources: sources.slice(0, 6),
+    answerText,
   };
 }
 
@@ -235,7 +328,8 @@ async function runOneModel(
 export async function runShareOfVoice(
   brand: string,
   topic: string,
-  url:   string | null = null
+  url:   string | null = null,
+  rivalBrands: string[] = []
 ): Promise<SovResult> {
   if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
 
@@ -276,6 +370,14 @@ export async function runShareOfVoice(
 
   const mentionedCount = countMentioned(modelResults);
 
+  const answers = modelResults.map(m => m.answerText || '');
+  const named = rivalBrands.map(c => c.trim()).filter(Boolean);
+  const rivals = named.length ? named : await detectCompetitors(client, b, answers);
+  const brandShares = computeBrandShares(b, rivals, answers);
+  const totalMentions = brandShares.reduce((a, s) => a + s.mentions, 0);
+  const sharePercent = rivals.length && totalMentions > 0 ? brandShares.find(s => s.isYou)!.sharePercent : rivals.length ? 0 : null;
+  for (const m of modelResults) delete m.answerText;
+
   // Domain share across all sources cited by the 3 prompts combined.
   const allSources = modelResults.flatMap(m => m.sources);
   const { domainCitedCount, domainSourceCount, domainSharePercent } = computeDomainShare(allSources, userDomain);
@@ -295,6 +397,9 @@ export async function runShareOfVoice(
     siteShared: !!siteDomain && !userDomain,
     competitors,
     recommendations,
+    brandShares: rivals.length ? brandShares : [],
+    sharePercent,
+    competitorsFrom: named.length ? 'you' : rivals.length ? 'detected' : 'none',
     summary: buildSummary(b, t, mentionedCount, domainSharePercent, domainCitedCount, domainSourceCount),
   };
 }

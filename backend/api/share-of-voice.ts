@@ -37,7 +37,10 @@ export async function sovHandler(req: express.Request, res: express.Response) {
     return res.status(429).json({ error: 'rate_limit_exceeded', message: 'Usage limit reached. Upgrade to continue.' } as ApiError);
   }
 
-  const { name, brand, topic, url } = req.body as { name?: string; brand?: string; topic?: string; url?: string };
+  const { name, brand, topic, url, competitors } = req.body as { name?: string; brand?: string; topic?: string; url?: string; competitors?: unknown };
+  const rivals = Array.isArray(competitors)
+    ? competitors.filter((c): c is string => typeof c === 'string').map(c => c.trim()).filter(c => c.length >= 2 && c.length <= 80).slice(0, 5)
+    : [];
 
   if (!name || typeof name !== 'string' || name.trim().length < 1) {
     return res.status(400).json({ error: 'bad_request', message: 'name is required' } as ApiError);
@@ -67,7 +70,7 @@ export async function sovHandler(req: express.Request, res: express.Response) {
   }
 
   try {
-    const result = await runShareOfVoice(brand.trim(), topic.trim(), normalisedUrl);
+    const result = await runShareOfVoice(brand.trim(), topic.trim(), normalisedUrl, rivals);
 
     // Persist to DB. overall_sov is no longer computed (it was an LLM
     // guess) — written as 0 with this comment, same placeholder pattern as
@@ -77,8 +80,8 @@ export async function sovHandler(req: express.Request, res: express.Response) {
     // deterministic advice built from the same facts (see
     // shareOfVoiceService.buildRecommendations), not an LLM guess.
     await pool.query(
-      `INSERT INTO sov_checks (user_id, name, brand, topic, url, overall_sov, cited_count, model_results, top_competitors, recommendations, summary)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
+      `INSERT INTO sov_checks (user_id, name, brand, topic, url, overall_sov, cited_count, model_results, top_competitors, recommendations, summary, brand_shares, share_percent)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
       [
         user.id,
         name.trim(),
@@ -91,6 +94,8 @@ export async function sovHandler(req: express.Request, res: express.Response) {
         JSON.stringify(result.competitors),
         JSON.stringify(result.recommendations),
         result.summary,
+        JSON.stringify(result.brandShares),
+        result.sharePercent,
       ]
     );
 
@@ -127,6 +132,8 @@ export async function sovHistoryHandler(req: express.Request, res: express.Respo
     topCompetitors:   typeof r.top_competitors === 'string' ? JSON.parse(r.top_competitors) : r.top_competitors,
     recommendations:  typeof r.recommendations === 'string' ? JSON.parse(r.recommendations) : r.recommendations,
     summary:          r.summary,
+    brandShares:      typeof r.brand_shares === 'string' ? JSON.parse(r.brand_shares) : (r.brand_shares || []),
+    sharePercent:     r.share_percent ?? null,
     checkedAt:        r.checked_at instanceof Date ? r.checked_at.toISOString() : r.checked_at,
   }));
 
