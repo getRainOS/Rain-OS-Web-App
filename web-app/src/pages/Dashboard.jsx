@@ -442,13 +442,11 @@ export default function Dashboard() {
   }, [userLane]);
 
   // A result belongs to a site when its URL is on that domain, or its brand
-  // name is the site's name (brand "Longreads" ↔ longreads.com).
+  // was linked to the site by the user. Names are never matched automatically.
   const squash = t => String(t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
   const belongsToSite = (r, site) =>
-    domainOf(r.url) === site || (!!r.brand && (
-      squash(r.brand) === squash(site.replace(/\.[a-z.]+$/, '')) ||
-      brandLinks.some(l => l.site === site && squash(l.brand) === squash(r.brand))
-    ));
+    domainOf(r.url) === site || (!!r.brand &&
+      brandLinks.some(l => l.site === site && squash(l.brand) === squash(r.brand)));
   const siteOfItem = h => (h.repo ? null : domainOf(h.url));
   // One key per piece, so re-analyses of the same text count as one piece.
   const keyOf = useMemo(() => buildPieceKeyer(history), [history]);
