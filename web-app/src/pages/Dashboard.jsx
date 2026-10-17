@@ -461,7 +461,7 @@ export default function Dashboard() {
       label: d,
       hint: `${plural(v.pieces.size, 'page')} · ${plural(v.checks, 'check')}`,
     }));
-    const loose = groupPieces(history.filter(h => !siteOfItem(h)), keyOf).map(p => ({
+    const loose = groupPieces(history.filter(h => !siteOfItem(h)), keyOf).filter(p => p.name !== 'Untitled').map(p => ({
       value: `piece:${p.key}`,
       label: p.name.length > 48 ? `${p.name.slice(0, 45)}…` : p.name,
       hint: `${p.latest.repo ? 'Repo' : 'Content'} · ${p.runs.length} ${p.runs.length === 1 ? 'analysis' : 'analyses'}`,
