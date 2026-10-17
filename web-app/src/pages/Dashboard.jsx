@@ -395,6 +395,8 @@ export default function Dashboard() {
   });
   const [citations, setCitations] = useState([]);
   const [brandVisHistory, setBrandVisHistory] = useState([]);
+  const [brandLinks, setBrandLinks] = useState([]);
+  const [linkPick, setLinkPick] = useState('');
   const [brandVisLoading, setBrandVisLoading] = useState(true);
   const [sovHistory, setSovHistory] = useState([]);
   const [sovLoading, setSovLoading] = useState(true);
@@ -441,7 +443,10 @@ export default function Dashboard() {
   // name is the site's name (brand "Longreads" ↔ longreads.com).
   const squash = t => String(t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
   const belongsToSite = (r, site) =>
-    domainOf(r.url) === site || (!!r.brand && squash(r.brand) === squash(site.replace(/\.[a-z.]+$/, '')));
+    domainOf(r.url) === site || (!!r.brand && (
+      squash(r.brand) === squash(site.replace(/\.[a-z.]+$/, '')) ||
+      brandLinks.some(l => l.site === site && squash(l.brand) === squash(r.brand))
+    ));
   const siteOfItem = h => (h.repo ? null : domainOf(h.url));
   // One key per piece, so re-analyses of the same text count as one piece.
   const keyOf = useMemo(() => buildPieceKeyer(history), [history]);
@@ -473,7 +478,7 @@ export default function Dashboard() {
       hint: `${p.latest.repo ? 'Repo' : 'Content'} · ${p.runs.length} ${p.runs.length === 1 ? 'analysis' : 'analyses'}`,
     }));
     return [{ value: '', label: 'Latest of each tool' }, ...siteOpts.slice(0, 30), ...loose.slice(0, 30)];
-  }, [history, citations, brandVisHistory, sovHistory, keyOf]);
+  }, [history, citations, brandVisHistory, sovHistory, brandLinks, keyOf]);
 
   // A remembered focus that no longer exists (data cleared) falls back quietly.
   const activeFocus = focusOptions.some(o => o.value === focus) ? focus : '';
@@ -483,6 +488,21 @@ export default function Dashboard() {
     setFocus(next);
     setPieceSel(next.startsWith('piece:') ? next.slice(6) : null);
     try { localStorage.setItem('rain_os_dash_focus', next); } catch { /* not remembered */ }
+  }
+
+  const linkableBrands = useMemo(() => {
+    const seen = new Map();
+    for (const r of [...citations, ...brandVisHistory, ...sovHistory]) {
+      if (r.brand && !seen.has(squash(r.brand))) seen.set(squash(r.brand), r.brand);
+    }
+    return [...seen.values()].filter(b => !focusSite || !belongsToSite({ brand: b }, focusSite)).sort();
+  }, [citations, brandVisHistory, sovHistory, focusSite, brandLinks]);
+
+  async function linkBrand(brand) {
+    try { const { data } = await api.saveBrandLink(brand, focusSite); setBrandLinks(data?.links ?? []); setLinkPick(''); } catch { /* keep as is */ }
+  }
+  async function unlinkBrand(brand) {
+    try { const { data } = await api.deleteBrandLink(brand); setBrandLinks(data?.links ?? []); } catch { /* keep as is */ }
   }
 
   const scopeChecks = rows => (focusSite ? rows.filter(r => belongsToSite(r, focusSite)) : activeFocus ? [] : rows);
@@ -546,6 +566,10 @@ export default function Dashboard() {
       .catch(() => { if (!cancelled) setBrandVisHistory([]); })
       .finally(() => { if (!cancelled) setBrandVisLoading(false); });
     return () => { cancelled = true; };
+  }, [user?.id]);
+
+  useEffect(() => {
+    api.brandLinks().then(({ data }) => setBrandLinks(data?.links ?? [])).catch(() => {});
   }, [user?.id]);
 
   useEffect(() => {
@@ -830,6 +854,7 @@ export default function Dashboard() {
       )}
 
       {!loading && focusOptions.length > 1 && (
+        <>
         <div className={styles.focusBar}>
           <span className="eyebrow">Showing</span>
           <Select
@@ -847,6 +872,29 @@ export default function Dashboard() {
               : 'Each tool below shows its own latest result. Choose a site to see them all together.'}
           </span>
         </div>
+        {focusSite && (
+          <div className={styles.brandLinkRow}>
+            <span className={styles.brandLinkLabel}>Brands counted for {focusSite}:</span>
+            {brandLinks.filter(l => l.site === focusSite).map(l => (
+              <span key={l.brand} className={styles.brandChip}>
+                {l.brand}
+                <button type="button" aria-label={`Unlink ${l.brand}`} onClick={() => unlinkBrand(l.brand)}>×</button>
+              </span>
+            ))}
+            {linkableBrands.length > 0 ? (
+              <>
+                <select value={linkPick} onChange={e => setLinkPick(e.target.value)} className={styles.brandSelect} aria-label="Brand to link">
+                  <option value="">Add a brand…</option>
+                  {linkableBrands.map(b => <option key={b} value={b}>{b}</option>)}
+                </select>
+                <button type="button" className={styles.brandLinkBtn} disabled={!linkPick} onClick={() => linkBrand(linkPick)}>Link</button>
+              </>
+            ) : (
+              <span className={styles.brandLinkHint}>Run Brand Sentiment or Share of Voice for a brand to link it here.</span>
+            )}
+          </div>
+        )}
+        </>
       )}
 
       {/* ── Pillar Breakdown (above the fold, full-width hero) ── */}
@@ -1248,7 +1296,8 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className={styles.analysesList}>
-              {recentHistory.slice(0, 7).map((item, i) => {
+              {groupPieces(recentHistory, keyOf).slice(0, 7).map((piece, i) => {
+                const item = piece.latest;
                 const type = getItemType(item);
                 const typeColor = type === 'URL' ? '#8f93c7' : type === 'Repo' ? '#7cae8f' : '#6b9bc4';
                 const TypeIcon = type === 'URL' ? Globe : type === 'Repo' ? GitBranch : FileText;
@@ -1259,7 +1308,7 @@ export default function Dashboard() {
                       <TypeIcon className={styles.analysisBadgeIcon} />
                       {type}
                     </div>
-                    <span className={styles.analysisTitle}>{item.title || item.url || 'Untitled'}</span>
+                    <span className={styles.analysisTitle}>{item.title || item.url || 'Untitled'}{piece.runs.length > 1 && <span className={styles.analysisCount}> · {piece.runs.length} analyses</span>}</span>
                     <div className={styles.pillarDots}>
                       {PILLARS.map(p => (
                         <span key={p.key} className={styles.pillarDot}
