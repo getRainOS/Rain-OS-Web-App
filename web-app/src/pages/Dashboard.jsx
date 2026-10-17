@@ -837,6 +837,8 @@ export default function Dashboard() {
         ) : null}
       </div>
 
+      {!showLaneSelector && (<>
+
       {/* ── Create Content hero — one-time per-lane onboarding prompt, gone once the lane has any analysis history ── */}
       {!loading && history.length === 0 && (
         <div className={styles.contentHero}>
@@ -1382,6 +1384,7 @@ export default function Dashboard() {
 
       </div>
 
+      </>)}
     </div>
   );
 }
