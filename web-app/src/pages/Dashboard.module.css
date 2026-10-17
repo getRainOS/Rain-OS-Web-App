@@ -1554,3 +1554,5 @@ button.emptyLink {
 .linkNoteOk, .linkNoteErr { flex: 1 0 100%; font-size: 12.5px; padding: 8px 12px; border-radius: 6px; border: 1px solid; }
 .linkNoteOk { color: #7cd9a0; background: rgba(124,217,160,0.08); border-color: rgba(124,217,160,0.35); }
 .linkNoteErr { color: #f08a8a; background: rgba(240,138,138,0.08); border-color: rgba(240,138,138,0.35); }
+
+.brandViewSelect { min-width: 170px; }

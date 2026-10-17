@@ -401,6 +401,7 @@ export default function Dashboard() {
   const [recentMore, setRecentMore] = useState(false);
   const [focusHelpOpen, setFocusHelpOpen] = useState(false);
   const [linkNote, setLinkNote] = useState(null);
+  const [brandPick, setBrandPick] = useState('');
   const [brandVisLoading, setBrandVisLoading] = useState(true);
   const [sovHistory, setSovHistory] = useState([]);
   const [sovLoading, setSovLoading] = useState(true);
@@ -489,6 +490,7 @@ export default function Dashboard() {
   function changeFocus(next) {
     setFocus(next);
     setLinkNote(null);
+    setBrandPick('');
     setPieceSel(next.startsWith('piece:') ? next.slice(6) : null);
     try { localStorage.setItem('rain_os_dash_focus', next); } catch { /* not remembered */ }
   }
@@ -514,7 +516,7 @@ export default function Dashboard() {
   }
   async function unlinkBrand(brand) {
     try {
-      const { data } = await api.deleteBrandLink(brand);
+      const { data } = await api.deleteBrandLink(brand, focusSite);
       setBrandLinks(data?.links ?? []);
       setLinkNote({ ok: true, text: `Unlinked ${brand} from ${focusSite}.` });
     } catch (e) {
@@ -733,7 +735,17 @@ export default function Dashboard() {
   const brandVisSorted = [...scopeChecks(brandVisHistory)].sort(
     (a, b) => new Date(b.checked_at || b.checkedAt) - new Date(a.checked_at || a.checkedAt)
   );
-  const brandVisLatestBrand = brandVisSorted[0]?.brand || null;
+  // Brands with results for the chosen site; with two or more, a picker chooses
+  // which one the sentiment and share of voice cards show (newest by default).
+  const siteBrands = (() => {
+    const seen = new Map();
+    for (const r of [...brandVisSorted, ...scopeChecks(sovHistory)]) {
+      if (r.brand && !seen.has(squash(r.brand))) seen.set(squash(r.brand), r.brand);
+    }
+    return [...seen.values()];
+  })();
+  const pickedBrand = focusSite && siteBrands.find(b => squash(b) === squash(brandPick)) || null;
+  const brandVisLatestBrand = pickedBrand || brandVisSorted[0]?.brand || null;
   const brandVisScoped = brandVisLatestBrand
     ? brandVisSorted
         .filter(h => (h.brand || '').toLowerCase() === brandVisLatestBrand.toLowerCase())
@@ -752,7 +764,7 @@ export default function Dashboard() {
   const sovSorted = [...scopeChecks(sovHistory)].sort(
     (a, b) => new Date(b.checkedAt || b.checked_at) - new Date(a.checkedAt || a.checked_at)
   );
-  const sovLatestBrand = sovSorted[0]?.brand || null;
+  const sovLatestBrand = pickedBrand || sovSorted[0]?.brand || null;
   const sovScoped = sovLatestBrand
     ? sovSorted
         .filter(h => (h.brand || '').toLowerCase() === sovLatestBrand.toLowerCase())
@@ -902,6 +914,18 @@ export default function Dashboard() {
               </div>
             )}
           </div>
+          {focusSite && siteBrands.length > 1 && (
+            <>
+              <span className="eyebrow">Brand</span>
+              <Select
+                className={styles.brandViewSelect}
+                value={brandVisLatestBrand || ''}
+                onChange={setBrandPick}
+                ariaLabel="Brand shown in the sentiment and share of voice cards"
+                options={siteBrands.map(b => ({ value: b, label: b }))}
+              />
+            </>
+          )}
         </div>
         {focusSite && (
           <div className={styles.brandLinkRow}>
@@ -921,8 +945,8 @@ export default function Dashboard() {
                   placeholder="Add a brand…"
                   ariaLabel="Brand to link"
                   options={linkableBrands.map(b => {
-                    const on = brandLinks.find(l => squash(l.brand) === squash(b));
-                    return { value: b, label: b, hint: on ? `moves from ${on.site}` : undefined };
+                    const other = brandLinks.filter(l => squash(l.brand) === squash(b)).map(l => l.site);
+                    return { value: b, label: b, hint: other.length ? `also on ${other.join(', ')}` : undefined };
                   })}
                 />
                 <button type="button" className={styles.brandLinkBtn} disabled={!linkPick} onClick={() => linkBrand(linkPick)}>Link</button>
