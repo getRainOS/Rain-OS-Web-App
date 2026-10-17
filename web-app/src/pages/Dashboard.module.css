@@ -1524,3 +1524,14 @@ button.emptyLink {
 }
 .fullBtn:hover { background: #1C73C4; }
 .fullBtn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+.brandLinkRow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: -8px 0 16px; font-size: 12.5px; color: var(--text-dim); }
+.brandLinkLabel { margin-right: 2px; }
+.brandChip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 4px 3px 10px; border: 1px solid var(--border); border-radius: 4px; color: var(--text); }
+.brandChip button { background: none; border: 0; color: var(--text-dim); cursor: pointer; font-size: 14px; line-height: 1; padding: 0 4px; }
+.brandChip button:hover { color: var(--text); }
+.brandSelect { background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 4px 8px; font-size: 12.5px; }
+.brandLinkBtn { background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 4px 10px; font-size: 12.5px; cursor: pointer; }
+.brandLinkBtn:disabled { opacity: 0.4; cursor: default; }
+.brandLinkHint { font-size: 12px; }
+.analysisCount { color: var(--text-dim); font-weight: 400; }

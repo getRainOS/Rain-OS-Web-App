@@ -55,6 +55,7 @@ import {
 import { startScheduler } from '../services/schedulerService';
 import promptSuggestionsHandler from './prompt-suggestions';
 import contentIdeasHandler from './content-ideas';
+import { listHandler as brandLinksListHandler, saveHandler as brandLinksSaveHandler, deleteHandler as brandLinksDeleteHandler } from './brand-links';
 import { optionsHandler as topicOptionsHandler, questionsHandler as topicQuestionsHandler } from './topic';
 import questionGapHandler from './question-gap';
 // ─── CORS configuration ───────────────────────────────────────────────────────
@@ -146,6 +147,9 @@ app.delete('/api/tracked-queries/:id', trackedDeleteHandler);
 app.patch('/api/citation-alerts', citationAlertsHandler);
 app.post('/api/prompt-suggestions', promptSuggestionsHandler);
 app.post('/api/content-ideas', contentIdeasHandler);
+app.get('/api/brand-links', brandLinksListHandler);
+app.put('/api/brand-links', brandLinksSaveHandler);
+app.delete('/api/brand-links', brandLinksDeleteHandler);
 app.post('/api/topic/options', topicOptionsHandler);
 app.post('/api/topic/questions', topicQuestionsHandler);
 app.post('/api/question-gap', questionGapHandler);

@@ -222,6 +222,17 @@ CREATE INDEX IF NOT EXISTS idx_citation_checks_source_checked_at
   ON citation_checks(source, checked_at);
 
 ALTER TABLE users ADD COLUMN IF NOT EXISTS citation_alerts BOOLEAN NOT NULL DEFAULT TRUE;
+
+-- Which brand names belong to which website, so the dashboard can show every
+-- result for a site even when the brand name differs from the domain.
+CREATE TABLE IF NOT EXISTS brand_site_links (
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  brand_key TEXT NOT NULL,
+  brand TEXT NOT NULL,
+  site TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (user_id, brand_key)
+);
 `;
 
 export const setupDatabase = async () => {
