@@ -77,6 +77,25 @@ export default function Settings() {
     });
   }
 
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
+  const emailMatches = !!user?.email && deleteConfirm.trim().toLowerCase() === user.email.toLowerCase();
+
+  async function handleDeleteAccount() {
+    if (!emailMatches) return;
+    setDeleting(true);
+    setDeleteError('');
+    try {
+      await api.deleteAccount(deleteConfirm.trim());
+      handleSignOut();
+    } catch (err) {
+      setDeleteError(err.message || 'Deleting your account failed. Nothing was removed.');
+      setDeleting(false);
+    }
+  }
+
   function handleSignOut() {
     supabase.auth.signOut().catch(() => {});
     clearApiKey();
@@ -408,6 +427,44 @@ export default function Settings() {
           <button onClick={handleSignOut} className="btn btn-danger" style={{ marginTop: 16 }}>
             Sign Out
           </button>
+        </div>
+
+        <div className="card">
+          <h2 className={styles.sectionTitle}>Delete account</h2>
+          <p className={styles.dangerText}>
+            Permanently deletes your account and everything saved in it: analyses, checks, tracked questions,
+            brand links and your API key. Any paid plan is cancelled first. This cannot be undone, so export
+            anything you want to keep from History before you start.
+          </p>
+          {!deleteOpen ? (
+            <button onClick={() => setDeleteOpen(true)} className="btn btn-danger" style={{ marginTop: 16 }}>
+              Delete my account
+            </button>
+          ) : (
+            <div style={{ marginTop: 16, display: 'grid', gap: 10, maxWidth: 420 }}>
+              <label htmlFor="delete-confirm" className={styles.dangerText} style={{ margin: 0 }}>
+                Type <strong>{user?.email}</strong> to confirm.
+              </label>
+              <input
+                id="delete-confirm"
+                className={styles.input}
+                value={deleteConfirm}
+                onChange={e => setDeleteConfirm(e.target.value)}
+                autoComplete="off"
+                placeholder={user?.email}
+                style={{ padding: '10px 12px', fontSize: 14 }}
+              />
+              {deleteError && <p className={styles.switchError} role="alert">{deleteError}</p>}
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button onClick={handleDeleteAccount} className="btn btn-danger" disabled={!emailMatches || deleting}>
+                  {deleting ? 'Deleting…' : 'Permanently delete'}
+                </button>
+                <button onClick={() => { setDeleteOpen(false); setDeleteConfirm(''); setDeleteError(''); }} className="btn btn-ghost" disabled={deleting}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

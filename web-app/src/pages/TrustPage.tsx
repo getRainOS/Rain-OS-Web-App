@@ -37,7 +37,7 @@ const CONTROLS = [
   'Export your history as CSV, or print a full report, at any time.',
   'Disconnect GitHub from Settings, which deletes the stored token.',
   'Turn off citation alert emails in Settings.',
-  'Close your account and have all your data deleted by emailing support@getrainos.com. We complete deletion within 30 days.',
+  'Delete your account yourself from Settings. It cancels any paid plan and deletes your account and everything saved in it straight away.',
 ];
 
 const NOT_YET = [
