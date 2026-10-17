@@ -231,6 +231,14 @@ ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS engine TEXT NOT NULL DEFAUL
 ALTER TABLE brand_visibility_checks ADD COLUMN IF NOT EXISTS engine TEXT NOT NULL DEFAULT 'gemini';
 ALTER TABLE sov_checks ADD COLUMN IF NOT EXISTS engine TEXT NOT NULL DEFAULT 'gemini';
 
+-- Daily count of Gemini calls that used Google Search grounding, by feature.
+CREATE TABLE IF NOT EXISTS grounded_calls_daily (
+  day DATE NOT NULL,
+  kind TEXT NOT NULL,
+  calls INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (day, kind)
+);
+
 -- Which brand names belong to which website, so the dashboard can show every
 -- result for a site even when the brand name differs from the domain.
 CREATE TABLE IF NOT EXISTS brand_site_links (

@@ -6,6 +6,7 @@ import { AppContext } from './context/AppContext.jsx';
 import AuthModal from './components/AuthModal.jsx';
 import Layout from './components/Layout.jsx';
 import Report from './pages/Report.jsx';
+import AdminUsage from './pages/AdminUsage.jsx';
 import { LANES } from './lib/lanes.js';
 import Dashboard from './pages/Dashboard.jsx';
 import ContentAnalyzer from './pages/ContentAnalyzer.jsx';
@@ -280,6 +281,7 @@ function AppRoutes({ apiKey, onAuth }) {
         <Route path="/share-of-voice" element={<ShareOfVoice />} />
         <Route path="/history" element={<History />} />
         <Route path="/report" element={<Report />} />
+        <Route path="/admin/usage" element={<AdminUsage />} />
         <Route path="/upgrade" element={<Upgrade />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/local-business" element={<Navigate to="/dashboard" replace />} />

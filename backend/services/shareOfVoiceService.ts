@@ -2,6 +2,7 @@ import { generateContentWithRetry } from './geminiRetry';
 // services/shareOfVoiceService.ts — rain OS AI Share of Voice
 // Runs 3 prompt phrasings through Google Search-grounded Gemini
 // answering behaviour and measures brand visibility across each.
+import { recordGroundedCall } from './groundingUsage';
 import {
   GoogleGenerativeAI,
   type GenerativeModel,
@@ -305,6 +306,7 @@ async function runOneModel(
     generationConfig: { temperature: 0.2, maxOutputTokens: 1024 },
   };
   const res = await generateContentWithRetry(gModel, req, { timeoutMs: 60000 });
+  recordGroundedCall('share_of_voice');
   const answerText = res.response.text();
   const cand = (res.response.candidates?.[0] || {}) as CandidateWithGrounding;
   const gm   = cand.groundingMetadata || {};

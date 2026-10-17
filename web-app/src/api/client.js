@@ -74,6 +74,7 @@ export const api = {
   saveBrandLink: (brand, site) => request('POST', '/api/brand-links', { brand, site }),
   deleteBrandLink: (brand, site) => request('DELETE', '/api/brand-links', { brand, site }),
   contentIdeas: (body) => request('POST', '/api/content-ideas', body),
+  groundingUsage: () => request('GET', '/api/admin/grounding-usage'),
   interviewQuestions: (body) => request('POST', '/api/interview/questions', body),
   interviewDraft: (body) => request('POST', '/api/interview/draft', body),
   topicOptions: (body) => request('POST', '/api/topic/options', body),

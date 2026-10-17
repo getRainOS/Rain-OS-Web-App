@@ -1,5 +1,6 @@
 import { generateContentWithRetry } from './geminiRetry';
 // services/promptSuggestionService.ts — suggest questions a business's customers ask AI.
+import { recordGroundedCall } from './groundingUsage';
 import { GoogleGenerativeAI, type GenerativeModel, type Tool } from '@google/generative-ai';
 
 const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
@@ -107,5 +108,6 @@ export async function suggestPrompts(input: {
       ...(grounded ? {} : { responseMimeType: 'application/json' }),
     },
   }, { timeoutMs: grounded ? 60000 : 30000 });
+  if (grounded) recordGroundedCall('question_suggestions');
   return parseSuggestions(result.response.text());
 }

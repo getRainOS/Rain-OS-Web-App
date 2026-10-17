@@ -321,6 +321,7 @@ export default function ShareOfVoice() {
                 <button type="submit" className={styles.btn} style={{ opacity: loading ? 0.6 : 1 }} disabled={loading}>
                   {loading ? 'Asking Gemini 3 different ways…' : <><BarChart2 size={14} /> Check Share of Voice</>}
                 </button>
+                <span className={styles.hint} style={{ margin: 0 }}>Uses 3 analyses, one per question asked.</span>
               </div>
               {loading && (
                 <div style={{ marginTop: 20 }}>
