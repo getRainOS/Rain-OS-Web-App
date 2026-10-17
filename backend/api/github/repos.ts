@@ -1,6 +1,6 @@
 // api/github/repos.ts
 // GitHub repo listing, repo analysis, and disconnect endpoints.
-// All routes require a valid Rain OS API key (Authorization: Bearer).
+// All routes require a valid rain OS API key (Authorization: Bearer).
 
 import express from 'express';
 import { findUserByApiKey, getUserGithubToken, disconnectGithub, incrementUsageAndSaveAnalysis } from '../../services/dbService';

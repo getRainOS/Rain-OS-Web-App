@@ -1,4 +1,4 @@
-// Turns what Rain OS already knows (citation checks, URL scans) into one
+// Turns what rain OS already knows (citation checks, URL scans) into one
 // prioritized to-do list. Pure and synchronous so it is easy to test.
 import { sourceTypeOf } from './sourceTypes.js';
 

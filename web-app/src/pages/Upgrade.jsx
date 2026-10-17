@@ -13,7 +13,7 @@ const PLANS = [
     price: '$0',
     period: '',
     priceId: PRICE_IDS.FREE,
-    description: 'Try Rain OS and see how AI reads your content.',
+    description: 'Try rain OS and see how AI reads your content.',
     color: 'var(--text-muted)',
     limit: '5 analyses total',
     features: [

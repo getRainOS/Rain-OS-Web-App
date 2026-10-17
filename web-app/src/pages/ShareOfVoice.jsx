@@ -292,7 +292,7 @@ export default function ShareOfVoice() {
                 <div>
                   <label className={styles.label}>Your brand or product</label>
                   <input className={styles.input} type="text" value={brand} onChange={e => setBrand(e.target.value)}
-                    placeholder="e.g. Rain OS" maxLength={200} required />
+                    placeholder="e.g. rain OS" maxLength={200} required />
                   <div className={styles.hint}>Use your name as people write it publicly.</div>
                   <RecentPicker mode="brand" onPick={setBrand} />
                 </div>

@@ -194,7 +194,7 @@ app.get( '/v1/ai/diagnostics/:contentId', aiDiagnosticsHandler);
 // Note: /v1/v1/* paths removed — they were duplicates from a copy-paste error
 // in the original index.ts and had no legitimate callers.
 app.listen(port, () => {
-console.log(`Rain OS backend listening on port ${port}`);
+console.log(`rain OS backend listening on port ${port}`);
 startScheduler();
 });
 };

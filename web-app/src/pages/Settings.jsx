@@ -291,7 +291,7 @@ export default function Settings() {
           {githubStatus === 'error' && (
             <p className={styles.errorBanner}>
               {githubReason === 'already_linked'
-                ? 'That GitHub account is already connected to a different Rain OS account. Sign in to that account and disconnect it first, or connect a different GitHub account.'
+                ? 'That GitHub account is already connected to a different rain OS account. Sign in to that account and disconnect it first, or connect a different GitHub account.'
                 : 'GitHub connection failed. Please try again.'}
             </p>
           )}
@@ -352,7 +352,7 @@ export default function Settings() {
         <div className="card">
           <h2 className={styles.sectionTitle}>Solution Lane</h2>
           <p className={styles.wpDesc}>
-            Choose the lane that best describes how you use Rain OS. This adjusts scoring weights and KPI cards across your dashboard and all analysis tools.
+            Choose the lane that best describes how you use rain OS. This adjusts scoring weights and KPI cards across your dashboard and all analysis tools.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 16 }}>
             {LANES.map(lane => (

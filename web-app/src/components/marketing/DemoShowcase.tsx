@@ -244,7 +244,7 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center gap-2">
                     <span className="flex h-1.5 w-1.5 rounded-full animate-pulse" style={{ background: data.modeColor }} />
-                    <span className="text-xs font-semibold text-neutral-400">Rain OS Analysis</span>
+                    <span className="text-xs font-semibold text-neutral-400">rain OS Analysis</span>
                   </div>
                   <AnimatePresence mode="wait">
                     <motion.div

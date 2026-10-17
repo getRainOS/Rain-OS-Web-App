@@ -1,6 +1,6 @@
 // api/github/callback.ts
 // Handles the GitHub OAuth callback: verifies nonce state, exchanges code for
-// access token, fetches GitHub user profile, and links it to the Rain OS user.
+// access token, fetches GitHub user profile, and links it to the rain OS user.
 
 import express from 'express';
 import { findUserById, saveGithubAuth } from '../../services/dbService';
@@ -110,7 +110,7 @@ export default async function handler(req: express.Request, res: express.Respons
     const separator = destination.includes('?') ? '&' : '?';
     res.redirect(`${APP_URL}${destination}${separator}github=connected&login=${encodeURIComponent(githubLogin)}`);
   } catch (err: unknown) {
-    // This GitHub account is already linked to a different Rain OS account.
+    // This GitHub account is already linked to a different rain OS account.
     if ((err as { code?: string })?.code === '23505') {
       return res.redirect(`${APP_URL}/settings?github=error&reason=already_linked`);
     }

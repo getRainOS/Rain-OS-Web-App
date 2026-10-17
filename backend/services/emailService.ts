@@ -3,7 +3,7 @@
 // so there's no npm install step to risk failing on Railway's build.
 
 const RESEND_API_URL = 'https://api.resend.com/emails';
-const FROM_ADDRESS = 'Rain OS <support@getrainos.com>';
+const FROM_ADDRESS = 'rain OS <support@getrainos.com>';
 
 const getAppUrl = () => process.env.APP_URL || 'https://getrainos.com';
 
@@ -41,7 +41,7 @@ export const sendConfirmationEmail = async (to: string, token: string): Promise<
 
   const html = `
     <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
-      <h1 style="font-size: 20px;">Welcome to Rain OS</h1>
+      <h1 style="font-size: 20px;">Welcome to rain OS</h1>
       <p>You're one click away from your account. Confirm your email to get started:</p>
       <p>
         <a href="${confirmLink}" style="display:inline-block; padding: 12px 20px; background: #6366f1; color: #fff; text-decoration: none; border-radius: 6px;">
@@ -49,18 +49,18 @@ export const sendConfirmationEmail = async (to: string, token: string): Promise<
         </a>
       </p>
       <p style="color: #666; font-size: 13px;">Or paste this link into your browser: ${confirmLink}</p>
-      <p style="color: #666; font-size: 13px;">If you didn't sign up for Rain OS, you can ignore this email.</p>
+      <p style="color: #666; font-size: 13px;">If you didn't sign up for rain OS, you can ignore this email.</p>
     </div>
   `;
 
-  await sendEmail(to, 'Confirm your Rain OS account', html);
+  await sendEmail(to, 'Confirm your rain OS account', html);
 };
 
 // Standalone welcome email for Google OAuth signups (no confirmation needed).
 export const sendWelcomeEmail = async (to: string): Promise<void> => {
   const html = `
     <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
-      <h1 style="font-size: 20px;">Welcome to Rain OS</h1>
+      <h1 style="font-size: 20px;">Welcome to rain OS</h1>
       <p>Your account is ready to go — head back to your dashboard to run your first analysis.</p>
       <p>
         <a href="${getAppUrl()}/dashboard" style="display:inline-block; padding: 12px 20px; background: #6366f1; color: #fff; text-decoration: none; border-radius: 6px;">
@@ -70,7 +70,7 @@ export const sendWelcomeEmail = async (to: string): Promise<void> => {
     </div>
   `;
 
-  await sendEmail(to, 'Welcome to Rain OS', html);
+  await sendEmail(to, 'Welcome to rain OS', html);
 };
 
 const escapeHtml = (s: string): string =>

@@ -205,7 +205,7 @@ The shift to conversational search is not coming. It is here. rain OS helps you 
   {
     slug: 'translation-vs-interpretation',
     title: 'Translation vs. Interpretation: Why Your Content Needs Both to Survive the AI Era',
-    subtitle: 'Understanding the difference between translation and interpretation is the key to understanding what Rain OS does, why it works, and why optimizing for AI readability is not optional.',
+    subtitle: 'Understanding the difference between translation and interpretation is the key to understanding what rain OS does, why it works, and why optimizing for AI readability is not optional.',
     date: '2026-05-28',
     readTime: '12 min read',
     category: 'Strategy',
@@ -214,7 +214,7 @@ The shift to conversational search is not coming. It is here. rain OS helps you 
     authorRole: 'Product',
     body: `There is an ancient and important distinction in linguistics that most people collapse into a single idea without realizing it. Translation and interpretation are not the same thing. They never were. And in the age of AI-powered search, that distinction has never mattered more — not just for linguists, but for every business that publishes content online and expects an AI to surface it accurately.
 
-Understanding the difference between these two acts is the key to understanding what Rain OS does, why it works, and why optimizing for AI readability is not optional if you want your content to reach the people who are actively searching for it.
+Understanding the difference between these two acts is the key to understanding what rain OS does, why it works, and why optimizing for AI readability is not optional if you want your content to reach the people who are actively searching for it.
 
 **The Oldest Profession in Communication**
 
@@ -246,13 +246,13 @@ When those signals are weak, noisy, or absent, the LLM either ignores your conte
 
 Your content is always being translated before it is interpreted. The question is whether it's translatable.
 
-**Rain OS Is Your Translation Layer**
+**rain OS Is Your Translation Layer**
 
-This is precisely what Rain OS was built to do.
+This is precisely what rain OS was built to do.
 
 We are not in the interpretation business. That is the LLM's job, and frankly, modern AI systems are extraordinarily good at it. You do not need to compete with that capability. You need to feed it.
 
-Rain OS is the translation layer between your content and the AI that will interpret it.
+rain OS is the translation layer between your content and the AI that will interpret it.
 
 We analyze your content across six critical pillars — AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, Local Presence, and RAG Readiness — not because these are arbitrary checkboxes, but because each one corresponds to a dimension of translatability. Each one asks: can an AI system read this content clearly, understand what it means, trust what it says, surface it in search, and retrieve it when it's relevant?
 
@@ -278,7 +278,7 @@ Here's the thing: the interpreter cannot do their job without the translator. If
 
 That is what happens to poorly optimized content in an AI-driven search environment, every single day.
 
-Rain OS is the Latin scholar. We translate your content — your expertise, your authority, your carefully developed knowledge — into a form that the interpreter can work from accurately. We do not interpret for your users. That's the LLM's role. We make sure the LLM has something real and clean and trustworthy to interpret from.
+rain OS is the Latin scholar. We translate your content — your expertise, your authority, your carefully developed knowledge — into a form that the interpreter can work from accurately. We do not interpret for your users. That's the LLM's role. We make sure the LLM has something real and clean and trustworthy to interpret from.
 
 Without us, the interpreter guesses.
 
@@ -292,13 +292,13 @@ Translation without interpretation is a library that no one can navigate. You ca
 
 Interpretation without translation is confident noise. An AI that interprets poorly sourced, ambiguously structured, semantically muddy content does not become less confident — it just becomes more confidently wrong. The hallucination problem in AI is, at its core, an interpretation problem caused by a translation failure.
 
-Your content needs both. The AI handles interpretation. You — with Rain OS — handle translation.
+Your content needs both. The AI handles interpretation. You — with rain OS — handle translation.
 
 This is not a passive arrangement. Translation is an active investment. It requires deliberate attention to how your content is written, structured, sourced, maintained, and presented to the machines that will carry it forward.
 
 The businesses that understand this now will not just survive the AI search transition. They will own it. Because when the interpreter trusts your translation, it references you. It cites you. It surfaces you. It becomes a megaphone for the work you've already done.
 
-**What Rain OS Gives You**
+**What rain OS Gives You**
 
 We give you confidence in your translation layer.
 
@@ -324,7 +324,7 @@ You are not in competition with AI. You are in partnership with it.
 
 Your job is to translate. Let the AI interpret.
 
-Rain OS makes sure your translation is ready.`
+rain OS makes sure your translation is ready.`
   },
   {
     slug: 'the-vibe-coding-trap',
@@ -444,7 +444,7 @@ Every serious fighter has a corner. A trainer who's seen a thousand fights and r
 
 Vibe coding gives you none of this by default. The tool builds. It does not explain. It does not sit you down afterward and walk you through what it just did and why.
 
-So here is the technique I have used on Rain OS, and it is the single most useful habit I have developed since starting to build this way: after the platform builds something, ask it to write a detailed, plain-English explanation of what it just built — the architecture, the data flow, the business logic, the risk points — as if explaining the business to someone who's never seen the code.
+So here is the technique I have used on rain OS, and it is the single most useful habit I have developed since starting to build this way: after the platform builds something, ask it to write a detailed, plain-English explanation of what it just built — the architecture, the data flow, the business logic, the risk points — as if explaining the business to someone who's never seen the code.
 
 Then take that explanation and load it into Google's NotebookLM, and generate an Audio Overview — the feature that turns uploaded source material into an AI-generated discussion between two hosts. What comes out is genuinely a podcast about your own business. Two AI voices, talking through what your product does, how the system works, where the data flows, what the risk surfaces are.
 
@@ -476,7 +476,7 @@ Then go back and ask follow-up questions about whatever didn't make sense. Repea
 
 You will not walk away a senior engineer. That's not the goal. The goal is closing the most dangerous gap in the vibe coding era — the gap between what you've built and what you understand — one fight at a time, until the weight class you're punching in finally matches the one you're equipped to win.
 
-Rain OS was built the same way — vibe coded, then understood, in that order, on purpose. If you're building something you're not sure you fully understand yet, that's not a reason to stop. It's a reason to start listening.`
+rain OS was built the same way — vibe coded, then understood, in that order, on purpose. If you're building something you're not sure you fully understand yet, that's not a reason to stop. It's a reason to start listening.`
   },
 ];
 
