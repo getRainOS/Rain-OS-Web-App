@@ -400,6 +400,7 @@ export default function Dashboard() {
   const [recentType, setRecentType] = useState('all');
   const [recentMore, setRecentMore] = useState(false);
   const [focusHelpOpen, setFocusHelpOpen] = useState(false);
+  const [linkNote, setLinkNote] = useState(null);
   const [brandVisLoading, setBrandVisLoading] = useState(true);
   const [sovHistory, setSovHistory] = useState([]);
   const [sovLoading, setSovLoading] = useState(true);
@@ -487,6 +488,7 @@ export default function Dashboard() {
 
   function changeFocus(next) {
     setFocus(next);
+    setLinkNote(null);
     setPieceSel(next.startsWith('piece:') ? next.slice(6) : null);
     try { localStorage.setItem('rain_os_dash_focus', next); } catch { /* not remembered */ }
   }
@@ -500,10 +502,24 @@ export default function Dashboard() {
   }, [citations, brandVisHistory, sovHistory, focusSite, brandLinks]);
 
   async function linkBrand(brand) {
-    try { const { data } = await api.saveBrandLink(brand, focusSite); setBrandLinks(data?.links ?? []); setLinkPick(''); } catch { /* keep as is */ }
+    try {
+      const { data } = await api.saveBrandLink(brand, focusSite);
+      setBrandLinks(data?.links ?? []);
+      setLinkPick('');
+      const n = [...citations, ...brandVisHistory, ...sovHistory].filter(r => squash(r.brand) === squash(brand)).length;
+      setLinkNote({ ok: true, text: `Linked ${brand} to ${focusSite}. ${n} AI ${n === 1 ? 'result' : 'results'} now included below.` });
+    } catch (e) {
+      setLinkNote({ ok: false, text: `Couldn't link ${brand}: ${e?.message || 'please try again'}.` });
+    }
   }
   async function unlinkBrand(brand) {
-    try { const { data } = await api.deleteBrandLink(brand); setBrandLinks(data?.links ?? []); } catch { /* keep as is */ }
+    try {
+      const { data } = await api.deleteBrandLink(brand);
+      setBrandLinks(data?.links ?? []);
+      setLinkNote({ ok: true, text: `Unlinked ${brand} from ${focusSite}.` });
+    } catch (e) {
+      setLinkNote({ ok: false, text: `Couldn't unlink ${brand}: ${e?.message || 'please try again'}.` });
+    }
   }
 
   const scopeChecks = rows => (focusSite ? rows.filter(r => belongsToSite(r, focusSite)) : activeFocus ? [] : rows);
@@ -913,6 +929,9 @@ export default function Dashboard() {
               </>
             ) : (
               <span className={styles.brandLinkHint}>Run Brand Sentiment or Share of Voice for a brand to link it here.</span>
+            )}
+            {linkNote && (
+              <span className={linkNote.ok ? styles.linkNoteOk : styles.linkNoteErr} role="status">{linkNote.text}</span>
             )}
           </div>
         )}
