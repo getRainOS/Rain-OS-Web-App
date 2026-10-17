@@ -4,6 +4,7 @@
 // FIX: Use express.Request and express.Response to avoid conflicts with global types.
 import express from 'express';
 import { findUserByPasswordResetToken, updateUser, hash } from '../../../services/dbService';
+import { hashPassword } from '../../../services/passwords';
 import type { ApiError } from '../../../types';
 
 export default async function handler(req: express.Request, res: express.Response) {
@@ -25,7 +26,7 @@ export default async function handler(req: express.Request, res: express.Respons
         return res.status(400).json({ error: 'bad_request', message: 'Password reset token is invalid or has expired.' } as ApiError);
     }
     
-    const newHashedPassword = hash(newPassword);
+    const newHashedPassword = hashPassword(newPassword);
     
     await updateUser(user.id, {
         hashedPassword: newHashedPassword,

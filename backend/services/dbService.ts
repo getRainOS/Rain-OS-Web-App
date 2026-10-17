@@ -5,6 +5,7 @@
 import { Buffer } from 'buffer';
 import type { User, SubscriptionStatus, PillarRecommendation } from '../types';
 import { randomBytes, createHash, createCipheriv, createDecipheriv } from 'crypto';
+import { hashPassword } from './passwords';
 import { pool } from './db';
 
 // --- Crypto Helpers ---
@@ -221,7 +222,7 @@ export const createUser = async (
         usage: { count: 0, limit: 5 },
     };
     if (password) {
-        newUser.hashedPassword = hash(password);
+        newUser.hashedPassword = hashPassword(password);
     }
 
     const query = `

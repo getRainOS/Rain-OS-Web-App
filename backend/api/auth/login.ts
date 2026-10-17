@@ -3,7 +3,8 @@
 
 // FIX: Use express.Request and express.Response to avoid conflicts with global types.
 import express from 'express';
-import { findUserByEmail, hash } from '../../services/dbService';
+import { findUserByEmail, updateUser } from '../../services/dbService';
+import { hashPassword, verifyPassword } from '../../services/passwords';
 import type { User, ApiError } from '../../types';
 
 export default async function handler(req: express.Request, res: express.Response) {
@@ -22,9 +23,13 @@ export default async function handler(req: express.Request, res: express.Respons
       return res.status(401).json({ error: 'unauthorized', message: 'Invalid credentials.' } as ApiError);
     }
 
-    const passwordHash = hash(password);
-    if (passwordHash !== user.hashedPassword) {
+    const check = verifyPassword(password, user.hashedPassword);
+    if (!check.ok) {
       return res.status(401).json({ error: 'unauthorized', message: 'Invalid credentials.' } as ApiError);
+    }
+    if (check.needsUpgrade) {
+      // Re-save an old SHA-256 hash as salted scrypt now that we have the password.
+      await updateUser(user.id, { hashedPassword: hashPassword(password) }).catch(err => console.error('Password hash upgrade failed:', err));
     }
 
     if (!user.emailConfirmed) {
