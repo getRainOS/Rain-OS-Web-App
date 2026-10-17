@@ -437,6 +437,11 @@ export default function Dashboard() {
       .finally(() => setLoading(false));
   }, [userLane]);
 
+  // A result belongs to a site when its URL is on that domain, or its brand
+  // name is the site's name (brand "Longreads" ↔ longreads.com).
+  const squash = t => String(t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const belongsToSite = (r, site) =>
+    domainOf(r.url) === site || (!!r.brand && squash(r.brand) === squash(site.replace(/\.[a-z.]+$/, '')));
   const siteOfItem = h => (h.repo ? null : domainOf(h.url));
   // One key per piece, so re-analyses of the same text count as one piece.
   const keyOf = useMemo(() => buildPieceKeyer(history), [history]);
@@ -451,15 +456,16 @@ export default function Dashboard() {
       const d = siteOfItem(h);
       if (d) site(d).pieces.add(keyOf(h));
     }
-    for (const c of [...citations, ...brandVisHistory, ...sovHistory]) {
-      const d = domainOf(c.url);
-      if (d) site(d).checks += 1;
+    const results = [...citations, ...brandVisHistory, ...sovHistory];
+    for (const c of results) { const d = domainOf(c.url); if (d) site(d); }
+    for (const c of results) {
+      for (const k of sites.keys()) if (belongsToSite(c, k)) site(k).checks += 1;
     }
     const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
     const siteOpts = [...sites].map(([d, v]) => ({
       value: `site:${d}`,
       label: d,
-      hint: `URL · ${plural(v.pieces.size, 'page')} · ${plural(v.checks, 'check')}`,
+      hint: `URL · ${plural(v.pieces.size, 'page')} analyzed · ${v.checks} AI ${v.checks === 1 ? 'result' : 'results'}`,
     }));
     const loose = groupPieces(history.filter(h => !siteOfItem(h)), keyOf).filter(p => p.name !== 'Untitled').map(p => ({
       value: `piece:${p.key}`,
@@ -479,7 +485,7 @@ export default function Dashboard() {
     try { localStorage.setItem('rain_os_dash_focus', next); } catch { /* not remembered */ }
   }
 
-  const scopeChecks = rows => (focusSite ? rows.filter(r => domainOf(r.url) === focusSite) : activeFocus ? [] : rows);
+  const scopeChecks = rows => (focusSite ? rows.filter(r => belongsToSite(r, focusSite)) : activeFocus ? [] : rows);
 
   const filteredHistory = useMemo(() => {
     let out = history;
@@ -835,9 +841,9 @@ export default function Dashboard() {
           />
           <span className={styles.focusNote}>
             {focusSite
-              ? `Everything below is for ${focusSite}: its pages, and every check run for it.`
+              ? `Everything below is for ${focusSite}: its page analyses and every AI result (sentiment, citations, share of voice) for it.`
               : activeFocus
-              ? "Pasted content and repos aren't tied to a website, so checks aren't shown. Add your website when you analyze content to link them."
+              ? "Pasted content and repos aren't tied to a website, so AI results aren't shown. Add your website when you analyze content to link them."
               : 'Each tool below shows its own latest result. Choose a site to see them all together.'}
           </span>
         </div>
