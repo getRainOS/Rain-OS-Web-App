@@ -18,7 +18,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
       <section className="pt-36 pb-20 px-6 relative overflow-hidden">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#2B8FE3]/30 bg-[#2B8FE3]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[#8ac2f4] mb-6">
+            <div className="inline-flex items-center gap-2 rounded-md border border-[#2B8FE3]/30 bg-[#2B8FE3]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[#8ac2f4] mb-6">
               <MapPin className="w-3.5 h-3.5" /> For Local Businesses
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.05] mb-6" style={{ letterSpacing: '-0.04em' }}>

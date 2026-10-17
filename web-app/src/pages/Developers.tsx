@@ -172,7 +172,7 @@ export default function Developers() {
                 (label) => (
                   <span
                     key={label}
-                    className="px-4 py-1.5 rounded-full text-xs font-semibold"
+                    className="px-4 py-1.5 rounded-md text-xs font-semibold"
                     style={{
                       background: 'rgba(255,255,255,0.08)',
                       border: '1px solid rgba(255,255,255,0.2)',
@@ -291,7 +291,7 @@ export default function Developers() {
                       <p.Icon className="w-5 h-5" style={{ color: p.color }} />
                     </div>
                     <span
-                      className="text-xs font-bold rounded-full px-3 py-1"
+                      className="text-xs font-bold rounded-md px-3 py-1"
                       style={{ color: p.color, background: p.bg, border: `1px solid ${p.border}` }}
                     >
                       {p.weight} weight
