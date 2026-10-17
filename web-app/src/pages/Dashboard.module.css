@@ -1530,8 +1530,9 @@ button.emptyLink {
 .brandChip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 4px 3px 10px; border: 1px solid var(--border); border-radius: 4px; color: var(--text); }
 .brandChip button { background: none; border: 0; color: var(--text-dim); cursor: pointer; font-size: 14px; line-height: 1; padding: 0 4px; }
 .brandChip button:hover { color: var(--text); }
-.brandSelect { background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 4px 8px; font-size: 12.5px; }
+.brandSelect { min-width: 180px; }
 .brandLinkBtn { background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 4px 10px; font-size: 12.5px; cursor: pointer; }
 .brandLinkBtn:disabled { opacity: 0.4; cursor: default; }
 .brandLinkHint { font-size: 12px; }
 .analysisCount { color: var(--text-dim); font-weight: 400; }
+.brandLinkWhy { flex: 1 0 100%; font-size: 12px; line-height: 1.5; color: var(--text-dim); max-width: 640px; }

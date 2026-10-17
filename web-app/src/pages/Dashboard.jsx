@@ -883,15 +883,22 @@ export default function Dashboard() {
             ))}
             {linkableBrands.length > 0 ? (
               <>
-                <select value={linkPick} onChange={e => setLinkPick(e.target.value)} className={styles.brandSelect} aria-label="Brand to link">
-                  <option value="">Add a brand…</option>
-                  {linkableBrands.map(b => <option key={b} value={b}>{b}</option>)}
-                </select>
+                <Select
+                  className={styles.brandSelect}
+                  value={linkPick}
+                  onChange={setLinkPick}
+                  placeholder="Add a brand…"
+                  ariaLabel="Brand to link"
+                  options={linkableBrands.map(b => ({ value: b, label: b }))}
+                />
                 <button type="button" className={styles.brandLinkBtn} disabled={!linkPick} onClick={() => linkBrand(linkPick)}>Link</button>
               </>
             ) : (
               <span className={styles.brandLinkHint}>Run Brand Sentiment or Share of Voice for a brand to link it here.</span>
             )}
+            <span className={styles.brandLinkWhy}>
+              Why link? Brand checks are saved under a brand name, not a website. Linking tells Rain OS that a brand belongs to this site, so its sentiment, citation and share of voice results show up here with the page scores.
+            </span>
           </div>
         )}
         </>
