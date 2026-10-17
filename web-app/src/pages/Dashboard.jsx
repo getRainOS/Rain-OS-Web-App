@@ -517,13 +517,9 @@ export default function Dashboard() {
     return out;
   }, [history, typeFilter, activeFocus, focusSite, keyOf]);
 
-  // Recent Analyses lists every type (content, URL, repo), narrowed only by the
-  // site or piece chosen in "Showing", not by the Content / URL / Repo switch.
-  const recentHistory = useMemo(() => {
-    if (focusSite) return history.filter(h => siteOfItem(h) === focusSite);
-    if (activeFocus.startsWith('piece:')) return history.filter(h => keyOf(h) === activeFocus.slice(6));
-    return history;
-  }, [history, activeFocus, focusSite, keyOf]);
+  // Recent Analyses always lists everything (content, URL, repo); its own
+  // dropdown narrows by type. It is not tied to "Showing" or the type switch.
+  const recentHistory = history;
 
   const recentPieces = useMemo(() => {
     const all = groupPieces(recentHistory, keyOf);
@@ -896,7 +892,10 @@ export default function Dashboard() {
                   onChange={setLinkPick}
                   placeholder="Add a brand…"
                   ariaLabel="Brand to link"
-                  options={linkableBrands.map(b => ({ value: b, label: b }))}
+                  options={linkableBrands.map(b => {
+                    const on = brandLinks.find(l => squash(l.brand) === squash(b));
+                    return { value: b, label: b, hint: on ? `moves from ${on.site}` : undefined };
+                  })}
                 />
                 <button type="button" className={styles.brandLinkBtn} disabled={!linkPick} onClick={() => linkBrand(linkPick)}>Link</button>
               </>
