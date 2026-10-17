@@ -2,15 +2,15 @@ import MarketingNav from '@/components/marketing/MarketingNav';
 import { useNavigate } from 'react-router-dom';
 
 import SiteFooter from '@/components/marketing/SiteFooter';
-const LAST_UPDATED = 'May 9, 2025';
+const LAST_UPDATED = 'October 17, 2026';
 
 const sections = [
   {
     title: 'Information We Collect',
     body: [
       'Account information: When you sign up, we collect your email address. We use this to identify your account, send transactional emails (receipts, password resets), and communicate product updates.',
-      'Content you submit: When you run an analysis, you send text content, URLs, or GitHub repository identifiers to our API. This content is processed to generate your Rain Score and pillar breakdown. We do not permanently store your raw text content on our servers after analysis is complete.',
-      'Usage data: We record the number of analyses you run each billing cycle so we can enforce plan limits. We also store your Rain Score history (overall score and per-pillar scores) so you can track progress over time. Raw content is not stored as part of this history.',
+      'Content you submit: When you run an analysis, you send text, URLs, questions or GitHub repository identifiers to our API to generate your scores and results. Text you paste into Content Optimizer is saved with that analysis so you can reopen and re-analyze it; deleting the analysis deletes it.',
+      'Usage data: We record the number of analyses you run each billing cycle so we can enforce plan limits, and we store your score and check history so you can track progress over time.',
       'API key: We issue a unique API key per account, which is stored securely in our database. You are responsible for keeping your key private.',
       'Payment information: Billing is handled entirely by Stripe. We never see or store your full card number. We store your Stripe customer ID and subscription status to manage your plan.',
       'Technical data: We collect standard server logs including IP addresses, request timestamps, and HTTP status codes. These are used for security monitoring and debugging and are not sold or shared.',
@@ -40,7 +40,8 @@ const sections = [
     body: [
       'Stripe: handles all payment processing. Your payment information is subject to Stripe\'s Privacy Policy at stripe.com/privacy.',
       'Google Gemini API: we use Gemini to generate scoring insights for your content. Content you submit is sent to Google\'s API under our agreement with Google. We do not share your account information with Google.',
-      'Supabase: we use Supabase for authentication and database hosting. Your data is stored on Supabase-managed infrastructure.',
+      'Supabase: handles sign-in sessions.',
+      'Railway: runs our API and hosts our database. Vercel: serves the website and app. Resend: sends account and alert emails.',
       'We do not sell, rent, or share your personal information with any third party for advertising or marketing purposes.',
     ],
   },
@@ -49,7 +50,7 @@ const sections = [
     body: [
       'Your account data (email, API key, subscription status) is retained for as long as your account exists.',
       'Your analysis history (scores, pillar breakdowns, timestamps) is retained for as long as your account exists so you can review progress over time.',
-      'Raw content submitted for analysis is not retained after the analysis request completes.',
+      'Text pasted into Content Optimizer is kept with its analysis until you delete the analysis or your account. Repository files fetched for Repo Analysis are not kept.',
       'You may request deletion of your account and all associated data by emailing support@getrainos.com. We will complete deletion within 30 days.',
     ],
   },
@@ -67,14 +68,14 @@ const sections = [
       'Access: you can request a copy of the personal data we hold about you.',
       'Correction: you can update your email address by contacting support.',
       'Deletion: you can request full account deletion at any time.',
-      'Portability: you can export your analysis history from the Score History page.',
+      'Portability: you can export your history as CSV from the History page.',
       'To exercise any of these rights, email us at support@getrainos.com.',
     ],
   },
   {
     title: 'Security',
     body: [
-      'All data is transmitted over HTTPS/TLS. API keys are stored hashed. GitHub tokens are encrypted at rest. We perform regular security reviews.',
+      'All data is transmitted over HTTPS/TLS. Passwords are stored as salted scrypt hashes, API keys are stored hashed, and GitHub tokens are encrypted at rest. See our Security & trust page for details.',
       'If you believe you have found a security vulnerability, please report it responsibly to support@getrainos.com.',
     ],
   },
