@@ -397,6 +397,8 @@ export default function Dashboard() {
   const [brandVisHistory, setBrandVisHistory] = useState([]);
   const [brandLinks, setBrandLinks] = useState([]);
   const [linkPick, setLinkPick] = useState('');
+  const [recentType, setRecentType] = useState('all');
+  const [recentMore, setRecentMore] = useState(false);
   const [brandVisLoading, setBrandVisLoading] = useState(true);
   const [sovHistory, setSovHistory] = useState([]);
   const [sovLoading, setSovLoading] = useState(true);
@@ -522,6 +524,11 @@ export default function Dashboard() {
     if (activeFocus.startsWith('piece:')) return history.filter(h => keyOf(h) === activeFocus.slice(6));
     return history;
   }, [history, activeFocus, focusSite, keyOf]);
+
+  const recentPieces = useMemo(() => {
+    const all = groupPieces(recentHistory, keyOf);
+    return recentType === 'all' ? all : all.filter(p => getItemType(p.latest).toLowerCase() === recentType);
+  }, [recentHistory, keyOf, recentType]);
 
   // Pillar Breakdown follows one piece at a time: the same repo, URL, or
   // re-analysis chain. Unrelated analyses are never drawn on one line.
@@ -1284,7 +1291,22 @@ export default function Dashboard() {
                 <HelpCircle size={11} />
               </span>
             </div>
-            <Link to="/history" className={styles.viewAll}>View all →</Link>
+            <div className={styles.recentControls}>
+              <Select
+                className={styles.recentSelect}
+                value={recentType}
+                onChange={v => { setRecentType(v); setRecentMore(false); }}
+                ariaLabel="Filter recent analyses by type"
+                menuAlign="right"
+                options={[
+                  { value: 'all', label: 'All recent analyses' },
+                  { value: 'content', label: 'Content' },
+                  { value: 'url', label: 'URL' },
+                  { value: 'repo', label: 'Repo' },
+                ]}
+              />
+              <Link to="/history" className={styles.viewAll}>View all →</Link>
+            </div>
           </div>
 
           {loading ? (
@@ -1303,7 +1325,7 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className={styles.analysesList}>
-              {groupPieces(recentHistory, keyOf).slice(0, 7).map((piece, i) => {
+              {recentPieces.slice(0, recentMore ? 30 : 7).map((piece, i) => {
                 const item = piece.latest;
                 const type = getItemType(item);
                 const typeColor = type === 'URL' ? '#8f93c7' : type === 'Repo' ? '#7cae8f' : '#6b9bc4';
@@ -1340,6 +1362,14 @@ export default function Dashboard() {
                   </div>
                 );
               })}
+              {recentPieces.length === 0 && (
+                <p className={styles.recentNone}>No {recentType} analyses yet.</p>
+              )}
+              {recentPieces.length > 7 && (
+                <button type="button" className={styles.recentMore} onClick={() => setRecentMore(m => !m)}>
+                  {recentMore ? 'Show fewer' : `Show more (${Math.min(recentPieces.length, 30) - 7})`}
+                </button>
+              )}
             </div>
           )}
         </div>
