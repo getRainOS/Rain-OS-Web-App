@@ -18,7 +18,7 @@ const pillars = [
     border: 'rgba(255,255,255,0.25)',
     Icon: BrainCircuit,
     name: 'AI Readability',
-    desc: 'How easily ChatGPT, Gemini, and Perplexity can extract answers from your content.',
+    desc: 'How easily AI assistants can pull a clear answer out of your content.',
   },
   {
     color: '#e5e5e5',
@@ -58,7 +58,7 @@ const features = [
   {
     Icon: Bot,
     title: 'AI Engine Scoring',
-    desc: 'See exactly how ChatGPT, Perplexity, and Gemini read your content and score it across six weighted pillars.',
+    desc: 'See how an AI reads your content, scored across six weighted pillars, with the fixes that matter most.',
   },
   {
     Icon: BarChart3,
@@ -362,7 +362,7 @@ export default function ContentWriters() {
               {pillars.map((p) => (
                 <span
                   key={p.name}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold"
                   style={{
                     background: p.bg,
                     border: `1px solid ${p.border}`,

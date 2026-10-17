@@ -853,7 +853,7 @@ export default function VibeCoders() {
               {platforms.map((label) => (
                 <span
                   key={label}
-                  className="px-4 py-1.5 rounded-full text-xs font-semibold"
+                  className="px-4 py-1.5 rounded-md text-xs font-semibold"
                   style={{
                     background: 'rgba(255,255,255,0.05)',
                     border: '1px solid rgba(255,255,255,0.12)',

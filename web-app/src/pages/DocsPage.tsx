@@ -98,8 +98,8 @@ export default function DocsPage() {
                 <div className="space-y-6 text-neutral-400 leading-relaxed">
                   <p>
                     rain OS is an AEO (Answer Engine Optimization) and GEO (Generative Engine Optimization) platform.
-                    It analyzes your content and scores it against the signals that ChatGPT, Perplexity, Gemini, and Claude
-                    use to decide what to cite and recommend.
+                    It analyzes your content against the widely documented signals AI assistants such as ChatGPT, Perplexity,
+                    Gemini and Claude rely on, and its visibility checks run on Gemini with Google Search.
                   </p>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -221,7 +221,7 @@ export default function DocsPage() {
                           <p.Icon className="w-5 h-5" style={{ color: p.color }} />
                           <h3 className="font-semibold text-white">{p.name}</h3>
                           <span
-                            className="text-xs font-bold rounded-full px-2.5 py-0.5 ml-auto"
+                            className="text-xs font-bold rounded-md px-2.5 py-0.5 ml-auto"
                             style={{ color: p.color, background: `${p.bg}`, border: `1px solid ${p.border}` }}
                           >
                             {p.weight} weight
@@ -303,7 +303,7 @@ export default function DocsPage() {
                         <div className="flex items-center gap-3 mb-3">
                           <s.Icon className="w-5 h-5" style={{ color: s.color }} />
                           <h3 className="font-semibold text-white">{s.name}</h3>
-                          <span className="text-xs text-neutral-500 bg-white/[0.04] border border-white/8 px-2.5 py-0.5 rounded-full ml-auto">
+                          <span className="text-xs text-neutral-500 bg-white/[0.04] border border-white/8 px-2.5 py-0.5 rounded-md ml-auto">
                             {s.badge}
                           </span>
                         </div>
