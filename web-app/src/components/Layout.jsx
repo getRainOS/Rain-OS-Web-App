@@ -7,6 +7,7 @@ import {
   LayoutDashboard, FileText, Globe, GitBranch, Radar, Eye,
   BarChart2, Settings, ArrowUp, LogOut, Wand2, Menu, X,
   ChevronLeft, ChevronRight, ChevronsUpDown, MessageSquareText, Lightbulb, CreditCard, Target, ScanSearch,
+  Activity,
 } from 'lucide-react';
 import KnowledgeBase from './KnowledgeBase.jsx';
 import { urlScannerLabel } from '../lib/laneLabels.js';
@@ -33,6 +34,7 @@ const TOOLS = {
   citation:   { to: '/citation-monitor', label: 'Citation Monitor',    Icon: Radar,            tooltip: 'Check whether Gemini cites your brand for your topics, using live Google Search grounding.' },
   visibility: { to: '/brand-visibility', label: 'Brand Sentiment',       Icon: Eye,              tooltip: 'See how Gemini describes your brand, using live Google Search grounding — is the sentiment positive and are the facts correct?' },
   sov:        { to: '/share-of-voice',   label: 'Share of Voice',      Icon: BarChart2,        tooltip: 'See how visible your brand is when Gemini answers your topic three ways, using live Google Search grounding.' },
+  adminUsage: { to: '/admin/usage',      label: 'Usage (staff)',       Icon: Activity,         tooltip: 'Daily Google Search calls against the free allowance. Only rain OS staff see this.' },
   settings:   { to: '/settings',         label: 'Settings',            Icon: Settings,         tooltip: 'Change your solution lane, API settings, and account preferences.' },
 };
 
@@ -218,6 +220,7 @@ export default function Layout({ children }) {
           <div className={styles.navGroup}>
             <span className={styles.navLabel}>Account</span>
             <NavItem {...TOOLS.settings} />
+            {user?.isAdmin && <NavItem {...TOOLS.adminUsage} />}
           </div>
         </nav>
 

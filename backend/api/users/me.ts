@@ -5,6 +5,7 @@
 import express from 'express';
 import { findUserByApiKey } from '../../services/dbService';
 import type { User, ApiError } from '../../types';
+import { isAdminEmail } from '../admin';
 
 const getApiKey = (req: express.Request): string | null => {
   const authHeader = req.headers.authorization;
@@ -41,6 +42,8 @@ export default async function handler(req: express.Request, res: express.Respons
       githubId: user.githubId,
       githubLogin: user.githubLogin,
     };
+    // Lets the app show staff-only links; the admin endpoints check again.
+    (clientSafeUser as any).isAdmin = isAdminEmail(user.email);
 
     console.log('Fetched user:', clientSafeUser);
 
