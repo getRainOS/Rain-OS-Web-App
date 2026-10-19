@@ -23,6 +23,8 @@ import { improveLink } from '../lib/improveLink.js';
 import { getMySite, setMySite } from '../lib/mySite.js';
 import CheckProgress from '../components/CheckProgress.jsx';
 import TrackedQueriesPanel, { useTrackedQueries, TrackWeeklyButton } from '../components/TrackedQueries.jsx';
+import LocalListings from '../components/LocalListings.jsx';
+import { needsPlace } from '../lib/localListings.js';
 import styles from './CitationMonitor.module.css';
 
 // Lazy: react-simple-maps + d3-geo only need to load for whoever actually
@@ -33,6 +35,11 @@ const EXAMPLE_TOPICS = [
   'best AI content optimizer for bloggers',
   'how to improve AEO for a SaaS landing page',
   'what is answer engine optimization',
+];
+const LOCAL_EXAMPLE_TOPICS = [
+  'best wedding cake bakery in Austin',
+  'emergency plumber in Denver open on weekends',
+  'family dentist in Columbus that takes new patients',
 ];
 
 const RECENT_PAGE_SIZE = 10;
@@ -344,7 +351,7 @@ export default function CitationMonitor() {
                 id="cm-topic"
                 rows={2}
                 className={`${styles.input} ${styles.textarea}`}
-                placeholder="What would a customer ask AI? e.g. best AI content optimizer for bloggers"
+                placeholder={userLane === 'local_business' ? 'What would a customer ask AI? e.g. best wedding cake bakery in Austin' : 'What would a customer ask AI? e.g. best AI content optimizer for bloggers'}
                 value={topic}
                 onChange={e => setTopic(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); e.currentTarget.form?.requestSubmit(); } }}
@@ -352,6 +359,11 @@ export default function CitationMonitor() {
                 required
               />
               <RecentPicker mode="question" onPick={setTopic} />
+              {userLane === 'local_business' && (
+                needsPlace(topic)
+                  ? <p className={styles.placeWarn}>“Near me” is answered from wherever the person asking is, and our check has no location. Add your city instead, like “best bakery in Austin”.</p>
+                  : <p className={styles.placeHint}>Include your city, the way customers ask: “best plumber in Austin”.</p>
+              )}
             </div>
 
             <div className={styles.field}>
@@ -416,7 +428,7 @@ export default function CitationMonitor() {
 
             <div className={styles.examples}>
               <span className={styles.examplesLabel}>Examples</span>
-              {EXAMPLE_TOPICS.map((t, i) => (
+              {(userLane === 'local_business' ? LOCAL_EXAMPLE_TOPICS : EXAMPLE_TOPICS).map((t, i) => (
                 <button
                   key={i}
                   type="button"
@@ -467,6 +479,7 @@ export default function CitationMonitor() {
               {resultTab === 'result' && (
                 <>
                   <ResultConsole result={result} name={name} topicHistory={topicHistory} tracking={tracking} />
+                  {userLane === 'local_business' && <LocalListings sources={result.sources} url={result.url || url} />}
                   {(() => {
                     const rank = result.citedSourceIndex != null ? result.citedSourceIndex + 1 : null;
                     if (rank === 1) return null;
