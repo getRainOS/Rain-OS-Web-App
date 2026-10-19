@@ -2,9 +2,10 @@
 // cost, speed, cited sources and whether a given site/brand shows up.
 // Usage (needs CLORO_API_KEY and network access to api.cloro.dev):
 //   node backend/scripts/cloro-test.mjs [--dry]
-// Request fields below follow the example in cloro's docs/articles
-// (POST /v1/monitor/<engine>, { prompt, country }); confirm the state field
-// name at docs.cloro.dev before trusting the state comparison.
+// Confirmed against the live API: POST /v1/monitor/<engine> with
+// { prompt, country, state? } (state codes from GET /v1/states?country=US),
+// answer in result.text, sources in result.sources[{ position, label, url }],
+// credits in the X-Credits-Charged / X-Credits-Remaining headers.
 const KEY = process.env.CLORO_API_KEY;
 const BASE = 'https://api.cloro.dev/v1/monitor';
 const DRY = process.argv.includes('--dry');
@@ -49,7 +50,8 @@ async function run(c) {
   const sources = sourcesOf(result);
   return {
     engine: c.engine, prompt: c.prompt, state: c.state || '-', status: res.status, seconds: (ms / 1000).toFixed(1),
-    credits: json.credits ?? json.creditsUsed ?? res.headers.get('x-credits-used') ?? '?',
+    credits: res.headers.get('x-credits-charged') ?? '?',
+    creditsLeft: res.headers.get('x-credits-remaining') ?? '?',
     sources: sources.length,
     siteCited: sources.some(u => u.includes(SITE)),
     brandNamed: text.toLowerCase().includes(BRAND.toLowerCase()),
