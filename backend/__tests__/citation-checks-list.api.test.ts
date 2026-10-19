@@ -97,7 +97,7 @@ describe('GET /api/citation-checks — list all (no topic filter)', () => {
     expect(res.body.items).toHaveLength(1);
     expect(res.body.data).toHaveLength(1);
     expect(res.body.items[0].id).toBe(1);
-    expect(getCitationChecksByUser).toHaveBeenCalledWith('user-1', 50);
+    expect(getCitationChecksByUser).toHaveBeenCalledWith('user-1', 50, 'gemini');
     expect(getCitationChecksByTopic).not.toHaveBeenCalled();
   });
 
@@ -122,7 +122,7 @@ describe('GET /api/citation-checks — list all (no topic filter)', () => {
       .set('Authorization', 'Bearer valid-key');
 
     expect(res.status).toBe(200);
-    expect(getCitationChecksByUser).toHaveBeenCalledWith('user-1', 10);
+    expect(getCitationChecksByUser).toHaveBeenCalledWith('user-1', 10, 'gemini');
   });
 
   it('clamps limit below 1 to 1', async () => {
@@ -132,7 +132,7 @@ describe('GET /api/citation-checks — list all (no topic filter)', () => {
       .get('/api/citation-checks?limit=0')
       .set('Authorization', 'Bearer valid-key');
 
-    expect(getCitationChecksByUser).toHaveBeenCalledWith('user-1', 1);
+    expect(getCitationChecksByUser).toHaveBeenCalledWith('user-1', 1, 'gemini');
   });
 
   it('clamps limit above 100 to 100', async () => {
@@ -142,7 +142,7 @@ describe('GET /api/citation-checks — list all (no topic filter)', () => {
       .get('/api/citation-checks?limit=999')
       .set('Authorization', 'Bearer valid-key');
 
-    expect(getCitationChecksByUser).toHaveBeenCalledWith('user-1', 100);
+    expect(getCitationChecksByUser).toHaveBeenCalledWith('user-1', 100, 'gemini');
   });
 
   it('uses default limit of 50 when limit is not a number', async () => {
@@ -152,7 +152,7 @@ describe('GET /api/citation-checks — list all (no topic filter)', () => {
       .get('/api/citation-checks?limit=abc')
       .set('Authorization', 'Bearer valid-key');
 
-    expect(getCitationChecksByUser).toHaveBeenCalledWith('user-1', 50);
+    expect(getCitationChecksByUser).toHaveBeenCalledWith('user-1', 50, 'gemini');
   });
 });
 
@@ -172,7 +172,7 @@ describe('GET /api/citation-checks — filter by topic', () => {
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.items).toHaveLength(1);
-    expect(getCitationChecksByTopic).toHaveBeenCalledWith('user-1', 'best widgets 2026', 20);
+    expect(getCitationChecksByTopic).toHaveBeenCalledWith('user-1', 'best widgets 2026', 20, 'gemini');
     expect(getCitationChecksByUser).not.toHaveBeenCalled();
   });
 
@@ -217,7 +217,7 @@ describe('GET /api/citation-checks — filter by topic', () => {
       .get('/api/citation-checks?topic=best%20widgets&limit=5')
       .set('Authorization', 'Bearer valid-key');
 
-    expect(getCitationChecksByTopic).toHaveBeenCalledWith('user-1', 'best widgets', 5);
+    expect(getCitationChecksByTopic).toHaveBeenCalledWith('user-1', 'best widgets', 5, 'gemini');
   });
 
   it('uses default topic limit of 20 when no limit is given', async () => {
@@ -227,7 +227,7 @@ describe('GET /api/citation-checks — filter by topic', () => {
       .get('/api/citation-checks?topic=best%20widgets')
       .set('Authorization', 'Bearer valid-key');
 
-    expect(getCitationChecksByTopic).toHaveBeenCalledWith('user-1', 'best widgets', 20);
+    expect(getCitationChecksByTopic).toHaveBeenCalledWith('user-1', 'best widgets', 20, 'gemini');
   });
 });
 

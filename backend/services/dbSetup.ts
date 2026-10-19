@@ -224,6 +224,8 @@ CREATE INDEX IF NOT EXISTS idx_citation_checks_source_checked_at
   ON citation_checks(source, checked_at);
 
 ALTER TABLE users ADD COLUMN IF NOT EXISTS citation_alerts BOOLEAN NOT NULL DEFAULT TRUE;
+-- Two-letter US state the user is in, for location-aware ChatGPT checks.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS location_state TEXT;
 
 -- Which AI engine produced each visibility check. Everything so far ran on
 -- Gemini with Google Search; ChatGPT and Claude will write their own ids.

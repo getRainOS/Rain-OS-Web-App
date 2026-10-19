@@ -60,7 +60,7 @@ describe('getCitationChecksByUser', () => {
     expect(sql).toMatch(/WHERE user_id = \$1/i);
     expect(sql).toMatch(/ORDER BY checked_at DESC/i);
     expect(sql).toMatch(/LIMIT \$2/i);
-    expect(params).toEqual(['user-1', 50]);
+    expect(params).toEqual(['user-1', 50, 'gemini']);
   });
 
   it('respects a custom limit argument', async () => {
@@ -69,7 +69,7 @@ describe('getCitationChecksByUser', () => {
     await getCitationChecksByUser('user-1', 10);
 
     const [, params] = poolQuery.mock.calls[0];
-    expect(params).toEqual(['user-1', 10]);
+    expect(params).toEqual(['user-1', 10, 'gemini']);
   });
 
   it('returns an empty array when the user has no citation checks', async () => {

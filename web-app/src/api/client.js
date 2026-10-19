@@ -67,6 +67,10 @@ export const api = {
     const qs = params ? '?' + new URLSearchParams(params).toString() : '';
     return request('GET', `/api/citation-checks${qs}`);
   },
+  engines: () => request('GET', '/api/engines'),
+  startEngineCheck: (body) => request('POST', '/api/citation-check/engine', body),
+  pollEngineCheck: (id) => request('GET', `/api/citation-check/engine/${id}`),
+  setLocationState: (state) => request('POST', '/api/users/me/location', { state }),
   deleteCitationCheck: (id) => request('DELETE', `/api/citation-checks/${id}`),
   deleteCitationHistory: () => request('DELETE', '/api/citation-checks'),
   suggestPrompts: (body) => request('POST', '/api/prompt-suggestions', body),

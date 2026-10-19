@@ -2,6 +2,7 @@
 // checks on. Gemini (with Google Search grounding) is live. ChatGPT and Claude
 // are listed so the data model and UI already carry an engine id; each turns
 // on once its API key is set and its adapter is written and tested.
+// ChatGPT runs through cloro (services/engines/cloro.ts).
 export type EngineId = 'gemini' | 'chatgpt' | 'claude';
 
 export interface EngineInfo {
@@ -13,7 +14,7 @@ export interface EngineInfo {
 
 export const ENGINES: EngineInfo[] = [
   { id: 'gemini', label: 'Gemini with Google Search', keyEnv: ['GEMINI_API_KEY', 'API_KEY'], implemented: true },
-  { id: 'chatgpt', label: 'ChatGPT with web search', keyEnv: ['OPENAI_API_KEY'], implemented: false },
+  { id: 'chatgpt', label: 'ChatGPT', keyEnv: ['CLORO_API_KEY'], implemented: true },
   { id: 'claude', label: 'Claude with web search', keyEnv: ['ANTHROPIC_API_KEY'], implemented: false },
 ];
 

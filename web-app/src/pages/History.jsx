@@ -100,7 +100,7 @@ export default function History() {
     if (tab !== 'citations' || citationsLoaded) return;
     setCitationsLoading(true);
     setCitationsError('');
-    api.citationHistory()
+    api.citationHistory({ engine: 'all', limit: 100 })
       .then(({ data }) => {
         const items = Array.isArray(data) ? data : data?.items ?? [];
         setCitations(items);
@@ -739,6 +739,7 @@ export default function History() {
                             >
                               {c.cited ? 'CITED' : 'NOT CITED'}
                             </span>
+                            <span className={styles.itemDate}>{c.engine === 'chatgpt' ? 'ChatGPT' : 'Gemini'}</span>
                           </div>
                         </div>
                         <div className={styles.itemRight}>

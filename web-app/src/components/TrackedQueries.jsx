@@ -183,6 +183,11 @@ export default function TrackedQueriesPanel({ tracking }) {
                   {item.topic.trim().toLowerCase() !== item.name.trim().toLowerCase() && (
                     <span className={styles.rowTopic}>{item.topic}</span>
                   )}
+                  {item.chatgptLatest && (
+                    <span className={styles.rowTopic}>
+                      Gemini: {status.label.toLowerCase()} · ChatGPT: {item.chatgptLatest.cited ? 'cited' : 'not cited'} ({formatDate(item.chatgptLatest.checkedAt)})
+                    </span>
+                  )}
                 </div>
                 <span className={`${styles.status} ${styles[status.tone]}`}>{status.label}</span>
                 <History history={item.history} />

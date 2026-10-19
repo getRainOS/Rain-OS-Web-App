@@ -6,6 +6,8 @@ import { supabase } from '../lib/supabase.js';
 import { LANES } from '../lib/lanes.js';
 import { PRICE_TO_PLAN } from '../lib/plans.js';
 import PageHeader from '../components/PageHeader.jsx';
+import Select from '../components/Select.jsx';
+import { US_STATES } from '../lib/usStates.js';
 import styles from './Settings.module.css';
 
 export default function Settings() {
@@ -75,6 +77,21 @@ export default function Settings() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
+  }
+
+  const [locState, setLocState] = useState(user?.locationState || '');
+  const [locNote, setLocNote] = useState('');
+  useEffect(() => { setLocState(user?.locationState || ''); }, [user?.locationState]);
+  async function handleLocation(next) {
+    setLocState(next);
+    setLocNote('');
+    try {
+      await api.setLocationState(next || null);
+      setLocNote(next ? 'Saved. ChatGPT checks now run as someone in this state would see them.' : 'Saved. ChatGPT checks run without a location.');
+      refreshUser?.();
+    } catch (err) {
+      setLocNote(err.message || 'Could not save.');
+    }
   }
 
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -417,6 +434,24 @@ export default function Settings() {
             />
           </label>
           {alertsError && <p className={styles.switchError} role="alert">{alertsError}</p>}
+        </div>
+
+        <div className="card">
+          <h2 className={styles.sectionTitle}>Your location</h2>
+          <p className={styles.dangerText}>
+            AI answers depend on where the person asking is. Pick your state and we run ChatGPT checks as someone there
+            would see them. This matters most for local businesses. Put your city in the question too, like
+            “best plumber in Austin”.
+          </p>
+          <div style={{ marginTop: 14, maxWidth: 320 }}>
+            <Select
+              value={locState}
+              onChange={handleLocation}
+              ariaLabel="Your US state"
+              options={[{ value: '', label: 'No location' }, ...US_STATES.map(([code, nm]) => ({ value: code, label: nm }))]}
+            />
+          </div>
+          {locNote && <p className={styles.dangerText} style={{ marginTop: 10 }} role="status">{locNote}</p>}
         </div>
 
         <div className="card">

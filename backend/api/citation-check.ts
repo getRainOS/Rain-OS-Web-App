@@ -86,10 +86,14 @@ export async function listHandler(req: express.Request, res: express.Response) {
   const limitRaw = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : NaN;
   const limit = Number.isFinite(limitRaw) ? Math.max(1, Math.min(100, limitRaw)) : undefined;
 
+  // Gemini checks by default so existing trend lines stay one engine; pass
+  // ?engine=chatgpt for one other engine or ?engine=all for every engine.
+  const engine = typeof req.query.engine === 'string' && /^[a-z]+$/.test(req.query.engine) ? req.query.engine : 'gemini';
+
   try {
     const items = topic && topic.trim().length >= 3
-      ? await getCitationChecksByTopic(user.id, topic, limit ?? 20)
-      : await getCitationChecksByUser(user.id, limit ?? 50);
+      ? await getCitationChecksByTopic(user.id, topic, limit ?? 20, engine)
+      : await getCitationChecksByUser(user.id, limit ?? 50, engine);
     return res.status(200).json({ success: true, data: items, items });
   } catch (error) {
     console.error('Citation history error:', error);

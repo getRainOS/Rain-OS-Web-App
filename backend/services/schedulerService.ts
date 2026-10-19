@@ -2,6 +2,8 @@
 import { pool } from './db';
 import { findUserById, saveCitationCheck } from './dbService';
 import { runCitationCheck } from './citationCheckService';
+import { runEngineCitationCheck } from './engines/cloro';
+import { availableEngines } from './engines';
 import { sendCitationStatusEmail } from './emailService';
 import { planTrackingCap, enforcePlanCap, hasMatchableSite, WEEK_MS, MAX_JITTER_MS } from './trackedQueryService';
 
@@ -20,7 +22,7 @@ export function dailyCeiling(): number {
 async function scheduledChecksToday(): Promise<number> {
   const res = await pool.query(
     `SELECT COUNT(*)::int AS n FROM citation_checks
-     WHERE source = 'scheduled' AND checked_at >= date_trunc('day', NOW())`
+     WHERE source = 'scheduled' AND engine = 'gemini' AND checked_at >= date_trunc('day', NOW())`
   );
   return res.rows[0].n;
 }
@@ -100,6 +102,7 @@ export async function runTrackedQuery(row: any): Promise<'ran' | 'skipped' | 'fa
         [row.id, result.cited, CONFIRM_MS]
       );
     }
+    await runOtherEngines(row, user);
     return 'ran';
   } catch (err) {
     console.error(`[scheduler] tracked query ${row.id} failed:`, err instanceof Error ? err.message : err);
@@ -117,6 +120,25 @@ export async function runTrackedQuery(row: any): Promise<'ran' | 'skipped' | 'fa
       );
     }
     return 'failed';
+  }
+}
+
+// The same question on every other available engine (ChatGPT via cloro), as
+// the user's state would ask it. Saved for History and trends; the Gemini
+// result alone drives the confirm-then-email state machine above, so a slow
+// or unavailable engine never blocks or changes alerts.
+async function runOtherEngines(row: any, user: { id: string; locationState?: string | null }): Promise<void> {
+  for (const engine of availableEngines().filter(e => e.id !== 'gemini')) {
+    try {
+      const result = await runEngineCitationCheck(engine.id, row.topic, row.url, user.locationState ?? null);
+      await saveCitationCheck(user.id, {
+        name: row.name, topic: result.topic, url: result.url, cited: result.cited, alignmentScore: 0,
+        sources: result.sources, recommendations: [], summary: result.summary,
+        source: 'scheduled', trackedQueryId: Number(row.id), engine: engine.id,
+      });
+    } catch (err) {
+      console.error(`[scheduler] ${engine.id} check for tracked query ${row.id} failed:`, err instanceof Error ? err.message : err);
+    }
   }
 }
 
