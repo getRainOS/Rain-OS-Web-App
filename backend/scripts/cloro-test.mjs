@@ -37,6 +37,13 @@ async function run(c) {
   });
   const ms = Date.now() - t0;
   const json = await res.json().catch(() => ({}));
+  // Print the first raw reply (trimmed) so field names can be checked against
+  // what the script assumes, and any validation error is visible in full.
+  if (!run.shown || !res.ok) {
+    run.shown = true;
+    console.log(`\n--- raw reply: ${c.engine}${c.state ? ' ' + c.state : ''} (HTTP ${res.status}) ---`);
+    console.log(JSON.stringify(json, (k, v) => (typeof v === 'string' && v.length > 300 ? v.slice(0, 300) + '…' : v), 2).slice(0, 4000));
+  }
   const result = json.result || json;
   const text = String(result.text || result.markdown || '');
   const sources = sourcesOf(result);
