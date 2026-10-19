@@ -38,6 +38,7 @@ export interface TrackedQuery {
   consecutiveFailures: number;
   pausedReason: PausedReason | null;
   createdAt: string;
+  chatgptLatest: { cited: boolean; checkedAt: string } | null;
   history: Array<{ cited: boolean; checkedAt: string }>;
 }
 
@@ -61,6 +62,9 @@ const mapRow = (row: any): TrackedQuery => ({
   consecutiveFailures: row.consecutive_failures,
   pausedReason: row.paused_reason,
   createdAt: iso(row.created_at) as string,
+  chatgptLatest: row.chatgpt_latest
+    ? { cited: !!row.chatgpt_latest.cited, checkedAt: iso(row.chatgpt_latest.checked_at) as string }
+    : null,
   history: Array.isArray(row.history)
     ? row.history.map((h: any) => ({ cited: !!h.cited, checkedAt: iso(h.checked_at) as string }))
     : [],
@@ -120,10 +124,13 @@ export async function listTrackedQueries(userId: string): Promise<TrackedQuery[]
        COALESCE((
          SELECT json_agg(h ORDER BY h.checked_at ASC) FROM (
            SELECT cited, checked_at FROM citation_checks
-           WHERE tracked_query_id = t.id
+           WHERE tracked_query_id = t.id AND engine = 'gemini'
            ORDER BY checked_at DESC LIMIT 12
          ) h
-       ), '[]'::json) AS history
+       ), '[]'::json) AS history,
+       (SELECT json_build_object('cited', c.cited, 'checked_at', c.checked_at) FROM citation_checks c
+          WHERE c.tracked_query_id = t.id AND c.engine = 'chatgpt'
+          ORDER BY c.checked_at DESC LIMIT 1) AS chatgpt_latest
      FROM tracked_queries t
      WHERE t.user_id = $1
      ORDER BY t.created_at ASC, t.id ASC`,

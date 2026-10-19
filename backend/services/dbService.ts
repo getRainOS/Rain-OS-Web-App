@@ -115,6 +115,7 @@ const mapRowToUser = (row: any, hashedApiKey?: string): User => {
         confirmationToken: row.confirmation_token,
         usage: row.usage,
         citationAlerts: row.citation_alerts !== false,
+        locationState: row.location_state ?? null,
         createdAt: row.created_at,
     };
 };
@@ -241,7 +242,7 @@ export const createUser = async (
     return mapRowToUser(res.rows[0], hashedApiKey);
 };
 
-export const updateUser = async (userId: string, updates: Partial<Pick<User, 'googleId' | 'hashedPassword' | 'passwordResetToken' | 'passwordResetExpires' | 'emailConfirmed' | 'name'>> & { confirmationToken?: string | null }): Promise<User | null> => {
+export const updateUser = async (userId: string, updates: Partial<Pick<User, 'googleId' | 'hashedPassword' | 'passwordResetToken' | 'passwordResetExpires' | 'emailConfirmed' | 'name' | 'locationState'>> & { confirmationToken?: string | null }): Promise<User | null> => {
     const setClauses: string[] = [];
     const values: any[] = [userId];
 
@@ -252,6 +253,10 @@ export const updateUser = async (userId: string, updates: Partial<Pick<User, 'go
     if (updates.name !== undefined) {
         values.push(updates.name);
         setClauses.push(`name = $${values.length}`);
+    }
+    if (updates.locationState !== undefined) {
+        values.push(updates.locationState);
+        setClauses.push(`location_state = $${values.length}`);
     }
     if (updates.hashedPassword !== undefined) {
         values.push(updates.hashedPassword);
@@ -583,13 +588,14 @@ export const saveCitationCheck = async (
     summary?: string;
     source?: 'manual' | 'scheduled';
     trackedQueryId?: number | null;
+    engine?: string;
   }
 ): Promise<CitationCheckRecord | null> => {
   const topicKey = normaliseTopicKey(data.topic);
   const res = await pool.query(
     `INSERT INTO citation_checks
-       (user_id, name, topic, topic_key, url, cited, alignment_score, sources, recommendations, summary, source, tracked_query_id)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+       (user_id, name, topic, topic_key, url, cited, alignment_score, sources, recommendations, summary, source, tracked_query_id, engine)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
      RETURNING *`,
     [
       userId,
@@ -604,6 +610,7 @@ export const saveCitationCheck = async (
       data.summary || null,
       data.source || 'manual',
       data.trackedQueryId ?? null,
+      data.engine || 'gemini',
     ]
   );
   return res.rows[0] ? mapCitationRow(res.rows[0]) : null;
@@ -612,29 +619,31 @@ export const saveCitationCheck = async (
 export const getCitationChecksByTopic = async (
   userId: string,
   topic: string,
-  limit = 20
+  limit = 20,
+  engine: string = 'gemini'
 ): Promise<CitationCheckRecord[]> => {
   const topicKey = normaliseTopicKey(topic);
   const res = await pool.query(
     `SELECT * FROM citation_checks
-     WHERE user_id = $1 AND topic_key = $2
+     WHERE user_id = $1 AND topic_key = $2 AND ($4 = 'all' OR engine = $4)
      ORDER BY checked_at DESC
      LIMIT $3`,
-    [userId, topicKey, limit]
+    [userId, topicKey, limit, engine]
   );
   return res.rows.map(mapCitationRow);
 };
 
 export const getCitationChecksByUser = async (
   userId: string,
-  limit = 50
+  limit = 50,
+  engine: string = 'gemini'
 ): Promise<CitationCheckRecord[]> => {
   const res = await pool.query(
     `SELECT * FROM citation_checks
-     WHERE user_id = $1
+     WHERE user_id = $1 AND ($3 = 'all' OR engine = $3)
      ORDER BY checked_at DESC
      LIMIT $2`,
-    [userId, limit]
+    [userId, limit, engine]
   );
   return res.rows.map(mapCitationRow);
 };
@@ -960,4 +969,24 @@ export const deleteUserAccount = async (userId: string): Promise<void> => {
   } finally {
     client.release();
   }
+};
+
+// The newest check for this question, site and engine within the window, so
+// a repeat check can be answered instantly instead of asking the AI again.
+export const findRecentCitationCheck = async (
+  userId: string,
+  topic: string,
+  url: string | null,
+  engine: string,
+  withinHours: number
+): Promise<CitationCheckRecord | null> => {
+  const res = await pool.query(
+    `SELECT * FROM citation_checks
+     WHERE user_id = $1 AND topic_key = $2 AND engine = $3
+       AND url IS NOT DISTINCT FROM $4
+       AND checked_at > NOW() - ($5::float8 * INTERVAL '1 hour')
+     ORDER BY checked_at DESC LIMIT 1`,
+    [userId, normaliseTopicKey(topic), engine, url, withinHours]
+  );
+  return res.rows[0] ? mapCitationRow(res.rows[0]) : null;
 };

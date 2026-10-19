@@ -42,6 +42,7 @@ limit: number;
 resetDate?: string;
 };
 citationAlerts?: boolean;
+locationState?: string | null;
 createdAt: Date;
 }
 export interface ApiError {

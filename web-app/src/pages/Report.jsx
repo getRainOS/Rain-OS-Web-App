@@ -33,7 +33,7 @@ export default function Report() {
     const safe = p => p.then(({ data }) => data).catch(() => null);
     Promise.all([
       safe(api.history({ limit: 100 })),
-      safe(api.citationHistory({ limit: 100 })),
+      safe(api.citationHistory({ limit: 100, engine: 'all' })),
       safe(api.brandVisHistory()),
       safe(api.sovHistory()),
       safe(api.brandLinks()),
@@ -121,8 +121,8 @@ export default function Report() {
             <Table
               title="Citation checks"
               empty="No citation checks yet."
-              head={['Question', 'Website', 'Cited', 'Date']}
-              rows={view.citations.slice(0, 15).map(c => [c.topic, domainOf(c.url) || '—', c.cited ? 'Yes' : 'No', day(when(c))])}
+              head={['Question', 'Website', 'AI', 'Cited', 'Date']}
+              rows={view.citations.slice(0, 15).map(c => [c.topic, domainOf(c.url) || '—', c.engine === 'chatgpt' ? 'ChatGPT' : 'Gemini', c.cited ? 'Yes' : 'No', day(when(c))])}
             />
             <Table
               title="Brand sentiment"

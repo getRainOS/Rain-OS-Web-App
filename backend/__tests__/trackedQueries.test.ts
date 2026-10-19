@@ -23,6 +23,18 @@ vi.mock('../services/citationCheckService', () => ({
   extractDomain: (u: string) => new URL(/^https?:/i.test(u) ? u : 'https://' + u).hostname.replace(/^www\./, ''),
 }));
 
+// Engines other than Gemini: off unless a test turns ChatGPT on, so no test
+// ever calls the real cloro service.
+const otherEngines = { on: false };
+const runEngineCitationCheck = vi.fn();
+vi.mock('../services/engines', () => ({
+  availableEngines: () => [{ id: 'gemini' }, ...(otherEngines.on ? [{ id: 'chatgpt' }] : [])],
+}));
+vi.mock('../services/engines/cloro', () => ({
+  runEngineCitationCheck: (...a: unknown[]) => runEngineCitationCheck(...a),
+  US_STATES: new Set(['TX']),
+}));
+
 const sendCitationStatusEmail = vi.fn();
 vi.mock('../services/emailService', () => ({
   sendCitationStatusEmail: (...a: unknown[]) => sendCitationStatusEmail(...a),
@@ -79,6 +91,29 @@ describe('firstRunAt', () => {
 });
 
 describe('runTrackedQuery', () => {
+  it('also checks ChatGPT from the user\'s state and saves it, without touching alerts', async () => {
+    sqlRouter();
+    otherEngines.on = true;
+    findUserById.mockResolvedValue({ ...proUser, locationState: 'TX' });
+    runCitationCheck.mockResolvedValue({ topic: 'best widgets', url: 'https://me.com', cited: false, sources: [], summary: '' });
+    runEngineCitationCheck.mockResolvedValue({ topic: 'best widgets', url: 'https://me.com', cited: true, sources: [], summary: '' });
+    expect(await runTrackedQuery(row)).toBe('ran');
+    expect(runEngineCitationCheck).toHaveBeenCalledWith('chatgpt', 'best widgets', 'https://me.com', 'TX');
+    expect(saveCitationCheck).toHaveBeenCalledWith('u1', expect.objectContaining({ engine: 'chatgpt', cited: true, trackedQueryId: 7 }));
+    expect(sendCitationStatusEmail).not.toHaveBeenCalled();
+    otherEngines.on = false;
+  });
+
+  it('a failed ChatGPT check does not fail the tracked run', async () => {
+    sqlRouter();
+    otherEngines.on = true;
+    findUserById.mockResolvedValue(proUser);
+    runCitationCheck.mockResolvedValue({ topic: 'best widgets', url: 'https://me.com', cited: false, sources: [], summary: '' });
+    runEngineCitationCheck.mockRejectedValue(new Error('unavailable'));
+    expect(await runTrackedQuery(row)).toBe('ran');
+    otherEngines.on = false;
+  });
+
   it('records a scheduled check', async () => {
     sqlRouter();
     findUserById.mockResolvedValue(proUser);

@@ -83,24 +83,25 @@ export function extractDomain(rawUrl: string): string {
  * Only ever references cited, how many sources were returned, and (when
  * relevant) which domains compete for the citation.
  */
-function buildSummary(
+export function buildSummary(
   hasUrl: boolean,
   cited: boolean,
   sourcesCount: number,
-  competitorDomains: string[]
+  competitorDomains: string[],
+  engineName = 'Gemini'
 ): string {
   if (sourcesCount === 0) {
-    return 'Gemini returned no grounded sources for this query.';
+    return `${engineName} returned no sources for this query.`;
   }
   const plural = sourcesCount === 1 ? '' : 's';
   const leaders = competitorDomains.slice(0, 3).join(', ');
   if (!hasUrl) {
-    return `Gemini cited ${sourcesCount} source${plural} for this query${leaders ? ` — currently led by ${leaders}` : ''}.`;
+    return `${engineName} cited ${sourcesCount} source${plural} for this query${leaders ? ` — currently led by ${leaders}` : ''}.`;
   }
   if (cited) {
-    return `Your site is among the ${sourcesCount} source${plural} Gemini cited for this query.`;
+    return `Your site is among the ${sourcesCount} source${plural} ${engineName} cited for this query.`;
   }
-  return `Your site was not among the ${sourcesCount} source${plural} Gemini cited for this query${leaders ? ` — currently led by ${leaders}` : ''}.`;
+  return `Your site was not among the ${sourcesCount} source${plural} ${engineName} cited for this query${leaders ? ` — currently led by ${leaders}` : ''}.`;
 }
 
 /**

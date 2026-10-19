@@ -30,6 +30,8 @@ import usersMeHandler from './users/me';
 import regenerateKeyHandler from './users/me/regenerate-key';
 import updateNameHandler from './users/me/update-name';
 import deleteAccountHandler from './users/me/delete-account';
+import locationHandler from './users/me/location';
+import { enginesHandler, startHandler as engineCheckStartHandler, pollHandler as engineCheckPollHandler } from './engine-check';
 // Stripe
 import createCheckoutSessionHandler from './stripe/create-checkout-session';
 import createPortalSessionHandler from './stripe/create-portal-session';
@@ -177,6 +179,10 @@ app.get( '/api/users/me', usersMeHandler);
 app.post('/api/users/me/regenerate-key', regenerateKeyHandler);
 app.post('/api/users/me/update-name', updateNameHandler);
 app.post('/api/users/me/delete-account', deleteAccountHandler);
+app.post('/api/users/me/location', locationHandler);
+app.get('/api/engines', enginesHandler);
+app.post('/api/citation-check/engine', engineCheckStartHandler);
+app.get('/api/citation-check/engine/:id', engineCheckPollHandler);
 // ─── Stripe ────────────────────────────────────────────────────────────────
 app.post('/api/stripe/create-checkout-session', createCheckoutSessionHandler);
 app.post('/api/stripe/create-portal-session', createPortalSessionHandler);

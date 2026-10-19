@@ -25,6 +25,7 @@ import CheckProgress from '../components/CheckProgress.jsx';
 import TrackedQueriesPanel, { useTrackedQueries, TrackWeeklyButton } from '../components/TrackedQueries.jsx';
 import LocalListings from '../components/LocalListings.jsx';
 import { needsPlace } from '../lib/localListings.js';
+import EngineCheckPanel from '../components/EngineCheckPanel.jsx';
 import styles from './CitationMonitor.module.css';
 
 // Lazy: react-simple-maps + d3-geo only need to load for whoever actually
@@ -100,7 +101,12 @@ function timeAgo(str) {
 }
 
 export default function CitationMonitor() {
-  const { refreshUser, userLane } = useApp();
+  const { refreshUser, userLane, user } = useApp();
+  const [engineRun, setEngineRun] = useState(null);
+  const [hasChatGpt, setHasChatGpt] = useState(false);
+  useEffect(() => {
+    api.engines().then(({ data }) => setHasChatGpt((data?.engines || []).some(e => e.id === 'chatgpt'))).catch(() => {});
+  }, []);
   const tracking = useTrackedQueries();
   const formRef = useRef(null);
   const checkRequestIdRef = useRef(0);
@@ -169,6 +175,8 @@ export default function CitationMonitor() {
     // newer one and overwriting its result — only the most recently
     // started request is allowed to update state.
     const requestId = ++checkRequestIdRef.current;
+    // ChatGPT starts alongside Gemini and fills in when it is ready.
+    setEngineRun(hasChatGpt ? { topic: topic.trim(), url: noSite ? undefined : (url.trim() || undefined), name: checkName, id: requestId } : null);
     setLoading(true);
     setError('');
     setResult(null);
@@ -479,6 +487,7 @@ export default function CitationMonitor() {
               {resultTab === 'result' && (
                 <>
                   <ResultConsole result={result} name={name} topicHistory={topicHistory} tracking={tracking} />
+                  {engineRun && <EngineCheckPanel run={engineRun} locationState={user?.locationState} />}
                   {userLane === 'local_business' && <LocalListings sources={result.sources} url={result.url || url} />}
                   {(() => {
                     const rank = result.citedSourceIndex != null ? result.citedSourceIndex + 1 : null;
