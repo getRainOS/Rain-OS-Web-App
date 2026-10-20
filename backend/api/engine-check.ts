@@ -12,6 +12,7 @@ import { findUserByApiKey, saveCitationCheck, findRecentCitationCheck } from '..
 import { runEngineCitationCheck, EngineError } from '../services/engines/cloro';
 import { availableEngines } from '../services/engines';
 import { normaliseLocation } from '../services/engines/location';
+import { isPaidPlan as isPaid } from '../services/planLimits';
 import { findCitedSourceIndex, extractDomain } from '../services/citationCheckService';
 import { createDailyLimiter } from '../services/dailyLimiter';
 import type { ApiError } from '../types';
@@ -46,7 +47,11 @@ const fromRecord = (r: any) => ({
 export async function enginesHandler(req: express.Request, res: express.Response) {
   const user = await authUser(req, res);
   if (!user) return;
-  return res.status(200).json({ success: true, engines: availableEngines().map(e => ({ id: e.id, label: e.label })) });
+  const paid = isPaid(user);
+  return res.status(200).json({
+    success: true,
+    engines: availableEngines().map(e => ({ id: e.id, label: e.label, locked: e.id !== 'gemini' && !paid })),
+  });
 }
 
 // Public: the engines live right now, for the marketing site. The copy names
@@ -62,6 +67,9 @@ export async function startHandler(req: express.Request, res: express.Response) 
   const engine = String(req.body?.engine || 'chatgpt');
   if (engine === 'gemini' || !availableEngines().some(e => e.id === engine)) {
     return res.status(400).json({ error: 'engine_unavailable', message: 'That AI engine is not available.' } as ApiError);
+  }
+  if (!isPaid(user)) {
+    return res.status(402).json({ error: 'plan_required', message: `${engine === 'chatgpt' ? 'ChatGPT' : 'This engine'} checks are on Pro and Business plans.` } as ApiError);
   }
   const topic = typeof req.body?.topic === 'string' ? req.body.topic.trim().slice(0, 500) : '';
   if (topic.length < 3) return res.status(400).json({ error: 'bad_request', message: 'topic is required' } as ApiError);

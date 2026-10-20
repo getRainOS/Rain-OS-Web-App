@@ -28,7 +28,8 @@ beforeAll(async () => {
   app.post('/start', m.startHandler);
   app.get('/poll/:id', m.pollHandler);
 });
-const user = { id: 'u1', email: 'u@x.com', locationState: 'TX' };
+const user = { id: 'u1', email: 'u@x.com', locationState: 'TX', subscriptionStatus: 'active', usage: { count: 0, limit: 200 } };
+const freeUser = { id: 'u3', email: 'f@x.com', subscriptionStatus: 'active', usage: { count: 0, limit: 10 } };
 beforeEach(() => {
   findUserByApiKey.mockReset().mockResolvedValue(user);
   saveCitationCheck.mockReset().mockResolvedValue({ id: 99 });
@@ -42,6 +43,16 @@ describe('engine checks', () => {
     const res = await request(app).get('/public-engines');
     expect(res.status).toBe(200);
     expect(res.body.engines).toEqual([{ id: 'gemini', name: 'Gemini' }, { id: 'chatgpt', name: 'ChatGPT' }]);
+  });
+  it('keeps ChatGPT checks to paid plans', async () => {
+    findUserByApiKey.mockResolvedValue(freeUser);
+    const res = await auth(request(app).post('/start').send({ engine: 'chatgpt', topic: 'best bakery in Austin' }));
+    expect(res.status).toBe(402);
+    expect(res.body.error).toBe('plan_required');
+    expect(runEngineCitationCheck).not.toHaveBeenCalled();
+    const list = await auth(request(app).get('/engines'));
+    expect(list.body.engines.find((e: any) => e.id === 'chatgpt').locked).toBe(true);
+    expect(list.body.engines.find((e: any) => e.id === 'gemini').locked).toBe(false);
   });
   it('lists available engines', async () => {
     const res = await auth(request(app).get('/engines'));
