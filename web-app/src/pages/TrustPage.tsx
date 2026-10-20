@@ -15,6 +15,7 @@ const GLANCE = [
 
 const PROVIDERS = [
   ['Google (Gemini API)', 'Scores your content and runs the visibility checks, with Google Search grounding.', 'The text, page or question being analyzed'],
+  ['cloro', 'Runs the ChatGPT visibility checks: asks ChatGPT your question and returns the answer and its sources.', 'The question being checked and the location chosen for it'],
   ['Google (sign-in)', 'Optional “Continue with Google” sign-in.', 'Your Google account email and name'],
   ['Railway', 'Runs the rain OS API and hosts our Postgres database. App servers run in Railway’s US West region.', 'Your account and saved results'],
   ['Vercel', 'Serves the rain OS website and app.', 'Standard web request data'],

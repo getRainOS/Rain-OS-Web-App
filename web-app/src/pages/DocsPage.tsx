@@ -99,7 +99,7 @@ export default function DocsPage() {
                   <p>
                     rain OS is an AEO (Answer Engine Optimization) and GEO (Generative Engine Optimization) platform.
                     It analyzes your content against the widely documented signals AI assistants such as ChatGPT, Perplexity,
-                    Gemini and Claude rely on, and its visibility checks run on Gemini with Google Search.
+                    Gemini and Claude rely on. Its citation checks run on Gemini with Google Search and on ChatGPT.
                   </p>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

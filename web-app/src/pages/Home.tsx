@@ -10,6 +10,7 @@ import MarketingNav from '@/components/marketing/MarketingNav';
 import RainBackground from '@/components/marketing/RainBackground';
 import SiteFooter from '@/components/marketing/SiteFooter';
 import { Pricing, FAQ } from '@/components/marketing/MarketingComponents';
+import { useLiveEngines, joinNames } from '@/lib/liveEngines';
 
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
 
@@ -210,7 +211,7 @@ const PLATFORM = [
     label: 'Monitor',
     Icon: Radar,
     title: 'See whether AI cites you',
-    body: 'Ask the questions your customers ask. We put them to Google\'s Gemini, searching the live web, and show every website it pointed to.',
+    body: 'Ask the questions your customers ask. We put them to {engines}, searching the live web, and show every website each one pointed to.',
     tools: [
       { Icon: Radar, name: 'Citation Monitor', desc: 'Cited or not, with the full source list' },
       { Icon: CalendarClock, name: 'Weekly tracking', desc: 'Re-checked every week, alerts on change' },
@@ -257,7 +258,9 @@ function PlatformVisual({ id }: { id: string }) {
 
 function PlatformSection() {
   const [active, setActive] = useState('measure');
-  const current = PLATFORM.find(p => p.id === active)!;
+  const engines = joinNames(useLiveEngines());
+  const found = PLATFORM.find(p => p.id === active)!;
+  const current = { ...found, body: found.body.replace('{engines}', engines) };
   return (
     <section id="product" className="relative z-10 py-28 border-t border-white/[0.06]">
       <div className="max-w-6xl mx-auto px-6">
@@ -288,7 +291,7 @@ function PlatformSection() {
                     <span className={`text-[11px] uppercase tracking-[0.14em] ${on ? 'text-white' : 'text-neutral-500'}`} style={MONO}>{p.label}</span>
                   </div>
                   <div className={`mt-2 text-[17px] font-medium ${on ? 'text-white' : 'text-neutral-400'}`}>{p.title}</div>
-                  {on && <p className="mt-2 text-[14px] text-neutral-400 leading-relaxed hidden lg:block">{p.body}</p>}
+                  {on && <p className="mt-2 text-[14px] text-neutral-400 leading-relaxed hidden lg:block">{p.body.replace('{engines}', engines)}</p>}
                 </button>
               );
             })}
@@ -392,8 +395,9 @@ function LanesSection() {
 /* ── Method ─────────────────────────────────────────────────────────────── */
 
 function MethodSection() {
+  const engines = joinNames(useLiveEngines());
   const steps = [
-    { n: '01', title: 'We ask the engine', body: 'Your exact question goes to Google\'s Gemini, searching the live web, the same way a customer would ask it.' },
+    { n: '01', title: 'We ask the engines', body: `Your exact question goes to ${engines}, searching the live web, the same way a customer would ask it.` },
     { n: '02', title: 'We read the sources', body: 'We collect every source the answer cites and match them against your domain. Cited or not is a fact, not an estimate.' },
     { n: '03', title: 'We show our work', body: 'You get the answer excerpt, the full source list and the competitors who were cited instead, saved so you can compare over time.' },
   ];
@@ -410,7 +414,7 @@ function MethodSection() {
           </p>
           <div className="mt-8 flex items-start gap-3 text-[13px] text-neutral-500 max-w-md">
             <ShieldCheck className="w-4 h-4 mt-0.5 shrink-0 text-neutral-400" />
-            Citation checks run on Google's Gemini today. The Rain Score looks at the same things ChatGPT, Perplexity and other assistants rely on.
+            Citation checks run on {engines} today; Share of Voice and Brand Sentiment run on Gemini. The Rain Score looks at what every AI assistant relies on, so the fixes apply everywhere.
           </div>
         </Reveal>
         <div className="space-y-3">
@@ -431,36 +435,42 @@ function MethodSection() {
   );
 }
 
-/* ── Why Google Gemini ───────────────────────────────────────────────────── */
+/* ── The engines we check ───────────────────────────────────────────────── */
 
 function WhyGoogleSection() {
+  const live = useLiveEngines();
+  const hasChatGpt = live.includes('ChatGPT');
+  const hasOverviews = live.some(n => /AI Overview/i.test(n));
   const points = [
     {
       Icon: Search,
       title: 'Where your customers already are',
-      body: 'Most people still start with Google, and Google now answers many searches with AI before showing a single link. Those answers, including AI Overviews and AI Mode, are built on Gemini.',
+      body: hasChatGpt
+        ? 'ChatGPT is the AI assistant people use most, and Google now answers many searches with AI built on Gemini before showing a single link. Between them, they answer much of what your customers ask.'
+        : 'Most people still start with Google, and Google now answers many searches with AI before showing a single link. Those answers, including AI Overviews and AI Mode, are built on Gemini.',
     },
     {
       Icon: Globe,
       title: 'Live search, not memory',
-      body: 'Every check uses Google Search grounding: Gemini searches the web at that moment and answers from what it finds today, not from training data that may be a year old.',
+      body: 'Every check searches the web at that moment and answers from what it finds today, not from training data that may be a year old.',
     },
     {
       Icon: ShieldCheck,
       title: 'Proof you can click',
-      body: 'Grounding returns the exact pages the answer relied on. So "cited" or "not cited" is a fact with links, not a guess, and you can open every source yourself.',
+      body: 'Each check returns the exact pages the answer relied on. So "cited" or "not cited" is a fact with links, not a guess, and you can open every source yourself.',
     },
   ];
   return (
     <section id="why-google" className="relative z-10 py-28 border-t border-white/[0.06]">
       <div className="max-w-6xl mx-auto px-6">
         <Reveal>
-          <Eyebrow>Why Google Gemini</Eyebrow>
+          <Eyebrow>The engines we check</Eyebrow>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance max-w-3xl">
-            We check the AI that sits on top of Google.
+            We ask the AI your customers actually use.
           </h2>
           <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-2xl">
-            rain OS asks your questions through Gemini with live Google Search, the same search engine behind the AI answers your customers see first. One engine, checked properly, beats five checked by guesswork.
+            rain OS puts your questions to {joinNames(live)}, searching the live web, and shows exactly which sites each one cited and where you ranked.
+            {' '}More engines are added as they go live.
           </p>
         </Reveal>
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -475,7 +485,8 @@ function WhyGoogleSection() {
           ))}
         </div>
         <p className="mt-6 text-[13px] text-neutral-500 max-w-3xl leading-relaxed">
-          To be clear about scope: our checks run on Gemini and won't exactly match every Google results page, ChatGPT or Perplexity. The Rain Score itself measures what all of them rely on, like clear answers, structure and schema, so the fixes apply everywhere.
+          To be clear about scope: each check shows what {joinNames(live)} answered at that moment. AI answers vary between runs and by location
+          {hasOverviews ? '' : ", and won't exactly match every Google results page or AI Overview"}. The Rain Score measures what every assistant relies on, like clear answers, structure and schema, so the fixes apply everywhere.
         </p>
       </div>
     </section>
@@ -620,6 +631,7 @@ const SPECS = [
 ];
 
 export default function Home() {
+  const engines = useLiveEngines();
   const navigate = useNavigate();
   const start = () => navigate('/login');
 
@@ -647,7 +659,7 @@ export default function Home() {
                 <span className="text-neutral-500">AI gives.</span>
               </h1>
               <p className="mt-7 text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto leading-relaxed text-balance">
-                More people now ask AI where to buy, who to hire and what to use. rain OS shows whether AI recommends you, and walks you through fixing it in plain English.
+                More people now ask AI where to buy, who to hire and what to use. rain OS checks whether {joinNames(engines)} recommend you, and walks you through fixing it in plain English.
               </p>
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button onClick={start} className="h-11 px-6 rounded-md bg-[#2B8FE3] text-white text-[15px] font-medium hover:bg-[#1C73C4] transition-colors inline-flex items-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
@@ -658,7 +670,7 @@ export default function Home() {
                 </a>
               </div>
               <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] text-neutral-400">
-                {['Checked live on Google Search', 'Free to start', 'No credit card', 'No technical skills needed'].map(t => (
+                {[`Checks ${joinNames(engines)}`, 'Free to start', 'No credit card', 'No technical skills needed'].map(t => (
                   <li key={t} className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-[#2B8FE3]" />{t}</li>
                 ))}
               </ul>
