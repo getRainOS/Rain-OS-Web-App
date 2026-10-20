@@ -1,3 +1,4 @@
+import { US_STATES } from '../lib/usStates.js';
 import LocalPageCheck, { LocalSteps } from '../components/LocalPageCheck.jsx';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -201,7 +202,7 @@ function heroSeenKey(lane) {
 }
 
 export default function UrlScanner() {
-  const { refreshUser, userLane } = useApp();
+  const { refreshUser, userLane, user } = useApp();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [url, setUrl] = useState(() => normalizeUrlInput(searchParams.get('url') || ''));
@@ -212,6 +213,8 @@ export default function UrlScanner() {
   const [scannedUrl, setScannedUrl] = useState('');
   const [city, setCity] = useState(() => searchParams.get('city') || '');
   const [showCity, setShowCity] = useState(() => !!searchParams.get('city'));
+  const [cityState, setCityState] = useState(null);
+  useEffect(() => { if (user) setCityState(s => s ?? (user.locationState || '')); }, [user]);
   const [heroSeen, setHeroSeen] = useState(() => {
     try {
       return localStorage.getItem(heroSeenKey(userLane)) === '1';
@@ -238,7 +241,7 @@ export default function UrlScanner() {
     try {
       const analysisModule = ['product_sellers', 'developers', 'local_business', 'vibe_coders'].includes(userLane) ? userLane : 'general';
       const target = /^https?:\/\//i.test(url.trim()) ? url.trim() : `https://${url.trim()}`;
-      const { data } = await api.scanUrl(target, { module: analysisModule, ...(city.trim() ? { targetCity: city.trim() } : {}) });
+      const { data } = await api.scanUrl(target, { module: analysisModule, ...((userLane === 'local_business' || showCity) && (city.trim() || cityState) ? { targetCity: city.trim(), targetState: cityState || undefined } : {}) });
       setResult(data);
       setScannedUrl(url.trim());
       refreshUser();
@@ -379,10 +382,22 @@ export default function UrlScanner() {
         <RecentPicker mode="page" onPick={v => setUrl(normalizeUrlInput(v))} />
         {userLane === 'local_business' || showCity ? (
           <div className={styles.cityRow}>
-            <label htmlFor="us-city" className={styles.cityLabel}>City you want to be found in <span>Optional</span></label>
-            <input id="us-city" type="text" className={styles.cityInput} placeholder="e.g. Austin" value={city}
-              onChange={e => setCity(e.target.value)} maxLength={80} />
-            <p className={styles.cityHint}>We'll check whether this page clearly serves that city: title, headings, service area, schema, and matching name, address and phone.</p>
+            <label htmlFor="us-city" className={styles.cityLabel}>Where you want to be found <span>Optional</span></label>
+            <div className={styles.cityFields}>
+              <input id="us-city" type="text" className={styles.cityInput} placeholder="City, e.g. Austin" value={city}
+                onChange={e => setCity(e.target.value)} maxLength={80} />
+              <Select
+                value={cityState ?? ''}
+                onChange={setCityState}
+                ariaLabel="State you want to be found in"
+                options={[{ value: '', label: 'No state' }, ...US_STATES.map(([v, l]) => ({ value: v, label: l }))]}
+              />
+            </div>
+            <p className={styles.cityHint}>
+              We'll check whether this page clearly serves that place: title, headings, service area, schema, and matching name,
+              address and phone. Add the state to catch a schema in the wrong one (Portland, OR vs Portland, ME), or leave the
+              city empty if you serve a whole state.
+            </p>
           </div>
         ) : (
           <button type="button" className={styles.cityToggle} onClick={() => setShowCity(true)}>+ Check for a city</button>
