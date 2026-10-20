@@ -73,7 +73,7 @@ const features = [
   {
     Icon: Radar,
     title: 'Citation Monitor',
-    desc: 'See whether Gemini already cites you for the topics you care about, and track it across every check you run.',
+    desc: 'See whether ChatGPT, Google AI Overviews, Perplexity and Claude cite you for the topics you care about, and track it every week.',
   },
   {
     Icon: TrendingUp,

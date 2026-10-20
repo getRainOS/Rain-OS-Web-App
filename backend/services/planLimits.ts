@@ -1,0 +1,23 @@
+// services/planLimits.ts — what each plan unlocks. No database imports, so
+// API handlers and tests can use it freely.
+import type { User } from '../types';
+
+export const PRO_TRACKING_CAP = 10;
+export const BUSINESS_TRACKING_CAP = 30;
+
+export function planTrackingCap(user: Pick<User, 'subscriptionStatus' | 'stripePriceId' | 'usage'>): number {
+  if (user.subscriptionStatus !== 'active' && user.subscriptionStatus !== 'trialing') return 0;
+  const business = process.env.STRIPE_PRICE_ID_BUSINESS;
+  const pro = process.env.STRIPE_PRICE_ID_PRO;
+  if (business && user.stripePriceId === business) return BUSINESS_TRACKING_CAP;
+  if (pro && user.stripePriceId === pro) return PRO_TRACKING_CAP;
+  const limit = user.usage?.limit ?? 0;
+  if (limit >= 500) return BUSINESS_TRACKING_CAP;
+  if (limit >= 200) return PRO_TRACKING_CAP;
+  return 0;
+}
+
+// Pro and Business. Checks on engines other than Gemini cost per run, so
+// they're limited to these plans.
+export const isPaidPlan = (user: Pick<User, 'subscriptionStatus' | 'stripePriceId' | 'usage'>): boolean =>
+  planTrackingCap(user) > 0;

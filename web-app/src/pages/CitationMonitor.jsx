@@ -106,12 +106,17 @@ export default function CitationMonitor() {
   const { refreshUser, userLane, user } = useApp();
   const [engineRun, setEngineRun] = useState(null);
   const [hasChatGpt, setHasChatGpt] = useState(false);
+  const [chatGptLocked, setChatGptLocked] = useState(false);
   // Where the ChatGPT check is asked from. Settings is only the default.
   const [checkCountry, setCheckCountry] = useState('US');
   const [checkState, setCheckState] = useState(null);
   useEffect(() => { if (user) setCheckState(s => s ?? (user.locationState || '')); }, [user]);
   useEffect(() => {
-    api.engines().then(({ data }) => setHasChatGpt((data?.engines || []).some(e => e.id === 'chatgpt'))).catch(() => {});
+    api.engines().then(({ data }) => {
+      const gpt = (data?.engines || []).find(e => e.id === 'chatgpt');
+      setHasChatGpt(!!gpt && !gpt.locked);
+      setChatGptLocked(!!gpt?.locked);
+    }).catch(() => {});
   }, []);
   const tracking = useTrackedQueries();
   const formRef = useRef(null);
@@ -518,6 +523,15 @@ export default function CitationMonitor() {
                   <ResultConsole result={result} name={name} topicHistory={topicHistory} tracking={tracking}
                     location={engineRun ? { country: engineRun.country, state: engineRun.state } : null} />
                   {engineRun && <EngineCheckPanel run={engineRun} />}
+                  {chatGptLocked && (
+                    <div className={`card ${styles.gptLocked}`}>
+                      <div>
+                        <strong>See what ChatGPT says too</strong>
+                        <p>Pro and Business ask ChatGPT the same question, from the state or country you choose, and show every site it cited.</p>
+                      </div>
+                      <Link to="/upgrade" className="btn btn-primary">Upgrade</Link>
+                    </div>
+                  )}
                   {userLane === 'local_business' && <LocalListings sources={result.sources} url={result.url || url} />}
                   {(() => {
                     const rank = result.citedSourceIndex != null ? result.citedSourceIndex + 1 : null;

@@ -5,8 +5,8 @@ import { extractDomain } from './citationCheckService';
 import { matchableDomain } from './sharedPlatforms';
 import type { User } from '../types';
 
-export const PRO_TRACKING_CAP = 10;
-export const BUSINESS_TRACKING_CAP = 30;
+import { planTrackingCap, PRO_TRACKING_CAP, BUSINESS_TRACKING_CAP } from './planLimits';
+export { planTrackingCap, PRO_TRACKING_CAP, BUSINESS_TRACKING_CAP };
 // True when the URL points at a site we can match cited sources against.
 export function hasMatchableSite(url: string | null | undefined): boolean {
   if (!url) return false;
@@ -77,17 +77,6 @@ const mapRow = (row: any): TrackedQuery => ({
 // Pro and Business only. Price IDs come from the same env vars stripeService
 // uses; the usage-limit fallback covers plans whose limit came from Stripe
 // price metadata instead.
-export function planTrackingCap(user: Pick<User, 'subscriptionStatus' | 'stripePriceId' | 'usage'>): number {
-  if (user.subscriptionStatus !== 'active' && user.subscriptionStatus !== 'trialing') return 0;
-  const business = process.env.STRIPE_PRICE_ID_BUSINESS;
-  const pro = process.env.STRIPE_PRICE_ID_PRO;
-  if (business && user.stripePriceId === business) return BUSINESS_TRACKING_CAP;
-  if (pro && user.stripePriceId === pro) return PRO_TRACKING_CAP;
-  const limit = user.usage?.limit ?? 0;
-  if (limit >= 500) return BUSINESS_TRACKING_CAP;
-  if (limit >= 200) return PRO_TRACKING_CAP;
-  return 0;
-}
 
 export function firstRunAt(now = Date.now(), random = Math.random): Date {
   return new Date(now + WEEK_MS + Math.floor(random() * MAX_JITTER_MS));
