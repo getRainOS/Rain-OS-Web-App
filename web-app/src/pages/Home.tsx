@@ -106,7 +106,7 @@ function HeroConsole() {
         <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
         <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
         <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
-        <span className="ml-3 text-[11px] text-neutral-500 truncate" style={MONO}>app.getrainos.com/citation-monitor</span>
+        <span className="ml-3 text-[11px] text-neutral-500 truncate" style={MONO}>getrainos.com/citation-monitor</span>
         <span className="ml-auto text-[10px] text-neutral-600 hidden sm:inline" style={MONO}>EXAMPLE DATA</span>
       </div>
 
@@ -182,7 +182,7 @@ function HeroConsole() {
               </p>
             </motion.div>
           </AnimatePresence>
-          <div className="text-[10px] uppercase tracking-[0.14em] text-neutral-500 mb-2" style={MONO}>Your position over time</div>
+          <div className="text-[10px] uppercase tracking-[0.14em] text-neutral-500 mb-2" style={MONO}>Position over time</div>
           <PositionLine history={ex.history} />
         </div>
       </div>
