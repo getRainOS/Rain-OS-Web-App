@@ -3,6 +3,7 @@ import express from 'express';
 import { findUserByApiKey, incrementUsageAndSaveAnalysis } from '../services/dbService';
 import { analyzeContent } from '../services/geminiService';
 import { scanUrlForTechnicalSignals } from '../services/urlScanService';
+import { checkLocalPage } from '../services/localPageCheck';
 import { runPageSpeed, isGoogleApiConfigured } from '../services/googleApisService';
 import { classifyGeminiError } from '../services/geminiErrors';
 import type { ApiError } from '../types';
@@ -69,7 +70,7 @@ export default async function handler(req: express.Request, res: express.Respons
   }
 
   // ─── Input validation ─────────────────────────────────────────────────────
-  const { url, industry, module } = req.body as { url?: string; industry?: string; module?: string };
+  const { url, industry, module, targetCity } = req.body as { url?: string; industry?: string; module?: string; targetCity?: string };
   const analysisModule: 'general' | 'product_sellers' | 'developers' | 'local_business' | 'vibe_coders' =
     module === 'product_sellers' || module === 'developers' || module === 'local_business' || module === 'vibe_coders' ? module : 'general';
   if (!url) {
@@ -156,6 +157,11 @@ export default async function handler(req: express.Request, res: express.Respons
       scan_timestamp: new Date().toISOString(),
       // Real performance data from Google
       page_speed: pageSpeed,
+      // Does the page clearly serve the city the user named? Read from the
+      // page itself; not part of the score.
+      local_page_check: typeof targetCity === 'string' && targetCity.trim().length >= 2
+        ? checkLocalPage(rawHtml, targetCity)
+        : null,
     };
 
     // ─── Increment usage and save to history ─────────────────────────────────
