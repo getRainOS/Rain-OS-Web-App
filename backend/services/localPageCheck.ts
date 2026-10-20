@@ -5,6 +5,7 @@
 // schema markup, and whether the name, address and phone agree between the
 // visible page and the schema. It does not check Google, Yelp or directories.
 import * as cheerio from 'cheerio';
+import { US_STATE_NAMES } from './engines/location';
 
 export interface LocalCheckItem {
   id: string;
@@ -47,23 +48,47 @@ const asList = (v: any): any[] => (Array.isArray(v) ? v : v == null ? [] : [v]);
 const textOf = (v: any): string =>
   typeof v === 'string' ? v : v && typeof v === 'object' ? String(v.name ?? v.addressLocality ?? '') : '';
 
-export function checkLocalPage(html: string, targetCity: string): LocalPageCheck {
-  const city = targetCity.trim().replace(/\s+/g, ' ').slice(0, 80);
+// A place to look for: a city name, or a US state written out or as its
+// two-letter code. The code only counts in capitals, so "in" or "or" in a
+// sentence isn't read as Indiana or Oregon.
+function placeMatcher(name: string, code?: string) {
+  const src = code ? `\\b(${escapeRe(name)}|${code})\\b` : `\\b(${escapeRe(name)})\\b`;
+  const ok = (m: string) => m.toLowerCase() === name.toLowerCase() || (!!code && m === code);
+  return {
+    src,
+    ok,
+    count: (text: string) => Array.from(text.matchAll(new RegExp(src, 'gi'))).filter(m => ok(m[1])).length,
+    test: (text: string) => Array.from(text.matchAll(new RegExp(src, 'gi'))).some(m => ok(m[1])),
+  };
+}
+
+// targetCity and/or targetState (a US two-letter code). With both, the city is
+// what's checked and the state is used to confirm the schema's state, so a
+// Portland, Maine schema doesn't pass a check for Portland, Oregon.
+export function checkLocalPage(html: string, targetCity: string, targetState?: string | null): LocalPageCheck | null {
+  const cityName = (targetCity || '').trim().replace(/\s+/g, ' ').slice(0, 80);
+  const stateCode = targetState && US_STATE_NAMES[targetState.toUpperCase()] ? targetState.toUpperCase() : null;
+  const stateName = stateCode ? US_STATE_NAMES[stateCode] : '';
+  const city = cityName || stateName;
+  if (city.length < 2) return null;
+  const place = cityName ? placeMatcher(cityName) : placeMatcher(stateName, stateCode || undefined);
+  const cityRe = { test: place.test };
   const $ = cheerio.load(html);
-  const cityRe = new RegExp(`\\b${escapeRe(city)}\\b`, 'i');
-  const cityReAll = new RegExp(`\\b${escapeRe(city)}\\b`, 'gi');
 
   const title = $('title').first().text();
   const h1 = $('h1').map((_, el) => $(el).text()).get().join(' ');
   const subheads = $('h2, h3').map((_, el) => $(el).text()).get().join(' ');
   $('script, style, noscript').remove();
   const body = $('body').text().replace(/\s+/g, ' ');
-  const mentions = (body.match(cityReAll) || []).length;
+  const mentions = place.count(body);
 
   const nodes = schemaNodes(cheerio.load(html));
   const business = nodes.find(n => n.address || n.telephone || n.areaServed || n.geo) || null;
   const address = business ? asList(business.address)[0] : null;
-  const schemaCity = address && typeof address === 'object' ? String(address.addressLocality || '') : '';
+  const schemaLocality = address && typeof address === 'object' ? String(address.addressLocality || '') : '';
+  const schemaRegion = address && typeof address === 'object' ? String(address.addressRegion || '') : '';
+  // With only a state, the schema's region is what names the place.
+  const schemaCity = cityName ? schemaLocality : schemaRegion;
   const areaServed = business ? asList(business.areaServed).map(textOf).filter(Boolean) : [];
 
   const items: LocalCheckItem[] = [];
@@ -84,8 +109,8 @@ export function checkLocalPage(html: string, targetCity: string): LocalPageCheck
     `Mention ${city} naturally a few times: where you work, who you serve, local examples.`);
 
   const serviceRe = new RegExp(
-    `(serv(?:e|es|ing|ice area)|located in|based in|deliver(?:s|ing)? (?:to|across|in)|covering|areas? we serve)[^.!?]{0,80}\\b${escapeRe(city)}\\b`, 'i');
-  const hasServiceStatement = serviceRe.test(body) || areaServed.some(a => cityRe.test(a));
+    `(?:serv(?:e|es|ing|ice area)|located in|based in|deliver(?:s|ing)? (?:to|across|in)|covering|areas? we serve)[^.!?]{0,80}?${place.src}`, 'gi');
+  const hasServiceStatement = Array.from(body.matchAll(serviceRe)).some(m => place.ok(m[1])) || areaServed.some(a => cityRe.test(a));
   add('service_area', 'States the area you serve', hasServiceStatement,
     hasServiceStatement ? `The page says it serves ${city}.` : `No sentence like "serving ${city}" or "based in ${city}".`,
     `Add a plain sentence: "We serve ${city} and the surrounding area, including …" and list nearby neighbourhoods or towns.`);
@@ -95,15 +120,22 @@ export function checkLocalPage(html: string, targetCity: string): LocalPageCheck
   const localDetail = hasMap || hasZip;
   add('local_detail', 'Has local detail', localDetail,
     localDetail
-      ? [hasMap && 'a map or directions link', hasZip && 'a postcode or ZIP code'].filter(Boolean).join(' and ') + ' found on the page.'
+      ? [hasMap && 'A map or directions link', hasZip && (hasMap ? 'a postcode or ZIP code' : 'A postcode or ZIP code')].filter(Boolean).join(' and ') + ' found on the page.'
       : 'No map, directions link or full address with a postcode or ZIP code.',
     'Add your full address, a map or directions link, and specifics only a local business would know: neighbourhoods, landmarks, venues you work with.');
 
   add('schema_city', `Schema markup names ${city}`, cityRe.test(schemaCity) || areaServed.some(a => cityRe.test(a)),
     !business ? 'No local business schema with an address or service area.'
-      : schemaCity ? `Schema address city: ${schemaCity}${areaServed.length ? `; serves: ${areaServed.slice(0, 5).join(', ')}` : ''}.`
-      : areaServed.length ? `Schema serves: ${areaServed.slice(0, 5).join(', ')}.` : 'The schema has no city.',
-    `Set addressLocality to ${city} in your LocalBusiness schema, or list ${city} in areaServed if you travel to customers.`);
+      : schemaCity ? `Schema address ${cityName ? 'city' : 'state'}: ${schemaCity}${areaServed.length ? `; serves: ${areaServed.slice(0, 5).join(', ')}` : ''}.`
+      : areaServed.length ? `Schema serves: ${areaServed.slice(0, 5).join(', ')}.` : `The schema has no ${cityName ? 'city' : 'state'}.`,
+    `Set ${cityName ? 'addressLocality' : 'addressRegion'} to ${cityName || stateCode} in your LocalBusiness schema, or list ${city} in areaServed if you travel to customers.`);
+  if (cityName && stateCode) {
+    const regionOk = !!schemaRegion && (schemaRegion.toUpperCase() === stateCode || schemaRegion.toLowerCase() === stateName.toLowerCase());
+    add('schema_state', `Schema address is in ${stateName}`, regionOk,
+      !business ? 'No local business schema with an address.'
+        : schemaRegion ? `Schema address state: ${schemaRegion}.` : 'The schema address has no state (addressRegion).',
+      `Set "addressRegion": "${stateCode}" in your schema address, so AI doesn't confuse ${cityName}, ${stateCode} with a ${cityName} in another state.`);
+  }
   add('schema_area_served', 'Schema lists the area you serve (areaServed)', areaServed.length > 0,
     areaServed.length ? `areaServed: ${areaServed.slice(0, 5).join(', ')}.` : 'No areaServed in the schema.',
     `Add "areaServed": ["${city}", …] to your LocalBusiness schema.`);
@@ -144,5 +176,5 @@ export function checkLocalPage(html: string, targetCity: string): LocalPageCheck
       'Use exactly the same business name on the page and in the schema.');
   }
 
-  return { city, passed: items.filter(i => i.pass).length, total: items.length, items };
+  return { city: cityName && stateCode ? `${cityName}, ${stateCode}` : city, passed: items.filter(i => i.pass).length, total: items.length, items };
 }

@@ -70,7 +70,7 @@ export default async function handler(req: express.Request, res: express.Respons
   }
 
   // ─── Input validation ─────────────────────────────────────────────────────
-  const { url, industry, module, targetCity } = req.body as { url?: string; industry?: string; module?: string; targetCity?: string };
+  const { url, industry, module, targetCity, targetState } = req.body as { url?: string; industry?: string; module?: string; targetCity?: string; targetState?: string };
   const analysisModule: 'general' | 'product_sellers' | 'developers' | 'local_business' | 'vibe_coders' =
     module === 'product_sellers' || module === 'developers' || module === 'local_business' || module === 'vibe_coders' ? module : 'general';
   if (!url) {
@@ -159,8 +159,8 @@ export default async function handler(req: express.Request, res: express.Respons
       page_speed: pageSpeed,
       // Does the page clearly serve the city the user named? Read from the
       // page itself; not part of the score.
-      local_page_check: typeof targetCity === 'string' && targetCity.trim().length >= 2
-        ? checkLocalPage(rawHtml, targetCity)
+      local_page_check: (typeof targetCity === 'string' && targetCity.trim().length >= 2) || typeof targetState === 'string'
+        ? checkLocalPage(rawHtml, typeof targetCity === 'string' ? targetCity : '', typeof targetState === 'string' ? targetState : null)
         : null,
     };
 
