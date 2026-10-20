@@ -49,6 +49,13 @@ export async function enginesHandler(req: express.Request, res: express.Response
   return res.status(200).json({ success: true, engines: availableEngines().map(e => ({ id: e.id, label: e.label })) });
 }
 
+// Public: the engines live right now, for the marketing site. The copy names
+// an engine only once its key is set, so it can't advertise one that isn't on.
+export async function publicEnginesHandler(_req: express.Request, res: express.Response) {
+  res.setHeader('Cache-Control', 'public, max-age=300');
+  return res.status(200).json({ success: true, engines: availableEngines().map(e => ({ id: e.id, name: e.short })) });
+}
+
 export async function startHandler(req: express.Request, res: express.Response) {
   const user = await authUser(req, res);
   if (!user) return;

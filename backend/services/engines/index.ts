@@ -8,14 +8,15 @@ export type EngineId = 'gemini' | 'chatgpt' | 'claude';
 export interface EngineInfo {
   id: EngineId;
   label: string;        // shown next to results, e.g. "Gemini with Google Search"
+  short: string;        // used in marketing copy, e.g. "Gemini"
   keyEnv: string[];     // any one of these environment variables enables it
   implemented: boolean; // adapter written and tested
 }
 
 export const ENGINES: EngineInfo[] = [
-  { id: 'gemini', label: 'Gemini with Google Search', keyEnv: ['GEMINI_API_KEY', 'API_KEY'], implemented: true },
-  { id: 'chatgpt', label: 'ChatGPT', keyEnv: ['CLORO_API_KEY'], implemented: true },
-  { id: 'claude', label: 'Claude with web search', keyEnv: ['ANTHROPIC_API_KEY'], implemented: false },
+  { id: 'gemini', label: 'Gemini with Google Search', short: 'Gemini', keyEnv: ['GEMINI_API_KEY', 'API_KEY'], implemented: true },
+  { id: 'chatgpt', label: 'ChatGPT', short: 'ChatGPT', keyEnv: ['CLORO_API_KEY'], implemented: true },
+  { id: 'claude', label: 'Claude with web search', short: 'Claude', keyEnv: ['ANTHROPIC_API_KEY'], implemented: false },
 ];
 
 export function engineLabel(id: string | null | undefined): string {
