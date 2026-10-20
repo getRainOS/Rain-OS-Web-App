@@ -400,6 +400,7 @@ export default function Dashboard() {
   const [recentType, setRecentType] = useState('all');
   const [recentMore, setRecentMore] = useState(false);
   const [focusHelpOpen, setFocusHelpOpen] = useState(false);
+  const [brandHelpOpen, setBrandHelpOpen] = useState(false);
   const [linkNote, setLinkNote] = useState(null);
   const [brandPick, setBrandPick] = useState('');
   const [brandVisLoading, setBrandVisLoading] = useState(true);
@@ -913,9 +914,6 @@ export default function Dashboard() {
               : activeFocus
               ? "Pasted content and repos aren't tied to a website, so AI results aren't shown. Add your website when you analyze content to link them."
               : 'Each tool below shows its own latest result. Choose a site to see them all together.'}</p>
-                {focusSite && (
-                  <p><strong>Why link a brand?</strong> Brand checks are saved under a brand name, not a website. Linking tells rain OS that a brand belongs to this site, so its sentiment, citation and share of voice results show up here with the page scores.</p>
-                )}
               </div>
             )}
           </div>
@@ -935,6 +933,19 @@ export default function Dashboard() {
         {focusSite && (
           <div className={styles.brandLinkRow}>
             <span className={styles.brandLinkLabel}>Brands counted for {focusSite}:</span>
+            <div className={styles.focusHelp}>
+              <button type="button" className={styles.focusHelpBtn} aria-label="What does linking a brand do?" aria-expanded={brandHelpOpen}
+                onClick={() => setBrandHelpOpen(o => !o)}>
+                <HelpCircle size={20} />
+              </button>
+              {brandHelpOpen && (
+                <div className={styles.focusHelpPop} role="note">
+                  <p><strong>What linking does</strong></p>
+                  <p>Your pillar analysis is saved under this website. Brand Sentiment and Share of Voice checks are saved under a brand name. Linking a brand connects the two, so those checks show up here next to this site's pillar scores in one view.</p>
+                  <p>You can link more than one brand, and remove one any time with the ×. Nothing is deleted when you unlink.</p>
+                </div>
+              )}
+            </div>
             {brandLinks.filter(l => l.site === focusSite).map(l => (
               <span key={l.brand} className={styles.brandChip}>
                 {l.brand}
