@@ -942,6 +942,7 @@ export default function Dashboard() {
                 <div className={styles.focusHelpPop} role="note">
                   <p><strong>What linking does</strong></p>
                   <p>Your pillar analysis is saved under this website. Brand Sentiment and Share of Voice checks are saved under a brand name. Linking a brand connects the two, so those checks show up here next to this site's pillar scores in one view.</p>
+                  <p>Citation Monitor checks don't need linking: they're saved with your website, so they already show up here.</p>
                   <p>You can link more than one brand, and remove one any time with the ×. Nothing is deleted when you unlink.</p>
                 </div>
               )}
