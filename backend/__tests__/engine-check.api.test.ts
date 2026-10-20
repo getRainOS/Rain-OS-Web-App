@@ -15,7 +15,7 @@ vi.mock('../services/engines/cloro', () => ({
   runEngineCitationCheck: (...a: unknown[]) => runEngineCitationCheck(...a),
   EngineError: class extends Error {},
 }));
-vi.mock('../services/engines', () => ({ availableEngines: () => [{ id: 'gemini', label: 'Gemini' }, { id: 'chatgpt', label: 'ChatGPT' }] }));
+vi.mock('../services/engines', () => ({ availableEngines: () => [{ id: 'gemini', label: 'Gemini with Google Search', short: 'Gemini' }, { id: 'chatgpt', label: 'ChatGPT', short: 'ChatGPT' }] }));
 vi.mock('../services/citationCheckService', () => ({ findCitedSourceIndex: () => -1, extractDomain: (u: string) => u }));
 
 let app: express.Express;
@@ -24,6 +24,7 @@ beforeAll(async () => {
   app = express();
   app.use(express.json());
   app.get('/engines', m.enginesHandler);
+  app.get('/public-engines', m.publicEnginesHandler);
   app.post('/start', m.startHandler);
   app.get('/poll/:id', m.pollHandler);
 });
@@ -37,6 +38,11 @@ beforeEach(() => {
 const auth = (r: request.Test) => r.set('Authorization', 'Bearer k');
 
 describe('engine checks', () => {
+  it('lists live engines publicly, without a key, by short name', async () => {
+    const res = await request(app).get('/public-engines');
+    expect(res.status).toBe(200);
+    expect(res.body.engines).toEqual([{ id: 'gemini', name: 'Gemini' }, { id: 'chatgpt', name: 'ChatGPT' }]);
+  });
   it('lists available engines', async () => {
     const res = await auth(request(app).get('/engines'));
     expect(res.body.engines.map((e: any) => e.id)).toEqual(['gemini', 'chatgpt']);
