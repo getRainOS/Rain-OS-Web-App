@@ -554,6 +554,8 @@ export interface CitationCheckRecord {
   summary: string | null;
   source: 'manual' | 'scheduled';
   engine: string;
+  locationCountry: string | null;
+  locationState: string | null;
   checkedAt: string;
 }
 
@@ -569,6 +571,8 @@ const mapCitationRow = (row: any): CitationCheckRecord => ({
   summary: row.summary,
   source: row.source === 'scheduled' ? 'scheduled' : 'manual',
   engine: row.engine || 'gemini',
+  locationCountry: row.location_country ?? null,
+  locationState: row.location_state ?? null,
   checkedAt: row.checked_at instanceof Date ? row.checked_at.toISOString() : row.checked_at,
 });
 
@@ -589,13 +593,15 @@ export const saveCitationCheck = async (
     source?: 'manual' | 'scheduled';
     trackedQueryId?: number | null;
     engine?: string;
+    locationCountry?: string | null;
+    locationState?: string | null;
   }
 ): Promise<CitationCheckRecord | null> => {
   const topicKey = normaliseTopicKey(data.topic);
   const res = await pool.query(
     `INSERT INTO citation_checks
-       (user_id, name, topic, topic_key, url, cited, alignment_score, sources, recommendations, summary, source, tracked_query_id, engine)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+       (user_id, name, topic, topic_key, url, cited, alignment_score, sources, recommendations, summary, source, tracked_query_id, engine, location_country, location_state)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
      RETURNING *`,
     [
       userId,
@@ -611,6 +617,8 @@ export const saveCitationCheck = async (
       data.source || 'manual',
       data.trackedQueryId ?? null,
       data.engine || 'gemini',
+      data.locationCountry ?? null,
+      data.locationState ?? null,
     ]
   );
   return res.rows[0] ? mapCitationRow(res.rows[0]) : null;
@@ -978,15 +986,18 @@ export const findRecentCitationCheck = async (
   topic: string,
   url: string | null,
   engine: string,
-  withinHours: number
+  withinHours: number,
+  location: { country: string; state: string | null } = { country: 'US', state: null }
 ): Promise<CitationCheckRecord | null> => {
   const res = await pool.query(
     `SELECT * FROM citation_checks
      WHERE user_id = $1 AND topic_key = $2 AND engine = $3
        AND url IS NOT DISTINCT FROM $4
        AND checked_at > NOW() - ($5::float8 * INTERVAL '1 hour')
+       AND COALESCE(location_country, 'US') = $6
+       AND location_state IS NOT DISTINCT FROM $7
      ORDER BY checked_at DESC LIMIT 1`,
-    [userId, normaliseTopicKey(topic), engine, url, withinHours]
+    [userId, normaliseTopicKey(topic), engine, url, withinHours, location.country, location.state]
   );
   return res.rows[0] ? mapCitationRow(res.rows[0]) : null;
 };

@@ -7,14 +7,12 @@
 import { extractDomain, findCitedSourceIndex, buildSummary, type CitationCheckResult, type CitationSource } from '../citationCheckService';
 import { matchableDomain } from '../sharedPlatforms';
 import { buildAnswerExcerpt } from '../textExcerpt';
+import { US_STATES } from './location';
 
 const BASE = 'https://api.cloro.dev/v1/monitor';
 const ENGINE_NAMES: Record<string, string> = { chatgpt: 'ChatGPT', gemini: 'Gemini', perplexity: 'Perplexity', copilot: 'Copilot' };
 
-export const US_STATES = new Set([
-  'AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS',
-  'MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY',
-]);
+export { US_STATES };
 
 export function cloroAvailable(env: NodeJS.ProcessEnv = process.env): boolean {
   return !!env.CLORO_API_KEY;
@@ -43,17 +41,18 @@ export function parseCloroResult(result: any): Omit<CloroAnswer, 'credits'> {
   return { text: typeof result?.text === 'string' ? result.text : '', sources, entities };
 }
 
-export async function cloroAnswer(engine: string, prompt: string, opts: { state?: string | null; timeoutMs?: number } = {}): Promise<CloroAnswer> {
+export async function cloroAnswer(engine: string, prompt: string, opts: { country?: string; state?: string | null; timeoutMs?: number } = {}): Promise<CloroAnswer> {
   const key = process.env.CLORO_API_KEY;
   if (!key) throw new EngineError('ChatGPT checks are not set up yet.', 503, 'engine_unavailable');
-  const state = opts.state && US_STATES.has(opts.state) ? opts.state : undefined;
+  const country = opts.country || 'US';
+  const state = country === 'US' && opts.state && US_STATES.has(opts.state) ? opts.state : undefined;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), opts.timeoutMs ?? 120000);
   try {
     const res = await fetch(`${BASE}/${engine}`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt, country: 'US', ...(state ? { state } : {}) }),
+      body: JSON.stringify({ prompt, country, ...(state ? { state } : {}) }),
       signal: ctrl.signal,
     });
     const json: any = await res.json().catch(() => ({}));
@@ -81,11 +80,12 @@ export async function runEngineCitationCheck(
   engine: string,
   topic: string,
   userUrl: string | null,
-  state: string | null = null
-): Promise<CitationCheckResult & { engine: string; state: string | null; brandsNamed: string[] }> {
+  state: string | null = null,
+  country = 'US'
+): Promise<CitationCheckResult & { engine: string; country: string; state: string | null; brandsNamed: string[] }> {
   const t = topic.trim();
   const userDomain = userUrl ? extractDomain(userUrl) : null;
-  const answer = await cloroAnswer(engine, t, { state });
+  const answer = await cloroAnswer(engine, t, { country, state });
   const idx = findCitedSourceIndex(answer.sources, userDomain);
   const citedSourceIndex = idx >= 0 ? idx : null;
   const competitors = Array.from(new Set(answer.sources.filter((_, i) => i !== citedSourceIndex).map(s => s.domain)));
@@ -101,7 +101,8 @@ export async function runEngineCitationCheck(
     summary: buildSummary(!!matchableDomain(userDomain), citedSourceIndex !== null, answer.sources.length, competitors, name),
     answerExcerpt: buildAnswerExcerpt(answer.text),
     engine,
-    state: state && US_STATES.has(state) ? state : null,
+    country,
+    state: country === 'US' && state && US_STATES.has(state) ? state : null,
     brandsNamed: answer.entities.slice(0, 10),
   };
 }

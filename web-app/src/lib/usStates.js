@@ -10,3 +10,15 @@ export const US_STATES = [
   ['VT','Vermont'],['VA','Virginia'],['WA','Washington'],['WV','West Virginia'],['WI','Wisconsin'],['WY','Wyoming'],
 ];
 export const stateName = code => US_STATES.find(([c]) => c === code)?.[1] || code;
+
+// Countries offered for "Check as someone in". The backend accepts any
+// country cloro supports; these are the ones most customers will want.
+export const COUNTRIES = [
+  ['US','United States'],['GB','United Kingdom'],['CA','Canada'],['AU','Australia'],['IE','Ireland'],['NZ','New Zealand'],
+  ['DE','Germany'],['FR','France'],['ES','Spain'],['IT','Italy'],['NL','Netherlands'],['SE','Sweden'],['CH','Switzerland'],
+  ['IN','India'],['SG','Singapore'],['AE','United Arab Emirates'],['ZA','South Africa'],['BR','Brazil'],['MX','Mexico'],['JP','Japan'],
+];
+export const countryName = code => COUNTRIES.find(([c]) => c === code)?.[1] || code;
+// "Texas, United States", "United Kingdom", or "" when nothing is set.
+export const locationLabel = (country, state) =>
+  !country ? '' : country === 'US' && state ? `${stateName(state)}, United States` : countryName(country);

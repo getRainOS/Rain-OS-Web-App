@@ -232,6 +232,10 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS location_state TEXT;
 ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS engine TEXT NOT NULL DEFAULT 'gemini';
 ALTER TABLE brand_visibility_checks ADD COLUMN IF NOT EXISTS engine TEXT NOT NULL DEFAULT 'gemini';
 ALTER TABLE sov_checks ADD COLUMN IF NOT EXISTS engine TEXT NOT NULL DEFAULT 'gemini';
+ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS location_country TEXT;
+ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS location_state TEXT;
+ALTER TABLE tracked_queries ADD COLUMN IF NOT EXISTS location_country TEXT;
+ALTER TABLE tracked_queries ADD COLUMN IF NOT EXISTS location_state TEXT;
 
 -- Daily count of Gemini calls that used Google Search grounding, by feature.
 CREATE TABLE IF NOT EXISTS grounded_calls_daily (

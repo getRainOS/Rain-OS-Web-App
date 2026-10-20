@@ -11,6 +11,7 @@ import {
   TrackingError,
   NO_SITE_MESSAGE,
 } from '../services/trackedQueryService';
+import { normaliseLocation } from '../services/engines/location';
 import type { ApiError, User } from '../types';
 
 async function authUser(req: express.Request, res: express.Response): Promise<User | null> {
@@ -95,6 +96,7 @@ export async function createHandler(req: express.Request, res: express.Response)
       url: normalisedUrl,
       lastCited: typeof lastCited === 'boolean' ? lastCited : null,
       checkId: typeof checkId === 'number' && checkId > 0 ? checkId : null,
+      ...(typeof req.body?.country === 'string' ? normaliseLocation(req.body.country, req.body.state ?? null) : {}),
     });
     return res.status(201).json({ success: true, item });
   } catch (err) {

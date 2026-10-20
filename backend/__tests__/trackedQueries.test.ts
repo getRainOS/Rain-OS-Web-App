@@ -98,7 +98,7 @@ describe('runTrackedQuery', () => {
     runCitationCheck.mockResolvedValue({ topic: 'best widgets', url: 'https://me.com', cited: false, sources: [], summary: '' });
     runEngineCitationCheck.mockResolvedValue({ topic: 'best widgets', url: 'https://me.com', cited: true, sources: [], summary: '' });
     expect(await runTrackedQuery(row)).toBe('ran');
-    expect(runEngineCitationCheck).toHaveBeenCalledWith('chatgpt', 'best widgets', 'https://me.com', 'TX');
+    expect(runEngineCitationCheck).toHaveBeenCalledWith('chatgpt', 'best widgets', 'https://me.com', 'TX', 'US');
     expect(saveCitationCheck).toHaveBeenCalledWith('u1', expect.objectContaining({ engine: 'chatgpt', cited: true, trackedQueryId: 7 }));
     expect(sendCitationStatusEmail).not.toHaveBeenCalled();
     otherEngines.on = false;
