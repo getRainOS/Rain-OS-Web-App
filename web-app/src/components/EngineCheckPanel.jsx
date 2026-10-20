@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { CheckCircle2, AlertCircle, ExternalLink, RotateCw } from 'lucide-react';
 import { api } from '../api/client.js';
 import CheckProgress from './CheckProgress.jsx';
-import { stateName } from '../lib/usStates.js';
+import { locationLabel } from '../lib/usStates.js';
 import styles from './EngineCheckPanel.module.css';
 
 const POLL_MS = 4000;
@@ -19,7 +19,7 @@ function ago(iso) {
 // The same question on another engine (ChatGPT via cloro). It starts with the
 // Gemini check, runs in the background (25-70s), and fills in when ready.
 // Leaving the page doesn't stop it: the result is saved to History.
-export default function EngineCheckPanel({ engine = 'chatgpt', label = 'ChatGPT', run, locationState }) {
+export default function EngineCheckPanel({ engine = 'chatgpt', label = 'ChatGPT', run }) {
   const [state, setState] = useState({ status: 'idle' });
   const [fresh, setFresh] = useState(0);
   const pollRef = useRef(null);
@@ -41,7 +41,7 @@ export default function EngineCheckPanel({ engine = 'chatgpt', label = 'ChatGPT'
         }
       }, POLL_MS);
     };
-    api.startEngineCheck({ engine, topic: run.topic, url: run.url, name: run.name, fresh: fresh > 0 })
+    api.startEngineCheck({ engine, topic: run.topic, url: run.url, name: run.name, country: run.country, state: run.state ?? null, fresh: fresh > 0 })
       .then(({ data }) => {
         if (cancelled) return;
         if (data.status === 'done') setState({ status: 'done', result: data.result, reused: !!data.reused });
@@ -61,7 +61,7 @@ export default function EngineCheckPanel({ engine = 'chatgpt', label = 'ChatGPT'
         <div>
           <h3 className={styles.title}>{label}</h3>
           <p className={styles.sub}>
-            The same question asked in {label}{locationState ? `, as someone in ${stateName(locationState)} would see it` : ''}.
+            The same question asked in {label}{locationLabel(run.country, run.state) ? `, as someone in ${locationLabel(run.country, run.state)} would see it` : ''}.
           </p>
         </div>
         {state.status === 'done' && (

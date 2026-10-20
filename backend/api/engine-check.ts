@@ -11,6 +11,7 @@ import { randomUUID } from 'crypto';
 import { findUserByApiKey, saveCitationCheck, findRecentCitationCheck } from '../services/dbService';
 import { runEngineCitationCheck, EngineError } from '../services/engines/cloro';
 import { availableEngines } from '../services/engines';
+import { normaliseLocation } from '../services/engines/location';
 import { findCitedSourceIndex, extractDomain } from '../services/citationCheckService';
 import { createDailyLimiter } from '../services/dailyLimiter';
 import type { ApiError } from '../types';
@@ -39,6 +40,7 @@ const fromRecord = (r: any) => ({
   topic: r.topic, url: r.url, cited: r.cited, sources: r.sources || [],
   citedSourceIndex: (() => { const i = findCitedSourceIndex(r.sources || [], r.url ? extractDomain(r.url) : null); return i >= 0 ? i : null; })(),
   summary: r.summary, engine: r.engine, checkId: r.id, checkedAt: r.checkedAt,
+  country: r.locationCountry || 'US', state: r.locationState,
 });
 
 export async function enginesHandler(req: express.Request, res: express.Response) {
@@ -64,8 +66,10 @@ export async function startHandler(req: express.Request, res: express.Response) 
   }
   const name = typeof req.body?.name === 'string' && req.body.name.trim() ? req.body.name.trim().slice(0, 120) : topic.slice(0, 120);
 
+  const loc = normaliseLocation(req.body?.country, req.body?.state, user.locationState ?? null);
+
   if (req.body?.fresh !== true) {
-    const recent = await findRecentCitationCheck(user.id, topic, url, engine, REUSE_HOURS);
+    const recent = await findRecentCitationCheck(user.id, topic, url, engine, REUSE_HOURS, loc);
     if (recent) return res.status(200).json({ success: true, status: 'done', reused: true, result: fromRecord(recent) });
   }
   if (!takeSlot(user.id)) {
@@ -78,10 +82,11 @@ export async function startHandler(req: express.Request, res: express.Response) 
   jobs.set(id, job);
   (async () => {
     try {
-      const result = await runEngineCitationCheck(engine, topic, url, user.locationState ?? null);
+      const result = await runEngineCitationCheck(engine, topic, url, loc.state, loc.country);
       const saved = await saveCitationCheck(user.id, {
         name, topic: result.topic, url: result.url, cited: result.cited, alignmentScore: 0,
         sources: result.sources, recommendations: [], summary: result.summary, engine,
+        locationCountry: loc.country, locationState: loc.state,
       }).catch(err => { console.error('Saving engine check failed:', err); return null; });
       job.result = { ...result, checkId: saved?.id ?? null, checkedAt: new Date().toISOString() };
       job.status = 'done';

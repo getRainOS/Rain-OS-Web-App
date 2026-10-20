@@ -3,6 +3,7 @@ import { pool } from './db';
 import { findUserById, saveCitationCheck } from './dbService';
 import { runCitationCheck } from './citationCheckService';
 import { runEngineCitationCheck } from './engines/cloro';
+import { normaliseLocation } from './engines/location';
 import { availableEngines } from './engines';
 import { sendCitationStatusEmail } from './emailService';
 import { planTrackingCap, enforcePlanCap, hasMatchableSite, WEEK_MS, MAX_JITTER_MS } from './trackedQueryService';
@@ -130,11 +131,15 @@ export async function runTrackedQuery(row: any): Promise<'ran' | 'skipped' | 'fa
 async function runOtherEngines(row: any, user: { id: string; locationState?: string | null }): Promise<void> {
   for (const engine of availableEngines().filter(e => e.id !== 'gemini')) {
     try {
-      const result = await runEngineCitationCheck(engine.id, row.topic, row.url, user.locationState ?? null);
+      const loc = row.location_country
+        ? normaliseLocation(row.location_country, row.location_state)
+        : normaliseLocation('US', undefined, user.locationState ?? null);
+      const result = await runEngineCitationCheck(engine.id, row.topic, row.url, loc.state, loc.country);
       await saveCitationCheck(user.id, {
         name: row.name, topic: result.topic, url: result.url, cited: result.cited, alignmentScore: 0,
         sources: result.sources, recommendations: [], summary: result.summary,
         source: 'scheduled', trackedQueryId: Number(row.id), engine: engine.id,
+        locationCountry: loc.country, locationState: loc.state,
       });
     } catch (err) {
       console.error(`[scheduler] ${engine.id} check for tracked query ${row.id} failed:`, err instanceof Error ? err.message : err);

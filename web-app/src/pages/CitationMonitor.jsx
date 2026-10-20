@@ -26,6 +26,8 @@ import TrackedQueriesPanel, { useTrackedQueries, TrackWeeklyButton } from '../co
 import LocalListings from '../components/LocalListings.jsx';
 import { needsPlace } from '../lib/localListings.js';
 import EngineCheckPanel from '../components/EngineCheckPanel.jsx';
+import Select from '../components/Select.jsx';
+import { COUNTRIES, US_STATES } from '../lib/usStates.js';
 import styles from './CitationMonitor.module.css';
 
 // Lazy: react-simple-maps + d3-geo only need to load for whoever actually
@@ -104,6 +106,10 @@ export default function CitationMonitor() {
   const { refreshUser, userLane, user } = useApp();
   const [engineRun, setEngineRun] = useState(null);
   const [hasChatGpt, setHasChatGpt] = useState(false);
+  // Where the ChatGPT check is asked from. Settings is only the default.
+  const [checkCountry, setCheckCountry] = useState('US');
+  const [checkState, setCheckState] = useState(null);
+  useEffect(() => { if (user) setCheckState(s => s ?? (user.locationState || '')); }, [user]);
   useEffect(() => {
     api.engines().then(({ data }) => setHasChatGpt((data?.engines || []).some(e => e.id === 'chatgpt'))).catch(() => {});
   }, []);
@@ -176,7 +182,7 @@ export default function CitationMonitor() {
     // started request is allowed to update state.
     const requestId = ++checkRequestIdRef.current;
     // ChatGPT starts alongside Gemini and fills in when it is ready.
-    setEngineRun(hasChatGpt ? { topic: topic.trim(), url: noSite ? undefined : (url.trim() || undefined), name: checkName, id: requestId } : null);
+    setEngineRun(hasChatGpt ? { topic: topic.trim(), url: noSite ? undefined : (url.trim() || undefined), name: checkName, id: requestId, country: checkCountry, state: checkCountry === 'US' ? (checkState || null) : null } : null);
     setLoading(true);
     setError('');
     setResult(null);
@@ -420,6 +426,29 @@ export default function CitationMonitor() {
               />
             </div>
 
+            {hasChatGpt && (
+              <div className={styles.field}>
+                <span className={styles.label}>Check as someone in</span>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  <Select
+                    value={checkCountry}
+                    onChange={setCheckCountry}
+                    ariaLabel="Country the ChatGPT check is asked from"
+                    options={COUNTRIES.map(([v, l]) => ({ value: v, label: l }))}
+                  />
+                  {checkCountry === 'US' && (
+                    <Select
+                      value={checkState ?? ''}
+                      onChange={setCheckState}
+                      ariaLabel="US state the ChatGPT check is asked from"
+                      options={[{ value: '', label: 'Anywhere in the US' }, ...US_STATES.map(([v, l]) => ({ value: v, label: l }))]}
+                    />
+                  )}
+                </div>
+                <p className={styles.fieldHint}>Applies to the ChatGPT check. The default comes from Settings; change it here for this one check.</p>
+              </div>
+            )}
+
             <button type="submit" className={styles.submitBtn} disabled={loading || !topic.trim() || (!noSite && !url.trim())}>
               {loading ? (
                 <>
@@ -486,8 +515,9 @@ export default function CitationMonitor() {
               />
               {resultTab === 'result' && (
                 <>
-                  <ResultConsole result={result} name={name} topicHistory={topicHistory} tracking={tracking} />
-                  {engineRun && <EngineCheckPanel run={engineRun} locationState={user?.locationState} />}
+                  <ResultConsole result={result} name={name} topicHistory={topicHistory} tracking={tracking}
+                    location={engineRun ? { country: engineRun.country, state: engineRun.state } : null} />
+                  {engineRun && <EngineCheckPanel run={engineRun} />}
                   {userLane === 'local_business' && <LocalListings sources={result.sources} url={result.url || url} />}
                   {(() => {
                     const rank = result.citedSourceIndex != null ? result.citedSourceIndex + 1 : null;
@@ -650,7 +680,7 @@ function RankingsChart({ history, map }) {
   );
 }
 
-function ResultConsole({ result, name, topicHistory, tracking }) {
+function ResultConsole({ result, name, topicHistory, tracking, location }) {
   const sources = Array.isArray(result.sources) ? result.sources : [];
   const rank = result.citedSourceIndex != null ? result.citedSourceIndex + 1 : null;
   const history = [...topicHistory].sort(byCheckedAtAsc).slice(-12);
@@ -756,7 +786,7 @@ function ResultConsole({ result, name, topicHistory, tracking }) {
             {history.length} {history.length === 1 ? 'check' : 'checks'} so far
           </p>
           <div className={styles.consoleTrack}>
-            <TrackWeeklyButton tracking={tracking} result={{ ...result, name: result.name || name }} />
+            <TrackWeeklyButton tracking={tracking} result={{ ...result, name: result.name || name, ...(location || {}) }} />
           </div>
         </div>
       </div>

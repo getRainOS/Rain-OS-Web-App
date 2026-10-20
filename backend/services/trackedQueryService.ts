@@ -39,6 +39,8 @@ export interface TrackedQuery {
   pausedReason: PausedReason | null;
   createdAt: string;
   chatgptLatest: { cited: boolean; checkedAt: string } | null;
+  locationCountry: string | null;
+  locationState: string | null;
   history: Array<{ cited: boolean; checkedAt: string }>;
 }
 
@@ -62,6 +64,8 @@ const mapRow = (row: any): TrackedQuery => ({
   consecutiveFailures: row.consecutive_failures,
   pausedReason: row.paused_reason,
   createdAt: iso(row.created_at) as string,
+  locationCountry: row.location_country ?? null,
+  locationState: row.location_state ?? null,
   chatgptLatest: row.chatgpt_latest
     ? { cited: !!row.chatgpt_latest.cited, checkedAt: iso(row.chatgpt_latest.checked_at) as string }
     : null,
@@ -141,7 +145,7 @@ export async function listTrackedQueries(userId: string): Promise<TrackedQuery[]
 
 export async function createTrackedQuery(
   user: User,
-  data: { name: string; topic: string; url: string | null; lastCited?: boolean | null; checkId?: number | null }
+  data: { name: string; topic: string; url: string | null; lastCited?: boolean | null; checkId?: number | null; country?: string | null; state?: string | null }
 ): Promise<TrackedQuery> {
   const cap = planTrackingCap(user);
   if (cap === 0) throw new TrackingError('plan_required', 'Weekly tracking is available on Pro and Business plans.');
@@ -156,11 +160,12 @@ export async function createTrackedQuery(
   }
 
   const res = await pool.query(
-    `INSERT INTO tracked_queries (user_id, name, topic, topic_key, url, next_run_at, last_cited, last_run_at)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, CASE WHEN $7::boolean IS NULL THEN NULL ELSE NOW() END)
+    `INSERT INTO tracked_queries (user_id, name, topic, topic_key, url, next_run_at, last_cited, last_run_at, location_country, location_state)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, CASE WHEN $7::boolean IS NULL THEN NULL ELSE NOW() END, $8, $9)
      ON CONFLICT (user_id, topic_key) DO NOTHING
      RETURNING *`,
-    [user.id, data.name, data.topic, normaliseTopicKey(data.topic), data.url, firstRunAt(), data.lastCited ?? null]
+    [user.id, data.name, data.topic, normaliseTopicKey(data.topic), data.url, firstRunAt(), data.lastCited ?? null,
+     data.country ?? null, data.country ? data.state ?? null : null]
   );
   if (!res.rows[0]) throw new TrackingError('duplicate', 'You are already tracking this question.');
 

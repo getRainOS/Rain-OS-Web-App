@@ -51,12 +51,20 @@ describe('engine checks', () => {
     runEngineCitationCheck.mockResolvedValue({ topic: 'best bakery in Austin', url: null, cited: false, sources: [], summary: 's' });
     const start = await auth(request(app).post('/start').send({ engine: 'chatgpt', topic: 'best bakery in Austin' }));
     expect(start.status).toBe(202);
-    expect(runEngineCitationCheck).toHaveBeenCalledWith('chatgpt', 'best bakery in Austin', null, 'TX');
+    expect(runEngineCitationCheck).toHaveBeenCalledWith('chatgpt', 'best bakery in Austin', null, 'TX', 'US');
     await new Promise(r => setTimeout(r, 10));
     const poll = await auth(request(app).get(`/poll/${start.body.jobId}`));
     expect(poll.body.status).toBe('done');
     expect(poll.body.result.checkId).toBe(99);
     expect(saveCitationCheck).toHaveBeenCalledWith('u1', expect.objectContaining({ engine: 'chatgpt' }));
+  });
+  it('uses the country and state chosen for this check over the Settings default', async () => {
+    runEngineCitationCheck.mockResolvedValue({ topic: 'best bakery in Miami', url: null, cited: false, sources: [], summary: '' });
+    await auth(request(app).post('/start').send({ engine: 'chatgpt', topic: 'best bakery in Miami', country: 'US', state: 'FL' }));
+    expect(runEngineCitationCheck).toHaveBeenCalledWith('chatgpt', 'best bakery in Miami', null, 'FL', 'US');
+    await auth(request(app).post('/start').send({ engine: 'chatgpt', topic: 'best bakery in Leeds', country: 'gb', state: 'TX' }));
+    expect(runEngineCitationCheck).toHaveBeenLastCalledWith('chatgpt', 'best bakery in Leeds', null, null, 'GB');
+    expect(findRecentCitationCheck).toHaveBeenLastCalledWith('u1', 'best bakery in Leeds', null, 'chatgpt', 24, { country: 'GB', state: null });
   });
   it('refuses Gemini and unknown engines here', async () => {
     expect((await auth(request(app).post('/start').send({ engine: 'gemini', topic: 'abc def' }))).status).toBe(400);

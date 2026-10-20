@@ -1,3 +1,4 @@
+import { locationLabel } from '../lib/usStates.js';
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CalendarClock, Pause, Play, Trash2, Lock, Check } from 'lucide-react';
@@ -83,6 +84,7 @@ export function TrackWeeklyButton({ tracking, result }) {
         url: result.url,
         lastCited: !!result.cited,
         checkId: result.checkId || undefined,
+        ...(result.country ? { country: result.country, state: result.state ?? null } : {}),
       });
     } catch (err) {
       setMsg(err.message || 'Could not start tracking.');
@@ -182,6 +184,9 @@ export default function TrackedQueriesPanel({ tracking }) {
                   <span className={styles.rowName}>{item.name}</span>
                   {item.topic.trim().toLowerCase() !== item.name.trim().toLowerCase() && (
                     <span className={styles.rowTopic}>{item.topic}</span>
+                  )}
+                  {item.locationCountry && (
+                    <span className={styles.rowTopic}>Checked from {locationLabel(item.locationCountry, item.locationState)}</span>
                   )}
                   {item.chatgptLatest && (
                     <span className={styles.rowTopic}>
