@@ -1,3 +1,4 @@
+import LocalPageCheck, { LocalSteps } from '../components/LocalPageCheck.jsx';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import CheckProgress from '../components/CheckProgress.jsx';
@@ -209,6 +210,8 @@ export default function UrlScanner() {
   const [errorCode, setErrorCode] = useState('');
   const [result, setResult] = useState(null);
   const [scannedUrl, setScannedUrl] = useState('');
+  const [city, setCity] = useState(() => searchParams.get('city') || '');
+  const [showCity, setShowCity] = useState(() => !!searchParams.get('city'));
   const [heroSeen, setHeroSeen] = useState(() => {
     try {
       return localStorage.getItem(heroSeenKey(userLane)) === '1';
@@ -235,7 +238,7 @@ export default function UrlScanner() {
     try {
       const analysisModule = ['product_sellers', 'developers', 'local_business', 'vibe_coders'].includes(userLane) ? userLane : 'general';
       const target = /^https?:\/\//i.test(url.trim()) ? url.trim() : `https://${url.trim()}`;
-      const { data } = await api.scanUrl(target, { module: analysisModule });
+      const { data } = await api.scanUrl(target, { module: analysisModule, ...(city.trim() ? { targetCity: city.trim() } : {}) });
       setResult(data);
       setScannedUrl(url.trim());
       refreshUser();
@@ -374,6 +377,16 @@ export default function UrlScanner() {
           </button>
         </div>
         <RecentPicker mode="page" onPick={v => setUrl(normalizeUrlInput(v))} />
+        {userLane === 'local_business' || showCity ? (
+          <div className={styles.cityRow}>
+            <label htmlFor="us-city" className={styles.cityLabel}>City you want to be found in <span>Optional</span></label>
+            <input id="us-city" type="text" className={styles.cityInput} placeholder="e.g. Austin" value={city}
+              onChange={e => setCity(e.target.value)} maxLength={80} />
+            <p className={styles.cityHint}>We'll check whether this page clearly serves that city: title, headings, service area, schema, and matching name, address and phone.</p>
+          </div>
+        ) : (
+          <button type="button" className={styles.cityToggle} onClick={() => setShowCity(true)}>+ Check for a city</button>
+        )}
         {error && (
           <p className={styles.error}>
             {error}
@@ -451,6 +464,12 @@ export default function UrlScanner() {
           )}
 
           <PillarScores result={result} lane={userLane} />
+
+          {result.local_page_check
+            ? <LocalPageCheck check={result.local_page_check} />
+            : userLane === 'local_business' && (
+              <div className="card" style={{ padding: '20px 22px', marginTop: 12 }}><LocalSteps city="" /></div>
+            )}
 
           {signalList.length > 0 && (
             <div className={`card ${styles.signalsCard}`}>
