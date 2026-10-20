@@ -41,6 +41,7 @@ const sections = [
       'Stripe: handles all payment processing. Your payment information is subject to Stripe\'s Privacy Policy at stripe.com/privacy.',
       'Google Gemini API: we use Gemini to generate scoring insights for your content. Content you submit is sent to Google\'s API under our agreement with Google. We do not share your account information with Google.',
       'cloro: runs our ChatGPT visibility checks. The question you check, and the location you choose for it, is sent to cloro so it can ask ChatGPT and return the answer and its sources. No account information is sent.',
+      'DataForSEO: runs our Google AI Overviews, AI Mode, Perplexity and Claude checks and Google Business Profile, review and Maps lookups. The question you check, the location you choose and, for local lookups, your business name are sent to DataForSEO. No account information is sent.',
       'Supabase: handles sign-in sessions.',
       'Railway: runs our API and hosts our database. Vercel: serves the website and app. Resend: sends account and alert emails.',
       'We do not sell, rent, or share your personal information with any third party for advertising or marketing purposes.',

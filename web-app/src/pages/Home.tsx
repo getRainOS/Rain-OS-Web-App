@@ -414,7 +414,7 @@ function MethodSection() {
           </p>
           <div className="mt-8 flex items-start gap-3 text-[13px] text-neutral-500 max-w-md">
             <ShieldCheck className="w-4 h-4 mt-0.5 shrink-0 text-neutral-400" />
-            Citation checks run on {engines} today; Share of Voice and Brand Sentiment run on Gemini. The Rain Score looks at what every AI assistant relies on, so the fixes apply everywhere.
+            Citation checks, weekly tracking, Share of Voice and Brand Sentiment run on every engine. The Rain Score looks at what all of them rely on, so each fix helps everywhere.
           </div>
         </Reveal>
         <div className="space-y-3">
@@ -439,15 +439,11 @@ function MethodSection() {
 
 function WhyGoogleSection() {
   const live = useLiveEngines();
-  const hasChatGpt = live.includes('ChatGPT');
-  const hasOverviews = live.some(n => /AI Overview/i.test(n));
   const points = [
     {
       Icon: Search,
       title: 'Where your customers already are',
-      body: hasChatGpt
-        ? 'ChatGPT is the AI assistant people use most, and Google now answers many searches with AI built on Gemini before showing a single link. Between them, they answer much of what your customers ask.'
-        : 'Most people still start with Google, and Google now answers many searches with AI before showing a single link. Those answers, including AI Overviews and AI Mode, are built on Gemini.',
+      body: 'ChatGPT is the AI assistant people use most. Google answers many searches with an AI Overview before a single link, and AI Mode goes further. Perplexity and Claude round out where people ask. We check the real answers on each.',
     },
     {
       Icon: Globe,
@@ -470,7 +466,7 @@ function WhyGoogleSection() {
           </h2>
           <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-2xl">
             rain OS puts your questions to {joinNames(live)}, searching the live web, and shows exactly which sites each one cited and where you ranked.
-            {' '}More engines are added as they go live.
+            {' '}One question, every engine, side by side.
           </p>
         </Reveal>
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -485,8 +481,8 @@ function WhyGoogleSection() {
           ))}
         </div>
         <p className="mt-6 text-[13px] text-neutral-500 max-w-3xl leading-relaxed">
-          To be clear about scope: each check shows what {joinNames(live)} answered at that moment. AI answers vary between runs and by location
-          {hasOverviews ? '' : ", and won't exactly match every Google results page or AI Overview"}. The Rain Score measures what every assistant relies on, like clear answers, structure and schema, so the fixes apply everywhere.
+          Each check shows what that engine answered at that moment, from the location you choose. AI answers vary between runs, which is why
+          weekly tracking matters more than any single check. The Rain Score measures what every assistant relies on, like clear answers, structure and schema, so the fixes apply everywhere.
         </p>
       </div>
     </section>
@@ -659,7 +655,7 @@ export default function Home() {
                 <span className="text-neutral-500">AI gives.</span>
               </h1>
               <p className="mt-7 text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto leading-relaxed text-balance">
-                More people now ask AI where to buy, who to hire and what to use. rain OS checks whether {joinNames(engines)} recommend you, and walks you through fixing it in plain English.
+                More people now ask AI where to buy, who to hire and what to use. rain OS checks whether ChatGPT, Google's AI answers, Perplexity and Claude recommend you, and walks you through fixing it in plain English.
               </p>
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button onClick={start} className="h-11 px-6 rounded-md bg-[#2B8FE3] text-white text-[15px] font-medium hover:bg-[#1C73C4] transition-colors inline-flex items-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
@@ -670,10 +666,16 @@ export default function Home() {
                 </a>
               </div>
               <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] text-neutral-400">
-                {[`Checks ${joinNames(engines)}`, 'Free to start', 'No credit card', 'No technical skills needed'].map(t => (
+                {[`Checks ${engines.length} AI engines`, 'Free to start', 'No credit card', 'No technical skills needed'].map(t => (
                   <li key={t} className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-[#2B8FE3]" />{t}</li>
                 ))}
               </ul>
+              <div className="mt-10">
+                <div className="text-[11px] uppercase tracking-[0.16em] text-neutral-600" style={MONO}>Checks answers from</div>
+                <div className="mt-3 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[14px] text-neutral-300">
+                  {engines.map(e => <span key={e}>{e}</span>)}
+                </div>
+              </div>
             </motion.div>
 
             <motion.div

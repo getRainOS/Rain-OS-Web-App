@@ -65,7 +65,7 @@ const problems = [
   },
   {
     label: 'The rain OS approach',
-    body: 'Score your product pages against the 5 AI shopping signals Gemini actually checks. Fix what\'s missing. Get recommended.',
+    body: 'Score your product pages against the 5 AI shopping signals AI assistants actually check. Fix what\'s missing. Get recommended.',
     dim: false,
   },
 ];

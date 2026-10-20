@@ -27,7 +27,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
               will they find you?
             </h1>
             <p className="text-neutral-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
-              ChatGPT, Perplexity, and Google's AI are answering local business questions millions of times a day. rain OS helps your business show up — and get called.
+              ChatGPT, Google's AI Overviews, Perplexity and Claude are answering local business questions millions of times a day. rain OS checks what each one says about your city, and helps your business show up and get called.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="/login" className="inline-flex items-center gap-2 bg-[#2B8FE3] hover:bg-[#1C73C4] text-white rounded-md px-7 py-3.5 text-sm font-medium transition-colors">
@@ -336,8 +336,10 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
               ['Your website is invisible to AI search', 'AI engines can read, trust, and cite your business'],
               ['You don\'t know why competitors get called instead of you', 'You get a clear score showing exactly what to fix'],
               ['Generic SEO advice that doesn\'t apply to local business', 'Local-specific recommendations written in plain English'],
-              ['No idea how customers find you via AI', 'Citation Monitor tracks when AI recommends your services'],
-              ['Your website info conflicts with your Google listing', 'Signals like NAP, schema, and trust markup are all checked'],
+              ['No idea how customers find you via AI', 'Citation Monitor tracks when ChatGPT, Google AI Overviews, Perplexity and Claude recommend you'],
+              ['Your website info conflicts with your Google listing', 'Your name, address and phone are checked across your site, schema and Google Business Profile'],
+              ['You guess what AI says in the next town over', 'Check any question as a customer in any US state or country would see it'],
+              ['You don\'t know how you compare on Google Maps or reviews', 'See your Google Business Profile, rating, reviews that mention your city, and Maps position next to competitors'],
               ['Customers land on your site and don\'t call', 'Conversion Readiness score shows you every reason they bounce'],
             ].map(([without, with_], i) => (
               <div key={i} className="grid grid-cols-2 border-b border-white/[0.05] last:border-0 hover:bg-white/[0.02] transition-colors">
