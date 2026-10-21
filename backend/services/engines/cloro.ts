@@ -18,9 +18,8 @@ export function cloroAvailable(env: NodeJS.ProcessEnv = process.env): boolean {
   return !!env.CLORO_API_KEY;
 }
 
-export class EngineError extends Error {
-  constructor(message: string, public status: number, public code?: string) { super(message); }
-}
+import { EngineError } from './engineError';
+export { EngineError };
 
 export interface CloroAnswer { text: string; sources: CitationSource[]; entities: string[]; credits: number | null }
 

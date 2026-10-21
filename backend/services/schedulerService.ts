@@ -2,7 +2,7 @@
 import { pool } from './db';
 import { findUserById, saveCitationCheck } from './dbService';
 import { runCitationCheck } from './citationCheckService';
-import { runEngineCitationCheck } from './engines/cloro';
+import { runEngineCheck } from './engines/run';
 import { normaliseLocation } from './engines/location';
 import { availableEngines } from './engines';
 import { sendCitationStatusEmail } from './emailService';
@@ -134,7 +134,7 @@ async function runOtherEngines(row: any, user: { id: string; locationState?: str
       const loc = row.location_country
         ? normaliseLocation(row.location_country, row.location_state)
         : normaliseLocation('US', undefined, user.locationState ?? null);
-      const result = await runEngineCitationCheck(engine.id, row.topic, row.url, loc.state, loc.country);
+      const result = await runEngineCheck(engine.id, row.topic, row.url, loc.state, loc.country);
       await saveCitationCheck(user.id, {
         name: row.name, topic: result.topic, url: result.url, cited: result.cited, alignmentScore: 0,
         sources: result.sources, recommendations: [], summary: result.summary,

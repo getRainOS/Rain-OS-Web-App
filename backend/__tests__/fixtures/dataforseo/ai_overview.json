@@ -1,0 +1,29 @@
+{
+  "version": "0.1.20250101", "status_code": 20000, "status_message": "Ok.", "cost": 0.0035,
+  "tasks": [{
+    "id": "t1", "status_code": 20000, "status_message": "Ok.", "cost": 0.0035,
+    "data": { "keyword": "best wedding cake bakery in austin", "location_name": "Texas,United States" },
+    "result": [{
+      "keyword": "best wedding cake bakery in austin", "type": "organic", "items_count": 3,
+      "items": [
+        {
+          "type": "ai_overview", "rank_group": 1, "rank_absolute": 1, "asynchronous_ai_overview": true,
+          "markdown": "Top Austin wedding cake bakeries include Sweet Co and Crumb Lab.",
+          "items": [
+            { "type": "ai_overview_element", "title": null, "text": "Sweet Co is known for custom tiered cakes.",
+              "references": [
+                { "type": "ai_overview_reference", "source": "The Knot", "domain": "www.theknot.com", "url": "https://www.theknot.com/marketplace/wedding-cakes-austin-tx", "title": "Austin wedding cakes", "text": "..." }
+              ] }
+          ],
+          "references": [
+            { "type": "ai_overview_reference", "source": "The Knot", "domain": "www.theknot.com", "url": "https://www.theknot.com/marketplace/wedding-cakes-austin-tx", "title": "Austin wedding cakes", "text": "..." },
+            { "type": "ai_overview_reference", "source": "Sweet Co", "domain": "sweetco.com", "url": "https://sweetco.com/wedding-cakes#top", "title": "Wedding cakes | Sweet Co", "text": "..." },
+            { "type": "ai_overview_reference", "source": "Yelp", "domain": "www.yelp.com", "url": "https://www.yelp.com/search?find_desc=wedding+cakes&find_loc=Austin", "title": "Top 10 wedding cakes", "text": "..." }
+          ]
+        },
+        { "type": "organic", "rank_group": 1, "rank_absolute": 2, "domain": "www.weddingwire.com", "url": "https://www.weddingwire.com/c/tx-texas/austin/wedding-cakes", "title": "Wedding cakes Austin" },
+        { "type": "local_pack", "rank_group": 1, "rank_absolute": 3, "title": "Crumb Lab", "domain": "crumblab.com", "url": "https://crumblab.com" }
+      ]
+    }]
+  }]
+}

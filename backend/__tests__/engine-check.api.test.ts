@@ -15,7 +15,7 @@ vi.mock('../services/engines/cloro', () => ({
   runEngineCitationCheck: (...a: unknown[]) => runEngineCitationCheck(...a),
   EngineError: class extends Error {},
 }));
-vi.mock('../services/engines', () => ({ availableEngines: () => [{ id: 'gemini', label: 'Gemini with Google Search', short: 'Gemini' }, { id: 'chatgpt', label: 'ChatGPT', short: 'ChatGPT' }] }));
+vi.mock('../services/engines', () => ({ engineLabel: (id: string) => (id === 'chatgpt' ? 'ChatGPT' : id), availableEngines: () => [{ id: 'gemini', label: 'Gemini with Google Search', short: 'Gemini' }, { id: 'chatgpt', label: 'ChatGPT', short: 'ChatGPT' }] }));
 vi.mock('../services/citationCheckService', () => ({ findCitedSourceIndex: () => -1, extractDomain: (u: string) => u }));
 
 let app: express.Express;

@@ -1,0 +1,21 @@
+{
+  "status_code": 20000, "status_message": "Ok.",
+  "tasks": [{
+    "status_code": 20000, "cost": 0.0042,
+    "result": [{
+      "model_name": "sonar", "input_tokens": 14, "output_tokens": 220, "web_search": true, "money_spent": 0.004,
+      "items": [{
+        "type": "message",
+        "sections": [{
+          "type": "text",
+          "text": "For wedding cakes in Austin, Crumb Lab and Sweet Co are often recommended.",
+          "annotations": [
+            { "title": "Crumb Lab reviews", "url": "https://www.yelp.com/biz/crumb-lab-austin" },
+            { "title": "Best wedding cakes in Austin", "url": "https://austin.eater.com/maps/best-wedding-cakes" },
+            { "title": "Crumb Lab reviews", "url": "https://www.yelp.com/biz/crumb-lab-austin" }
+          ]
+        }]
+      }]
+    }]
+  }]
+}

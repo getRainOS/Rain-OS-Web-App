@@ -1,22 +1,31 @@
 // services/engines/index.ts — the AI engines rain OS can run visibility
-// checks on. Gemini (with Google Search grounding) is live. ChatGPT and Claude
-// are listed so the data model and UI already carry an engine id; each turns
-// on once its API key is set and its adapter is written and tested.
-// ChatGPT runs through cloro (services/engines/cloro.ts).
-export type EngineId = 'gemini' | 'chatgpt' | 'claude';
+// checks on. Gemini (with Google Search grounding) runs direct; ChatGPT
+// through cloro (engines/cloro.ts); Google AI Overviews, AI Mode, Perplexity
+// and Claude through DataForSEO (engines/dataforseo.ts). An engine is on when
+// its keys are set; an unverified adapter also needs its verify flag, set only
+// after a real call has been checked.
+export type EngineId = 'gemini' | 'chatgpt' | 'ai_overviews' | 'ai_mode' | 'perplexity' | 'claude';
 
 export interface EngineInfo {
   id: EngineId;
   label: string;        // shown next to results, e.g. "Gemini with Google Search"
   short: string;        // used in marketing copy, e.g. "Gemini"
-  keyEnv: string[];     // any one of these environment variables enables it
-  implemented: boolean; // adapter written and tested
+  keyEnv: string[];     // all of these environment variables must be set
+  altKeyEnv?: string[]; // or any one of these
+  verifyEnv?: string;   // must be "true" before an unverified adapter runs
+  implemented: boolean; // adapter written
+  location: 'state' | 'none'; // whether the engine itself can ask from a place
 }
 
+const DFS_KEYS = ['DATAFORSEO_LOGIN', 'DATAFORSEO_PASSWORD'];
+
 export const ENGINES: EngineInfo[] = [
-  { id: 'gemini', label: 'Gemini with Google Search', short: 'Gemini', keyEnv: ['GEMINI_API_KEY', 'API_KEY'], implemented: true },
-  { id: 'chatgpt', label: 'ChatGPT', short: 'ChatGPT', keyEnv: ['CLORO_API_KEY'], implemented: true },
-  { id: 'claude', label: 'Claude with web search', short: 'Claude', keyEnv: ['ANTHROPIC_API_KEY'], implemented: false },
+  { id: 'gemini', label: 'Gemini with Google Search', short: 'Gemini', keyEnv: [], altKeyEnv: ['GEMINI_API_KEY', 'API_KEY'], implemented: true, location: 'none' },
+  { id: 'chatgpt', label: 'ChatGPT', short: 'ChatGPT', keyEnv: ['CLORO_API_KEY'], implemented: true, location: 'state' },
+  { id: 'ai_overviews', label: 'Google AI Overviews', short: 'Google AI Overviews', keyEnv: DFS_KEYS, verifyEnv: 'DATAFORSEO_VERIFIED', implemented: true, location: 'state' },
+  { id: 'ai_mode', label: 'Google AI Mode', short: 'Google AI Mode', keyEnv: DFS_KEYS, verifyEnv: 'DATAFORSEO_VERIFIED', implemented: true, location: 'state' },
+  { id: 'perplexity', label: 'Perplexity', short: 'Perplexity', keyEnv: DFS_KEYS, verifyEnv: 'DATAFORSEO_VERIFIED', implemented: true, location: 'none' },
+  { id: 'claude', label: 'Claude', short: 'Claude', keyEnv: DFS_KEYS, verifyEnv: 'DATAFORSEO_VERIFIED', implemented: true, location: 'none' },
 ];
 
 export function engineLabel(id: string | null | undefined): string {
@@ -25,5 +34,9 @@ export function engineLabel(id: string | null | undefined): string {
 
 // Engines that can run right now: adapter done and a key configured.
 export function availableEngines(env: NodeJS.ProcessEnv = process.env): EngineInfo[] {
-  return ENGINES.filter(e => e.implemented && e.keyEnv.some(k => !!env[k]));
+  return ENGINES.filter(e =>
+    e.implemented
+    && e.keyEnv.every(k => !!env[k])
+    && (!e.altKeyEnv || e.altKeyEnv.some(k => !!env[k]))
+    && (!e.verifyEnv || env[e.verifyEnv] === 'true'));
 }
