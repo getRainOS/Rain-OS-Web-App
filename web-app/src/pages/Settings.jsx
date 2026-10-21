@@ -421,7 +421,7 @@ export default function Settings() {
           <label className={styles.switchRow} htmlFor="citation-alerts">
             <span className={styles.switchText}>
               <span className={styles.switchLabel}>Email me when a tracked question changes</span>
-              <span className={styles.switchHint}>Sent only when Gemini starts or stops citing you in a weekly check.</span>
+              <span className={styles.switchHint}>Sent only when an AI engine starts or stops citing you, confirmed by two checks in a row.</span>
             </span>
             <input
               id="citation-alerts"
