@@ -48,6 +48,10 @@ export function useTrackedQueries() {
   return { items, cap, loading, error, setError, refresh, track, isTracked };
 }
 
+const ENGINE_NAMES = {
+  chatgpt: 'ChatGPT', ai_overviews: 'AI Overviews', ai_mode: 'AI Mode', perplexity: 'Perplexity', claude: 'Claude',
+};
+
 export function TrackWeeklyButton({ tracking, result }) {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState('');
@@ -167,7 +171,7 @@ export default function TrackedQueriesPanel({ tracking }) {
 
       {cap === 0 ? (
         <div className={styles.locked}>
-          <p>rain OS can re-run your most important questions every week and email you when Gemini starts or stops citing you. Weekly tracking is included with Pro and Business.</p>
+          <p>rain OS can re-run your most important questions every week and email you when any AI engine starts or stops citing you. Weekly tracking is included with Pro and Business.</p>
           <Link to="/upgrade" className={styles.upgradeLink}>See plans</Link>
         </div>
       ) : items.length === 0 ? (
@@ -188,9 +192,10 @@ export default function TrackedQueriesPanel({ tracking }) {
                   {item.locationCountry && (
                     <span className={styles.rowTopic}>Checked from {locationLabel(item.locationCountry, item.locationState)}</span>
                   )}
-                  {item.chatgptLatest && (
+                  {item.engineLatest?.length > 0 && (
                     <span className={styles.rowTopic}>
-                      Gemini: {status.label.toLowerCase()} · ChatGPT: {item.chatgptLatest.cited ? 'cited' : 'not cited'} ({formatDate(item.chatgptLatest.checkedAt)})
+                      Gemini: {status.label.toLowerCase()}
+                      {item.engineLatest.map(l => ` · ${ENGINE_NAMES[l.engine] || l.engine}: ${l.cited ? 'cited' : 'not cited'}`).join('')}
                     </span>
                   )}
                 </div>

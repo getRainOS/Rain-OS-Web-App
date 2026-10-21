@@ -29,6 +29,7 @@ const otherEngines = { on: false };
 const runEngineCitationCheck = vi.fn();
 vi.mock('../services/engines', () => ({
   availableEngines: () => [{ id: 'gemini' }, ...(otherEngines.on ? [{ id: 'chatgpt' }] : [])],
+  engineLabel: (id: string) => (id === 'chatgpt' ? 'ChatGPT' : id),
 }));
 vi.mock('../services/engines/cloro', () => ({
   runEngineCitationCheck: (...a: unknown[]) => runEngineCitationCheck(...a),
@@ -137,9 +138,48 @@ describe('runTrackedQuery', () => {
     findUserById.mockResolvedValue(proUser);
     runCitationCheck.mockResolvedValue({ topic: 'best widgets', url: 'https://me.com', cited: true, sources: [], summary: '' });
     await runTrackedQuery({ ...row, pending_cited: true });
-    expect(sendCitationStatusEmail).toHaveBeenCalledWith('u@example.com', { name: 'Q', topic: 'best widgets', cited: true });
+    expect(sendCitationStatusEmail).toHaveBeenCalledWith('u@example.com', { name: 'Q', topic: 'best widgets', changes: [{ engine: 'Gemini', cited: true }] });
     const upd = query.mock.calls.find(c => String(c[0]).includes('pending_cited = NULL'));
     expect(upd![1]).toEqual([7, true]);
+  });
+
+  it('confirms a ChatGPT change on its own and emails it', async () => {
+    sqlRouter();
+    otherEngines.on = true;
+    findUserById.mockResolvedValue(proUser);
+    runCitationCheck.mockResolvedValue({ topic: 'best widgets', url: 'https://me.com', cited: false, sources: [], summary: '' });
+    runEngineCitationCheck.mockResolvedValue({ topic: 'best widgets', url: 'https://me.com', cited: true, sources: [], summary: '' });
+    await runTrackedQuery({ ...row, engine_state: { chatgpt: { cited: false, pending: true } } });
+    expect(sendCitationStatusEmail).toHaveBeenCalledWith('u@example.com', { name: 'Q', topic: 'best widgets', changes: [{ engine: 'ChatGPT', cited: true }] });
+    const upd = query.mock.calls.find(c => String(c[0]).includes('engine_state'));
+    expect(JSON.parse(upd![1][1])).toEqual({ chatgpt: { cited: true, pending: null } });
+    otherEngines.on = false;
+  });
+
+  it('sends one email when Gemini and ChatGPT change in the same run', async () => {
+    sqlRouter();
+    otherEngines.on = true;
+    findUserById.mockResolvedValue(proUser);
+    runCitationCheck.mockResolvedValue({ topic: 'best widgets', url: 'https://me.com', cited: true, sources: [], summary: '' });
+    runEngineCitationCheck.mockResolvedValue({ topic: 'best widgets', url: 'https://me.com', cited: true, sources: [], summary: '' });
+    await runTrackedQuery({ ...row, pending_cited: true, engine_state: { chatgpt: { cited: false, pending: true } } });
+    expect(sendCitationStatusEmail).toHaveBeenCalledTimes(1);
+    expect(sendCitationStatusEmail.mock.calls[0][1].changes).toEqual([{ engine: 'Gemini', cited: true }, { engine: 'ChatGPT', cited: true }]);
+    otherEngines.on = false;
+  });
+
+  it('a first-seen ChatGPT change waits for a re-check a day later, without emailing', async () => {
+    sqlRouter();
+    otherEngines.on = true;
+    findUserById.mockResolvedValue(proUser);
+    runCitationCheck.mockResolvedValue({ topic: 'best widgets', url: 'https://me.com', cited: false, sources: [], summary: '' });
+    runEngineCitationCheck.mockResolvedValue({ topic: 'best widgets', url: 'https://me.com', cited: true, sources: [], summary: '' });
+    await runTrackedQuery({ ...row, engine_state: { chatgpt: { cited: false, pending: null } } });
+    expect(sendCitationStatusEmail).not.toHaveBeenCalled();
+    const upd = query.mock.calls.find(c => String(c[0]).includes('engine_state'));
+    expect(String(upd![0])).toContain('LEAST(next_run_at');
+    expect(JSON.parse(upd![1][1])).toEqual({ chatgpt: { cited: false, pending: true } });
+    otherEngines.on = false;
   });
 
   it('drops a pending change when the next check goes back to the old result', async () => {

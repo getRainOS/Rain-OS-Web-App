@@ -4,7 +4,8 @@ import { findUserById, saveCitationCheck } from './dbService';
 import { runCitationCheck } from './citationCheckService';
 import { runEngineCheck } from './engines/run';
 import { normaliseLocation } from './engines/location';
-import { availableEngines } from './engines';
+import { availableEngines, engineLabel } from './engines';
+import { stepAlertState, type EngineAlertState } from './alertState';
 import { sendCitationStatusEmail } from './emailService';
 import { planTrackingCap, enforcePlanCap, hasMatchableSite, WEEK_MS, MAX_JITTER_MS } from './trackedQueryService';
 
@@ -82,6 +83,7 @@ export async function runTrackedQuery(row: any): Promise<'ran' | 'skipped' | 'fa
     // One check is a single noisy sample, so a change is only believed (and
     // emailed) when the next check, a day later, agrees. The first result
     // is the baseline and never alerts.
+    const changes: Array<{ engine: string; cited: boolean }> = [];
     const previous: boolean | null = row.last_cited ?? null;
     if (previous === null || previous === result.cited) {
       await pool.query(
@@ -93,9 +95,7 @@ export async function runTrackedQuery(row: any): Promise<'ran' | 'skipped' | 'fa
         `UPDATE tracked_queries SET last_run_at = NOW(), last_cited = $2, pending_cited = NULL, consecutive_failures = 0 WHERE id = $1`,
         [row.id, result.cited]
       );
-      if (user.citationAlerts !== false) {
-        await sendCitationStatusEmail(user.email, { name: row.name, topic: row.topic, cited: result.cited });
-      }
+      changes.push({ engine: 'Gemini', cited: result.cited });
     } else {
       await pool.query(
         `UPDATE tracked_queries SET last_run_at = NOW(), pending_cited = $2, consecutive_failures = 0,
@@ -103,7 +103,11 @@ export async function runTrackedQuery(row: any): Promise<'ran' | 'skipped' | 'fa
         [row.id, result.cited, CONFIRM_MS]
       );
     }
-    await runOtherEngines(row, user);
+    changes.push(...(await runOtherEngines(row, user)));
+    // One email per run, listing every engine whose status really changed.
+    if (changes.length && user.citationAlerts !== false) {
+      await sendCitationStatusEmail(user.email, { name: row.name, topic: row.topic, changes });
+    }
     return 'ran';
   } catch (err) {
     console.error(`[scheduler] tracked query ${row.id} failed:`, err instanceof Error ? err.message : err);
@@ -124,11 +128,15 @@ export async function runTrackedQuery(row: any): Promise<'ran' | 'skipped' | 'fa
   }
 }
 
-// The same question on every other available engine (ChatGPT via cloro), as
-// the user's state would ask it. Saved for History and trends; the Gemini
-// result alone drives the confirm-then-email state machine above, so a slow
-// or unavailable engine never blocks or changes alerts.
-async function runOtherEngines(row: any, user: { id: string; locationState?: string | null }): Promise<void> {
+// The same question on every other available engine (ChatGPT, AI Overviews,
+// …), from the question's own location. Each engine has its own
+// confirm-then-alert state in tracked_queries.engine_state; returns the
+// changes confirmed this run. A failing engine is logged and skipped, so it
+// never blocks the others or the Gemini result.
+async function runOtherEngines(row: any, user: { id: string; locationState?: string | null }): Promise<Array<{ engine: string; cited: boolean }>> {
+  const states: Record<string, EngineAlertState> = row.engine_state && typeof row.engine_state === 'object' ? { ...row.engine_state } : {};
+  const changes: Array<{ engine: string; cited: boolean }> = [];
+  let needsConfirm = false;
   for (const engine of availableEngines().filter(e => e.id !== 'gemini')) {
     try {
       const loc = row.location_country
@@ -141,10 +149,20 @@ async function runOtherEngines(row: any, user: { id: string; locationState?: str
         source: 'scheduled', trackedQueryId: Number(row.id), engine: engine.id,
         locationCountry: loc.country, locationState: loc.state,
       });
+      const step = stepAlertState(states[engine.id], result.cited, (result as any).answerShown !== false);
+      states[engine.id] = step.state;
+      if (step.confirmed !== null) changes.push({ engine: engineLabel(engine.id), cited: step.confirmed });
+      if (step.needsConfirm) needsConfirm = true;
     } catch (err) {
       console.error(`[scheduler] ${engine.id} check for tracked query ${row.id} failed:`, err instanceof Error ? err.message : err);
     }
   }
+  await pool.query(
+    `UPDATE tracked_queries SET engine_state = $2::jsonb${needsConfirm ? `,
+       next_run_at = LEAST(next_run_at, NOW() + ($3::float8 * INTERVAL '1 millisecond'))` : ''} WHERE id = $1`,
+    needsConfirm ? [row.id, JSON.stringify(states), CONFIRM_MS] : [row.id, JSON.stringify(states)]
+  );
+  return changes;
 }
 
 export async function runSchedulerTick(): Promise<{ claimed: number; ran: number; failed: number }> {

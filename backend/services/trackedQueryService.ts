@@ -38,7 +38,7 @@ export interface TrackedQuery {
   consecutiveFailures: number;
   pausedReason: PausedReason | null;
   createdAt: string;
-  chatgptLatest: { cited: boolean; checkedAt: string } | null;
+  engineLatest: Array<{ engine: string; cited: boolean; checkedAt: string }>;
   locationCountry: string | null;
   locationState: string | null;
   history: Array<{ cited: boolean; checkedAt: string }>;
@@ -66,9 +66,9 @@ const mapRow = (row: any): TrackedQuery => ({
   createdAt: iso(row.created_at) as string,
   locationCountry: row.location_country ?? null,
   locationState: row.location_state ?? null,
-  chatgptLatest: row.chatgpt_latest
-    ? { cited: !!row.chatgpt_latest.cited, checkedAt: iso(row.chatgpt_latest.checked_at) as string }
-    : null,
+  engineLatest: Array.isArray(row.engine_latest)
+    ? row.engine_latest.map((l: any) => ({ engine: l.engine, cited: !!l.cited, checkedAt: iso(l.checked_at) as string }))
+    : [],
   history: Array.isArray(row.history)
     ? row.history.map((h: any) => ({ cited: !!h.cited, checkedAt: iso(h.checked_at) as string }))
     : [],
@@ -121,9 +121,13 @@ export async function listTrackedQueries(userId: string): Promise<TrackedQuery[]
            ORDER BY checked_at DESC LIMIT 12
          ) h
        ), '[]'::json) AS history,
-       (SELECT json_build_object('cited', c.cited, 'checked_at', c.checked_at) FROM citation_checks c
-          WHERE c.tracked_query_id = t.id AND c.engine = 'chatgpt'
-          ORDER BY c.checked_at DESC LIMIT 1) AS chatgpt_latest
+       COALESCE((
+         SELECT json_agg(json_build_object('engine', l.engine, 'cited', l.cited, 'checked_at', l.checked_at)) FROM (
+           SELECT DISTINCT ON (engine) engine, cited, checked_at FROM citation_checks
+           WHERE tracked_query_id = t.id AND engine <> 'gemini'
+           ORDER BY engine, checked_at DESC
+         ) l
+       ), '[]'::json) AS engine_latest
      FROM tracked_queries t
      WHERE t.user_id = $1
      ORDER BY t.created_at ASC, t.id ASC`,
