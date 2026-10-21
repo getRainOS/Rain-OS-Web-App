@@ -5,6 +5,12 @@ import { downloadCsv, EXPORTS } from '../lib/exportCsv.js';
 import { api } from '../api/client.js';
 import PillarScores from '../components/PillarScores.jsx';
 import { PILLAR_COLORS } from '../lib/pillarColors.js';
+import { domainOf } from '../lib/opportunities.js';
+
+const PILLAR_LABELS = {
+  ai_readability: 'AI Readability', digital_authority: 'Digital Authority',
+  conversion_readiness: 'Conversion Readiness', product_discoverability: 'Product Discoverability',
+};
 import { CheckCircle2, AlertCircle, ExternalLink, Trash2, Search, X } from 'lucide-react';
 import PageHeader from '../components/PageHeader.jsx';
 import styles from './History.module.css';
@@ -168,16 +174,24 @@ export default function History() {
       });
   }, [tab, sovLoaded]);
 
+  // Brand names find analyses too: a brand linked to a site on the
+  // dashboard matches every analysis of that site.
+  const [brandLinks, setBrandLinks] = useState([]);
+  useEffect(() => { api.brandLinks().then(({ data }) => setBrandLinks(data?.links || [])).catch(() => {}); }, []);
+
   const filteredHistory = useMemo(() => {
     const q = analysesSearch.trim().toLowerCase();
+    const squash = t => String(t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const brandSites = q ? new Set(brandLinks.filter(l => squash(l.brand).includes(squash(q))).map(l => l.site)) : new Set();
     return history.filter(item => {
       if (analysesTypeFilter !== 'all' && getAnalysisType(item) !== analysesTypeFilter) return false;
       if (!q) return true;
       return (item.title || '').toLowerCase().includes(q)
         || (item.url || '').toLowerCase().includes(q)
-        || (item.repo || '').toLowerCase().includes(q);
+        || (item.repo || '').toLowerCase().includes(q)
+        || (!!item.url && brandSites.has(domainOf(item.url)));
     });
-  }, [history, analysesSearch, analysesTypeFilter]);
+  }, [history, analysesSearch, analysesTypeFilter, brandLinks]);
 
   const filteredCitations = useMemo(() => {
     const q = citationsSearch.trim().toLowerCase();
@@ -469,7 +483,7 @@ export default function History() {
                 <input
                   type="text"
                   className={styles.searchInput}
-                  placeholder="Search by title, URL, or repo…"
+                  placeholder="Search by title, URL, repo or brand name…"
                   value={analysesSearch}
                   onChange={e => setAnalysesSearch(e.target.value)}
                 />
@@ -508,10 +522,7 @@ export default function History() {
                 const itemKey = item.id ?? i;
                 const isOpen = expanded === itemKey;
                 const score = item.overall_score ?? null;
-                const scoreColor = score === null ? 'var(--text-dim)'
-                  : score >= 75 ? 'var(--green)'
-                  : score >= 50 ? 'var(--yellow)'
-                  : 'var(--red)';
+                const scoreColor = score === null ? 'var(--text-dim)' : 'var(--text)';
                 const isConfirming = confirmDeleteAnalysisId === item.id;
                 const isDeleting = deletingAnalysisId === item.id;
                 return (
@@ -544,7 +555,8 @@ export default function History() {
                             { key: 'conversion_readiness', color: PILLAR_COLORS.conversion_readiness },
                             { key: 'product_discoverability', color: PILLAR_COLORS.product_discoverability },
                           ].map(p => (
-                            <span key={p.key} className={styles.miniScore} style={{ color: p.color }}>
+                            <span key={p.key} className={styles.miniScore} title={PILLAR_LABELS[p.key]}>
+                              <span className={styles.miniDot} style={{ background: p.color }} aria-hidden="true" />
                               {item[p.key] !== undefined && item[p.key] !== null ? Math.round(item[p.key]) : '—'}
                             </span>
                           ))}

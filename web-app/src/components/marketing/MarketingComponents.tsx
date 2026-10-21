@@ -391,7 +391,7 @@ export const Pricing = () => {
   };
   const plans: Plan[] = [
     {
-      plan: "Free", price: "Free", checkCount: "5 analyses to start",
+      plan: "Free", price: "$0", checkCount: "5 analyses to start",
       accentColor: "#a3a3a3",
       description: "Try rain OS and see how AI reads your content — no credit card needed.",
       buttonText: "Get Started",

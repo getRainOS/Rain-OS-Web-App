@@ -179,7 +179,7 @@ export default function KnowledgeBase() {
                 <div className={styles.pillarHeader}>
                   <p.Icon style={{ width: 12, height: 12, color: p.color }} />
                   <span className={styles.pillarLabel}>{p.label}</span>
-                  <span className={styles.pillarWeight} style={{ color: p.color }}>{p.weight}</span>
+                  <span className={styles.pillarWeight}>{p.weight}</span>
                 </div>
                 <p className={styles.pillarDesc}>{p.desc}</p>
               </div>
