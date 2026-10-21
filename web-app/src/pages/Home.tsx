@@ -11,6 +11,7 @@ import RainBackground from '@/components/marketing/RainBackground';
 import SiteFooter from '@/components/marketing/SiteFooter';
 import { Pricing, FAQ } from '@/components/marketing/MarketingComponents';
 import { useLiveEngines, joinNames } from '@/lib/liveEngines';
+import HeroPrompt from '@/components/marketing/HeroPrompt';
 
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
 
@@ -670,12 +671,6 @@ export default function Home() {
                   <li key={t} className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-[#2B8FE3]" />{t}</li>
                 ))}
               </ul>
-              <div className="mt-10">
-                <div className="text-[11px] uppercase tracking-[0.16em] text-neutral-600" style={MONO}>Checks answers from</div>
-                <div className="mt-3 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[14px] text-neutral-300">
-                  {engines.map(e => <span key={e}>{e}</span>)}
-                </div>
-              </div>
             </motion.div>
 
             <motion.div
@@ -684,7 +679,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
             >
-              <HeroConsole />
+              <HeroPrompt />
             </motion.div>
           </div>
         </section>
@@ -722,6 +717,27 @@ export default function Home() {
                   PEW RESEARCH CENTER, JULY 2025 <ArrowUpRight className="w-3 h-3" />
                 </a>
               </div>
+            </Reveal>
+          </div>
+        </section>
+
+        <section className="relative z-10 py-28 border-t border-white/[0.06]">
+          <div className="max-w-6xl mx-auto px-6">
+            <Reveal className="text-center">
+              <Eyebrow>Inside the app</Eyebrow>
+              <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
+                Every source, in order. Your place among them.
+              </h2>
+              <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-2xl mx-auto">
+                Ask the question your customers ask. See exactly which sites the AI cited, where you ranked, and how that changes week to week.
+              </p>
+              <div className="mt-8 text-[11px] uppercase tracking-[0.16em] text-neutral-600" style={MONO}>Checks answers from</div>
+              <div className="mt-3 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[14px] text-neutral-300">
+                {engines.map(e => <span key={e}>{e}</span>)}
+              </div>
+            </Reveal>
+            <Reveal delay={0.1} className="mt-12 max-w-5xl mx-auto">
+              <HeroConsole />
             </Reveal>
           </div>
         </section>
