@@ -68,6 +68,7 @@ export const api = {
     return request('GET', `/api/citation-checks${qs}`);
   },
   engines: () => request('GET', '/api/engines'),
+  localListing: (body) => request('POST', '/api/local-listing', body),
   startEngineCheck: (body) => request('POST', '/api/citation-check/engine', body),
   pollEngineCheck: (id) => request('GET', `/api/citation-check/engine/${id}`),
   setLocationState: (state) => request('POST', '/api/users/me/location', { state }),

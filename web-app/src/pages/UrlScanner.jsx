@@ -1,4 +1,5 @@
 import { US_STATES } from '../lib/usStates.js';
+import ListingCheck from '../components/ListingCheck.jsx';
 import LocalPageCheck, { LocalSteps } from '../components/LocalPageCheck.jsx';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -214,6 +215,8 @@ export default function UrlScanner() {
   const [city, setCity] = useState(() => searchParams.get('city') || '');
   const [showCity, setShowCity] = useState(() => !!searchParams.get('city'));
   const [cityState, setCityState] = useState(null);
+  const [listings, setListings] = useState('off');
+  useEffect(() => { api.engines().then(({ data }) => setListings(data?.features?.localListings || 'off')).catch(() => {}); }, []);
   useEffect(() => { if (user) setCityState(s => s ?? (user.locationState || '')); }, [user]);
   const [heroSeen, setHeroSeen] = useState(() => {
     try {
@@ -481,7 +484,10 @@ export default function UrlScanner() {
           <PillarScores result={result} lane={userLane} />
 
           {result.local_page_check
-            ? <LocalPageCheck check={result.local_page_check} />
+            ? <>
+                <LocalPageCheck check={result.local_page_check} hideSteps={listings === 'on'} />
+                {listings !== 'off' && <ListingCheck mode={listings} nap={result.local_page_check.nap} url={result.url || scannedUrl} />}
+              </>
             : userLane === 'local_business' && (
               <div className="card" style={{ padding: '20px 22px', marginTop: 12 }}><LocalSteps city="" /></div>
             )}

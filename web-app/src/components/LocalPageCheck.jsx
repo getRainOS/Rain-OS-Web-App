@@ -4,7 +4,7 @@ import styles from './LocalPageCheck.module.css';
 // URL Scanner: does this page clearly serve the target city? Every row is
 // read from the page itself. The steps underneath are guidance, not checks:
 // we can't see Google Business Profile, Bing Places or reviews yet.
-export default function LocalPageCheck({ check }) {
+export default function LocalPageCheck({ check, hideSteps = false }) {
   if (!check) return null;
   const failing = check.items.filter(i => !i.pass);
   const passing = check.items.filter(i => i.pass);
@@ -34,7 +34,7 @@ export default function LocalPageCheck({ check }) {
           </li>
         ))}
       </ul>
-      <LocalSteps city={check.city} />
+      {!hideSteps && <LocalSteps city={check.city} />}
     </div>
   );
 }
