@@ -225,7 +225,7 @@ export default function ContentAnalyzer() {
     setRewriteError('');
     setRewriteResult(null);
     try {
-      const { data } = await api.rewrite({ content, module: analysisModule });
+      const { data } = await api.rewrite({ content, module: analysisModule, focus: weakSpots(result) });
       setRewriteResult(data);
       refreshUser();
     } catch (err) {
@@ -524,8 +524,25 @@ export default function ContentAnalyzer() {
   );
 }
 
+// What the latest score found weakest: the three lowest sub-scores and the
+// top recommendations. The rewrite is told to fix exactly these.
+function weakSpots(result) {
+  if (!result) return [];
+  const subs = (result.subScores || [])
+    .filter(s => typeof s?.score === 'number' && s.label)
+    .sort((a, b) => a.score - b.score)
+    .slice(0, 3)
+    .map(s => `${s.label} scored ${Math.round(s.score)}/100`);
+  const recs = (result.recommendations || [])
+    .map(r => (typeof r === 'object' && r !== null ? (r.text || r.recommendation || r.description || r.issue || '') : String(r)))
+    .filter(Boolean)
+    .slice(0, 4);
+  return [...subs, ...recs];
+}
+
 function RewritePanel({ rewriteResult, onAccept, onDiscard, canRescore }) {
   const changes = rewriteResult.changes || [];
+  const signals = rewriteResult.signals || [];
   return (
     <div className={styles.rewritePanel}>
       <div className={styles.rewritePanelHeader}>
@@ -544,6 +561,25 @@ function RewritePanel({ rewriteResult, onAccept, onDiscard, canRescore }) {
       <div className={styles.rewriteContent}>
         <pre className={styles.rewriteText}>{rewriteResult.rewritten}</pre>
       </div>
+
+      {signals.length > 0 && (
+        <div className={styles.rewriteSignals}>
+          <div className={styles.rewriteSignalsTitle}>Measured before and after</div>
+          <table>
+            <tbody>
+              {signals.map(s => (
+                <tr key={s.label}>
+                  <td>{s.label}</td>
+                  <td>{s.before}</td>
+                  <td aria-hidden="true">→</td>
+                  <td className={s.better === true ? styles.signalBetter : s.better === false ? styles.signalWorse : undefined}>{s.after}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className={styles.rewriteSignalsNote}>Exact counts from the text, the same measurements the score is anchored on.</p>
+        </div>
+      )}
 
       {changes.length > 0 && (
         <details className={styles.rewriteChangesList}>

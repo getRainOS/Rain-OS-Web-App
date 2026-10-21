@@ -37,4 +37,10 @@ describe('rewrite keeps its length', () => {
     const r = await rewriteDocumentForAI(words(100));
     expect(r.rewritten.split(' ')).toHaveLength(60);
   });
+
+  it("passes the score's weak spots into the prompt", async () => {
+    generate.mockResolvedValueOnce(reply(words(100)));
+    await rewriteDocumentForAI(words(100), 'general', ['Answer-First Formatting scored 42/100']);
+    expect(generate.mock.calls[0][1].contents[0].parts[0].text).toContain('- Answer-First Formatting scored 42/100');
+  });
 });

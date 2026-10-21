@@ -1,6 +1,7 @@
 import express from 'express';
 import { findUserByApiKey, incrementUserUsage } from '../services/dbService';
 import { rewriteDocumentForAI } from '../services/geminiService';
+import { rewriteSignals } from '../services/rewriteSignals';
 import { classifyGeminiError } from '../services/geminiErrors';
 import type { ApiError } from '../types';
 
@@ -30,6 +31,10 @@ export default async function rewriteHandler(req: express.Request, res: express.
   }
 
   const { content, module: mod } = req.body as { content?: string; module?: string };
+  // The weak spots the latest analysis found, so the rewrite targets them.
+  const focus = Array.isArray(req.body?.focus)
+    ? req.body.focus.filter((f: unknown): f is string => typeof f === 'string').map((f: string) => f.trim().slice(0, 300)).filter(Boolean).slice(0, 8)
+    : [];
 
   if (!content || content.trim().length < 20) {
     return res.status(400).json({ error: 'bad_request', message: 'content is required (minimum 20 characters)' } as ApiError);
@@ -39,10 +44,10 @@ export default async function rewriteHandler(req: express.Request, res: express.
     mod === 'product_sellers' || mod === 'developers' ? mod : 'general';
 
   try {
-    const result = await rewriteDocumentForAI(content, module);
+    const result = await rewriteDocumentForAI(content, module, focus);
     const updatedUser = await incrementUserUsage(user.id);
     if (updatedUser) res.setHeader('X-Usage-Info', JSON.stringify(updatedUser.usage));
-    return res.status(200).json({ success: true, ...result });
+    return res.status(200).json({ success: true, ...result, signals: rewriteSignals(content, result.rewritten) });
   } catch (error) {
     const { status, body } = classifyGeminiError(error, 'rewrite');
     return res.status(status).json(body as ApiError);

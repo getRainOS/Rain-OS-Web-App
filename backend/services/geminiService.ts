@@ -510,7 +510,8 @@ async function rewriteChunkForAI(
   content: string,
   module: 'general' | 'product_sellers' | 'developers' = 'general',
   part?: { index: number; total: number },
-  extraInstruction = ''
+  extraInstruction = '',
+  focus: string[] = []
 ): Promise<{ rewritten: string; changes: string[] }> {
   if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
 
@@ -534,7 +535,7 @@ REWRITING RULES:
 7. Preserve ALL facts, data, figures, and meaning — do not add new information or hallucinate
 8. Instructions: Number all steps explicitly; make each step independently executable
 9. Keep the full length: this is a rewrite, not a summary. Every point, example, story, quote and detail in the original must still be there. Splitting sentences and adding headings usually makes the text slightly longer, not shorter. Aim for roughly the same word count as the original (within about 10%).
-${extraInstruction ? `\nIMPORTANT: ${extraInstruction}\n` : ''}
+${focus.length ? `\nTHIS CONTENT'S SCORE FOUND THESE WEAKNESSES. Fix each one specifically, within the rules above:\n${focus.map(f => `- ${f}`).join('\n')}\n` : ''}${extraInstruction ? `\nIMPORTANT: ${extraInstruction}\n` : ''}
 ${part && part.total > 1 ? `This is part ${part.index} of ${part.total} of a longer document. Rewrite only this part. Do not add an introduction, conclusion or summary that is not already here, and keep heading levels consistent.\n\n` : ''}CONTENT TO REWRITE:
 ${content}
 
@@ -606,7 +607,8 @@ export function splitForRewrite(content: string, chunkChars = REWRITE_CHUNK_CHAR
 
 export async function rewriteDocumentForAI(
   content: string,
-  module: 'general' | 'product_sellers' | 'developers' = 'general'
+  module: 'general' | 'product_sellers' | 'developers' = 'general',
+  focus: string[] = []
 ): Promise<{ rewritten: string; changes: string[]; truncated: boolean }> {
   if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
   const truncated = content.length > REWRITE_MAX_CHARS;
@@ -614,14 +616,14 @@ export async function rewriteDocumentForAI(
   const parts = await Promise.all(
     chunks.map(async (c, i) => {
       const part = { index: i + 1, total: chunks.length };
-      const first = await rewriteChunkForAI(c, module, part);
+      const first = await rewriteChunkForAI(c, module, part, '', focus);
       // Models tend to condense. A rewrite that lost a fifth of the words has
       // almost certainly dropped content, so ask once more, firmly, and keep
       // whichever version is longer.
       const ratio = wordCount(first.rewritten) / Math.max(1, wordCount(c));
       if (ratio >= MIN_REWRITE_RATIO) return first;
       const second = await rewriteChunkForAI(c, module, part,
-        `Your previous rewrite was only ${Math.round(ratio * 100)}% of the original length and dropped content. Rewrite again and keep every point, example and detail.`)
+        `Your previous rewrite was only ${Math.round(ratio * 100)}% of the original length and dropped content. Rewrite again and keep every point, example and detail.`, focus)
         .catch(() => first);
       return wordCount(second.rewritten) > wordCount(first.rewritten) ? second : first;
     })
