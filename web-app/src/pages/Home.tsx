@@ -621,8 +621,8 @@ function HowItWorks() {
 /* ── Page ───────────────────────────────────────────────────────────────── */
 
 const SPECS = [
-  { k: '6', v: 'things AI checks on your site' },
-  { k: '5', v: 'business types, each scored its own way' },
+  { k: '6', v: 'scoring pillars, weighted for your type of business' },
+  { k: '6', v: 'AI engines checked, from any US state or country' },
   { k: 'Live', v: 'checks against real AI answers' },
   { k: 'Weekly', v: 're-checks with email alerts' },
 ];

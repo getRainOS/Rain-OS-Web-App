@@ -243,7 +243,7 @@ function PillarLineTooltip({ active, payload, pillars }) {
         return (
           <div key={p.key} className={styles.pillarTooltipRow}>
             <span style={{ color: p.color }}>{p.label}</span>
-            <span style={{ color: p.color }} className={styles.pillarTooltipValue}>{entry.value}</span>
+            <span className={styles.pillarTooltipValue}>{entry.value}</span>
           </div>
         );
       })}

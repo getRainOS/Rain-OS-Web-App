@@ -247,12 +247,17 @@
 }
 
 .miniScore {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-size: 12px;
-  font-weight: 600;
-  min-width: 28px;
-  text-align: center;
+  font-weight: 500;
+  min-width: 34px;
+  color: var(--text-dim);
   font-variant-numeric: tabular-nums;
 }
+
+.miniDot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 
 .overallScore {
   font-size: 20px;
