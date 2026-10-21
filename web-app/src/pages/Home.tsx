@@ -662,8 +662,8 @@ export default function Home() {
                 <button onClick={start} className="h-11 px-6 rounded-md bg-[#2B8FE3] text-white text-[15px] font-medium hover:bg-[#1C73C4] transition-colors inline-flex items-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
                   Check my site free <ArrowRight className="w-4 h-4" />
                 </button>
-                <a href="#who" className="h-11 px-6 rounded-md border border-white/15 text-[15px] text-white hover:bg-white/[0.05] transition-colors inline-flex items-center">
-                  Find what fits you
+                <a href="/demo" className="h-11 px-6 rounded-md border border-white/15 text-[15px] text-white hover:bg-white/[0.05] transition-colors inline-flex items-center gap-2">
+                  Try the live demo <ArrowRight className="w-4 h-4 text-neutral-400" />
                 </a>
               </div>
               <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] text-neutral-400">

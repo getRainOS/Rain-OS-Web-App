@@ -1,3 +1,4 @@
+import { isDemo, exitDemo } from '../lib/demo.js';
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext.jsx';
@@ -162,6 +163,13 @@ export default function Layout({ children }) {
 
   return (
     <div className={styles.root}>
+      {isDemo() && (
+        <div className={styles.demoBar} role="status">
+          <span>You're exploring a demo with sample data.</span>
+          <a href="/login" onClick={() => exitDemo()} className={styles.demoBarCta}>Sign up free</a>
+          <button type="button" onClick={() => { exitDemo(); window.location.replace('/'); }} className={styles.demoBarExit}>Exit demo</button>
+        </div>
+      )}
       <button className={styles.mobileMenuBtn} onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
         {menuOpen ? <X style={{ width: 18, height: 18 }} /> : <Menu style={{ width: 18, height: 18 }} />}
       </button>

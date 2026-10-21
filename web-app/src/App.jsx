@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { getApiKey, setApiKey, clearApiKey, api } from './api/client.js';
 import { supabase } from './lib/supabase.js';
+import { isDemo, startDemo, exitDemo } from './lib/demo.js';
 import { AppContext } from './context/AppContext.jsx';
 import AuthModal from './components/AuthModal.jsx';
 import Layout from './components/Layout.jsx';
@@ -72,6 +73,11 @@ export default function App() {
 
   useEffect(() => {
     async function initAuth() {
+      // Demo: a sample account answered in the browser; no real sign-in.
+      if (isDemo()) {
+        try { const { data } = await api.me(); setUser(data); } catch (_) {}
+        return;
+      }
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         try {
@@ -115,6 +121,7 @@ export default function App() {
   }
 
   function onLogout() {
+    if (isDemo()) { exitDemo(); window.location.replace('/'); return; }
     supabase.auth.signOut().catch(() => {});
     clearApiKey();
     setApiKeyState('');
@@ -195,6 +202,13 @@ function AuthCallbackRoute({ onAuth }) {
   return <div style={{ minHeight: '100vh', background: '#000000' }} />;
 }
 
+// /demo: switch this tab into the live demo and open the dashboard. A full
+// page load so every part of the app starts from the sample account.
+function DemoStart() {
+  useEffect(() => { startDemo(); window.location.replace('/dashboard'); }, []);
+  return null;
+}
+
 function AuthModalRoute({ onAuth }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -237,6 +251,7 @@ function AppRoutes({ apiKey, onAuth }) {
               </LandingWrapper>
             }
           />
+          <Route path="/demo" element={<DemoStart />} />
           <Route path="/local-business" element={<LandingWrapper><LocalBusinessPage onBack={() => navigate('/')} /></LandingWrapper>} />
           <Route path="/login" element={<AuthModalRoute onAuth={onAuth} />} />
             <Route path="/confirm" element={<ConfirmEmail />} />
@@ -264,6 +279,7 @@ function AppRoutes({ apiKey, onAuth }) {
     <Layout>
       <Routes>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/demo" element={<DemoStart />} />
         <Route path="/login" element={<Navigate to="/dashboard" replace />} />
         <Route path="/auth/callback" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<Dashboard />} />
