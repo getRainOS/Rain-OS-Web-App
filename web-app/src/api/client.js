@@ -19,6 +19,8 @@ async function request(method, path, body) {
     'Content-Type': 'application/json',
   };
   if (key) headers['Authorization'] = `Bearer ${key}`;
+  // Every check and analysis is saved with the lane it was run in.
+  try { const lane = localStorage.getItem('rain_os_user_lane'); if (lane) headers['X-Rain-Lane'] = lane; } catch { /* storage blocked */ }
 
   const res = await fetch(BASE + path, {
     method,
