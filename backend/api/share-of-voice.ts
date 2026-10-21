@@ -2,6 +2,8 @@
 import express from 'express';
 import { findUserByApiKey, incrementUserUsage } from '../services/dbService';
 import { runShareOfVoice } from '../services/shareOfVoiceService';
+import { requestedEngine } from '../services/engines/requestEngine';
+import { EngineError } from '../services/engines/engineError';
 import { classifyGeminiError } from '../services/geminiErrors';
 import { pool } from '../services/db';
 import type { ApiError } from '../types';
@@ -72,8 +74,11 @@ export async function sovHandler(req: express.Request, res: express.Response) {
     catch { return res.status(400).json({ error: 'bad_request', message: 'url is malformed' } as ApiError); }
   }
 
+  const picked = requestedEngine(req.body, user);
+  if ('error' in picked) return res.status(400).json({ error: 'engine_unavailable', message: picked.error } as ApiError);
+
   try {
-    const result = await runShareOfVoice(brand.trim(), topic.trim(), normalisedUrl, rivals);
+    const result = await runShareOfVoice(brand.trim(), topic.trim(), normalisedUrl, rivals, picked.engine, picked.location);
 
     // Persist to DB. overall_sov is no longer computed (it was an LLM
     // guess) — written as 0 with this comment, same placeholder pattern as
@@ -83,8 +88,8 @@ export async function sovHandler(req: express.Request, res: express.Response) {
     // deterministic advice built from the same facts (see
     // shareOfVoiceService.buildRecommendations), not an LLM guess.
     await pool.query(
-      `INSERT INTO sov_checks (user_id, name, brand, topic, url, overall_sov, cited_count, model_results, top_competitors, recommendations, summary, brand_shares, share_percent)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
+      `INSERT INTO sov_checks (user_id, name, brand, topic, url, overall_sov, cited_count, model_results, top_competitors, recommendations, summary, brand_shares, share_percent, engine)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)`,
       [
         user.id,
         name.trim(),
@@ -99,6 +104,7 @@ export async function sovHandler(req: express.Request, res: express.Response) {
         result.summary,
         JSON.stringify(result.brandShares),
         result.sharePercent,
+        picked.engine,
       ]
     );
 
@@ -107,6 +113,7 @@ export async function sovHandler(req: express.Request, res: express.Response) {
 
     return res.status(200).json({ success: true, data: { ...result, name: name.trim() } });
   } catch (err) {
+    if (err instanceof EngineError) return res.status(err.status).json({ error: err.code || 'engine_error', message: err.message } as ApiError);
     const { status, body } = classifyGeminiError(err, 'share-of-voice');
     return res.status(status).json(body as ApiError);
   }

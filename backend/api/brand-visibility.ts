@@ -3,6 +3,8 @@
 import express from 'express';
 import { findUserByApiKey, incrementUserUsage, saveBrandVisibilityCheck, getBrandVisibilityChecksByUser, deleteBrandVisibilityChecksByUser } from '../services/dbService';
 import { runBrandVisibilityCheck, GenerationIncompleteError } from '../services/brandVisibilityService';
+import { requestedEngine } from '../services/engines/requestEngine';
+import { EngineError } from '../services/engines/engineError';
 import { classifyGeminiError } from '../services/geminiErrors';
 import type { ApiError } from '../types';
 
@@ -69,8 +71,11 @@ export default async function handler(req: express.Request, res: express.Respons
     }
   }
 
+  const picked = requestedEngine(req.body, user);
+  if ('error' in picked) return res.status(400).json({ error: 'engine_unavailable', message: picked.error } as ApiError);
+
   try {
-    const result = await runBrandVisibilityCheck(brand.trim(), topic.trim(), normalisedUrl);
+    const result = await runBrandVisibilityCheck(brand.trim(), topic.trim(), normalisedUrl, picked.engine, picked.location);
 
     // Persist to DB. visibility_score and mention_position are no longer
     // computed (they were LLM guesses) — omitted so they fall back to their
@@ -90,13 +95,15 @@ export default async function handler(req: express.Request, res: express.Respons
       competitors: result.competitors,
       recommendations: result.recommendations,
       summary: result.summary,
+      engine: picked.engine,
     });
 
     const updated = await incrementUserUsage(user.id);
     if (updated) res.setHeader('X-Usage-Info', JSON.stringify(updated.usage));
 
-    return res.status(200).json({ success: true, data: { ...result, name: name.trim() }, ...result, name: name.trim() });
+    return res.status(200).json({ success: true, data: { ...result, engine: picked.engine, name: name.trim() }, ...result, engine: picked.engine, name: name.trim() });
   } catch (error) {
+    if (error instanceof EngineError) return res.status(error.status).json({ error: error.code || 'engine_error', message: error.message } as ApiError);
     if (error instanceof GenerationIncompleteError) {
       return res.status(422).json({
         error: 'generation_incomplete',

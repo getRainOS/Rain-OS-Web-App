@@ -1,3 +1,6 @@
+import { askEngine } from './engines/run';
+import { engineLabel } from './engines';
+import { EngineError } from './engines/engineError';
 import { generateContentWithRetry } from './geminiRetry';
 // services/shareOfVoiceService.ts — rain OS AI Share of Voice
 // Runs 3 prompt phrasings through Google Search-grounded Gemini
@@ -44,6 +47,7 @@ export interface ModelResult {
   answerExcerpt: string;
   sources:     SovSource[];
   answerText?: string;           // full answer, used for counting; not stored
+  shown?: boolean;               // other engines: whether it gave an AI answer at all; not stored
 }
 
 // One brand's standing across the answers: how many answers named it, its
@@ -57,6 +61,7 @@ export interface BrandShare {
 }
 
 export interface SovResult {
+  engine?: string;
   brand:   string;
   topic:   string;
   url:     string | null;
@@ -224,20 +229,23 @@ export function buildSummary(
   mentionedCount: number,
   domainSharePercent: number | null,
   domainCitedCount: number | null,
-  domainSourceCount: number | null
+  domainSourceCount: number | null,
+  engineName = 'Gemini',
+  total = 3
 ): string {
+  const phrasings = total === 1 ? 'the search' : `${total} query phrasings`;
   const mentionPart =
     mentionedCount === 0
-      ? `${brand} was not mentioned in any of the 3 query phrasings for "${topic}"`
-      : mentionedCount === 3
-      ? `${brand} was mentioned in all 3 query phrasings for "${topic}"`
-      : `${brand} was mentioned in ${mentionedCount} of 3 query phrasings for "${topic}"`;
+      ? `${brand} was not mentioned in ${total === 1 ? 'the answer to' : `any of the ${phrasings} for`} "${topic}"`
+      : mentionedCount === total
+      ? `${brand} was mentioned in ${total === 1 ? 'the answer to' : `all ${phrasings} for`} "${topic}"`
+      : `${brand} was mentioned in ${mentionedCount} of ${phrasings} for "${topic}"`;
 
   if (domainSharePercent === null || domainSourceCount === null || domainCitedCount === null) {
     return `${mentionPart}.`;
   }
   if (domainSourceCount === 0) {
-    return `${mentionPart}. Gemini returned no grounded sources across the 3 prompts.`;
+    return `${mentionPart}. ${engineName} returned no ${engineName === 'Gemini' ? 'grounded ' : ''}sources${total === 1 ? '' : ` across the ${total} prompts`}.`;
   }
   return `${mentionPart}. Your domain is ${domainCitedCount} of ${domainSourceCount} cited sources (${domainSharePercent}%).`;
 }
@@ -253,13 +261,14 @@ export function buildRecommendations(
   domainSharePercent: number | null,
   domainCitedCount: number | null,
   competitors: string[],
-  hasUrl: boolean
+  hasUrl: boolean,
+  engineName = 'Gemini'
 ): string[] {
   const recs: string[] = [];
 
   if (mentionedCount === 0) {
     recs.push(
-      'Gemini never named your brand across any of the 3 phrasings. Run this page through Content Optimizer to strengthen the AI-readable signals (clear headings, direct answers, structured facts) that get a brand mentioned by name.'
+      `${engineName} never named your brand in its answers. Run this page through Content Optimizer to strengthen the AI-readable signals (clear headings, direct answers, structured facts) that get a brand mentioned by name.`
     );
   }
 
@@ -324,6 +333,27 @@ async function runOneModel(
   };
 }
 
+// One phrasing on a non-Gemini engine, read exactly like runOneModel.
+async function runOneEngine(
+  engine: string,
+  brand: string,
+  topic: string,
+  modelConfig: { modelLabel: string; modelKey: string; promptStyle: string; userPrompt: string },
+  location: { country?: string; state?: string | null }
+): Promise<ModelResult> {
+  const a = await askEngine(engine, modelConfig.userPrompt, { searchQuery: topic, ...location });
+  return {
+    modelLabel: modelConfig.modelLabel,
+    modelKey: modelConfig.modelKey,
+    promptStyle: modelConfig.promptStyle,
+    mentioned: brandInText(brand, a.text),
+    answerExcerpt: buildAnswerExcerpt(a.text),
+    sources: a.sources.slice(0, 6) as any,
+    answerText: a.text,
+    shown: a.shown,
+  };
+}
+
 /* ─────────────────────────────────────────────────────────────────────────── *
  *  Main export                                                                 *
  * ─────────────────────────────────────────────────────────────────────────── */
@@ -331,7 +361,9 @@ export async function runShareOfVoice(
   brand: string,
   topic: string,
   url:   string | null = null,
-  rivalBrands: string[] = []
+  rivalBrands: string[] = [],
+  engine: string = 'gemini',
+  location: { country?: string; state?: string | null } = {}
 ): Promise<SovResult> {
   if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
 
@@ -364,11 +396,20 @@ export async function runShareOfVoice(
     },
   ];
 
-  // Run all 3 grounded prompts in parallel — one Gemini call each, no
-  // second "analysis" call.
+  // Gemini: all 3 grounded prompts in parallel, one call each. Other
+  // engines get the same 3 phrasings, except Google AI Overviews, which
+  // answers a search rather than a chat prompt and so gets the topic once.
+  const engineName = engine === 'gemini' ? 'Gemini' : engineLabel(engine);
+  const configs = engine === 'ai_overviews'
+    ? [{ modelLabel: 'Google search', modelKey: engine, promptStyle: `"${t}"`, userPrompt: t }]
+    : modelConfigs;
   const modelResults = await Promise.all(
-    modelConfigs.map(cfg => runOneModel(client, b, cfg))
+    configs.map(cfg => (engine === 'gemini' ? runOneModel(client, b, cfg) : runOneEngine(engine, b, t, cfg, location)))
   );
+  if (engine !== 'gemini' && modelResults.every(m => m.shown === false)) {
+    throw new EngineError(`${engineName} gave no AI answer for this topic, so there was nothing to measure. Try a more specific question.`, 422, 'no_ai_answer');
+  }
+  for (const m of modelResults) delete m.shown;
 
   const mentionedCount = countMentioned(modelResults);
 
@@ -385,7 +426,7 @@ export async function runShareOfVoice(
   const { domainCitedCount, domainSourceCount, domainSharePercent } = computeDomainShare(allSources, userDomain);
 
   const competitors = rankCompetitorDomains(modelResults, userDomain);
-  const recommendations = buildRecommendations(mentionedCount, domainSharePercent, domainCitedCount, competitors, !!userDomain);
+  const recommendations = buildRecommendations(mentionedCount, domainSharePercent, domainCitedCount, competitors, !!userDomain, engineName);
 
   return {
     brand: b,
@@ -402,6 +443,7 @@ export async function runShareOfVoice(
     brandShares: rivals.length ? brandShares : [],
     sharePercent,
     competitorsFrom: named.length ? 'you' : rivals.length ? 'detected' : 'none',
-    summary: buildSummary(b, t, mentionedCount, domainSharePercent, domainCitedCount, domainSourceCount),
+    summary: buildSummary(b, t, mentionedCount, domainSharePercent, domainCitedCount, domainSourceCount, engineName, modelResults.length),
+    engine,
   };
 }
