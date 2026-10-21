@@ -1,8 +1,10 @@
 // Runs real content through the live pipeline: score → rubric rewrite (with
 // its own scoring and second pass) → score the original again, to check that
 // scores repeat. Needs GEMINI_API_KEY. Prints numbers only, no secrets.
-//   npx tsx scripts/rewrite-eval.ts [module] [file ...]
-// Defaults: module "general", every file in scripts/rewrite-samples.
+//   npx tsx scripts/rewrite-eval.ts [file ...]
+// Defaults to every file in scripts/rewrite-samples. Each file is scored in
+// the lane its name starts with (local_business--plumber.md → local_business),
+// so Local Presence and Product Discoverability are tested too.
 import { readFileSync, readdirSync } from 'fs';
 import { join, basename } from 'path';
 import { analyzeContent } from '../services/geminiService';
@@ -11,11 +13,14 @@ import { wordCount } from '../services/geminiService';
 
 async function main() {
   if (!process.env.GEMINI_API_KEY && !process.env.API_KEY) throw new Error('Set GEMINI_API_KEY first.');
-  const [module = 'general', ...files] = process.argv.slice(2);
+  const files = process.argv.slice(2);
   const dir = join(__dirname, 'rewrite-samples');
   const paths = files.length ? files : readdirSync(dir).map(f => join(dir, f));
+  const LANES = ['general', 'product_sellers', 'local_business', 'developers', 'vibe_coders'];
   for (const p of paths) {
     const text = readFileSync(p, 'utf8');
+    const prefix = basename(p).split('--')[0];
+    const module = LANES.includes(prefix) ? prefix : 'general';
     const t0 = Date.now();
     const before = await analyzeContent(text, 'General / Other', module as any);
     const again = await analyzeContent(text, 'General / Other', module as any);
