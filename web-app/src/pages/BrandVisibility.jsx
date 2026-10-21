@@ -1,3 +1,5 @@
+import EnginePicker, { DEFAULT_ENGINE, engineBody } from '../components/EnginePicker.jsx';
+import { engineName } from '../lib/engines.js';
 import { useState, useEffect, useMemo } from 'react';
 import CheckProgress from '../components/CheckProgress.jsx';
 import ImproveCta from '../components/ImproveCta.jsx';
@@ -90,6 +92,7 @@ function AlertIcon({ size = 14 }) {
 }
 
 export default function BrandVisibility() {
+  const [eng, setEng] = useState(DEFAULT_ENGINE);
   const { refreshUser } = useApp();
   const [name, setName] = useState('');
   const [brand, setBrand] = useState('');
@@ -124,7 +127,7 @@ export default function BrandVisibility() {
     setPlanGated(false);
     setResult(null);
     try {
-      const { data } = await api.brandVisibility({ name: name.trim(), brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined });
+      const { data } = await api.brandVisibility({ name: name.trim(), brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined, ...engineBody(eng) });
       setResult(data.data || data);
       setMySite(url);
       setResultTab('summary');
@@ -190,7 +193,7 @@ export default function BrandVisibility() {
     <div className={styles.page}>
       <PageHeader
         title="Brand Sentiment"
-        subtitle="See whether Gemini mentions your brand, how it describes you, and what to do if it doesn't."
+        subtitle="See whether AI mentions your brand, how it describes you, and what to do if it doesn't."
         about={[
           { heading: 'What the result means', body: 'Whether you are mentioned is a direct check of Gemini\'s answer. The tone label is AI\'s judgment of the exact sentences that mention you, which we show so you can judge them yourself.' },
           { heading: 'How the check works', body: 'We ask Gemini with live Google Search grounding and report mentions, citations and tone as given. One model and one phrasing, so it suits spot checks better than full brand monitoring.' },
@@ -216,7 +219,7 @@ export default function BrandVisibility() {
           <div>
             <div className={styles.planGatedTitle}>Business plan required</div>
             <div className={styles.planGatedDesc}>
-              Brand Sentiment tracks how Gemini describes your brand across live, Google Search-grounded answers. It runs multiple Gemini calls per check and is available on the Business plan.
+              Brand Sentiment tracks how ChatGPT, Google's AI answers, Gemini, Perplexity and Claude describe your brand in live answers. Available on the Business plan.
             </div>
           </div>
           <a href="/upgrade" className={styles.planGatedCta}>
@@ -283,6 +286,9 @@ export default function BrandVisibility() {
             <RecentPicker mode="site" onPick={setUrl} />
             <SiteNote url={url} blankText="Add your website to see whether your site is cited. Without it we can still tell whether AI names your brand." />
           </div>
+          <div className={styles.field}>
+            <EnginePicker value={eng} onChange={setEng} labelClass={styles.label} hintClass={styles.hint} />
+          </div>
           <div className={styles.submitRow}>
             <button
               type="submit"
@@ -299,7 +305,7 @@ export default function BrandVisibility() {
                 title="Checking what AI says about you"
                 skeleton="list"
                 steps={[
-                  { label: 'Asking Gemini about your brand', ms: 3000 },
+                  { label: `Asking ${engineName(eng.engine)} about your brand`, ms: 3000 },
                   { label: 'Searching Google live', ms: 7000 },
                   { label: 'Reading the answer and its sources', ms: 5000 },
                   { label: 'Judging the tone' },
@@ -368,7 +374,7 @@ export default function BrandVisibility() {
             return (
               <ImproveCta
                 title={title}
-                body="We compare your page with the sources Gemini used and list the changes to make first."
+                body={`We compare your page with the sources ${engineName(result.engine)} used and list the changes to make first.`}
                 link={improveLink({ question: result.topic, url: result.url || url, mode, brand: result.brand, sources: result.sources || [], competitors: result.competitors || [], note: result.sentimentExplanation })}
               />
             );
@@ -392,12 +398,12 @@ export default function BrandVisibility() {
           )}
 
           {resultTab === 'sources' && !(result.sources?.length) && (
-            <TabEmpty>Gemini answered without citing any sources.</TabEmpty>
+            <TabEmpty>{engineName(result.engine)} answered without citing any sources.</TabEmpty>
           )}
 
           {resultTab === 'sources' && result.competitors && result.competitors.length > 0 && (
             <div className={styles.card}>
-              <div className={styles.sectionTitle}>Sites Gemini cited</div>
+              <div className={styles.sectionTitle}>Sites {engineName(result.engine)} cited</div>
               <div className={styles.competitorGrid}>
                 {result.competitors.map((c, i) => (
                   <span key={i} className={styles.competitorChip}>{c}</span>
@@ -505,7 +511,7 @@ export default function BrandVisibility() {
 
                 {pastTab === 'tone' && (
                   <div className={styles.card}>
-                    <div className={styles.sectionTitle}>How Gemini described {group.brand} on each check</div>
+                    <div className={styles.sectionTitle}>How AI described {group.brand} on each check</div>
                     <CheckChips
                       items={group.list.slice(-16).map(h => ({ date: shortDate(h.checked_at || h.checkedAt), ...toneOf(h) }))}
                     />
