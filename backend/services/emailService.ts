@@ -79,21 +79,28 @@ const escapeHtml = (s: string): string =>
 // Sent only when a tracked query flips between cited and not cited.
 export const sendCitationStatusEmail = async (
   to: string,
-  data: { name: string; topic: string; cited: boolean }
+  data: { name: string; topic: string; changes: Array<{ engine: string; cited: boolean }> }
 ): Promise<void> => {
   const name = escapeHtml(data.name);
   const topic = escapeHtml(data.topic);
-  const headline = data.cited
-    ? `Gemini now cites you for "${topic}"`
-    : `Gemini stopped citing you for "${topic}"`;
-  const body = data.cited
-    ? 'Your site appeared among the sources in two checks in a row, so this is a real change. Keep the page that earned it up to date.'
-    : 'Your site was missing from the sources in two checks in a row, so this is a real change. Open Citation Monitor to see who was cited instead.';
+  const gained = data.changes.filter(c => c.cited).map(c => c.engine);
+  const lost = data.changes.filter(c => !c.cited).map(c => c.engine);
+  const list = (n: string[]) => (n.length <= 1 ? n.join('') : `${n.slice(0, -1).join(', ')} and ${n[n.length - 1]}`);
+  const headline = escapeHtml(
+    gained.length && !lost.length ? `${list(gained)} now ${gained.length === 1 ? 'cites' : 'cite'} you for "${data.topic}"`
+      : lost.length && !gained.length ? `${list(lost)} stopped citing you for "${data.topic}"`
+      : `Your citations changed for "${data.topic}"`
+  );
+  const rows = data.changes
+    .map(c => `<li>${escapeHtml(c.engine)}: <strong>${c.cited ? 'now cites you' : 'stopped citing you'}</strong></li>`)
+    .join('');
+  const body = `<ul style="padding-left: 18px;">${rows}</ul>`
+    + `<p>${lost.length ? 'Open Citation Monitor to see who was cited instead.' : 'Keep the page that earned it up to date.'}</p>`;
   const html = `
     <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
       <p style="color: #666; font-size: 13px; margin: 0 0 8px;">Weekly tracking · ${name}</p>
       <h1 style="font-size: 20px;">${headline}</h1>
-      <p>${body}</p>
+      ${body}
       <p>
         <a href="${getAppUrl()}/citation-monitor" style="display:inline-block; padding: 12px 20px; background: #2B8FE3; color: #fff; text-decoration: none; border-radius: 6px;">
           Open Citation Monitor
@@ -102,6 +109,6 @@ export const sendCitationStatusEmail = async (
       <p style="color: #666; font-size: 13px;">We only email when two checks in a row agree. <a href="${getAppUrl()}/settings" style="color:#666;">Turn these alerts off in Settings</a>.</p>
     </div>
   `;
-  const subject = data.cited ? `Now cited: ${data.name}` : `No longer cited: ${data.name}`;
+  const subject = gained.length && !lost.length ? `Now cited: ${data.name}` : lost.length && !gained.length ? `No longer cited: ${data.name}` : `Citations changed: ${data.name}`;
   await sendEmail(to, subject, html);
 };
