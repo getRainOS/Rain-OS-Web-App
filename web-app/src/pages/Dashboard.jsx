@@ -352,10 +352,29 @@ function DotRow({ values }) {
 
 /* ── Lane Selector ── */
 function LaneSelector({ onSelect, current }) {
+  const [stats, setStats] = useState({});
+  const [helpOpen, setHelpOpen] = useState(false);
+  useEffect(() => { api.laneStats().then(({ data }) => setStats(data?.lanes || {})).catch(() => {}); }, []);
+  const shortDay = d => new Date(d).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
   return (
     <div className={styles.laneSelector}>
       <div className={styles.laneSelectorHeader}>
-        <h2 className={styles.laneSelectorTitle}>What are you optimizing for?</h2>
+        <h2 className={styles.laneSelectorTitle}>
+          What are you optimizing for?
+          <span className={styles.focusHelp} style={{ verticalAlign: 'middle', marginLeft: 6 }}>
+            <button type="button" className={styles.focusHelpBtn} aria-label="What do the numbers on each lane mean?" aria-expanded={helpOpen}
+              onClick={() => setHelpOpen(o => !o)}>
+              <HelpCircle size={18} />
+            </button>
+            {helpOpen && (
+              <div className={styles.focusHelpPop} role="note" style={{ textAlign: 'left', fontWeight: 400 }}>
+                <p><strong>Analyses</strong> score a page, post or repo: Content Optimizer, URL Scanner and Repo Analysis.</p>
+                <p><strong>Checks</strong> ask AI engines a question: Citation Monitor, Share of Voice and Brand Sentiment. One Citation Monitor run counts once, however many engines it asks. Automatic weekly re-checks aren't counted.</p>
+                <p>Each is counted in the lane you were in when you ran it. Checks from before lanes were recorded aren't included; they're all still in History.</p>
+              </div>
+            )}
+          </span>
+        </h2>
         <p className={styles.laneSelectorSub}>Choose your solution lane to get the right scoring weights and KPIs across your dashboard and analysis tools.</p>
       </div>
       <div className={styles.laneCards}>
@@ -371,6 +390,12 @@ function LaneSelector({ onSelect, current }) {
             </div>
             <div className={styles.laneCardLabel}>{lane.label}</div>
             <div className={styles.laneCardDesc}>{lane.desc}</div>
+            {stats[lane.id] && (
+              <div className={styles.laneCardStats}>
+                {stats[lane.id].analyses} {stats[lane.id].analyses === 1 ? 'analysis' : 'analyses'} · {stats[lane.id].checks} {stats[lane.id].checks === 1 ? 'check' : 'checks'}
+                {stats[lane.id].lastUsed ? ` · last used ${shortDay(stats[lane.id].lastUsed)}` : ''}
+              </div>
+            )}
             <div className={styles.laneCardCta}>{lane.id === current ? 'Current lane' : 'Select →'}</div>
           </button>
         ))}
@@ -854,8 +879,6 @@ export default function Dashboard() {
           </h1>
           <p className={styles.headerSub}>
             {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-            {' · '}
-            <Link to="/history" style={{ color: 'var(--text)', textDecoration: 'underline', textUnderlineOffset: '2px' }} title="Every saved analysis in your history — separate from 'API Usage', which counts billed API calls and may exclude imports or manual inserts.">You have a library of {totalCount ?? history.length} pieces analyzed</Link>
           </p>
         </div>
         <div className={styles.headerBtns}>

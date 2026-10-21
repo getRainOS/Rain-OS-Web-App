@@ -68,6 +68,7 @@ export const api = {
     return request('GET', `/api/citation-checks${qs}`);
   },
   engines: () => request('GET', '/api/engines'),
+  laneStats: () => request('GET', '/api/lane-stats'),
   localListing: (body) => request('POST', '/api/local-listing', body),
   startEngineCheck: (body) => request('POST', '/api/citation-check/engine', body),
   pollEngineCheck: (id) => request('GET', `/api/citation-check/engine/${id}`),

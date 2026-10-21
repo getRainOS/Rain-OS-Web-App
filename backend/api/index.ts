@@ -32,6 +32,7 @@ import updateNameHandler from './users/me/update-name';
 import deleteAccountHandler from './users/me/delete-account';
 import locationHandler from './users/me/location';
 import localListingHandler from './local-listing';
+import laneStatsHandler from './lane-stats';
 import { enginesHandler, publicEnginesHandler, startHandler as engineCheckStartHandler, pollHandler as engineCheckPollHandler } from './engine-check';
 // Stripe
 import createCheckoutSessionHandler from './stripe/create-checkout-session';
@@ -73,7 +74,7 @@ import questionGapHandler from './question-gap';
 const corsOptions: cors.CorsOptions = {
 origin: '*',
 methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-allowedHeaders: ['Content-Type', 'Authorization'],
+allowedHeaders: ['Content-Type', 'Authorization', 'X-Rain-Lane'],
 exposedHeaders: ['X-Usage-Info'],
 };
 const startServer = async () => {
@@ -184,6 +185,7 @@ app.post('/api/users/me/location', locationHandler);
 app.get('/api/engines', enginesHandler);
 app.get('/api/public/engines', publicEnginesHandler);
 app.post('/api/local-listing', localListingHandler);
+app.get('/api/lane-stats', laneStatsHandler);
 app.post('/api/citation-check/engine', engineCheckStartHandler);
 app.get('/api/citation-check/engine/:id', engineCheckPollHandler);
 // ─── Stripe ────────────────────────────────────────────────────────────────
