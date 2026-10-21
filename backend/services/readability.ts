@@ -30,7 +30,15 @@ export interface ReadabilityMetrics {
     'type', 'form', 'nature', 'level', 'area', 'field', 'case',
     ]);
     export function computeReadabilityMetrics(raw: string): ReadabilityMetrics {
-    const text = stripHtml(raw);
+    // Markdown: drop the markers (#, -, 1.), which aren't words, and end each
+    // heading and list item as its own line, so it isn't glued onto the next
+    // sentence (that made sentences look longer than they are).
+    const endLine = (_: string, line: string) => (/[.!?:]$/.test(line.trim()) ? line : `${line.trim()}.`);
+    const text = stripHtml(raw
+    .replace(/^\s{0,3}#{1,6}\s+(.*)$/gm, endLine)
+    .replace(/^\s*(?:[-*+]|\d+[.)])\s+(.*)$/gm, endLine)
+    .replace(/[*_`]{1,3}/g, '')
+    .replace(/<\/(h[1-6]|li|p)>/gi, '. '));
     const words = getWords(text);
     const sentences = getSentences(text);
     const wordCount = words.length;
@@ -66,7 +74,10 @@ export interface ReadabilityMetrics {
     const totalCommas = (text.match(/,/g) || []).length;
     const nestedDepth = sentences.length ? totalCommas / sentences.length : 0;
     // ─── Heading density (headings per 100 words) ────────────────────────────
-    const headingMatches = (raw.match(/<h[1-6][^>]*>/gi) || []).length;
+    // HTML headings, or Markdown ones (# Title) as pasted text and the AI
+    // rewrite use. Counting HTML only made every Markdown heading invisible.
+    const headingMatches = (raw.match(/<h[1-6][^>]*>/gi) || []).length
+    + (raw.match(/^\s{0,3}#{1,6}\s+\S/gm) || []).length;
     const headingDensity = wordCount ? (headingMatches / wordCount) * 100 : 0;
     // ─── Answer-first ratio (sentences that lead with a direct answer) ────────
     // Heuristic: short sentences (<= 20 words) that start with a noun or number
@@ -92,7 +103,8 @@ export interface ReadabilityMetrics {
     
     
     // ─── List item ratio (list items per 100 words) ──────────────────────────
-    const listItems = (raw.match(/<li[^>]*>/gi) || []).length;
+    const listItems = (raw.match(/<li[^>]*>/gi) || []).length
+    + (raw.match(/^\s*(?:[-*+]|\d+[.)])\s+\S/gm) || []).length;
     const listRatio = wordCount ? (listItems / wordCount) * 100 : 0;
     return {
     avgSentenceLength: Math.round(avg * 10) / 10,

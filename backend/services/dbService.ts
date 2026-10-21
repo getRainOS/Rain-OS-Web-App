@@ -812,6 +812,7 @@ export const deleteBrandVisibilityChecksByUser = async (userId: string): Promise
 // --------------------------
 
 export interface AnalysisRecord {
+  subScores?: Array<{ category: string; label: string; score: number }>;
   id: number;
   title: string | null;
   url: string | null;
@@ -848,6 +849,16 @@ const mapAnalysisRow = (row: any): AnalysisRecord => ({
   lane: row.lane ?? null,
   content: row.content ?? null,
   series_id: row.series_id != null ? Number(row.series_id) : null,
+  // Sub-scores, so a reopened analysis can still tell the rewrite its weak spots.
+  subScores: (() => {
+    try {
+      const parsed = typeof row.result_json === 'string' ? JSON.parse(row.result_json) : row.result_json;
+      return Array.isArray(parsed?.subScores)
+        ? parsed.subScores.filter((x: any) => x && typeof x.score === 'number' && typeof x.label === 'string')
+          .map((x: any) => ({ category: String(x.category || ''), label: x.label, score: x.score }))
+        : [];
+    } catch { return []; }
+  })(),
   recommendations: (() => {
     try {
       const parsed = typeof row.result_json === 'string' ? JSON.parse(row.result_json) : row.result_json;
