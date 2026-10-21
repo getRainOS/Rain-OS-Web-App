@@ -3,6 +3,7 @@
 import express from 'express';
 import { findUserByApiKey, incrementUserUsage, saveBrandVisibilityCheck, getBrandVisibilityChecksByUser, deleteBrandVisibilityChecksByUser } from '../services/dbService';
 import { runBrandVisibilityCheck, GenerationIncompleteError } from '../services/brandVisibilityService';
+import { laneOf } from '../services/lanes';
 import { requestedEngine } from '../services/engines/requestEngine';
 import { EngineError } from '../services/engines/engineError';
 import { classifyGeminiError } from '../services/geminiErrors';
@@ -96,6 +97,7 @@ export default async function handler(req: express.Request, res: express.Respons
       recommendations: result.recommendations,
       summary: result.summary,
       engine: picked.engine,
+      lane: laneOf(req),
     });
 
     const updated = await incrementUserUsage(user.id);

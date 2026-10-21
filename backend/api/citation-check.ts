@@ -1,3 +1,4 @@
+import { laneOf } from '../services/lanes';
 // api/citation-check.ts — POST /api/citation-check
 // Run a Google-grounded Gemini query to test whether a user's content would be
 // cited by AI engines for a given topic. Counts as one usage credit.
@@ -181,6 +182,7 @@ export default async function handler(req: express.Request, res: express.Respons
         sources: result.sources,
         recommendations: [],
         summary: result.summary,
+        lane: laneOf(req),
       });
       checkId = saved?.id ?? null;
       history = await getCitationChecksByTopic(user.id, result.topic, 20);

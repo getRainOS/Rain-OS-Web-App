@@ -13,6 +13,7 @@ import { EngineError } from '../services/engines/engineError';
 import { runEngineCheck } from '../services/engines/run';
 import { engineLabel } from '../services/engines';
 import { availableEngines } from '../services/engines';
+import { laneOf } from '../services/lanes';
 import { normaliseLocation } from '../services/engines/location';
 import { isPaidPlan as isPaid } from '../services/planLimits';
 import { listingsAvailable } from './local-listing';
@@ -105,7 +106,7 @@ export async function startHandler(req: express.Request, res: express.Response) 
       const saved = await saveCitationCheck(user.id, {
         name, topic: result.topic, url: result.url, cited: result.cited, alignmentScore: 0,
         sources: result.sources, recommendations: [], summary: result.summary, engine,
-        locationCountry: loc.country, locationState: loc.state,
+        locationCountry: loc.country, locationState: loc.state, lane: laneOf(req),
       }).catch(err => { console.error('Saving engine check failed:', err); return null; });
       job.result = { ...result, checkId: saved?.id ?? null, checkedAt: new Date().toISOString() };
       job.status = 'done';

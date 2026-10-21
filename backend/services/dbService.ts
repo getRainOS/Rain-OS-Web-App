@@ -595,13 +595,14 @@ export const saveCitationCheck = async (
     engine?: string;
     locationCountry?: string | null;
     locationState?: string | null;
+    lane?: string | null;
   }
 ): Promise<CitationCheckRecord | null> => {
   const topicKey = normaliseTopicKey(data.topic);
   const res = await pool.query(
     `INSERT INTO citation_checks
-       (user_id, name, topic, topic_key, url, cited, alignment_score, sources, recommendations, summary, source, tracked_query_id, engine, location_country, location_state)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+       (user_id, name, topic, topic_key, url, cited, alignment_score, sources, recommendations, summary, source, tracked_query_id, engine, location_country, location_state, lane)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
      RETURNING *`,
     [
       userId,
@@ -619,6 +620,7 @@ export const saveCitationCheck = async (
       data.engine || 'gemini',
       data.locationCountry ?? null,
       data.locationState ?? null,
+      data.lane ?? null,
     ]
   );
   return res.rows[0] ? mapCitationRow(res.rows[0]) : null;
@@ -748,13 +750,14 @@ export const saveBrandVisibilityCheck = async (
     recommendations?: string[];
     summary?: string;
     engine?: string;
+    lane?: string | null;
   }
 ): Promise<BrandVisibilityRecord | null> => {
   const res = await pool.query(
     `INSERT INTO brand_visibility_checks
        (user_id, name, brand, topic, url, visibility_score, mention_status, mention_position,
-        sentiment, sentiment_explanation, answer_excerpt, sources, competitors, recommendations, summary, engine)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+        sentiment, sentiment_explanation, answer_excerpt, sources, competitors, recommendations, summary, engine, lane)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
      RETURNING *`,
     [
       userId,
@@ -773,6 +776,7 @@ export const saveBrandVisibilityCheck = async (
       JSON.stringify(data.recommendations || []),
       data.summary ?? null,
       data.engine || 'gemini',
+      data.lane ?? null,
     ]
   );
   return res.rows[0] ? mapBrandVisRow(res.rows[0]) : null;
