@@ -9,7 +9,9 @@
 import express from 'express';
 import { randomUUID } from 'crypto';
 import { findUserByApiKey, saveCitationCheck, findRecentCitationCheck } from '../services/dbService';
-import { runEngineCitationCheck, EngineError } from '../services/engines/cloro';
+import { EngineError } from '../services/engines/engineError';
+import { runEngineCheck } from '../services/engines/run';
+import { engineLabel } from '../services/engines';
 import { availableEngines } from '../services/engines';
 import { normaliseLocation } from '../services/engines/location';
 import { isPaidPlan as isPaid } from '../services/planLimits';
@@ -50,7 +52,7 @@ export async function enginesHandler(req: express.Request, res: express.Response
   const paid = isPaid(user);
   return res.status(200).json({
     success: true,
-    engines: availableEngines().map(e => ({ id: e.id, label: e.label, locked: e.id !== 'gemini' && !paid })),
+    engines: availableEngines().map(e => ({ id: e.id, label: e.label, location: e.location, locked: e.id !== 'gemini' && !paid })),
   });
 }
 
@@ -69,7 +71,7 @@ export async function startHandler(req: express.Request, res: express.Response) 
     return res.status(400).json({ error: 'engine_unavailable', message: 'That AI engine is not available.' } as ApiError);
   }
   if (!isPaid(user)) {
-    return res.status(402).json({ error: 'plan_required', message: `${engine === 'chatgpt' ? 'ChatGPT' : 'This engine'} checks are on Pro and Business plans.` } as ApiError);
+    return res.status(402).json({ error: 'plan_required', message: `${engineLabel(engine)} checks are on Pro and Business plans.` } as ApiError);
   }
   const topic = typeof req.body?.topic === 'string' ? req.body.topic.trim().slice(0, 500) : '';
   if (topic.length < 3) return res.status(400).json({ error: 'bad_request', message: 'topic is required' } as ApiError);
@@ -87,8 +89,8 @@ export async function startHandler(req: express.Request, res: express.Response) 
     const recent = await findRecentCitationCheck(user.id, topic, url, engine, REUSE_HOURS, loc);
     if (recent) return res.status(200).json({ success: true, status: 'done', reused: true, result: fromRecord(recent) });
   }
-  if (!takeSlot(user.id)) {
-    return res.status(429).json({ error: 'rate_limit_exceeded', message: 'You have run 60 ChatGPT checks today. Try again tomorrow.' } as ApiError);
+  if (!takeSlot(`${user.id}:${engine}`)) {
+    return res.status(429).json({ error: 'rate_limit_exceeded', message: 'You have run 60 checks on other AI engines today. Try again tomorrow.' } as ApiError);
   }
 
   sweep();
@@ -97,7 +99,7 @@ export async function startHandler(req: express.Request, res: express.Response) 
   jobs.set(id, job);
   (async () => {
     try {
-      const result = await runEngineCitationCheck(engine, topic, url, loc.state, loc.country);
+      const result = await runEngineCheck(engine, topic, url, loc.state, loc.country);
       const saved = await saveCitationCheck(user.id, {
         name, topic: result.topic, url: result.url, cited: result.cited, alignmentScore: 0,
         sources: result.sources, recommendations: [], summary: result.summary, engine,

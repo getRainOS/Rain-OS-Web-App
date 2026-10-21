@@ -105,17 +105,19 @@ function timeAgo(str) {
 export default function CitationMonitor() {
   const { refreshUser, userLane, user } = useApp();
   const [engineRun, setEngineRun] = useState(null);
-  const [hasChatGpt, setHasChatGpt] = useState(false);
-  const [chatGptLocked, setChatGptLocked] = useState(false);
+  // Engines beyond Gemini (ChatGPT, AI Overviews, …) that run alongside it.
+  const [otherEngines, setOtherEngines] = useState([]);
+  const [enginesLocked, setEnginesLocked] = useState(false);
+  const hasChatGpt = otherEngines.length > 0;
   // Where the ChatGPT check is asked from. Settings is only the default.
   const [checkCountry, setCheckCountry] = useState('US');
   const [checkState, setCheckState] = useState(null);
   useEffect(() => { if (user) setCheckState(s => s ?? (user.locationState || '')); }, [user]);
   useEffect(() => {
     api.engines().then(({ data }) => {
-      const gpt = (data?.engines || []).find(e => e.id === 'chatgpt');
-      setHasChatGpt(!!gpt && !gpt.locked);
-      setChatGptLocked(!!gpt?.locked);
+      const others = (data?.engines || []).filter(e => e.id !== 'gemini');
+      setOtherEngines(others.filter(e => !e.locked));
+      setEnginesLocked(others.some(e => e.locked));
     }).catch(() => {});
   }, []);
   const tracking = useTrackedQueries();
@@ -438,19 +440,19 @@ export default function CitationMonitor() {
                   <Select
                     value={checkCountry}
                     onChange={setCheckCountry}
-                    ariaLabel="Country the ChatGPT check is asked from"
+                    ariaLabel="Country the check is asked from"
                     options={COUNTRIES.map(([v, l]) => ({ value: v, label: l }))}
                   />
                   {checkCountry === 'US' && (
                     <Select
                       value={checkState ?? ''}
                       onChange={setCheckState}
-                      ariaLabel="US state the ChatGPT check is asked from"
+                      ariaLabel="US state the check is asked from"
                       options={[{ value: '', label: 'Anywhere in the US' }, ...US_STATES.map(([v, l]) => ({ value: v, label: l }))]}
                     />
                   )}
                 </div>
-                <p className={styles.fieldHint}>Applies to the ChatGPT check. The default comes from Settings; change it here for this one check.</p>
+                <p className={styles.fieldHint}>Applies to ChatGPT and Google's AI answers; Gemini, Perplexity and Claude don't take a location. The default comes from Settings.</p>
               </div>
             )}
 
@@ -522,12 +524,14 @@ export default function CitationMonitor() {
                 <>
                   <ResultConsole result={result} name={name} topicHistory={topicHistory} tracking={tracking}
                     location={engineRun ? { country: engineRun.country, state: engineRun.state } : null} />
-                  {engineRun && <EngineCheckPanel run={engineRun} />}
-                  {chatGptLocked && (
+                  {engineRun && otherEngines.map(e => (
+                    <EngineCheckPanel key={e.id} engine={e.id} label={e.label} usesLocation={e.location !== 'none'} run={engineRun} />
+                  ))}
+                  {enginesLocked && (
                     <div className={`card ${styles.gptLocked}`}>
                       <div>
-                        <strong>See what ChatGPT says too</strong>
-                        <p>Pro and Business ask ChatGPT the same question, from the state or country you choose, and show every site it cited.</p>
+                        <strong>See what every AI engine says</strong>
+                        <p>Pro and Business ask ChatGPT, Google AI Overviews and the other engines the same question, from the state or country you choose, and show every site each one cited.</p>
                       </div>
                       <Link to="/upgrade" className="btn btn-primary">Upgrade</Link>
                     </div>

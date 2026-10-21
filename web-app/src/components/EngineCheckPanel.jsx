@@ -19,7 +19,7 @@ function ago(iso) {
 // The same question on another engine (ChatGPT via cloro). It starts with the
 // Gemini check, runs in the background (25-70s), and fills in when ready.
 // Leaving the page doesn't stop it: the result is saved to History.
-export default function EngineCheckPanel({ engine = 'chatgpt', label = 'ChatGPT', run }) {
+export default function EngineCheckPanel({ engine = 'chatgpt', label = 'ChatGPT', run, usesLocation = true }) {
   const [state, setState] = useState({ status: 'idle' });
   const [fresh, setFresh] = useState(0);
   const pollRef = useRef(null);
@@ -61,11 +61,13 @@ export default function EngineCheckPanel({ engine = 'chatgpt', label = 'ChatGPT'
         <div>
           <h3 className={styles.title}>{label}</h3>
           <p className={styles.sub}>
-            The same question asked in {label}{locationLabel(run.country, run.state) ? `, as someone in ${locationLabel(run.country, run.state)} would see it` : ''}.
+            The same question asked on {label}{usesLocation && locationLabel(run.country, run.state) ? `, as someone in ${locationLabel(run.country, run.state)} would see it` : ''}.
           </p>
         </div>
         {state.status === 'done' && (
-          r?.url
+          r?.answerShown === false
+            ? <span className={styles.muted}>No AI answer shown</span>
+            : r?.url
             ? <span className={rank ? styles.good : styles.bad}>{rank ? <><CheckCircle2 size={12} /> Cited · source {rank}</> : <><AlertCircle size={12} /> Not cited</>}</span>
             : <span className={styles.muted}>No website given</span>
         )}
