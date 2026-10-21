@@ -1,3 +1,5 @@
+import EnginePicker, { DEFAULT_ENGINE, engineBody } from '../components/EnginePicker.jsx';
+import { engineName } from '../lib/engines.js';
 import { useState, useEffect, useMemo } from 'react';
 import CheckProgress from '../components/CheckProgress.jsx';
 import ImproveCta from '../components/ImproveCta.jsx';
@@ -96,7 +98,7 @@ function BrandShareTable({ result }) {
       ))}
       <p className={styles.shareNote}>
         {result.competitorsFrom === 'detected' ? 'Competitors were taken from the brands the answers recommend. ' : ''}
-        Based on 3 answers from Gemini with Google Search. Each answer counts once per brand.
+        Based on {result.modelResults?.length || 3} {result.modelResults?.length === 1 ? 'answer' : 'answers'} from {engineName(result.engine)}. Each answer counts once per brand.
       </p>
     </div>
   );
@@ -138,6 +140,7 @@ function timeAgo(str) {
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 export default function ShareOfVoice() {
+  const [eng, setEng] = useState(DEFAULT_ENGINE);
   const { refreshUser } = useApp();
   const [name,  setName]    = useState('');
   const [brand, setBrand]   = useState('');
@@ -175,6 +178,7 @@ export default function ShareOfVoice() {
       const { data } = await api.shareOfVoice({
         name: name.trim(), brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined,
         competitors: rivals.split(',').map(c => c.trim()).filter(Boolean).slice(0, 5),
+        ...engineBody(eng),
       });
       setResult(data?.data ?? data);
       setMySite(url);
@@ -244,7 +248,7 @@ export default function ShareOfVoice() {
 
       <PageHeader
         title="Share of Voice"
-        subtitle="See how often Gemini mentions and cites you for a topic, and which competitors show up instead."
+        subtitle="See how often AI mentions and cites you for a topic, and which competitors show up instead."
         about={[
           { heading: 'What the numbers mean', body: 'Mentions and citation share are literal counts from three real Gemini prompts, not a score. Re-run over time to see whether your presence is growing.' },
           { heading: 'How the check works', body: 'We ask Gemini about your topic 3 different ways (best options, a recommendation, and a comparison), each with a live Google search. The 3 questions tab shows exactly what was asked. It covers Gemini only, at one moment, so treat it as a trend signal rather than true market share.' },
@@ -270,7 +274,7 @@ export default function ShareOfVoice() {
               <div>
                 <div className={styles.planGatedTitle}>Business plan required</div>
                 <div className={styles.planGatedDesc}>
-                  Share of Voice runs 3 Google Search-grounded Gemini checks per topic — an informational question, a conversational request, and a research-style comparison. Available on Business plan.
+                  Share of Voice asks each AI engine about your topic 3 ways — an informational question, a conversational request, and a research-style comparison. Available on Business plan.
                 </div>
               </div>
               <a href="/upgrade" className={styles.planGatedCta}>
@@ -314,19 +318,23 @@ export default function ShareOfVoice() {
                 <input className={styles.input} type="text" value={url} onChange={e => setUrl(e.target.value)}
                   placeholder="https://yourdomain.com" />
                 <RecentPicker mode="site" onPick={setUrl} />
-                <SiteNote url={url} blankText="Add your website to see your share of the sources Gemini cites. Without it we can still tell whether AI names your brand." />
+                <SiteNote url={url} blankText="Add your website to see your share of the sources AI cites. Without it we can still tell whether AI names your brand." />
+              </div>
+
+              <div className={styles.field}>
+                <EnginePicker value={eng} onChange={setEng} labelClass={styles.label} hintClass={styles.hint} />
               </div>
 
               <div className={styles.submitRow}>
                 <button type="submit" className={styles.btn} style={{ opacity: loading ? 0.6 : 1 }} disabled={loading}>
-                  {loading ? 'Asking Gemini 3 different ways…' : <><BarChart2 size={14} /> Check Share of Voice</>}
+                  {loading ? `Asking ${engineName(eng.engine)}…` : <><BarChart2 size={14} /> Check Share of Voice</>}
                 </button>
                 <span className={styles.hint} style={{ margin: 0 }}>Uses 3 analyses, one per question asked.</span>
               </div>
               {loading && (
                 <div style={{ marginTop: 20 }}>
                   <CheckProgress
-                    title="Asking Gemini 3 different ways"
+                    title={`Asking ${engineName(eng.engine)}`}
                     skeleton="cards"
                     steps={[
                       { label: 'Asking for the best options', ms: 7000 },
@@ -411,7 +419,7 @@ export default function ShareOfVoice() {
                 return (
                   <ImproveCta
                     title={result.mentionedCount === 0 ? 'AI did not name you. See how to get mentioned.' : 'AI names you only some of the time. See how to get mentioned more.'}
-                    body="We compare what you publish with the sources Gemini leaned on for this topic and list the changes to make first."
+                    body={`We compare what you publish with the sources ${engineName(result.engine)} leaned on for this topic and list the changes to make first.`}
                     link={improveLink({ question: result.topic, url: result.url || url, mode: 'share_of_voice', brand: result.brand, sources: pooled, competitors: result.competitors || [], note: result.summary })}
                   />
                 );
@@ -436,7 +444,7 @@ export default function ShareOfVoice() {
 
               {/* Citation share */}
               {resultTab === 'competitors' && citationShare.length === 0 && (
-                <TabEmpty>Gemini didn't cite any sources across the three prompts.</TabEmpty>
+                <TabEmpty>{engineName(result.engine)} didn't cite any sources.</TabEmpty>
               )}
               {resultTab === 'competitors' && citationShare.length > 0 && (
                 <div className={styles.card}>
@@ -479,7 +487,7 @@ export default function ShareOfVoice() {
                   </div>
 
                   <p className={styles.shareFootnote}>
-                    Share of all sources Gemini cited across the 3 questions for this topic — real counts, not an estimate.
+                    Share of all sources {engineName(result.engine)} cited for this topic — real counts, not an estimate.
                   </p>
                 </div>
               )}

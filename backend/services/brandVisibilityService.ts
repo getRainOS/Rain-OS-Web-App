@@ -1,3 +1,6 @@
+import { EngineError } from './engines/engineError';
+import { engineLabel } from './engines';
+import { askEngine } from './engines/run';
 import { generateContentWithRetry } from './geminiRetry';
 // services/brandVisibilityService.ts — rain OS AI Brand Visibility Checker
 // Uses Gemini with Google Search grounding to check how AI engines see a brand.
@@ -108,19 +111,20 @@ export function buildSummary(
   brand: string,
   mentioned: boolean,
   cited: boolean,
-  competitors: string[]
+  competitors: string[],
+  engineName = 'Gemini'
 ): string {
   const leaders = competitors.slice(0, 3).join(', ');
   if (mentioned && cited) {
-    return `Gemini mentioned ${brand} in its answer, and your site is among the sources it cited.`;
+    return `${engineName} mentioned ${brand} in its answer, and your site is among the sources it cited.`;
   }
   if (mentioned) {
-    return `Gemini mentioned ${brand} in its answer for this topic.`;
+    return `${engineName} mentioned ${brand} in its answer for this topic.`;
   }
   if (cited) {
-    return `Gemini didn't mention ${brand} by name, but your site is among the sources it cited.`;
+    return `${engineName} didn't mention ${brand} by name, but your site is among the sources it cited.`;
   }
-  return `Gemini did not mention ${brand}${leaders ? ` — it favored ${leaders} instead` : ''} when answering this topic.`;
+  return `${engineName} did not mention ${brand}${leaders ? ` — it favored ${leaders} instead` : ''} when answering this topic.`;
 }
 
 // Generic/corporate-suffix words that are never worth surfacing as "the
@@ -168,13 +172,14 @@ export function buildRecommendations(
   cited: boolean,
   sentiment: VisibilitySentiment,
   competitors: string[],
-  hasUrl: boolean
+  hasUrl: boolean,
+  engineName = 'Gemini'
 ): string[] {
   const recs: string[] = [];
 
   if (!mentioned) {
     recs.push(
-      'Gemini did not mention your brand by name for this topic. Run this page through Content Optimizer to strengthen the AI-readable signals that get a brand named directly in an answer.'
+      `${engineName} did not mention your brand by name for this topic. Run this page through Content Optimizer to strengthen the AI-readable signals that get a brand named directly in an answer.`
     );
   }
 
@@ -204,7 +209,9 @@ export function buildRecommendations(
 export async function runBrandVisibilityCheck(
   brand: string,
   topic: string,
-  url: string | null = null
+  url: string | null = null,
+  engine: string = 'gemini',
+  location: { country?: string; state?: string | null } = {}
 ): Promise<BrandVisibilityResult> {
   if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
 
@@ -213,65 +220,77 @@ export async function runBrandVisibilityCheck(
 
   const client = new GoogleGenerativeAI(API_KEY);
 
-  // ─── Step 1: Grounded query — ask about the topic as a user would ─────────
-  const groundedTools: GroundedTool[] = [{ googleSearch: {} }];
-  const groundedModel: GenerativeModel = client.getGenerativeModel({
-    model: MODEL,
-    tools: groundedTools as Tool[],
-  });
-
   const groundedPrompt =
     `A user is searching for information about: "${trimmedTopic}".\n\n` +
     `Provide a helpful, comprehensive answer that mentions specific brands, products, tools, or companies ` +
     `that are relevant. Be specific — name actual products and brands rather than staying generic. ` +
     `Answer as you would for a real user researching this topic.`;
 
-  const groundedRequest: GenerateContentRequest = {
-    contents: [{ role: 'user', parts: [{ text: groundedPrompt }] }],
-    generationConfig: {
-      temperature: 0.2,
-      maxOutputTokens: 1024,
-    },
-  };
-  const groundedResult = await generateContentWithRetry(groundedModel, groundedRequest, { timeoutMs: 60000 });
-  recordGroundedCall('brand_sentiment');
+  const engineName = engine === 'gemini' ? 'Gemini' : engineLabel(engine);
+  let answerText = '';
+  let sources: BrandVisibilitySource[] = [];
+  if (engine !== 'gemini') {
+    // ChatGPT, AI Overviews, Perplexity, … answer the same question; the
+    // mention, citation and sentiment reading below is the same for all.
+    const a = await askEngine(engine, groundedPrompt, { searchQuery: trimmedTopic, ...location });
+    if (!a.shown) throw new EngineError(`${engineName} gave no AI answer for this topic, so there was nothing to check. Try a more specific question.`, 422, 'no_ai_answer');
+    answerText = a.text;
+    sources = a.sources.map(src => ({ ...src }));
+  } else {
+    // ─── Step 1: Grounded query — ask about the topic as a user would ─────────
+    const groundedTools: GroundedTool[] = [{ googleSearch: {} }];
+    const groundedModel: GenerativeModel = client.getGenerativeModel({
+      model: MODEL,
+      tools: groundedTools as Tool[],
+    });
 
-  const answerText = groundedResult.response.text();
-  const candidate = (groundedResult.response.candidates?.[0] || {}) as CandidateWithGrounding;
+    const groundedRequest: GenerateContentRequest = {
+      contents: [{ role: 'user', parts: [{ text: groundedPrompt }] }],
+      generationConfig: {
+        temperature: 0.2,
+        maxOutputTokens: 1024,
+      },
+    };
+    const groundedResult = await generateContentWithRetry(groundedModel, groundedRequest, { timeoutMs: 60000 });
+    recordGroundedCall('brand_sentiment');
 
-  // A candidate that didn't finish with STOP (e.g. RECITATION, SAFETY,
-  // MAX_TOKENS) produced a partial or policy-truncated answer — evaluating
-  // it as a normal check would risk a false "not mentioned". Bail out
-  // before any mention/source/sentiment processing.
-  if (candidate.finishReason && candidate.finishReason !== FinishReason.STOP) {
-    console.error(`[gemini-finish-reason] brand-visibility finishReason=${candidate.finishReason} brand="${trimmedBrand}" topic="${trimmedTopic}"`);
-    throw new GenerationIncompleteError(candidate.finishReason);
-  }
+    answerText = groundedResult.response.text();
+    const candidate = (groundedResult.response.candidates?.[0] || {}) as CandidateWithGrounding;
 
-  const groundingMetadata = candidate.groundingMetadata || {};
-  const chunks: GroundingChunk[] =
-    groundingMetadata.groundingChunks || groundingMetadata.groundingChuncks || [];
-  const supports: GroundingSupport[] =
-    groundingMetadata.groundingSupports || groundingMetadata.groundingSupport || [];
+    // A candidate that didn't finish with STOP (e.g. RECITATION, SAFETY,
+    // MAX_TOKENS) produced a partial or policy-truncated answer — evaluating
+    // it as a normal check would risk a false "not mentioned". Bail out
+    // before any mention/source/sentiment processing.
+    if (candidate.finishReason && candidate.finishReason !== FinishReason.STOP) {
+      console.error(`[gemini-finish-reason] brand-visibility finishReason=${candidate.finishReason} brand="${trimmedBrand}" topic="${trimmedTopic}"`);
+      throw new GenerationIncompleteError(candidate.finishReason);
+    }
 
-  // ─── Build sources from grounding chunks ─────────────────────────────────
-  const seen = new Set<string>();
-  const sources: BrandVisibilitySource[] = [];
-  for (const chunk of chunks) {
-    const web = chunk.web;
-    const rawUrl = web?.uri || '';
-    if (!rawUrl || seen.has(rawUrl)) continue;
-    seen.add(rawUrl);
-    const domain = resolveSourceDomain(web?.title, rawUrl);
-    sources.push({ title: web?.title || domain, url: rawUrl, domain, snippet: '' });
-  }
+    const groundingMetadata = candidate.groundingMetadata || {};
+    const chunks: GroundingChunk[] =
+      groundingMetadata.groundingChunks || groundingMetadata.groundingChuncks || [];
+    const supports: GroundingSupport[] =
+      groundingMetadata.groundingSupports || groundingMetadata.groundingSupport || [];
 
-  for (const support of supports) {
-    const segmentText = support.segment?.text || '';
-    if (!segmentText) continue;
-    for (const idx of (support.groundingChunkIndices || [])) {
-      if (sources[idx] && !sources[idx].snippet) {
-        sources[idx].snippet = segmentText.slice(0, 240);
+    // ─── Build sources from grounding chunks ─────────────────────────────────
+    const seen = new Set<string>();
+    sources = [];
+    for (const chunk of chunks) {
+      const web = chunk.web;
+      const rawUrl = web?.uri || '';
+      if (!rawUrl || seen.has(rawUrl)) continue;
+      seen.add(rawUrl);
+      const domain = resolveSourceDomain(web?.title, rawUrl);
+      sources.push({ title: web?.title || domain, url: rawUrl, domain, snippet: '' });
+    }
+
+    for (const support of supports) {
+      const segmentText = support.segment?.text || '';
+      if (!segmentText) continue;
+      for (const idx of (support.groundingChunkIndices || [])) {
+        if (sources[idx] && !sources[idx].snippet) {
+          sources[idx].snippet = segmentText.slice(0, 240);
+        }
       }
     }
   }
@@ -356,9 +375,9 @@ export async function runBrandVisibilityCheck(
     answerExcerpt: buildAnswerExcerpt(answerText),
     sources,
     competitors,
-    recommendations: buildRecommendations(mentioned, cited, sentiment, competitors, !!matchableDomain(userDomain)),
+    recommendations: buildRecommendations(mentioned, cited, sentiment, competitors, !!matchableDomain(userDomain), engineName),
     siteShared: !!userDomain && !matchableDomain(userDomain),
-    summary: buildSummary(trimmedBrand, mentioned, cited, competitors),
+    summary: buildSummary(trimmedBrand, mentioned, cited, competitors, engineName),
     notMentionedHint,
   };
 }
