@@ -148,6 +148,8 @@ export default function ContentAnalyzer() {
   const [rewriteResult, setRewriteResult] = useState(null);
   // True after "Use this version": the results below are for the old text.
   const [stale, setStale] = useState(false);
+  // Score before an accepted rewrite, shown as "64 → 71" once it's rescored.
+  const [beforeScore, setBeforeScore] = useState(null);
   const [rewriteError, setRewriteError] = useState('');
 
   const usageCount = user?.usage?.count ?? 0;
@@ -182,8 +184,13 @@ export default function ContentAnalyzer() {
 
   async function handleAnalyze(e) {
     e.preventDefault();
+    setBeforeScore(null);
+    await runAnalysis(content);
+  }
+
+  async function runAnalysis(text) {
     if (!title.trim()) return;
-    if (!content.trim() && !url.trim()) return;
+    if (!text.trim() && !url.trim()) return;
     setLoading(true);
     setError('');
     setResult(null);
@@ -194,7 +201,7 @@ export default function ContentAnalyzer() {
       // dashboard can show its trend. A fresh analysis starts a new piece.
       const previousAnalysisId = id && result ? Number(id) : undefined;
       setStale(false);
-      const { data } = await api.analyze({ title, content, url, module: analysisModule, lane: userLane, contentType: contentTypeLabel, previousAnalysisId });
+      const { data } = await api.analyze({ title, content: text, url, module: analysisModule, lane: userLane, contentType: contentTypeLabel, previousAnalysisId });
       setResult(data);
       refreshUser();
       if (data?.analysisId) {
@@ -202,7 +209,7 @@ export default function ContentAnalyzer() {
         // safeguard in addition to localStorage.
         navigate(`/analyze/${data.analysisId}`, {
           replace: true,
-          state: { pendingTitle: title, pendingContent: content, pendingUrl: url },
+          state: { pendingTitle: title, pendingContent: text, pendingUrl: url },
         });
       }
     } catch (err) {
@@ -228,14 +235,19 @@ export default function ContentAnalyzer() {
     }
   }
 
-  function handleAcceptRewrite() {
-    if (rewriteResult?.rewritten) {
-      setContent(rewriteResult.rewritten);
-      setRewriteResult(null);
-      // Keep the old results (and the piece's link to them) so a re-analysis
-      // joins the same series and the dashboard can show before and after.
-      if (result) setStale(true);
-    }
+  // Swap in the rewrite and score it straight away. The old result stays
+  // open until then, so the new analysis joins the same piece's series and
+  // the dashboard shows before and after.
+  async function handleAcceptRewrite() {
+    if (!rewriteResult?.rewritten) return;
+    const text = rewriteResult.rewritten;
+    const prev = result?.overall_score ?? result?.rain_score ?? null;
+    setContent(text);
+    setRewriteResult(null);
+    if (!result) return;
+    if (isAtLimit) { setStale(true); return; }
+    setBeforeScore(typeof prev === 'number' ? prev : null);
+    await runAnalysis(text);
   }
 
   return (
@@ -372,6 +384,7 @@ export default function ContentAnalyzer() {
             <RewritePanel
               rewriteResult={rewriteResult}
               onAccept={handleAcceptRewrite}
+              canRescore={!!result && !isAtLimit}
               onDiscard={() => setRewriteResult(null)}
             />
           )}
@@ -410,6 +423,16 @@ export default function ContentAnalyzer() {
               You swapped in the rewrite, so these scores are for your old text. Choose Re-analyze to score the new version (uses 1 analysis).
             </p>
           )}
+          {beforeScore !== null && typeof (result.overall_score ?? result.rain_score) === 'number' && (() => {
+            const after = result.overall_score ?? result.rain_score;
+            const d = Math.round(after - beforeScore);
+            return (
+              <p className={styles.rescoreNote} role="status">
+                After the rewrite: <strong>{Math.round(beforeScore)} → {Math.round(after)}</strong>
+                {' '}({d > 0 ? `+${d}` : d === 0 ? 'no change' : d})
+              </p>
+            );
+          })()}
           <div className={styles.resultsHeader}>
             <div>
               <h2 className={styles.resultsTitle}>Analysis Results</h2>
@@ -501,7 +524,7 @@ export default function ContentAnalyzer() {
   );
 }
 
-function RewritePanel({ rewriteResult, onAccept, onDiscard }) {
+function RewritePanel({ rewriteResult, onAccept, onDiscard, canRescore }) {
   const changes = rewriteResult.changes || [];
   return (
     <div className={styles.rewritePanel}>
@@ -536,7 +559,7 @@ function RewritePanel({ rewriteResult, onAccept, onDiscard }) {
 
       <div className={styles.rewriteActions}>
         <button className={styles.rewriteAcceptBtn} onClick={onAccept}>
-          Use this version
+          {canRescore ? 'Use this version and rescore' : 'Use this version'}
         </button>
         <button className={styles.rewriteDiscardBtn} onClick={onDiscard}>
           Keep original
