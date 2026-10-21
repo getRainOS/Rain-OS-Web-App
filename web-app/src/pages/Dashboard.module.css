@@ -1556,3 +1556,8 @@ button.emptyLink {
 .linkNoteErr { color: #f08a8a; background: rgba(240,138,138,0.08); border-color: rgba(240,138,138,0.35); }
 
 .brandViewSelect { min-width: 170px; }
+
+/* The lane already chosen: logo blue border, faint blue fill. */
+.laneCardCurrent { border-color: #2B8FE3; background: rgba(43, 143, 227, 0.08); }
+.laneCardCurrent:hover { border-color: #2B8FE3; background: rgba(43, 143, 227, 0.12); }
+.laneCardCurrent .laneCardCta { color: #2B8FE3; opacity: 1; }

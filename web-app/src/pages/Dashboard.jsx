@@ -351,7 +351,7 @@ function DotRow({ values }) {
 }
 
 /* ── Lane Selector ── */
-function LaneSelector({ onSelect }) {
+function LaneSelector({ onSelect, current }) {
   return (
     <div className={styles.laneSelector}>
       <div className={styles.laneSelectorHeader}>
@@ -362,7 +362,8 @@ function LaneSelector({ onSelect }) {
         {LANES.map(lane => (
           <button
             key={lane.id}
-            className={styles.laneCard}
+            className={`${styles.laneCard} ${lane.id === current ? styles.laneCardCurrent : ''}`}
+            aria-current={lane.id === current ? 'true' : undefined}
             onClick={() => onSelect(lane.id)}
           >
             <div className={styles.laneCardIcon}>
@@ -370,7 +371,7 @@ function LaneSelector({ onSelect }) {
             </div>
             <div className={styles.laneCardLabel}>{lane.label}</div>
             <div className={styles.laneCardDesc}>{lane.desc}</div>
-            <div className={styles.laneCardCta}>Select →</div>
+            <div className={styles.laneCardCta}>{lane.id === current ? 'Current lane' : 'Select →'}</div>
           </button>
         ))}
       </div>
@@ -867,7 +868,7 @@ export default function Dashboard() {
       {/* ── Lane Banner / Selector ── */}
       <div ref={laneSectionRef}>
         {showLaneSelector ? (
-          <LaneSelector onSelect={(id) => { setUserLane(id); setShowLaneSelector(false); }} />
+          <LaneSelector current={userLane} onSelect={(id) => { setUserLane(id); setShowLaneSelector(false); }} />
         ) : null}
       </div>
 
