@@ -27,6 +27,12 @@ async function main() {
       const b = r.before.pillars.find(x => x.key === pl.key)?.score;
       console.log(`    ${pl.label.padEnd(24)} ${b} -> ${pl.score}`);
     }
+    const weakest = [...(r.scored.subScores || [])].sort((a, b) => a.score - b.score).slice(0, 5);
+    console.log('  lowest after rewrite:');
+    for (const s of weakest) console.log(`    ${String(Math.round(s.score)).padStart(3)}  ${s.label}${s.insight ? ` — ${s.insight}` : ''}`);
+    const recs = (r.scored.recommendations || []).slice(0, 5);
+    console.log(`  recommendations still open (${recs.length}):`);
+    for (const x of recs) console.log(`    - ${x.text}`);
     console.log(`  owner to-dos (${r.needsYou.length}): ${r.needsYou.map(n => n.item).join('; ') || 'none'}`);
     console.log(`  FAQ items: ${r.faq.length}; measured: ${r.signals.filter(s => s.better === true).map(s => s.label).join(', ')}`);
   }
