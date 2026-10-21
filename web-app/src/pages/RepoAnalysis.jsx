@@ -1,3 +1,4 @@
+import PastAnalyses from '../components/PastAnalyses.jsx';
 import { useState, useEffect } from 'react';
 import Select from '../components/Select.jsx';
 import { useLocation, Link } from 'react-router-dom';
@@ -518,6 +519,7 @@ export default function RepoAnalysis() {
           <FixPromptGenerator result={result} repoUrl={repoUrl} />
         </div>
       )}
+      <PastAnalyses kind="repo" refreshKey={result} />
     </div>
   );
 }

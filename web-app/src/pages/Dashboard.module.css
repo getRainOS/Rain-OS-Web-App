@@ -1561,3 +1561,4 @@ button.emptyLink {
 .laneCardCurrent { border-color: #2B8FE3; background: rgba(43, 143, 227, 0.08); }
 .laneCardCurrent:hover { border-color: #2B8FE3; background: rgba(43, 143, 227, 0.12); }
 .laneCardCurrent .laneCardCta { color: #2B8FE3; opacity: 1; }
+.laneCardStats { margin-top: 10px; font-size: 12px; color: var(--text-dim); }

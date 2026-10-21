@@ -1,3 +1,4 @@
+import PastAnalyses from '../components/PastAnalyses.jsx';
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api/client.js';
@@ -495,6 +496,7 @@ export default function ContentAnalyzer() {
           />
         </div>
       )}
+      <PastAnalyses kind="content" refreshKey={result} />
     </div>
   );
 }

@@ -19,6 +19,8 @@ async function request(method, path, body) {
     'Content-Type': 'application/json',
   };
   if (key) headers['Authorization'] = `Bearer ${key}`;
+  // Every check and analysis is saved with the lane it was run in.
+  try { const lane = localStorage.getItem('rain_os_user_lane'); if (lane) headers['X-Rain-Lane'] = lane; } catch { /* storage blocked */ }
 
   const res = await fetch(BASE + path, {
     method,
@@ -68,6 +70,7 @@ export const api = {
     return request('GET', `/api/citation-checks${qs}`);
   },
   engines: () => request('GET', '/api/engines'),
+  laneStats: () => request('GET', '/api/lane-stats'),
   localListing: (body) => request('POST', '/api/local-listing', body),
   startEngineCheck: (body) => request('POST', '/api/citation-check/engine', body),
   pollEngineCheck: (id) => request('GET', `/api/citation-check/engine/${id}`),

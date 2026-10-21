@@ -1,3 +1,4 @@
+import PastAnalyses from '../components/PastAnalyses.jsx';
 import { US_STATES } from '../lib/usStates.js';
 import ListingCheck from '../components/ListingCheck.jsx';
 import LocalPageCheck, { LocalSteps } from '../components/LocalPageCheck.jsx';
@@ -551,6 +552,7 @@ export default function UrlScanner() {
           />
         </div>
       )}
+      <PastAnalyses kind="url" refreshKey={result} />
     </div>
   );
 }

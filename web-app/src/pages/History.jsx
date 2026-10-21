@@ -1,3 +1,4 @@
+import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { Download } from 'lucide-react';
 import { downloadCsv, EXPORTS } from '../lib/exportCsv.js';
@@ -34,17 +35,19 @@ const CITATION_STATUS_FILTERS = [
 ];
 
 export default function History() {
-  const [tab, setTab] = useState('analyses');
+  // Deep links from each tool's "Past analyses": ?type=url&open=<id>
+  const [searchParams] = useSearchParams();
+  const [tab, setTab] = useState(searchParams.get('tab') || 'analyses');
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [expanded, setExpanded] = useState(null);
+  const [expanded, setExpanded] = useState(() => (searchParams.get('open') ? Number(searchParams.get('open')) : null));
 
   const [confirmDeleteAnalysisId, setConfirmDeleteAnalysisId] = useState(null);
   const [deletingAnalysisId, setDeletingAnalysisId] = useState(null);
   const [deleteAnalysisError, setDeleteAnalysisError] = useState('');
   const [analysesSearch, setAnalysesSearch] = useState('');
-  const [analysesTypeFilter, setAnalysesTypeFilter] = useState('all');
+  const [analysesTypeFilter, setAnalysesTypeFilter] = useState(() => (['content', 'url', 'repo'].includes(searchParams.get('type')) ? searchParams.get('type') : 'all'));
 
   const [citations, setCitations] = useState([]);
   const [citationsLoading, setCitationsLoading] = useState(false);
