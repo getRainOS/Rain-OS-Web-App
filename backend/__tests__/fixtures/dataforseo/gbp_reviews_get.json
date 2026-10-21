@@ -1,0 +1,5 @@
+{ "status_code": 20000, "tasks": [{ "id": "rev-1", "status_code": 20000, "result": [{ "items": [
+  { "type": "google_review", "review_text": "Best wedding cake we found in Austin!", "rating": { "value": 5 } },
+  { "type": "google_review", "review_text": "Lovely staff, great cake.", "rating": { "value": 5 } },
+  { "type": "google_review", "review_text": "Delivered to our venue on time.", "rating": { "value": 4 } }
+] }] }] }

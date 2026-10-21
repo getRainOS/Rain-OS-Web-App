@@ -1,0 +1,5 @@
+{ "status_code": 20000, "tasks": [{ "status_code": 20000, "cost": 0.0054, "result": [{ "keyword": "Sweet Co Austin", "items": [{
+  "type": "google_business_info", "title": "Sweet Co Bakery", "category": "Wedding bakery", "is_claimed": false,
+  "address": "12 Main St, Austin, TX 78701", "phone": "+1 512-555-0199", "url": "https://sweetco.com/", "domain": "sweetco.com",
+  "rating": { "rating_type": "Max5", "value": 4.7, "votes_count": 12 }, "total_photos": 6, "cid": "123"
+}] }] }] }

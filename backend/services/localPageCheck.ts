@@ -20,6 +20,8 @@ export interface LocalPageCheck {
   passed: number;
   total: number;
   items: LocalCheckItem[];
+  // What the page says, for comparing with the Google Business Profile.
+  nap: { name: string; phone: string; street: string; city: string; state: string | null };
 }
 
 const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -176,5 +178,13 @@ export function checkLocalPage(html: string, targetCity: string, targetState?: s
       'Use exactly the same business name on the page and in the schema.');
   }
 
-  return { city: cityName && stateCode ? `${cityName}, ${stateCode}` : city, passed: items.filter(i => i.pass).length, total: items.length, items };
+  return {
+    nap: {
+      name: business?.name ? String(business.name) : '',
+      phone: schemaPhone || pagePhones[0] || '',
+      street,
+      city: cityName,
+      state: stateCode,
+    },
+    city: cityName && stateCode ? `${cityName}, ${stateCode}` : city, passed: items.filter(i => i.pass).length, total: items.length, items };
 }

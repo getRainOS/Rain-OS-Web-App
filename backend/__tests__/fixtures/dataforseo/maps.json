@@ -1,0 +1,6 @@
+{ "status_code": 20000, "tasks": [{ "status_code": 20000, "result": [{ "items": [
+  { "type": "maps_search", "rank_group": 1, "title": "Crumb Lab", "domain": "crumblab.com", "rating": { "value": 4.9, "votes_count": 310 } },
+  { "type": "maps_search", "rank_group": 2, "title": "Hey Cupcake", "domain": "heycupcake.com", "rating": { "value": 4.6, "votes_count": 120 } },
+  { "type": "maps_search", "rank_group": 3, "title": "Tiers of Joy", "rating": { "value": 4.8, "votes_count": 95 } },
+  { "type": "maps_search", "rank_group": 4, "title": "Sweet Co Bakery", "domain": "www.sweetco.com", "rating": { "value": 4.7, "votes_count": 12 } }
+] }] }] }

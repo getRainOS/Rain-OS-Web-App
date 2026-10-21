@@ -15,6 +15,7 @@ import { engineLabel } from '../services/engines';
 import { availableEngines } from '../services/engines';
 import { normaliseLocation } from '../services/engines/location';
 import { isPaidPlan as isPaid } from '../services/planLimits';
+import { listingsAvailable } from './local-listing';
 import { findCitedSourceIndex, extractDomain } from '../services/citationCheckService';
 import { createDailyLimiter } from '../services/dailyLimiter';
 import type { ApiError } from '../types';
@@ -53,6 +54,7 @@ export async function enginesHandler(req: express.Request, res: express.Response
   return res.status(200).json({
     success: true,
     engines: availableEngines().map(e => ({ id: e.id, label: e.label, location: e.location, locked: e.id !== 'gemini' && !paid })),
+    features: { localListings: listingsAvailable() ? (paid ? 'on' : 'locked') : 'off' },
   });
 }
 
