@@ -1,7 +1,10 @@
+import { isDemo } from '../lib/demo.js';
+
 const BASE = 'https://api.getrainos.com';
 const KEY_STORAGE = 'rain_os_api_key';
 
 export function getApiKey() {
+  if (isDemo()) return 'demo';
   return localStorage.getItem(KEY_STORAGE) || '';
 }
 
@@ -14,6 +17,8 @@ export function clearApiKey() {
 }
 
 async function request(method, path, body) {
+  // Demo: answered in the browser from sample data, never sent to the API.
+  if (isDemo()) return (await import('../lib/demoData.js')).demoRequest(method, path, body);
   const key = getApiKey();
   const headers = {
     'Content-Type': 'application/json',
