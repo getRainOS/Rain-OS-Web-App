@@ -1,7 +1,7 @@
 import express from 'express';
-import { findUserByApiKey, incrementUserUsage } from '../services/dbService';
-import { rewriteDocumentForAI } from '../services/geminiService';
-import { rewriteSignals } from '../services/rewriteSignals';
+import { findUserByApiKey, incrementUserUsage, getAnalysisById } from '../services/dbService';
+import { pillarRewrite, type Baseline } from '../services/pillarRewrite';
+import { rememberScoredRewrite } from '../services/scoredRewrites';
 import { classifyGeminiError } from '../services/geminiErrors';
 import type { ApiError } from '../types';
 
@@ -31,23 +31,41 @@ export default async function rewriteHandler(req: express.Request, res: express.
   }
 
   const { content, module: mod } = req.body as { content?: string; module?: string };
-  // The weak spots the latest analysis found, so the rewrite targets them.
-  const focus = Array.isArray(req.body?.focus)
-    ? req.body.focus.filter((f: unknown): f is string => typeof f === 'string').map((f: string) => f.trim().slice(0, 300)).filter(Boolean).slice(0, 8)
-    : [];
 
   if (!content || content.trim().length < 20) {
     return res.status(400).json({ error: 'bad_request', message: 'content is required (minimum 20 characters)' } as ApiError);
   }
 
-  const module: 'general' | 'product_sellers' | 'developers' =
-    mod === 'product_sellers' || mod === 'developers' ? mod : 'general';
+  const module = ['product_sellers', 'developers', 'local_business', 'vibe_coders'].includes(String(mod)) ? String(mod) : 'general';
+  const industry = typeof req.body?.industry === 'string' ? req.body.industry.slice(0, 80) : undefined;
+  const contentType = typeof req.body?.contentType === 'string' ? req.body.contentType.slice(0, 60) : undefined;
+
+  // The piece's saved score is the "before"; without one it is scored now.
+  let baseline: Baseline | null = null;
+  const analysisId = Number(req.body?.analysisId);
+  if (Number.isInteger(analysisId) && analysisId > 0) {
+    const saved = await getAnalysisById(user.id, analysisId).catch(() => null);
+    if (saved && typeof saved.overall_score === 'number') {
+      baseline = {
+        overallScore: saved.overall_score,
+        pillarScores: {
+          aiReadability: saved.ai_readability ?? 0, digitalAuthority: saved.digital_authority ?? 0,
+          conversionReadiness: saved.conversion_readiness ?? 0, productDiscoverability: saved.product_discoverability ?? 0,
+          localPresence: saved.local_presence ?? 0, ragReadiness: saved.rag_readiness ?? 0,
+        },
+        subScores: saved.subScores || [],
+        recommendations: saved.recommendations || [],
+      };
+    }
+  }
 
   try {
-    const result = await rewriteDocumentForAI(content, module, focus);
+    const result = await pillarRewrite(content, module, { industry, contentType, baseline });
+    rememberScoredRewrite(user.id, result.rewritten, module, result.scored);
     const updatedUser = await incrementUserUsage(user.id);
     if (updatedUser) res.setHeader('X-Usage-Info', JSON.stringify(updatedUser.usage));
-    return res.status(200).json({ success: true, ...result, signals: rewriteSignals(content, result.rewritten) });
+    const { scored, ...rest } = result;
+    return res.status(200).json({ success: true, ...rest });
   } catch (error) {
     const { status, body } = classifyGeminiError(error, 'rewrite');
     return res.status(status).json(body as ApiError);

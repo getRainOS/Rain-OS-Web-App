@@ -6,6 +6,7 @@ import { analyzeContent, API_VERSION, generateTitles, generateDescription, summa
 import { createHash } from 'crypto';
 import { findUserByApiKey, incrementUsageAndSaveAnalysis, findAnalysisByContentHash } from './dbService';
 import { classifyGeminiError } from './geminiErrors';
+import { takeScoredRewrite } from './scoredRewrites';
 import type { ApiError, CapabilitiesResponse, AnalysisResponse } from '../types';
 const PHASE2_SUB_SCORES = [
 'sectionConceptIsolation',
@@ -70,7 +71,9 @@ const earlier = await findAnalysisByContentHash(user.id, contentHash, API_VERSIO
 if (earlier) {
   return res.status(200).json({ success: true, data: earlier.result, ...earlier.result, analysisId: earlier.id, reused: true });
 }
-const result = await analyzeContent(content, industry || 'General / Other', analysisModule, safeContentType);
+// An accepted rewrite was already scored when it was made: save that score.
+const result = takeScoredRewrite(user.id, content, analysisModule)
+  ?? await analyzeContent(content, industry || 'General / Other', analysisModule, safeContentType);
 
 // ─── Batched Transaction: Increment Usage + Save Analysis ─────────────────────
 // Consolidate N+1 queries into a single transaction for better performance.

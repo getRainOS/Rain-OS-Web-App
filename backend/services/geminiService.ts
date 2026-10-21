@@ -222,19 +222,11 @@ function contentTypeRubric(contentType?: string): string | null {
   return `CONTENT TYPE: ${contentType} — weigh structure, tone, and formatting expectations for this content type when judging AI Readability and Conversion Readiness.`;
 }
 // ─── Main export ──────────────────────────────────────────────────────────────
-export async function analyzeContent(
-content: string,
-industry: string = 'General / Other',
-module: 'general' | 'product_sellers' | 'developers' | 'local_business' | 'vibe_coders' = 'general',
-contentType?: string
-): Promise<AnalysisResponse> {
-if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
-// Step 1: Algorithmic pre-analysis — hard metrics, no API cost
-const metrics = computeReadabilityMetrics(content);
-const groundingBlock = formatMetricsAsGroundingBlock(metrics);
-// Step 2: Build the prompt with grounding anchors injected
-// Build module-specific weight instruction
-const moduleWeightInstructions = module === 'product_sellers'
+// The lane-specific part of the scoring rubric: pillar weights and what each
+// pillar is judged on. Shared by the scorer and the rewrite, so a rewrite is
+// written to exactly the standard it is scored against.
+export function moduleRubric(module: string): string {
+  return module === 'product_sellers'
   ? `MODULE: product_sellers
 MODULE_WEIGHTS: AI Readability 20%, Digital Authority 15%, Conversion Readiness 15%, Product Discoverability 50%, Local Presence Signals 0%, RAG Readiness 10%
 For this module, Product Discoverability is the PRIMARY scoring focus. Score it with maximum precision — pricing transparency, variant coverage, availability, merchant identity, review signals, comparative context. Do not score Local Presence Signals — set to 0.`
@@ -272,6 +264,20 @@ Do not score Product Discoverability — set to 0.`
 MODULE_WEIGHTS: AI Readability 36%, Digital Authority 27%, Conversion Readiness 27%, Product Discoverability 0%, Local Presence Signals 0%, RAG Readiness 10%
 For this module, do not weight Product Discoverability or Local Presence Signals in the overall score. Score both conservatively (40-60 range) but neither affects the overall Rain Score.
 RAG Readiness is scored at 10% weight and always included. It measures RAG-system retrieval quality.`;
+}
+
+export async function analyzeContent(
+content: string,
+industry: string = 'General / Other',
+module: 'general' | 'product_sellers' | 'developers' | 'local_business' | 'vibe_coders' = 'general',
+contentType?: string
+): Promise<AnalysisResponse> {
+if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
+// Step 1: Algorithmic pre-analysis — hard metrics, no API cost
+const metrics = computeReadabilityMetrics(content);
+const groundingBlock = formatMetricsAsGroundingBlock(metrics);
+// Step 2: Build the prompt with grounding anchors injected
+const moduleWeightInstructions = moduleRubric(module);
 
 const prompt = [
 groundingBlock,
@@ -508,42 +514,53 @@ return parseQuickToolJson(raw, 'Rewrite', { rewritten: sentence });
 // ─── Document rewrite for AI readability ──────────────────────────────────────
 async function rewriteChunkForAI(
   content: string,
-  module: 'general' | 'product_sellers' | 'developers' = 'general',
+  module: string = 'general',
   part?: { index: number; total: number },
   extraInstruction = '',
   focus: string[] = []
-): Promise<{ rewritten: string; changes: string[] }> {
+): Promise<{ rewritten: string; changes: string[]; needsYou: NeedsYou[]; faq: Array<{ q: string; a: string }> }> {
   if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
 
-  const moduleContext = module === 'developers'
-    ? `This is technical documentation. Priorities: clear getting-started section, unambiguous numbered steps (copy-paste ready), code examples clearly framed with context, error scenarios covered, each function/API defined answer-first (what it does before how it works).`
-    : module === 'product_sellers'
-    ? `This is product content. Priorities: lead with the primary benefit, make pricing/variants/availability explicit, add comparison context, ensure strong purchase CTAs, use specific claims over vague descriptions.`
-    : `This is content marketing or editorial content. Priorities: answer-first paragraphs, scannable headings, concise active sentences, strong CTA placement, citation-ready statements (clear subject-predicate-fact structure).`;
+  const targets = [
+    'Average sentence length 15-20 words; under 5% of sentences over 30 words',
+    'Passive voice under 10% of sentences',
+    'No ambiguous pronouns: name the subject instead of "it", "this", "they" at the start of a sentence',
+    'Vague words (various, some, often, things, aspects) replaced with specific terms',
+    'At least half of all sentences lead with the answer or the key fact',
+    'A descriptive heading every 100-200 words; each section covers exactly one concept',
+    'A 40-60 word direct-answer summary at the very top that answers the main question on its own',
+  ].map(t => `- ${t}`).join('\n');
 
-  const prompt = `You are an AEO (Answer Engine Optimization) expert rewriting content so AI systems (ChatGPT, Perplexity, Google AI Overviews, Claude) can better extract, quote, and cite it.
+  const prompt = `You rewrite content so it scores as close to 100 as possible on rain OS's AI-visibility rubric. The rubric below is the exact standard the rewrite will be scored against afterwards. Treat every pillar and sub-score in it as a requirement.
 
-Context: ${moduleContext}
+=== SCORING RUBRIC (the standard) ===
+${SYSTEM_INSTRUCTION}
 
-REWRITING RULES:
-1. Answer-first: Lead every paragraph and section with the key fact or answer, then explain
-2. Active voice: Convert passive constructions to active wherever natural
-3. Descriptive headings: Use H2/H3 headings that could stand alone as question-answers
-4. Short sentences: Keep sentences under 25 words where possible; split complex ones
-5. Atomic sections: Each section covers exactly ONE concept (critical for AI chunking)
-6. Remove vagueness: Replace words like "some", "often", "various" with specific terms
-7. Preserve ALL facts, data, figures, and meaning — do not add new information or hallucinate
-8. Instructions: Number all steps explicitly; make each step independently executable
-9. Keep the full length: this is a rewrite, not a summary. Every point, example, story, quote and detail in the original must still be there. Splitting sentences and adding headings usually makes the text slightly longer, not shorter. Aim for roughly the same word count as the original (within about 10%).
-${focus.length ? `\nTHIS CONTENT'S SCORE FOUND THESE WEAKNESSES. Fix each one specifically, within the rules above:\n${focus.map(f => `- ${f}`).join('\n')}\n` : ''}${extraInstruction ? `\nIMPORTANT: ${extraInstruction}\n` : ''}
-${part && part.total > 1 ? `This is part ${part.index} of ${part.total} of a longer document. Rewrite only this part. Do not add an introduction, conclusion or summary that is not already here, and keep heading levels consistent.\n\n` : ''}CONTENT TO REWRITE:
+${moduleRubric(module)}
+=== END RUBRIC ===
+
+MEASURED TARGETS (these are measured exactly in the rewritten text):
+${targets}
+
+RULES:
+1. Meet every pillar of the rubric that can be met with the facts already in the content.
+2. Preserve ALL facts, data, figures, examples, quotes and meaning. Never invent facts, numbers, reviews, credentials, prices, names or links.
+3. Keep the full length: this is a rewrite, not a summary. Splitting sentences and adding headings usually makes it slightly longer.
+4. Use Markdown: # and ## headings, - lists, numbered steps.
+5. Where the rubric needs something only the owner can supply (real reviews, credentials, prices, original data, author bio, address, booking link, schema code on the page), do not make it up. List it in "needsYou" instead.
+
+${focus.length ? `THIS CONTENT'S LATEST SCORE FOUND THESE WEAKNESSES. Fix each one specifically:\n${focus.map(f => `- ${f}`).join('\n')}\n\n` : ''}${extraInstruction ? `IMPORTANT: ${extraInstruction}\n\n` : ''}${part && part.total > 1 ? `This is part ${part.index} of ${part.total} of a longer document. Rewrite only this part. ${part.index === 1 ? 'Include the direct-answer summary at the top.' : 'Do not add a new introduction or summary.'} Keep heading levels consistent.\n\n` : ''}CONTENT TO REWRITE:
 ${content}
 
 Respond with valid JSON only (no markdown fences):
 {
-  "rewritten": "the full rewritten content preserving markdown formatting, using \\n for line breaks",
-  "changes": ["specific change 1", "specific change 2", "..."] (4-8 concrete changes made)
-}`;
+  "rewritten": "the full rewritten content in Markdown, using \\n for line breaks",
+  "changes": ["specific change 1", "..."] (4-8 concrete changes, each naming the pillar it improves),
+  "needsYou": [{ "item": "what is missing", "why": "which pillar or sub-score it holds back and why", "where": "where in the piece it belongs" }] (empty if nothing),
+  "faq": [{ "q": "a question a customer would ask AI", "a": "a 1-3 sentence answer using only facts from the content" }] (3-5 items${part && part.total > 1 && part.index !== part.total ? '; return [] for this part' : ''})
+}
+
+`;
 
   const model = getModel();
   const result = await generateContentWithRetry(model, {
@@ -568,9 +585,16 @@ Respond with valid JSON only (no markdown fences):
   try {
     const clean = raw.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(clean);
+    const str = (v: unknown) => (typeof v === 'string' ? v.trim() : '');
     return {
       rewritten: typeof parsed.rewritten === 'string' ? parsed.rewritten : '',
       changes: Array.isArray(parsed.changes) ? parsed.changes : [],
+      needsYou: (Array.isArray(parsed.needsYou) ? parsed.needsYou : [])
+        .map((n: any) => ({ item: str(n?.item), why: str(n?.why), where: str(n?.where) }))
+        .filter((n: NeedsYou) => n.item),
+      faq: (Array.isArray(parsed.faq) ? parsed.faq : [])
+        .map((f: any) => ({ q: str(f?.q), a: str(f?.a) }))
+        .filter((f: { q: string; a: string }) => f.q && f.a),
     };
   } catch (e) {
     console.error('Rewrite parse error:', raw.slice(0, 500));
@@ -584,6 +608,9 @@ Respond with valid JSON only (no markdown fences):
 const REWRITE_CHUNK_CHARS = 7000;
 export const REWRITE_MAX_CHARS = 24000;
 export const MIN_REWRITE_RATIO = 0.8;
+
+// Something the rubric needs that only the owner can supply.
+export interface NeedsYou { item: string; why: string; where: string }
 export const wordCount = (t: string) => (t.match(/\S+/g) || []).length;
 
 export function splitForRewrite(content: string, chunkChars = REWRITE_CHUNK_CHARS): string[] {
@@ -607,9 +634,9 @@ export function splitForRewrite(content: string, chunkChars = REWRITE_CHUNK_CHAR
 
 export async function rewriteDocumentForAI(
   content: string,
-  module: 'general' | 'product_sellers' | 'developers' = 'general',
+  module: string = 'general',
   focus: string[] = []
-): Promise<{ rewritten: string; changes: string[]; truncated: boolean }> {
+): Promise<{ rewritten: string; changes: string[]; truncated: boolean; needsYou: NeedsYou[]; faq: Array<{ q: string; a: string }> }> {
   if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
   const truncated = content.length > REWRITE_MAX_CHARS;
   const chunks = splitForRewrite(content.slice(0, REWRITE_MAX_CHARS));
@@ -629,5 +656,13 @@ export async function rewriteDocumentForAI(
     })
   );
   const changes = Array.from(new Set(parts.flatMap(p => p.changes))).slice(0, 10);
-  return { rewritten: parts.map(p => p.rewritten.trim()).join('\n\n'), changes, truncated };
+  const seen = new Set<string>();
+  const needsYou = parts.flatMap(p => p.needsYou || []).filter(n => {
+    const k = n.item.toLowerCase();
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  }).slice(0, 10);
+  const faq = parts.flatMap(p => p.faq || []).slice(0, 6);
+  return { rewritten: parts.map(p => p.rewritten.trim()).join('\n\n'), changes, truncated, needsYou, faq };
 }
