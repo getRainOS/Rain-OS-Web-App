@@ -2,6 +2,8 @@
 // visitors can use the real app without an account. Nothing is sent to the
 // server. Bright Smile Dental (Austin, TX) is fictional.
 
+import { PRICE_IDS } from './plans.js';
+
 const SITE = 'https://brightsmiledental.com';
 const DOMAIN = 'brightsmiledental.com';
 const BRAND = 'Bright Smile Dental';
@@ -9,7 +11,7 @@ const daysAgo = n => new Date(Date.now() - n * 864e5).toISOString();
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
 const user = {
-  id: 'demo', email: 'demo@getrainos.com', name: 'Demo', subscriptionStatus: 'active', stripePriceId: null,
+  id: 'demo', email: 'demo@getrainos.com', name: 'Demo', subscriptionStatus: 'active', stripePriceId: PRICE_IDS.BUSINESS,
   usage: { count: 41, limit: 500 }, citationAlerts: true, locationState: 'TX', createdAt: daysAgo(60),
   apiKey: 'demo', isAdmin: false, isDemo: true,
 };
@@ -171,6 +173,20 @@ export async function demoRequest(method, path, body) {
       return ok({ success: true, truncated: false,
         rewritten: `# ${BRAND}: Invisalign in Austin\n\nInvisalign at ${BRAND} costs $3,500–$5,500 and usually takes 12–18 months. We treat adults and teens across Austin, including Mueller, Hyde Park and South Congress.\n\n${text.slice(0, 1200)}`,
         changes: ['Answer-first opening with price and timeline', 'Named Austin neighbourhoods served', 'Split long paragraphs into short, single-idea sections'],
+        improved: true, passes: 2,
+        before: { overall: 63, pillars: [{ key: 'aiReadability', label: 'AI Readability', score: 61 }, { key: 'digitalAuthority', label: 'Digital Authority', score: 60 }, { key: 'conversionReadiness', label: 'Conversion Readiness', score: 64 }, { key: 'localPresence', label: 'Local Presence', score: 66 }, { key: 'ragReadiness', label: 'RAG Readiness', score: 58 }] },
+        after: { overall: 89, pillars: [{ key: 'aiReadability', label: 'AI Readability', score: 95 }, { key: 'digitalAuthority', label: 'Digital Authority', score: 78 }, { key: 'conversionReadiness', label: 'Conversion Readiness', score: 90 }, { key: 'localPresence', label: 'Local Presence', score: 88 }, { key: 'ragReadiness', label: 'RAG Readiness', score: 92 }] },
+        needsYou: [
+          { item: 'Dentist credentials and years in practice', why: 'Digital Authority: AI trusts named, qualified experts', where: 'Under the main heading' },
+          { item: 'Two or three real patient reviews that mention Austin', why: 'Local Presence and Authority: social proof AI can quote', where: 'After the pricing section' },
+          { item: 'Online booking link', why: 'Conversion Readiness: a direct next step', where: 'Top of the page and after each service' },
+        ],
+        faq: [
+          { q: 'How much does Invisalign cost in Austin?', a: 'At Bright Smile Dental, Invisalign costs $3,500–$5,500, depending on the case.' },
+          { q: 'How long does Invisalign take?', a: 'Most treatments take 12–18 months.' },
+          { q: 'Do you treat teens?', a: 'Yes, Bright Smile Dental treats adults and teens across Austin.' },
+        ],
+        schema: JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: [{ '@type': 'Question', name: 'How much does Invisalign cost in Austin?', acceptedAnswer: { '@type': 'Answer', text: 'At Bright Smile Dental, Invisalign costs $3,500–$5,500, depending on the case.' } }] }, null, 2),
         signals: [
           { label: 'Average sentence length', before: '26.1 words', after: '16.4 words', better: true },
           { label: 'Sentences over 30 words', before: '22%', after: '4%', better: true },

@@ -225,7 +225,10 @@ export default function ContentAnalyzer() {
     setRewriteError('');
     setRewriteResult(null);
     try {
-      const { data } = await api.rewrite({ content, module: analysisModule, focus: weakSpots(result) });
+      const contentTypeLabel = CONTENT_TYPES.find(t => t.id === contentType)?.label || undefined;
+      // The server rewrites to the scoring rubric, scores the result, and uses
+      // this piece's saved score as the "before".
+      const { data } = await api.rewrite({ content, module: analysisModule, contentType: contentTypeLabel, analysisId: id && result ? Number(id) : undefined });
       setRewriteResult(data);
       refreshUser();
     } catch (err) {
@@ -357,7 +360,7 @@ export default function ContentAnalyzer() {
               disabled={rewriteLoading || loading || isAtLimit || !content.trim()}
               onClick={handleRewrite}
             >
-              {rewriteLoading ? 'Rewriting…' : 'Rewrite for AI'}
+              {rewriteLoading ? 'Rewriting to the rubric and scoring it… (up to a minute)' : 'Rewrite for AI'}
             </button>
             {result && id && (
               <button
@@ -524,25 +527,18 @@ export default function ContentAnalyzer() {
   );
 }
 
-// What the latest score found weakest: the three lowest sub-scores and the
-// top recommendations. The rewrite is told to fix exactly these.
-function weakSpots(result) {
-  if (!result) return [];
-  const subs = (result.subScores || [])
-    .filter(s => typeof s?.score === 'number' && s.label)
-    .sort((a, b) => a.score - b.score)
-    .slice(0, 3)
-    .map(s => `${s.label} scored ${Math.round(s.score)}/100`);
-  const recs = (result.recommendations || [])
-    .map(r => (typeof r === 'object' && r !== null ? (r.text || r.recommendation || r.description || r.issue || '') : String(r)))
-    .filter(Boolean)
-    .slice(0, 4);
-  return [...subs, ...recs];
-}
-
 function RewritePanel({ rewriteResult, onAccept, onDiscard, canRescore }) {
   const changes = rewriteResult.changes || [];
   const signals = rewriteResult.signals || [];
+  const needsYou = rewriteResult.needsYou || [];
+  const faq = rewriteResult.faq || [];
+  const before = rewriteResult.before;
+  const after = rewriteResult.after;
+  const [copied, setCopied] = useState(false);
+  function copySchema() {
+    const tag = `<script type="application/ld+json">\n${rewriteResult.schema}\n</script>`;
+    navigator.clipboard?.writeText(tag).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }).catch(() => {});
+  }
   return (
     <div className={styles.rewritePanel}>
       <div className={styles.rewritePanelHeader}>
@@ -558,9 +554,61 @@ function RewritePanel({ rewriteResult, onAccept, onDiscard, canRescore }) {
         </p>
       )}
 
+      {before && after && (
+        <div className={styles.rewriteScore}>
+          <div className={styles.rewriteScoreHead}>
+            <span>Scored with the same rubric as your analysis</span>
+            <strong>{before.overall} → {after.overall}</strong>
+            <span className={after.overall > before.overall ? styles.signalBetter : styles.signalWorse}>
+              {after.overall > before.overall ? `+${after.overall - before.overall}` : after.overall === before.overall ? 'no change' : after.overall - before.overall}
+            </span>
+          </div>
+          <ul className={styles.rewritePillars}>
+            {after.pillars.map(p => {
+              const b = before.pillars.find(x => x.key === p.key)?.score ?? 0;
+              return (
+                <li key={p.key}>
+                  <span>{p.label}</span>
+                  <span className={styles.rewritePillarBar}><span style={{ width: `${p.score}%` }} /></span>
+                  <span className={styles.rewritePillarNum}>{b} → {p.score}</span>
+                </li>
+              );
+            })}
+          </ul>
+          {!rewriteResult.improved && (
+            <p className={styles.rewriteScoreNote}>The rewrite didn't raise the score. What's holding it back is listed under "Only you can add these".</p>
+          )}
+        </div>
+      )}
+
       <div className={styles.rewriteContent}>
         <pre className={styles.rewriteText}>{rewriteResult.rewritten}</pre>
       </div>
+
+      {needsYou.length > 0 && (
+        <div className={styles.needsYou}>
+          <div className={styles.rewriteSignalsTitle}>Only you can add these{after && after.overall < 100 ? ` to close the remaining ${100 - after.overall} points` : ''}</div>
+          <p className={styles.rewriteSignalsNote} style={{ marginTop: 0 }}>The rewrite doesn't invent facts. Add these yourself to close the gap.</p>
+          <ol>
+            {needsYou.map((n, i) => (
+              <li key={i}><strong>{n.item}</strong>{n.where ? ` — ${n.where}` : ''}{n.why ? <span className={styles.needsYouWhy}>{n.why}</span> : null}</li>
+            ))}
+          </ol>
+        </div>
+      )}
+
+      {faq.length > 0 && (
+        <div className={styles.needsYou}>
+          <div className={styles.rewriteSignalsTitle}>FAQ for this page</div>
+          <p className={styles.rewriteSignalsNote} style={{ marginTop: 0 }}>Questions customers ask AI, answered from your content. Add them to the page, and paste the schema so AI and search engines read them as Q&A.</p>
+          <dl className={styles.faqList}>
+            {faq.map((f, i) => (<div key={i}><dt>{f.q}</dt><dd>{f.a}</dd></div>))}
+          </dl>
+          {rewriteResult.schema && (
+            <button type="button" className={styles.rewriteDiscardBtn} onClick={copySchema}>{copied ? 'Copied' : 'Copy FAQ schema code'}</button>
+          )}
+        </div>
+      )}
 
       {signals.length > 0 && (
         <div className={styles.rewriteSignals}>
