@@ -16,3 +16,4 @@
 .stepList { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.55; color: var(--text-dim); }
 .stepList li + li { margin-top: 6px; }
 .stepList strong { color: var(--text); font-weight: 500; }
+.input { padding: 9px 12px; background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 14px; }
