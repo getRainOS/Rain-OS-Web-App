@@ -1562,3 +1562,6 @@ button.emptyLink {
 .laneCardCurrent:hover { border-color: #2B8FE3; background: rgba(43, 143, 227, 0.12); }
 .laneCardCurrent .laneCardCta { color: #2B8FE3; opacity: 1; }
 .laneCardStats { margin-top: 10px; font-size: 12px; color: var(--text-dim); }
+.laneWeightsHead { margin-top: 36px; text-align: left; }
+.laneWeightsHead h3 { margin: 0; font-size: 15px; font-weight: 600; color: var(--text); }
+.laneWeightsHead p { margin: 4px 0 0; font-size: 13px; color: var(--text-dim); }

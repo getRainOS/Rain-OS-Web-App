@@ -29,6 +29,17 @@ const CONTENT_TYPES = [
 // showing all six to every lane is noise (a developer isn't writing a
 // product description; a product seller isn't writing documentation). First
 // entry in each list is that lane's default.
+// Plain-English version of the scorer's content-type rubric
+// (backend CONTENT_TYPE_RUBRICS), shown behind the "?" next to Content type.
+const TYPE_EXPECTATIONS = {
+  article: 'a clear headline, descriptive subheadings, an answer-first opening and attributed claims.',
+  blog_post: 'a hook in the first two sentences, short paragraphs, concrete examples and a clear takeaway.',
+  product_description: 'price, availability and specs as plain facts, who it is for, and how it differs from alternatives. Vague adjectives cost points.',
+  landing_page: 'one clear value proposition, a direct call to action, and specific proof (numbers, testimonials) over vague claims.',
+  documentation: 'clear navigation, numbered steps, runnable code examples, and error cases covered.',
+  social_post: 'a strong first line, one idea, and a takeaway that stands on its own.',
+};
+
 const LANE_CONTENT_TYPES = {
   general: ['article', 'blog_post', 'landing_page', 'social_post'],
   product_sellers: ['product_description', 'landing_page', 'social_post'],
@@ -93,6 +104,7 @@ export default function ContentAnalyzer() {
   const [title, setTitle] = useState(prefill.pendingTitle || (savedDraftMatchesAnalysis ? savedDraft.title : '') || '');
   const [content, setContent] = useState(prefill.pendingContent || (!fromIdea && savedDraftMatchesAnalysis ? savedDraft.content : '') || '');
   const [url, setUrl] = useState(prefill.pendingUrl || (!fromIdea && savedDraftMatchesAnalysis ? savedDraft.url : '') || '');
+  const [typeHelpOpen, setTypeHelpOpen] = useState(false);
   const [contentType, setContentType] = useState(
     (fromIdea && contentTypesForLane(userLane).some(t => t.id === prefill.contentType) ? prefill.contentType : '')
       || (savedDraftMatchesAnalysis ? savedDraft.contentType : '') || defaultContentTypeForLane(userLane)
@@ -297,7 +309,20 @@ export default function ContentAnalyzer() {
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label}>Content type</label>
+            <label className={styles.label}>
+              Content type
+              <button type="button" className={styles.typeHelpBtn} aria-label="How does content type change the score?" aria-expanded={typeHelpOpen}
+                onClick={() => setTypeHelpOpen(o => !o)}>?</button>
+            </label>
+            {typeHelpOpen && (
+              <div className={styles.typeHelp} role="note">
+                <p><strong>Your lane</strong> sets how much each pillar counts toward the score (see the lane chooser on the dashboard).</p>
+                <p><strong>The content type</strong> doesn't change those weights. It changes what's expected, and the AI rewrite is held to the same expectations:</p>
+                <ul>
+                  {contentTypesForLane(userLane).map(t => <li key={t.id}><strong>{t.label}:</strong> {TYPE_EXPECTATIONS[t.id]}</li>)}
+                </ul>
+              </div>
+            )}
             <div className={styles.typePills}>
               {contentTypesForLane(userLane).map(t => (
                 <button
