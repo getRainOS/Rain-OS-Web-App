@@ -689,3 +689,39 @@ export async function rewriteDocumentForAI(
   const faq = parts.flatMap(p => p.faq || []).slice(0, 6);
   return { rewritten: parts.map(p => p.rewritten.trim()).join('\n\n'), changes, truncated, needsYou, faq };
 }
+
+// Drafts the judgement fields of a product fact sheet (best for, specs...)
+// from the product's own description only. Fields the description doesn't
+// support come back empty — no invented specs or competitors. The owner
+// confirms each draft before it is treated as a verified fact.
+export async function draftProductFacts(input: { name: string; brand: string; sourceText: string }): Promise<Record<string, string>> {
+  if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
+  const prompt = `From this product's own description, draft short fact-sheet fields for AI shopping answers.
+
+Product: ${input.name}${input.brand ? ` by ${input.brand}` : ''}
+DESCRIPTION:
+${input.sourceText.slice(0, 4000)}
+
+Rules:
+- Use only what the description states or directly implies. If it doesn't say, return "" for that field.
+- Never invent measurements, materials, competitors or claims.
+- "comparedTo" only if the description itself compares to named alternatives or a previous model; otherwise "".
+- Plain, factual, under 25 words per field.
+
+Respond with valid JSON only:
+{ "bestFor": "", "notFor": "", "comparedTo": "", "materials": "", "dimensions": "", "weight": "", "specs": "" }`;
+  const result = await generateContentWithRetry(getModel(), {
+    contents: [{ role: 'user', parts: [{ text: prompt }] }],
+    generationConfig: { temperature: 0, thinkingConfig: { thinkingBudget: 0 }, maxOutputTokens: 1024, responseMimeType: 'application/json' } as any,
+  });
+  try {
+    const parsed = JSON.parse(result.response.text().replace(/```json|```/g, '').trim());
+    const out: Record<string, string> = {};
+    for (const k of ['bestFor', 'notFor', 'comparedTo', 'materials', 'dimensions', 'weight', 'specs']) {
+      if (typeof parsed?.[k] === 'string' && parsed[k].trim()) out[k] = parsed[k].trim().slice(0, 400);
+    }
+    return out;
+  } catch {
+    throw new Error('Failed to parse product draft');
+  }
+}

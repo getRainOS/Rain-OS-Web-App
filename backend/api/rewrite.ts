@@ -2,8 +2,8 @@ import express from 'express';
 import { findUserByApiKey, incrementUserUsage, getAnalysisById } from '../services/dbService';
 import { pillarRewrite, type Baseline } from '../services/pillarRewrite';
 import { rememberScoredRewrite } from '../services/scoredRewrites';
-import { getProductFacts } from '../services/productFactService';
-import { factsForPrompt, factsToSchema } from '../services/productFacts';
+import { getProductFacts, getStoreDefaults } from '../services/productFactService';
+import { factsForPrompt, factsToSchema, verifiedFacts } from '../services/productFacts';
 import { classifyGeminiError } from '../services/geminiErrors';
 import type { ApiError } from '../types';
 
@@ -67,7 +67,12 @@ export default async function rewriteHandler(req: express.Request, res: express.
   const productId = Number(req.body?.productId);
   if (Number.isInteger(productId) && productId > 0) {
     const sheet = await getProductFacts(user.id, productId).catch(() => null);
-    if (sheet) { facts = factsForPrompt(sheet.facts); productSchema = factsToSchema(sheet.facts); }
+    if (sheet) {
+      // Only confirmed facts plus store defaults; unconfirmed AI drafts are left out.
+      const v = verifiedFacts(sheet.facts, await getStoreDefaults(user.id).catch(() => null));
+      facts = factsForPrompt(v);
+      productSchema = factsToSchema(v);
+    }
   }
 
   try {

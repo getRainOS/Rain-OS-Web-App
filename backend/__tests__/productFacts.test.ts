@@ -19,6 +19,8 @@ describe('product fact sheets', () => {
   it('measures completeness against the rubric', () => {
     expect(factsCompleteness(sheet)).toEqual({ filled: 13, total: 13, missing: [] });
     expect(factsCompleteness(cleanFacts({ name: 'X' })).missing).toContain('Price');
+    // A single-option product isn't marked down for having no variants.
+    expect(factsCompleteness(cleanFacts({ name: 'Cork Block', price: '24' })).missing).not.toContain('Variants with prices');
   });
   it('gives the rewrite only the facts that were entered, marked as verified', () => {
     const p = factsForPrompt(sheet);

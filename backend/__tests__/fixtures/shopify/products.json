@@ -1,0 +1,10 @@
+{"products":[
+ {"id":1,"title":"EcoFlow Yoga Mat","handle":"ecoflow-yoga-mat","vendor":"EcoFlow","product_type":"Mats","body_html":"<p>Made from <strong>natural tree rubber</strong> with an organic cotton top. 183 x 61 cm, 4 mm thick. Grips even in hot yoga.</p>",
+  "variants":[
+   {"id":11,"title":"Sage / 183 cm","price":"89.00","compare_at_price":null,"sku":"EF-S-183","available":true,"grams":2200},
+   {"id":12,"title":"Sand / 200 cm","price":"99.00","compare_at_price":"119.00","sku":"","available":false,"grams":2500}],
+  "images":[{"src":"https://cdn.shopify.com/s/files/mat.jpg"}]},
+ {"id":2,"title":"Cork Block","handle":"cork-block","vendor":"EcoFlow","body_html":"Dense natural cork.",
+  "variants":[{"id":21,"title":"Default Title","price":"24.00","compare_at_price":"30.00","sku":"EF-CORK","available":true,"grams":450}],
+  "images":[]}
+]}
