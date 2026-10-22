@@ -534,3 +534,10 @@
 .typeHelp p { margin: 0 0 6px; }
 .typeHelp ul { margin: 0; padding-left: 16px; }
 .typeHelp strong { color: var(--text); font-weight: 500; }
+
+.productPick { margin: 4px 0 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 13px; color: var(--text-dim); }
+.productPick label { color: var(--text); }
+.productPick label span { color: var(--text-dim); font-size: 12px; margin-left: 4px; }
+.productPick select { padding: 6px 10px; background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 13px; }
+.productPick p { margin: 0; }
+.productPick a { color: #2B8FE3; }

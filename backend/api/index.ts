@@ -33,6 +33,7 @@ import deleteAccountHandler from './users/me/delete-account';
 import locationHandler from './users/me/location';
 import localListingHandler from './local-listing';
 import laneStatsHandler from './lane-stats';
+import { listHandler as productsListHandler, saveHandler as productsSaveHandler, deleteHandler as productsDeleteHandler } from './products';
 import { enginesHandler, publicEnginesHandler, startHandler as engineCheckStartHandler, pollHandler as engineCheckPollHandler } from './engine-check';
 // Stripe
 import createCheckoutSessionHandler from './stripe/create-checkout-session';
@@ -186,6 +187,9 @@ app.get('/api/engines', enginesHandler);
 app.get('/api/public/engines', publicEnginesHandler);
 app.post('/api/local-listing', localListingHandler);
 app.get('/api/lane-stats', laneStatsHandler);
+app.get('/api/products', productsListHandler);
+app.post('/api/products', productsSaveHandler);
+app.delete('/api/products/:id', productsDeleteHandler);
 app.post('/api/citation-check/engine', engineCheckStartHandler);
 app.get('/api/citation-check/engine/:id', engineCheckPollHandler);
 // ─── Stripe ────────────────────────────────────────────────────────────────

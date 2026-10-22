@@ -127,6 +127,22 @@ function runCitation(body, engine = 'gemini') {
 
 const jobs = new Map();
 
+// Product fact sheets, kept in memory for the visit.
+const FACT_KEYS = ['brand', 'sku', 'price', 'materials', 'dimensions', 'bestFor', 'comparedTo', 'shipping', 'returns', 'warranty', 'rating', 'reviewCount'];
+const FACT_LABELS = { brand: 'Brand', sku: 'SKU or barcode (GTIN)', price: 'Price', materials: 'Materials or specs', dimensions: 'Dimensions or weight', bestFor: 'Best for', comparedTo: 'Compared to alternatives', shipping: 'Shipping', returns: 'Returns', warranty: 'Warranty', rating: 'Rating', reviewCount: 'Review count' };
+const sheetView = (id, facts) => {
+  const missing = FACT_KEYS.filter(k => !String(facts[k] || '').trim());
+  return { id, facts, updatedAt: new Date().toISOString(), completeness: { filled: FACT_KEYS.length - missing.length, total: FACT_KEYS.length, missing: missing.map(k => FACT_LABELS[k]) },
+    schema: JSON.stringify({ '@context': 'https://schema.org', '@type': 'Product', name: facts.name, ...(facts.brand ? { brand: { '@type': 'Brand', name: facts.brand } } : {}),
+      ...(facts.price ? { offers: { '@type': 'Offer', price: Number(facts.price), priceCurrency: facts.currency || 'USD' } } : {}) }, null, 2) };
+};
+const sheets = [sheetView(1, {
+  name: 'Clear Aligner Starter Kit', brand: BRAND, url: `${SITE}/shop/aligner-kit`, sku: 'BSD-KIT-01', gtin: '', mpn: '', price: '249', currency: 'USD', salePrice: '',
+  variants: [], materials: 'BPA-free medical-grade plastic', dimensions: '', weight: '', specs: 'Includes impression kit, case and cleaning crystals',
+  bestFor: 'Adults with mild crowding', notFor: '', comparedTo: '', shipping: 'Free 2-day shipping in the US', returns: '30-day returns if unopened',
+  warranty: '', rating: '4.7', reviewCount: '38', reviewQuotes: ['Fit perfectly and the impression kit was easy.'], image: '',
+})];
+
 const ok = data => ({ data, usage: null });
 const demoError = (msg = 'This is a demo with sample data. Sign up free to run this on your own site.') => {
   const e = new Error(msg); e.status = 403; e.code = 'demo'; throw e;
@@ -158,10 +174,19 @@ export async function demoRequest(method, path, body) {
     if (p === '/api/brand-links') return ok({ success: true, links: [{ brand: BRAND, site: DOMAIN }] });
     if (p === '/api/lane-stats') return ok({ success: true, lanes: { local_business: { analyses: 5, checks: 14, lastUsed: daysAgo(2) } } });
     if (p === '/api/usage') return ok({ success: true, usage: user.usage });
+    if (p === '/api/products') return ok({ success: true, items: sheets });
     return ok({ success: true, data: [], items: [] });
   }
 
   if (method === 'POST') {
+    if (p === '/api/products') {
+      const facts = { ...(body?.facts || {}) };
+      const id = body?.id || Date.now();
+      const item = sheetView(id, facts);
+      const at = sheets.findIndex(x => x.id === id);
+      if (at >= 0) sheets[at] = item; else sheets.unshift(item);
+      return ok({ success: true, item });
+    }
     if (p === '/api/analyze') {
       await wait(2200);
       const a = analysis({ id: 9100, title: body?.title || 'Your content', overall: 63, ar: 61, da: 60, cr: 64, lp: 66, rr: 58, at: new Date().toISOString(), summary: 'Readable, but the key answers are buried and the location is barely mentioned.' });

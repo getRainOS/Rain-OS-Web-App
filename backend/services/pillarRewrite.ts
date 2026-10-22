@@ -85,21 +85,21 @@ export function faqSchema(faq: Array<{ q: string; a: string }>): string | null {
 export async function pillarRewrite(
   content: string,
   module: string,
-  opts: { industry?: string; contentType?: string; baseline?: Baseline | null } = {},
+  opts: { industry?: string; contentType?: string; baseline?: Baseline | null; facts?: string } = {},
   deps = { analyze: analyzeContent, rewrite: rewriteDocumentForAI }
 ): Promise<PillarRewriteResult> {
   const industry = opts.industry || 'General / Other';
   const score = (text: string) => deps.analyze(text, industry, module as any, opts.contentType);
   const baseline: Baseline = opts.baseline ?? (await score(content));
 
-  const first = await deps.rewrite(content, module, focusFrom(baseline, module), opts.contentType);
+  const first = await deps.rewrite(content, module, focusFrom(baseline, module), opts.contentType, opts.facts);
   const firstScore = await score(first.rewritten);
   let best = { r: first, s: firstScore };
   let passes = 1;
 
   if (firstScore.overallScore < TARGET) {
     passes = 2;
-    const second = await deps.rewrite(first.rewritten, module, focusFrom(firstScore, module), opts.contentType).catch(() => null);
+    const second = await deps.rewrite(first.rewritten, module, focusFrom(firstScore, module), opts.contentType, opts.facts).catch(() => null);
     const keepsLength = second && wordCount(second.rewritten) >= MIN_REWRITE_RATIO * wordCount(content);
     if (second && keepsLength) {
       const secondScore = await score(second.rewritten).catch(() => null);

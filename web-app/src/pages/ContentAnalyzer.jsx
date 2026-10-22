@@ -1,6 +1,6 @@
 import PastAnalyses from '../components/PastAnalyses.jsx';
 import { useState, useEffect } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
@@ -105,6 +105,13 @@ export default function ContentAnalyzer() {
   const [content, setContent] = useState(prefill.pendingContent || (!fromIdea && savedDraftMatchesAnalysis ? savedDraft.content : '') || '');
   const [url, setUrl] = useState(prefill.pendingUrl || (!fromIdea && savedDraftMatchesAnalysis ? savedDraft.url : '') || '');
   const [typeHelpOpen, setTypeHelpOpen] = useState(false);
+  // Product fact sheets the rewrite can use as verified facts.
+  const [products, setProducts] = useState([]);
+  const [productId, setProductId] = useState('');
+  useEffect(() => {
+    if (userLane !== 'product_sellers') return;
+    api.products().then(({ data }) => setProducts(data?.items || [])).catch(() => {});
+  }, [userLane]);
   const [contentType, setContentType] = useState(
     (fromIdea && contentTypesForLane(userLane).some(t => t.id === prefill.contentType) ? prefill.contentType : '')
       || (savedDraftMatchesAnalysis ? savedDraft.contentType : '') || defaultContentTypeForLane(userLane)
@@ -240,7 +247,7 @@ export default function ContentAnalyzer() {
       const contentTypeLabel = CONTENT_TYPES.find(t => t.id === contentType)?.label || undefined;
       // The server rewrites to the scoring rubric, scores the result, and uses
       // this piece's saved score as the "before".
-      const { data } = await api.rewrite({ content, module: analysisModule, contentType: contentTypeLabel, analysisId: id && result ? Number(id) : undefined });
+      const { data } = await api.rewrite({ content, module: analysisModule, contentType: contentTypeLabel, analysisId: id && result ? Number(id) : undefined, productId: productId ? Number(productId) : undefined });
       setRewriteResult(data);
       refreshUser();
     } catch (err) {
@@ -321,6 +328,19 @@ export default function ContentAnalyzer() {
                 <ul>
                   {contentTypesForLane(userLane).map(t => <li key={t.id}><strong>{t.label}:</strong> {TYPE_EXPECTATIONS[t.id]}</li>)}
                 </ul>
+              </div>
+            )}
+            {userLane === 'product_sellers' && (
+              <div className={styles.productPick}>
+                <label htmlFor="ca-product">Product facts <span>Optional</span></label>
+                {products.length ? (
+                  <select id="ca-product" value={productId} onChange={e => setProductId(e.target.value)}>
+                    <option value="">None</option>
+                    {products.map(p => <option key={p.id} value={p.id}>{p.facts.name} ({p.completeness.filled}/{p.completeness.total} facts)</option>)}
+                  </select>
+                ) : (
+                  <p><Link to="/products">Add a product fact sheet</Link> and the rewrite can state your real prices, specs and shipping instead of asking for them.</p>
+                )}
               </div>
             )}
             <div className={styles.typePills}>
@@ -631,6 +651,9 @@ function RewritePanel({ rewriteResult, onAccept, onDiscard, canRescore }) {
           </dl>
           {rewriteResult.schema && (
             <button type="button" className={styles.rewriteDiscardBtn} onClick={copySchema}>{copied ? 'Copied' : 'Copy FAQ schema code'}</button>
+          )}
+          {rewriteResult.productSchema && (
+            <button type="button" className={styles.rewriteDiscardBtn} style={{ marginLeft: 8 }} onClick={() => navigator.clipboard?.writeText(`<script type="application/ld+json">\n${rewriteResult.productSchema}\n</script>`)}>Copy product schema code</button>
           )}
         </div>
       )}

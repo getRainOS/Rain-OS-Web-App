@@ -2,6 +2,8 @@ import express from 'express';
 import { findUserByApiKey, incrementUserUsage, getAnalysisById } from '../services/dbService';
 import { pillarRewrite, type Baseline } from '../services/pillarRewrite';
 import { rememberScoredRewrite } from '../services/scoredRewrites';
+import { getProductFacts } from '../services/productFactService';
+import { factsForPrompt, factsToSchema } from '../services/productFacts';
 import { classifyGeminiError } from '../services/geminiErrors';
 import type { ApiError } from '../types';
 
@@ -59,13 +61,22 @@ export default async function rewriteHandler(req: express.Request, res: express.
     }
   }
 
+  // A product fact sheet: facts the rewrite may state as true.
+  let facts = '';
+  let productSchema: string | null = null;
+  const productId = Number(req.body?.productId);
+  if (Number.isInteger(productId) && productId > 0) {
+    const sheet = await getProductFacts(user.id, productId).catch(() => null);
+    if (sheet) { facts = factsForPrompt(sheet.facts); productSchema = factsToSchema(sheet.facts); }
+  }
+
   try {
-    const result = await pillarRewrite(content, module, { industry, contentType, baseline });
+    const result = await pillarRewrite(content, module, { industry, contentType, baseline, facts });
     rememberScoredRewrite(user.id, result.rewritten, module, result.scored);
     const updatedUser = await incrementUserUsage(user.id);
     if (updatedUser) res.setHeader('X-Usage-Info', JSON.stringify(updatedUser.usage));
     const { scored, ...rest } = result;
-    return res.status(200).json({ success: true, ...rest });
+    return res.status(200).json({ success: true, ...rest, productSchema });
   } catch (error) {
     const { status, body } = classifyGeminiError(error, 'rewrite');
     return res.status(status).json(body as ApiError);

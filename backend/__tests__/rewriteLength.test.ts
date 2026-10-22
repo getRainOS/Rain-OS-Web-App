@@ -51,4 +51,10 @@ describe('rewrite keeps its length', () => {
     expect(prompt).toContain('CONTENT TYPE: Product Description');
     expect(prompt).toContain('Variant coverage');
   });
+
+  it('passes verified product facts into the prompt', async () => {
+    generate.mockResolvedValueOnce(reply(words(100)));
+    await rewriteDocumentForAI(words(100), 'product_sellers', [], 'Product Description', 'VERIFIED PRODUCT FACTS FROM THE OWNER.\n- Price: 89 USD');
+    expect(generate.mock.calls[0][1].contents[0].parts[0].text).toContain('- Price: 89 USD');
+  });
 });

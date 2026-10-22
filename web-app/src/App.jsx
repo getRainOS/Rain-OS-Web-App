@@ -21,6 +21,7 @@ import FullCheck from './pages/FullCheck.jsx';
 import BrandVisibility from './pages/BrandVisibility.jsx';
 import ShareOfVoice from './pages/ShareOfVoice.jsx';
 import History from './pages/History.jsx';
+import ProductFacts from './pages/ProductFacts.jsx';
 import Upgrade from './pages/Upgrade.jsx';
 import Settings from './pages/Settings.jsx';
 import ConfirmEmail from './pages/ConfirmEmail.jsx';
@@ -296,6 +297,7 @@ function AppRoutes({ apiKey, onAuth }) {
         <Route path="/brand-visibility" element={<BrandVisibility />} />
         <Route path="/share-of-voice" element={<ShareOfVoice />} />
         <Route path="/history" element={<History />} />
+        <Route path="/products" element={<ProductFacts />} />
         <Route path="/report" element={<Report />} />
         <Route path="/admin/usage" element={<AdminUsage />} />
         <Route path="/upgrade" element={<Upgrade />} />
