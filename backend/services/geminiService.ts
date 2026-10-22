@@ -535,7 +535,8 @@ async function rewriteChunkForAI(
   part?: { index: number; total: number },
   extraInstruction = '',
   focus: string[] = [],
-  contentType?: string
+  contentType?: string,
+  facts = ''
 ): Promise<{ rewritten: string; changes: string[]; needsYou: NeedsYou[]; faq: Array<{ q: string; a: string }> }> {
   if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
 
@@ -557,6 +558,7 @@ ${SYSTEM_INSTRUCTION}
 ${moduleRubric(module)}
 ${contentTypeRubric(contentType) ?? ''}
 === END RUBRIC ===
+${facts ? `\n${facts}\n` : ''}
 
 MEASURED TARGETS (these are measured exactly in the rewritten text):
 ${targets}
@@ -655,7 +657,8 @@ export async function rewriteDocumentForAI(
   content: string,
   module: string = 'general',
   focus: string[] = [],
-  contentType?: string
+  contentType?: string,
+  facts = ''
 ): Promise<{ rewritten: string; changes: string[]; truncated: boolean; needsYou: NeedsYou[]; faq: Array<{ q: string; a: string }> }> {
   if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
   const truncated = content.length > REWRITE_MAX_CHARS;
@@ -663,14 +666,14 @@ export async function rewriteDocumentForAI(
   const parts = await Promise.all(
     chunks.map(async (c, i) => {
       const part = { index: i + 1, total: chunks.length };
-      const first = await rewriteChunkForAI(c, module, part, '', focus, contentType);
+      const first = await rewriteChunkForAI(c, module, part, '', focus, contentType, facts);
       // Models tend to condense. A rewrite that lost a fifth of the words has
       // almost certainly dropped content, so ask once more, firmly, and keep
       // whichever version is longer.
       const ratio = wordCount(first.rewritten) / Math.max(1, wordCount(c));
       if (ratio >= MIN_REWRITE_RATIO) return first;
       const second = await rewriteChunkForAI(c, module, part,
-        `Your previous rewrite was only ${Math.round(ratio * 100)}% of the original length and dropped content. Rewrite again and keep every point, example and detail.`, focus, contentType)
+        `Your previous rewrite was only ${Math.round(ratio * 100)}% of the original length and dropped content. Rewrite again and keep every point, example and detail.`, focus, contentType, facts)
         .catch(() => first);
       return wordCount(second.rewritten) > wordCount(first.rewritten) ? second : first;
     })

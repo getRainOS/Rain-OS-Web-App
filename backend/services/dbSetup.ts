@@ -240,6 +240,15 @@ ALTER TABLE tracked_queries ADD COLUMN IF NOT EXISTS engine_state JSONB NOT NULL
 ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS lane TEXT;
 ALTER TABLE brand_visibility_checks ADD COLUMN IF NOT EXISTS lane TEXT;
 ALTER TABLE sov_checks ADD COLUMN IF NOT EXISTS lane TEXT;
+CREATE TABLE IF NOT EXISTS product_facts (
+  id BIGSERIAL PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  facts JSONB NOT NULL DEFAULT '{}'::jsonb,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_product_facts_user ON product_facts(user_id, updated_at DESC);
 
 -- Daily count of Gemini calls that used Google Search grounding, by feature.
 CREATE TABLE IF NOT EXISTS grounded_calls_daily (
