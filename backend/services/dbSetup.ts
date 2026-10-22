@@ -249,6 +249,11 @@ CREATE TABLE IF NOT EXISTS product_facts (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE INDEX IF NOT EXISTS idx_product_facts_user ON product_facts(user_id, updated_at DESC);
+CREATE TABLE IF NOT EXISTS product_defaults (
+  user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  defaults JSONB NOT NULL DEFAULT '{}'::jsonb,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
 
 -- Daily count of Gemini calls that used Google Search grounding, by feature.
 CREATE TABLE IF NOT EXISTS grounded_calls_daily (

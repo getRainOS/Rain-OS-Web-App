@@ -13,7 +13,15 @@ export interface ProductFacts {
   shipping: string; returns: string; warranty: string;
   rating: string; reviewCount: string; reviewQuotes: string[];
   image: string;
+  // The product's own description, kept for AI drafts. Not shown as a fact.
+  sourceText: string;
+  // Fields an AI drafted that the owner hasn't confirmed. Not treated as
+  // verified (not sent to the rewrite, not in the schema) until confirmed.
+  drafts: string[];
 }
+
+// Facts that usually apply to every product in a store.
+export interface StoreDefaults { shipping: string; returns: string; warranty: string; currency: string }
 
 const str = (v: unknown, max = 400) => (typeof v === 'string' ? v.trim().slice(0, max) : typeof v === 'number' ? String(v) : '');
 const num = (v: string) => { const n = Number(String(v).replace(/[^0-9.]/g, '')); return Number.isFinite(n) && v.trim() ? n : null; };
@@ -33,14 +41,36 @@ export function cleanFacts(input: any): ProductFacts {
     rating: str(i.rating, 4), reviewCount: str(i.reviewCount, 8),
     reviewQuotes: (Array.isArray(i.reviewQuotes) ? i.reviewQuotes : []).map((q: unknown) => str(q, 300)).filter(Boolean).slice(0, 5),
     image: str(i.image, 500),
+    sourceText: str(i.sourceText, 4000),
+    drafts: (Array.isArray(i.drafts) ? i.drafts : []).filter((d: unknown): d is string => typeof d === 'string' && DRAFTABLE.includes(d)),
   };
+}
+
+export const DRAFTABLE = ['bestFor', 'notFor', 'comparedTo', 'materials', 'dimensions', 'weight', 'specs'];
+
+export function cleanDefaults(input: any): StoreDefaults {
+  const i = input && typeof input === 'object' ? input : {};
+  return { shipping: str(i.shipping), returns: str(i.returns), warranty: str(i.warranty), currency: str(i.currency, 3).toUpperCase() };
+}
+
+// What the rewrite and schema may treat as true: the owner's facts, store
+// defaults for anything left blank, and no unconfirmed AI drafts.
+export function verifiedFacts(f: ProductFacts, d?: StoreDefaults | null): ProductFacts {
+  const v: any = { ...f };
+  for (const k of f.drafts) v[k] = '';
+  if (d) {
+    for (const k of ['shipping', 'returns', 'warranty'] as const) if (!v[k] && d[k]) v[k] = d[k];
+    if (!f.price && d.currency) v.currency = d.currency;
+  }
+  return v as ProductFacts;
 }
 
 // How complete the sheet is, against what the Product Discoverability rubric asks for.
 export function factsCompleteness(f: ProductFacts): { filled: number; total: number; missing: string[] } {
   const checks: Array<[string, boolean]> = [
     ['Brand', !!f.brand], ['SKU or barcode (GTIN)', !!(f.sku || f.gtin || f.mpn)], ['Price', !!f.price],
-    ['Variants with prices', f.variants.length > 0 && f.variants.every(v => !!v.price)],
+    // A product without options has no variants to price; its main price covers it.
+    ['Variants with prices', f.variants.length ? f.variants.every(v => !!v.price) : !!f.price],
     ['Materials or specs', !!(f.materials || f.specs)], ['Dimensions or weight', !!(f.dimensions || f.weight)],
     ['Best for', !!f.bestFor], ['Compared to alternatives', !!f.comparedTo],
     ['Shipping', !!f.shipping], ['Returns', !!f.returns], ['Warranty', !!f.warranty],
