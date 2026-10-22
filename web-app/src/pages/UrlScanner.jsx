@@ -1,6 +1,7 @@
 import PastAnalyses from '../components/PastAnalyses.jsx';
 import { US_STATES } from '../lib/usStates.js';
 import ListingCheck from '../components/ListingCheck.jsx';
+import ProductPageCheck from '../components/ProductPageCheck.jsx';
 import LocalPageCheck, { LocalSteps } from '../components/LocalPageCheck.jsx';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -483,6 +484,8 @@ export default function UrlScanner() {
           )}
 
           <PillarScores result={result} lane={userLane} />
+
+          {result.product_page_check && <ProductPageCheck check={result.product_page_check} />}
 
           {result.local_page_check
             ? <>

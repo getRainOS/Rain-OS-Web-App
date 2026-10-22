@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
+import LaneWeights from '../components/LaneWeights.jsx';
 import { useApp } from '../context/AppContext.jsx';
 import { PILLAR_COLORS } from '../lib/pillarColors.js';
 import { urlScannerLabel } from '../lib/laneLabels.js';
@@ -400,6 +401,11 @@ function LaneSelector({ onSelect, current }) {
           </button>
         ))}
       </div>
+      <div className={styles.laneWeightsHead}>
+        <h3>How each lane is scored</h3>
+        <p>Every lane is scored on the same core pillars. Your lane sets how much each one counts, and stores and local businesses add their own pillar.</p>
+      </div>
+      <LaneWeights current={current} />
     </div>
   );
 }

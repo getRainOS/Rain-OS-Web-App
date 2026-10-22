@@ -4,6 +4,7 @@ import { findUserByApiKey, incrementUsageAndSaveAnalysis } from '../services/dbS
 import { analyzeContent } from '../services/geminiService';
 import { scanUrlForTechnicalSignals } from '../services/urlScanService';
 import { checkLocalPage } from '../services/localPageCheck';
+import { checkProductPage, fetchShopifyVariants } from '../services/productPageCheck';
 import { runPageSpeed, isGoogleApiConfigured } from '../services/googleApisService';
 import { classifyGeminiError } from '../services/geminiErrors';
 import type { ApiError } from '../types';
@@ -143,8 +144,14 @@ export default async function handler(req: express.Request, res: express.Respons
       }
     }
 
+    // Product pages: exact checks of what AI shopping answers can read.
+    const productPageCheck = analysisModule === 'product_sellers'
+      ? checkProductPage(rawHtml, scan.detectedPlatform === 'shopify' ? await fetchShopifyVariants(url).catch(() => null) : null)
+      : null;
+
     const result = {
       ...gemini,
+      product_page_check: productPageCheck,
       overallScore: adjustedScore,
       pillarScores: adjustedPillarScores,
       // flat signals object — kept for isJsRendered check

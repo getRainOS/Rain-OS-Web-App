@@ -43,4 +43,12 @@ describe('rewrite keeps its length', () => {
     await rewriteDocumentForAI(words(100), 'general', ['Answer-First Formatting scored 42/100']);
     expect(generate.mock.calls[0][1].contents[0].parts[0].text).toContain('- Answer-First Formatting scored 42/100');
   });
+
+  it('holds the rewrite to the content type and lane rubric', async () => {
+    generate.mockResolvedValueOnce(reply(words(100)));
+    await rewriteDocumentForAI(words(100), 'product_sellers', [], 'Product Description');
+    const prompt = generate.mock.calls[0][1].contents[0].parts[0].text;
+    expect(prompt).toContain('CONTENT TYPE: Product Description');
+    expect(prompt).toContain('Variant coverage');
+  });
 });
