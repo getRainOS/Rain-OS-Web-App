@@ -92,14 +92,14 @@ export async function pillarRewrite(
   const score = (text: string) => deps.analyze(text, industry, module as any, opts.contentType);
   const baseline: Baseline = opts.baseline ?? (await score(content));
 
-  const first = await deps.rewrite(content, module, focusFrom(baseline, module));
+  const first = await deps.rewrite(content, module, focusFrom(baseline, module), opts.contentType);
   const firstScore = await score(first.rewritten);
   let best = { r: first, s: firstScore };
   let passes = 1;
 
   if (firstScore.overallScore < TARGET) {
     passes = 2;
-    const second = await deps.rewrite(first.rewritten, module, focusFrom(firstScore, module)).catch(() => null);
+    const second = await deps.rewrite(first.rewritten, module, focusFrom(firstScore, module), opts.contentType).catch(() => null);
     const keepsLength = second && wordCount(second.rewritten) >= MIN_REWRITE_RATIO * wordCount(content);
     if (second && keepsLength) {
       const secondScore = await score(second.rewritten).catch(() => null);

@@ -214,7 +214,7 @@ const CONTENT_TYPE_RUBRICS: Record<string, string> = {
   'social post': `CONTENT TYPE: Social Post. Expect extreme brevity, a strong hook in the first line, a single clear idea (not multiple buried points), and a natural, platform-appropriate tone. Penalize long-form structure, buried CTAs, and corporate phrasing that reads like a press release. Reward a clear single takeaway that stands alone without needing surrounding context.`,
 };
 
-function contentTypeRubric(contentType?: string): string | null {
+export function contentTypeRubric(contentType?: string): string | null {
   if (!contentType) return null;
   const rubric = CONTENT_TYPE_RUBRICS[contentType.trim().toLowerCase()];
   if (rubric) return rubric;
@@ -229,11 +229,28 @@ export function moduleRubric(module: string): string {
   return module === 'product_sellers'
   ? `MODULE: product_sellers
 MODULE_WEIGHTS: AI Readability 20%, Digital Authority 15%, Conversion Readiness 15%, Product Discoverability 50%, Local Presence Signals 0%, RAG Readiness 10%
-For this module, Product Discoverability is the PRIMARY scoring focus. Score it with maximum precision — pricing transparency, variant coverage, availability, merchant identity, review signals, comparative context. Do not score Local Presence Signals — set to 0.`
+For this module, Product Discoverability is the PRIMARY scoring focus — AI shopping answers recommend products whose facts they can extract and compare. Score it with maximum precision:
+PRODUCT DISCOVERABILITY:
+- Identity: brand, exact product/model name, and an identifier (SKU, GTIN/UPC, MPN) stated plainly
+- Specs as facts: materials, dimensions, weight, capacity, compatibility — numbers and units, not adjectives
+- Variant coverage: every size/color/option listed, with its own price and stock where they differ
+- Pricing transparency: exact price with currency, sale price and what it compares against; no "contact us" or "a certain amount"
+- Availability and logistics: in stock or not, shipping time and cost, free-shipping threshold, return window and conditions
+- Best-for fit: who the product is for and for which use cases, stated directly ("best for hot yoga and travel")
+- Comparative context: how it differs from named alternatives or the previous model, with specifics
+- Review signals: rating, review count, and quotable review lines
+- Buyer FAQ: direct answers to the questions shoppers ask AI (care, sizing, durability, warranty)
+- Merchant identity: who sells it, warranty and support contact
+CONVERSION READINESS signals: a clear add-to-cart or buy action, price near the action, trust signals (warranty, secure checkout, returns).
+Do not score Local Presence Signals — set to 0.`
   : module === 'developers'
   ? `MODULE: developers
 MODULE_WEIGHTS: AI Readability (Documentation Structure) 32%, Digital Authority (Technical Completeness) 32%, Conversion Readiness (Technical Clarity) 26%, Product Discoverability 0% (not applicable), Local Presence Signals 0% (not applicable), RAG Readiness 10%
 For this module, score AI Readability as Documentation Structure (navigation, TOC, getting started), Digital Authority as Documentation Authority (API completeness, error coverage, versioning), and Conversion Readiness as Technical Clarity (code example quality, step determinism, snippet extractability). Do not score Product Discoverability or Local Presence Signals — set both to 0.`
+  : module === 'vibe_coders'
+  ? `MODULE: vibe_coders
+MODULE_WEIGHTS: AI Readability 32%, Digital Authority 32%, Conversion Readiness 26%, Product Discoverability 0%, Local Presence Signals 0%, RAG Readiness 10%
+This is an app or product built with an AI builder (landing page, app copy, docs). Score AI Readability on whether AI can tell in one sentence what the app does and for whom; Digital Authority on the maker's credibility, real use cases, pricing and limits stated plainly, privacy and data handling; Conversion Readiness on a clear sign-up or try action and what happens next. Do not score Product Discoverability or Local Presence Signals — set both to 0.`
   : module === 'local_business'
   ? `MODULE: local_business
 MODULE_WEIGHTS: AI Readability 20%, Digital Authority 20%, Conversion Readiness 20%, Product Discoverability 0%, Local Presence Signals 30%, RAG Readiness 10%
@@ -517,7 +534,8 @@ async function rewriteChunkForAI(
   module: string = 'general',
   part?: { index: number; total: number },
   extraInstruction = '',
-  focus: string[] = []
+  focus: string[] = [],
+  contentType?: string
 ): Promise<{ rewritten: string; changes: string[]; needsYou: NeedsYou[]; faq: Array<{ q: string; a: string }> }> {
   if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
 
@@ -537,6 +555,7 @@ async function rewriteChunkForAI(
 ${SYSTEM_INSTRUCTION}
 
 ${moduleRubric(module)}
+${contentTypeRubric(contentType) ?? ''}
 === END RUBRIC ===
 
 MEASURED TARGETS (these are measured exactly in the rewritten text):
@@ -635,7 +654,8 @@ export function splitForRewrite(content: string, chunkChars = REWRITE_CHUNK_CHAR
 export async function rewriteDocumentForAI(
   content: string,
   module: string = 'general',
-  focus: string[] = []
+  focus: string[] = [],
+  contentType?: string
 ): Promise<{ rewritten: string; changes: string[]; truncated: boolean; needsYou: NeedsYou[]; faq: Array<{ q: string; a: string }> }> {
   if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
   const truncated = content.length > REWRITE_MAX_CHARS;
@@ -643,14 +663,14 @@ export async function rewriteDocumentForAI(
   const parts = await Promise.all(
     chunks.map(async (c, i) => {
       const part = { index: i + 1, total: chunks.length };
-      const first = await rewriteChunkForAI(c, module, part, '', focus);
+      const first = await rewriteChunkForAI(c, module, part, '', focus, contentType);
       // Models tend to condense. A rewrite that lost a fifth of the words has
       // almost certainly dropped content, so ask once more, firmly, and keep
       // whichever version is longer.
       const ratio = wordCount(first.rewritten) / Math.max(1, wordCount(c));
       if (ratio >= MIN_REWRITE_RATIO) return first;
       const second = await rewriteChunkForAI(c, module, part,
-        `Your previous rewrite was only ${Math.round(ratio * 100)}% of the original length and dropped content. Rewrite again and keep every point, example and detail.`, focus)
+        `Your previous rewrite was only ${Math.round(ratio * 100)}% of the original length and dropped content. Rewrite again and keep every point, example and detail.`, focus, contentType)
         .catch(() => first);
       return wordCount(second.rewritten) > wordCount(first.rewritten) ? second : first;
     })
