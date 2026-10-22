@@ -8,8 +8,7 @@ import {
   LayoutDashboard, FileText, Globe, GitBranch, Radar, Eye,
   BarChart2, Settings, ArrowUp, LogOut, Wand2, Menu, X,
   ChevronLeft, ChevronRight, ChevronsUpDown, MessageSquareText, Lightbulb, CreditCard, Target, ScanSearch,
-  Activity,
-} from 'lucide-react';
+  Activity, Package } from 'lucide-react';
 import KnowledgeBase from './KnowledgeBase.jsx';
 import { urlScannerLabel } from '../lib/laneLabels.js';
 import { PRICE_TO_PLAN } from '../lib/plans.js';
@@ -27,14 +26,15 @@ const TOOLS = {
   dashboard:  { to: '/dashboard',        label: 'Dashboard',           Icon: LayoutDashboard, tooltip: 'Your home base — scores, trends, and performance at a glance.' },
   analyze:    { to: '/analyze',          label: 'Content Optimizer',   Icon: FileText,         tooltip: 'Paste your content and get an AI readability score plus fix recommendations.' },
   urlScanner: { to: '/url-scanner',      label: 'URL Scanner',         Icon: Globe,            tooltip: 'Enter a website URL to check how well AI can read and understand your pages.' },
+  products:   { to: '/products',         label: 'Product Fact Sheets', Icon: Package,          tooltip: 'Enter each product\'s facts once (price, variants, specs, shipping). The AI rewrite uses them, and they generate your product schema.' },
   repo:       { to: '/repo-analysis',    label: 'Repo Analysis',       Icon: GitBranch,        tooltip: 'Connect your GitHub repo to score docs and source code for AI readability.' },
   questions:  { to: '/prompt-research',  label: 'AI Question Research', Icon: MessageSquareText, tooltip: 'Find the questions your customers ask AI, then check or track them.' },
   fullcheck:  { to: '/full-check',       label: 'Full Check',          Icon: ScanSearch,       tooltip: 'Enter your website and run the page scan and the AI visibility checks together, with one report.' },
-  improve:    { to: '/improve',         label: 'Improve a Question',  Icon: Target,           tooltip: 'Pick a question, compare your page with the sources Gemini cited, and get the specific changes that help you get chosen.' },
+  improve:    { to: '/improve',         label: 'Improve a Question',  Icon: Target,           tooltip: 'Pick a question, compare your page with the sources AI cited, and get the specific changes that help you get chosen.' },
   opportunities: { to: '/opportunities', label: 'Opportunities',    Icon: Lightbulb,        tooltip: 'Your to-do list for showing up in AI answers, built from your checks and scans.' },
-  citation:   { to: '/citation-monitor', label: 'Citation Monitor',    Icon: Radar,            tooltip: 'Check whether Gemini cites your brand for your topics, using live Google Search grounding.' },
-  visibility: { to: '/brand-visibility', label: 'Brand Sentiment',       Icon: Eye,              tooltip: 'See how Gemini describes your brand, using live Google Search grounding — is the sentiment positive and are the facts correct?' },
-  sov:        { to: '/share-of-voice',   label: 'Share of Voice',      Icon: BarChart2,        tooltip: 'See how visible your brand is when Gemini answers your topic three ways, using live Google Search grounding.' },
+  citation:   { to: '/citation-monitor', label: 'Citation Monitor',    Icon: Radar,            tooltip: 'Check whether AI engines cite your site for the questions your customers ask.' },
+  visibility: { to: '/brand-visibility', label: 'Brand Sentiment',       Icon: Eye,              tooltip: 'See how AI engines describe your brand: is the tone positive and are the facts right?' },
+  sov:        { to: '/share-of-voice',   label: 'Share of Voice',      Icon: BarChart2,        tooltip: 'See how often AI names your brand versus competitors when it answers your topic.' },
   adminUsage: { to: '/admin/usage',      label: 'Usage (staff)',       Icon: Activity,         tooltip: 'Daily Google Search calls against the free allowance. Only rain OS staff see this.' },
   settings:   { to: '/settings',         label: 'Settings',            Icon: Settings,         tooltip: 'Change your solution lane, API settings, and account preferences.' },
 };
@@ -53,7 +53,7 @@ const LANE_GROUPS = {
     { label: 'Improve',    tools: ['fullcheck', 'opportunities'] },
   ],
   product_sellers: [
-    { label: 'Optimize',   tools: ['urlScanner', 'analyze', 'repo'] },
+    { label: 'Optimize',   tools: ['urlScanner', 'products', 'analyze', 'repo'] },
     { label: 'Prompts',    tools: ['questions', 'improve'] },
     { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
     { label: 'Improve',    tools: ['fullcheck', 'opportunities'] },
