@@ -15,3 +15,14 @@ export const PILLAR_COLORS = {
   rag_readiness: '#CF7F9D',
   local_presence: '#4FAEA6',
 };
+
+// Brighter versions for charts (trend lines and score rings), so thin strokes
+// read crisply on the dark background. Still not neon: lighter, not louder.
+export const PILLAR_CHART_COLORS = {
+  ai_readability: '#74B9F5',
+  digital_authority: '#72D6A0',
+  conversion_readiness: '#B6A2F7',
+  product_discoverability: '#F0BE72',
+  rag_readiness: '#EF9BBA',
+  local_presence: '#63D3C8',
+};

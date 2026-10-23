@@ -3,7 +3,8 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import LaneWeights from '../components/LaneWeights.jsx';
 import { useApp } from '../context/AppContext.jsx';
-import { PILLAR_COLORS } from '../lib/pillarColors.js';
+import { PILLAR_COLORS, PILLAR_CHART_COLORS } from '../lib/pillarColors.js';
+import ScoreDonut from '../components/ScoreDonut.jsx';
 import { urlScannerLabel } from '../lib/laneLabels.js';
 import { LANES as LANE_META } from '../lib/lanes.js';
 import { groupPieces, pieceName, pieceKey, buildPieceKeyer } from '../lib/analysisSeries.js';
@@ -32,12 +33,12 @@ function joinWithAnd(items) {
 }
 
 const PILLARS = [
-  { key: 'ai_readability',          label: 'AI Readability',       color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit },
-  { key: 'digital_authority',       label: 'Digital Authority',    color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck },
-  { key: 'conversion_readiness',    label: 'Conversion Readiness', color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick },
-  { key: 'product_discoverability', label: 'Discoverability',      color: PILLAR_COLORS.product_discoverability, Icon: SearchCheck },
-  { key: 'rag_readiness',           label: 'RAG Readiness',        color: PILLAR_COLORS.rag_readiness, Icon: Layers },
-  { key: 'local_presence',          label: 'Local Presence',       color: PILLAR_COLORS.local_presence, Icon: MapPin },
+  { key: 'ai_readability',          label: 'AI Readability',       color: PILLAR_CHART_COLORS.ai_readability, Icon: BrainCircuit },
+  { key: 'digital_authority',       label: 'Digital Authority',    color: PILLAR_CHART_COLORS.digital_authority, Icon: ShieldCheck },
+  { key: 'conversion_readiness',    label: 'Conversion Readiness', color: PILLAR_CHART_COLORS.conversion_readiness, Icon: MousePointerClick },
+  { key: 'product_discoverability', label: 'Product Discoverability',color: PILLAR_CHART_COLORS.product_discoverability, Icon: SearchCheck },
+  { key: 'rag_readiness',           label: 'RAG Readiness',        color: PILLAR_CHART_COLORS.rag_readiness, Icon: Layers },
+  { key: 'local_presence',          label: 'Local Presence',       color: PILLAR_CHART_COLORS.local_presence, Icon: MapPin },
 ];
 
 // product_sellers and local_business already have their content live on a
@@ -1082,7 +1083,7 @@ export default function Dashboard() {
               <ResponsiveContainer width="100%" height={200}>
                 <LineChart data={SAMPLE_PILLAR_TREND}>
                   {SAMPLE_PILLAR_LINES.map(l => (
-                    <Line key={l.key} type="monotone" dataKey={l.key} stroke={l.color} strokeWidth={1.5} dot={false} />
+                    <Line key={l.key} type="monotone" dataKey={l.key} stroke={l.color} strokeWidth={2} dot={false} />
                   ))}
                 </LineChart>
               </ResponsiveContainer>
@@ -1142,10 +1143,11 @@ export default function Dashboard() {
                       tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
                     <Tooltip content={<PillarLineTooltip pillars={activePillars} />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
                     {activePillars.map(p => (
-                      <Line key={p.key} type="monotone" dataKey={p.key} stroke={p.color} strokeWidth={1.5}
+                      <Line key={p.key} type="monotone" dataKey={p.key} stroke={p.color} strokeWidth={2.25}
+                        strokeLinecap="round" strokeLinejoin="round"
                         isAnimationActive={false}
-                        dot={piecePoints.length === 1 ? { r: 5, strokeWidth: 0, fill: p.color } : false}
-                        activeDot={{ r: 4, strokeWidth: 0 }} />
+                        dot={{ r: piecePoints.length === 1 ? 5 : 3.5, strokeWidth: 0, fill: p.color }}
+                        activeDot={{ r: 5, strokeWidth: 0, fill: p.color }} />
                     ))}
                   </LineChart>
                 </ResponsiveContainer>
@@ -1183,21 +1185,19 @@ export default function Dashboard() {
 
             <div className={styles.heroRank}>
               <div className={styles.heroRankHeader}>
-                <span>Pillars ranked by score</span>
+                <span>Pillar scores</span>
               </div>
-              {[...piecePillars].sort((a, b) => b.score - a.score).map(p => (
-                <div key={p.key} className={styles.heroRankRow}>
-                  <div className={styles.heroRankLabelRow}>
-                    <span className={styles.pillarTableDot} style={{ background: p.color }} />
-                    <span className={styles.heroRankLabel}>{p.label}</span>
-                  </div>
-                  <div className={styles.heroRankValueRow}>
-                    <span className={styles.heroRankScore}>{p.score}</span>
-                    <DeltaPts value={p.delta} />
-                  </div>
-                  <span className={styles.heroRankBar} aria-hidden="true"><span style={{ width: `${Math.max(0, Math.min(100, p.score))}%` }} /></span>
-                </div>
-              ))}
+              <div className={styles.donutGrid}>
+                {[...piecePillars].sort((a, b) => b.score - a.score).map(p => (
+                  <ScoreDonut
+                    key={p.key}
+                    score={p.score}
+                    label={p.label}
+                    color={p.color}
+                    delta={p.delta == null ? null : Math.abs(p.delta) <= NOISE_PTS ? 0 : p.delta}
+                  />
+                ))}
+              </div>
             </div>
           </div>
           </>
