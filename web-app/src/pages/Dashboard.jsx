@@ -452,6 +452,8 @@ export default function Dashboard() {
   });
   const [citations, setCitations] = useState([]);
   const [brandVisHistory, setBrandVisHistory] = useState([]);
+  // Which KPI card the map shows: 'citation' (Cited by AI) or 'brand' (Mentioned by AI).
+  const [mapKpi, setMapKpi] = useState('citation');
   const [brandLinks, setBrandLinks] = useState([]);
   const [linkPick, setLinkPick] = useState('');
   const [recentType, setRecentType] = useState('all');
@@ -1217,8 +1219,17 @@ export default function Dashboard() {
         </div>
       </div>
       <div className={styles.toolCards}>
-        {toolCards.map((t, idx) => (
-          <Link key={t.key} to={t.to} style={{ '--i': idx }} className={`reveal ${styles.toolCard} ${!t.hasData ? styles.toolCardEmpty : ''}`}>
+        {toolCards.map((t, idx) => {
+          // Cited by AI and Mentioned by AI drive the map below: clicking one
+          // shows its data there (the map's See more opens the checks).
+          const mappable = t.key === 'citation' || t.key === 'brand';
+          const selected = mappable && mapKpi === t.key;
+          const Card = mappable ? 'button' : Link;
+          const cardProps = mappable
+            ? { type: 'button', onClick: () => setMapKpi(t.key), 'aria-pressed': selected, title: 'Show on the map below' }
+            : { to: t.to };
+          return (
+          <Card key={t.key} {...cardProps} style={{ '--i': idx }} className={`reveal ${styles.toolCard} ${!t.hasData ? styles.toolCardEmpty : ''} ${mappable ? styles.toolCardButton : ''} ${selected ? styles.toolCardSelected : ''}`}>
             <div className={styles.toolCardTop}>
               <div className={styles.toolCardLabelRow}>
                 <span className={styles.toolCardLabel}>{t.label}</span>
@@ -1279,12 +1290,21 @@ export default function Dashboard() {
                 </div>
               </div>
             )}
-          </Link>
-        ))}
+            {mappable && (
+              <span className={styles.toolCardMapHint}>{selected ? 'Shown on the map below' : 'Show on the map'}</span>
+            )}
+          </Card>
+          );
+        })}
       </div>
 
       {/* ── Where AI's sources are based ── */}
-      <CitationMapCard citedChecks={citationScoped} mentionedChecks={brandVisScoped} ownDomain={focusSite} />
+      <CitationMapCard
+        source={mapKpi === 'brand' ? 'mentioned' : 'cited'}
+        kpiLabel={toolCards.find(t => t.key === mapKpi)?.label}
+        checks={mapKpi === 'brand' ? brandVisScoped : citationScoped}
+        ownDomain={focusSite}
+      />
 
       {/* ── Quick Wins ── */}
       {quickWins.length > 0 && (
