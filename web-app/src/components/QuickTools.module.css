@@ -64,11 +64,9 @@
 }
 
 .label {
-  font-size: 11.5px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
 }
 
 .rewriteInput {
@@ -124,10 +122,8 @@
 
 .resultLabel {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
 }
 
 .clearBtn {

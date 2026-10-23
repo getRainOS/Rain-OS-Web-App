@@ -548,19 +548,10 @@ export default function History() {
                         </div>
                       </div>
                       <div className={styles.itemRight}>
-                        <div className={styles.itemPillars}>
-                          {[
-                            { key: 'ai_readability', color: PILLAR_COLORS.ai_readability },
-                            { key: 'digital_authority', color: PILLAR_COLORS.digital_authority },
-                            { key: 'conversion_readiness', color: PILLAR_COLORS.conversion_readiness },
-                            { key: 'product_discoverability', color: PILLAR_COLORS.product_discoverability },
-                          ].map(p => (
-                            <span key={p.key} className={styles.miniScore} title={PILLAR_LABELS[p.key]}>
-                              <span className={styles.miniDot} style={{ background: p.color }} aria-hidden="true" />
-                              {item[p.key] !== undefined && item[p.key] !== null ? Math.round(item[p.key]) : '—'}
-                            </span>
-                          ))}
-                        </div>
+                        <span className={styles.itemBar} aria-hidden="true"
+                          title={Object.keys(PILLAR_LABELS).filter(k => item[k] != null).map(k => `${PILLAR_LABELS[k]}: ${Math.round(item[k])}`).join('\n')}>
+                          <span style={{ width: `${Math.max(0, Math.min(100, score ?? 0))}%` }} />
+                        </span>
                         <div className={styles.overallScore} style={{ color: scoreColor }}>
                           {score !== null ? Math.round(score) : '—'}
                         </div>

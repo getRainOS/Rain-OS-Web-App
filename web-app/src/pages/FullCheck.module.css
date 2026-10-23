@@ -5,7 +5,7 @@
   letter-spacing: var(--display-tracking);
 }
 .label { margin-top: 10px; display: flex; justify-content: space-between; font-size: 12.5px; font-weight: 500; color: var(--text-muted); }
-.opt { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: var(--label-tracking); text-transform: uppercase; color: var(--text-dim); }
+.opt { font-family: var(--font-mono); font-size: 12px; letter-spacing: var(--label-tracking); text-transform: uppercase; color: var(--text-dim); }
 .hint { margin: 2px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--text-dim); }
 .error { margin: 6px 0 0; font-size: 13px; line-height: 1.5; color: var(--red); }
 

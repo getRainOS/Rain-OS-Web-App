@@ -4,10 +4,7 @@
 
 .count {
   margin: 0 0 12px;
-  font-family: var(--font-mono);
   font-size: 12px;
-  letter-spacing: var(--label-tracking);
-  text-transform: uppercase;
   color: var(--text-dim);
 }
 

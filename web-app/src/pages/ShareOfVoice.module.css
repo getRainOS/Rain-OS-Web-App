@@ -159,10 +159,8 @@
 
 .sectionTitle {
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
   margin-bottom: 14px;
   margin-top: 0;
 }
@@ -372,11 +370,9 @@
 }
 
 .modelSourcesLabel {
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   margin-bottom: 6px;
 }
 
@@ -488,10 +484,8 @@
 /* ── Result overview ───────────────────────────────────────────────────────── */
 .resultName {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   margin-bottom: 4px;
 }
 
@@ -615,7 +609,7 @@
 .sovHeroLabel { font-size: 13px; color: var(--text-dim); }
 .shareTable { margin-top: 18px; border-top: 1px solid var(--border); }
 .shareTableHead, .shareRow { display: grid; grid-template-columns: minmax(120px, 1.2fr) 2fr 90px; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
-.shareTableHead { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dim); }
+.shareTableHead { font-size: 12px; font-weight: 500; color: var(--text-dim); }
 .shareTableHead span:last-child, .sharePos { text-align: right; }
 .shareRow { font-size: 13.5px; }
 .shareRowYou { background: rgba(59, 156, 245, 0.06); }
