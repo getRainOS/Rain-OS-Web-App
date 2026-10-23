@@ -251,6 +251,20 @@ function buildSubItems(pillarKey, detailKey, result) {
     return items;
   }
 
+  // Content Optimizer results scored with a content-type scorecard: the
+  // judged sub-scores for this type (numbers), then the exact measurements
+  // that feed this pillar, each against this type's target.
+  if (Array.isArray(result?.measured_checks)) {
+    const detail = result?.[detailKey] || {};
+    const judged = Object.entries(detail)
+      .filter(([, v]) => typeof v === 'number')
+      .map(([k, v]) => ({ label: camelToLabel(k), value: Math.round(v) }));
+    const measured = result.measured_checks
+      .filter(c => c.pillar === pillarKey)
+      .map(c => ({ label: c.label, pass: !!c.pass, caption: `${c.display} · target ${c.target}` }));
+    return [...judged, ...measured];
+  }
+
   // AI Readability: prefer the deterministic algorithmic breakdown when the
   // backend returned it. Older saved analyses (from before readability_metrics
   // shipped) won't have it — those fall through to the Gemini-judged
@@ -348,6 +362,7 @@ function SubItemsList({ items, open = false }) {
                   <X size={14} className={styles.subItemFail} />
                 )}
                 <span className={styles.subItemLabel}>{item.label}</span>
+                {item.caption && <span className={styles.subItemCaption} style={{ marginLeft: 'auto' }}>{item.caption}</span>}
               </div>
             )
           )}

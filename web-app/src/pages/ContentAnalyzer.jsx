@@ -13,6 +13,7 @@ import PageHeader from '../components/PageHeader.jsx';
 import CheckProgress from '../components/CheckProgress.jsx';
 import InterviewDraft from '../components/InterviewDraft.jsx';
 import styles from './ContentAnalyzer.module.css';
+import { PILLAR_COLORS } from '../lib/pillarColors.js';
 
 const DRAFT_STORAGE_KEY = 'rain_os_content_analyzer_draft';
 
@@ -71,6 +72,14 @@ const pillarScoreOf = (result, key) => {
   const v = result?.[key] ?? result?.pillarScores?.[PILLAR_CAMEL[key]];
   return typeof v === 'number' ? Math.round(v) : null;
 };
+
+// The analysis's fixes in one shape. Older analyses have no ids, so each
+// gets one from its position.
+function fixesOf(result) {
+  return (result?.recommendations || []).map((r, i) => (typeof r === 'object' && r !== null
+    ? { id: r.id || `r:${i}`, text: r.text || r.recommendation || r.description || r.issue || '', pillar: r.pillar || null, source: r.source || 'judged', metric: r.metric, sub: r.sub, artifact: r.artifact || null }
+    : { id: `r:${i}`, text: String(r), pillar: null, source: 'judged', artifact: null })).filter(f => f.text);
+}
 
 const LANE_CONTENT_TYPES = {
   general: ['article', 'blog_post', 'landing_page', 'social_post'],
@@ -152,6 +161,10 @@ export default function ContentAnalyzer() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
+  // The text the open result was scored on, to tell when the editor has moved on.
+  const [analyzedContent, setAnalyzedContent] = useState(null);
+  // Fix id -> { done, now } from re-checking the edited text (no AI, no credit).
+  const [fixState, setFixState] = useState({});
 
   // Keep the editor draft across refreshes and route changes. This is intentionally
   // separate from analysis history so an in-progress edit is never lost.
@@ -177,6 +190,7 @@ export default function ContentAnalyzer() {
       .then(({ data }) => {
         if (!cancelled) {
           setResult(data?.data ?? null);
+          setAnalyzedContent(typeof data?.data?.content === 'string' && data.data.content.trim() ? data.data.content : null);
           // Older analyses, or deployments where the content column is still
           // empty, must not erase the text that is already in the editor.
           const persistedContent = data?.data?.content;
@@ -193,6 +207,28 @@ export default function ContentAnalyzer() {
       });
     return () => { cancelled = true; };
   }, [id]);
+  // Re-check the listed fixes as the text is edited, by hand or by an accepted
+  // rewrite, so the ones actually done drop off. Measured fixes are exact;
+  // judged ones wait for the next analysis.
+  // Older analyses saved no text: the editor's text when they opened is the baseline.
+  useEffect(() => {
+    if (result && analyzedContent === null && content.trim()) setAnalyzedContent(content);
+  }, [result, analyzedContent, content]);
+  const contentEdited = !!result && analyzedContent !== null && content !== analyzedContent;
+  useEffect(() => {
+    if (!result) return;
+    if (!contentEdited) { setFixState({}); return; }
+    const fixes = fixesOf(result);
+    if (!fixes.some(f => f.source === 'measured')) return;
+    const t = setTimeout(() => {
+      const contentTypeLabel = CONTENT_TYPES.find(x => x.id === contentType)?.label || '';
+      api.checkFixes({ content, contentType: contentTypeLabel, fixes: fixes.map(({ id, source, metric, sub }) => ({ id, source, metric, sub })) })
+        .then(({ data }) => setFixState(Object.fromEntries((data?.status || []).map(x => [x.id, x]))))
+        .catch(() => {});
+    }, 900);
+    return () => clearTimeout(t);
+  }, [content, contentEdited, result, contentType]);
+
   const [textareaFocused, setTextareaFocused] = useState(false);
 
   const [rewriteLoading, setRewriteLoading] = useState(false);
@@ -254,6 +290,7 @@ export default function ContentAnalyzer() {
       setStale(false);
       const { data } = await api.analyze({ title, content: text, url, module: analysisModule, lane: userLane, contentType: contentTypeLabel, previousAnalysisId });
       setResult(data);
+      setAnalyzedContent(text);
       refreshUser();
       if (data?.analysisId) {
         // Carry the submitted draft through the route transition as a second
@@ -279,7 +316,9 @@ export default function ContentAnalyzer() {
       const contentTypeLabel = CONTENT_TYPES.find(t => t.id === contentType)?.label || undefined;
       // The server rewrites to the scoring rubric, scores the result, and uses
       // this piece's saved score as the "before".
-      const { data } = await api.rewrite({ content, module: analysisModule, contentType: contentTypeLabel, analysisId: id && result ? Number(id) : undefined, productId: productId ? Number(productId) : undefined });
+      // With results open, the rewrite works through exactly the fixes still listed.
+      const fixes = result ? fixesOf(result).filter(f => fixState[f.id]?.done !== true).map(({ artifact, ...f }) => f) : undefined;
+      const { data } = await api.rewrite({ content, module: analysisModule, contentType: contentTypeLabel, analysisId: id && result ? Number(id) : undefined, productId: productId ? Number(productId) : undefined, fixes });
       setRewriteResult(data);
       refreshUser();
     } catch (err) {
@@ -462,6 +501,7 @@ export default function ContentAnalyzer() {
 
           {rewriteResult && (
             <RewritePanel
+              listedFixes={result ? fixesOf(result) : []}
               rewriteResult={rewriteResult}
               onAccept={handleAcceptRewrite}
               canRescore={!!result && !isAtLimit}
@@ -567,48 +607,67 @@ export default function ContentAnalyzer() {
             </div>
           )}
 
-          {lengthWarning(contentType, content) && (
+          {/* Older analyses have no measured length fix, so the length warning stands in. */}
+          {lengthWarning(contentType, content) && !fixesOf(result).some(f => f.metric === 'characters' || f.metric === 'words') && (
             <div className={`card ${styles.recoCard}`} role="alert" style={{ borderColor: 'var(--yellow)' }}>
               <h3 className={styles.sectionTitle}>Length</h3>
               <p className={styles.summaryText}>{lengthWarning(contentType, content)}</p>
             </div>
           )}
 
-          {result.recommendations?.length > 0 && (() => {
-            const recs = result.recommendations.map(r => (typeof r === 'object' && r !== null
-              ? { text: r.text || r.recommendation || r.description || r.issue || '', pillar: r.pillar || null, artifact: r.artifact || null }
-              : { text: String(r), pillar: null, artifact: null })).filter(r => r.text);
+          {fixesOf(result).length > 0 && (() => {
+            const all = fixesOf(result);
+            const open = all.filter(f => fixState[f.id]?.done !== true);
+            const done = all.filter(f => fixState[f.id]?.done === true);
             const weak = Object.keys(PILLAR_NAMES)
               .map(k => ({ key: k, score: pillarScoreOf(result, k) }))
-              .filter(p => p.score !== null && p.score < 50 && recs.some(r => r.pillar === p.key))
+              .filter(p => p.score !== null && p.score < 50 && all.some(r => r.pillar === p.key))
               .sort((a, b) => a.score - b.score);
             const groups = [
               ...Object.keys(PILLAR_NAMES)
-                .map(k => ({ key: k, score: pillarScoreOf(result, k), items: recs.filter(r => r.pillar === k) }))
+                .map(k => ({ key: k, score: pillarScoreOf(result, k), items: open.filter(r => r.pillar === k) }))
                 .filter(g => g.items.length)
                 .sort((a, b) => (a.score ?? 100) - (b.score ?? 100)),
-              { key: 'other', score: null, items: recs.filter(r => !r.pillar || !PILLAR_NAMES[r.pillar]) },
+              { key: 'other', score: null, items: open.filter(r => !r.pillar || !PILLAR_NAMES[r.pillar]) },
             ].filter(g => g.items.length);
             let n = 0;
             return (
               <div className={`card ${styles.recoCard}`}>
-                <h3 className={styles.sectionTitle}>What to fix ({recs.length})</h3>
+                <h3 className={styles.sectionTitle}>
+                  What to fix ({open.length}){done.length > 0 && <span style={{ fontWeight: 400, color: 'var(--green)', marginLeft: 8, fontSize: 13 }}>{done.length} done</span>}
+                </h3>
                 {weak.length > 0 && (
                   <p className={styles.summaryText} style={{ marginBottom: 12 }}>
                     Based on your Needs Work {weak.length === 1 ? 'pillar' : 'pillars'}: {weak.map(p => `${PILLAR_NAMES[p.key]} (${p.score})`).join(' and ')}. Start at the top.
                   </p>
                 )}
+                {contentEdited && (
+                  <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: '0 0 12px' }}>
+                    You've edited the text. Fixes we can measure (length, sentences, headings…) update as you type; the rest are confirmed when you re-analyze.
+                  </p>
+                )}
+                {open.length === 0 && (
+                  <p className={styles.summaryText}>Every measured fix is done. Re-analyze to confirm the rest and get your new score.</p>
+                )}
                 {groups.map(g => (
-                  <div key={g.key} style={{ marginBottom: 12 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', margin: '8px 0 6px' }}>
-                      {g.key === 'other' ? 'General' : `${PILLAR_NAMES[g.key]}${g.score !== null ? ` · ${g.score}/100` : ''}`}
+                  <div key={g.key} style={{ marginBottom: 14 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: g.key === 'other' ? 'var(--text-muted)' : PILLAR_COLORS[g.key], margin: '10px 0 8px' }}>
+                      <span style={{ width: 8, height: 8, borderRadius: '50%', background: g.key === 'other' ? 'var(--text-muted)' : PILLAR_COLORS[g.key] }} aria-hidden="true" />
+                      {g.key === 'other' ? 'General' : PILLAR_NAMES[g.key]}
+                      {g.score !== null && <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>· {g.score}/100</span>}
                     </div>
                     <ul className={styles.recoList}>
-                      {g.items.map((r, i) => (
-                        <li key={i} className={styles.recoItem}>
+                      {g.items.map(r => (
+                        <li key={r.id} className={styles.recoItem}>
                           <span className={styles.recoNum}>{++n}</span>
                           <div className={styles.recoContent}>
                             <span>{r.text}</span>
+                            {r.source === 'measured' && fixState[r.id]?.now && (
+                              <span style={{ display: 'block', fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>Now: {fixState[r.id].now}</span>
+                            )}
+                            {r.source !== 'measured' && contentEdited && (
+                              <span style={{ display: 'block', fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>Re-analyze to confirm</span>
+                            )}
                             {r.artifact && <ArtifactBlock artifact={r.artifact} />}
                           </div>
                         </li>
@@ -616,13 +675,21 @@ export default function ContentAnalyzer() {
                     </ul>
                   </div>
                 ))}
-                {content.trim() && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', marginTop: 8 }}>
+                {done.length > 0 && (
+                  <details style={{ marginTop: 4 }}>
+                    <summary style={{ cursor: 'pointer', fontSize: 13, color: 'var(--green)' }}>Done ({done.length})</summary>
+                    <ul style={{ margin: '8px 0 0', paddingLeft: 18, fontSize: 13, color: 'var(--text-muted)' }}>
+                      {done.map(f => <li key={f.id} style={{ textDecoration: 'line-through', marginBottom: 4 }}>{f.text}</li>)}
+                    </ul>
+                  </details>
+                )}
+                {content.trim() && open.length > 0 && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', marginTop: 12 }}>
                     <button type="button" className="btn btn-primary" disabled={rewriteLoading || loading || isAtLimit} onClick={handleRewrite}>
-                      {rewriteLoading ? 'Fixing and re-scoring… (up to a minute)' : 'Fix these for me'}
+                      {rewriteLoading ? 'Fixing and re-scoring… (up to a minute)' : `Fix ${open.length === 1 ? 'this' : `all ${open.length}`} for me`}
                     </button>
                     <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
-                      Rewrites your piece against every fix above, then re-scores it. Anything only you can supply is listed for you.
+                      Rewrites your piece against every fix above, re-scores it, and shows which ones it fixed. Anything only you can supply is listed for you.
                     </span>
                   </div>
                 )}
@@ -643,7 +710,7 @@ export default function ContentAnalyzer() {
   );
 }
 
-function RewritePanel({ rewriteResult, onAccept, onDiscard, canRescore }) {
+function RewritePanel({ rewriteResult, onAccept, onDiscard, canRescore, listedFixes = [] }) {
   const changes = rewriteResult.changes || [];
   const signals = rewriteResult.signals || [];
   const needsYou = rewriteResult.needsYou || [];
@@ -700,6 +767,26 @@ function RewritePanel({ rewriteResult, onAccept, onDiscard, canRescore }) {
       <div className={styles.rewriteContent}>
         <pre className={styles.rewriteText}>{rewriteResult.rewritten}</pre>
       </div>
+
+      {(rewriteResult.fixes || []).length > 0 && (() => {
+        const byId = Object.fromEntries(listedFixes.map(f => [f.id, f]));
+        const st = rewriteResult.fixes.filter(x => byId[x.id]);
+        const fixed = st.filter(x => x.done === true);
+        const notYet = st.filter(x => x.done !== true);
+        return (
+          <div style={{ margin: '12px 16px 0' }}>
+            <p style={{ fontWeight: 600, margin: '0 0 6px' }}>Fixed {fixed.length} of {st.length} listed fixes (checked on the rewritten text)</p>
+            {notYet.length > 0 && (
+              <details>
+                <summary style={{ cursor: 'pointer', fontSize: 13, color: 'var(--text-muted)' }}>Still open ({notYet.length})</summary>
+                <ul style={{ margin: '6px 0 0', paddingLeft: 18, fontSize: 13, color: 'var(--text-muted)' }}>
+                  {notYet.map(x => <li key={x.id} style={{ marginBottom: 4 }}>{byId[x.id].text}</li>)}
+                </ul>
+              </details>
+            )}
+          </div>
+        );
+      })()}
 
       {needsYou.length > 0 && (
         <div className={styles.needsYou}>
