@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import PillarScores from '../components/PillarScores.jsx';
+import MetricBars from '../components/MetricBars.jsx';
 import QuickTools from '../components/QuickTools.jsx';
 import ArtifactBlock from '../components/ArtifactBlock.jsx';
 import TypewriterPlaceholder from '../components/TypewriterPlaceholder.jsx';
@@ -764,18 +765,9 @@ function RewritePanel({ rewriteResult, onAccept, onDiscard, canRescore, listedFi
               {after.overall > before.overall ? `+${after.overall - before.overall}` : after.overall === before.overall ? 'no change' : after.overall - before.overall}
             </span>
           </div>
-          <ul className={styles.rewritePillars}>
-            {after.pillars.map(p => {
-              const b = before.pillars.find(x => x.key === p.key)?.score ?? 0;
-              return (
-                <li key={p.key}>
-                  <span>{p.label}</span>
-                  <span className={styles.rewritePillarBar}><span style={{ width: `${p.score}%` }} /></span>
-                  <span className={styles.rewritePillarNum}>{b} → {p.score}</span>
-                </li>
-              );
-            })}
-          </ul>
+          <div style={{ marginTop: 12 }}>
+            <MetricBars rows={after.pillars.map(p => ({ key: p.key, label: p.label, value: p.score, before: before.pillars.find(x => x.key === p.key)?.score ?? 0, display: p.score }))} />
+          </div>
           {!rewriteResult.improved && (
             <p className={styles.rewriteScoreNote}>The rewrite didn't raise the score. What's holding it back is listed under "Only you can add these".</p>
           )}
@@ -791,6 +783,8 @@ function RewritePanel({ rewriteResult, onAccept, onDiscard, canRescore, listedFi
         const st = rewriteResult.fixes.filter(x => byId[x.id]);
         const fixed = st.filter(x => x.done === true);
         const notYet = st.filter(x => x.done !== true);
+        // Analyses from before fix tracking can't say which fixes were done.
+        if (!st.some(x => x.done !== null)) return null;
         return (
           <div style={{ margin: '12px 16px 0' }}>
             <p style={{ fontWeight: 600, margin: '0 0 6px' }}>Fixed {fixed.length} of {st.length} listed fixes (checked on the rewritten text)</p>
