@@ -583,8 +583,10 @@ RULES:
 1. Meet every pillar of the rubric that can be met with the facts already in the content.
 2. Preserve ALL facts, data, figures, examples, quotes and meaning. Never invent facts, numbers, reviews, credentials, prices, names or links.
 3. ${isShortForm(contentType) ? 'This is a social post: keep it short. Lead with the hook, keep one idea, and cut it to under 1,300 characters (under 280 is ideal). No headings.' : 'Keep the full length: this is a rewrite, not a summary. Splitting sentences and adding headings usually makes it slightly longer.'}
-4. Use Markdown: # and ## headings, - lists, numbered steps.
+4. ${isShortForm(contentType) ? 'Plain text with line breaks only: no headings, no bold section titles.' : 'Use Markdown: # and ## headings, - lists, numbered steps.'}
 5. Where the rubric needs something only the owner can supply (real reviews, credentials, prices, original data, author bio, address, booking link, schema code on the page), do not make it up. List it in "needsYou" instead.
+6. When a fix asks for a source, statistic, study, link, offer or proof that is not already in the content (or the verified facts), do NOT write one: list it in "needsYou". No new numbers, years, studies, organizations or URLs.
+7. Never leave placeholders such as [link], [source] or "insert X here", and never claim something exists that the content doesn't mention (a community, newsletter, discount, guarantee).
 
 ${focus.length ? `THIS CONTENT'S LATEST SCORE FOUND THESE WEAKNESSES. Fix each one specifically:\n${focus.map(f => `- ${f}`).join('\n')}\n\n` : ''}${extraInstruction ? `IMPORTANT: ${extraInstruction}\n\n` : ''}${part && part.total > 1 ? `This is part ${part.index} of ${part.total} of a longer document. Rewrite only this part. ${part.index === 1 ? 'Include the direct-answer summary at the top.' : 'Do not add a new introduction or summary.'} Keep heading levels consistent.\n\n` : ''}CONTENT TO REWRITE:
 ${content}

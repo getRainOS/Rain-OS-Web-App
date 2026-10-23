@@ -15,12 +15,13 @@ describe('content type scorecards', () => {
     expect(contentTypeId(undefined)).toBeNull();
   });
 
-  it('flags a long social post by length, and never asks it for headings or an FAQ', () => {
+  it('flags a long social post by length, never asks it for an FAQ, and wants no headings', () => {
     const m = computeReadabilityMetrics(longSocial);
     const keys = measuredChecks(m, longSocial, 'social_post').map(c => c.key);
     expect(keys).toContain('characters');
-    expect(keys).not.toContain('headingDensity');
     expect(keys).not.toContain('qaDensity');
+    // Headings are checked only to be absent: plain text passes.
+    expect(measuredChecks(m, longSocial, 'social_post').find(c => c.key === 'headingDensity')?.pass).toBe(true);
     expect(measuredFixes(m, longSocial, 'social_post').map(f => f.id)).toContain('m:characters');
   });
 
@@ -90,5 +91,19 @@ describe('fix coverage', () => {
 
   it("ignores pillars that don't count in the lane", () => {
     expect(coverageFixes(parsed, [], [...counted]).some(f => f.pillar === 'local_presence')).toBe(false);
+  });
+});
+
+import { unverifiedDetails } from '../services/contentTypes';
+describe('invention check', () => {
+  const original = 'Veganism avoids animal products. The term was coined in 1944.';
+  it('flags new numbers, studies years and placeholders, not ones already there', () => {
+    const rewrite = 'A 2023 study found a 75% cut. The term dates from 1944. Learn more: [Link to a reputable source]';
+    expect(unverifiedDetails(original, rewrite)).toEqual(expect.arrayContaining(['2023', '75%', '[Link to a reputable source]']));
+    expect(unverifiedDetails(original, rewrite)).not.toContain('1944');
+    expect(unverifiedDetails('w1 w2', 'w100 w101 step 2')).toEqual([]);
+  });
+  it('accepts numbers from the verified facts', () => {
+    expect(unverifiedDetails('Our mat is great.', 'The mat costs $89.', 'Price: 89 USD')).toEqual([]);
   });
 });
