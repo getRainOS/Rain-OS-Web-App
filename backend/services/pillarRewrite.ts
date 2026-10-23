@@ -7,6 +7,8 @@
 // FAQ with ready-to-paste schema, so the result is more than a chat reply.
 import { analyzeContent, rewriteDocumentForAI, wordCount, MIN_REWRITE_RATIO, isShortForm, type NeedsYou } from './geminiService';
 import { rewriteSignals, type RewriteSignal } from './rewriteSignals';
+import { computeReadabilityMetrics } from './readability';
+import { contentTypeId, fixStatus, type Fix, type FixStatus } from './contentTypes';
 import type { AnalysisResponse } from '../types';
 
 export const TARGET = 95;
@@ -45,6 +47,7 @@ export interface PillarRewriteResult {
   faq: Array<{ q: string; a: string }>;
   schema: string | null;
   signals: RewriteSignal[];
+  fixes: FixStatus[]; // each listed fix: done after the rewrite, or not
   scored: AnalysisResponse; // the rewrite's full score, reused when it is accepted
 }
 
@@ -68,8 +71,8 @@ export function focusFrom(r: Baseline, module: string): string[] {
     .map(s => `${s.label} scored ${Math.round(s.score)}/100`);
   const pillars = scoreView(r, module).pillars.filter(p => p.score < 90).map(p => `${p.label} pillar is ${p.score}/100`);
   const recs = (r.recommendations || [])
-    .map(x => (typeof x === 'string' ? x : x?.text || '')).filter(Boolean).slice(0, 4);
-  return [...pillars, ...subs, ...recs].slice(0, 10);
+    .map(x => (typeof x === 'string' ? x : x?.text || '')).filter(Boolean).slice(0, 15);
+  return [...recs, ...pillars, ...subs].slice(0, 20);
 }
 
 // FAQ structured data (schema.org FAQPage) to paste into the page.
@@ -85,14 +88,17 @@ export function faqSchema(faq: Array<{ q: string; a: string }>): string | null {
 export async function pillarRewrite(
   content: string,
   module: string,
-  opts: { industry?: string; contentType?: string; baseline?: Baseline | null; facts?: string } = {},
+  opts: { industry?: string; contentType?: string; baseline?: Baseline | null; facts?: string; fixes?: Fix[] } = {},
   deps = { analyze: analyzeContent, rewrite: rewriteDocumentForAI }
 ): Promise<PillarRewriteResult> {
   const industry = opts.industry || 'General / Other';
   const score = (text: string) => deps.analyze(text, industry, module as any, opts.contentType);
   const baseline: Baseline = opts.baseline ?? (await score(content));
 
-  const first = await deps.rewrite(content, module, focusFrom(baseline, module), opts.contentType, opts.facts);
+  // The exact fixes the user sees, when given; otherwise the score's weak spots.
+  const listed = (opts.fixes || []).filter(f => f?.text);
+  const focus = listed.length ? [...listed.map(f => f.text), ...focusFrom({ ...baseline, recommendations: [] }, module)].slice(0, 25) : focusFrom(baseline, module);
+  const first = await deps.rewrite(content, module, focus, opts.contentType, opts.facts);
   const firstScore = await score(first.rewritten);
   let best = { r: first, s: firstScore };
   let passes = 1;
@@ -130,6 +136,9 @@ export async function pillarRewrite(
     faq,
     schema: faqSchema(faq),
     signals: rewriteSignals(content, best.r.rewritten),
+    fixes: listed.length
+      ? fixStatus(listed, computeReadabilityMetrics(best.r.rewritten), best.r.rewritten, contentTypeId(opts.contentType), best.s as any)
+      : [],
     scored: best.s,
   };
 }

@@ -51,6 +51,7 @@ import { listReposHandler, analyzeRepoHandler, disconnectGithubHandler } from '.
 import githubPreviewFixesHandler from './github/preview-fixes';
 import githubPushFixesHandler from './github/push-fixes';
 import rewriteHandler from './rewrite';
+import { fixesCheckHandler, fixesSummaryHandler } from './fixes';
 import {
   listHandler as trackedListHandler,
   createHandler as trackedCreateHandler,
@@ -118,6 +119,8 @@ app.post('/analyze', handleAnalyze);
 
 // ─── Document Rewrite for AI ──────────────────────────────────────────────
 app.post('/api/rewrite', rewriteHandler);
+app.post('/api/fixes/check', fixesCheckHandler);
+app.get('/api/fixes/summary', fixesSummaryHandler);
 app.post('/v1/api/rewrite', rewriteHandler);
 // ─── URL Scan (new in v2.3) ────────────────────────────────────────────────
 app.post('/api/url-scan', urlScanHandler);
