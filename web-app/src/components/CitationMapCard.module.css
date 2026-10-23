@@ -17,3 +17,4 @@
 .tabActive { background: rgba(255,255,255,0.08); color: var(--text); }
 .foot { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 10px; }
 .foot .note { margin: 0; }
+.showing { font-size: 12px; color: #2B8FE3; border: 1px solid rgba(43,143,227,0.4); border-radius: 999px; padding: 4px 10px; white-space: nowrap; }

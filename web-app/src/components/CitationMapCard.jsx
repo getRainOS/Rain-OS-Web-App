@@ -7,12 +7,11 @@ import styles from './CitationMapCard.module.css';
 
 const CitationWorldMap = lazy(() => import('./CitationWorldMap.jsx'));
 
-// Dashboard map of where the cited websites are based, for the same checks
-// as the cards above it: the latest Cited by AI question, or the latest
-// Mentioned by AI brand. "See more" opens those checks.
-export default function CitationMapCard({ citedChecks = [], mentionedChecks = [], ownDomain }) {
-  const [tab, setTab] = useState(() => (citedChecks.length || !mentionedChecks.length ? 'cited' : 'mentioned'));
-  const checks = tab === 'cited' ? citedChecks : mentionedChecks;
+// Dashboard map of where the cited websites are based, for whichever KPI card
+// is selected above it (Cited by AI or Mentioned by AI), using that card's
+// checks. "See more" opens those checks.
+export default function CitationMapCard({ source = 'cited', kpiLabel, checks = [], ownDomain }) {
+  const tab = source;
   const [resolved, setResolved] = useState(() => new Map());
   const map = useMemo(() => buildCompetitorMap(checks, ownDomain, resolved), [checks, ownDomain, resolved]);
 
@@ -57,10 +56,7 @@ export default function CitationMapCard({ citedChecks = [], mentionedChecks = []
                 : 'Run a Brand Sentiment check to see where the websites AI cites are based.'}
           </p>
         </div>
-        <div className={styles.tabs} role="tablist" aria-label="Which checks the map shows">
-          <button role="tab" aria-selected={tab === 'cited'} className={`${styles.tab} ${tab === 'cited' ? styles.tabActive : ''}`} onClick={() => setTab('cited')}>Cited by AI</button>
-          <button role="tab" aria-selected={tab === 'mentioned'} className={`${styles.tab} ${tab === 'mentioned' ? styles.tabActive : ''}`} onClick={() => setTab('mentioned')}>Mentioned by AI</button>
-        </div>
+        {kpiLabel && <span className={styles.showing}>Showing: {kpiLabel}</span>}
       </div>
       <div className={styles.mapWrap}>
         <Suspense fallback={<div className={styles.loading}><span className="spinner" /></div>}>
