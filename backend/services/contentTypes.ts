@@ -218,7 +218,8 @@ const CRITERIA: Partial<Record<ContentTypeId, Criterion[]>> = {
 };
 
 const NOT_APPLICABLE: Partial<Record<ContentTypeId, string[]>> = {
-  social_post: ['sectionConceptIsolation', 'hierarchicalFormatting', 'explicitQaStructures', 'freshnessSignals', 'citationSignals', 'frictionReduction', 'narrativeNuance'],
+  // topicalAuthority asks for full coverage of a topic, the opposite of one idea per post.
+  social_post: ['sectionConceptIsolation', 'hierarchicalFormatting', 'explicitQaStructures', 'freshnessSignals', 'citationSignals', 'frictionReduction', 'narrativeNuance', 'topicalAuthority'],
   landing_page: ['narrativeNuance', 'freshnessSignals'],
   product_description: ['narrativeNuance', 'freshnessSignals', 'hierarchicalFormatting'],
   documentation: ['socialProofMarkup', 'valueProposition'],
