@@ -63,3 +63,32 @@ describe('content type scorecards', () => {
     expect(typeScorecardPrompt('social_post')).toContain('hookStrength');
   });
 });
+
+import { coverageFixes } from '../services/contentTypes';
+describe('fix coverage', () => {
+  const parsed = {
+    pillarScores: { aiReadability: 49, digitalAuthority: 68, conversionReadiness: 42, ragReadiness: 59, localPresence: 30 },
+    ai_readability_detail: { structuralClarity: 45, semanticPrecision: 80 },
+    digital_authority_detail: { citationSignals: 52, entityClarity: 85 },
+    conversion_readiness_detail: { callToActionClarity: 25 },
+    rag_readiness_detail: { informationDensity: 72, explicitQaStructures: 74 },
+    local_presence_detail: { napConsistency: 10 },
+  };
+  const counted = ['ai_readability', 'digital_authority', 'conversion_readiness', 'rag_readiness'] as const;
+
+  it('adds a fix for every weak sub-score the scorer skipped', () => {
+    const out = coverageFixes(parsed, [{ sub: 'callToActionClarity', pillar: 'conversion_readiness' }], [...counted]);
+    expect(out.map(f => f.sub)).toEqual(expect.arrayContaining(['structuralClarity', 'citationSignals']));
+    expect(out.map(f => f.sub)).not.toContain('callToActionClarity');
+    expect(out.find(f => f.sub === 'citationSignals')?.text).toMatch(/^Citation Signals is 52\/100\./);
+  });
+
+  it('gives a pillar under 75 a fix even when no sub-score is under 70', () => {
+    const out = coverageFixes(parsed, [{ sub: 'callToActionClarity', pillar: 'conversion_readiness' }], [...counted]);
+    expect(out.find(f => f.pillar === 'rag_readiness')?.sub).toBe('informationDensity');
+  });
+
+  it("ignores pillars that don't count in the lane", () => {
+    expect(coverageFixes(parsed, [], [...counted]).some(f => f.pillar === 'local_presence')).toBe(false);
+  });
+});
