@@ -15,6 +15,7 @@ import { pillarRewrite } from '../services/pillarRewrite';
   console.log(`\nAFTER ${r.after.overall} (passes ${r.passes}), words ${text.split(/\s+/).length} -> ${r.rewritten.split(/\s+/).length}, chars ${text.length} -> ${r.rewritten.length}`);
   r.after.pillars.forEach(p => console.log(`  ${p.label}: ${r.before.pillars.find(b => b.key === p.key)?.score} -> ${p.score}`));
   const byId = Object.fromEntries(fixes.map((f: any) => [f.id, f]));
+  console.log(`UNVERIFIED: ${r.unverified.join(" | ") || "none"}`);
   console.log(`\nFIXED ${r.fixes.filter(x => x.done).length} of ${r.fixes.length}`);
   r.fixes.forEach(x => console.log(`  ${x.done ? 'DONE ' : x.done === false ? 'OPEN ' : '???? '} ${byId[x.id]?.sub || byId[x.id]?.metric}${x.now ? ` (now ${x.now})` : ''}`));
   console.log('\nREWRITE:\n' + r.rewritten);
