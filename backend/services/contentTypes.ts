@@ -151,7 +151,7 @@ export function measuredChecks(m: ReadabilityMetrics, text: string, type: Conten
     const raw = def.value(m, text);
     const value = Number.isFinite(raw) ? raw : 0;
     const pass = (t.min === undefined || value >= t.min) && (t.max === undefined || value <= t.max);
-    const target = t.min !== undefined && t.max !== undefined ? `${def.display(t.min)} to ${def.display(t.max)}`
+    const target = t.min !== undefined && t.max !== undefined ? `${+t.min.toFixed(2)}–${def.display(t.max)}`
       : t.max !== undefined ? `${def.display(t.max)} or less` : `${def.display(t.min!)} or more`;
     out.push({ key, label: def.label, pillar: def.pillar, value, display: def.display(value), target, pass });
   }
