@@ -27,9 +27,8 @@ export default function WhyNotCited({ open = false }) {
 
         <h4>Citations favour consistency over time</h4>
         <p>
-          AI tends to cite sources that give the same clear answer, in the same words, everywhere it looks: your website,
-          your Google Business Profile, directories and reviews, week after week. That trust builds over weeks and months,
-          not overnight. Fix the page, keep your details consistent, then judge progress over 4 to 8 weeks of checks, not one.
+          AI trusts businesses that say the same thing everywhere, for a long time. Keep your details the same on your
+          website, Google profile and listings, and give it 4 to 8 weeks before judging the results.
         </p>
 
         <h4>What to do next</h4>
