@@ -8,7 +8,7 @@
 import { analyzeContent, rewriteDocumentForAI, wordCount, MIN_REWRITE_RATIO, isShortForm, type NeedsYou } from './geminiService';
 import { rewriteSignals, type RewriteSignal } from './rewriteSignals';
 import { computeReadabilityMetrics } from './readability';
-import { contentTypeId, fixStatus, type Fix, type FixStatus } from './contentTypes';
+import { contentTypeId, fixStatus, unverifiedDetails, type Fix, type FixStatus } from './contentTypes';
 import type { AnalysisResponse } from '../types';
 
 export const TARGET = 95;
@@ -48,6 +48,7 @@ export interface PillarRewriteResult {
   schema: string | null;
   signals: RewriteSignal[];
   fixes: FixStatus[]; // each listed fix: done after the rewrite, or not
+  unverified: string[]; // numbers, links or placeholders not in the original or the facts
   scored: AnalysisResponse; // the rewrite's full score, reused when it is accepted
 }
 
@@ -120,6 +121,14 @@ export async function pillarRewrite(
     seen.add(k);
     return true;
   });
+  const unverified = unverifiedDetails(content, best.r.rewritten, opts.facts || '');
+  if (unverified.length) {
+    needsYou.unshift({
+      item: `Check before publishing: ${unverified.join(', ')}`,
+      why: "These weren't in your original text, so we can't confirm they're true. Keep them only if they are, and replace any placeholder.",
+      where: 'Where they appear in the rewrite',
+    });
+  }
   const faq = (best.r.faq.length ? best.r.faq : first.faq).slice(0, 6);
   const before = scoreView(baseline, module);
   const after = scoreView(best.s, module);
@@ -140,5 +149,6 @@ export async function pillarRewrite(
       ? fixStatus(listed, computeReadabilityMetrics(best.r.rewritten), best.r.rewritten, contentTypeId(opts.contentType), best.s as any)
       : [],
     scored: best.s,
+    unverified,
   };
 }

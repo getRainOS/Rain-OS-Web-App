@@ -74,6 +74,7 @@ const MEASURES: Record<string, Omit<Measure, 'min' | 'max'>> = {
     value: m => m.headingDensity, display: per100,
     fix: (v, t) => (v < (t.min ?? 0)
       ? `Add headings: you have ${v.toFixed(2)} per 100 words; aim for at least ${t.min} (one every ${Math.round(100 / (t.min || 1))} words or so). Phrase them as the question the section answers.`
+      : t.max === 0 ? 'Remove the headings: a social post reads as plain lines, and headings make it look like an article.'
       : `Too many headings (${v.toFixed(2)} per 100 words; aim for ${t.max} or fewer). Merge thin sections.`),
   },
   qaDensity: {
@@ -126,7 +127,7 @@ const TARGETS: Record<ContentTypeId | 'default', Record<string, Target>> = {
   },
   social_post: {
     avgSentenceLength: { max: 18 }, longSentenceRatio: { max: 0.1 }, passiveVoiceRatio: { max: 0.2 },
-    abstractionRatio: { max: 0.05 }, characters: { max: 1300 },
+    abstractionRatio: { max: 0.05 }, characters: { max: 1300 }, headingDensity: { max: 0 },
   },
 };
 
@@ -305,13 +306,13 @@ const TEMPLATES: Record<string, string> = {
   sectionConceptIsolation: "Split sections that cover two topics, so each heading matches exactly one idea.",
   // Digital Authority
   citationSignals: 'Back your main claims with a named source or a specific number, and say where it comes from ("according to…", a link, a study, your own data).',
-  entityClarity: 'State plainly who you are and what you offer: your full business or brand name, what it is, and where it operates, early on.',
+  entityClarity: 'Name who is speaking and exactly what this is about early on: the author, brand or organization, and the specific topic, product or place.',
   topicalAuthority: 'Cover the topic more completely: add the questions, details and edge cases an expert would include and a beginner would ask about.',
   freshnessSignals: 'Show it is current: add a "last updated" date and refer to current prices, versions or the current year where relevant.',
   socialProofMarkup: 'Add real proof: customer reviews, ratings, testimonials or results with names or numbers.',
   // Conversion Readiness
   callToActionClarity: 'End with one clear next step and say exactly what happens when they take it (e.g. "Book a free 15-minute call").',
-  trustSignals: 'Add reasons to trust you near the call to action: guarantees, credentials, years in business, secure payment, returns.',
+  trustSignals: 'Give the reader a reason to trust it near the call to action: who is behind it and their experience, real results, or (for a business) guarantees and returns.',
   valueProposition: 'Say in one sentence near the top what the reader gets and why it beats the alternatives.',
   frictionReduction: 'Remove reasons to hesitate: state price, time, effort and what is included before asking for action.',
   // Product Discoverability
@@ -384,4 +385,22 @@ export function coverageFixes(parsed: any, existing: Array<{ sub?: string; pilla
     out.push({ id: `j:${sub}`, pillar, source: 'judged', sub, text: `${label(sub)} is ${Math.round(v)}/100, the lowest part of this pillar. ${TEMPLATES[sub]}` });
   }
   return out;
+}
+
+// ─── Invention check ─────────────────────────────────────────────────────────
+// Numbers, years, links and placeholders in a rewrite that appear nowhere in
+// the original text or the verified facts. The rewrite is told not to add
+// them; this catches it when it does, so the owner checks before publishing.
+export function unverifiedDetails(original: string, rewritten: string, facts = ''): string[] {
+  const source = `${original}\n${facts}`.toLowerCase().replace(/,/g, '');
+  const found = new Set<string>();
+  for (const m of rewritten.matchAll(/\[[^\]\n]{3,80}\](?!\()/g)) found.add(m[0]); // [placeholder]
+  for (const m of rewritten.matchAll(/https?:\/\/[^\s)\]]+/g)) if (!source.includes(m[0].toLowerCase())) found.add(m[0]);
+  for (const m of rewritten.matchAll(/(?<![\w.])[$£€]?\d[\d,]*(?:\.\d+)?%?(?![\w])/g)) {
+    const tok = m[0];
+    const bare = tok.replace(/,/g, '').replace(/^[$£€]/, '').replace(/%$/, '');
+    if (bare.length < 2 && !tok.endsWith('%')) continue; // single digits are usually list numbers
+    if (!source.includes(bare)) found.add(tok);
+  }
+  return [...found].slice(0, 10);
 }
