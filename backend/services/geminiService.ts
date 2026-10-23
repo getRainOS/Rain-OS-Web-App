@@ -4,6 +4,7 @@ import { generateContentWithRetry } from './geminiRetry';
 // Algorithmic readability pre-analysis grounding.
 // SDK: @google/generative-ai
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
+import { contentTypeId, typeScorecardPrompt, applyTypeScorecard, measuredChecks, measuredFixes, MEASURED_TOPICS } from './contentTypes';
 import { computeReadabilityMetrics, formatMetricsAsGroundingBlock } from './readability'
 import type {
 AnalysisResponse,
@@ -19,7 +20,7 @@ AuthorshipSignals,
 } from '../types';
 // ─── Config ───────────────────────────────────────────────────────────────────
 // api_version is a single source of truth — never hardcoded in return statements
-export const API_VERSION = '2.5';
+export const API_VERSION = '2.6';
 const API_KEY = process.env.GEMINI_API_KEY || process.env.API_KEY || '';
 const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 let _client: GoogleGenerativeAI | null = null;
@@ -191,12 +192,13 @@ function normalizeRecommendations(raw: unknown): import('../types').PillarRecomm
   const out: import('../types').PillarRecommendation[] = [];
   for (const item of raw) {
     if (typeof item === 'string' && item.trim()) {
-      out.push({ pillar: null, text: item.trim() });
+      out.push({ pillar: null, text: item.trim(), source: 'judged', id: `j:${out.length}` });
     } else if (item && typeof item === 'object' && typeof (item as any).text === 'string' && (item as any).text.trim()) {
       const pillar = typeof (item as any).pillar === 'string' && VALID_PILLARS.has((item as any).pillar)
         ? (item as any).pillar as import('../types').PillarRecommendation['pillar']
         : null;
-      out.push({ pillar, text: (item as any).text.trim() });
+      const sub = typeof (item as any).sub === 'string' ? (item as any).sub.trim() : '';
+      out.push({ pillar, text: (item as any).text.trim(), source: 'judged', id: `j:${sub || out.length}`, ...(sub ? { sub } : {}) });
     }
   }
   return out;
@@ -293,6 +295,8 @@ if (!API_KEY) throw new Error('GEMINI_API_KEY environment variable is not set');
 // Step 1: Algorithmic pre-analysis — hard metrics, no API cost
 const metrics = computeReadabilityMetrics(content);
 const groundingBlock = formatMetricsAsGroundingBlock(metrics);
+const typeId = contentTypeId(contentType);
+const scorecard = typeScorecardPrompt(typeId);
 // Step 2: Build the prompt with grounding anchors injected
 const moduleWeightInstructions = moduleRubric(module);
 
@@ -301,12 +305,13 @@ groundingBlock,
 moduleWeightInstructions,
 `INDUSTRY: ${industry}`,
 ...(contentTypeRubric(contentType) ? [contentTypeRubric(contentType) as string] : []),
+...(scorecard ? [scorecard] : []),
 '',
 '=== CONTENT TO SCORE ===',
 content.slice(0, 12000), // cap at ~12k chars to manage token cost
 '=== END CONTENT ===',
 '',
-'IMPORTANT: The "recommendations" array must contain one specific, actionable fix for EVERY subcategory above that scored under 70 (at least 3, at most 12), weakest first (e.g. "Add a bulleted FAQ answering the top 3 buyer questions" rather than generic advice like "improve clarity"). Never return an empty array — every piece of content has room for at least one concrete improvement. Each recommendation must be an object of the shape { "pillar": "<key>", "text": "<fix>" }, where "pillar" is exactly one of: "ai_readability", "digital_authority", "conversion_readiness", "product_discoverability", "rag_readiness", "local_presence" — whichever pillar that specific fix most directly improves.',
+`IMPORTANT: The "recommendations" array must contain one specific, actionable fix for EVERY judged sub-score above that scored under 70, weakest first (e.g. "Add a bulleted FAQ answering the top 3 buyer questions" rather than generic advice like "improve clarity"). Skip anything about ${MEASURED_TOPICS}: those fixes are measured and added separately. Each recommendation must be an object { "pillar": "<key>", "sub": "<the sub-score key it fixes, e.g. callToActionClarity>", "text": "<fix>" }, where "pillar" is exactly one of: "ai_readability", "digital_authority", "conversion_readiness", "product_discoverability", "rag_readiness", "local_presence". If no judged sub-score is under 70, return the 1-3 changes that would raise the score most.`,
   'IMPORTANT: The "summary" field must be a concise 1-2 sentence overview of what this content is about and its overall AEO readiness, written in plain language for a non-technical reader.',
   'Return your scores as a single JSON object matching this exact shape (all fields required):',
 JSON.stringify(RESPONSE_SCHEMA, null, 2),
@@ -358,6 +363,7 @@ parsed = JSON.parse(clean);
 console.error('Gemini response parse error:', raw.slice(0, 500));
 throw new Error('Failed to parse Gemini scoring response as JSON');
 }
+applyTypeScorecard(parsed, typeId);
 // Step 5: Invert semanticRedundancyScore with bounds clamp
 // Gemini returns raw redundancy level (0=clean, 100=highly repetitive).
 // We expose an improvement score (100=clean, 0=highly repetitive).
@@ -454,7 +460,9 @@ authorityScore: clamp(authorshipRaw.authorityScore || 0),
       rag_readiness_detail: parsed.rag_readiness_detail || ({} as RagReadinessDetail),
       local_presence_detail: parsed.local_presence_detail || ({} as LocalPresenceDetail),
       readability_metrics: metrics,
-      recommendations: normalizeRecommendations(parsed.recommendations),
+      content_type: typeId,
+      measured_checks: measuredChecks(metrics, content, typeId),
+      recommendations: [...measuredFixes(metrics, content, typeId), ...normalizeRecommendations(parsed.recommendations)],
       summary: typeof parsed.summary === 'string' ? parsed.summary : '',
       keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],
       authorship: authorshipSignals,
