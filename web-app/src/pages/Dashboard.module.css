@@ -178,12 +178,10 @@
 }
 
 .toolCardLabel {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 400;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--text-dim);
-  letter-spacing: var(--label-tracking);
-  text-transform: uppercase;
+  letter-spacing: 0;
 }
 
 .toolCardBadgeEmpty {
@@ -330,11 +328,9 @@
 }
 
 .kpiLabel {
-  font-size: 11px;
+  font-size: 12.5px;
   font-weight: 500;
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 .kpiIconWrap {
@@ -503,7 +499,7 @@
 /* ── Dotted grid backdrop (Pillar Breakdown hero) ── */
 .dottedBg {
   position: relative;
-  background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-image: none;
   background-size: 16px 16px;
   background-position: -4px -4px;
 }
@@ -1114,11 +1110,9 @@ button.emptyLink {
 }
 
 .heroRankHeader {
-  font-size: 10.5px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   padding-bottom: 8px;
   margin-bottom: 8px;
   border-bottom: 1px solid var(--border);
@@ -1126,9 +1120,11 @@ button.emptyLink {
 
 .heroRankRow {
   display: flex;
+  flex-wrap: wrap;
+  row-gap: 0;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 4px 10px;
   padding: 8px 0;
   border-bottom: 1px solid rgba(255,255,255,0.04);
 }
@@ -1141,6 +1137,7 @@ button.emptyLink {
   display: flex;
   align-items: center;
   min-width: 0;
+  flex: 1 1 0;
 }
 
 .heroRankLabel {
@@ -1375,10 +1372,9 @@ button.emptyLink {
 
 .pieceEyebrow {
   display: block;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: var(--label-tracking);
-  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
   color: var(--text-dim);
 }
 
@@ -1396,7 +1392,7 @@ button.emptyLink {
 .pieceSelect { width: 300px; max-width: 100%; }
 
 .deltaPts {
-  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
   font-size: 12px;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -1447,10 +1443,9 @@ button.emptyLink {
 .improveText { display: grid; gap: 3px; min-width: 0; }
 
 .improveLabel {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: var(--label-tracking);
-  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
   color: var(--text-dim);
 }
 
@@ -1565,3 +1560,12 @@ button.emptyLink {
 .laneWeightsHead { margin-top: 36px; text-align: left; }
 .laneWeightsHead h3 { margin: 0; font-size: 15px; font-weight: 600; color: var(--text); }
 .laneWeightsHead p { margin: 4px 0 0; font-size: 13px; color: var(--text-dim); }
+
+/* Ranked pillars: the standard thin bar under each row (see MetricBars). */
+.heroRankBar { flex-basis: 100%; display: block; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.08); overflow: hidden; margin-top: 6px; }
+.heroRankBar span { display: block; height: 100%; background: #2B8FE3; border-radius: 2px; }
+
+/* Recent analyses: overall score as the standard thin bar. */
+.analysisBar { display: block; width: 72px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.08); overflow: hidden; flex-shrink: 0; }
+.analysisBar span { display: block; height: 100%; background: #2B8FE3; border-radius: 2px; }
+@media (max-width: 640px) { .analysisBar { display: none; } }

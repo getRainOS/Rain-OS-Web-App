@@ -14,8 +14,7 @@ import CitationMapCard from '../components/CitationMapCard.jsx';
 import {
   AreaChart, Area, XAxis, YAxis,
   Tooltip, ResponsiveContainer,
-  LineChart, Line,
-} from 'recharts';
+  LineChart, Line, CartesianGrid } from 'recharts';
 import {
   Plus, TrendingUp, TrendingDown,
   FileText, Globe, GitBranch, ArrowRight,
@@ -671,23 +670,23 @@ export default function Dashboard() {
       { ...PILLARS[4], weight: 10 },
     ];
     if (userLane === 'developers') return [
-      { ...PILLARS[0], label: 'Doc Structure', weight: 32 },
-      { ...PILLARS[1], label: 'Tech Completeness', weight: 32 },
-      { ...PILLARS[2], label: 'Technical Clarity', weight: 26 },
-      { ...PILLARS[4], label: 'RAG Readiness', weight: 10 },
+      { ...PILLARS[0], weight: 32 },
+      { ...PILLARS[1], weight: 32 },
+      { ...PILLARS[2], weight: 26 },
+      { ...PILLARS[4], weight: 10 },
     ];
     if (userLane === 'local_business') return [
       { ...PILLARS[5], weight: 30 },
-      { ...PILLARS[0], label: 'AI Presence', weight: 20 },
-      { ...PILLARS[1], label: 'Digital Authority', weight: 20 },
-      { ...PILLARS[2], label: 'Trust & Conversion', weight: 20 },
-      { ...PILLARS[4], label: 'RAG Readiness', weight: 10 },
+      { ...PILLARS[0], weight: 20 },
+      { ...PILLARS[1], weight: 20 },
+      { ...PILLARS[2], weight: 20 },
+      { ...PILLARS[4], weight: 10 },
     ];
     if (userLane === 'vibe_coders') return [
-      { ...PILLARS[0], label: 'AI Readability', weight: 32 },
-      { ...PILLARS[1], label: 'Discoverability', weight: 32 },
-      { ...PILLARS[2], label: 'Conversion', weight: 26 },
-      { ...PILLARS[4], label: 'RAG Readiness', weight: 10 },
+      { ...PILLARS[0], weight: 32 },
+      { ...PILLARS[1], weight: 32 },
+      { ...PILLARS[2], weight: 26 },
+      { ...PILLARS[4], weight: 10 },
     ];
     return [
       { ...PILLARS[0], weight: 36 },
@@ -1135,6 +1134,7 @@ export default function Dashboard() {
               <div className={styles.heroChartBg}>
                 <ResponsiveContainer width="100%" height={200}>
                   <LineChart data={piecePoints} margin={{ top: 8, right: 16, bottom: 0, left: -24 }}>
+                    <CartesianGrid vertical={false} stroke="rgba(255,255,255,0.06)" />
                     <XAxis dataKey="idx" stroke="transparent" type="category"
                       tickFormatter={n => `Analysis ${n}`} padding={{ left: 24, right: 24 }}
                       tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
@@ -1142,7 +1142,7 @@ export default function Dashboard() {
                       tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
                     <Tooltip content={<PillarLineTooltip pillars={activePillars} />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
                     {activePillars.map(p => (
-                      <Line key={p.key} type="monotone" dataKey={p.key} stroke={p.color} strokeWidth={2}
+                      <Line key={p.key} type="monotone" dataKey={p.key} stroke={p.color} strokeWidth={1.5}
                         isAnimationActive={false}
                         dot={piecePoints.length === 1 ? { r: 5, strokeWidth: 0, fill: p.color } : false}
                         activeDot={{ r: 4, strokeWidth: 0 }} />
@@ -1195,6 +1195,7 @@ export default function Dashboard() {
                     <span className={styles.heroRankScore}>{p.score}</span>
                     <DeltaPts value={p.delta} />
                   </div>
+                  <span className={styles.heroRankBar} aria-hidden="true"><span style={{ width: `${Math.max(0, Math.min(100, p.score))}%` }} /></span>
                 </div>
               ))}
             </div>
@@ -1386,6 +1387,7 @@ export default function Dashboard() {
           ) : (
             <ResponsiveContainer key={`chart-${chartRange}`} width="100%" height={160}>
               <AreaChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
+                    <CartesianGrid vertical={false} stroke="rgba(255,255,255,0.06)" />
                 <defs>
                   <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="var(--accent)" stopOpacity={0.08} />
@@ -1462,13 +1464,10 @@ export default function Dashboard() {
                       {type}
                     </div>
                     <span className={styles.analysisTitle}>{item.title || item.url || 'Untitled'}{piece.runs.length > 1 && <span className={styles.analysisCount}> · {piece.runs.length} analyses</span>}</span>
-                    <div className={styles.pillarDots}>
-                      {PILLARS.map(p => (
-                        <span key={p.key} className={styles.pillarDot}
-                          style={{ background: p.color, opacity: item[p.key] ? (item[p.key] / 100) * 0.7 + 0.3 : 0.2 }}
-                          title={`${p.label}: ${item[p.key] ?? '—'}`} />
-                      ))}
-                    </div>
+                    <span className={styles.analysisBar} aria-hidden="true"
+                      title={PILLARS.filter(p => item[p.key] != null).map(p => `${p.label}: ${Math.round(item[p.key])}`).join('\n')}>
+                      <span style={{ width: `${Math.max(0, Math.min(100, item.overall_score ?? 0))}%` }} />
+                    </span>
                     <span className={styles.analysisScore}>
                       {item.overall_score ?? '—'}
                     </span>
