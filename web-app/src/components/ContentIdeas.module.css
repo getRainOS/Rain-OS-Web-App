@@ -37,10 +37,7 @@
 .itemTop { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .itemTitle { font-size: 14.5px; font-weight: 600; color: var(--text); }
 .format {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: var(--label-tracking);
-  text-transform: uppercase;
+  font-size: 12px;
   color: var(--text-dim);
 }
 .angle { margin: 4px 0 0; font-size: 13px; line-height: 1.5; color: var(--text-muted); }

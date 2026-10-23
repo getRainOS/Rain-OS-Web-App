@@ -46,10 +46,8 @@
 }
 
 .sectionTitle {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--text-muted);
   margin-bottom: 8px;
   opacity: 0.7;
