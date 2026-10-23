@@ -262,7 +262,14 @@ function buildSubItems(pillarKey, detailKey, result) {
     const measured = result.measured_checks
       .filter(c => c.pillar === pillarKey)
       .map(c => ({ label: c.label, pass: !!c.pass, caption: `${c.display} · target ${c.target}` }));
-    return [...judged, ...measured];
+    // Who wrote it and when: part of Digital Authority, found on the page.
+    const a = result?.authorship;
+    const authorship = pillarKey === 'digital_authority' && a ? [
+      { label: 'Author byline', pass: !!a.hasAuthorByline },
+      { label: 'Publish date', pass: !!a.hasPublishDate },
+      { label: 'Organization named', pass: !!a.hasOrganization },
+    ] : [];
+    return [...judged, ...measured, ...authorship];
   }
 
   // AI Readability: prefer the deterministic algorithmic breakdown when the
@@ -453,7 +460,7 @@ function WhatDoesThisMean({ tagline, children }) {
   );
 }
 
-export default function PillarScores({ result, lane }) {
+export default function PillarScores({ result, lane, fixCounts }) {
   const visiblePillars = PILLARS.filter(p => {
     if (p.key === 'product_discoverability') return lane === 'product_sellers';
     if (p.key === 'local_presence') return lane === 'local_business';
@@ -524,6 +531,19 @@ export default function PillarScores({ result, lane }) {
                       <span className={styles.pillarTag}>
                         {scoreLabel(pct)}
                       </span>
+                      {fixCounts && (
+                        fixCounts[p.key] ? (
+                          <a
+                            href={`#fixes-${p.key}`}
+                            onClick={e => { e.preventDefault(); document.getElementById(`fixes-${p.key}`)?.scrollIntoView({ behavior: 'smooth' }); }}
+                            style={{ display: 'block', width: '100%', textAlign: 'right', fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}
+                          >
+                            {fixCounts[p.key]} {fixCounts[p.key] === 1 ? 'fix' : 'fixes'} ↓
+                          </a>
+                        ) : (
+                          <span style={{ display: 'block', width: '100%', textAlign: 'right', fontSize: 12, color: 'var(--text-dim)', marginTop: 4 }}>{pct < 75 ? 'Re-analyze to get fixes' : 'No fixes needed'}</span>
+                        )
+                      )}
                     </>
                   ) : (
                     <span className={styles.pillarNa}>N/A</span>
