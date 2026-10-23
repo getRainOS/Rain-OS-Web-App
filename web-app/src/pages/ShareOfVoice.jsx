@@ -378,10 +378,10 @@ export default function ShareOfVoice() {
                       <span className={styles.sovHeroLabel}>Share of Voice: your share of all brand mentions</span>
                     </div>
                   )}
-                  <div className={styles.resultHeadline} style={{ marginBottom: result.domainSharePercent !== null ? 4 : 12 }}>
-                    Mentioned in {result.mentionedCount} of 3 answers
+                  <div className={styles.resultHeadline} style={{ marginBottom: result.domainSharePercent != null ? 4 : 12 }}>
+                    Mentioned in {result.mentionedCount ?? (result.modelResults || []).filter(m => m.mentioned ?? m.cited).length} of {(result.modelResults || []).length || 3} answers
                   </div>
-                  {result.domainSharePercent !== null && (
+                  {result.domainSharePercent != null && result.domainSourceCount != null && (
                     <div className={styles.resultDomainShare}>
                       Source share: your domain is {result.domainCitedCount} of {result.domainSourceCount} cited sources ({result.domainSharePercent}%)
                     </div>
