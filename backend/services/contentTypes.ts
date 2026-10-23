@@ -291,3 +291,97 @@ export function fixStatus(
     return { id: f.id, done: null };
   });
 }
+
+// ─── Coverage: every weak sub-score gets a fix ───────────────────────────────
+// The scorer is asked for one fix per sub-score under 70 but can skip one.
+// These templates fill any gap, so the fix list always matches the scores.
+const WEAK = 70;
+const TEMPLATES: Record<string, string> = {
+  // AI Readability
+  structuralClarity: 'Give each section one job: a heading that names it, then short paragraphs that stay on that point.',
+  answerFirstFormatting: 'Open each section with the direct answer in one sentence, then explain. AI quotes the first sentence under a heading.',
+  semanticPrecision: 'Swap general words for exact ones: name the product, place, number or person instead of "it", "things" or "solutions".',
+  contextSufficiency: 'Make each section make sense on its own: restate who or what it is about, since AI often quotes one section without the rest.',
+  sectionConceptIsolation: "Split sections that cover two topics, so each heading matches exactly one idea.",
+  // Digital Authority
+  citationSignals: 'Back your main claims with a named source or a specific number, and say where it comes from ("according to…", a link, a study, your own data).',
+  entityClarity: 'State plainly who you are and what you offer: your full business or brand name, what it is, and where it operates, early on.',
+  topicalAuthority: 'Cover the topic more completely: add the questions, details and edge cases an expert would include and a beginner would ask about.',
+  freshnessSignals: 'Show it is current: add a "last updated" date and refer to current prices, versions or the current year where relevant.',
+  socialProofMarkup: 'Add real proof: customer reviews, ratings, testimonials or results with names or numbers.',
+  // Conversion Readiness
+  callToActionClarity: 'End with one clear next step and say exactly what happens when they take it (e.g. "Book a free 15-minute call").',
+  trustSignals: 'Add reasons to trust you near the call to action: guarantees, credentials, years in business, secure payment, returns.',
+  valueProposition: 'Say in one sentence near the top what the reader gets and why it beats the alternatives.',
+  frictionReduction: 'Remove reasons to hesitate: state price, time, effort and what is included before asking for action.',
+  // Product Discoverability
+  productVariantCoverage: 'List every size, colour or option with its own price and stock status.',
+  merchantIdentityClarity: 'Name the seller clearly, with shipping, returns and contact details on the page.',
+  pricingTransparency: 'State the exact price with currency, plus any sale price, shipping cost or subscription terms.',
+  availabilitySignals: 'Say whether it is in stock and how fast it ships.',
+  comparativeContext: 'Compare it with one or two alternatives: what it does better, and who should pick something else.',
+  // Local Presence
+  napConsistency: 'Show your business name, street address and phone number exactly as they appear on your Google Business Profile.',
+  localSchemaMarkup: 'Add LocalBusiness structured data with your name, address, phone, hours and service area.',
+  serviceAreaClarity: 'Name the city and the neighbourhoods or towns you serve in the main heading and first paragraph.',
+  reviewSignalStrength: 'Quote or link real local reviews, ideally ones that mention your city or service.',
+  localCitationSignals: 'Link to your listings on Google, Yelp and local directories, and make sure the details match.',
+  // RAG Readiness
+  informationDensity: 'Replace filler with facts: every paragraph should carry a number, name, step or specific detail.',
+  semanticMapping: "Use the words your readers would search for, and the topic's standard terms, in headings and first sentences.",
+  narrativeNuance: 'Add the "it depends" detail: when the advice applies, when it does not, and the trade-offs.',
+  hierarchicalFormatting: 'Use headings and sub-headings in order (H2 for sections, H3 inside them) so the outline reads on its own.',
+  explicitQaStructures: 'Add a short FAQ: 3 to 5 real questions, each answered in one or two sentences right underneath.',
+  authoritySignals: 'Name the author or business and their relevant experience, and cite sources for key facts.',
+  // Content-type criteria
+  hookStrength: 'Rewrite the first line so it makes your point or a bold, specific claim on its own.',
+  singleClearIdea: 'Cut it down to one idea; save the other points for separate posts.',
+  standaloneTakeaway: 'Add one sentence that sums up the takeaway and makes sense quoted on its own.',
+  platformFit: 'Write it the way people talk on the platform: plain, first person, no press-release phrasing.',
+  aboveTheFoldClarity: 'Make the headline and first line say what it is, who it is for and the main benefit.',
+  proofSpecificity: 'Replace vague claims with specific proof: numbers, named customers, results, testimonials.',
+  objectionHandling: 'Answer the top objections on the page: price, risk, time, and "will this work for me".',
+  audienceClarity: 'Name exactly who it is for (role, business type, situation), so AI recommends it to the right people.',
+  stepClarity: 'Number the steps, one action each, and list prerequisites before step 1.',
+  codeExampleCompleteness: 'Make every code example copy-paste runnable and show the expected output.',
+  errorCaseCoverage: 'Add the common errors and what to do about each.',
+  specsAsFacts: 'State specs as facts with units: dimensions, weight, materials, compatibility.',
+  bestForClarity: 'Say who it is best for, and who should choose something else.',
+};
+
+const label = (k: string) => k.replace(/([A-Z])/g, ' $1').replace(/^./, c => c.toUpperCase()).trim();
+
+// Fixes for weak sub-scores the scorer left without one. Only pillars that
+// count in this lane, and only sub-scores that apply to this content type.
+export function coverageFixes(parsed: any, existing: Array<{ sub?: string; pillar?: string | null }>, countedPillars: PillarKey[]): Fix[] {
+  const covered = new Set(existing.map(f => f.sub).filter(Boolean));
+  const out: Fix[] = [];
+  for (const pillar of countedPillars) {
+    const d = parsed?.[DETAIL_OF[pillar]];
+    if (!d || typeof d !== 'object') continue;
+    for (const [sub, v] of Object.entries(d)) {
+      if (typeof v !== 'number' || v >= WEAK || covered.has(sub) || !TEMPLATES[sub]) continue;
+      covered.add(sub);
+      out.push({ id: `j:${sub}`, pillar, source: 'judged', sub, text: `${label(sub)} is ${Math.round(v)}/100. ${TEMPLATES[sub]}` });
+    }
+  }
+  // A pillar below Good (75) always gets at least one fix: its lowest sub-score.
+  const CAMEL: Record<PillarKey, string> = {
+    ai_readability: 'aiReadability', digital_authority: 'digitalAuthority', conversion_readiness: 'conversionReadiness',
+    product_discoverability: 'productDiscoverability', rag_readiness: 'ragReadiness', local_presence: 'localPresence',
+  };
+  const has = new Set([...existing.map((f: any) => f.pillar), ...out.map(f => f.pillar)]);
+  for (const pillar of countedPillars) {
+    const score = Number(parsed?.pillarScores?.[CAMEL[pillar]]);
+    if (!Number.isFinite(score) || score >= 75 || has.has(pillar)) continue;
+    const d = parsed?.[DETAIL_OF[pillar]] || {};
+    const lowest = Object.entries(d)
+      .filter(([k, v]) => typeof v === 'number' && TEMPLATES[k] && !covered.has(k))
+      .sort((a, b) => (a[1] as number) - (b[1] as number))[0];
+    if (!lowest) continue;
+    const [sub, v] = lowest as [string, number];
+    covered.add(sub);
+    out.push({ id: `j:${sub}`, pillar, source: 'judged', sub, text: `${label(sub)} is ${Math.round(v)}/100, the lowest part of this pillar. ${TEMPLATES[sub]}` });
+  }
+  return out;
+}

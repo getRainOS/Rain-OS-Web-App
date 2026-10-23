@@ -4,7 +4,7 @@ import { generateContentWithRetry } from './geminiRetry';
 // Algorithmic readability pre-analysis grounding.
 // SDK: @google/generative-ai
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
-import { contentTypeId, typeScorecardPrompt, applyTypeScorecard, measuredChecks, measuredFixes, MEASURED_TOPICS } from './contentTypes';
+import { contentTypeId, typeScorecardPrompt, applyTypeScorecard, measuredChecks, measuredFixes, coverageFixes, MEASURED_TOPICS } from './contentTypes';
 import { computeReadabilityMetrics, formatMetricsAsGroundingBlock } from './readability'
 import type {
 AnalysisResponse,
@@ -462,7 +462,15 @@ authorityScore: clamp(authorshipRaw.authorityScore || 0),
       readability_metrics: metrics,
       content_type: typeId,
       measured_checks: measuredChecks(metrics, content, typeId),
-      recommendations: [...measuredFixes(metrics, content, typeId), ...normalizeRecommendations(parsed.recommendations)],
+      recommendations: (() => {
+        // Measured fixes, the scorer's fixes, then a template fix for any weak
+        // sub-score the scorer skipped, so every weak sub-score has a fix.
+        const judged = normalizeRecommendations(parsed.recommendations);
+        const counted = ([['ai_readability', 'ar'], ['digital_authority', 'da'], ['conversion_readiness', 'cr'],
+          ['product_discoverability', 'pd'], ['local_presence', 'lp'], ['rag_readiness', 'rr']] as const)
+          .filter(([, w]) => (moduleWeights as any)[w] > 0).map(([k]) => k);
+        return [...measuredFixes(metrics, content, typeId), ...judged, ...coverageFixes(parsed, judged, [...counted])];
+      })(),
       summary: typeof parsed.summary === 'string' ? parsed.summary : '',
       keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],
       authorship: authorshipSignals,

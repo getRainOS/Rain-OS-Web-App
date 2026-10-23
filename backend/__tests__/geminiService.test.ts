@@ -379,10 +379,11 @@ describe('analyzeContent', () => {
     expect(Array.isArray(result.keywords)).toBe(true);
   });
 
-  it('defaults recommendations and keywords to [] when absent from response', async () => {
+  it("with no scorer fixes, keeps only measured and coverage fixes; keywords default to []", async () => {
     mockResponseText = makeValidGeminiResponse({ recommendations: null, keywords: undefined });
     const result = await analyzeContent('Content here.', 'General / Other');
-    expect(result.recommendations).toEqual([]);
+    // Nothing comes from the scorer; weak sub-scores are still covered by templates.
+    expect(result.recommendations.every((r: any) => r.source === 'measured' || /\/100/.test(r.text))).toBe(true);
     expect(result.keywords).toEqual([]);
   });
 
