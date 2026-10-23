@@ -309,8 +309,8 @@ function buildSubItems(pillarKey, detailKey, result) {
 }
 
 /* ── Collapsed-by-default pass/fail scoring breakdown ────────────────────── */
-function SubItemsList({ items }) {
-  const [collapsed, setCollapsed] = useState(true);
+function SubItemsList({ items, open = false }) {
+  const [collapsed, setCollapsed] = useState(!open);
   if (!items || items.length === 0) return null;
 
   return (
@@ -516,7 +516,7 @@ export default function PillarScores({ result, lane }) {
                 </div>
               </div>
 
-              <SubItemsList items={buildSubItems(p.key, p.detailKey, result)} />
+              <SubItemsList items={buildSubItems(p.key, p.detailKey, result)} open={pct !== null && pct < 50} />
             </div>
           );
         })}

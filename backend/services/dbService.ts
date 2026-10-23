@@ -812,6 +812,7 @@ export const deleteBrandVisibilityChecksByUser = async (userId: string): Promise
 // --------------------------
 
 export interface AnalysisRecord {
+  [detail: string]: any; // per-pillar breakdowns from result_json
   subScores?: Array<{ category: string; label: string; score: number }>;
   id: number;
   title: string | null;
@@ -832,6 +833,12 @@ export interface AnalysisRecord {
   series_id: number | null;
 }
 
+const DETAIL_KEYS = [
+  'ai_readability_detail', 'digital_authority_detail', 'conversion_readiness_detail',
+  'product_discoverability_detail', 'rag_readiness_detail', 'local_presence_detail',
+  'readability_metrics', 'authorship',
+] as const;
+
 const mapAnalysisRow = (row: any): AnalysisRecord => ({
   id: Number(row.id),
   title: row.title ?? null,
@@ -849,6 +856,16 @@ const mapAnalysisRow = (row: any): AnalysisRecord => ({
   lane: row.lane ?? null,
   content: row.content ?? null,
   series_id: row.series_id != null ? Number(row.series_id) : null,
+  // The per-pillar breakdowns, so a reopened analysis shows the same detail
+  // under each pillar as when it was first run.
+  ...(() => {
+    try {
+      const parsed = typeof row.result_json === 'string' ? JSON.parse(row.result_json) : row.result_json;
+      const out: Record<string, any> = {};
+      for (const k of DETAIL_KEYS) if (parsed?.[k] && typeof parsed[k] === 'object') out[k] = parsed[k];
+      return out;
+    } catch { return {}; }
+  })(),
   // Sub-scores, so a reopened analysis can still tell the rewrite its weak spots.
   subScores: (() => {
     try {
