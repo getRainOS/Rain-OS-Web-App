@@ -250,8 +250,8 @@ export default function ShareOfVoice() {
         title="Share of Voice"
         subtitle="See how often AI mentions and cites you for a topic, and which competitors show up instead."
         about={[
-          { heading: 'What the numbers mean', body: 'Mentions and citation share are literal counts from three real Gemini prompts, not a score. Re-run over time to see whether your presence is growing.' },
-          { heading: 'How the check works', body: 'We ask Gemini about your topic 3 different ways (best options, a recommendation, and a comparison), each with a live Google search. The 3 questions tab shows exactly what was asked. It covers Gemini only, at one moment, so treat it as a trend signal rather than true market share.' },
+          { heading: 'What the numbers mean', body: 'Mentions and citation share are literal counts from three real AI answers, not a score. Re-run over time to see whether your presence is growing.' },
+          { heading: 'How the check works', body: 'We ask the AI engine you pick about your topic 3 different ways (best options, a recommendation, and a comparison), each live. The 3 questions tab shows exactly what was asked. It covers one engine at one moment, so treat it as a trend signal rather than true market share.' },
         ]}
         actions={(tab !== 'check' || result) && <NewCheckButton onClick={() => { handleReset(); setTab('check'); }} />}
       />
