@@ -7,7 +7,6 @@ import PillarScores from '../components/PillarScores.jsx';
 import QuickTools from '../components/QuickTools.jsx';
 import ArtifactBlock from '../components/ArtifactBlock.jsx';
 import TypewriterPlaceholder from '../components/TypewriterPlaceholder.jsx';
-import CitationCrossPromo from '../components/CitationCrossPromo.jsx';
 import { FileText, PenLine, ShoppingBag, LayoutTemplate, BookOpen, MessageSquare, Sparkles, Lock } from 'lucide-react';
 import PageHeader from '../components/PageHeader.jsx';
 import CheckProgress from '../components/CheckProgress.jsx';
@@ -115,6 +114,27 @@ function readSavedDraft() {
   }
 }
 
+// Unanalyzed pieces set aside with "Start a new piece", kept in this browser
+// and listed under Drafts in the Library.
+const DRAFTS_KEY = 'rain_content_drafts';
+function readDrafts() {
+  try {
+    const list = JSON.parse(localStorage.getItem(DRAFTS_KEY) || '[]');
+    return Array.isArray(list) ? list.filter(d => d && typeof d.content === 'string') : [];
+  } catch { return []; }
+}
+function writeDrafts(list) {
+  try { localStorage.setItem(DRAFTS_KEY, JSON.stringify(list.slice(0, 30))); } catch { /* best-effort */ }
+  return list.slice(0, 30);
+}
+function addDraft({ title, content, contentType }) {
+  const list = readDrafts().filter(d => d.content !== content);
+  return writeDrafts([{ id: `d${Date.now()}`, title: title || '', content, contentType: contentType || '', savedAt: new Date().toISOString() }, ...list]);
+}
+function removeDraft(draftId) {
+  return writeDrafts(readDrafts().filter(d => d.id !== draftId));
+}
+
 function saveDraft(draft) {
   try {
     localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify({
@@ -161,6 +181,9 @@ export default function ContentAnalyzer() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
+  const [drafts, setDrafts] = useState(readDrafts);
+  // The text last sent for analysis in this visit (saved results may not carry it).
+  const [lastAnalyzedText, setLastAnalyzedText] = useState('');
   // The text the open result was scored on, to tell when the editor has moved on.
   const [analyzedContent, setAnalyzedContent] = useState(null);
   // Fix id -> { done, now } from re-checking the edited text (no AI, no credit).
@@ -291,6 +314,7 @@ export default function ContentAnalyzer() {
       const { data } = await api.analyze({ title, content: text, url, module: analysisModule, lane: userLane, contentType: contentTypeLabel, previousAnalysisId });
       setResult(data);
       setAnalyzedContent(text);
+      setLastAnalyzedText(text);
       refreshUser();
       if (data?.analysisId) {
         // Carry the submitted draft through the route transition as a second
@@ -321,6 +345,8 @@ export default function ContentAnalyzer() {
       const { data } = await api.rewrite({ content, module: analysisModule, contentType: contentTypeLabel, analysisId: id && result ? Number(id) : undefined, productId: productId ? Number(productId) : undefined, fixes });
       setRewriteResult(data);
       refreshUser();
+      // The result shows by the editor; bring it into view from the fix list.
+      setTimeout(() => document.getElementById('rewrite-result')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
     } catch (err) {
       setRewriteError(err.message || 'Rewrite failed. Please try again.');
     } finally {
@@ -470,20 +496,16 @@ export default function ContentAnalyzer() {
             >
               {loading ? (result ? 'Re-analyzing…' : 'Analyzing…') : (result ? 'Re-analyze' : 'Analyze content')}
             </button>
-            <button
-              type="button"
-              className={styles.rewriteBtn}
-              disabled={rewriteLoading || loading || isAtLimit || !content.trim()}
-              onClick={handleRewrite}
-            >
-              {rewriteLoading ? 'Rewriting to the rubric and scoring it… (up to a minute)' : 'Rewrite for AI'}
-            </button>
-            {result && id && (
+            {((result && id) || content.trim()) && (
               <button
                 type="button"
                 className={styles.rewriteBtn}
                 disabled={loading}
                 onClick={() => {
+                  // Text that was never analyzed in this form goes to Drafts in the Library.
+                  if (content.trim() && content !== (result?.content || lastAnalyzedText)) {
+                    setDrafts(addDraft({ title, content, contentType }));
+                  }
                   saveDraft({ title: '', content: '', url: '', contentType, analysisId: null, lastAnalysisId: null });
                   setTitle(''); setContent(''); setUrl(''); setResult(null); setRewriteResult(null); setStale(false);
                   navigate('/analyze');
@@ -499,6 +521,7 @@ export default function ContentAnalyzer() {
 
           {rewriteError && <p className={styles.error}>{rewriteError}</p>}
 
+          <div id="rewrite-result" style={{ scrollMarginTop: 80 }} />
           {rewriteResult && (
             <RewritePanel
               listedFixes={result ? fixesOf(result) : []}
@@ -573,32 +596,11 @@ export default function ContentAnalyzer() {
             </div>
           </div>
 
-          <PillarScores result={result} lane={userLane} />
-
-          {result.authorship && (
-            <div className={`card ${styles.authorshipCard}`}>
-              <h3 className={styles.sectionTitle}>Authorship &amp; E-E-A-T Signals</h3>
-              <div className={styles.authorshipGrid}>
-                {[
-                  { label: 'Author Byline', ok: result.authorship.hasAuthorByline },
-                  { label: 'Publish Date', ok: result.authorship.hasPublishDate },
-                  { label: 'Organization', ok: result.authorship.hasOrganization },
-                ].map(({ label, ok }) => (
-                  <div key={label} className={styles.authorshipBadge}>
-                    <span className={styles.authorshipBadgeIcon} style={{ color: ok ? 'var(--green)' : 'var(--red)' }}>
-                      {ok ? '✓' : '✗'}
-                    </span>
-                    <span style={{ color: ok ? 'var(--text)' : 'var(--text-muted)' }}>{label}</span>
-                  </div>
-                ))}
-                <div className={styles.authorshipScore}>
-                  <span>Authority Score</span>
-                  <span className={styles.authorshipScoreValue}>{result.authorship.authorityScore}</span>
-                  <span style={{ color: 'var(--text-dim)', fontSize: 11 }}>/100</span>
-                </div>
-              </div>
-            </div>
-          )}
+          <PillarScores
+            result={result}
+            lane={userLane}
+            fixCounts={fixesOf(result).filter(f => fixState[f.id]?.done !== true).reduce((m, f) => (f.pillar ? { ...m, [f.pillar]: (m[f.pillar] || 0) + 1 } : m), {})}
+          />
 
           {result.summary && (
             <div className={`card ${styles.summaryCard}`}>
@@ -650,7 +652,7 @@ export default function ContentAnalyzer() {
                   <p className={styles.summaryText}>Every measured fix is done. Re-analyze to confirm the rest and get your new score.</p>
                 )}
                 {groups.map(g => (
-                  <div key={g.key} style={{ marginBottom: 14 }}>
+                  <div key={g.key} id={`fixes-${g.key}`} style={{ marginBottom: 14, scrollMarginTop: 80 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: g.key === 'other' ? 'var(--text-muted)' : PILLAR_COLORS[g.key], margin: '10px 0 8px' }}>
                       <span style={{ width: 8, height: 8, borderRadius: '50%', background: g.key === 'other' ? 'var(--text-muted)' : PILLAR_COLORS[g.key] }} aria-hidden="true" />
                       {g.key === 'other' ? 'General' : PILLAR_NAMES[g.key]}
@@ -688,6 +690,7 @@ export default function ContentAnalyzer() {
                     <button type="button" className="btn btn-primary" disabled={rewriteLoading || loading || isAtLimit} onClick={handleRewrite}>
                       {rewriteLoading ? 'Fixing and re-scoring… (up to a minute)' : `Fix ${open.length === 1 ? 'this' : `all ${open.length}`} for me`}
                     </button>
+                    {rewriteError && <p className={styles.error} style={{ width: '100%', margin: 0 }}>{rewriteError}</p>}
                     <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
                       Rewrites your piece against every fix above, re-scores it, and shows which ones it fixed. Anything only you can supply is listed for you.
                     </span>
@@ -699,13 +702,24 @@ export default function ContentAnalyzer() {
 
           <QuickTools content={content} title={title} />
 
-          <CitationCrossPromo
-            title="Optimization done? Now check if AI actually cites you."
-            sub="Citation Monitor gives you a real-time snapshot of current AI citations — run it before and after optimizing to see where you stand."
-          />
+
         </div>
       )}
-      <PastAnalyses kind="content" refreshKey={result} />
+      <PastAnalyses
+        kind="content"
+        refreshKey={result}
+        drafts={drafts}
+        onOpenDraft={d => {
+          if (content.trim() && content !== (result?.content || lastAnalyzedText) && content !== d.content) setDrafts(addDraft({ title, content, contentType }));
+          setDrafts(removeDraft(d.id));
+          saveDraft({ title: d.title, content: d.content, url: '', contentType: d.contentType || contentType, analysisId: null, lastAnalysisId: null });
+          setTitle(d.title || ''); setContent(d.content); setUrl(''); if (d.contentType) setContentType(d.contentType);
+          setResult(null); setRewriteResult(null); setStale(false); setAnalyzedContent(null);
+          navigate('/analyze');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        onDeleteDraft={d => setDrafts(removeDraft(d.id))}
+      />
     </div>
   );
 }
