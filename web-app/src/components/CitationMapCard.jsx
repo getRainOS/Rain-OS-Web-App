@@ -2,13 +2,17 @@ import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { buildCompetitorMap } from '../lib/citationHistory.js';
+import { enginesOf } from '../lib/engines.js';
 import styles from './CitationMapCard.module.css';
 
 const CitationWorldMap = lazy(() => import('./CitationWorldMap.jsx'));
 
-// Dashboard version of the Citation Monitor's world map: where the websites
-// Gemini cited are based, across your recent checks.
-export default function CitationMapCard({ checks, ownDomain }) {
+// Dashboard map of where the cited websites are based, for the same checks
+// as the cards above it: the latest Cited by AI question, or the latest
+// Mentioned by AI brand. "See more" opens those checks.
+export default function CitationMapCard({ citedChecks = [], mentionedChecks = [], ownDomain }) {
+  const [tab, setTab] = useState(() => (citedChecks.length || !mentionedChecks.length ? 'cited' : 'mentioned'));
+  const checks = tab === 'cited' ? citedChecks : mentionedChecks;
   const [resolved, setResolved] = useState(() => new Map());
   const map = useMemo(() => buildCompetitorMap(checks, ownDomain, resolved), [checks, ownDomain, resolved]);
 
@@ -30,7 +34,15 @@ export default function CitationMapCard({ checks, ownDomain }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map.domains]);
 
-  const top = map.regions.slice(0, 3);
+  const top = map.regions.filter(r => r.name).slice(0, 3);
+  const latest = checks[0];
+  const engines = enginesOf(checks);
+  const about = tab === 'cited'
+    ? latest && `for “${latest.name || latest.topic}”`
+    : latest && `for ${latest.brand}${latest.topic ? ` · “${latest.topic}”` : ''}`;
+  const seeMore = !latest ? null : tab === 'cited'
+    ? `/citation-monitor?view=past&topic=${encodeURIComponent(latest.topic || '')}`
+    : `/brand-visibility?view=past&brand=${encodeURIComponent(latest.brand || '')}&topic=${encodeURIComponent(latest.topic || '')}`;
 
   return (
     <section className={styles.card} aria-labelledby="citation-map-heading">
@@ -38,19 +50,27 @@ export default function CitationMapCard({ checks, ownDomain }) {
         <div>
           <h2 id="citation-map-heading" className={styles.title}>Where AI's sources are based</h2>
           <p className={styles.sub}>
-            {top.length > 0
-              ? `Most cited sites are based in ${top.map(r => r.name).join(', ')}.`
-              : 'Run a citation check to see where the websites Gemini cites are based.'}
+            {latest
+              ? `${top.length ? `Sites ${engines} cited ${about} are mostly based in ${top.map(r => r.name).join(', ')}.` : `Sites ${engines} cited ${about}.`}`
+              : tab === 'cited'
+                ? 'Run a Citation Monitor check to see where the websites AI cites are based.'
+                : 'Run a Brand Sentiment check to see where the websites AI cites are based.'}
           </p>
         </div>
-        <Link to="/citation-monitor" className={styles.link}>Open Citation Monitor →</Link>
+        <div className={styles.tabs} role="tablist" aria-label="Which checks the map shows">
+          <button role="tab" aria-selected={tab === 'cited'} className={`${styles.tab} ${tab === 'cited' ? styles.tabActive : ''}`} onClick={() => setTab('cited')}>Cited by AI</button>
+          <button role="tab" aria-selected={tab === 'mentioned'} className={`${styles.tab} ${tab === 'mentioned' ? styles.tabActive : ''}`} onClick={() => setTab('mentioned')}>Mentioned by AI</button>
+        </div>
       </div>
       <div className={styles.mapWrap}>
         <Suspense fallback={<div className={styles.loading}><span className="spinner" /></div>}>
           <CitationWorldMap regions={map.regions} unknownCount={map.unknownCount} />
         </Suspense>
       </div>
-      <p className={styles.note}>Inferred from each site's country domain (like .de or .jp) and a lookup. Many sites use .com, so this is a partial read.</p>
+      <div className={styles.foot}>
+        <p className={styles.note}>Inferred from each site's country domain (like .de or .jp) and a lookup. Many sites use .com, so this is a partial read.</p>
+        {seeMore && <Link to={seeMore} className={styles.link}>See more →</Link>}
+      </div>
     </section>
   );
 }
