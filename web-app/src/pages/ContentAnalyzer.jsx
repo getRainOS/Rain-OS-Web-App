@@ -547,18 +547,6 @@ export default function ContentAnalyzer() {
           />
         </div>
       )}
-      {rewriteLoading && (
-        <div style={{ marginTop: 20 }}>
-          <CheckProgress
-            title="Rewriting for AI"
-            compact
-            steps={[
-              { label: 'Reading your draft', ms: 2500 },
-              { label: 'Restructuring it so AI can quote it' },
-            ]}
-          />
-        </div>
-      )}
       {result && (
         <div className={styles.results} style={stale ? { opacity: 0.55 } : undefined}>
           {stale && (
@@ -685,10 +673,26 @@ export default function ContentAnalyzer() {
                     </ul>
                   </details>
                 )}
-                {content.trim() && open.length > 0 && (
+                {rewriteLoading && (
+                  <div style={{ marginTop: 12 }}>
+                    <CheckProgress
+                      title={`Fixing ${open.length === 1 ? '1 issue' : `${open.length} issues`}`}
+                      compact
+                      skeleton={null}
+                      steps={[
+                        { label: 'Rewriting against every fix', ms: 15000 },
+                        { label: 'Re-scoring with the same scorer', ms: 12000 },
+                        { label: 'Second pass on anything still weak', ms: 18000 },
+                        { label: 'Checking each fix' },
+                      ]}
+                    />
+                  </div>
+                )}
+                {content.trim() && open.length > 0 && !rewriteLoading && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', marginTop: 12 }}>
-                    <button type="button" className="btn btn-primary" disabled={rewriteLoading || loading || isAtLimit} onClick={handleRewrite}>
-                      {rewriteLoading ? 'Fixing and re-scoring… (up to a minute)' : `Fix ${open.length === 1 ? 'this' : `all ${open.length}`} for me`}
+                    <button type="button" className="btn btn-primary" disabled={loading || isAtLimit} onClick={handleRewrite}>
+                      <Sparkles size={14} aria-hidden="true" style={{ marginRight: 6, verticalAlign: '-2px' }} />
+                      {`Fix ${open.length === 1 ? 'this' : `all ${open.length}`} for me`}
                     </button>
                     {rewriteError && <p className={styles.error} style={{ width: '100%', margin: 0 }}>{rewriteError}</p>}
                     <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
