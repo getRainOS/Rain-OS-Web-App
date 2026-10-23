@@ -36,6 +36,19 @@ function analysis({ id, title, url = null, overall, ar, da, cr, lp, rr, at, summ
       { id: 'j:answerFirstFormatting', source: 'judged', sub: 'answerFirstFormatting', pillar: 'ai_readability', text: 'Open each service section with a one-sentence answer: what it is, who it is for, what it costs.' },
       { id: 'j:citationSignals', source: 'judged', sub: 'citationSignals', pillar: 'digital_authority', text: 'Add dentist credentials and years in practice near the top, with a link to the ADA profile.' },
     ],
+    // Sample breakdown under each pillar, in the same shape the scorer returns.
+    content_type: 'landing_page',
+    ai_readability_detail: { structuralClarity: ar + 4, answerFirstFormatting: ar - 9, semanticPrecision: ar + 2, contextSufficiency: ar - 3, audienceClarity: ar + 6 },
+    digital_authority_detail: { citationSignals: da - 12, entityClarity: da + 8, topicalAuthority: da + 1, socialProofMarkup: da - 6, proofSpecificity: da - 10 },
+    conversion_readiness_detail: { callToActionClarity: cr + 3, trustSignals: cr - 4, valueProposition: cr + 5, frictionReduction: cr - 2, aboveTheFoldClarity: cr + 1, objectionHandling: cr - 14 },
+    rag_readiness_detail: { informationDensity: rr + 4, semanticMapping: rr - 2, hierarchicalFormatting: rr + 9, explicitQaStructures: rr - 15, authoritySignals: rr - 5 },
+    local_presence_detail: { napConsistency: lp + 10, localSchemaMarkup: lp + 6, serviceAreaClarity: lp - 8, reviewSignalStrength: lp - 3, localCitationSignals: lp - 11 },
+    authorship: { hasAuthorByline: false, hasPublishDate: true, hasOrganization: true, authorityScore: da },
+    measured_checks: [
+      { key: 'avgSentenceLength', label: 'Average sentence length', pillar: 'ai_readability', value: 27, display: '27.0 words', target: '18.0 words or less', pass: false },
+      { key: 'passiveVoiceRatio', label: 'Passive voice', pillar: 'ai_readability', value: 0.12, display: '12%', target: '20% or less', pass: true },
+      { key: 'headingDensity', label: 'Headings', pillar: 'ai_readability', value: 1.1, display: '1.10 per 100 words', target: '0.5–4.00 per 100 words', pass: true },
+    ],
     content: null,
   };
 }
