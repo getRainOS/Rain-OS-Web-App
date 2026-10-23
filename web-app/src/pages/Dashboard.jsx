@@ -12,6 +12,7 @@ import { domainOf } from '../lib/opportunities.js';
 import Select from '../components/Select.jsx';
 import NewAnalysisMenu from '../components/NewAnalysisMenu.jsx';
 import CitationMapCard from '../components/CitationMapCard.jsx';
+import { enginesOf } from '../lib/engines.js';
 import {
   AreaChart, Area, XAxis, YAxis,
   Tooltip, ResponsiveContainer,
@@ -849,7 +850,7 @@ export default function Dashboard() {
         : 'No data yet. Check a question your customers ask to see if AI cites you.',
       Icon: Radar,
       dots: citationTotal > 0 ? citationScoped.slice(0, 8).reverse().map(c => !!c.cited) : null,
-      tooltip: 'How often Gemini cited your site for the question you checked most recently, over its last 10 checks. Each check uses live Google Search.',
+      tooltip: `How often ${citationTotal ? enginesOf(citationScoped) : 'AI'} cited your site for the question you checked most recently, over its last 10 checks. Each check asks the engine live.`,
     },
     {
       key: 'brand',
@@ -860,9 +861,9 @@ export default function Dashboard() {
       value: brandVisTotal > 0 ? `${brandVisRate}%` : null,
       sub: brandVisTotal > 0
         ? `Mentioned in ${brandVisMentionedCount} of your last ${brandVisTotal} check${brandVisTotal > 1 ? 's' : ''}`
-        : 'No data yet. Run a check to see how Gemini describes you.',
+        : 'No data yet. Run a check to see how AI describes you.',
       Icon: Heart,
-      tooltip: 'How often Gemini mentioned your brand by name in your recent Brand Sentiment checks for this brand.',
+      tooltip: `How often ${brandVisTotal ? enginesOf(brandVisScoped) : 'AI'} mentioned your brand by name in your recent Brand Sentiment checks for this brand.`,
     },
     {
       key: 'sov',
@@ -877,7 +878,7 @@ export default function Dashboard() {
         ? sovScoped[0]?.sharePercent != null
           ? `Your share of brand mentions vs ${Math.max((sovScoped[0].brandShares || []).length - 1, 0)} competitors, latest check`
           : `Mentioned in ${sovMentionedCount} of your last ${sovTotal} check${sovTotal > 1 ? 's' : ''}`
-        : 'No data yet. Run a check to see how often Gemini mentions your brand.',
+        : 'No data yet. Run a check to see how often AI mentions your brand.',
       Icon: BarChart2,
       dots: sovTotal > 0
         ? sovScoped.slice(0, 8).reverse().map(h => (h.mentionedCount ?? h.citedCount ?? h.cited_count ?? 0) > 0)
@@ -1283,7 +1284,7 @@ export default function Dashboard() {
       </div>
 
       {/* ── Where AI's sources are based ── */}
-      <CitationMapCard checks={citationSorted.slice(0, 50)} ownDomain={focusSite} />
+      <CitationMapCard citedChecks={citationScoped} mentionedChecks={brandVisScoped} ownDomain={focusSite} />
 
       {/* ── Quick Wins ── */}
       {quickWins.length > 0 && (

@@ -202,6 +202,13 @@ export async function demoRequest(method, path, body) {
       if (at >= 0) sheets[at] = item; else sheets.unshift(item);
       return ok({ success: true, item });
     }
+    if (p === '/api/citation-checks/regions') {
+      // Demo: every sample source is a US site, except the UK and Canadian guides.
+      const US = { name: 'United States', flag: '🇺🇸', iso: '840' };
+      const GB = { name: 'United Kingdom', flag: '🇬🇧', iso: '826' };
+      const domains = Object.fromEntries((body?.domains || []).map(d => [d, /\.co\.uk$/.test(d) ? GB : US]));
+      return ok({ success: true, domains });
+    }
     if (p === '/api/fixes/check') {
       // Demo: the sentence-length fix counts as done once sentences average 20 words or fewer.
       const text = String(body?.content || '');
