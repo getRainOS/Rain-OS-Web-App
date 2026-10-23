@@ -39,9 +39,9 @@ const KB_DATA = {
         desc: 'How easily AI shopping engines find and recommend your products. Structured data, rich descriptions, and attribute completeness matter most.' },
       { key: 'ai_readability',  label: 'AI Readability',          weight: '20%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
         desc: 'How well AI can parse your product descriptions and extract key features, benefits, and comparisons.' },
-      { key: 'authority',       label: 'Authority',              weight: '15%', color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck,
+      { key: 'authority',       label: 'Digital Authority',      weight: '15%', color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck,
         desc: 'Brand trust signals — reviews, certifications, and third-party mentions that make AI confident recommending you.' },
-      { key: 'conversion',      label: 'Conversion',           weight: '15%', color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick,
+      { key: 'conversion',      label: 'Conversion Readiness',   weight: '15%', color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick,
         desc: 'Purchase intent signals like clear pricing, availability, and compelling calls to action.' },
       { key: 'rag_readiness',   label: 'RAG Readiness',         weight: '10%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
         desc: 'How well your product descriptions are optimized for AI retrieval and vector database search. Structured Q&A and semantic mapping help AI surface your products for relevant queries.' },
@@ -94,11 +94,11 @@ const KB_DATA = {
 
   developers: {
     pillars: [
-      { key: 'doc_structure',    label: 'Doc Structure',       weight: '32%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
+      { key: 'doc_structure',    label: 'AI Readability',      weight: '32%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
         desc: 'README and documentation organization. Clear hierarchy, navigation, and heading structure so AI can index your docs properly.' },
-      { key: 'tech_completeness', label: 'Tech Completeness',    weight: '32%', color: PILLAR_COLORS.digital_authority, Icon: GitBranch,
+      { key: 'tech_completeness', label: 'Digital Authority',    weight: '32%', color: PILLAR_COLORS.digital_authority, Icon: GitBranch,
         desc: 'Coverage of API endpoints, error handling, code examples, and installation steps. Missing sections cost you visibility.' },
-      { key: 'technical_clarity', label: 'Technical Clarity',  weight: '26%', color: PILLAR_COLORS.conversion_readiness, Icon: ShieldCheck,
+      { key: 'technical_clarity', label: 'Conversion Readiness', weight: '26%', color: PILLAR_COLORS.conversion_readiness, Icon: ShieldCheck,
         desc: 'Plain-language explanations alongside technical depth. AI prefers docs that explain the "why" not just the "how".' },
       { key: 'rag_readiness',     label: 'RAG Readiness',      weight: '10%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
         desc: 'How well your docs are optimized for AI retrieval and vector database search. Structured Q&A and semantic mapping matter.' },
@@ -123,12 +123,14 @@ const KB_DATA = {
 
   local_business: {
     pillars: [
-      { key: 'local_authority',  label: 'Local Authority',   weight: '36%', color: PILLAR_COLORS.digital_authority, Icon: MapPin,
-        desc: 'NAP consistency, LocalBusiness schema, Google Business Profile signals, and local citation strength.' },
-      { key: 'ai_presence',      label: 'AI Presence',        weight: '27%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
-        desc: 'How often AI engines mention your business for local service queries. Structured data and local content matter.' },
-      { key: 'trust_conversion', label: 'Trust & Conversion', weight: '27%', color: PILLAR_COLORS.conversion_readiness, Icon: ShieldCheck,
-        desc: 'Reviews, testimonials, and contact intent signals that make AI confident recommending your services.' },
+      { key: 'local_presence',   label: 'Local Presence',     weight: '30%', color: PILLAR_COLORS.local_presence, Icon: MapPin,
+        desc: 'Name, address and phone that match everywhere, LocalBusiness schema, the city and areas you serve, and reviews that mention them.' },
+      { key: 'ai_readability',   label: 'AI Readability',     weight: '20%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
+        desc: 'How easily AI can read your page and pull out a clear answer: short sentences, answer-first sections, plain structure.' },
+      { key: 'digital_authority', label: 'Digital Authority', weight: '20%', color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck,
+        desc: 'Credentials, years in business, reviews and sources that make AI confident recommending you.' },
+      { key: 'conversion_readiness', label: 'Conversion Readiness', weight: '20%', color: PILLAR_COLORS.conversion_readiness, Icon: ShieldCheck,
+        desc: 'A clear way to book or call, prices or ranges, and what happens next.' },
       { key: 'rag_readiness',    label: 'RAG Readiness',      weight: '10%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
         desc: 'How well your local business content is optimized for AI retrieval. Structured Q&A, service descriptions, and semantic mapping help AI surface you for local queries.' },
     ],
