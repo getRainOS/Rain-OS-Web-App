@@ -76,7 +76,17 @@ export default async function rewriteHandler(req: express.Request, res: express.
   }
 
   try {
-    const result = await pillarRewrite(content, module, { industry, contentType, baseline, facts });
+    // The fixes on screen ("Fix these for me"): rewritten against, then re-checked.
+    const fixes = (Array.isArray(req.body?.fixes) ? req.body.fixes : []).slice(0, 30)
+      .filter((f: any) => f && typeof f.id === 'string' && typeof f.text === 'string' && f.text.trim())
+      .map((f: any) => ({
+        id: String(f.id).slice(0, 80), text: String(f.text).slice(0, 600),
+        pillar: typeof f.pillar === 'string' ? f.pillar : null,
+        source: f.source === 'measured' ? 'measured' as const : 'judged' as const,
+        metric: typeof f.metric === 'string' ? f.metric : undefined,
+        sub: typeof f.sub === 'string' ? f.sub : undefined,
+      }));
+    const result = await pillarRewrite(content, module, { industry, contentType, baseline, facts, fixes });
     rememberScoredRewrite(user.id, result.rewritten, module, result.scored);
     const updatedUser = await incrementUserUsage(user.id);
     if (updatedUser) res.setHeader('X-Usage-Info', JSON.stringify(updatedUser.usage));

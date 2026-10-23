@@ -411,6 +411,30 @@ function LaneSelector({ onSelect, current }) {
 }
 
 /* ══════════════════════════════════════════ */
+// Fixes still listed on each piece's latest analysis. Re-analyzing or
+// accepting a rewrite replaces a piece's list, so done fixes drop off.
+function FixesWaiting({ lane }) {
+  const navigate = useNavigate();
+  const [data, setData] = useState(null);
+  useEffect(() => { api.getFixesSummary().then(({ data: d }) => setData(d)).catch(() => {}); }, [lane]);
+  if (!data?.totalFixes) return null;
+  const top = data.pieces[0];
+  const others = data.pieces.length - 1;
+  return (
+    <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', padding: '14px 18px', marginBottom: 16 }}>
+      <div style={{ flex: 1, minWidth: 220 }}>
+        <div style={{ fontWeight: 600 }}>
+          {data.totalFixes} {data.totalFixes === 1 ? 'fix' : 'fixes'} ready to raise your scores
+        </div>
+        <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>
+          {top.fixes} on “{top.title}”{others > 0 ? `, and more on ${others} other ${others === 1 ? 'piece' : 'pieces'}` : ''}. Fix them yourself or let rain OS do it in one click.
+        </div>
+      </div>
+      <button className="btn btn-primary" onClick={() => navigate(`/analyze/${top.id}`)}>See the fixes</button>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const { user, userLane, setUserLane } = useApp();
   const navigate = useNavigate();
@@ -920,6 +944,8 @@ export default function Dashboard() {
           </span>
         </div>
       )}
+
+      <FixesWaiting lane={userLane} />
 
       {!loading && focusOptions.length > 1 && (
         <>

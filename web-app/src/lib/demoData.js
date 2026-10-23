@@ -31,9 +31,10 @@ function analysis({ id, title, url = null, overall, ar, da, cr, lp, rr, at, summ
       { category: 'semanticPrecision', label: 'Semantic Precision', score: ar + 2 },
     ],
     recommendations: [
-      { pillar: 'local_presence', text: 'Name Austin and the neighbourhoods you serve in your main heading and first paragraph.' },
-      { pillar: 'ai_readability', text: 'Open each service section with a one-sentence answer: what it is, who it is for, what it costs.' },
-      { pillar: 'digital_authority', text: 'Add dentist credentials and years in practice near the top, with a link to the ADA profile.' },
+      { id: 'm:avgSentenceLength', source: 'measured', metric: 'avgSentenceLength', pillar: 'ai_readability', text: 'Shorten your sentences: they average 27 words; aim for 20 or fewer. Split any sentence that joins two ideas with "and", "which" or a comma.' },
+      { id: 'j:serviceAreaClarity', source: 'judged', sub: 'serviceAreaClarity', pillar: 'local_presence', text: 'Name Austin and the neighbourhoods you serve in your main heading and first paragraph.' },
+      { id: 'j:answerFirstFormatting', source: 'judged', sub: 'answerFirstFormatting', pillar: 'ai_readability', text: 'Open each service section with a one-sentence answer: what it is, who it is for, what it costs.' },
+      { id: 'j:citationSignals', source: 'judged', sub: 'citationSignals', pillar: 'digital_authority', text: 'Add dentist credentials and years in practice near the top, with a link to the ADA profile.' },
     ],
     content: null,
   };
@@ -175,6 +176,7 @@ export async function demoRequest(method, path, body) {
     if (p === '/api/lane-stats') return ok({ success: true, lanes: { local_business: { analyses: 5, checks: 14, lastUsed: daysAgo(2) } } });
     if (p === '/api/usage') return ok({ success: true, usage: user.usage });
     if (p === '/api/products') return ok({ success: true, items: sheets });
+    if (p === '/api/fixes/summary') return ok({ success: true, totalFixes: 8, pieces: [{ id: 9003, title: history[0].title, fixes: 4, score: 74 }, { id: 9004, title: history[3].title, fixes: 4, score: 69 }] });
     return ok({ success: true, data: [], items: [] });
   }
 
@@ -186,6 +188,13 @@ export async function demoRequest(method, path, body) {
       const at = sheets.findIndex(x => x.id === id);
       if (at >= 0) sheets[at] = item; else sheets.unshift(item);
       return ok({ success: true, item });
+    }
+    if (p === '/api/fixes/check') {
+      // Demo: the sentence-length fix counts as done once sentences average 20 words or fewer.
+      const text = String(body?.content || '');
+      const sentences = text.split(/(?<=[.!?])\s+/).filter(x => x.trim().length > 10);
+      const avg = sentences.length ? text.split(/\s+/).filter(Boolean).length / sentences.length : 0;
+      return ok({ success: true, status: (body?.fixes || []).map(f => ({ id: f.id, done: f.source === 'measured' ? avg <= 20 : null })) });
     }
     if (p === '/api/analyze') {
       await wait(2200);

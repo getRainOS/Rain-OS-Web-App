@@ -143,6 +143,10 @@ export interface AiReadabilityDetail {
   export interface PillarRecommendation {
   pillar: 'ai_readability' | 'digital_authority' | 'conversion_readiness' | 'product_discoverability' | 'rag_readiness' | 'local_presence' | null;
   text: string;
+  id?: string;
+  source?: 'measured' | 'judged';
+  metric?: string; // measured: re-checked exactly on any edit
+  sub?: string;    // judged: the sub-score it fixes, confirmed by the next analysis
   }
   export interface AnalysisResponse {
   overallScore: number;
@@ -161,6 +165,8 @@ export interface AiReadabilityDetail {
   // AI Readability instead of thresholding Gemini's own invented numbers.
   readability_metrics: ReadabilityMetrics;
 recommendations: PillarRecommendation[];
+content_type?: string | null;
+measured_checks?: import('./services/contentTypes').MeasuredCheck[];
   summary: string;
 keywords: string[];
 authorship: AuthorshipSignals;

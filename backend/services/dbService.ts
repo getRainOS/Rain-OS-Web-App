@@ -836,7 +836,7 @@ export interface AnalysisRecord {
 const DETAIL_KEYS = [
   'ai_readability_detail', 'digital_authority_detail', 'conversion_readiness_detail',
   'product_discoverability_detail', 'rag_readiness_detail', 'local_presence_detail',
-  'readability_metrics', 'authorship',
+  'readability_metrics', 'authorship', 'measured_checks', 'content_type',
 ] as const;
 
 const mapAnalysisRow = (row: any): AnalysisRecord => ({
@@ -862,7 +862,7 @@ const mapAnalysisRow = (row: any): AnalysisRecord => ({
     try {
       const parsed = typeof row.result_json === 'string' ? JSON.parse(row.result_json) : row.result_json;
       const out: Record<string, any> = {};
-      for (const k of DETAIL_KEYS) if (parsed?.[k] && typeof parsed[k] === 'object') out[k] = parsed[k];
+      for (const k of DETAIL_KEYS) if (parsed?.[k] != null) out[k] = parsed[k];
       return out;
     } catch { return {}; }
   })(),
@@ -884,7 +884,13 @@ const mapAnalysisRow = (row: any): AnalysisRecord => ({
         .map((item: any) => {
           if (typeof item === 'string' && item.trim()) return { pillar: null, text: item.trim() };
           if (item && typeof item === 'object' && typeof item.text === 'string' && item.text.trim()) {
-            return { pillar: typeof item.pillar === 'string' ? item.pillar : null, text: item.text.trim() };
+            return {
+              pillar: typeof item.pillar === 'string' ? item.pillar : null, text: item.text.trim(),
+              ...(typeof item.id === 'string' ? { id: item.id } : {}),
+              ...(item.source === 'measured' || item.source === 'judged' ? { source: item.source } : {}),
+              ...(typeof item.metric === 'string' ? { metric: item.metric } : {}),
+              ...(typeof item.sub === 'string' ? { sub: item.sub } : {}),
+            };
           }
           return null;
         })
