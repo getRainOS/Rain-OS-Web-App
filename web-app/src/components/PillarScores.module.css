@@ -299,3 +299,18 @@
   color: var(--text-dim);
   margin: 8px 0 0;
 }
+
+/* Pillar scores as the app's standard bars (see MetricBars). */
+.barsCard {
+  padding: 16px 18px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.overallStatus { margin-left: 10px; font-size: 12.5px; font-weight: 500; }
+
+/* Scoring breakdown: bars for scores, then measured checks as plain rows. */
+.breakdown { display: grid; gap: 10px; margin-top: 10px; }
+.checkRow { display: grid; grid-template-columns: 16px 1fr auto; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-dim); padding-top: 8px; border-top: 1px solid var(--border); }
+.checkRow + .checkRow { border-top: none; padding-top: 0; }
+.checkValue { font-variant-numeric: tabular-nums; color: var(--text); font-size: 12px; text-align: right; }

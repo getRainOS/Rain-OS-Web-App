@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ChevronDown, ChevronUp, Check, X } from 'lucide-react';
 import styles from './PillarScores.module.css';
 import { PILLAR_COLORS } from '../lib/pillarColors.js';
+import MetricBars from './MetricBars.jsx';
 
 // A Gemini-judged sub-score (0-100) at or above this counts as a "pass" in
 // the breakdown below. The raw number is never shown — only pass/fail — so
@@ -345,70 +346,28 @@ function SubItemsList({ items, open = false }) {
         {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         <span>Scoring breakdown</span>
       </button>
-      {!collapsed && (
-        <div className={styles.subItemsList}>
-          {items.map((item, i) =>
-            item.value !== undefined ? (
-              <div key={i} className={`${styles.subItem} ${styles.subItemNumeric}`}>
-                <div className={styles.subItemNumericHeader}>
-                  <span className={styles.subItemLabel}>{item.label}</span>
-                  <span
-                    className={styles.subItemValue}
-                    style={{ color: item.value >= 75 ? 'var(--green)' : item.value >= 50 ? 'var(--yellow)' : 'var(--red)' }}
-                  >
-                    {item.value}
-                  </span>
-                </div>
-                {item.caption && <span className={styles.subItemCaption}>{item.caption}</span>}
-              </div>
-            ) : (
-              <div key={i} className={styles.subItem}>
-                {item.pass ? (
-                  <Check size={14} className={styles.subItemPass} />
-                ) : (
-                  <X size={14} className={styles.subItemFail} />
-                )}
-                <span className={styles.subItemLabel}>{item.label}</span>
-                {item.caption && <span className={styles.subItemCaption} style={{ marginLeft: 'auto' }}>{item.caption}</span>}
-              </div>
-            )
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
-const DOT_COUNT = 24;
-
-/* ── Vertical dotted bar chart — one column per visible pillar ──────────── */
-function PillarDotChart({ pillars, result }) {
-  return (
-    <div className={styles.dotChart}>
-      {pillars.map(p => {
-        const score = resolveScore(result, p.key, p.camel);
-        const pct = score !== null ? Math.min(Math.round(score), 100) : null;
-        const filledCount = pct !== null ? Math.round((pct / 100) * DOT_COUNT) : 0;
-
+      {!collapsed && (() => {
+        const numeric = items.filter(i => i.value !== undefined);
+        const checks = items.filter(i => i.value === undefined);
         return (
-          <div key={p.key} className={styles.dotColumn}>
-            {pct !== null ? (
-              <span className={styles.dotColumnValue}>{pct}%</span>
-            ) : (
-              <span className={styles.dotColumnValueNa}>N/A</span>
+          <div className={styles.breakdown}>
+            {numeric.length > 0 && (
+              <MetricBars
+                labelWidth={190}
+                valueWidth={44}
+                rows={numeric.map((i, n) => ({ key: `${i.label}-${n}`, label: i.label, value: i.value, tone: i.value < 50 ? 'warn' : undefined, hint: i.caption }))}
+              />
             )}
-            <div className={styles.dotTrack}>
-              {Array.from({ length: DOT_COUNT }, (_, i) => (
-                <div
-                  key={i}
-                  className={`${styles.dot} ${i < filledCount ? styles.dotFilled : ''}`}
-                />
-              ))}
-            </div>
-            <span className={styles.dotColumnLabel}>{p.label}</span>
+            {checks.map((item, i) => (
+              <div key={i} className={styles.checkRow}>
+                {item.pass ? <Check size={13} className={styles.subItemPass} /> : <X size={13} className={styles.subItemFail} />}
+                <span>{item.label}</span>
+                {item.caption && <span className={styles.checkValue}>{item.caption}</span>}
+              </div>
+            ))}
           </div>
         );
-      })}
+      })()}
     </div>
   );
 }
@@ -479,20 +438,11 @@ export default function PillarScores({ result, lane, fixCounts }) {
       {overall !== null && (
         <div className={styles.overallRow}>
           <span className={styles.overallLabel}>Overall AEO Score</span>
-          <span
-            className={styles.overallValue}
-            style={{
-              color:
-                overall >= 75
-                  ? 'var(--green)'
-                  : overall >= 50
-                  ? 'var(--yellow)'
-                  : 'var(--red)',
-            }}
-          >
-            {Math.round(overall)}
-          </span>
+          <span className={styles.overallValue}>{Math.round(overall)}</span>
           <span className={styles.overallMax}>/100</span>
+          <span className={styles.overallStatus} style={{ color: overall >= 75 ? 'var(--green)' : overall >= 50 ? 'var(--yellow)' : 'var(--orange)' }}>
+            {scoreLabel(overall)}
+          </span>
         </div>
       )}
 
@@ -500,7 +450,14 @@ export default function PillarScores({ result, lane, fixCounts }) {
         This score is an AI's rating, not a measurement. Gemini reads your content and scores it against the same checklist every time, so you can compare pages and track progress. It doesn't count things like words or page speed.
       </WhatDoesThisMean>
 
-      <PillarDotChart pillars={visiblePillars} result={result} />
+      <div className={styles.barsCard}>
+        <MetricBars
+          rows={visiblePillars.map(p => {
+            const v = resolveScore(result, p.key, p.camel);
+            return { key: p.key, label: p.label, value: v ?? 0, display: v === null ? 'N/A' : Math.round(v) };
+          })}
+        />
+      </div>
 
       <div className={styles.pillars}>
         {visiblePillars.map(p => {
