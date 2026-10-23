@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, lazy, Suspense, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import WhyNotCited from '../components/WhyNotCited.jsx';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import {
@@ -138,10 +139,11 @@ export default function CitationMonitor() {
   // Backend per-topic timeline (drives "Previous checks for this topic")
   const [topicHistory, setTopicHistory] = useState([]);
   const [visibleCount, setVisibleCount] = useState(RECENT_PAGE_SIZE);
-  const [view, setView] = useState('new');
+  // ?view=past&topic=… opens that question's past checks (the dashboard map links here).
+  const [view, setView] = useState(() => (searchParams.get('view') === 'past' ? 'past' : 'new'));
   const [resultTab, setResultTab] = useState('result');
   const [pastTab, setPastTab] = useState('overview');
-  const [mapFilter, setMapFilter] = useState(null);
+  const [mapFilter, setMapFilter] = useState(() => (searchParams.get('topic') ? topicKey(searchParams.get('topic')) : null));
 
   async function fetchMapHistory() {
     setMapLoading(true);
@@ -338,10 +340,10 @@ export default function CitationMonitor() {
     <div className={`${styles.page} fade-in`}>
       <PageHeader
         title="Citation Monitor"
-        subtitle="Check whether Gemini cites your site when people ask about the topics you care about."
+        subtitle="Check whether AI engines cite your site when people ask about the topics you care about."
         about={[
-          { heading: 'What the result means', body: '"Cited" or "Not cited" is what one real Gemini answer did at that moment. It is a snapshot to track over time, not a lasting rank.' },
-          { heading: 'How the check works', body: 'We ask Gemini your exact question with live Google Search grounding and look for your domain among the sources it cites. One model and one phrasing, so run a few variations before drawing conclusions.' },
+          { heading: 'What the result means', body: '"Cited" or "Not cited" is what one real AI answer did at that moment, shown for each engine you can use. It is a snapshot to track over time, not a lasting rank.' },
+          { heading: 'How the check works', body: 'We ask each AI engine your exact question live (Gemini with Google Search, ChatGPT and the others through their real answers) and look for your domain among the sources each one cites. One phrasing per check, so run a few variations before drawing conclusions.' },
         ]}
         actions={view !== 'new' && <NewCheckButton onClick={() => setView('new')} />}
       />
@@ -363,7 +365,7 @@ export default function CitationMonitor() {
           <form onSubmit={handleCheck} className={`card ${styles.formCard}`}>
             <div className={styles.formHead}>
               <h2 className={styles.formTitle}>Check a question</h2>
-              <p className={styles.formSub}>See which sites Gemini cites when a customer asks it, and whether yours is one of them.</p>
+              <p className={styles.formSub}>See which sites AI cites when a customer asks it, and whether yours is one of them.</p>
             </div>
 
             <div className={styles.field}>
@@ -408,7 +410,7 @@ export default function CitationMonitor() {
                 I don’t have a website
               </label>
               {noSite ? (
-                <p className={styles.fieldHint}>You’ll see which sites Gemini cites, but we can’t tell whether you’re among them or where you rank.</p>
+                <p className={styles.fieldHint}>You’ll see which sites AI cites, but we can’t tell whether you’re among them or where you rank.</p>
               ) : (
                 <>
                   <p className={styles.fieldHint}>So we can find you among the sources.</p>
@@ -574,12 +576,14 @@ export default function CitationMonitor() {
             <div className={styles.resultsWrap}>
               <PromptSuggestions url={url} lane={userLane || 'general'} tracking={tracking} onUse={handleUseSuggestion} />
               <p className={styles.emptyHint}>
-                Run a check and your result appears here: every source Gemini cited for your question and where your site ranked.
+                Run a check and your result appears here: every source AI cited for your question and where your site ranked.
               </p>
             </div>
           )}
         </div>
       </div>
+
+      <WhyNotCited open={!!result && result.cited === false} />
 
       </>)}
 

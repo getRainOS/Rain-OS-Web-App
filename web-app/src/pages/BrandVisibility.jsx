@@ -106,10 +106,11 @@ export default function BrandVisibility() {
 
   const [history, setHistory] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
-  const [tab, setTab] = useState('check'); // 'check' | 'history'
+  // ?view=past&brand=…&topic=… opens that brand and question's past checks.
+  const [tab, setTab] = useState(() => (searchParams.get('view') === 'past' ? 'history' : 'check')); // 'check' | 'history'
   const [resultTab, setResultTab] = useState('summary');
   const [pastTab, setPastTab] = useState('overview');
-  const [pastKey, setPastKey] = useState(null);
+  const [pastKey, setPastKey] = useState(() => (searchParams.get('brand') ? `${searchParams.get('brand').toLowerCase().trim()}::${(searchParams.get('topic') || '').toLowerCase().trim()}` : null));
 
   useEffect(() => {
     setHistoryLoading(true);
@@ -195,8 +196,8 @@ export default function BrandVisibility() {
         title="Brand Sentiment"
         subtitle="See whether AI mentions your brand, how it describes you, and what to do if it doesn't."
         about={[
-          { heading: 'What the result means', body: 'Whether you are mentioned is a direct check of Gemini\'s answer. The tone label is AI\'s judgment of the exact sentences that mention you, which we show so you can judge them yourself.' },
-          { heading: 'How the check works', body: 'We ask Gemini with live Google Search grounding and report mentions, citations and tone as given. One model and one phrasing, so it suits spot checks better than full brand monitoring.' },
+          { heading: 'What the result means', body: 'Whether you are mentioned is a direct check of the AI engine\'s answer. The tone label is AI\'s judgment of the exact sentences that mention you, which we show so you can judge them yourself.' },
+          { heading: 'How the check works', body: 'We ask the AI engine you pick (Gemini uses live Google Search) and report mentions, citations and tone as given. One engine and one phrasing per check, so it suits spot checks better than full brand monitoring.' },
         ]}
         actions={(tab !== 'check' || result) && <NewCheckButton onClick={() => { setResult(null); setError(''); setTab('check'); }} />}
       />
