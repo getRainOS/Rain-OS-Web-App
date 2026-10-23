@@ -8,7 +8,7 @@ export default function ScoreDonut({ score, label, color = '#2B8FE3', size = 72,
   const pct = Math.max(0, Math.min(100, Number(score) || 0));
   return (
     <figure className={styles.donut} title={`${label}: ${Math.round(pct)}/100`}>
-      <div className={styles.ring} style={{ width: size, height: size, '--glow': `${color}99` }}>
+      <div className={styles.ring} style={{ width: size, height: size }}>
         <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} shapeRendering="geometricPrecision" aria-hidden="true">
           <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={stroke} />
           <circle

@@ -16,14 +16,13 @@ export const PILLAR_COLORS = {
   local_presence: '#4FAEA6',
 };
 
-// Fluorescent versions for the dashboard's charts (trend lines and score
-// rings), with a soft glow, so they pop against the calm UI. Only for chart
-// strokes; text, dots in lists and tags keep the muted PILLAR_COLORS.
+// Brighter versions for charts (trend lines and score rings), so thin strokes
+// read crisply on the dark background. Still not neon: lighter, not louder.
 export const PILLAR_CHART_COLORS = {
-  ai_readability: '#2EC5FF',
-  digital_authority: '#39FF88',
-  conversion_readiness: '#B76BFF',
-  product_discoverability: '#FFC22E',
-  rag_readiness: '#FF3DA8',
-  local_presence: '#1FFFE0',
+  ai_readability: '#74B9F5',
+  digital_authority: '#72D6A0',
+  conversion_readiness: '#B6A2F7',
+  product_discoverability: '#F0BE72',
+  rag_readiness: '#EF9BBA',
+  local_presence: '#63D3C8',
 };

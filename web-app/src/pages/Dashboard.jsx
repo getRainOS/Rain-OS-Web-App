@@ -1145,7 +1145,6 @@ export default function Dashboard() {
                     {activePillars.map(p => (
                       <Line key={p.key} type="monotone" dataKey={p.key} stroke={p.color} strokeWidth={2.25}
                         strokeLinecap="round" strokeLinejoin="round"
-                        style={{ filter: `drop-shadow(0 0 3px ${p.color}aa)` }}
                         isAnimationActive={false}
                         dot={{ r: piecePoints.length === 1 ? 5 : 3.5, strokeWidth: 0, fill: p.color }}
                         activeDot={{ r: 5, strokeWidth: 0, fill: p.color }} />
