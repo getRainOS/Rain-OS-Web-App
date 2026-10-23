@@ -5,7 +5,7 @@
 //      aimed at what is still weak, and keep whichever version scores higher.
 // Returns the verified before/after, what only the owner can supply, and an
 // FAQ with ready-to-paste schema, so the result is more than a chat reply.
-import { analyzeContent, rewriteDocumentForAI, wordCount, MIN_REWRITE_RATIO, type NeedsYou } from './geminiService';
+import { analyzeContent, rewriteDocumentForAI, wordCount, MIN_REWRITE_RATIO, isShortForm, type NeedsYou } from './geminiService';
 import { rewriteSignals, type RewriteSignal } from './rewriteSignals';
 import type { AnalysisResponse } from '../types';
 
@@ -100,7 +100,7 @@ export async function pillarRewrite(
   if (firstScore.overallScore < TARGET) {
     passes = 2;
     const second = await deps.rewrite(first.rewritten, module, focusFrom(firstScore, module), opts.contentType, opts.facts).catch(() => null);
-    const keepsLength = second && wordCount(second.rewritten) >= MIN_REWRITE_RATIO * wordCount(content);
+    const keepsLength = second && (isShortForm(opts.contentType) || wordCount(second.rewritten) >= MIN_REWRITE_RATIO * wordCount(content));
     if (second && keepsLength) {
       const secondScore = await score(second.rewritten).catch(() => null);
       if (secondScore && secondScore.overallScore > firstScore.overallScore) best = { r: second, s: secondScore };

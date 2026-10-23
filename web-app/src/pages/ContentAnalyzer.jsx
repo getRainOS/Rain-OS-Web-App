@@ -40,6 +40,38 @@ const TYPE_EXPECTATIONS = {
   social_post: 'a strong first line, one idea, and a takeaway that stands on its own.',
 };
 
+// Exact length checks per content type (no AI): a social post longer than
+// the platforms show before "see more", or a product description that runs
+// to an essay, is flagged whatever the score says.
+const LENGTH_LIMITS = {
+  social_post: { maxChars: 1300, note: 'LinkedIn cuts posts off after about 210 characters with "see more", X allows 280 characters, and posts over about 1,300 characters get far less engagement. Lead with the hook and cut it down, or split it into a thread.' },
+  product_description: { maxWords: 400, note: 'Shoppers and AI shopping answers pull the key facts from the top. Keep the description tight and move the long story to a separate page.' },
+};
+
+function lengthWarning(contentType, text) {
+  const limit = LENGTH_LIMITS[contentType];
+  const t = (text || '').trim();
+  if (!limit || !t) return null;
+  const chars = t.length;
+  const words = t.split(/\s+/).length;
+  if (limit.maxChars && chars > limit.maxChars) return `Too long for a social post: ${chars.toLocaleString()} characters (aim for under ${limit.maxChars.toLocaleString()}). ${limit.note}`;
+  if (limit.maxWords && words > limit.maxWords) return `Long for a product description: ${words.toLocaleString()} words (aim for under ${limit.maxWords}). ${limit.note}`;
+  return null;
+}
+
+const PILLAR_NAMES = {
+  ai_readability: 'AI Readability', digital_authority: 'Digital Authority', conversion_readiness: 'Conversion Readiness',
+  product_discoverability: 'Product Discoverability', rag_readiness: 'RAG Readiness', local_presence: 'Local Presence',
+};
+const PILLAR_CAMEL = {
+  ai_readability: 'aiReadability', digital_authority: 'digitalAuthority', conversion_readiness: 'conversionReadiness',
+  product_discoverability: 'productDiscoverability', rag_readiness: 'ragReadiness', local_presence: 'localPresence',
+};
+const pillarScoreOf = (result, key) => {
+  const v = result?.[key] ?? result?.pillarScores?.[PILLAR_CAMEL[key]];
+  return typeof v === 'number' ? Math.round(v) : null;
+};
+
 const LANE_CONTENT_TYPES = {
   general: ['article', 'blog_post', 'landing_page', 'social_post'],
   product_sellers: ['product_description', 'landing_page', 'social_post'],
@@ -535,29 +567,68 @@ export default function ContentAnalyzer() {
             </div>
           )}
 
-          {result.recommendations?.length > 0 && (
-            <div className={`card ${styles.recoCard}`}>
-              <h3 className={styles.sectionTitle}>Recommendations</h3>
-              <ul className={styles.recoList}>
-                {result.recommendations.map((r, i) => {
-                  const isObj = typeof r === 'object' && r !== null;
-                  const text = isObj
-                    ? (r.text || r.recommendation || r.description || r.issue || '')
-                    : String(r);
-                  const artifact = isObj ? r.artifact : null;
-                  return (
-                    <li key={i} className={styles.recoItem}>
-                      <span className={styles.recoNum}>{i + 1}</span>
-                      <div className={styles.recoContent}>
-                        <span>{text}</span>
-                        {artifact && <ArtifactBlock artifact={artifact} />}
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
+          {lengthWarning(contentType, content) && (
+            <div className={`card ${styles.recoCard}`} role="alert" style={{ borderColor: 'var(--yellow)' }}>
+              <h3 className={styles.sectionTitle}>Length</h3>
+              <p className={styles.summaryText}>{lengthWarning(contentType, content)}</p>
             </div>
           )}
+
+          {result.recommendations?.length > 0 && (() => {
+            const recs = result.recommendations.map(r => (typeof r === 'object' && r !== null
+              ? { text: r.text || r.recommendation || r.description || r.issue || '', pillar: r.pillar || null, artifact: r.artifact || null }
+              : { text: String(r), pillar: null, artifact: null })).filter(r => r.text);
+            const weak = Object.keys(PILLAR_NAMES)
+              .map(k => ({ key: k, score: pillarScoreOf(result, k) }))
+              .filter(p => p.score !== null && p.score < 50 && recs.some(r => r.pillar === p.key))
+              .sort((a, b) => a.score - b.score);
+            const groups = [
+              ...Object.keys(PILLAR_NAMES)
+                .map(k => ({ key: k, score: pillarScoreOf(result, k), items: recs.filter(r => r.pillar === k) }))
+                .filter(g => g.items.length)
+                .sort((a, b) => (a.score ?? 100) - (b.score ?? 100)),
+              { key: 'other', score: null, items: recs.filter(r => !r.pillar || !PILLAR_NAMES[r.pillar]) },
+            ].filter(g => g.items.length);
+            let n = 0;
+            return (
+              <div className={`card ${styles.recoCard}`}>
+                <h3 className={styles.sectionTitle}>What to fix ({recs.length})</h3>
+                {weak.length > 0 && (
+                  <p className={styles.summaryText} style={{ marginBottom: 12 }}>
+                    Based on your Needs Work {weak.length === 1 ? 'pillar' : 'pillars'}: {weak.map(p => `${PILLAR_NAMES[p.key]} (${p.score})`).join(' and ')}. Start at the top.
+                  </p>
+                )}
+                {groups.map(g => (
+                  <div key={g.key} style={{ marginBottom: 12 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', margin: '8px 0 6px' }}>
+                      {g.key === 'other' ? 'General' : `${PILLAR_NAMES[g.key]}${g.score !== null ? ` · ${g.score}/100` : ''}`}
+                    </div>
+                    <ul className={styles.recoList}>
+                      {g.items.map((r, i) => (
+                        <li key={i} className={styles.recoItem}>
+                          <span className={styles.recoNum}>{++n}</span>
+                          <div className={styles.recoContent}>
+                            <span>{r.text}</span>
+                            {r.artifact && <ArtifactBlock artifact={r.artifact} />}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+                {content.trim() && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', marginTop: 8 }}>
+                    <button type="button" className="btn btn-primary" disabled={rewriteLoading || loading || isAtLimit} onClick={handleRewrite}>
+                      {rewriteLoading ? 'Fixing and re-scoring… (up to a minute)' : 'Fix these for me'}
+                    </button>
+                    <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+                      Rewrites your piece against every fix above, then re-scores it. Anything only you can supply is listed for you.
+                    </span>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
 
           <QuickTools content={content} title={title} />
 

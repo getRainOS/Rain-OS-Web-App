@@ -306,7 +306,7 @@ moduleWeightInstructions,
 content.slice(0, 12000), // cap at ~12k chars to manage token cost
 '=== END CONTENT ===',
 '',
-'IMPORTANT: The "recommendations" array must contain 3-5 specific, actionable fixes tied to the lowest-scoring subcategories above (e.g. "Add a bulleted FAQ answering the top 3 buyer questions" rather than generic advice like "improve clarity"). Never return an empty array — every piece of content has room for at least one concrete improvement. Each recommendation must be an object of the shape { "pillar": "<key>", "text": "<fix>" }, where "pillar" is exactly one of: "ai_readability", "digital_authority", "conversion_readiness", "product_discoverability", "rag_readiness", "local_presence" — whichever pillar that specific fix most directly improves.',
+'IMPORTANT: The "recommendations" array must contain one specific, actionable fix for EVERY subcategory above that scored under 70 (at least 3, at most 12), weakest first (e.g. "Add a bulleted FAQ answering the top 3 buyer questions" rather than generic advice like "improve clarity"). Never return an empty array — every piece of content has room for at least one concrete improvement. Each recommendation must be an object of the shape { "pillar": "<key>", "text": "<fix>" }, where "pillar" is exactly one of: "ai_readability", "digital_authority", "conversion_readiness", "product_discoverability", "rag_readiness", "local_presence" — whichever pillar that specific fix most directly improves.',
   'IMPORTANT: The "summary" field must be a concise 1-2 sentence overview of what this content is about and its overall AEO readiness, written in plain language for a non-technical reader.',
   'Return your scores as a single JSON object matching this exact shape (all fields required):',
 JSON.stringify(RESPONSE_SCHEMA, null, 2),
@@ -566,7 +566,7 @@ ${targets}
 RULES:
 1. Meet every pillar of the rubric that can be met with the facts already in the content.
 2. Preserve ALL facts, data, figures, examples, quotes and meaning. Never invent facts, numbers, reviews, credentials, prices, names or links.
-3. Keep the full length: this is a rewrite, not a summary. Splitting sentences and adding headings usually makes it slightly longer.
+3. ${isShortForm(contentType) ? 'This is a social post: keep it short. Lead with the hook, keep one idea, and cut it to under 1,300 characters (under 280 is ideal). No headings.' : 'Keep the full length: this is a rewrite, not a summary. Splitting sentences and adding headings usually makes it slightly longer.'}
 4. Use Markdown: # and ## headings, - lists, numbered steps.
 5. Where the rubric needs something only the owner can supply (real reviews, credentials, prices, original data, author bio, address, booking link, schema code on the page), do not make it up. List it in "needsYou" instead.
 
@@ -629,6 +629,8 @@ Respond with valid JSON only (no markdown fences):
 const REWRITE_CHUNK_CHARS = 7000;
 export const REWRITE_MAX_CHARS = 24000;
 export const MIN_REWRITE_RATIO = 0.8;
+// Social posts should get shorter, so the keep-the-length rule doesn't apply.
+export const isShortForm = (contentType?: string) => /social/i.test(contentType || '');
 
 // Something the rubric needs that only the owner can supply.
 export interface NeedsYou { item: string; why: string; where: string }
@@ -671,7 +673,7 @@ export async function rewriteDocumentForAI(
       // almost certainly dropped content, so ask once more, firmly, and keep
       // whichever version is longer.
       const ratio = wordCount(first.rewritten) / Math.max(1, wordCount(c));
-      if (ratio >= MIN_REWRITE_RATIO) return first;
+      if (ratio >= MIN_REWRITE_RATIO || isShortForm(contentType)) return first;
       const second = await rewriteChunkForAI(c, module, part,
         `Your previous rewrite was only ${Math.round(ratio * 100)}% of the original length and dropped content. Rewrite again and keep every point, example and detail.`, focus, contentType, facts)
         .catch(() => first);
