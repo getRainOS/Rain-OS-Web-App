@@ -10,7 +10,7 @@ const CitationWorldMap = lazy(() => import('./CitationWorldMap.jsx'));
 // Dashboard map of where the cited websites are based, for whichever KPI card
 // is selected above it (Cited by AI or Mentioned by AI), using that card's
 // checks. "See more" opens those checks.
-export default function CitationMapCard({ source = 'cited', kpiLabel, checks = [], ownDomain }) {
+export default function CitationMapCard({ source = 'cited', kpiLabel, checks = [], ownDomain, attachedAt = null }) {
   const tab = source;
   const [resolved, setResolved] = useState(() => new Map());
   const map = useMemo(() => buildCompetitorMap(checks, ownDomain, resolved), [checks, ownDomain, resolved]);
@@ -44,7 +44,11 @@ export default function CitationMapCard({ source = 'cited', kpiLabel, checks = [
     : `/brand-visibility?view=past&brand=${encodeURIComponent(latest.brand || '')}&topic=${encodeURIComponent(latest.topic || '')}`;
 
   return (
-    <section className={styles.card} aria-labelledby="citation-map-heading">
+    <section
+      className={`${styles.card} ${attachedAt ? styles.attached : ''}`}
+      style={attachedAt === 'first' ? { '--attach-tl': '0px' } : attachedAt === 'last' ? { '--attach-tr': '0px' } : undefined}
+      aria-labelledby="citation-map-heading"
+    >
       <div className={styles.head}>
         <div>
           <h2 id="citation-map-heading" className={styles.title}>Where AI's sources are based</h2>
