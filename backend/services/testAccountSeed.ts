@@ -9,18 +9,27 @@ export const TEST_EMAIL = 'support@getrainos.com';
 
 // Real, public sites of the kind each lane is built for.
 export type SeedKind = 'url' | 'content' | 'repo';
-export type Seed = { lane: string; url: string; brand: string; kind?: SeedKind; title?: string; contentType?: string; content?: string };
+export type Seed = { lane: string; url: string; brand: string; kind?: SeedKind; title?: string; contentType?: string; content?: string; state?: string; platform?: string };
 export const SEEDS: Seed[] = [
   // Local Service Business: independent local shops and restaurants
-  { lane: 'local_business', url: 'https://franklinbbq.com', brand: 'Franklin Barbecue' },
-  { lane: 'local_business', url: 'https://www.joespizzanyc.com', brand: "Joe's Pizza" },
-  { lane: 'local_business', url: 'https://www.voodoodoughnut.com', brand: 'Voodoo Doughnut' },
-  { lane: 'local_business', url: 'https://tartinebakery.com', brand: 'Tartine Bakery' },
-  // Product Sellers: independent online stores
+  { lane: 'local_business', url: 'https://franklinbbq.com', brand: 'Franklin Barbecue', state: 'TX' },
+  { lane: 'local_business', url: 'https://www.joespizzanyc.com', brand: "Joe's Pizza", state: 'NY' },
+  { lane: 'local_business', url: 'https://www.voodoodoughnut.com', brand: 'Voodoo Doughnut', state: 'OR' },
+  { lane: 'local_business', url: 'https://tartinebakery.com', brand: 'Tartine Bakery', state: 'CA' },
+  // Local service businesses outside the big coastal cities
+  { lane: 'local_business', url: 'https://www.yoderplumbing.com', brand: 'Yoder Plumbing', state: 'OH' },
+  { lane: 'local_business', url: 'https://www.kryderlaw.com', brand: 'The Kryder Law Group', state: 'IL' },
+  { lane: 'local_business', url: 'https://ugclimbing.com', brand: 'Übergrippen', state: 'CO' },
+  // Product Sellers: independent brand stores (likely Shopify, not verified)
   { lane: 'product_sellers', url: 'https://ugmonk.com', brand: 'Ugmonk' },
   { lane: 'product_sellers', url: 'https://fellowproducts.com', brand: 'Fellow' },
   { lane: 'product_sellers', url: 'https://www.manduka.com', brand: 'Manduka' },
   { lane: 'product_sellers', url: 'https://bellroy.com', brand: 'Bellroy' },
+  // ...and stores on other platforms
+  { lane: 'product_sellers', url: 'https://nalgene.com', brand: 'Nalgene', platform: 'WooCommerce' },
+  { lane: 'product_sellers', url: 'https://www.skullcandy.com', brand: 'Skullcandy', platform: 'BigCommerce' },
+  { lane: 'product_sellers', url: 'https://www.blacksheepbikes.com', brand: 'Black Sheep Bikes', platform: 'Wix', state: 'CO' },
+  { lane: 'product_sellers', url: 'https://www.washiarts.com', brand: 'Washi Arts', platform: 'Squarespace' },
   // Vibe Coders: small AI apps and no-code sites built fast by solo makers
   { lane: 'vibe_coders', url: 'https://photoai.com', brand: 'Photo AI' },
   { lane: 'vibe_coders', url: 'https://interiorai.com', brand: 'Interior AI' },
@@ -35,7 +44,7 @@ export const SEEDS: Seed[] = [
   { lane: 'general', url: 'https://seths.blog', brand: "Seth's Blog" },
 
   // Pasted content (Content Optimizer): short drafts of the kind each lane writes.
-  { lane: 'local_business', kind: 'content', url: 'content:franklin-faq', brand: 'Franklin Barbecue', contentType: 'blog_post', title: 'How to plan a visit to Franklin Barbecue',
+  { lane: 'local_business', kind: 'content', url: 'content:franklin-faq', brand: 'Franklin Barbecue', state: 'TX', contentType: 'blog_post', title: 'How to plan a visit to Franklin Barbecue',
     content: 'Planning a trip to Franklin Barbecue in Austin? Most people line up early because brisket sells out. Bring a chair, water and some patience. The line moves steadily once the doors open, and staff walk the line to let people know when food is likely to run out. If you would rather skip the wait, look at the pre-order option on the website, which needs to be placed well ahead of time. Parking nearby fills up, so arriving on foot or by rideshare is easier.' },
   { lane: 'product_sellers', kind: 'content', url: 'content:bellroy-wallet', brand: 'Bellroy', contentType: 'product_description', title: 'Slim leather wallet',
     content: 'A slim leather wallet that holds your everyday cards and a few folded notes without the bulk. A pull tab brings less-used cards up from the bottom, and a quick-access slot keeps your most used card at the front. Made from leather that softens with use. Fits easily in a front pocket.' },
@@ -131,10 +140,10 @@ export async function startReset(port: number | string): Promise<void> {
       for (let attempt = 0; attempt < 3; attempt++) {
         try {
           const [path, body] = s.kind === 'content'
-            ? ['/api/analyze', { content: s.content, title: s.title, contentType: s.contentType, module: s.lane, brand: s.brand }]
+            ? ['/api/analyze', { content: s.content, title: s.title, contentType: s.contentType, module: s.lane, brand: s.brand, state: s.state }]
             : s.kind === 'repo'
               ? ['/api/github/analyze', { repoUrl: s.url, module: s.lane }]
-              : ['/api/url-scan', { url: s.url, module: s.lane, brand: s.brand }];
+              : ['/api/url-scan', { url: s.url, module: s.lane, brand: s.brand, state: s.state }];
           const res = await fetch(`http://127.0.0.1:${port}${path}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}`, 'X-Rain-Lane': s.lane },
