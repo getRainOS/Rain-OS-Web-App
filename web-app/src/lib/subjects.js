@@ -41,21 +41,24 @@ export function buildSubjects(history) {
   for (const p of groupPieces(items.filter(h => !h.url || h.repo))) {
     if (p.name === 'Untitled') continue;
     const repo = p.latest.repo;
+    const brand = [...p.runs].reverse().find(r => r.brand)?.brand || null;
     out.push({
       key: repo ? `repo:${repo.replace(/^https?:\/\/(www\.)?github\.com\//, '')}` : `piece:${p.latest.series_id ?? p.latest.id}`,
       type: repo ? 'repo' : 'content',
       name: repo ? pieceName(p.latest) : p.name,
-      website: null, brand: null, latestId: p.latest.id, at: time(p.latest), count: p.runs.length,
+      website: null, brand, latestId: p.latest.id, at: time(p.latest), count: p.runs.length,
     });
   }
-  return out.sort((a, b) => b.at - a.at);
+  // lookFor: the name AI answers are searched for. A website's name, or the
+  // brand given for a piece of content (a title isn't something AI names).
+  return out.map(s => ({ ...s, lookFor: s.brand || (s.type === 'site' ? s.name : null) })).sort((a, b) => b.at - a.at);
 }
 
 // A short description for the picker.
 export function subjectHint(s) {
   if (s.type === 'site') return `Website${s.brand ? ` · ${s.website}` : ''} · ${s.count} ${s.count === 1 ? 'analysis' : 'analyses'}`;
   if (s.type === 'repo') return `Repo · ${s.count} ${s.count === 1 ? 'analysis' : 'analyses'}`;
-  return `Content · ${s.count} ${s.count === 1 ? 'analysis' : 'analyses'}`;
+  return `Content${s.brand ? ` · ${s.brand}` : ''} · ${s.count} ${s.count === 1 ? 'analysis' : 'analyses'}`;
 }
 
 // Does a saved check belong to this subject? Checks saved with a subject key
