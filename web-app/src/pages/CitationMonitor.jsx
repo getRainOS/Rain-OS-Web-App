@@ -193,12 +193,12 @@ export default function CitationMonitor() {
     // started request is allowed to update state.
     const requestId = ++checkRequestIdRef.current;
     // ChatGPT starts alongside Gemini and fills in when it is ready.
-    setEngineRun(hasChatGpt ? { topic: topic.trim(), url: noSite ? undefined : (url.trim() || undefined), name: checkName, subject: subject.key, id: requestId, country: checkCountry, state: checkCountry === 'US' ? (checkState || null) : null } : null);
+    setEngineRun(hasChatGpt ? { topic: topic.trim(), url: noSite ? undefined : (url.trim() || undefined), name: checkName, subject: subject.key, brand: subject.lookFor || undefined, id: requestId, country: checkCountry, state: checkCountry === 'US' ? (checkState || null) : null } : null);
     setLoading(true);
     setError('');
     setResult(null);
     try {
-      const { data } = await api.citationCheck({ name: checkName, topic: topic.trim(), url: noSite ? undefined : (url.trim() || undefined), subject: subject.key });
+      const { data } = await api.citationCheck({ name: checkName, topic: topic.trim(), url: noSite ? undefined : (url.trim() || undefined), subject: subject.key, brand: subject.lookFor || undefined });
       if (requestId !== checkRequestIdRef.current) return;
       setResult(data);
       setMySite(url);
@@ -344,7 +344,7 @@ export default function CitationMonitor() {
         title="Citation Monitor"
         subtitle="Check whether AI engines cite your site when people ask about the topics you care about."
         about={[
-          { heading: 'What the result means', body: '"Cited" or "Not cited" is what one real AI answer did at that moment, shown for each engine you can use. It is a snapshot to track over time, not a lasting rank.' },
+          { heading: 'What the result means', body: 'Two results for each answer. Mentioned: the AI named your brand (needs only a name). Cited: it linked to your website as a source (needs a website). Each is what one real AI answer did at that moment, so track it over time rather than reading one check as a lasting rank.' },
           { heading: 'How the check works', body: 'We ask each AI engine your exact question live (Gemini with Google Search, ChatGPT and the others through their real answers) and look for your domain among the sources each one cites. One phrasing per check, so run a few variations before drawing conclusions.' },
         ]}
         actions={view !== 'new' && <NewCheckButton onClick={() => setView('new')} />}
@@ -375,7 +375,7 @@ export default function CitationMonitor() {
                 label="Checking for"
                 initialKey={searchParams.get('subject') || undefined}
                 onChange={sub => { setSubject(sub); setUrl(sub?.website || ''); setNoSite(!sub?.website); setError(''); }}
-                note={subject && !subject.website ? 'This content has no web address yet, so you’ll see which sites AI cites for your question, but not whether you’re one of them.' : undefined}
+                note={subject && !subject.website ? (subject.lookFor ? `Each answer is checked for “${subject.lookFor}”. Add the page’s link once it’s published to also see whether it’s cited.` : 'Add a brand name to this content in Content Optimizer so we can check whether AI names you.') : undefined}
               />
             </div>
 
@@ -566,15 +566,17 @@ export default function CitationMonitor() {
       {/* Content without a website: what the check can and can't tell, and the two ways forward. */}
       {subject && !subject.website ? (
         <div className={styles.unpublishedCard}>
-          <p className={styles.unpublishedTitle}>Want to know whether AI cites “{subject.name}”?</p>
+          <p className={styles.unpublishedTitle}>
+            {subject.lookFor ? `Checks show whether AI names “${subject.lookFor}”` : `Add a brand name to “${subject.name}”`}
+          </p>
           <p className={styles.unpublishedText}>
-            AI cites web pages by their address, and this content doesn’t have one yet. Once it’s published, analyze it again with its link,
-            and Citation Monitor can tell you whether you’re cited, where you rank, and track it every week.
+            {subject.lookFor
+              ? 'That works without a website. To also see whether AI links to the piece as a source (cited), add its link once it’s published.'
+              : 'Mentions are found by name, so tell us the business or brand behind this content. To also track citations, add the page’s link once it’s published.'}
           </p>
           <div className={styles.unpublishedActions}>
-            <Link to={`/analyze/${subject.latestId}?addLink=1`} className="btn btn-primary">Add its link in Content Optimizer</Link>
-            <Link to={`/brand-visibility${topic.trim() ? `?q=${encodeURIComponent(topic.trim())}` : ''}`} className="btn btn-ghost">
-              Check whether AI names your brand for this question
+            <Link to={`/analyze/${subject.latestId}?addLink=1`} className="btn btn-primary">
+              {subject.lookFor ? 'Add its link in Content Optimizer' : 'Add a brand name and link'}
             </Link>
           </div>
         </div>
@@ -709,6 +711,10 @@ function ResultConsole({ result, name, topicHistory, tracking, location }) {
   else if (!result.url) badge = <span className={`${styles.consoleBadge} ${styles.consoleBadgeMuted}`}>No website given</span>;
   else if (rank) badge = <span className={`${styles.consoleBadge} ${styles.consoleBadgeGood}`}>Cited · source {rank}</span>;
   else badge = <span className={`${styles.consoleBadge} ${styles.consoleBadgeBad}`}>Not cited</span>;
+  // Mentioned: did the answer name the brand? Works without a website.
+  const mentionBadge = result.mentioned == null ? null : result.mentioned
+    ? <span className={`${styles.consoleBadge} ${styles.consoleBadgeGood}`}>Mentioned · {result.brand}</span>
+    : <span className={`${styles.consoleBadge} ${styles.consoleBadgeBad}`}>Not mentioned</span>;
 
   return (
     <div className={`card ${styles.console}`}>
@@ -724,6 +730,12 @@ function ResultConsole({ result, name, topicHistory, tracking, location }) {
             <Search size={14} aria-hidden="true" />
             <span>{result.topic}</span>
           </div>
+          {mentionBadge && (
+            <div className={styles.consoleLabelRow}>
+              <span className={styles.consoleLabel}>Named in the answer</span>
+              {mentionBadge}
+            </div>
+          )}
           <div className={styles.consoleLabelRow}>
             <span className={styles.consoleLabel}>Sources Gemini cited</span>
             {badge}

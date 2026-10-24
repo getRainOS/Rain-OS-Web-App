@@ -69,7 +69,7 @@ export const api = {
   },
   getAnalysisById: (id) => request('GET', `/api/history/${id}`),
   scanUrl: (url, opts = {}) => request('POST', '/api/url-scan', { url, ...opts }),
-  citationCheck: ({ name, topic, url }) => request('POST', '/api/citation-check', { name, topic, url }),
+  citationCheck: ({ name, topic, url, ...rest }) => request('POST', '/api/citation-check', { name, topic, url, ...rest }),
   citationHistory: (params) => {
     const qs = params ? '?' + new URLSearchParams(params).toString() : '';
     return request('GET', `/api/citation-checks${qs}`);

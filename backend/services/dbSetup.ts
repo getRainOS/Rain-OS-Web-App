@@ -54,6 +54,9 @@ CREATE INDEX IF NOT EXISTS idx_citation_checks_user_checked_at
 ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS name TEXT;
 -- Which analyzed brand / website / piece a check was run for (see lib/subjects.js).
 ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS subject TEXT;
+-- Citation Monitor reports both: was the brand named in the answer, and was the site cited.
+ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS brand TEXT;
+ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS mentioned BOOLEAN;
 ALTER TABLE brand_visibility_checks ADD COLUMN IF NOT EXISTS subject TEXT;
 ALTER TABLE sov_checks ADD COLUMN IF NOT EXISTS subject TEXT;
 

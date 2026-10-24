@@ -293,8 +293,8 @@ export default function ShareOfVoice() {
                 <SubjectPicker
                   label="Checking for"
                   initialKey={searchParams.get('subject') || undefined}
-                  onChange={sub => { setSubject(sub); setBrand(sub?.name || ''); setUrl(sub?.website || ''); }}
-                  note={subject ? `AI answers are searched for “${subject.name}”${subject.website ? ` and ${subject.website}` : ''}.` : undefined}
+                  onChange={sub => { setSubject(sub); setBrand(sub?.lookFor || ''); setUrl(sub?.website || ''); }}
+                  note={subject ? (subject.lookFor ? `AI answers are searched for “${subject.lookFor}”${subject.website ? ` and ${subject.website}` : ''}.` : 'This content has no brand name yet. Add one in Content Optimizer so we know whose name to look for.') : undefined}
                 />
               </div>
               <div className={styles.field}>

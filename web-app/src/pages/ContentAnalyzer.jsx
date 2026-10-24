@@ -182,6 +182,8 @@ export default function ContentAnalyzer() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
+  // The brand behind this piece: Citation Monitor, Sentiment and Share of Voice look for it in AI answers.
+  const [brandName, setBrandName] = useState('');
   const [drafts, setDrafts] = useState(readDrafts);
   // The text last sent for analysis in this visit (saved results may not carry it).
   const [lastAnalyzedText, setLastAnalyzedText] = useState('');
@@ -214,6 +216,7 @@ export default function ContentAnalyzer() {
       .then(({ data }) => {
         if (!cancelled) {
           setResult(data?.data ?? null);
+          if (data?.data?.brand) setBrandName(data.data.brand);
           setAnalyzedContent(typeof data?.data?.content === 'string' && data.data.content.trim() ? data.data.content : null);
           // Older analyses, or deployments where the content column is still
           // empty, must not erase the text that is already in the editor.
@@ -328,7 +331,7 @@ export default function ContentAnalyzer() {
       // dashboard can show its trend. A fresh analysis starts a new piece.
       const previousAnalysisId = id && result ? Number(id) : undefined;
       setStale(false);
-      const { data } = await api.analyze({ title, content: text, url, module: analysisModule, lane: userLane, contentType: contentTypeLabel, previousAnalysisId });
+      const { data } = await api.analyze({ title, content: text, url, brand: brandName.trim() || undefined, module: analysisModule, lane: userLane, contentType: contentTypeLabel, previousAnalysisId });
       setResult(data);
       setAnalyzedContent(text);
       setLastAnalyzedText(text);
@@ -426,6 +429,16 @@ export default function ContentAnalyzer() {
                 placeholder="https://example.com/article"
                 value={url}
                 onChange={e => setUrl(e.target.value)}
+              />
+              <label className={styles.label} htmlFor="ca-brand" style={{ marginTop: 10 }}>Business or brand name (optional)</label>
+              <input
+                id="ca-brand"
+                type="text"
+                className={styles.input}
+                placeholder="As people write it, e.g. Bright Smile Dental"
+                value={brandName}
+                onChange={e => setBrandName(e.target.value)}
+                maxLength={120}
               />
               {addingLink && !url.trim() && (
                 <p style={{ margin: '6px 0 0', fontSize: 12.5, color: '#2B8FE3' }}>

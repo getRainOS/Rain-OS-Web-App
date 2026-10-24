@@ -99,6 +99,7 @@ export async function runEngineCitationCheck(
     siteShared: !!userDomain && !matchableDomain(userDomain),
     summary: buildSummary(!!matchableDomain(userDomain), citedSourceIndex !== null, answer.sources.length, competitors, name),
     answerExcerpt: buildAnswerExcerpt(answer.text),
+    answerText: answer.text,
     engine,
     country,
     state: country === 'US' && state && US_STATES.has(state) ? state : null,

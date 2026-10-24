@@ -3,6 +3,7 @@ import { laneOf } from '../services/lanes';
 // Run a Google-grounded Gemini query to test whether a user's content would be
 // cited by AI engines for a given topic. Counts as one usage credit.
 import express from 'express';
+import { mentionedIn } from '../services/brandMatch';
 import {
   findUserByApiKey,
   incrementUserUsage,
@@ -124,6 +125,8 @@ export default async function handler(req: express.Request, res: express.Respons
   const { name, topic, url } = req.body as { name?: string; topic?: string; url?: string };
   // The analyzed brand / website / piece this check is for (lib/subjects.js on the web app).
   const subject = typeof req.body?.subject === 'string' ? req.body.subject.trim().slice(0, 300) || null : null;
+  // The brand to look for in the answer (works without a website).
+  const brand = typeof req.body?.brand === 'string' ? req.body.brand.trim().slice(0, 120) || null : null;
   if (!name || typeof name !== 'string' || name.trim().length < 1) {
     return res.status(400).json({
       error: 'bad_request',
@@ -164,7 +167,9 @@ export default async function handler(req: express.Request, res: express.Respons
   }
 
   try {
-    const result = await runCitationCheck(topic, normalisedUrl);
+    const full = await runCitationCheck(topic, normalisedUrl);
+    const { answerText, ...rest } = full;
+    const result = { ...rest, brand, mentioned: mentionedIn(brand, answerText) };
 
     // Persist to citation history (best-effort — never block the response on a save error)
     let history: any[] = [];
@@ -186,6 +191,8 @@ export default async function handler(req: express.Request, res: express.Respons
         summary: result.summary,
         lane: laneOf(req),
         subject,
+        brand,
+        mentioned: result.mentioned,
       });
       checkId = saved?.id ?? null;
       history = await getCitationChecksByTopic(user.id, result.topic, 20);

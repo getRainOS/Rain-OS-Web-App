@@ -41,7 +41,7 @@ export default function EngineCheckPanel({ engine = 'chatgpt', label = 'ChatGPT'
         }
       }, POLL_MS);
     };
-    api.startEngineCheck({ engine, topic: run.topic, url: run.url, name: run.name, subject: run.subject, country: run.country, state: run.state ?? null, fresh: fresh > 0 })
+    api.startEngineCheck({ engine, topic: run.topic, url: run.url, name: run.name, subject: run.subject, brand: run.brand, country: run.country, state: run.state ?? null, fresh: fresh > 0 })
       .then(({ data }) => {
         if (cancelled) return;
         if (data.status === 'done') setState({ status: 'done', result: data.result, reused: !!data.reused });
@@ -67,9 +67,14 @@ export default function EngineCheckPanel({ engine = 'chatgpt', label = 'ChatGPT'
         {state.status === 'done' && (
           r?.answerShown === false
             ? <span className={styles.muted}>No AI answer shown</span>
-            : r?.url
-            ? <span className={rank ? styles.good : styles.bad}>{rank ? <><CheckCircle2 size={12} /> Cited · source {rank}</> : <><AlertCircle size={12} /> Not cited</>}</span>
-            : <span className={styles.muted}>No website given</span>
+            : <span style={{ display: 'inline-flex', gap: 10, flexWrap: 'wrap' }}>
+                {r?.mentioned != null && (
+                  <span className={r.mentioned ? styles.good : styles.bad}>{r.mentioned ? <><CheckCircle2 size={12} /> Mentioned</> : <><AlertCircle size={12} /> Not mentioned</>}</span>
+                )}
+                {r?.url
+                  ? <span className={rank ? styles.good : styles.bad}>{rank ? <><CheckCircle2 size={12} /> Cited · source {rank}</> : <><AlertCircle size={12} /> Not cited</>}</span>
+                  : <span className={styles.muted}>No website to cite</span>}
+              </span>
         )}
       </div>
 

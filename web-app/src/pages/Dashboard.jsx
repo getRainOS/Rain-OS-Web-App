@@ -797,7 +797,9 @@ export default function Dashboard() {
     ? citationSorted.filter(c => topicKeyOf(c.topic) === topicKeyOf(citationLatestTopic)).slice(0, 10)
     : [];
   const citationTotal = citationScoped.length;
-  const citationCitedCount = citationScoped.filter(c => c.cited).length;
+  // Without a website nothing can be cited by link, so count answers that name the brand.
+  const citeByName = !!subject && !subject.website;
+  const citationCitedCount = citationScoped.filter(c => (citeByName ? c.mentioned === true : c.cited)).length;
   const citationRate = citationTotal > 0 ? Math.round((citationCitedCount / citationTotal) * 100) : null;
 
   // Brand Sentiment: mention rate scoped to the most recently checked brand
@@ -852,10 +854,10 @@ export default function Dashboard() {
       hasData: citationTotal > 0,
       value: citationTotal > 0 ? `${citationRate}%` : null,
       sub: citationTotal > 0
-        ? `Cited in ${citationCitedCount} of your last ${citationTotal} check${citationTotal > 1 ? 's' : ''}`
+        ? `${citeByName ? 'Named' : 'Cited'} in ${citationCitedCount} of your last ${citationTotal} check${citationTotal > 1 ? 's' : ''}`
         : 'No data yet. Check a question your customers ask to see if AI cites you.',
       Icon: Radar,
-      dots: citationTotal > 0 ? citationScoped.slice(0, 8).reverse().map(c => !!c.cited) : null,
+      dots: citationTotal > 0 ? citationScoped.slice(0, 8).reverse().map(c => (citeByName ? c.mentioned === true : !!c.cited)) : null,
       tooltip: `How often ${citationTotal ? enginesOf(citationScoped) : 'AI'} cited your site for the question you checked most recently, over its last 10 checks. Each check asks the engine live.`,
     },
     {
@@ -963,10 +965,6 @@ export default function Dashboard() {
             ariaLabel="What the dashboard shows"
             options={subjects.map(x => ({ value: x.key, label: x.name, hint: subjectHint(x) }))}
           />
-          <button type="button" className={styles.fullBtn}
-            onClick={() => navigate(subject?.website ? `/full-check?subject=${encodeURIComponent(subject.key)}` : '/full-check')}>
-            {subject?.website ? `Run full check for ${subject.name}` : 'Run a full check'}
-          </button>
         </div>
       )}
 

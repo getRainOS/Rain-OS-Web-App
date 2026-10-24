@@ -544,6 +544,8 @@ export const getAiContentProfile = async (contentId: string): Promise<{ profile_
 
 export interface CitationCheckRecord {
   subject?: string | null; // analyzed brand / website / piece the check was run for
+  brand?: string | null;   // name looked for in the answer
+  mentioned?: boolean | null; // the answer names the brand (null: no brand given)
   id: number;
   name: string | null;
   topic: string;
@@ -573,6 +575,8 @@ const mapCitationRow = (row: any): CitationCheckRecord => ({
   source: row.source === 'scheduled' ? 'scheduled' : 'manual',
   engine: row.engine || 'gemini',
   subject: row.subject ?? null,
+  brand: row.brand ?? null,
+  mentioned: typeof row.mentioned === 'boolean' ? row.mentioned : null,
   locationCountry: row.location_country ?? null,
   locationState: row.location_state ?? null,
   checkedAt: row.checked_at instanceof Date ? row.checked_at.toISOString() : row.checked_at,
@@ -599,13 +603,15 @@ export const saveCitationCheck = async (
     locationState?: string | null;
     lane?: string | null;
     subject?: string | null;
+    brand?: string | null;
+    mentioned?: boolean | null;
   }
 ): Promise<CitationCheckRecord | null> => {
   const topicKey = normaliseTopicKey(data.topic);
   const res = await pool.query(
     `INSERT INTO citation_checks
-       (user_id, name, topic, topic_key, url, cited, alignment_score, sources, recommendations, summary, source, tracked_query_id, engine, location_country, location_state, lane, subject)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+       (user_id, name, topic, topic_key, url, cited, alignment_score, sources, recommendations, summary, source, tracked_query_id, engine, location_country, location_state, lane, subject, brand, mentioned)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
      RETURNING *`,
     [
       userId,
@@ -625,6 +631,8 @@ export const saveCitationCheck = async (
       data.locationState ?? null,
       data.lane ?? null,
       data.subject ?? null,
+      data.brand ?? null,
+      data.mentioned ?? null,
     ]
   );
   return res.rows[0] ? mapCitationRow(res.rows[0]) : null;
