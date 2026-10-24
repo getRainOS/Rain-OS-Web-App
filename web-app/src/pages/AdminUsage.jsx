@@ -63,6 +63,7 @@ export default function AdminUsage() {
         The allowance and price are the published figures for Gemini 2.5 grounding as we last checked them. Google bills by its own day
         boundary and can change prices, so treat the cost as an estimate and confirm it in Google Cloud billing. Content scoring does not use Google Search and is not counted here.
       </p>
+      <TestAccountReset />
     </div>
   );
 }
@@ -74,5 +75,65 @@ function Kpi({ label, value, note }) {
       <div className={styles.kpiValue}>{value}</div>
       <div className={styles.kpiNote}>{note}</div>
     </div>
+  );
+}
+
+const TEST_EMAIL = 'test08@getrainos.com';
+const LANE_LABELS = { local_business: 'Local business', product_sellers: 'Online sellers', vibe_coders: 'Vibe coders', developers: 'Developers', general: 'General' };
+
+// Staff-only: clears the test account (keeping Bright Smile Dental) and
+// analyzes a set of real public sites per lane.
+function TestAccountReset() {
+  const [info, setInfo] = useState(null);
+  const [error, setError] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  const load = () => api.testAccount().then(({ data }) => setInfo(data)).catch(err => setError(err.message || 'Could not load the test account.'));
+  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    if (!info?.job?.running) return undefined;
+    const t = setTimeout(load, 5000);
+    return () => clearTimeout(t);
+  }, [info]);
+
+  const start = async () => {
+    setBusy(true); setError('');
+    try { await api.resetTestAccount(confirm); setConfirm(''); await load(); }
+    catch (err) { setError(err.message || 'Could not start the reset.'); }
+    finally { setBusy(false); }
+  };
+
+  const job = info?.job;
+  const seeds = job?.seeds?.length ? job.seeds : info?.preview?.seeds || [];
+  return (
+    <section style={{ marginTop: 32 }}>
+      <h2 style={{ fontSize: 18, margin: '0 0 4px' }}>Test account ({TEST_EMAIL})</h2>
+      <p className={styles.note}>Removes every result and brand on this account except Bright Smile Dental, then analyzes the sites below in their lanes.</p>
+      {error && <p className={styles.note}>{error}</p>}
+      {!info ? <span className="spinner" /> : (
+        <>
+          <table className={styles.table}>
+            <thead><tr><th>Table</th><th>Will remove</th><th>Will keep</th></tr></thead>
+            <tbody>{info.preview.counts.map(c => <tr key={c.table}><td>{c.table}</td><td>{c.remove}</td><td>{c.keep}</td></tr>)}</tbody>
+          </table>
+          <table className={styles.table} style={{ marginTop: 16 }}>
+            <thead><tr><th>Lane</th><th>Brand</th><th>Site</th><th>Status</th></tr></thead>
+            <tbody>{seeds.map(s => (
+              <tr key={s.url}>
+                <td>{LANE_LABELS[s.lane] || s.lane}</td><td>{s.brand}</td><td>{s.url}</td>
+                <td>{!s.status ? '—' : s.status === 'done' ? `Done${s.score != null ? ` · ${s.score}` : ''}` : s.status === 'failed' ? `Failed: ${s.error || 'unknown error'}` : s.status === 'running' ? 'Analyzing…' : 'Waiting'}</td>
+              </tr>
+            ))}</tbody>
+          </table>
+          <div style={{ display: 'flex', gap: 8, marginTop: 16, flexWrap: 'wrap' }}>
+            <input className="input" style={{ maxWidth: 320 }} placeholder={`Type ${TEST_EMAIL} to confirm`} value={confirm} onChange={e => setConfirm(e.target.value)} disabled={job?.running} />
+            <button type="button" className="btn btn-primary" disabled={busy || job?.running || confirm.trim() !== TEST_EMAIL} onClick={start}>
+              {job?.running ? 'Seeding…' : 'Clean & seed'}
+            </button>
+          </div>
+        </>
+      )}
+    </section>
   );
 }
