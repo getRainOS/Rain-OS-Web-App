@@ -431,12 +431,9 @@ export default function Dashboard() {
   const [brandVisHistory, setBrandVisHistory] = useState([]);
   // Which KPI card the map shows: 'citation', 'brand' or 'sov'.
   const [mapKpi, setMapKpi] = useState('citation');
-  // Fixes waiting on each piece's latest analysis, for the Quick wins card.
-  const [fixesSummary, setFixesSummary] = useState(null);
   // Google listing data: 'on', 'locked' (free plan) or 'off' (not connected yet).
   const [listingsMode, setListingsMode] = useState('off');
   useEffect(() => { api.engines().then(({ data }) => setListingsMode(data?.features?.localListings || 'off')).catch(() => {}); }, []);
-  useEffect(() => { api.getFixesSummary().then(({ data }) => setFixesSummary(data)).catch(() => {}); }, [userLane]);
   const [brandLinks, setBrandLinks] = useState([]);
   const [linkPick, setLinkPick] = useState('');
   const [recentType, setRecentType] = useState('all');
@@ -451,7 +448,6 @@ export default function Dashboard() {
   const urlWantsLaneSelect = searchParams.get('selectLane') === '1';
   const [showLaneSelector, setShowLaneSelector] = useState(!userLane || urlWantsLaneSelect);
   const [typeFilter, setTypeFilter] = useState('all');
-  const [showAllFixes, setShowAllFixes] = useState(false);
   const laneSectionRef = useRef(null);
   const typeFilterAutoSet = useRef(false);
 
@@ -1174,12 +1170,10 @@ export default function Dashboard() {
         const weakest = [...piecePillars].filter(p => p.score > 0).sort((a, b) => a.score - b.score)[0];
         const order = k => { const i = [...piecePillars].sort((a, b) => a.score - b.score).findIndex(p => p.key === k); return i < 0 ? 99 : i; };
         const ranked = [...allFixes].sort((a, b) => order(a.pillar) - order(b.pillar));
-        const shown = showAllFixes ? ranked : ranked.slice(0, 3);
+        const shown = ranked.slice(0, 3);
         const href = run.repo ? '/repo-analysis'
           : run.url && !run.series_id ? `/url-scanner?url=${encodeURIComponent(run.url)}`
-          : `/analyze/${run.id}`;
-        const others = (fixesSummary?.pieces || []).filter(p => p.id !== run.id);
-        const otherCount = others.reduce((n, p) => n + p.fixes, 0);
+          : `/analyze/${run.id}?fix=1`;
         return (
           <div className={styles.chartCard} style={{ marginBottom: 12 }}>
             <div className={styles.chartHeader}>
@@ -1192,7 +1186,7 @@ export default function Dashboard() {
                 </p>
               </div>
               <Link to={href} className={styles.improveBtn}>
-                Improve this score <ArrowRight size={14} />
+                Improve this score with AI <ArrowRight size={14} />
               </Link>
             </div>
             <div className={styles.quickWinsList}>
@@ -1210,18 +1204,6 @@ export default function Dashboard() {
                   </div>
                 );
               })}
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', marginTop: 10, fontSize: 13 }}>
-              {allFixes.length > 3 ? (
-                <button type="button" className={styles.viewAll} onClick={() => setShowAllFixes(v => !v)}>
-                  {showAllFixes ? 'Show top 3' : `Show all ${allFixes.length} fixes`}
-                </button>
-              ) : <span />}
-              {otherCount > 0 && (
-                <Link to={`/analyze/${others[0].id}`} style={{ color: 'var(--text-dim)' }}>
-                  {otherCount} more {otherCount === 1 ? 'fix' : 'fixes'} on {others.length} other {others.length === 1 ? 'piece' : 'pieces'} →
-                </Link>
-              )}
             </div>
           </div>
         );
@@ -1314,6 +1296,9 @@ export default function Dashboard() {
             )}
             {mappable && (
               <span className={styles.toolCardMapHint}>{selected ? 'Shown on the map below' : 'Show on the map'}</span>
+            )}
+            {t.key === 'usage' && (
+              <span className={styles.toolCardMapHint}>See plans and usage →</span>
             )}
           </Card>
           );
