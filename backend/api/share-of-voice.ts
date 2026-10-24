@@ -89,8 +89,8 @@ export async function sovHandler(req: express.Request, res: express.Response) {
     // deterministic advice built from the same facts (see
     // shareOfVoiceService.buildRecommendations), not an LLM guess.
     await pool.query(
-      `INSERT INTO sov_checks (user_id, name, brand, topic, url, overall_sov, cited_count, model_results, top_competitors, recommendations, summary, brand_shares, share_percent, engine, lane)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)`,
+      `INSERT INTO sov_checks (user_id, name, brand, topic, url, overall_sov, cited_count, model_results, top_competitors, recommendations, summary, brand_shares, share_percent, engine, lane, subject)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)`,
       [
         user.id,
         name.trim(),
@@ -107,6 +107,7 @@ export async function sovHandler(req: express.Request, res: express.Response) {
         result.sharePercent,
         picked.engine,
         laneOf(req),
+        typeof req.body?.subject === 'string' ? req.body.subject.trim().slice(0, 300) || null : null,
       ]
     );
 
@@ -145,6 +146,7 @@ export async function sovHistoryHandler(req: express.Request, res: express.Respo
     recommendations:  typeof r.recommendations === 'string' ? JSON.parse(r.recommendations) : r.recommendations,
     summary:          r.summary,
     engine:           r.engine || 'gemini',
+    subject:          r.subject ?? null,
     brandShares:      typeof r.brand_shares === 'string' ? JSON.parse(r.brand_shares) : (r.brand_shares || []),
     sharePercent:     r.share_percent ?? null,
     checkedAt:        r.checked_at instanceof Date ? r.checked_at.toISOString() : r.checked_at,

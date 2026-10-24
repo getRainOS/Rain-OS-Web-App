@@ -98,6 +98,7 @@ export default async function handler(req: express.Request, res: express.Respons
       summary: result.summary,
       engine: picked.engine,
       lane: laneOf(req),
+      subject: typeof req.body?.subject === 'string' ? req.body.subject.trim().slice(0, 300) || null : null,
     });
 
     const updated = await incrementUserUsage(user.id);

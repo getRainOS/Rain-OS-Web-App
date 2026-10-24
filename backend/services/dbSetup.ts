@@ -52,6 +52,10 @@ CREATE INDEX IF NOT EXISTS idx_citation_checks_user_checked_at
   ON citation_checks(user_id, checked_at DESC);
 -- Additive migration for existing deployments (idempotent)
 ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS name TEXT;
+-- Which analyzed brand / website / piece a check was run for (see lib/subjects.js).
+ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS subject TEXT;
+ALTER TABLE brand_visibility_checks ADD COLUMN IF NOT EXISTS subject TEXT;
+ALTER TABLE sov_checks ADD COLUMN IF NOT EXISTS subject TEXT;
 
 -- Content analysis history (additive)
 CREATE TABLE IF NOT EXISTS content_analyses (
