@@ -8,7 +8,7 @@ import styles from './CitationMapCard.module.css';
 const CitationWorldMap = lazy(() => import('./CitationWorldMap.jsx'));
 
 // Dashboard map of where the cited websites are based, for whichever KPI card
-// is selected above it (Cited by AI or Mentioned by AI), using that card's
+// is selected above it (Cited by AI, Mentioned by AI or Share of Voice), using that card's
 // checks. "See more" opens those checks.
 export default function CitationMapCard({ source = 'cited', kpiLabel, checks = [], ownDomain, attachedAt = null }) {
   const tab = source;
@@ -39,9 +39,11 @@ export default function CitationMapCard({ source = 'cited', kpiLabel, checks = [
   const about = tab === 'cited'
     ? latest && `for “${latest.name || latest.topic}”`
     : latest && `for ${latest.brand}${latest.topic ? ` · “${latest.topic}”` : ''}`;
+  const brandQs = latest ? `brand=${encodeURIComponent(latest.brand || '')}&topic=${encodeURIComponent(latest.topic || '')}` : '';
   const seeMore = !latest ? null : tab === 'cited'
     ? `/citation-monitor?view=past&topic=${encodeURIComponent(latest.topic || '')}`
-    : `/brand-visibility?view=past&brand=${encodeURIComponent(latest.brand || '')}&topic=${encodeURIComponent(latest.topic || '')}`;
+    : tab === 'sov' ? `/share-of-voice?view=past&${brandQs}`
+    : `/brand-visibility?view=past&${brandQs}`;
 
   return (
     <section
@@ -57,7 +59,9 @@ export default function CitationMapCard({ source = 'cited', kpiLabel, checks = [
               ? `${top.length ? `Sites ${engines} cited ${about} are mostly based in ${top.map(r => r.name).join(', ')}.` : `Sites ${engines} cited ${about}.`}`
               : tab === 'cited'
                 ? 'Run a Citation Monitor check to see where the websites AI cites are based.'
-                : 'Run a Brand Sentiment check to see where the websites AI cites are based.'}
+                : tab === 'sov'
+                  ? 'Run a Share of Voice check to see where the websites AI cites are based.'
+                  : 'Run a Brand Sentiment check to see where the websites AI cites are based.'}
           </p>
         </div>
         {kpiLabel && <span className={styles.showing}>Showing: {kpiLabel}</span>}
