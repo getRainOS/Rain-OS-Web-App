@@ -3,7 +3,7 @@ import express from 'express';
 import {
   findUserByApiKey,
   getAnalysesByUser, getAnalysesCountByUser, getAnalysisById,
-  deleteAnalysis,
+  deleteAnalysis, setAnalysisBrand,
 } from '../services/dbService';
 import type { ApiError } from '../types';
 
@@ -94,4 +94,18 @@ export async function deleteHandler(req: express.Request, res: express.Response)
     const msg = error instanceof Error ? error.message : 'Internal error';
     return res.status(500).json({ error: 'internal_server_error', message: msg } as ApiError);
   }
+}
+
+// POST /api/history/:id/brand — { brand } sets (or, empty, clears) the brand
+// name monitoring tools use for this analysis.
+export async function setBrandHandler(req: express.Request, res: express.Response) {
+  const apiKey = getApiKey(req);
+  const user = apiKey ? await findUserByApiKey(apiKey) : null;
+  if (!user) return res.status(401).json({ error: 'unauthorized', message: 'API key missing or invalid' } as ApiError);
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id <= 0) return res.status(400).json({ error: 'bad_request', message: 'Invalid id' } as ApiError);
+  const brand = typeof req.body?.brand === 'string' ? req.body.brand.trim().slice(0, 120) || null : null;
+  const ok = await setAnalysisBrand(user.id, id, brand);
+  if (!ok) return res.status(404).json({ error: 'not_found', message: 'Analysis not found' } as ApiError);
+  return res.json({ success: true, brand });
 }

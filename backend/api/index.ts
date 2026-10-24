@@ -15,7 +15,7 @@ import citationCheckHandler, {
   bulkDeleteHandler as citationChecksBulkDeleteHandler,
 } from './citation-check';
 import { regionsHandler as citationRegionsHandler } from './citation-regions';
-import { listHandler as historyListHandler, deleteHandler as historyDeleteHandler, getByIdHandler as historyGetByIdHandler } from './history';
+import { listHandler as historyListHandler, deleteHandler as historyDeleteHandler, getByIdHandler as historyGetByIdHandler, setBrandHandler as historySetBrandHandler } from './history';
 import brandVisibilityHandler, { brandVisHistoryHandler, brandVisDeleteHandler } from './brand-visibility';
 import { sovHandler, sovHistoryHandler, sovDeleteHandler } from './share-of-voice';
 // Auth
@@ -173,6 +173,7 @@ app.get('/api/history', historyListHandler);
 app.get('/v1/api/history', historyListHandler);
 app.get('/api/history/:id', historyGetByIdHandler);
 app.delete('/api/history/:id', historyDeleteHandler);
+app.post('/api/history/:id/brand', historySetBrandHandler);
 app.delete('/v1/api/history/:id', historyDeleteHandler);
 // ─── Auth ──────────────────────────────────────────────────────────────────
 app.post('/api/auth/login', loginHandler);
