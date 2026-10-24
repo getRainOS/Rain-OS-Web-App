@@ -8,8 +8,11 @@ import styles from './PromptSuggestions.module.css';
 
 const INTENT_LABEL = { discover: 'Discover', compare: 'Compare', decide: 'Decide', learn: 'Learn' };
 
-export default function PromptSuggestions({ url, lane, tracking, onUse, renderUse, title = 'Not sure what to ask?' }) {
-  const [site, setSite] = useState(url || getMySite());
+// lockSite: the website comes from the chosen subject (Citation Monitor), so
+// there's no box to type a different one.
+export default function PromptSuggestions({ url, lane, tracking, onUse, renderUse, title = 'Not sure what to ask?', lockSite = false }) {
+  const [typedSite, setSite] = useState(url || getMySite());
+  const site = lockSite ? (url || '') : typedSite;
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
   const [loading, setLoading] = useState(false);
@@ -68,6 +71,7 @@ export default function PromptSuggestions({ url, lane, tracking, onUse, renderUs
       </div>
 
       <form onSubmit={handleSuggest} className={styles.form}>
+        {!lockSite && (<>
         <label className={styles.label} htmlFor="ps-site">Your website</label>
         <input
           id="ps-site"
@@ -79,6 +83,7 @@ export default function PromptSuggestions({ url, lane, tracking, onUse, renderUs
           value={site}
           onChange={e => setSite(e.target.value)}
         />
+        </>)}
         <label className={styles.label} htmlFor="ps-desc">What you do <span className={styles.optional}>(optional, helps a lot)</span></label>
         <input
           id="ps-desc"

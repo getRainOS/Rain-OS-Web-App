@@ -41,7 +41,7 @@ export default function EngineCheckPanel({ engine = 'chatgpt', label = 'ChatGPT'
         }
       }, POLL_MS);
     };
-    api.startEngineCheck({ engine, topic: run.topic, url: run.url, name: run.name, country: run.country, state: run.state ?? null, fresh: fresh > 0 })
+    api.startEngineCheck({ engine, topic: run.topic, url: run.url, name: run.name, subject: run.subject, country: run.country, state: run.state ?? null, fresh: fresh > 0 })
       .then(({ data }) => {
         if (cancelled) return;
         if (data.status === 'done') setState({ status: 'done', result: data.result, reused: !!data.reused });

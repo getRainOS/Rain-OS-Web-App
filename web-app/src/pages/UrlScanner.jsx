@@ -216,6 +216,8 @@ export default function UrlScanner() {
   const [result, setResult] = useState(null);
   const [scannedUrl, setScannedUrl] = useState('');
   const [city, setCity] = useState(() => searchParams.get('city') || '');
+  // The name Citation Monitor, Brand Sentiment and Share of Voice use for this site.
+  const [brandName, setBrandName] = useState('');
   const [showCity, setShowCity] = useState(() => !!searchParams.get('city'));
   const [cityState, setCityState] = useState(null);
   const [listings, setListings] = useState('off');
@@ -247,7 +249,7 @@ export default function UrlScanner() {
     try {
       const analysisModule = ['product_sellers', 'developers', 'local_business', 'vibe_coders'].includes(userLane) ? userLane : 'general';
       const target = /^https?:\/\//i.test(url.trim()) ? url.trim() : `https://${url.trim()}`;
-      const { data } = await api.scanUrl(target, { module: analysisModule, ...((userLane === 'local_business' || showCity) && (city.trim() || cityState) ? { targetCity: city.trim(), targetState: cityState || undefined } : {}) });
+      const { data } = await api.scanUrl(target, { module: analysisModule, brand: brandName.trim() || undefined, ...((userLane === 'local_business' || showCity) && (city.trim() || cityState) ? { targetCity: city.trim(), targetState: cityState || undefined } : {}) });
       setResult(data);
       setScannedUrl(url.trim());
       refreshUser();
@@ -386,6 +388,11 @@ export default function UrlScanner() {
           </button>
         </div>
         <RecentPicker mode="page" onPick={v => setUrl(normalizeUrlInput(v))} />
+        <div className={styles.cityRow}>
+          <label htmlFor="us-brand" className={styles.cityLabel}>Business or brand name <span>Optional</span></label>
+          <input id="us-brand" type="text" className={styles.cityInput} placeholder="As people write it, e.g. Bright Smile Dental" value={brandName}
+            onChange={e => setBrandName(e.target.value)} maxLength={120} />
+        </div>
         {userLane === 'local_business' || showCity ? (
           <div className={styles.cityRow}>
             <label htmlFor="us-city" className={styles.cityLabel}>Where you want to be found <span>Optional</span></label>

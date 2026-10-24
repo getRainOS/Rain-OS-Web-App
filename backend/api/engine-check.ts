@@ -107,6 +107,7 @@ export async function startHandler(req: express.Request, res: express.Response) 
         name, topic: result.topic, url: result.url, cited: result.cited, alignmentScore: 0,
         sources: result.sources, recommendations: [], summary: result.summary, engine,
         locationCountry: loc.country, locationState: loc.state, lane: laneOf(req),
+        subject: typeof req.body?.subject === 'string' ? req.body.subject.trim().slice(0, 300) || null : null,
       }).catch(err => { console.error('Saving engine check failed:', err); return null; });
       job.result = { ...result, checkId: saved?.id ?? null, checkedAt: new Date().toISOString() };
       job.status = 'done';

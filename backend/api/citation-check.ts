@@ -122,6 +122,8 @@ export default async function handler(req: express.Request, res: express.Respons
 
   // ─── Input validation ───────────────────────────────────────────────────
   const { name, topic, url } = req.body as { name?: string; topic?: string; url?: string };
+  // The analyzed brand / website / piece this check is for (lib/subjects.js on the web app).
+  const subject = typeof req.body?.subject === 'string' ? req.body.subject.trim().slice(0, 300) || null : null;
   if (!name || typeof name !== 'string' || name.trim().length < 1) {
     return res.status(400).json({
       error: 'bad_request',
@@ -183,6 +185,7 @@ export default async function handler(req: express.Request, res: express.Respons
         recommendations: [],
         summary: result.summary,
         lane: laneOf(req),
+        subject,
       });
       checkId = saved?.id ?? null;
       history = await getCitationChecksByTopic(user.id, result.topic, 20);

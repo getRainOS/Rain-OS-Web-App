@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, lazy, Suspense, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import WhyNotCited from '../components/WhyNotCited.jsx';
+import SubjectPicker from '../components/SubjectPicker.jsx';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import {
@@ -17,7 +18,6 @@ import PageHeader from '../components/PageHeader.jsx';
 import { ViewTabs, SubTabs, NewCheckButton, QuestionPicker, TabEmpty } from '../components/MonitorTabs.jsx';
 import PromptSuggestions from '../components/PromptSuggestions.jsx';
 import ImproveCta from '../components/ImproveCta.jsx';
-import SiteNote from '../components/SiteNote.jsx';
 import RecentPicker from '../components/RecentPicker.jsx';
 import { isSharedPlatform } from '../lib/sharedPlatforms.js';
 import { improveLink } from '../lib/improveLink.js';
@@ -130,6 +130,8 @@ export default function CitationMonitor() {
   const [topic, setTopic] = useState(() => searchParams.get('q') || '');
   const [url, setUrl] = useState(() => searchParams.get('url') || getMySite());
   const [noSite, setNoSite] = useState(false);
+  // The analyzed brand / website / content this check is for (SubjectPicker).
+  const [subject, setSubject] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
@@ -180,8 +182,8 @@ export default function CitationMonitor() {
   async function handleCheck(e) {
     e.preventDefault();
     if (!topic.trim()) return;
-    if (!noSite && !url.trim()) {
-      setError('Enter your website, or tick “I don’t have a website”. Without it we can’t tell whether you’re cited.');
+    if (!subject) {
+      setError('Choose what you are checking. Analyze your website or content first if the list is empty.');
       return;
     }
     const checkName = name.trim() || (topic.trim().length > 60 ? `${topic.trim().slice(0, 57)}…` : topic.trim());
@@ -191,12 +193,12 @@ export default function CitationMonitor() {
     // started request is allowed to update state.
     const requestId = ++checkRequestIdRef.current;
     // ChatGPT starts alongside Gemini and fills in when it is ready.
-    setEngineRun(hasChatGpt ? { topic: topic.trim(), url: noSite ? undefined : (url.trim() || undefined), name: checkName, id: requestId, country: checkCountry, state: checkCountry === 'US' ? (checkState || null) : null } : null);
+    setEngineRun(hasChatGpt ? { topic: topic.trim(), url: noSite ? undefined : (url.trim() || undefined), name: checkName, subject: subject.key, id: requestId, country: checkCountry, state: checkCountry === 'US' ? (checkState || null) : null } : null);
     setLoading(true);
     setError('');
     setResult(null);
     try {
-      const { data } = await api.citationCheck({ name: checkName, topic: topic.trim(), url: noSite ? undefined : (url.trim() || undefined) });
+      const { data } = await api.citationCheck({ name: checkName, topic: topic.trim(), url: noSite ? undefined : (url.trim() || undefined), subject: subject.key });
       if (requestId !== checkRequestIdRef.current) return;
       setResult(data);
       setMySite(url);
@@ -369,6 +371,15 @@ export default function CitationMonitor() {
             </div>
 
             <div className={styles.field}>
+              <SubjectPicker
+                label="Checking for"
+                initialKey={searchParams.get('subject') || undefined}
+                onChange={sub => { setSubject(sub); setUrl(sub?.website || ''); setNoSite(!sub?.website); setError(''); }}
+                note={subject && !subject.website ? 'This one has no website, so you’ll see which sites AI cites but not whether you’re among them.' : undefined}
+              />
+            </div>
+
+            <div className={styles.field}>
               <label className={styles.label} htmlFor="cm-topic">Question</label>
               <textarea
                 id="cm-topic"
@@ -386,37 +397,6 @@ export default function CitationMonitor() {
                 needsPlace(topic)
                   ? <p className={styles.placeWarn}>“Near me” is answered from wherever the person asking is, and our check has no location. Add your city instead, like “best bakery in Austin”.</p>
                   : <p className={styles.placeHint}>Include your city, the way customers ask: “best plumber in Austin”.</p>
-              )}
-            </div>
-
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="cm-url">
-                Your website {!noSite && <span className={styles.optional}>Required</span>}
-              </label>
-              <input
-                id="cm-url"
-                type="text"
-                inputMode="url"
-                autoComplete="url"
-                spellCheck={false}
-                className={styles.input}
-                placeholder="yourdomain.com"
-                value={noSite ? '' : url}
-                disabled={noSite}
-                onChange={e => setUrl(e.target.value)}
-              />
-              <label className={styles.noSite}>
-                <input type="checkbox" checked={noSite} onChange={e => { setNoSite(e.target.checked); setError(''); }} />
-                I don’t have a website
-              </label>
-              {noSite ? (
-                <p className={styles.fieldHint}>You’ll see which sites AI cites, but we can’t tell whether you’re among them or where you rank.</p>
-              ) : (
-                <>
-                  <p className={styles.fieldHint}>So we can find you among the sources.</p>
-                  <RecentPicker mode="site" onPick={setUrl} />
-                  <SiteNote url={url} />
-                </>
               )}
             </div>
 
@@ -458,7 +438,7 @@ export default function CitationMonitor() {
               </div>
             )}
 
-            <button type="submit" className={styles.submitBtn} disabled={loading || !topic.trim() || (!noSite && !url.trim())}>
+            <button type="submit" className={styles.submitBtn} disabled={loading || !topic.trim() || !subject}>
               {loading ? (
                 <>
                   <span className="spinner" style={{ width: 14, height: 14 }} />
@@ -574,7 +554,7 @@ export default function CitationMonitor() {
             </div>
           ) : (
             <div className={styles.resultsWrap}>
-              <PromptSuggestions url={url} lane={userLane || 'general'} tracking={tracking} onUse={handleUseSuggestion} />
+              <PromptSuggestions url={url} lockSite lane={userLane || 'general'} tracking={tracking} onUse={handleUseSuggestion} />
               <p className={styles.emptyHint}>
                 Run a check and your result appears here: every source AI cited for your question and where your site ranked.
               </p>

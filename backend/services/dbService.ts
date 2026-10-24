@@ -543,6 +543,7 @@ export const getAiContentProfile = async (contentId: string): Promise<{ profile_
 // --------------------------
 
 export interface CitationCheckRecord {
+  subject?: string | null; // analyzed brand / website / piece the check was run for
   id: number;
   name: string | null;
   topic: string;
@@ -571,6 +572,7 @@ const mapCitationRow = (row: any): CitationCheckRecord => ({
   summary: row.summary,
   source: row.source === 'scheduled' ? 'scheduled' : 'manual',
   engine: row.engine || 'gemini',
+  subject: row.subject ?? null,
   locationCountry: row.location_country ?? null,
   locationState: row.location_state ?? null,
   checkedAt: row.checked_at instanceof Date ? row.checked_at.toISOString() : row.checked_at,
@@ -596,13 +598,14 @@ export const saveCitationCheck = async (
     locationCountry?: string | null;
     locationState?: string | null;
     lane?: string | null;
+    subject?: string | null;
   }
 ): Promise<CitationCheckRecord | null> => {
   const topicKey = normaliseTopicKey(data.topic);
   const res = await pool.query(
     `INSERT INTO citation_checks
-       (user_id, name, topic, topic_key, url, cited, alignment_score, sources, recommendations, summary, source, tracked_query_id, engine, location_country, location_state, lane)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+       (user_id, name, topic, topic_key, url, cited, alignment_score, sources, recommendations, summary, source, tracked_query_id, engine, location_country, location_state, lane, subject)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
      RETURNING *`,
     [
       userId,
@@ -621,6 +624,7 @@ export const saveCitationCheck = async (
       data.locationCountry ?? null,
       data.locationState ?? null,
       data.lane ?? null,
+      data.subject ?? null,
     ]
   );
   return res.rows[0] ? mapCitationRow(res.rows[0]) : null;
@@ -693,6 +697,7 @@ export const deleteCitationChecksByUser = async (
 // Brand Visibility / Sentiment history
 // --------------------------
 export interface BrandVisibilityRecord {
+  subject?: string | null;
   id: number;
   name: string | null;
   brand: string;
@@ -729,6 +734,7 @@ const mapBrandVisRow = (row: any): BrandVisibilityRecord => ({
   recommendations: Array.isArray(row.recommendations) ? row.recommendations : (typeof row.recommendations === 'string' ? JSON.parse(row.recommendations) : []),
   summary: row.summary ?? null,
   engine: row.engine || 'gemini',
+  subject: row.subject ?? null,
   checked_at: row.checked_at instanceof Date ? row.checked_at.toISOString() : row.checked_at,
 });
 
@@ -751,13 +757,14 @@ export const saveBrandVisibilityCheck = async (
     summary?: string;
     engine?: string;
     lane?: string | null;
+    subject?: string | null;
   }
 ): Promise<BrandVisibilityRecord | null> => {
   const res = await pool.query(
     `INSERT INTO brand_visibility_checks
        (user_id, name, brand, topic, url, visibility_score, mention_status, mention_position,
-        sentiment, sentiment_explanation, answer_excerpt, sources, competitors, recommendations, summary, engine, lane)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+        sentiment, sentiment_explanation, answer_excerpt, sources, competitors, recommendations, summary, engine, lane, subject)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
      RETURNING *`,
     [
       userId,
@@ -777,6 +784,7 @@ export const saveBrandVisibilityCheck = async (
       data.summary ?? null,
       data.engine || 'gemini',
       data.lane ?? null,
+      data.subject ?? null,
     ]
   );
   return res.rows[0] ? mapBrandVisRow(res.rows[0]) : null;
@@ -836,7 +844,7 @@ export interface AnalysisRecord {
 const DETAIL_KEYS = [
   'ai_readability_detail', 'digital_authority_detail', 'conversion_readiness_detail',
   'product_discoverability_detail', 'rag_readiness_detail', 'local_presence_detail',
-  'readability_metrics', 'authorship', 'measured_checks', 'content_type',
+  'readability_metrics', 'authorship', 'measured_checks', 'content_type', 'brand',
 ] as const;
 
 const mapAnalysisRow = (row: any): AnalysisRecord => ({

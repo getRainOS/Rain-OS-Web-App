@@ -182,7 +182,8 @@ export default async function handler(req: express.Request, res: express.Respons
       rag_readiness: result.pillarScores?.ragReadiness ?? null,
       local_presence: result.pillarScores?.localPresence ?? null,
       summary: result.summary ?? null,
-      result_json: result,
+      // The business or brand name, if given: monitoring tools use it as this site's name.
+      result_json: { ...result, brand: typeof req.body?.brand === 'string' ? req.body.brand.trim().slice(0, 120) || null : null },
       lane: analysisModule,
     });
     const updated = saveResult.updatedUser;
