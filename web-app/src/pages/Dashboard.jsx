@@ -429,7 +429,7 @@ export default function Dashboard() {
   });
   const [citations, setCitations] = useState([]);
   const [brandVisHistory, setBrandVisHistory] = useState([]);
-  // Which KPI card the map shows: 'citation' (Cited by AI) or 'brand' (Mentioned by AI).
+  // Which KPI card the map shows: 'citation', 'brand' or 'sov'.
   const [mapKpi, setMapKpi] = useState('citation');
   // Fixes waiting on each piece's latest analysis, for the Quick wins card.
   const [fixesSummary, setFixesSummary] = useState(null);
@@ -1244,7 +1244,7 @@ export default function Dashboard() {
         {toolCards.map((t, idx) => {
           // Cited by AI and Mentioned by AI drive the map below: clicking one
           // shows its data there (the map's See more opens the checks).
-          const mappable = t.key === 'citation' || t.key === 'brand';
+          const mappable = t.key === 'citation' || t.key === 'brand' || t.key === 'sov';
           const selected = mappable && mapKpi === t.key;
           const Card = mappable ? 'button' : Link;
           const cardProps = mappable
@@ -1322,9 +1322,12 @@ export default function Dashboard() {
 
       {/* ── Where AI's sources are based ── */}
       <CitationMapCard
-        source={mapKpi === 'brand' ? 'mentioned' : 'cited'}
+        source={mapKpi === 'brand' ? 'mentioned' : mapKpi === 'sov' ? 'sov' : 'cited'}
         kpiLabel={toolCards.find(t => t.key === mapKpi)?.label}
-        checks={mapKpi === 'brand' ? brandVisScoped : citationScoped}
+        // Share of Voice asks 3 questions per check; each answer's sources count once.
+        checks={mapKpi === 'brand' ? brandVisScoped
+          : mapKpi === 'sov' ? sovScoped.flatMap(h => (h.modelResults || []).map(m => ({ ...h, sources: m.sources || [] })))
+          : citationScoped}
         ownDomain={focusSite}
         attachedAt={(() => {
           const at = toolCards.findIndex(t => t.key === mapKpi);

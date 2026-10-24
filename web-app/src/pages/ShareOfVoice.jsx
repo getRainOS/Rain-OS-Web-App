@@ -155,10 +155,11 @@ export default function ShareOfVoice() {
 
   const [history, setHistory]         = useState([]);
   const [histLoading, setHistLoading] = useState(true);
-  const [tab, setTab]                 = useState('check'); // 'check' | 'history'
+  // ?view=past&brand=…&topic=… opens that brand and question's past checks (the dashboard map links here).
+  const [tab, setTab]                 = useState(() => (searchParams.get('view') === 'past' ? 'history' : 'check')); // 'check' | 'history'
   const [resultTab, setResultTab]     = useState('summary');
   const [pastTab, setPastTab]         = useState('overview');
-  const [pastKey, setPastKey]         = useState(null);
+  const [pastKey, setPastKey]         = useState(() => (searchParams.get('brand') ? `${searchParams.get('brand').toLowerCase()}:::${(searchParams.get('topic') || '').toLowerCase()}` : null));
 
   useEffect(() => {
     api.sovHistory()
