@@ -911,7 +911,8 @@ export default function Dashboard() {
       key: 'usage',
       subject: 'This month',
       label: 'API Usage',
-      to: '/upgrade',
+      // Paid plans see their usage and billing; only free plans go to the plans page.
+      to: user?.subscriptionStatus === 'active' ? '/settings#account' : '/upgrade',
       hasData: !!user,
       value: user ? `${user.usage?.count ?? 0}` : null,
       suffix: `/${user?.usage?.limit ?? 100}`,
@@ -1271,7 +1272,7 @@ export default function Dashboard() {
               <span className={styles.toolCardMapHint}>{selected ? 'Shown on the map below' : 'Show on the map'}</span>
             )}
             {t.key === 'usage' && (
-              <span className={styles.toolCardMapHint}>See plans and usage →</span>
+              <span className={styles.toolCardMapHint}>{user?.subscriptionStatus === 'active' ? 'Usage and billing →' : 'See plans →'}</span>
             )}
           </Card>
           );

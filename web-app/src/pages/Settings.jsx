@@ -14,6 +14,12 @@ export default function Settings() {
   const { user, onLogout, refreshUser, userLane, setUserLane } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
+  // /settings#account (the dashboard's API Usage card) opens on plan and usage.
+  useEffect(() => {
+    if (location.hash !== '#account') return;
+    const t = setTimeout(() => document.getElementById('account')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    return () => clearTimeout(t);
+  }, [location.hash]);
   const [copied, setCopied] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
   const [error, setError] = useState('');
@@ -195,7 +201,7 @@ export default function Settings() {
       {error && <p className={styles.errorBanner}>{error}</p>}
 
       <div className={styles.sections}>
-        <div className="card">
+        <div className="card" id="account" style={{ scrollMarginTop: 80 }}>
           <h2 className={styles.sectionTitle}>Account</h2>
           {user && (
             <div className={styles.accountGrid}>
