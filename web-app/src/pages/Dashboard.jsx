@@ -12,6 +12,7 @@ import { domainOf } from '../lib/opportunities.js';
 import Select from '../components/Select.jsx';
 import NewAnalysisMenu from '../components/NewAnalysisMenu.jsx';
 import CitationMapCard from '../components/CitationMapCard.jsx';
+import MapsGridCard from '../components/MapsGridCard.jsx';
 import { enginesOf } from '../lib/engines.js';
 import {
   AreaChart, Area, XAxis, YAxis,
@@ -432,6 +433,9 @@ export default function Dashboard() {
   const [mapKpi, setMapKpi] = useState('citation');
   // Fixes waiting on each piece's latest analysis, for the Quick wins card.
   const [fixesSummary, setFixesSummary] = useState(null);
+  // Google listing data: 'on', 'locked' (free plan) or 'off' (not connected yet).
+  const [listingsMode, setListingsMode] = useState('off');
+  useEffect(() => { api.engines().then(({ data }) => setListingsMode(data?.features?.localListings || 'off')).catch(() => {}); }, []);
   useEffect(() => { api.getFixesSummary().then(({ data }) => setFixesSummary(data)).catch(() => {}); }, [userLane]);
   const [brandLinks, setBrandLinks] = useState([]);
   const [linkPick, setLinkPick] = useState('');
@@ -1328,6 +1332,9 @@ export default function Dashboard() {
         })()}
       />
       </div>
+
+      {/* Local businesses: where they show up on Google Maps across their area. */}
+      {userLane === 'local_business' && <MapsGridCard mode={listingsMode} defaults={{ url: focusSite || undefined }} />}
 
       {/* ── Bottom row ── */}
       <div className={styles.bottomRow}>
