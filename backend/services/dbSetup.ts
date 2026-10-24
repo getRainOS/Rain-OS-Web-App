@@ -57,8 +57,6 @@ ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS subject TEXT;
 -- Citation Monitor reports both: was the brand named in the answer, and was the site cited.
 ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS brand TEXT;
 ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS mentioned BOOLEAN;
-ALTER TABLE brand_visibility_checks ADD COLUMN IF NOT EXISTS subject TEXT;
-ALTER TABLE sov_checks ADD COLUMN IF NOT EXISTS subject TEXT;
 
 -- Content analysis history (additive)
 CREATE TABLE IF NOT EXISTS content_analyses (
@@ -224,6 +222,9 @@ UPDATE tracked_queries SET paused_reason = 'no_site' WHERE url IS NULL AND pause
 -- Weekly tracking also checks whether the answer names the brand (no website needed).
 ALTER TABLE tracked_queries ADD COLUMN IF NOT EXISTS brand TEXT;
 ALTER TABLE tracked_queries ADD COLUMN IF NOT EXISTS subject TEXT;
+-- (After those tables are created.) Which analyzed subject a check was run for.
+ALTER TABLE brand_visibility_checks ADD COLUMN IF NOT EXISTS subject TEXT;
+ALTER TABLE sov_checks ADD COLUMN IF NOT EXISTS subject TEXT;
 
 ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS source TEXT NOT NULL DEFAULT 'manual';
 ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS tracked_query_id BIGINT
