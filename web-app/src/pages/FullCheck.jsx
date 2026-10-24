@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Check, ScanSearch } from 'lucide-react';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
@@ -21,8 +21,10 @@ export default function FullCheck() {
   const { user, userLane, refreshUser } = useApp();
   const navigate = useNavigate();
   const [phase, setPhase] = useState('setup'); // setup | questions | running | done
-  const [url, setUrl] = useState(getMySite());
-  const [brand, setBrand] = useState('');
+  // The dashboard's "Run full check for <brand>" passes ?brand= and ?url=.
+  const [searchParams] = useSearchParams();
+  const [url, setUrl] = useState(() => searchParams.get('url') || getMySite());
+  const [brand, setBrand] = useState(() => searchParams.get('brand') || '');
   const [plan, setPlan] = useState('full');
   const [suggestions, setSuggestions] = useState([]);
   const [picked, setPicked] = useState([]);

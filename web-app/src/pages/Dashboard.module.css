@@ -1601,3 +1601,4 @@ button.emptyLink {
 
 .kpiMap { display: flex; flex-direction: column; gap: 0; min-width: 0; }
 .kpiMap > section { margin-top: 0; }
+.brandBarLabel { font-size: 13px; color: var(--text-dim); font-weight: 500; }
