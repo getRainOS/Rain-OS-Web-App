@@ -261,6 +261,14 @@ export default function ContentAnalyzer() {
     return () => clearTimeout(t);
   }, [result, location.search]);
 
+  // Citation Monitor's "Add its link" arrives with ?addLink=1: focus the URL field.
+  const addingLink = new URLSearchParams(location.search).get('addLink') === '1';
+  useEffect(() => {
+    if (!addingLink) return;
+    const t = setTimeout(() => { const el = document.getElementById('ca-url'); el?.scrollIntoView({ block: 'center' }); el?.focus(); }, 400);
+    return () => clearTimeout(t);
+  }, [addingLink]);
+
   const [textareaFocused, setTextareaFocused] = useState(false);
 
   const [rewriteLoading, setRewriteLoading] = useState(false);
@@ -410,14 +418,20 @@ export default function ContentAnalyzer() {
               />
             </div>
             <div className={styles.field}>
-              <label className={styles.label}>URL (optional)</label>
+              <label className={styles.label} htmlFor="ca-url">URL (optional)</label>
               <input
+                id="ca-url"
                 type="url"
                 className={styles.input}
                 placeholder="https://example.com/article"
                 value={url}
                 onChange={e => setUrl(e.target.value)}
               />
+              {addingLink && !url.trim() && (
+                <p style={{ margin: '6px 0 0', fontSize: 12.5, color: '#2B8FE3' }}>
+                  Paste the link where this is published, then choose Re-analyze. It then shows up in Citation Monitor as a website you can track.
+                </p>
+              )}
             </div>
           </div>
 
