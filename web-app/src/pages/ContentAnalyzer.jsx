@@ -253,6 +253,14 @@ export default function ContentAnalyzer() {
     return () => clearTimeout(t);
   }, [content, contentEdited, result, contentType]);
 
+  // "Improve this score with AI" on the dashboard links here with ?fix=1:
+  // once the results are in, bring the fix list and its button into view.
+  useEffect(() => {
+    if (!result || new URLSearchParams(location.search).get('fix') !== '1') return;
+    const t = setTimeout(() => document.getElementById('what-to-fix')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+    return () => clearTimeout(t);
+  }, [result, location.search]);
+
   const [textareaFocused, setTextareaFocused] = useState(false);
 
   const [rewriteLoading, setRewriteLoading] = useState(false);
@@ -624,7 +632,7 @@ export default function ContentAnalyzer() {
             let n = 0;
             return (
               <div className={`card ${styles.recoCard}`}>
-                <h3 className={styles.sectionTitle}>
+                <h3 className={styles.sectionTitle} id="what-to-fix" style={{ scrollMarginTop: 80 }}>
                   What to fix ({open.length}){done.length > 0 && <span style={{ fontWeight: 400, color: 'var(--green)', marginLeft: 8, fontSize: 13 }}>{done.length} done</span>}
                 </h3>
                 {weak.length > 0 && (
