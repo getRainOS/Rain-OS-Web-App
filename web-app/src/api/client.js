@@ -68,6 +68,7 @@ export const api = {
     return request('GET', `/api/history${qs}`);
   },
   getAnalysisById: (id) => request('GET', `/api/history/${id}`),
+  setAnalysisBrand: (id, brand) => request('POST', `/api/history/${id}/brand`, { brand }),
   scanUrl: (url, opts = {}) => request('POST', '/api/url-scan', { url, ...opts }),
   citationCheck: ({ name, topic, url, ...rest }) => request('POST', '/api/citation-check', { name, topic, url, ...rest }),
   citationHistory: (params) => {

@@ -204,6 +204,7 @@ export async function demoRequest(method, path, body) {
       if (at >= 0) sheets[at] = item; else sheets.unshift(item);
       return ok({ success: true, item });
     }
+    if (/^\/api\/history\/\d+\/brand$/.test(p)) return ok({ success: true, brand: body?.brand || null });
     if (p === '/api/maps-grid') {
       await wait(2500);
       const P = [[null, 14, 9, 12, null], [11, 6, 3, 5, 13], [8, 2, 1, 2, 7], [12, 4, 2, 3, 9], [null, 10, 6, 11, null]];
@@ -273,7 +274,7 @@ export async function demoRequest(method, path, body) {
     if (p === '/api/url-scan') {
       await wait(2500);
       const a = analysis({ id: 9200, title: body?.url, url: body?.url, overall: 69, ar: 71, da: 66, cr: 70, lp: 73, rr: 61, at: new Date().toISOString(), summary: 'Strong contact details and schema; the page rarely names the city.' });
-      const r = { ...a, technical_signals: { hasSchemaMarkup: true, hasLocalBusinessSchema: true }, signals: [], technical_recommendations: [], detected_platform: 'wordpress', url_scanned: body?.url,
+      const r = { ...a, technical_signals: { hasSchemaMarkup: true, hasLocalBusinessSchema: true }, signals: [], technical_recommendations: [], detected_platform: 'wordpress', url_scanned: body?.url, brand: body?.brand || BRAND, brandFromPage: !body?.brand, analysisId: 9003,
         local_page_check: body?.targetCity ? { city: body.targetCity, passed: 9, total: 12, nap: { name: BRAND, phone: '5125550142', street: '1200 Barton Springs Rd', city: body.targetCity, state: body.targetState || 'TX' },
           items: [
             { id: 'city_title', label: `${body.targetCity} in the page title`, pass: true, detail: `Title: "Invisalign in ${body.targetCity} | ${BRAND}"` },

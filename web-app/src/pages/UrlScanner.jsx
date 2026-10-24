@@ -2,6 +2,7 @@ import PastAnalyses from '../components/PastAnalyses.jsx';
 import { US_STATES } from '../lib/usStates.js';
 import ListingCheck from '../components/ListingCheck.jsx';
 import MapsGridCard from '../components/MapsGridCard.jsx';
+import BrandNameLine from '../components/BrandNameLine.jsx';
 import ProductPageCheck from '../components/ProductPageCheck.jsx';
 import LocalPageCheck, { LocalSteps } from '../components/LocalPageCheck.jsx';
 import { useState, useEffect } from 'react';
@@ -390,7 +391,7 @@ export default function UrlScanner() {
         <RecentPicker mode="page" onPick={v => setUrl(normalizeUrlInput(v))} />
         <div className={styles.cityRow}>
           <label htmlFor="us-brand" className={styles.cityLabel}>Business or brand name <span>Optional</span></label>
-          <input id="us-brand" type="text" className={styles.cityInput} placeholder="As people write it, e.g. Bright Smile Dental" value={brandName}
+          <input id="us-brand" type="text" className={styles.cityInput} placeholder="Leave empty to use the name on your page" value={brandName}
             onChange={e => setBrandName(e.target.value)} maxLength={120} />
         </div>
         {userLane === 'local_business' || showCity ? (
@@ -491,6 +492,7 @@ export default function UrlScanner() {
             </div>
           )}
 
+          <BrandNameLine key={result.analysisId || result.url_scanned} analysisId={result.analysisId} brand={result.brand} fromPage={result.brandFromPage} />
           <PillarScores result={result} lane={userLane} />
 
           {result.product_page_check && <ProductPageCheck check={result.product_page_check} />}
