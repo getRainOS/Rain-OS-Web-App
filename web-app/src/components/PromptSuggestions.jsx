@@ -10,7 +10,7 @@ const INTENT_LABEL = { discover: 'Discover', compare: 'Compare', decide: 'Decide
 
 // lockSite: the website comes from the chosen subject (Citation Monitor), so
 // there's no box to type a different one.
-export default function PromptSuggestions({ url, lane, tracking, onUse, renderUse, title = 'Not sure what to ask?', lockSite = false }) {
+export default function PromptSuggestions({ url, lane, tracking, onUse, renderUse, title = 'Not sure what to ask?', lockSite = false, brand, subject }) {
   const [typedSite, setSite] = useState(url || getMySite());
   const site = lockSite ? (url || '') : typedSite;
   const [description, setDescription] = useState('');
@@ -51,7 +51,7 @@ export default function PromptSuggestions({ url, lane, tracking, onUse, renderUs
       return;
     }
     try {
-      await tracking.track({ name: q.length > 60 ? `${q.slice(0, 57)}…` : q, topic: q, url: site.trim() });
+      await tracking.track({ name: q.length > 60 ? `${q.slice(0, 57)}…` : q, topic: q, url: site.trim() || undefined, brand, subject });
       setTracked(t => ({ ...t, [q]: true }));
     } catch (err) {
       setError(err.message || 'Could not start tracking.');

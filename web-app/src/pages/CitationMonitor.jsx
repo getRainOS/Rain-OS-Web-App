@@ -200,7 +200,8 @@ export default function CitationMonitor() {
     try {
       const { data } = await api.citationCheck({ name: checkName, topic: topic.trim(), url: noSite ? undefined : (url.trim() || undefined), subject: subject.key, brand: subject.lookFor || undefined });
       if (requestId !== checkRequestIdRef.current) return;
-      setResult(data);
+      // Keep the subject on the result, so Track weekly records it.
+      setResult({ ...data, subject: subject?.key });
       setMySite(url);
       setResultTab('result');
       setMapFilter(topicKey(data?.topic || topic));
@@ -554,7 +555,7 @@ export default function CitationMonitor() {
             </div>
           ) : (
             <div className={styles.resultsWrap}>
-              <PromptSuggestions url={url} lockSite lane={userLane || 'general'} tracking={tracking} onUse={handleUseSuggestion} />
+              <PromptSuggestions url={url} lockSite brand={subject?.lookFor || undefined} subject={subject?.key} lane={userLane || 'general'} tracking={tracking} onUse={handleUseSuggestion} />
               <p className={styles.emptyHint}>
                 Run a check and your result appears here: every source AI cited for your question and where your site ranked.
               </p>
