@@ -1057,3 +1057,15 @@ export const findRecentCitationCheck = async (
   );
   return res.rows[0] ? mapCitationRow(res.rows[0]) : null;
 };
+
+// Change the brand name saved with an analysis (URL Scanner pre-fills it from
+// the page; the user can correct it). Empty clears it.
+export const setAnalysisBrand = async (userId: string, id: number, brand: string | null): Promise<boolean> => {
+  const res = await pool.query(
+    `UPDATE content_analyses
+        SET result_json = COALESCE(result_json, '{}'::jsonb) || jsonb_build_object('brand', $3::text, 'brandFromPage', false)
+      WHERE id = $1 AND user_id = $2`,
+    [id, userId, brand]
+  );
+  return (res.rowCount || 0) > 0;
+};

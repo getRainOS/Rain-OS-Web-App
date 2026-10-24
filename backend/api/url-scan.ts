@@ -1,5 +1,6 @@
 // api/url-scan.ts — Fetch a URL, score with Gemini + Cheerio HTML analysis.
 import express from 'express';
+import { pageBrandName } from '../services/pageBrand';
 import { findUserByApiKey, incrementUsageAndSaveAnalysis } from '../services/dbService';
 import { analyzeContent } from '../services/geminiService';
 import { scanUrlForTechnicalSignals } from '../services/urlScanService';
@@ -114,6 +115,10 @@ export default async function handler(req: express.Request, res: express.Respons
 
     // ─── Cheerio technical analysis (zero API cost) ─────────────────────────
     const scan = await scanUrlForTechnicalSignals(rawHtml, url, analysisModule);
+    // The brand name: what the user typed, or else what the page says it is
+    // (shown with the result so it can be changed).
+    const givenBrand = typeof req.body?.brand === 'string' ? req.body.brand.trim().slice(0, 120) || null : null;
+    const brand = givenBrand || pageBrandName(rawHtml, url);
 
     if (!scan.extractedText || scan.extractedText.trim().length < 50) {
       return res.status(422).json({
@@ -183,13 +188,14 @@ export default async function handler(req: express.Request, res: express.Respons
       local_presence: result.pillarScores?.localPresence ?? null,
       summary: result.summary ?? null,
       // The business or brand name, if given: monitoring tools use it as this site's name.
-      result_json: { ...result, brand: typeof req.body?.brand === 'string' ? req.body.brand.trim().slice(0, 120) || null : null },
+      result_json: { ...result, brand, brandFromPage: !givenBrand && !!brand },
       lane: analysisModule,
     });
     const updated = saveResult.updatedUser;
     if (updated) res.setHeader('X-Usage-Info', JSON.stringify(updated.usage));
 
-    return res.status(200).json({ success: true, data: result, ...result, raw: gemini });
+    const extra = { brand, brandFromPage: !givenBrand && !!brand, analysisId: saveResult.analysisId ?? null };
+    return res.status(200).json({ success: true, data: { ...result, ...extra }, ...result, ...extra, raw: gemini });
   } catch (error) {
     const { status, body } = classifyGeminiError(error, 'url-scan');
     return res.status(status).json(body as ApiError);
