@@ -1,11 +1,11 @@
 // services/testAccountSeed.ts — staff tool: reset the test account
-// (test08@getrainos.com only) to Bright Smile Dental plus a realistic set of
+// (the staff account support@getrainos.com only) to Bright Smile Dental plus a realistic set of
 // real public sites per lane, each analyzed for real through URL Scanner, so
 // every tool can be tried on brands AI actually knows.
 import { pool } from './db';
 import { findUserByEmail } from './dbService';
 
-export const TEST_EMAIL = 'test08@getrainos.com';
+export const TEST_EMAIL = 'support@getrainos.com';
 
 // Real, public sites of the kind each lane is built for.
 export type SeedKind = 'url' | 'content' | 'repo';

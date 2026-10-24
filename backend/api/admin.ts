@@ -39,8 +39,8 @@ export async function groundingUsageHandler(req: express.Request, res: express.R
   return res.status(200).json({ success: true, freePerDay: FREE_GROUNDED_PER_DAY, usdPer1000: USD_PER_1000_GROUNDED, days });
 }
 
-// ─── Test account reset (staff only; acts on test08@getrainos.com only) ───────
-import { previewReset, startReset, job as resetJob } from '../services/testAccountSeed';
+// ─── Test account reset (staff only; acts on the staff account only) ───────
+import { previewReset, startReset, job as resetJob, TEST_EMAIL } from '../services/testAccountSeed';
 
 async function staff(req: express.Request, res: express.Response) {
   const h = req.headers.authorization;
