@@ -22,7 +22,7 @@ function analysis({ id, title, url = null, overall, ar, da, cr, lp, rr, at, summ
   return {
     id, title, url, repo: null, overall_score: overall, rain_score: overall, overallScore: overall,
     ai_readability: ar, digital_authority: da, conversion_readiness: cr, product_discoverability: null,
-    rag_readiness: rr, local_presence: lp, summary, analyzed_at: at, lane: 'local_business', series_id: 1,
+    rag_readiness: rr, local_presence: lp, summary, analyzed_at: at, lane: 'local_business', series_id: 1, brand: url ? BRAND : null,
     pillarScores: { aiReadability: ar, digitalAuthority: da, conversionReadiness: cr, productDiscoverability: 0, localPresence: lp, ragReadiness: rr },
     subScores: [
       { category: 'answerFirstFormatting', label: 'Answer-First Formatting', score: ar - 9 },
