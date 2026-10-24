@@ -1,6 +1,7 @@
 import PastAnalyses from '../components/PastAnalyses.jsx';
 import { US_STATES } from '../lib/usStates.js';
 import ListingCheck from '../components/ListingCheck.jsx';
+import MapsGridCard from '../components/MapsGridCard.jsx';
 import ProductPageCheck from '../components/ProductPageCheck.jsx';
 import LocalPageCheck, { LocalSteps } from '../components/LocalPageCheck.jsx';
 import { useState, useEffect } from 'react';
@@ -491,6 +492,7 @@ export default function UrlScanner() {
             ? <>
                 <LocalPageCheck check={result.local_page_check} hideSteps={listings === 'on'} />
                 {listings !== 'off' && <ListingCheck mode={listings} nap={result.local_page_check.nap} url={result.url || scannedUrl} />}
+                <MapsGridCard mode={listings} defaults={{ name: result.local_page_check.nap?.name, city: result.local_page_check.nap?.city, state: result.local_page_check.nap?.state, url: result.url || scannedUrl }} />
               </>
             : userLane === 'local_business' && (
               <div className="card" style={{ padding: '20px 22px', marginTop: 12 }}><LocalSteps city="" /></div>

@@ -84,6 +84,7 @@ export const api = {
   importProductPage: (url) => request('POST', '/api/products/import-page', { url }),
   draftProduct: (id) => request('POST', `/api/products/${id}/draft`),
   localListing: (body) => request('POST', '/api/local-listing', body),
+  mapsGrid: (body) => request('POST', '/api/maps-grid', body),
   startEngineCheck: (body) => request('POST', '/api/citation-check/engine', body),
   pollEngineCheck: (id) => request('GET', `/api/citation-check/engine/${id}`),
   setLocationState: (state) => request('POST', '/api/users/me/location', { state }),

@@ -202,6 +202,17 @@ export async function demoRequest(method, path, body) {
       if (at >= 0) sheets[at] = item; else sheets.unshift(item);
       return ok({ success: true, item });
     }
+    if (p === '/api/maps-grid') {
+      await wait(2500);
+      const P = [[null, 14, 9, 12, null], [11, 6, 3, 5, 13], [8, 2, 1, 2, 7], [12, 4, 2, 3, 9], [null, 10, 6, 11, null]];
+      const points = P.flatMap((r, row) => r.map((position, col) => ({ row, col, lat: 30.27 + (2 - row) * 0.0145, lng: -97.74 + (col - 2) * 0.0167, position })));
+      const found = points.filter(x => x.position !== null);
+      return ok({ success: true, data: {
+        query: body?.service || 'invisalign dentist', center: { lat: 30.27, lng: -97.74 }, size: 5, spacingKm: 1.6, points, checkedAt: new Date().toISOString(),
+        summary: { top3: found.filter(x => x.position <= 3).length, top10: found.filter(x => x.position <= 10).length, found: found.length, total: 25,
+          averagePosition: +(found.reduce((a, x) => a + x.position, 0) / found.length).toFixed(1) },
+      } });
+    }
     if (p === '/api/citation-checks/regions') {
       // Demo: every sample source is a US site, except the UK and Canadian guides.
       const US = { name: 'United States', flag: '🇺🇸', iso: '840' };
