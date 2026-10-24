@@ -2,6 +2,14 @@
 // API handlers and tests can use it freely.
 import type { User } from '../types';
 
+// rain OS staff (ADMIN_EMAILS). They get a Business-level allowance so the
+// team can test every tool without a paid subscription.
+export function isAdminEmail(email: string | undefined, env: NodeJS.ProcessEnv = process.env): boolean {
+  const list = (env.ADMIN_EMAILS || 'support@getrainos.com').split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+  return !!email && list.includes(email.toLowerCase());
+}
+export const STAFF_USAGE_LIMIT = 100000;
+
 export const PRO_TRACKING_CAP = 10;
 export const BUSINESS_TRACKING_CAP = 30;
 
