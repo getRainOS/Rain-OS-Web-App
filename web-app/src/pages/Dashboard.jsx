@@ -412,30 +412,6 @@ function LaneSelector({ onSelect, current }) {
 }
 
 /* ══════════════════════════════════════════ */
-// Fixes still listed on each piece's latest analysis. Re-analyzing or
-// accepting a rewrite replaces a piece's list, so done fixes drop off.
-function FixesWaiting({ lane }) {
-  const navigate = useNavigate();
-  const [data, setData] = useState(null);
-  useEffect(() => { api.getFixesSummary().then(({ data: d }) => setData(d)).catch(() => {}); }, [lane]);
-  if (!data?.totalFixes) return null;
-  const top = data.pieces[0];
-  const others = data.pieces.length - 1;
-  return (
-    <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', padding: '14px 18px', marginBottom: 16 }}>
-      <div style={{ flex: 1, minWidth: 220 }}>
-        <div style={{ fontWeight: 600 }}>
-          {data.totalFixes} {data.totalFixes === 1 ? 'fix' : 'fixes'} ready to raise your scores
-        </div>
-        <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>
-          {top.fixes} on “{top.title}”{others > 0 ? `, and more on ${others} other ${others === 1 ? 'piece' : 'pieces'}` : ''}. Fix them yourself or let rain OS do it in one click.
-        </div>
-      </div>
-      <button className="btn btn-primary" onClick={() => navigate(`/analyze/${top.id}`)}>See the fixes</button>
-    </div>
-  );
-}
-
 export default function Dashboard() {
   const { user, userLane, setUserLane } = useApp();
   const navigate = useNavigate();
@@ -454,6 +430,9 @@ export default function Dashboard() {
   const [brandVisHistory, setBrandVisHistory] = useState([]);
   // Which KPI card the map shows: 'citation' (Cited by AI) or 'brand' (Mentioned by AI).
   const [mapKpi, setMapKpi] = useState('citation');
+  // Fixes waiting on each piece's latest analysis, for the Quick wins card.
+  const [fixesSummary, setFixesSummary] = useState(null);
+  useEffect(() => { api.getFixesSummary().then(({ data }) => setFixesSummary(data)).catch(() => {}); }, [userLane]);
   const [brandLinks, setBrandLinks] = useState([]);
   const [linkPick, setLinkPick] = useState('');
   const [recentType, setRecentType] = useState('all');
@@ -728,22 +707,6 @@ export default function Dashboard() {
   // below are scoped to this one scan, not blended across several.
   const latestTypedAnalysis = selectedPiece?.latest ?? filteredHistory[0] ?? null;
 
-  const allFixes = useMemo(() => {
-    if (!latestTypedAnalysis) return [];
-    const seen = new Set();
-    const fixes = [];
-    for (const rec of latestTypedAnalysis.recommendations || []) {
-      if (!rec) continue;
-      const text = typeof rec === 'string' ? rec : rec.text;
-      const pillar = typeof rec === 'string' ? null : (rec.pillar ?? null);
-      if (!text || seen.has(text)) continue;
-      seen.add(text);
-      fixes.push({ text, pillar });
-    }
-    return fixes;
-  }, [latestTypedAnalysis]);
-
-  const quickWins = showAllFixes ? allFixes : allFixes.slice(0, 3);
 
   const chartData = [...filteredHistory]
     .slice(0, chartRange)
@@ -772,6 +735,23 @@ export default function Dashboard() {
     score: latestRun ? Math.round(latestRun[p.key] ?? 0) : 0,
     delta: ptsDelta(p.key),
   }));
+
+  const allFixes = useMemo(() => {
+    const run = latestRun || latestTypedAnalysis;
+    if (!run) return [];
+    const seen = new Set();
+    const fixes = [];
+    for (const rec of run.recommendations || []) {
+      if (!rec) continue;
+      const text = typeof rec === 'string' ? rec : rec.text;
+      const pillar = typeof rec === 'string' ? null : (rec.pillar ?? null);
+      if (!text || seen.has(text)) continue;
+      seen.add(text);
+      fixes.push({ text, pillar });
+    }
+    return fixes;
+  }, [latestRun, latestTypedAnalysis]);
+
 
   // Mentions follows one question (the most recently checked), capped at
   // its last 10 checks, so unrelated questions are never blended.
@@ -948,7 +928,6 @@ export default function Dashboard() {
         </div>
       )}
 
-      <FixesWaiting lane={userLane} />
 
       {!loading && focusOptions.length > 1 && (
         <>
@@ -1155,30 +1134,6 @@ export default function Dashboard() {
                   </LineChart>
                 </ResponsiveContainer>
               </div>
-              {latestRun && (() => {
-                const weakest = [...piecePillars].sort((a, b) => a.score - b.score)[0];
-                const fixCount = (latestRun.recommendations || []).length;
-                const href = latestRun.repo
-                  ? '/repo-analysis'
-                  : latestRun.url && !latestRun.series_id
-                  ? `/url-scanner?url=${encodeURIComponent(latestRun.url)}`
-                  : `/analyze/${latestRun.id}`;
-                return (
-                  <div className={styles.improveBar}>
-                    <div className={styles.improveText}>
-                      <span className={styles.improveLabel}>Biggest opportunity</span>
-                      <span className={styles.improveValue}>
-                        <span className={styles.pillarTableDot} style={{ background: weakest?.color }} />
-                        {weakest?.label} <strong>{weakest?.score}/100</strong>
-                        {fixCount > 0 && <span className={styles.improveFixes}> · {fixCount} fix{fixCount !== 1 ? 'es' : ''} ready</span>}
-                      </span>
-                    </div>
-                    <Link to={href} className={styles.improveBtn}>
-                      Improve this score <ArrowRight size={14} />
-                    </Link>
-                  </div>
-                );
-              })()}
               {pieceRuns.length === 1 && (
                 <p className={styles.pieceHint}>
                   This is the first analysis of this piece. Make your changes, then choose <strong>Re-analyze</strong> on the result to see each pillar's trend here.
@@ -1206,6 +1161,67 @@ export default function Dashboard() {
           </>
         )}
       </div>
+
+      {/* ── Quick wins: the one place for fixes. The piece shown in Pillar
+           Breakdown, its weakest pillar first, plus a count for other pieces. ── */}
+      {(() => {
+        const run = latestRun || latestTypedAnalysis;
+        if (!run || allFixes.length === 0) return null;
+        const weakest = [...piecePillars].filter(p => p.score > 0).sort((a, b) => a.score - b.score)[0];
+        const order = k => { const i = [...piecePillars].sort((a, b) => a.score - b.score).findIndex(p => p.key === k); return i < 0 ? 99 : i; };
+        const ranked = [...allFixes].sort((a, b) => order(a.pillar) - order(b.pillar));
+        const shown = showAllFixes ? ranked : ranked.slice(0, 3);
+        const href = run.repo ? '/repo-analysis'
+          : run.url && !run.series_id ? `/url-scanner?url=${encodeURIComponent(run.url)}`
+          : `/analyze/${run.id}`;
+        const others = (fixesSummary?.pieces || []).filter(p => p.id !== run.id);
+        const otherCount = others.reduce((n, p) => n + p.fixes, 0);
+        return (
+          <div className={styles.chartCard} style={{ marginBottom: 12 }}>
+            <div className={styles.chartHeader}>
+              <div>
+                <h2 className={styles.chartTitle}>Quick wins</h2>
+                <p className={styles.chartSub}>
+                  {weakest
+                    ? <>Biggest opportunity: <strong style={{ color: 'var(--text)', fontWeight: 500 }}>{weakest.label} {weakest.score}/100</strong> on “{run.title || run.url || run.repo || 'Untitled'}”</>
+                    : <>From “{run.title || run.url || run.repo || 'Untitled'}”</>}
+                </p>
+              </div>
+              <Link to={href} className={styles.improveBtn}>
+                Improve this score <ArrowRight size={14} />
+              </Link>
+            </div>
+            <div className={styles.quickWinsList}>
+              {shown.map((rec, i) => {
+                const pillarInfo = rec.pillar ? PILLARS.find(p => p.key === rec.pillar) : null;
+                return (
+                  <div key={i} className={styles.quickWinRow}>
+                    <span className={styles.quickWinIndex}>{i + 1}</span>
+                    {pillarInfo && (
+                      <span className={styles.quickWinTag} style={{ background: `${PILLAR_COLORS[pillarInfo.key]}26`, color: PILLAR_COLORS[pillarInfo.key] }}>
+                        {pillarInfo.label}
+                      </span>
+                    )}
+                    <span className={styles.quickWinText}>{rec.text}</span>
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', marginTop: 10, fontSize: 13 }}>
+              {allFixes.length > 3 ? (
+                <button type="button" className={styles.viewAll} onClick={() => setShowAllFixes(v => !v)}>
+                  {showAllFixes ? 'Show top 3' : `Show all ${allFixes.length} fixes`}
+                </button>
+              ) : <span />}
+              {otherCount > 0 && (
+                <Link to={`/analyze/${others[0].id}`} style={{ color: 'var(--text-dim)' }}>
+                  {otherCount} more {otherCount === 1 ? 'fix' : 'fixes'} on {others.length} other {others.length === 1 ? 'piece' : 'pieces'} →
+                </Link>
+              )}
+            </div>
+          </div>
+        );
+      })()}
 
       {/* ── Tool Snapshot Cards ── */}
       <div className={styles.chartHeader}>
@@ -1312,51 +1328,6 @@ export default function Dashboard() {
         })()}
       />
       </div>
-
-      {/* ── Quick Wins ── */}
-      {quickWins.length > 0 && (
-        <div className={styles.chartCard} style={{ marginBottom: 12 }}>
-          <div className={styles.chartHeader}>
-            <div>
-              <h2 className={styles.chartTitle}>Quick wins</h2>
-              <p className={styles.chartSub}>
-                From "{latestTypedAnalysis.title || latestTypedAnalysis.url || latestTypedAnalysis.repo || 'Untitled'}"
-                {latestTypedAnalysis.analyzed_at ? ` · ${timeAgo(latestTypedAnalysis.analyzed_at)}` : ''}
-              </p>
-              <span className={styles.chartHelp} title="The top recommendations from your most recent analysis of this type — switch the toggle above to see fixes for a different tool.">
-                <HelpCircle size={11} />
-              </span>
-            </div>
-            {allFixes.length > 3 && (
-              <button type="button" className={styles.viewAll} onClick={() => setShowAllFixes(v => !v)}>
-                {showAllFixes ? 'Show top 3' : `Show all ${allFixes.length} fixes`}
-              </button>
-            )}
-          </div>
-          <div className={styles.quickWinsList}>
-            {quickWins.map((rec, i) => {
-              const pillarInfo = rec.pillar ? PILLARS.find(p => p.key === rec.pillar) : null;
-              return (
-                <div key={i} className={styles.quickWinRow}>
-                  <span className={styles.quickWinIndex}>{i + 1}</span>
-                  {pillarInfo && (
-                    <span
-                      className={styles.quickWinTag}
-                      style={{ background: `${pillarInfo.color}26`, color: pillarInfo.color }}
-                    >
-                      {pillarInfo.label}
-                    </span>
-                  )}
-                  <span className={styles.quickWinText}>{rec.text}</span>
-                </div>
-              );
-            })}
-          </div>
-          <Link to={typeRoute} className={styles.insightAction} style={{ marginTop: 10, display: 'inline-flex' }}>
-            Open in {typeFilter === 'url' ? urlScannerLabel(userLane) : (CONTENT_TYPE_TOOL_NAMES[typeFilter] || 'Content Optimizer')} to fix →
-          </Link>
-        </div>
-      )}
 
       {/* ── Bottom row ── */}
       <div className={styles.bottomRow}>
