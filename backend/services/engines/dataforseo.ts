@@ -176,6 +176,7 @@ export async function runDataforseoCitationCheck(
     siteShared: !!userDomain && !matchableDomain(userDomain),
     summary,
     answerExcerpt: buildAnswerExcerpt(answer.text),
+    answerText: answer.text,
     engine,
     country: engine === 'ai_overviews' || engine === 'ai_mode' ? country : 'US',
     state: (engine === 'ai_overviews' || engine === 'ai_mode') && country === 'US' ? state : null,

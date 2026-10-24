@@ -64,6 +64,7 @@ export interface CitationCheckResult {
   competitorDomains: string[];
   summary: string;
   answerExcerpt: string;
+  answerText?: string; // full answer, used to find brand mentions; not stored or sent
   // True when the site given is a page on a shared platform (facebook.com,
   // yelp.com, ...): a domain match would not mean the cited page was theirs.
   siteShared?: boolean;
@@ -231,5 +232,6 @@ export async function runCitationCheck(
     siteShared: !!userDomain && !matchableDomain(userDomain),
     summary: buildSummary(!!matchableDomain(userDomain), cited, sources.length, dedupedCompetitors),
     answerExcerpt: buildAnswerExcerpt(answerText),
+    answerText,
   };
 }

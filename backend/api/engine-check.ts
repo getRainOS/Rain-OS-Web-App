@@ -7,6 +7,7 @@
 // saved to History even if the user leaves. A check of the same question and
 // site within 24 hours is reused instead of asking again.
 import express from 'express';
+import { mentionedIn } from '../services/brandMatch';
 import { randomUUID } from 'crypto';
 import { findUserByApiKey, saveCitationCheck, findRecentCitationCheck } from '../services/dbService';
 import { EngineError } from '../services/engines/engineError';
@@ -102,12 +103,15 @@ export async function startHandler(req: express.Request, res: express.Response) 
   jobs.set(id, job);
   (async () => {
     try {
-      const result = await runEngineCheck(engine, topic, url, loc.state, loc.country);
+      const brand = typeof req.body?.brand === 'string' ? req.body.brand.trim().slice(0, 120) || null : null;
+      const { answerText, ...rest } = await runEngineCheck(engine, topic, url, loc.state, loc.country);
+      const result = { ...rest, brand, mentioned: mentionedIn(brand, answerText) };
       const saved = await saveCitationCheck(user.id, {
         name, topic: result.topic, url: result.url, cited: result.cited, alignmentScore: 0,
         sources: result.sources, recommendations: [], summary: result.summary, engine,
         locationCountry: loc.country, locationState: loc.state, lane: laneOf(req),
         subject: typeof req.body?.subject === 'string' ? req.body.subject.trim().slice(0, 300) || null : null,
+        brand, mentioned: result.mentioned,
       }).catch(err => { console.error('Saving engine check failed:', err); return null; });
       job.result = { ...result, checkId: saved?.id ?? null, checkedAt: new Date().toISOString() };
       job.status = 'done';

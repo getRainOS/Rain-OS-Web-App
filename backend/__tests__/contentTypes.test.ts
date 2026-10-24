@@ -107,3 +107,14 @@ describe('invention check', () => {
     expect(unverifiedDetails('Our mat is great.', 'The mat costs $89.', 'Price: 89 USD')).toEqual([]);
   });
 });
+
+import { mentionedIn } from '../services/brandMatch';
+describe('mentioned in the answer', () => {
+  it('finds the brand by name, without a website', () => {
+    expect(mentionedIn('Bright Smile Dental', 'For Invisalign in Austin, Bright Smile Dental and Austin Smiles are popular.')).toBe(true);
+    expect(mentionedIn('Bright Smile Dental', 'Austin Smiles is a popular choice.')).toBe(false);
+  });
+  it('is null when no brand was given', () => {
+    expect(mentionedIn(null, 'anything')).toBeNull();
+  });
+});

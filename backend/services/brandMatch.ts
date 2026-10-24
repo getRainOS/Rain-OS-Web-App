@@ -46,3 +46,8 @@ export function brandIndex(brand: string, text: string): number {
   const m = pattern.exec(text);
   return m ? m.index : -1;
 }
+
+// Was the brand named in the answer? Null when no brand was given.
+export function mentionedIn(brand: string | null, text: string | undefined): boolean | null {
+  return brand ? brandInText(brand, text || '') : null;
+}
