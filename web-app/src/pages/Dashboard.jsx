@@ -1218,6 +1218,8 @@ export default function Dashboard() {
           </p>
         </div>
       </div>
+      {/* KPI cards and the map are one unit: the selected card is the map's tab. */}
+      <div className={styles.kpiMap}>
       <div className={styles.toolCards}>
         {toolCards.map((t, idx) => {
           // Cited by AI and Mentioned by AI drive the map below: clicking one
@@ -1304,7 +1306,12 @@ export default function Dashboard() {
         kpiLabel={toolCards.find(t => t.key === mapKpi)?.label}
         checks={mapKpi === 'brand' ? brandVisScoped : citationScoped}
         ownDomain={focusSite}
+        attachedAt={(() => {
+          const at = toolCards.findIndex(t => t.key === mapKpi);
+          return at === 0 ? 'first' : at === toolCards.length - 1 ? 'last' : at > 0 ? 'middle' : null;
+        })()}
       />
+      </div>
 
       {/* ── Quick Wins ── */}
       {quickWins.length > 0 && (
