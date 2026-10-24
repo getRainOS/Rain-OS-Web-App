@@ -221,6 +221,9 @@ ALTER TABLE tracked_queries ADD COLUMN IF NOT EXISTS pending_cited BOOLEAN;
 -- Without a website there is nothing to match sources against, so every check
 -- would report "not cited". Pause those until a website is added.
 UPDATE tracked_queries SET paused_reason = 'no_site' WHERE url IS NULL AND paused_reason IS NULL;
+-- Weekly tracking also checks whether the answer names the brand (no website needed).
+ALTER TABLE tracked_queries ADD COLUMN IF NOT EXISTS brand TEXT;
+ALTER TABLE tracked_queries ADD COLUMN IF NOT EXISTS subject TEXT;
 
 ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS source TEXT NOT NULL DEFAULT 'manual';
 ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS tracked_query_id BIGINT

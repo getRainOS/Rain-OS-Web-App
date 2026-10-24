@@ -1,6 +1,7 @@
 // services/schedulerService.ts — runs due tracked queries on a timer inside the API server.
 import { pool } from './db';
 import { findUserById, saveCitationCheck } from './dbService';
+import { mentionedIn } from './brandMatch';
 import { runCitationCheck } from './citationCheckService';
 import { runEngineCheck } from './engines/run';
 import { normaliseLocation } from './engines/location';
@@ -61,14 +62,15 @@ export async function runTrackedQuery(row: any): Promise<'ran' | 'skipped' | 'fa
 
   // No matchable website means every check would say "not cited". Don't spend
   // a Gemini call on it; pause until the user adds a site.
-  if (!hasMatchableSite(row.url)) {
+  if (!hasMatchableSite(row.url) && !row.brand) {
     await pool.query(`UPDATE tracked_queries SET paused_reason = 'no_site' WHERE id = $1`, [row.id]);
     return 'skipped';
   }
 
   try {
-    const result = await runCitationCheck(row.topic, row.url);
+    const { answerText, ...result } = await runCitationCheck(row.topic, row.url);
     await saveCitationCheck(user.id, {
+      brand: row.brand ?? null, mentioned: mentionedIn(row.brand ?? null, answerText), subject: row.subject ?? null,
       name: row.name,
       topic: result.topic,
       url: result.url,
@@ -142,8 +144,9 @@ async function runOtherEngines(row: any, user: { id: string; locationState?: str
       const loc = row.location_country
         ? normaliseLocation(row.location_country, row.location_state)
         : normaliseLocation('US', undefined, user.locationState ?? null);
-      const result = await runEngineCheck(engine.id, row.topic, row.url, loc.state, loc.country);
+      const { answerText, ...result } = await runEngineCheck(engine.id, row.topic, row.url, loc.state, loc.country);
       await saveCitationCheck(user.id, {
+        brand: row.brand ?? null, mentioned: mentionedIn(row.brand ?? null, answerText), subject: row.subject ?? null,
         name: row.name, topic: result.topic, url: result.url, cited: result.cited, alignmentScore: 0,
         sources: result.sources, recommendations: [], summary: result.summary,
         source: 'scheduled', trackedQueryId: Number(row.id), engine: engine.id,

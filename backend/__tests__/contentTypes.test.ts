@@ -118,3 +118,13 @@ describe('mentioned in the answer', () => {
     expect(mentionedIn(null, 'anything')).toBeNull();
   });
 });
+
+import { canTrack } from '../services/trackability';
+describe('weekly tracking', () => {
+  it('needs a matchable website or a brand name', () => {
+    expect(canTrack('https://brightsmiledental.com', null)).toBe(true);
+    expect(canTrack(null, 'Bright Smile Dental')).toBe(true);
+    expect(canTrack(null, null)).toBe(false);
+    expect(canTrack(null, '  ')).toBe(false);
+  });
+});
