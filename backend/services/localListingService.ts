@@ -24,6 +24,8 @@ export interface ListingProfile {
   address: string;
   website: string;
   photos: number | null;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 export interface MapsEntry { position: number; name: string; rating: number | null; reviewCount: number | null; domain: string; isYou: boolean }
@@ -65,6 +67,8 @@ export function parseProfile(json: any): ListingProfile | null {
     address: it.address ? String(it.address) : '',
     website: it.url ? String(it.url) : it.domain ? `https://${it.domain}` : '',
     photos: num(it.total_photos),
+    latitude: num(it.latitude),
+    longitude: num(it.longitude),
   };
 }
 
@@ -127,7 +131,7 @@ export function buildSteps(c: Omit<ListingCheck, 'steps'>, city: string): string
   return s;
 }
 
-async function dfs(method: 'GET' | 'POST', path: string, body?: unknown, timeoutMs = 60000): Promise<any> {
+export async function dfs(method: 'GET' | 'POST', path: string, body?: unknown, timeoutMs = 60000): Promise<any> {
   const login = process.env.DATAFORSEO_LOGIN;
   const password = process.env.DATAFORSEO_PASSWORD;
   if (!login || !password) throw new EngineError('Google listing checks are not set up yet.', 503, 'engine_unavailable');
