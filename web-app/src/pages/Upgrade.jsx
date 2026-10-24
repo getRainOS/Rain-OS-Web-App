@@ -150,16 +150,22 @@ export default function Upgrade() {
       )}
 
       <div className={styles.plans}>
-        {PLANS.map(plan => {
+        {PLANS.map((plan, idx) => {
           const isCurrent = currentPlan === plan.name;
+          // On a paid plan, your plan is the highlighted one and lower plans
+          // are a quiet "switch", not a sales pitch.
+          const currentIdx = PLANS.findIndex(p => p.name === currentPlan);
+          const onPaid = isSubscribed && currentIdx > 0;
+          const highlighted = onPaid ? isCurrent : plan.featured;
+          const isLower = onPaid && idx < currentIdx;
           const isLoading = loadingPlan === plan.priceId;
           return (
             <div
               key={plan.name}
-              className={`${styles.plan} ${plan.featured ? styles.planFeatured : ''}`}
+              className={`${styles.plan} ${highlighted ? styles.planFeatured : ''}`}
               style={{ '--plan-color': plan.color }}
             >
-              {plan.featured && <div className={styles.badge}>Most Popular</div>}
+              {highlighted && <div className={styles.badge}>{onPaid ? 'Your plan' : 'Most Popular'}</div>}
 
               <div className={styles.planTop}>
                 <div className={styles.planName} style={{ color: plan.color }}>{plan.name}</div>
@@ -189,15 +195,15 @@ export default function Upgrade() {
                   <span className={styles.currentBadge} style={{ opacity: 0.5 }}>Free Tier</span>
                 ) : (
                   <button
-                    className={styles.ctaBtn}
-                    style={{ background: plan.color }}
+                    className={isLower ? `btn btn-ghost ${styles.ctaBtn}` : styles.ctaBtn}
+                    style={isLower ? { background: 'transparent', color: 'var(--text-muted)', border: '1px solid var(--border)' } : { background: plan.color }}
                     onClick={() => handleUpgrade(plan.priceId)}
                     disabled={isLoading}
                   >
                     {isLoading ? (
                       <><span className="spinner" style={{ width: 14, height: 14 }} /> Processing…</>
                     ) : (
-                      `Upgrade to ${plan.name}`
+                      isLower ? `Switch to ${plan.name}` : `Upgrade to ${plan.name}`
                     )}
                   </button>
                 )}
