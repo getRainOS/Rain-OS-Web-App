@@ -14,6 +14,7 @@ import NewAnalysisMenu from '../components/NewAnalysisMenu.jsx';
 import CitationMapCard from '../components/CitationMapCard.jsx';
 import MapsGridCard from '../components/MapsGridCard.jsx';
 import { enginesOf } from '../lib/engines.js';
+import { buildSubjects, subjectHint, checkBelongs, getSubjectKey, setSubjectKey } from '../lib/subjects.js';
 import {
   AreaChart, Area, XAxis, YAxis,
   Tooltip, ResponsiveContainer,
@@ -453,9 +454,8 @@ export default function Dashboard() {
   const [brandHelpOpen, setBrandHelpOpen] = useState(false);
   const [linkNote, setLinkNote] = useState(null);
   const [brandPick, setBrandPick] = useState('');
-  // The brand chosen on the dashboard, remembered between visits.
-  const [brandChoice, setBrandChoiceState] = useState(() => { try { return localStorage.getItem('rain_os_dash_brand') || ''; } catch { return ''; } });
-  const setBrandChoice = b => { setBrandChoiceState(b); try { localStorage.setItem('rain_os_dash_brand', b); } catch { /* not remembered */ } };
+  // The analyzed subject the dashboard shows, shared with the monitoring pages.
+  const [subjectChoice, setSubjectChoice] = useState(getSubjectKey);
   const [brandVisLoading, setBrandVisLoading] = useState(true);
   const [sovHistory, setSovHistory] = useState([]);
   const [sovLoading, setSovLoading] = useState(true);
@@ -538,7 +538,7 @@ export default function Dashboard() {
 
   // A remembered focus that no longer exists (data cleared) falls back quietly.
   // The dashboard always shows the latest of each tool; the brand picker
-  // (dashBrand) is the only choice, and it scopes the AI results.
+  // (the subject picker) is the only choice, and it scopes everything.
   const activeFocus = '';
   const focusSite = activeFocus.startsWith('site:') ? activeFocus.slice(5) : null;
 
@@ -583,33 +583,26 @@ export default function Dashboard() {
 
   // Every brand you've checked, newest first. The chosen one (default: the
   // newest) scopes the Cited by AI, Mentioned by AI and Share of Voice cards.
-  const allBrands = useMemo(() => {
-    const rows = [...brandVisHistory, ...sovHistory, ...citations]
-      .filter(r => r.brand)
-      .sort((a, b) => new Date(b.checkedAt || b.checked_at) - new Date(a.checkedAt || a.checked_at));
-    const seen = new Map();
-    for (const r of rows) if (!seen.has(squash(r.brand))) seen.set(squash(r.brand), r.brand);
-    return [...seen.values()];
-  }, [brandVisHistory, sovHistory, citations]);
-  const dashBrand = allBrands.find(b => squash(b) === squash(brandChoice)) || allBrands[0] || null;
-  const brandSites = useMemo(() => {
-    const out = new Set();
-    if (!dashBrand) return out;
-    for (const r of [...brandVisHistory, ...sovHistory, ...citations]) {
-      if (r.brand && squash(r.brand) === squash(dashBrand) && domainOf(r.url)) out.add(domainOf(r.url));
-    }
-    for (const l of brandLinks) if (squash(l.brand) === squash(dashBrand)) out.add(l.site);
-    return out;
-  }, [dashBrand, brandVisHistory, sovHistory, citations, brandLinks]);
-  const brandSite = [...brandSites][0] || null;
+  // Everything you've analyzed (a website, a piece of content or a repo). The
+  // chosen one scopes the whole dashboard; monitoring checks save its key.
+  const subjects = useMemo(() => buildSubjects(history), [history]);
+  const subject = subjects.find(x => x.key === subjectChoice) || subjects[0] || null;
+  const subjectRuns = useMemo(() => {
+    if (!subject) return null;
+    if (subject.type === 'site') return history.filter(h => !h.repo && domainOf(h.url) === subject.website);
+    if (subject.type === 'repo') return history.filter(h => h.repo && h.repo.replace(/^https?:\/\/(www\.)?github\.com\//, '') === subject.key.slice(5));
+    const latest = history.find(h => h.id === subject.latestId);
+    return latest ? history.filter(h => !h.url && !h.repo && keyOf(h) === keyOf(latest)) : [];
+  }, [subject, history, keyOf]);
 
   const filteredHistory = useMemo(() => {
+    if (subjectRuns) return subjectRuns;
     let out = history;
     if (focusSite) out = out.filter(h => siteOfItem(h) === focusSite);
     else if (activeFocus.startsWith('piece:')) out = out.filter(h => keyOf(h) === activeFocus.slice(6));
     else if (typeFilter !== 'all') out = out.filter(h => getItemType(h).toLowerCase() === typeFilter);
     return out;
-  }, [history, typeFilter, activeFocus, focusSite, keyOf]);
+  }, [subjectRuns, history, typeFilter, activeFocus, focusSite, keyOf]);
 
   // Recent Analyses always lists everything (content, URL, repo); its own
   // dropdown narrows by type. It is not tied to "Showing" or the type switch.
@@ -796,7 +789,7 @@ export default function Dashboard() {
   // Citation checks are saved by website, not brand: count the ones for the
   // chosen brand's website(s) (from its brand checks and brand links).
   const citationSorted = [...citations]
-    .filter(c => !brandSites.size || brandSites.has(domainOf(c.url)))
+    .filter(c => !subject || checkBelongs(c, subject))
     .sort((a, b) => new Date(b.checkedAt || b.checked_at) - new Date(a.checkedAt || a.checked_at));
   const topicKeyOf = t => (t || '').trim().toLowerCase().replace(/\s+/g, ' ');
   const citationLatestTopic = citationSorted[0]?.topic || null;
@@ -824,13 +817,8 @@ export default function Dashboard() {
     }
     return [...seen.values()];
   })();
-  const pickedBrand = dashBrand;
-  const brandVisLatestBrand = pickedBrand || brandVisSorted[0]?.brand || null;
-  const brandVisScoped = brandVisLatestBrand
-    ? brandVisSorted
-        .filter(h => (h.brand || '').toLowerCase() === brandVisLatestBrand.toLowerCase())
-        .slice(0, 10)
-    : [];
+  const brandVisScoped = (subject ? brandVisSorted.filter(h => checkBelongs(h, subject)) : brandVisSorted).slice(0, 10);
+  const brandVisLatestBrand = brandVisScoped[0]?.brand || subject?.name || null;
   const brandVisTotal = brandVisScoped.length;
   const brandVisMentionedCount = brandVisScoped.filter(
     h => (h.mention_status || h.mentionStatus) === 'mentioned'
@@ -844,12 +832,8 @@ export default function Dashboard() {
   const sovSorted = [...scopeChecks(sovHistory)].sort(
     (a, b) => new Date(b.checkedAt || b.checked_at) - new Date(a.checkedAt || a.checked_at)
   );
-  const sovLatestBrand = pickedBrand || sovSorted[0]?.brand || null;
-  const sovScoped = sovLatestBrand
-    ? sovSorted
-        .filter(h => (h.brand || '').toLowerCase() === sovLatestBrand.toLowerCase())
-        .slice(0, 10)
-    : [];
+  const sovScoped = (subject ? sovSorted.filter(h => checkBelongs(h, subject)) : sovSorted).slice(0, 10);
+  const sovLatestBrand = sovScoped[0]?.brand || subject?.name || null;
   const sovTotal = sovScoped.length;
   const sovMentionedCount = sovScoped.filter(
     h => (h.mentionedCount ?? h.citedCount ?? h.cited_count ?? 0) > 0
@@ -969,23 +953,19 @@ export default function Dashboard() {
       )}
 
 
-      {!loading && allBrands.length === 0 && (
+      {!loading && subjects.length > 0 && (
         <div className={styles.focusBar}>
-          <button type="button" className={styles.fullBtn} onClick={() => navigate('/full-check')}>Run a full check</button>
-        </div>
-      )}
-      {!loading && allBrands.length > 0 && (
-        <div className={styles.focusBar}>
-          <span className={styles.brandBarLabel}>Your brand</span>
+          <span className={styles.brandBarLabel}>Brand, website or content</span>
           <Select
             className={styles.focusSelect}
-            value={dashBrand || ''}
-            onChange={setBrandChoice}
-            ariaLabel="Brand the AI results below are for"
-            options={allBrands.map(b => ({ value: b, label: b }))}
+            value={subject?.key || ''}
+            onChange={k => { setSubjectChoice(k); setSubjectKey(k); }}
+            ariaLabel="What the dashboard shows"
+            options={subjects.map(x => ({ value: x.key, label: x.name, hint: subjectHint(x) }))}
           />
-          <button type="button" className={styles.fullBtn} onClick={() => navigate(`/full-check?brand=${encodeURIComponent(dashBrand || '')}${brandSite ? `&url=${encodeURIComponent(brandSite)}` : ''}`)}>
-            Run full check for {dashBrand}
+          <button type="button" className={styles.fullBtn}
+            onClick={() => navigate(subject?.website ? `/full-check?subject=${encodeURIComponent(subject.key)}` : '/full-check')}>
+            {subject?.website ? `Run full check for ${subject.name}` : 'Run a full check'}
           </button>
         </div>
       )}
@@ -1014,25 +994,6 @@ export default function Dashboard() {
                 </div>
               )}
             </span>
-          </div>
-          <div className={styles.framingToggle} role="tablist" aria-label="Analysis type">
-            {CONTENT_TYPE_TOGGLES.map(ct => (
-              <button
-                key={ct.id}
-                type="button"
-                role="tab"
-                aria-selected={shownType === ct.id}
-                className={`${styles.framingBtn} ${shownType === ct.id ? styles.framingBtnActive : ''}`}
-                title={activeFocus ? 'Switches back to the latest of each tool, filtered to this type' : undefined}
-                onClick={() => {
-                  // Picking a type leaves any single site or piece and shows that type's latest.
-                  if (activeFocus) changeFocus('');
-                  setTypeFilter(ct.id); setPieceSel(null); setShowAllFixes(false); typeFilterAutoSet.current = true;
-                }}
-              >
-                {ct.label}
-              </button>
-            ))}
           </div>
         </div>
 
