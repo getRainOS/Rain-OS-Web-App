@@ -453,6 +453,9 @@ export default function Dashboard() {
   const [brandHelpOpen, setBrandHelpOpen] = useState(false);
   const [linkNote, setLinkNote] = useState(null);
   const [brandPick, setBrandPick] = useState('');
+  // The brand chosen on the dashboard, remembered between visits.
+  const [brandChoice, setBrandChoiceState] = useState(() => { try { return localStorage.getItem('rain_os_dash_brand') || ''; } catch { return ''; } });
+  const setBrandChoice = b => { setBrandChoiceState(b); try { localStorage.setItem('rain_os_dash_brand', b); } catch { /* not remembered */ } };
   const [brandVisLoading, setBrandVisLoading] = useState(true);
   const [sovHistory, setSovHistory] = useState([]);
   const [sovLoading, setSovLoading] = useState(true);
@@ -534,7 +537,9 @@ export default function Dashboard() {
   }, [history, citations, brandVisHistory, sovHistory, brandLinks, keyOf]);
 
   // A remembered focus that no longer exists (data cleared) falls back quietly.
-  const activeFocus = focusOptions.some(o => o.value === focus) ? focus : '';
+  // The dashboard always shows the latest of each tool; the brand picker
+  // (dashBrand) is the only choice, and it scopes the AI results.
+  const activeFocus = '';
   const focusSite = activeFocus.startsWith('site:') ? activeFocus.slice(5) : null;
 
   function changeFocus(next) {
@@ -575,6 +580,28 @@ export default function Dashboard() {
   }
 
   const scopeChecks = rows => (focusSite ? rows.filter(r => belongsToSite(r, focusSite)) : activeFocus ? [] : rows);
+
+  // Every brand you've checked, newest first. The chosen one (default: the
+  // newest) scopes the Cited by AI, Mentioned by AI and Share of Voice cards.
+  const allBrands = useMemo(() => {
+    const rows = [...brandVisHistory, ...sovHistory, ...citations]
+      .filter(r => r.brand)
+      .sort((a, b) => new Date(b.checkedAt || b.checked_at) - new Date(a.checkedAt || a.checked_at));
+    const seen = new Map();
+    for (const r of rows) if (!seen.has(squash(r.brand))) seen.set(squash(r.brand), r.brand);
+    return [...seen.values()];
+  }, [brandVisHistory, sovHistory, citations]);
+  const dashBrand = allBrands.find(b => squash(b) === squash(brandChoice)) || allBrands[0] || null;
+  const brandSites = useMemo(() => {
+    const out = new Set();
+    if (!dashBrand) return out;
+    for (const r of [...brandVisHistory, ...sovHistory, ...citations]) {
+      if (r.brand && squash(r.brand) === squash(dashBrand) && domainOf(r.url)) out.add(domainOf(r.url));
+    }
+    for (const l of brandLinks) if (squash(l.brand) === squash(dashBrand)) out.add(l.site);
+    return out;
+  }, [dashBrand, brandVisHistory, sovHistory, citations, brandLinks]);
+  const brandSite = [...brandSites][0] || null;
 
   const filteredHistory = useMemo(() => {
     let out = history;
@@ -766,9 +793,11 @@ export default function Dashboard() {
 
   // Mentions follows one question (the most recently checked), capped at
   // its last 10 checks, so unrelated questions are never blended.
-  const citationSorted = [...scopeChecks(citations)].sort(
-    (a, b) => new Date(b.checkedAt || b.checked_at) - new Date(a.checkedAt || a.checked_at)
-  );
+  // Citation checks are saved by website, not brand: count the ones for the
+  // chosen brand's website(s) (from its brand checks and brand links).
+  const citationSorted = [...citations]
+    .filter(c => !brandSites.size || brandSites.has(domainOf(c.url)))
+    .sort((a, b) => new Date(b.checkedAt || b.checked_at) - new Date(a.checkedAt || a.checked_at));
   const topicKeyOf = t => (t || '').trim().toLowerCase().replace(/\s+/g, ' ');
   const citationLatestTopic = citationSorted[0]?.topic || null;
   const citationScoped = citationLatestTopic
@@ -795,7 +824,7 @@ export default function Dashboard() {
     }
     return [...seen.values()];
   })();
-  const pickedBrand = focusSite && siteBrands.find(b => squash(b) === squash(brandPick)) || null;
+  const pickedBrand = dashBrand;
   const brandVisLatestBrand = pickedBrand || brandVisSorted[0]?.brand || null;
   const brandVisScoped = brandVisLatestBrand
     ? brandVisSorted
@@ -907,7 +936,6 @@ export default function Dashboard() {
         </div>
         <div className={styles.headerBtns}>
           <button onClick={() => navigate('/report')} className={styles.fullBtn}>Report</button>
-          <button onClick={() => navigate('/full-check')} className={styles.fullBtn}>Full check</button>
           <NewAnalysisMenu lane={userLane} firstTime={!loading && history.length === 0} />
         </div>
       </div>
@@ -940,92 +968,25 @@ export default function Dashboard() {
       )}
 
 
-      {!loading && focusOptions.length > 1 && (
-        <>
+      {!loading && allBrands.length === 0 && (
         <div className={styles.focusBar}>
-          <span className="eyebrow">Showing</span>
+          <button type="button" className={styles.fullBtn} onClick={() => navigate('/full-check')}>Run a full check</button>
+        </div>
+      )}
+      {!loading && allBrands.length > 0 && (
+        <div className={styles.focusBar}>
+          <span className={styles.brandBarLabel}>Your brand</span>
           <Select
             className={styles.focusSelect}
-            value={activeFocus}
-            onChange={changeFocus}
-            ariaLabel="Choose what the dashboard shows"
-            options={focusOptions}
+            value={dashBrand || ''}
+            onChange={setBrandChoice}
+            ariaLabel="Brand the AI results below are for"
+            options={allBrands.map(b => ({ value: b, label: b }))}
           />
-          <div className={styles.focusHelp}>
-            <button type="button" className={styles.focusHelpBtn} aria-label="What does this selector do?" aria-expanded={focusHelpOpen}
-              onClick={() => setFocusHelpOpen(o => !o)}>
-              <HelpCircle size={20} />
-            </button>
-            {focusHelpOpen && (
-              <div className={styles.focusHelpPop} role="note">
-                <p>{focusSite
-              ? `Everything below is for ${focusSite}: its page analyses and every AI result (sentiment, citations, share of voice) for it.`
-              : activeFocus
-              ? "Pasted content and repos aren't tied to a website, so AI results aren't shown. Add your website when you analyze content to link them."
-              : 'Each tool below shows its own latest result. Choose a site to see them all together.'}</p>
-              </div>
-            )}
-          </div>
-          {focusSite && siteBrands.length > 1 && (
-            <>
-              <span className="eyebrow">Brand</span>
-              <Select
-                className={styles.brandViewSelect}
-                value={brandVisLatestBrand || ''}
-                onChange={setBrandPick}
-                ariaLabel="Brand shown in the sentiment and share of voice cards"
-                options={siteBrands.map(b => ({ value: b, label: b }))}
-              />
-            </>
-          )}
+          <button type="button" className={styles.fullBtn} onClick={() => navigate(`/full-check?brand=${encodeURIComponent(dashBrand || '')}${brandSite ? `&url=${encodeURIComponent(brandSite)}` : ''}`)}>
+            Run full check for {dashBrand}
+          </button>
         </div>
-        {focusSite && (
-          <div className={styles.brandLinkRow}>
-            <span className={styles.brandLinkLabel}>Brands counted for {focusSite}:</span>
-            <div className={styles.focusHelp}>
-              <button type="button" className={styles.focusHelpBtn} aria-label="What does linking a brand do?" aria-expanded={brandHelpOpen}
-                onClick={() => setBrandHelpOpen(o => !o)}>
-                <HelpCircle size={20} />
-              </button>
-              {brandHelpOpen && (
-                <div className={styles.focusHelpPop} role="note">
-                  <p><strong>What linking does</strong></p>
-                  <p>Your pillar analysis is saved under this website. Brand Sentiment and Share of Voice checks are saved under a brand name. Linking a brand connects the two, so those checks show up here next to this site's pillar scores in one view.</p>
-                  <p>Citation Monitor checks don't need linking: they're saved with your website, so they already show up here.</p>
-                  <p>You can link more than one brand, and remove one any time with the ×. Nothing is deleted when you unlink.</p>
-                </div>
-              )}
-            </div>
-            {brandLinks.filter(l => l.site === focusSite).map(l => (
-              <span key={l.brand} className={styles.brandChip}>
-                {l.brand}
-                <button type="button" aria-label={`Unlink ${l.brand}`} onClick={() => unlinkBrand(l.brand)}>×</button>
-              </span>
-            ))}
-            {linkableBrands.length > 0 ? (
-              <>
-                <Select
-                  className={styles.brandSelect}
-                  value={linkPick}
-                  onChange={setLinkPick}
-                  placeholder="Add a brand…"
-                  ariaLabel="Brand to link"
-                  options={linkableBrands.map(b => {
-                    const other = brandLinks.filter(l => squash(l.brand) === squash(b)).map(l => l.site);
-                    return { value: b, label: b, hint: other.length ? `also on ${other.join(', ')}` : undefined };
-                  })}
-                />
-                <button type="button" className={styles.brandLinkBtn} disabled={!linkPick} onClick={() => linkBrand(linkPick)}>Link</button>
-              </>
-            ) : (
-              <span className={styles.brandLinkHint}>Run Brand Sentiment or Share of Voice for a brand to link it here.</span>
-            )}
-            {linkNote && (
-              <span className={linkNote.ok ? styles.linkNoteOk : styles.linkNoteErr} role="status">{linkNote.text}</span>
-            )}
-          </div>
-        )}
-        </>
       )}
 
       {/* ── Pillar Breakdown (above the fold, full-width hero) ── */}
@@ -1117,20 +1078,6 @@ export default function Dashboard() {
               </span>
               <h3 className={styles.pieceName} title={selectedPiece?.name}>{selectedPiece?.name}</h3>
             </div>
-            {pieces.length > 1 && (
-              <Select
-                className={styles.pieceSelect}
-                value={selectedPiece?.key || ''}
-                onChange={setPieceSel}
-                ariaLabel="Choose which piece to show"
-                menuAlign="right"
-                options={pieces.map(p => ({
-                  value: p.key,
-                  label: p.name.length > 48 ? `${p.name.slice(0, 45)}…` : p.name,
-                  hint: p.runs.length > 1 ? `${p.runs.length} runs` : undefined,
-                }))}
-              />
-            )}
           </div>
           <div className={styles.heroGrid}>
             <div className={styles.heroMain}>
