@@ -40,3 +40,39 @@ export async function groundingUsageHandler(req: express.Request, res: express.R
   }));
   return res.status(200).json({ success: true, freePerDay: FREE_GROUNDED_PER_DAY, usdPer1000: USD_PER_1000_GROUNDED, days });
 }
+
+// ─── Test account reset (staff only; acts on test08@getrainos.com only) ───────
+import { previewReset, startReset, job as resetJob } from '../services/testAccountSeed';
+
+async function staff(req: express.Request, res: express.Response) {
+  const h = req.headers.authorization;
+  const apiKey = (Array.isArray(h) ? h[0] : h)?.split(' ')[1];
+  const user = apiKey ? await findUserByApiKey(apiKey) : null;
+  if (!user) { res.status(401).json({ error: 'unauthorized', message: 'Sign in first.' } as ApiError); return null; }
+  if (!isAdminEmail(user.email)) { res.status(403).json({ error: 'forbidden', message: 'This page is for rain OS staff.' } as ApiError); return null; }
+  return user;
+}
+
+// GET: what a reset would delete and add, and the progress of a running one.
+export async function testAccountStatusHandler(req: express.Request, res: express.Response) {
+  if (!(await staff(req, res))) return;
+  try {
+    return res.json({ success: true, preview: await previewReset(), job: resetJob });
+  } catch (err: any) {
+    return res.status(400).json({ error: 'bad_request', message: err?.message || 'Could not read the test account.' } as ApiError);
+  }
+}
+
+// POST { confirm: 'test08@getrainos.com' }: clean out and seed.
+export async function testAccountResetHandler(req: express.Request, res: express.Response) {
+  if (!(await staff(req, res))) return;
+  if (req.body?.confirm !== 'test08@getrainos.com') {
+    return res.status(400).json({ error: 'bad_request', message: 'Type the test account email to confirm.' } as ApiError);
+  }
+  try {
+    await startReset(process.env.PORT || 3001);
+    return res.status(202).json({ success: true, job: resetJob });
+  } catch (err: any) {
+    return res.status(400).json({ error: 'bad_request', message: err?.message || 'Could not start the reset.' } as ApiError);
+  }
+}
