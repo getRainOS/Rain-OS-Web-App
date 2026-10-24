@@ -375,7 +375,7 @@ export default function CitationMonitor() {
               <SubjectPicker
                 label="Checking for"
                 initialKey={searchParams.get('subject') || undefined}
-                onChange={sub => { setSubject(sub); setUrl(sub?.website || ''); setNoSite(!sub?.website); setError(''); }}
+                onChange={sub => { setSubject(sub); setUrl(sub?.website || ''); if (sub?.state) { setCheckCountry('US'); setCheckState(sub.state); } setNoSite(!sub?.website); setError(''); }}
                 note={subject && !subject.website ? (subject.lookFor ? `Each answer is checked for “${subject.lookFor}”. Add the page’s link once it’s published to also see whether it’s cited.` : 'Add a brand name to this content in Content Optimizer so we can check whether AI names you.') : undefined}
               />
             </div>

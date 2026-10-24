@@ -1,6 +1,7 @@
 // services/analyzeController.ts
 // Route handlers for POST /api/analyze and GET /api/capabilities.
 // Auth, usage-check, and incrementing all live here — keeping api/index.ts thin.
+import { usState } from './planLimits';
 import express from 'express';
 import { analyzeContent, API_VERSION, generateTitles, generateDescription, summarizeContent } from './geminiService';
 import { createHash } from 'crypto';
@@ -94,7 +95,7 @@ const { updatedUser, analysisId } = await incrementUsageAndSaveAnalysis(user.id,
   local_presence: typeof pillar?.localPresence === 'number' ? pillar.localPresence : null,
   summary: typeof typedResult.summary === 'string' ? typedResult.summary : null,
   // The business or brand behind this piece, if given: monitoring looks for this name.
-  result_json: { ...result, brand: typeof (req.body as any)?.brand === 'string' ? (req.body as any).brand.trim().slice(0, 120) || null : null },
+  result_json: { ...result, brand: typeof (req.body as any)?.brand === 'string' ? (req.body as any).brand.trim().slice(0, 120) || null : null, state: usState((req.body as any)?.state) },
   content_hash: contentHash,
   content: safeContent,
   lane: lane ?? null,
