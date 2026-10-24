@@ -1481,3 +1481,9 @@
 .gptLocked { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 20px; margin-top: 12px; flex-wrap: wrap; }
 .gptLocked strong { font-size: 14px; color: var(--text); font-weight: 500; }
 .gptLocked p { margin: 4px 0 0; font-size: 13px; color: var(--text-dim); max-width: 520px; }
+
+/* Content without a website: how to make it trackable. */
+.unpublishedCard { margin-top: 16px; padding: 16px 18px; border: 1px solid rgba(43,143,227,0.35); border-radius: 12px; background: rgba(43,143,227,0.05); }
+.unpublishedTitle { margin: 0 0 6px; font-size: 14px; font-weight: 600; color: var(--text); }
+.unpublishedText { margin: 0; font-size: 13px; line-height: 1.6; color: var(--text-muted); max-width: 720px; }
+.unpublishedActions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }

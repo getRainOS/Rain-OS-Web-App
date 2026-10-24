@@ -375,7 +375,7 @@ export default function CitationMonitor() {
                 label="Checking for"
                 initialKey={searchParams.get('subject') || undefined}
                 onChange={sub => { setSubject(sub); setUrl(sub?.website || ''); setNoSite(!sub?.website); setError(''); }}
-                note={subject && !subject.website ? 'This one has no website, so you’ll see which sites AI cites but not whether you’re among them.' : undefined}
+                note={subject && !subject.website ? 'This content has no web address yet, so you’ll see which sites AI cites for your question, but not whether you’re one of them.' : undefined}
               />
             </div>
 
@@ -563,7 +563,24 @@ export default function CitationMonitor() {
         </div>
       </div>
 
-      <WhyNotCited open={!!result && result.cited === false} />
+      {/* Content without a website: what the check can and can't tell, and the two ways forward. */}
+      {subject && !subject.website ? (
+        <div className={styles.unpublishedCard}>
+          <p className={styles.unpublishedTitle}>Want to know whether AI cites “{subject.name}”?</p>
+          <p className={styles.unpublishedText}>
+            AI cites web pages by their address, and this content doesn’t have one yet. Once it’s published, analyze it again with its link,
+            and Citation Monitor can tell you whether you’re cited, where you rank, and track it every week.
+          </p>
+          <div className={styles.unpublishedActions}>
+            <Link to={`/analyze/${subject.latestId}?addLink=1`} className="btn btn-primary">Add its link in Content Optimizer</Link>
+            <Link to={`/brand-visibility${topic.trim() ? `?q=${encodeURIComponent(topic.trim())}` : ''}`} className="btn btn-ghost">
+              Check whether AI names your brand for this question
+            </Link>
+          </div>
+        </div>
+      ) : (
+        <WhyNotCited open={!!result && result.cited === false} />
+      )}
 
       </>)}
 
