@@ -78,7 +78,7 @@ function Kpi({ label, value, note }) {
   );
 }
 
-const TEST_EMAIL = 'test08@getrainos.com';
+const TEST_EMAIL = 'support@getrainos.com';
 const LANE_LABELS = { local_business: 'Local business', product_sellers: 'Online sellers', vibe_coders: 'Vibe coders', developers: 'Developers', general: 'General' };
 
 // Staff-only: clears the test account (keeping Bright Smile Dental) and
@@ -109,7 +109,7 @@ function TestAccountReset() {
   return (
     <section style={{ marginTop: 32 }}>
       <h2 style={{ fontSize: 18, margin: '0 0 4px' }}>Test account ({TEST_EMAIL})</h2>
-      <p className={styles.note}>Removes every result and brand on this account except Bright Smile Dental, then analyzes the URLs, pasted content and GitHub repos below in their lanes. Repos need GitHub connected on the test account.</p>
+      <p className={styles.note}>Removes every result and brand on this account except Bright Smile Dental, then analyzes the URLs, pasted content and GitHub repos below in their lanes. Repos need GitHub connected on this account.</p>
       {error && <p className={styles.note}>{error}</p>}
       {!info ? <span className="spinner" /> : (
         <>

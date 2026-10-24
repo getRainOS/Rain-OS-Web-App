@@ -10,10 +10,8 @@ import type { ApiError } from '../types';
 export const FREE_GROUNDED_PER_DAY = 1500;
 export const USD_PER_1000_GROUNDED = 35;
 
-export function isAdminEmail(email: string | undefined, env: NodeJS.ProcessEnv = process.env): boolean {
-  const list = (env.ADMIN_EMAILS || 'support@getrainos.com').split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
-  return !!email && list.includes(email.toLowerCase());
-}
+import { isAdminEmail } from '../services/planLimits';
+export { isAdminEmail };
 
 export async function groundingUsageHandler(req: express.Request, res: express.Response) {
   const h = req.headers.authorization;
@@ -41,8 +39,8 @@ export async function groundingUsageHandler(req: express.Request, res: express.R
   return res.status(200).json({ success: true, freePerDay: FREE_GROUNDED_PER_DAY, usdPer1000: USD_PER_1000_GROUNDED, days });
 }
 
-// ─── Test account reset (staff only; acts on test08@getrainos.com only) ───────
-import { previewReset, startReset, job as resetJob } from '../services/testAccountSeed';
+// ─── Test account reset (staff only; acts on the staff account only) ───────
+import { previewReset, startReset, job as resetJob, TEST_EMAIL } from '../services/testAccountSeed';
 
 async function staff(req: express.Request, res: express.Response) {
   const h = req.headers.authorization;
@@ -63,10 +61,10 @@ export async function testAccountStatusHandler(req: express.Request, res: expres
   }
 }
 
-// POST { confirm: 'test08@getrainos.com' }: clean out and seed.
+// POST { confirm: 'support@getrainos.com' }: clean out and seed.
 export async function testAccountResetHandler(req: express.Request, res: express.Response) {
   if (!(await staff(req, res))) return;
-  if (req.body?.confirm !== 'test08@getrainos.com') {
+  if (req.body?.confirm !== TEST_EMAIL) {
     return res.status(400).json({ error: 'bad_request', message: 'Type the test account email to confirm.' } as ApiError);
   }
   try {

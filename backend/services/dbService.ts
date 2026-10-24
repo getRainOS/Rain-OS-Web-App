@@ -7,6 +7,7 @@ import type { User, SubscriptionStatus, PillarRecommendation } from '../types';
 import { randomBytes, createHash, createCipheriv, createDecipheriv } from 'crypto';
 import { hashPassword } from './passwords';
 import { pool } from './db';
+import { isAdminEmail, STAFF_USAGE_LIMIT } from './planLimits';
 
 // --- Crypto Helpers ---
 const ALGORITHM = 'aes-256-cbc';
@@ -96,6 +97,7 @@ export const hash = (data: string) => createHash('sha256').update(data).digest('
 // --- DB to Application Mapper ---
 const mapRowToUser = (row: any, hashedApiKey?: string): User => {
     if (!row) return null as any;
+    const staff = isAdminEmail(row.email);
     return {
         id: row.id,
         email: row.email,
@@ -110,10 +112,10 @@ const mapRowToUser = (row: any, hashedApiKey?: string): User => {
         hashedApiKey: row.hashed_api_key,
         stripeCustomerId: row.stripe_customer_id,
         stripePriceId: row.stripe_price_id,
-        subscriptionStatus: row.subscription_status,
+        subscriptionStatus: staff ? 'active' : row.subscription_status,
         emailConfirmed: row.email_confirmed,
         confirmationToken: row.confirmation_token,
-        usage: row.usage,
+        usage: staff ? { ...row.usage, limit: Math.max(row.usage?.limit ?? 0, STAFF_USAGE_LIMIT) } : row.usage,
         citationAlerts: row.citation_alerts !== false,
         locationState: row.location_state ?? null,
         createdAt: row.created_at,
