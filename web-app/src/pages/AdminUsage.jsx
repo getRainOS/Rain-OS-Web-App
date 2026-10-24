@@ -121,7 +121,7 @@ function TestAccountReset() {
             <thead><tr><th>Lane</th><th>Type</th><th>Brand</th><th>Source</th><th>Status</th></tr></thead>
             <tbody>{seeds.map(s => (
               <tr key={s.url}>
-                <td>{LANE_LABELS[s.lane] || s.lane}</td><td>{s.kind === 'content' ? 'Content' : s.kind === 'repo' ? 'Repo' : 'URL'}</td><td>{s.brand}</td><td>{s.kind === 'content' ? s.title : s.url}</td>
+                <td>{LANE_LABELS[s.lane] || s.lane}</td><td>{s.kind === 'content' ? 'Content' : s.kind === 'repo' ? 'Repo' : 'URL'}</td><td>{s.brand}{s.state ? ` · ${s.state}` : ''}{s.platform ? ` · ${s.platform}` : ''}</td><td>{s.kind === 'content' ? s.title : s.url}</td>
                 <td>{!s.status ? '—' : s.status === 'done' ? `Done${s.score != null ? ` · ${s.score}` : ''}` : s.status === 'failed' ? `Failed: ${s.error || 'unknown error'}` : s.status === 'running' ? 'Analyzing…' : 'Waiting'}</td>
               </tr>
             ))}</tbody>
