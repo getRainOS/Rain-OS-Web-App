@@ -70,6 +70,8 @@ const citation = (id, topic, engine, cited, rank, at) => {
     id, name: topic, topic, url: SITE, cited, sources, engine, checkedAt: at, checked_at: at, source: 'manual',
     summary: cited ? `Your site is source ${rank} of ${sources.length} for this question.` : `Your site was not among the ${sources.length} sources cited.`,
     alignmentScore: 0, recommendations: [], locationCountry: 'US', locationState: 'TX',
+    // Named in the answer whenever it's cited, and in some answers where it isn't.
+    brand: BRAND, mentioned: cited || id % 2 === 0,
   };
 };
 const T1 = 'best dentist in Austin for Invisalign';
@@ -260,7 +262,7 @@ export async function demoRequest(method, path, body) {
           { label: 'Headings per 100 words', before: '0.0', after: '1.1', better: true },
         ] });
     }
-    if (p === '/api/citation-check') { await wait(2500); const r = runCitation(body); return ok({ success: true, data: r, history: citations.filter(c => c.topic === T1 && c.engine === 'gemini'), ...r }); }
+    if (p === '/api/citation-check') { await wait(2500); const r = { ...runCitation(body), brand: body?.brand || null, mentioned: body?.brand ? true : null }; return ok({ success: true, data: r, history: citations.filter(c => c.topic === T1 && c.engine === 'gemini'), ...r }); }
     if (p === '/api/citation-check/engine') {
       const id = `demo-${body?.engine}-${Date.now()}`;
       jobs.set(id, { readyAt: Date.now() + 4000, result: { ...runCitation(body, body?.engine), engine: body?.engine, answerShown: true } });
