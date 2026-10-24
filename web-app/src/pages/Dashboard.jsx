@@ -34,6 +34,16 @@ function joinWithAnd(items) {
   return `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`;
 }
 
+// One line on what each pillar measures, for the Pillar Breakdown "?".
+const PILLAR_MEANING = {
+  ai_readability: 'how easily AI can read the page and pull out a clear answer.',
+  digital_authority: 'whether AI can trust it: who is behind it, proof, sources.',
+  conversion_readiness: 'whether a reader knows what to do next, and why to choose you.',
+  product_discoverability: 'whether AI shopping answers can find and describe the product: price, specs, stock, reviews.',
+  local_presence: 'whether AI can tell where you are and who you serve: name, address, phone, area, reviews.',
+  rag_readiness: 'how well the page splits into self-contained pieces AI can retrieve and quote.',
+};
+
 const PILLARS = [
   { key: 'ai_readability',          label: 'AI Readability',       color: PILLAR_CHART_COLORS.ai_readability, Icon: BrainCircuit },
   { key: 'digital_authority',       label: 'Digital Authority',    color: PILLAR_CHART_COLORS.digital_authority, Icon: ShieldCheck },
@@ -431,6 +441,7 @@ export default function Dashboard() {
   const [brandVisHistory, setBrandVisHistory] = useState([]);
   // Which KPI card the map shows: 'citation', 'brand' or 'sov'.
   const [mapKpi, setMapKpi] = useState('citation');
+  const [pillarHelpOpen, setPillarHelpOpen] = useState(false);
   // Google listing data: 'on', 'locked' (free plan) or 'off' (not connected yet).
   const [listingsMode, setListingsMode] = useState('off');
   useEffect(() => { api.engines().then(({ data }) => setListingsMode(data?.features?.localListings || 'off')).catch(() => {}); }, []);
@@ -1023,8 +1034,23 @@ export default function Dashboard() {
           <div>
             <h2 className={styles.chartTitle}>Pillar Breakdown</h2>
             <p className={styles.chartSub}>How one piece scores on each AEO pillar, analysis by analysis.</p>
-            <span className={styles.chartHelp} title={`How your scores are distributed across your ${activePillars.length} pillars: ${joinWithAnd(activePillars.map(p => p.label))}.`}>
-              <HelpCircle size={11} />
+            <span className={styles.focusHelp}>
+              <button type="button" className={styles.focusHelpBtn} aria-label="Which pillars make up this score?" aria-expanded={pillarHelpOpen}
+                onClick={() => setPillarHelpOpen(o => !o)}>
+                <HelpCircle size={13} />
+              </button>
+              {pillarHelpOpen && (
+                <div className={styles.focusHelpPop} role="note" style={{ textAlign: 'left', fontWeight: 400 }}>
+                  <p><strong>Your {activePillars.length} pillars</strong> for {LANE_META.find(l => l.id === userLane)?.label || 'your lane'}, and how much each counts toward the overall score:</p>
+                  <ul style={{ margin: '6px 0 0', paddingLeft: 16, listStyle: 'disc' }}>
+                    {[...activePillars].sort((a, b) => b.weight - a.weight).map(p => (
+                      <li key={p.key} style={{ marginBottom: 4 }}>
+                        <strong>{p.label} · {p.weight}%</strong>: {PILLAR_MEANING[p.key]}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </span>
           </div>
           <div className={styles.framingToggle} role="tablist" aria-label="Analysis type">
