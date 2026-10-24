@@ -10,6 +10,10 @@ export function isAdminEmail(email: string | undefined, env: NodeJS.ProcessEnv =
 }
 export const STAFF_USAGE_LIMIT = 100000;
 
+// A two-letter US state saved with an analysis (where the business is), or null.
+export const usState = (v: unknown): string | null =>
+  typeof v === 'string' && /^[A-Za-z]{2}$/.test(v.trim()) ? v.trim().toUpperCase() : null;
+
 export const PRO_TRACKING_CAP = 10;
 export const BUSINESS_TRACKING_CAP = 30;
 

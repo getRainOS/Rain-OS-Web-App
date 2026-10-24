@@ -854,7 +854,7 @@ export interface AnalysisRecord {
 const DETAIL_KEYS = [
   'ai_readability_detail', 'digital_authority_detail', 'conversion_readiness_detail',
   'product_discoverability_detail', 'rag_readiness_detail', 'local_presence_detail',
-  'readability_metrics', 'authorship', 'measured_checks', 'content_type', 'brand',
+  'readability_metrics', 'authorship', 'measured_checks', 'content_type', 'brand', 'state',
 ] as const;
 
 const mapAnalysisRow = (row: any): AnalysisRecord => ({

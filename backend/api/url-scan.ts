@@ -1,4 +1,5 @@
 // api/url-scan.ts — Fetch a URL, score with Gemini + Cheerio HTML analysis.
+import { usState } from '../services/planLimits';
 import express from 'express';
 import { pageBrandName } from '../services/pageBrand';
 import { findUserByApiKey, incrementUsageAndSaveAnalysis } from '../services/dbService';
@@ -188,7 +189,7 @@ export default async function handler(req: express.Request, res: express.Respons
       local_presence: result.pillarScores?.localPresence ?? null,
       summary: result.summary ?? null,
       // The business or brand name, if given: monitoring tools use it as this site's name.
-      result_json: { ...result, brand, brandFromPage: !givenBrand && !!brand },
+      result_json: { ...result, brand, brandFromPage: !givenBrand && !!brand, state: usState(req.body?.state) },
       lane: analysisModule,
     });
     const updated = saveResult.updatedUser;

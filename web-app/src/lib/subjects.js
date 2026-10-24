@@ -32,6 +32,7 @@ export function buildSubjects(history) {
     s.count += 1;
     s.titles.push(h.title);
     if (!s.brand && h.brand) s.brand = h.brand;
+    if (!s.state && h.state) s.state = h.state;
     sites.set(site, s);
   }
   const out = [...sites.values()].map(({ titles, ...s }) => {
