@@ -109,7 +109,7 @@ function TestAccountReset() {
   return (
     <section style={{ marginTop: 32 }}>
       <h2 style={{ fontSize: 18, margin: '0 0 4px' }}>Test account ({TEST_EMAIL})</h2>
-      <p className={styles.note}>Removes every result and brand on this account except Bright Smile Dental, then analyzes the sites below in their lanes.</p>
+      <p className={styles.note}>Removes every result and brand on this account except Bright Smile Dental, then analyzes the URLs, pasted content and GitHub repos below in their lanes. Repos need GitHub connected on the test account.</p>
       {error && <p className={styles.note}>{error}</p>}
       {!info ? <span className="spinner" /> : (
         <>
@@ -118,10 +118,10 @@ function TestAccountReset() {
             <tbody>{info.preview.counts.map(c => <tr key={c.table}><td>{c.table}</td><td>{c.remove}</td><td>{c.keep}</td></tr>)}</tbody>
           </table>
           <table className={styles.table} style={{ marginTop: 16 }}>
-            <thead><tr><th>Lane</th><th>Brand</th><th>Site</th><th>Status</th></tr></thead>
+            <thead><tr><th>Lane</th><th>Type</th><th>Brand</th><th>Source</th><th>Status</th></tr></thead>
             <tbody>{seeds.map(s => (
               <tr key={s.url}>
-                <td>{LANE_LABELS[s.lane] || s.lane}</td><td>{s.brand}</td><td>{s.url}</td>
+                <td>{LANE_LABELS[s.lane] || s.lane}</td><td>{s.kind === 'content' ? 'Content' : s.kind === 'repo' ? 'Repo' : 'URL'}</td><td>{s.brand}</td><td>{s.kind === 'content' ? s.title : s.url}</td>
                 <td>{!s.status ? '—' : s.status === 'done' ? `Done${s.score != null ? ` · ${s.score}` : ''}` : s.status === 'failed' ? `Failed: ${s.error || 'unknown error'}` : s.status === 'running' ? 'Analyzing…' : 'Waiting'}</td>
               </tr>
             ))}</tbody>

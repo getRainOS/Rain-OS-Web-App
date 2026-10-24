@@ -8,7 +8,9 @@ import { findUserByEmail } from './dbService';
 export const TEST_EMAIL = 'test08@getrainos.com';
 
 // Real, public sites of the kind each lane is built for.
-export const SEEDS: Array<{ lane: string; url: string; brand: string }> = [
+export type SeedKind = 'url' | 'content' | 'repo';
+export type Seed = { lane: string; url: string; brand: string; kind?: SeedKind; title?: string; contentType?: string; content?: string };
+export const SEEDS: Seed[] = [
   // Local Service Business: independent local shops and restaurants
   { lane: 'local_business', url: 'https://franklinbbq.com', brand: 'Franklin Barbecue' },
   { lane: 'local_business', url: 'https://www.joespizzanyc.com', brand: "Joe's Pizza" },
@@ -31,6 +33,23 @@ export const SEEDS: Array<{ lane: string; url: string; brand: string }> = [
   { lane: 'general', url: 'https://longreads.com', brand: 'Longreads' },
   { lane: 'general', url: 'https://waitbutwhy.com', brand: 'Wait But Why' },
   { lane: 'general', url: 'https://seths.blog', brand: "Seth's Blog" },
+
+  // Pasted content (Content Optimizer): short drafts of the kind each lane writes.
+  { lane: 'local_business', kind: 'content', url: 'content:franklin-faq', brand: 'Franklin Barbecue', contentType: 'blog_post', title: 'How to plan a visit to Franklin Barbecue',
+    content: 'Planning a trip to Franklin Barbecue in Austin? Most people line up early because brisket sells out. Bring a chair, water and some patience. The line moves steadily once the doors open, and staff walk the line to let people know when food is likely to run out. If you would rather skip the wait, look at the pre-order option on the website, which needs to be placed well ahead of time. Parking nearby fills up, so arriving on foot or by rideshare is easier.' },
+  { lane: 'product_sellers', kind: 'content', url: 'content:bellroy-wallet', brand: 'Bellroy', contentType: 'product_description', title: 'Slim leather wallet',
+    content: 'A slim leather wallet that holds your everyday cards and a few folded notes without the bulk. A pull tab brings less-used cards up from the bottom, and a quick-access slot keeps your most used card at the front. Made from leather that softens with use. Fits easily in a front pocket.' },
+  { lane: 'vibe_coders', kind: 'content', url: 'content:photoai-launch', brand: 'Photo AI', contentType: 'social_post', title: 'Launch post',
+    content: 'Just shipped a new update to Photo AI 📸 You can now pick a style, upload a few selfies and get a full set of professional-looking photos in minutes. No studio, no photographer. Built it solo and it keeps growing every week. Try it and tell me what you think 👇 #buildinpublic #indiehackers' },
+  { lane: 'developers', kind: 'content', url: 'content:hono-quickstart', brand: 'Hono', contentType: 'documentation', title: 'Hono quick start',
+    content: 'Hono is a small, fast web framework built on Web Standards. It runs on Cloudflare Workers, Deno, Bun, Node.js and more. To start a project, run npm create hono@latest and pick your runtime. Define a route with app.get(\'/\', (c) => c.text(\'Hello Hono!\')). Middleware is added with app.use(). Hono includes helpers for JSON responses, validation and routing groups.' },
+  { lane: 'general', kind: 'content', url: 'content:wbw-procrastination', brand: 'Wait But Why', contentType: 'article', title: 'Why we procrastinate',
+    content: 'Most procrastinators know exactly what they should be doing. The problem is not knowledge, it is the moment of choice. In that moment, the easy, fun option wins over the important one again and again. Deadlines help because they bring panic, and panic overrides the pull of distraction. But a lot of important work in life has no deadline at all, and that is where procrastination does the most damage.' },
+
+  // GitHub repos (needs GitHub connected on the test account).
+  { lane: 'developers', kind: 'repo', url: 'https://github.com/bigskysoftware/htmx', brand: 'htmx' },
+  { lane: 'developers', kind: 'repo', url: 'https://github.com/pocketbase/pocketbase', brand: 'PocketBase' },
+  { lane: 'vibe_coders', kind: 'repo', url: 'https://github.com/honojs/hono', brand: 'Hono' },
 ];
 
 // Bright Smile Dental is kept everywhere.
@@ -65,11 +84,11 @@ export async function previewReset() {
     );
     counts.push({ table, remove: r.rows[0].remove, keep: r.rows[0].keep });
   }
-  return { email: TEST_EMAIL, counts, seeds: SEEDS };
+  return { email: TEST_EMAIL, counts, seeds: SEEDS.map(({ content, ...s }) => s) };
 }
 
 // ─── Running a reset ──────────────────────────────────────────────────────────
-type SeedStatus = { url: string; brand: string; lane: string; status: 'waiting' | 'running' | 'done' | 'failed'; score?: number | null; error?: string };
+type SeedStatus = Seed & { status: 'waiting' | 'running' | 'done' | 'failed'; score?: number | null; error?: string };
 export const job: { running: boolean; startedAt: string | null; deleted: Record<string, number>; seeds: SeedStatus[] } = {
   running: false, startedAt: null, deleted: {}, seeds: [],
 };
@@ -102,7 +121,7 @@ export async function startReset(port: number | string): Promise<void> {
   job.running = true;
   job.startedAt = new Date().toISOString();
   job.deleted = deleted;
-  job.seeds = SEEDS.map(s => ({ ...s, status: 'waiting' }));
+  job.seeds = SEEDS.map(s => ({ ...s, status: 'waiting' as const }));
 
   // Seed in the background: a real URL Scanner analysis per site, through the
   // normal API as the test account, one at a time (gentle on the Gemini quota).
@@ -111,10 +130,15 @@ export async function startReset(port: number | string): Promise<void> {
       s.status = 'running';
       for (let attempt = 0; attempt < 3; attempt++) {
         try {
-          const res = await fetch(`http://127.0.0.1:${port}/api/url-scan`, {
+          const [path, body] = s.kind === 'content'
+            ? ['/api/analyze', { content: s.content, title: s.title, contentType: s.contentType, module: s.lane, brand: s.brand }]
+            : s.kind === 'repo'
+              ? ['/api/github/analyze', { repoUrl: s.url, module: s.lane }]
+              : ['/api/url-scan', { url: s.url, module: s.lane, brand: s.brand }];
+          const res = await fetch(`http://127.0.0.1:${port}${path}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}`, 'X-Rain-Lane': s.lane },
-            body: JSON.stringify({ url: s.url, module: s.lane, brand: s.brand }),
+            body: JSON.stringify(body),
           });
           const json: any = await res.json().catch(() => ({}));
           if (res.ok) { s.status = 'done'; s.score = json?.overallScore ?? json?.data?.overallScore ?? null; s.error = undefined; break; }
