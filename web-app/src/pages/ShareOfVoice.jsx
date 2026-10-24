@@ -3,11 +3,11 @@ import { engineName } from '../lib/engines.js';
 import { useState, useEffect, useMemo } from 'react';
 import CheckProgress from '../components/CheckProgress.jsx';
 import ImproveCta from '../components/ImproveCta.jsx';
-import SiteNote from '../components/SiteNote.jsx';
 import RecentPicker from '../components/RecentPicker.jsx';
 import { improveLink } from '../lib/improveLink.js';
 import { getMySite, setMySite } from '../lib/mySite.js';
 import { Link, useSearchParams } from 'react-router-dom';
+import SubjectPicker from '../components/SubjectPicker.jsx';
 import {
   BarChart2, Search, CheckCircle2, AlertCircle,
   Trash2,
@@ -144,6 +144,8 @@ export default function ShareOfVoice() {
   const { refreshUser } = useApp();
   const [name,  setName]    = useState('');
   const [brand, setBrand]   = useState('');
+  // The analyzed brand / website / content this check is for (SubjectPicker).
+  const [subject, setSubject] = useState(null);
   const [rivals, setRivals] = useState('');
   const [searchParams] = useSearchParams();
   const [topic, setTopic] = useState(() => searchParams.get('q') || '');
@@ -170,14 +172,14 @@ export default function ShareOfVoice() {
 
   async function handleCheck(e) {
     e.preventDefault();
-    if (!name.trim() || !brand.trim() || !topic.trim()) return;
+    if (!name.trim() || !subject || !brand.trim() || !topic.trim()) return;
     setLoading(true);
     setError('');
     setResult(null);
     setPlanGated(false);
     try {
       const { data } = await api.shareOfVoice({
-        name: name.trim(), brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined,
+        name: name.trim(), brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined, subject: subject.key,
         competitors: rivals.split(',').map(c => c.trim()).filter(Boolean).slice(0, 5),
         ...engineBody(eng),
       });
@@ -288,25 +290,24 @@ export default function ShareOfVoice() {
           {!result ? (
             <form onSubmit={handleCheck} className={styles.card}>
               <div className={styles.field}>
+                <SubjectPicker
+                  label="Checking for"
+                  initialKey={searchParams.get('subject') || undefined}
+                  onChange={sub => { setSubject(sub); setBrand(sub?.name || ''); setUrl(sub?.website || ''); }}
+                  note={subject ? `AI answers are searched for “${subject.name}”${subject.website ? ` and ${subject.website}` : ''}.` : undefined}
+                />
+              </div>
+              <div className={styles.field}>
                 <label className={styles.label}>Analysis name</label>
                 <input className={styles.input} type="text" value={name} onChange={e => setName(e.target.value)}
                   placeholder="e.g. Acme Roofing SOV check" maxLength={120} required />
                 <div className={styles.hint}>Required — so you can find this check again later.</div>
               </div>
-              <div className={styles.formGrid2}>
-                <div>
-                  <label className={styles.label}>Your brand or product</label>
-                  <input className={styles.input} type="text" value={brand} onChange={e => setBrand(e.target.value)}
-                    placeholder="e.g. rain OS" maxLength={200} required />
-                  <div className={styles.hint}>Use your name as people write it publicly.</div>
-                  <RecentPicker mode="brand" onPick={setBrand} />
-                </div>
-                <div>
-                  <label className={styles.label}>Question to check</label>
-                  <input className={styles.input} type="text" value={topic} onChange={e => setTopic(e.target.value)}
-                    placeholder="e.g. AI content optimization tools" maxLength={300} required />
-                  <RecentPicker mode="question" onPick={setTopic} />
-                </div>
+              <div className={styles.field}>
+                <label className={styles.label}>Question to check</label>
+                <input className={styles.input} type="text" value={topic} onChange={e => setTopic(e.target.value)}
+                  placeholder="e.g. AI content optimization tools" maxLength={300} required />
+                <RecentPicker mode="question" onPick={setTopic} />
               </div>
               <div className={styles.field}>
                 <label className={styles.label}>Competitors <span className={styles.optionalHint}>(optional — up to 5, separated by commas)</span></label>
@@ -314,14 +315,6 @@ export default function ShareOfVoice() {
                   placeholder="e.g. Profound, Peec AI, Semrush" maxLength={400} />
                 <div className={styles.hint}>Leave blank and we'll use the brands the AI answers actually recommend.</div>
               </div>
-              <div className={styles.field}>
-                <label className={styles.label}>Your website URL <span className={styles.optionalHint}>(optional — used to check if your domain is in cited sources)</span></label>
-                <input className={styles.input} type="text" value={url} onChange={e => setUrl(e.target.value)}
-                  placeholder="https://yourdomain.com" />
-                <RecentPicker mode="site" onPick={setUrl} />
-                <SiteNote url={url} blankText="Add your website to see your share of the sources AI cites. Without it we can still tell whether AI names your brand." />
-              </div>
-
               <div className={styles.field}>
                 <EnginePicker value={eng} onChange={setEng} labelClass={styles.label} hintClass={styles.hint} />
               </div>

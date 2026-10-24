@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import SubjectPicker from '../components/SubjectPicker.jsx';
 import { ArrowRight, Check, ScanSearch } from 'lucide-react';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
@@ -11,8 +12,6 @@ import { improveLink } from '../lib/improveLink.js';
 import { getMySite, setMySite } from '../lib/mySite.js';
 import { PLANS, SOV_COST, costOf, siteFromUrl, guessBrand } from '../lib/fullCheck.js';
 import { isSharedPlatform } from '../lib/sharedPlatforms.js';
-import SiteNote from '../components/SiteNote.jsx';
-import RecentPicker from '../components/RecentPicker.jsx';
 import styles from './FullCheck.module.css';
 
 const MODULE_LANES = ['product_sellers', 'developers', 'local_business', 'vibe_coders'];
@@ -25,6 +24,8 @@ export default function FullCheck() {
   const [searchParams] = useSearchParams();
   const [url, setUrl] = useState(() => searchParams.get('url') || getMySite());
   const [brand, setBrand] = useState(() => searchParams.get('brand') || '');
+  // The analyzed website this full check is for (SubjectPicker).
+  const [subject, setSubject] = useState(null);
   const [plan, setPlan] = useState('full');
   const [suggestions, setSuggestions] = useState([]);
   const [picked, setPicked] = useState([]);
@@ -43,7 +44,7 @@ export default function FullCheck() {
 
   async function findQuestions(e) {
     e.preventDefault();
-    if (!domain) { setError('Enter your website, like yourdomain.com.'); return; }
+    if (!domain) { setError('Choose a website you have analyzed. A full check scans your site, so content without a website can’t be used here.'); return; }
     if (isSharedPlatform(domain)) {
       setError(`That’s a page on ${domain}, which many businesses share, so we can’t tell whether a cited page is yours. Use your own website, or run Brand Sentiment to see whether AI names your business.`);
       return;
@@ -113,14 +114,14 @@ export default function FullCheck() {
 
     // 1) Page scan.
     const lane = MODULE_LANES.includes(userLane) ? userLane : 'general';
-    out.scanError = await attempt(0, async () => (await api.scanUrl(target, { module: lane })).data, d => { out.scan = d; });
+    out.scanError = await attempt(0, async () => (await api.scanUrl(target, { module: lane, brand: brandName })).data, d => { out.scan = d; });
 
     // 2) Questions, in parallel.
     await Promise.all(questions.map(async (q, i) => {
       const item = { question: q, result: null, error: null };
       out.questions[i] = item;
       item.error = await attempt(1 + i,
-        async () => (await api.citationCheck({ name: q.slice(0, 80), topic: q, url: target })).data,
+        async () => (await api.citationCheck({ name: q.slice(0, 80), topic: q, url: target, subject: subject?.key })).data,
         d => { item.result = d; });
     }));
 
@@ -129,11 +130,11 @@ export default function FullCheck() {
     const base = 1 + questions.length;
     await Promise.all([
       full ? attempt(base, async () => {
-        const { data } = await api.shareOfVoice({ name: `${brandName} full check`, brand: brandName, topic, url: target });
+        const { data } = await api.shareOfVoice({ name: `${brandName} full check`, brand: brandName, topic, url: target, subject: subject?.key });
         return data?.data ?? data;
       }, d => { out.sov = d; }, SOV_COST).then(e => { out.sovError = e; }) : null,
       attempt(base + (full ? 1 : 0), async () => {
-        const { data } = await api.brandVisibility({ name: `${brandName} full check`, brand: brandName, topic, url: target });
+        const { data } = await api.brandVisibility({ name: `${brandName} full check`, brand: brandName, topic, url: target, subject: subject?.key });
         return data.data || data;
       }, d => { out.bv = d; }).then(e => { out.bvError = e; }),
     ]);
@@ -152,7 +153,7 @@ export default function FullCheck() {
     <div className={`${styles.page} fade-in`}>
       <PageHeader
         title="Full check"
-        subtitle="Enter your website and we run the page scan and the AI visibility checks together, then show one report."
+        subtitle="Choose a website you have analyzed and we run the page scan and the AI visibility checks together, then show one report."
         about={[
           { heading: 'What runs', body: 'A scan of your page, then Citation Monitor on the questions your customers ask, plus Brand Sentiment, and on Full also Share of Voice. Each result is saved, so it shows up in the dashboard under your site.' },
           { heading: 'What it costs', body: 'Each tool run uses one analysis, the same as running it yourself, except Share of Voice, which asks the AI 3 questions and uses 3. You see the total before anything runs. Suggesting questions is free.' },
@@ -161,17 +162,12 @@ export default function FullCheck() {
 
       {phase === 'setup' && (
         <form onSubmit={findQuestions} className={`card ${styles.form}`}>
-          <label className={styles.label} htmlFor="fc-url">Your website</label>
-          <input id="fc-url" className={styles.input} type="text" inputMode="url" spellCheck={false}
-            placeholder="yourdomain.com" value={url} onChange={e => setUrl(e.target.value)} />
-          <RecentPicker mode="site" onPick={setUrl} />
-          <SiteNote url={url} />
-
-          <label className={styles.label} htmlFor="fc-brand">Your business or brand name <span className={styles.opt}>Optional</span></label>
-          <input id="fc-brand" className={styles.input} type="text" maxLength={120}
-            placeholder={domain ? guessBrand(domain) : 'e.g. Acme Bakery'} value={brand} onChange={e => setBrand(e.target.value)} />
-          <RecentPicker mode="brand" onPick={setBrand} />
-          <p className={styles.hint}>As people write it publicly. We use it to see whether AI names you.</p>
+          <SubjectPicker
+            label="Checking for"
+            initialKey={searchParams.get('subject') || undefined}
+            onChange={sub => { setSubject(sub); setUrl(sub?.website || ''); setBrand(sub?.brand || ''); setError(''); }}
+            note={subject && !subject.website ? 'A full check scans your website, so choose a website (or analyze one first).' : undefined}
+          />
 
           <div className={styles.label}>How thorough</div>
           <SubTabs label="Version" value={plan} onChange={changePlan}

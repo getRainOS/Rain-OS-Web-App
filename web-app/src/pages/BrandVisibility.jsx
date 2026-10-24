@@ -3,11 +3,11 @@ import { engineName } from '../lib/engines.js';
 import { useState, useEffect, useMemo } from 'react';
 import CheckProgress from '../components/CheckProgress.jsx';
 import ImproveCta from '../components/ImproveCta.jsx';
-import SiteNote from '../components/SiteNote.jsx';
 import RecentPicker from '../components/RecentPicker.jsx';
 import { improveLink } from '../lib/improveLink.js';
 import { getMySite, setMySite } from '../lib/mySite.js';
 import { Link, useSearchParams } from 'react-router-dom';
+import SubjectPicker from '../components/SubjectPicker.jsx';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import PageHeader from '../components/PageHeader.jsx';
@@ -96,6 +96,8 @@ export default function BrandVisibility() {
   const { refreshUser } = useApp();
   const [name, setName] = useState('');
   const [brand, setBrand] = useState('');
+  // The analyzed brand / website / content this check is for (SubjectPicker).
+  const [subject, setSubject] = useState(null);
   const [searchParams] = useSearchParams();
   const [topic, setTopic] = useState(() => searchParams.get('q') || '');
   const [url, setUrl] = useState(() => searchParams.get('url') || getMySite());
@@ -122,13 +124,13 @@ export default function BrandVisibility() {
 
   async function handleCheck(e) {
     e.preventDefault();
-    if (!name.trim() || !brand.trim() || !topic.trim()) return;
+    if (!name.trim() || !subject || !brand.trim() || !topic.trim()) return;
     setLoading(true);
     setError('');
     setPlanGated(false);
     setResult(null);
     try {
-      const { data } = await api.brandVisibility({ name: name.trim(), brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined, ...engineBody(eng) });
+      const { data } = await api.brandVisibility({ name: name.trim(), brand: brand.trim(), topic: topic.trim(), url: url.trim() || undefined, subject: subject.key, ...engineBody(eng) });
       setResult(data.data || data);
       setMySite(url);
       setResultTab('summary');
@@ -234,6 +236,14 @@ export default function BrandVisibility() {
       <div className={styles.card}>
         <form onSubmit={handleCheck}>
           <div className={styles.field}>
+            <SubjectPicker
+              label="Checking for"
+              initialKey={searchParams.get('subject') || undefined}
+              onChange={sub => { setSubject(sub); setBrand(sub?.name || ''); setUrl(sub?.website || ''); }}
+              note={subject ? `AI answers are searched for “${subject.name}”${subject.website ? ` and ${subject.website}` : ''}.` : undefined}
+            />
+          </div>
+          <div className={styles.field}>
             <label className={styles.label}>Analysis name</label>
             <input
               className={styles.input}
@@ -245,47 +255,17 @@ export default function BrandVisibility() {
             />
             <div className={styles.hint}>Required — so you can find this check again later.</div>
           </div>
-          <div className={styles.formGrid2}>
-            <div>
-              <label className={styles.label}>Your brand or product</label>
-              <input
-                className={styles.input}
-                value={brand}
-                onChange={e => setBrand(e.target.value)}
-                placeholder="e.g. rain OS, Acme Widgets"
-                required
-                maxLength={200}
-              />
-              <div className={styles.hint}>Use your name as people write it publicly.</div>
-              <RecentPicker mode="brand" onPick={setBrand} />
-            </div>
-            <div>
-              <label className={styles.label}>Question to check</label>
-              <input
-                className={styles.input}
-                value={topic}
-                onChange={e => setTopic(e.target.value)}
-                placeholder="e.g. AI content optimization tools"
-                required
-                maxLength={300}
-              />
-              <RecentPicker mode="question" onPick={setTopic} />
-            </div>
-          </div>
           <div className={styles.field}>
-            <label className={styles.label}>Your website URL <span className={styles.optionalHint}>(optional)</span></label>
+            <label className={styles.label}>Question to check</label>
             <input
               className={styles.input}
-              value={url}
-              onChange={e => setUrl(e.target.value)}
-              placeholder="https://yourdomain.com"
-              type="text"
-              inputMode="url"
-              autoComplete="url"
-              spellCheck={false}
+              value={topic}
+              onChange={e => setTopic(e.target.value)}
+              placeholder="e.g. AI content optimization tools"
+              required
+              maxLength={300}
             />
-            <RecentPicker mode="site" onPick={setUrl} />
-            <SiteNote url={url} blankText="Add your website to see whether your site is cited. Without it we can still tell whether AI names your brand." />
+            <RecentPicker mode="question" onPick={setTopic} />
           </div>
           <div className={styles.field}>
             <EnginePicker value={eng} onChange={setEng} labelClass={styles.label} hintClass={styles.hint} />
