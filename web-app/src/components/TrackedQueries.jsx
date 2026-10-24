@@ -71,10 +71,11 @@ export function TrackWeeklyButton({ tracking, result }) {
       </span>
     );
   }
-  if (!trackableSite(result.url)) {
+  // A brand name is enough (weekly checks then track whether AI names it).
+  if (!trackableSite(result.url) && !result.brand) {
     return (
       <span className={styles.trackMsg}>
-        Weekly tracking needs your own website. Add one above and run the check again.
+        Weekly tracking needs a brand name or your own website. Add a brand name to this content in Content Optimizer.
       </span>
     );
   }
@@ -88,6 +89,9 @@ export function TrackWeeklyButton({ tracking, result }) {
         url: result.url,
         lastCited: !!result.cited,
         checkId: result.checkId || undefined,
+        // With a brand, weekly checks also record whether AI names it (works without a website).
+        brand: result.brand || undefined,
+        subject: result.subject || undefined,
         ...(result.country ? { country: result.country, state: result.state ?? null } : {}),
       });
     } catch (err) {
@@ -116,7 +120,7 @@ function statusFor(item) {
   if (item.pausedReason === 'failures') return { label: 'Paused after errors', tone: 'warn' };
   if (item.pausedReason === 'plan_limit') return { label: 'Over plan limit', tone: 'warn' };
   if (item.pausedReason === 'user') return { label: 'Paused', tone: 'muted' };
-  if (item.pausedReason === 'no_site') return { label: 'Needs your website', tone: 'warn' };
+  if (item.pausedReason === 'no_site') return { label: 'Needs a brand or website', tone: 'warn' };
   if (item.pendingCited !== null && item.pendingCited !== undefined) {
     return { label: item.pendingCited ? 'Cited? confirming' : 'Not cited? confirming', tone: 'warn' };
   }
@@ -192,18 +196,23 @@ export default function TrackedQueriesPanel({ tracking }) {
                   {item.locationCountry && (
                     <span className={styles.rowTopic}>Checked from {locationLabel(item.locationCountry, item.locationState)}</span>
                   )}
-                  {item.engineLatest?.length > 0 && (
-                    <span className={styles.rowTopic}>
-                      Gemini: {status.label.toLowerCase()}
-                      {item.engineLatest.map(l => ` · ${ENGINE_NAMES[l.engine] || l.engine}: ${l.cited ? 'cited' : 'not cited'}`).join('')}
-                    </span>
-                  )}
+                  {(item.engineLatest?.length > 0 || item.brand) && (() => {
+                    // Per engine: named in the answer (when a brand is tracked) and cited.
+                    const named = m => (m == null ? '' : m ? 'named, ' : 'not named, ');
+                    const lastGemini = item.history?.[item.history.length - 1];
+                    return (
+                      <span className={styles.rowTopic}>
+                        Gemini: {named(lastGemini?.mentioned)}{status.label.toLowerCase()}
+                        {(item.engineLatest || []).map(l => ` · ${ENGINE_NAMES[l.engine] || l.engine}: ${named(l.mentioned)}${l.cited ? 'cited' : 'not cited'}`).join('')}
+                      </span>
+                    );
+                  })()}
                 </div>
                 <span className={`${styles.status} ${styles[status.tone]}`}>{status.label}</span>
                 <History history={item.history} />
                 <span className={styles.next}>
                   {item.pausedReason === 'no_site'
-                    ? 'Add a website to resume'
+                    ? 'Add a brand name or website to resume'
                     : paused ? '—'
                     : `Next check ${formatDate(item.nextRunAt)}${item.lastCited === null ? ' (sets baseline)' : item.pendingCited !== null && item.pendingCited !== undefined ? ' (confirms change)' : ''}`}
                 </span>

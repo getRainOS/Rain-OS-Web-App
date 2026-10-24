@@ -1,24 +1,12 @@
 // services/trackedQueryService.ts — tracked queries for weekly citation re-checks.
 import { pool } from './db';
 import { normaliseTopicKey } from './dbService';
-import { extractDomain } from './citationCheckService';
-import { matchableDomain } from './sharedPlatforms';
 import type { User } from '../types';
 
 import { planTrackingCap, PRO_TRACKING_CAP, BUSINESS_TRACKING_CAP } from './planLimits';
 export { planTrackingCap, PRO_TRACKING_CAP, BUSINESS_TRACKING_CAP };
-// True when the URL points at a site we can match cited sources against.
-export function hasMatchableSite(url: string | null | undefined): boolean {
-  if (!url) return false;
-  try {
-    return !!matchableDomain(extractDomain(url));
-  } catch {
-    return false;
-  }
-}
-
-export const NO_SITE_MESSAGE =
-  'Add your own website to track this question. Without one we cannot tell whether you were cited, and social or review pages are shared with other businesses.';
+import { hasMatchableSite, canTrack, NO_SITE_MESSAGE } from './trackability';
+export { hasMatchableSite, canTrack, NO_SITE_MESSAGE };
 
 export const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 export const MAX_JITTER_MS = 6 * 60 * 60 * 1000;
@@ -38,10 +26,12 @@ export interface TrackedQuery {
   consecutiveFailures: number;
   pausedReason: PausedReason | null;
   createdAt: string;
-  engineLatest: Array<{ engine: string; cited: boolean; checkedAt: string }>;
+  engineLatest: Array<{ engine: string; cited: boolean; mentioned?: boolean | null; checkedAt: string }>;
+  brand?: string | null;    // looked for in each answer (Mentioned)
+  subject?: string | null;  // the analyzed subject it was tracked from
   locationCountry: string | null;
   locationState: string | null;
-  history: Array<{ cited: boolean; checkedAt: string }>;
+  history: Array<{ cited: boolean; mentioned?: boolean | null; checkedAt: string }>;
 }
 
 export class TrackingError extends Error {
@@ -66,11 +56,13 @@ const mapRow = (row: any): TrackedQuery => ({
   createdAt: iso(row.created_at) as string,
   locationCountry: row.location_country ?? null,
   locationState: row.location_state ?? null,
+  brand: row.brand ?? null,
+  subject: row.subject ?? null,
   engineLatest: Array.isArray(row.engine_latest)
-    ? row.engine_latest.map((l: any) => ({ engine: l.engine, cited: !!l.cited, checkedAt: iso(l.checked_at) as string }))
+    ? row.engine_latest.map((l: any) => ({ engine: l.engine, cited: !!l.cited, mentioned: typeof l.mentioned === 'boolean' ? l.mentioned : null, checkedAt: iso(l.checked_at) as string }))
     : [],
   history: Array.isArray(row.history)
-    ? row.history.map((h: any) => ({ cited: !!h.cited, checkedAt: iso(h.checked_at) as string }))
+    ? row.history.map((h: any) => ({ cited: !!h.cited, mentioned: typeof h.mentioned === 'boolean' ? h.mentioned : null, checkedAt: iso(h.checked_at) as string }))
     : [],
 });
 
@@ -116,14 +108,14 @@ export async function listTrackedQueries(userId: string): Promise<TrackedQuery[]
     `SELECT t.*,
        COALESCE((
          SELECT json_agg(h ORDER BY h.checked_at ASC) FROM (
-           SELECT cited, checked_at FROM citation_checks
+           SELECT cited, mentioned, checked_at FROM citation_checks
            WHERE tracked_query_id = t.id AND engine = 'gemini'
            ORDER BY checked_at DESC LIMIT 12
          ) h
        ), '[]'::json) AS history,
        COALESCE((
-         SELECT json_agg(json_build_object('engine', l.engine, 'cited', l.cited, 'checked_at', l.checked_at)) FROM (
-           SELECT DISTINCT ON (engine) engine, cited, checked_at FROM citation_checks
+         SELECT json_agg(json_build_object('engine', l.engine, 'cited', l.cited, 'mentioned', l.mentioned, 'checked_at', l.checked_at)) FROM (
+           SELECT DISTINCT ON (engine) engine, cited, mentioned, checked_at FROM citation_checks
            WHERE tracked_query_id = t.id AND engine <> 'gemini'
            ORDER BY engine, checked_at DESC
          ) l
@@ -138,11 +130,11 @@ export async function listTrackedQueries(userId: string): Promise<TrackedQuery[]
 
 export async function createTrackedQuery(
   user: User,
-  data: { name: string; topic: string; url: string | null; lastCited?: boolean | null; checkId?: number | null; country?: string | null; state?: string | null }
+  data: { name: string; topic: string; url: string | null; lastCited?: boolean | null; checkId?: number | null; country?: string | null; state?: string | null; brand?: string | null; subject?: string | null }
 ): Promise<TrackedQuery> {
   const cap = planTrackingCap(user);
   if (cap === 0) throw new TrackingError('plan_required', 'Weekly tracking is available on Pro and Business plans.');
-  if (!hasMatchableSite(data.url)) throw new TrackingError('no_site', NO_SITE_MESSAGE);
+  if (!canTrack(data.url, data.brand)) throw new TrackingError('no_site', NO_SITE_MESSAGE);
 
   const countRes = await pool.query(
     `SELECT COUNT(*)::int AS n FROM tracked_queries WHERE user_id = $1 AND paused_reason IS DISTINCT FROM 'plan_limit'`,
@@ -153,12 +145,12 @@ export async function createTrackedQuery(
   }
 
   const res = await pool.query(
-    `INSERT INTO tracked_queries (user_id, name, topic, topic_key, url, next_run_at, last_cited, last_run_at, location_country, location_state)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, CASE WHEN $7::boolean IS NULL THEN NULL ELSE NOW() END, $8, $9)
+    `INSERT INTO tracked_queries (user_id, name, topic, topic_key, url, next_run_at, last_cited, last_run_at, location_country, location_state, brand, subject)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, CASE WHEN $7::boolean IS NULL THEN NULL ELSE NOW() END, $8, $9, $10, $11)
      ON CONFLICT (user_id, topic_key) DO NOTHING
      RETURNING *`,
     [user.id, data.name, data.topic, normaliseTopicKey(data.topic), data.url, firstRunAt(), data.lastCited ?? null,
-     data.country ?? null, data.country ? data.state ?? null : null]
+     data.country ?? null, data.country ? data.state ?? null : null, data.brand ?? null, data.subject ?? null]
   );
   if (!res.rows[0]) throw new TrackingError('duplicate', 'You are already tracking this question.');
 
@@ -181,9 +173,9 @@ export async function setTrackedQueryPaused(user: User, id: number, paused: bool
     return;
   }
   const cap = planTrackingCap(user);
-  const own = await pool.query(`SELECT url FROM tracked_queries WHERE id = $1 AND user_id = $2`, [id, user.id]);
+  const own = await pool.query(`SELECT url, brand FROM tracked_queries WHERE id = $1 AND user_id = $2`, [id, user.id]);
   if (!own.rows[0]) throw new TrackingError('not_found', 'Tracked query not found.');
-  if (!hasMatchableSite(own.rows[0].url)) throw new TrackingError('no_site', NO_SITE_MESSAGE);
+  if (!canTrack(own.rows[0].url, own.rows[0].brand)) throw new TrackingError('no_site', NO_SITE_MESSAGE);
   const active = await pool.query(
     `SELECT COUNT(*)::int AS n FROM tracked_queries WHERE user_id = $1 AND paused_reason IS NULL AND id <> $2`,
     [user.id, id]

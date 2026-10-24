@@ -75,7 +75,10 @@ export async function createHandler(req: express.Request, res: express.Response)
   if (typeof topic !== 'string' || topic.trim().length < 3 || topic.length > 500) {
     return res.status(400).json({ error: 'bad_request', message: 'topic is required (3 to 500 characters)' } as ApiError);
   }
-  if (typeof url !== 'string' || !url.trim()) {
+  const brand = typeof req.body?.brand === 'string' ? req.body.brand.trim().slice(0, 120) || null : null;
+  const subject = typeof req.body?.subject === 'string' ? req.body.subject.trim().slice(0, 300) || null : null;
+  // A brand name alone is enough: weekly checks then track whether AI names it.
+  if ((typeof url !== 'string' || !url.trim()) && !brand) {
     return res.status(400).json({ error: 'no_site', message: NO_SITE_MESSAGE } as ApiError);
   }
   let normalisedUrl: string | null = null;
@@ -96,6 +99,7 @@ export async function createHandler(req: express.Request, res: express.Response)
       url: normalisedUrl,
       lastCited: typeof lastCited === 'boolean' ? lastCited : null,
       checkId: typeof checkId === 'number' && checkId > 0 ? checkId : null,
+      brand, subject,
       ...(typeof req.body?.country === 'string' ? normaliseLocation(req.body.country, req.body.state ?? null) : {}),
     });
     return res.status(201).json({ success: true, item });
