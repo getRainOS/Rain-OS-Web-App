@@ -149,7 +149,8 @@ export default function Layout({ children }) {
 
   const remaining = usage ? Math.max(0, usage.limit - usage.count) : null;
   const pct = usage ? Math.round((usage.count / usage.limit) * 100) : 0;
-  const tier = (user?.subscriptionStatus === 'active' && user?.stripePriceId)
+  // rain OS staff get a staff allowance, not a paid plan.
+  const tier = user?.isAdmin ? 'Staff' : (user?.subscriptionStatus === 'active' && user?.stripePriceId)
     ? (PRICE_TO_PLAN[user.stripePriceId] ?? 'Pro')
     : 'Free';
   const isFree = tier === 'Free';
@@ -297,7 +298,7 @@ export default function Layout({ children }) {
               <div className={styles.avatar}>{(user?.email?.[0] || '?').toUpperCase()}</div>
               <div className={styles.userInfo}>
                 <span className={styles.userEmail}>{user?.email || 'Account'}</span>
-                <span className={styles.userTier}>{tier} plan</span>
+                <span className={styles.userTier}>{tier === 'Staff' ? 'Staff' : `${tier} plan`}</span>
               </div>
               <ChevronsUpDown className={styles.accountChevron} />
             </button>
