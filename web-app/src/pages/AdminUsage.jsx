@@ -104,6 +104,13 @@ function TestAccountReset() {
     finally { setBusy(false); }
   };
 
+  const retry = async () => {
+    setBusy(true); setError('');
+    try { await api.retryTestAccount(); await load(); }
+    catch (err) { setError(err.message || 'Could not start the retry.'); }
+    finally { setBusy(false); }
+  };
+
   const job = info?.job;
   const seeds = job?.seeds?.length ? job.seeds : info?.preview?.seeds || [];
   return (
@@ -130,6 +137,9 @@ function TestAccountReset() {
             <input className="input" style={{ maxWidth: 320 }} placeholder={`Type ${TEST_EMAIL} to confirm`} value={confirm} onChange={e => setConfirm(e.target.value)} disabled={job?.running} />
             <button type="button" className="btn btn-primary" disabled={busy || job?.running || confirm.trim() !== TEST_EMAIL} onClick={start}>
               {job?.running ? 'Seeding…' : 'Clean & seed'}
+            </button>
+            <button type="button" className="btn btn-secondary" disabled={busy || job?.running} onClick={retry} title="Runs only the ones without an analysis. Nothing is deleted.">
+              Retry failed
             </button>
           </div>
         </>

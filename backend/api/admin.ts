@@ -40,7 +40,7 @@ export async function groundingUsageHandler(req: express.Request, res: express.R
 }
 
 // ─── Test account reset (staff only; acts on the staff account only) ───────
-import { previewReset, startReset, job as resetJob, TEST_EMAIL } from '../services/testAccountSeed';
+import { previewReset, startReset, startRetry, job as resetJob, TEST_EMAIL } from '../services/testAccountSeed';
 
 async function staff(req: express.Request, res: express.Response) {
   const h = req.headers.authorization;
@@ -72,5 +72,16 @@ export async function testAccountResetHandler(req: express.Request, res: express
     return res.status(202).json({ success: true, job: resetJob });
   } catch (err: any) {
     return res.status(400).json({ error: 'bad_request', message: err?.message || 'Could not start the reset.' } as ApiError);
+  }
+}
+
+// POST: rerun only the seeds that have no analysis yet (nothing is deleted).
+export async function testAccountRetryHandler(req: express.Request, res: express.Response) {
+  if (!(await staff(req, res))) return;
+  try {
+    const missing = await startRetry(process.env.PORT || 3001);
+    return res.status(202).json({ success: true, missing, job: resetJob });
+  } catch (err: any) {
+    return res.status(400).json({ error: 'bad_request', message: err?.message || 'Could not start the retry.' } as ApiError);
   }
 }
