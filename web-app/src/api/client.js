@@ -98,6 +98,7 @@ export const api = {
   contentIdeas: (body) => request('POST', '/api/content-ideas', body),
   groundingUsage: () => request('GET', '/api/admin/grounding-usage'),
   testAccount: () => request('GET', '/api/admin/test-account'),
+  retryTestAccount: () => request('POST', '/api/admin/test-account/retry'),
   resetTestAccount: confirm => request('POST', '/api/admin/test-account/reset', { confirm }),
   interviewQuestions: (body) => request('POST', '/api/interview/questions', body),
   interviewDraft: (body) => request('POST', '/api/interview/draft', body),

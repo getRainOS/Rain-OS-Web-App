@@ -127,17 +127,46 @@ export async function startReset(port: number | string): Promise<void> {
     client.release();
   }
 
+  job.deleted = deleted;
+  runSeeds(SEEDS.map(s => ({ ...s, status: 'waiting' as const })), apiKey, port);
+}
+
+// Does this account already have an analysis for the seed?
+const seedPresent = (s: Seed, rows: Array<{ url: string | null; title: string | null; repo: string | null }>) => {
+  const k = s.url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '').toLowerCase();
+  if (s.kind === 'content') return rows.some(r => !r.url && !r.repo && r.title === s.title);
+  if (s.kind === 'repo') return rows.some(r => (r.repo || '').toLowerCase().includes(k.replace(/^github\.com\//, '')));
+  return rows.some(r => !r.repo && (r.url || '').toLowerCase().includes(k));
+};
+
+// Runs only the seeds that are missing (failed or never run), without
+// deleting anything, so a busy AI provider doesn't cost the ones that worked.
+export async function startRetry(port: number | string): Promise<number> {
+  if (job.running) throw new Error('A reset is already running.');
+  const user = await testUser();
+  const apiKey = (user as any).apiKey as string | undefined;
+  if (!apiKey) throw new Error('Could not read the test account key.');
+  const { rows } = await pool.query(`SELECT url, title, repo, overall_score FROM content_analyses WHERE user_id = $1`, [user.id]);
+  const seeds: SeedStatus[] = SEEDS.map(s => seedPresent(s, rows) ? { ...s, status: 'done' as const } : { ...s, status: 'waiting' as const });
+  const missing = seeds.filter(s => s.status === 'waiting').length;
+  if (!missing) throw new Error('Every seed already has an analysis.');
+  job.deleted = {};
+  runSeeds(seeds, apiKey, port);
+  return missing;
+}
+
+function runSeeds(seeds: SeedStatus[], apiKey: string, port: number | string) {
   job.running = true;
   job.startedAt = new Date().toISOString();
-  job.deleted = deleted;
-  job.seeds = SEEDS.map(s => ({ ...s, status: 'waiting' as const }));
+  job.seeds = seeds;
 
   // Seed in the background: a real URL Scanner analysis per site, through the
   // normal API as the test account, one at a time (gentle on the Gemini quota).
   (async () => {
     for (const s of job.seeds) {
+      if (s.status !== 'waiting') continue;
       s.status = 'running';
-      for (let attempt = 0; attempt < 3; attempt++) {
+      for (let attempt = 0; attempt < 5; attempt++) {
         try {
           const [path, body] = s.kind === 'content'
             ? ['/api/analyze', { content: s.content, title: s.title, contentType: s.contentType, module: s.lane, brand: s.brand, state: s.state }]
@@ -154,14 +183,14 @@ export async function startReset(port: number | string): Promise<void> {
           s.status = 'failed';
           s.error = json?.message || `HTTP ${res.status}`;
           if (res.status !== 429 && res.status < 500) break; // not worth retrying
-          await wait(30000 * (attempt + 1));
+          await wait(60000 * (attempt + 1)); // the AI provider is busy: back off longer each time
         } catch (err: any) {
           s.status = 'failed';
           s.error = err?.message || 'Request failed';
           await wait(15000);
         }
       }
-      await wait(8000);
+      await wait(12000);
     }
     job.running = false;
   })().catch(() => { job.running = false; });

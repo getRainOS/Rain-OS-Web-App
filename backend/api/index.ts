@@ -63,7 +63,7 @@ import {
 import { startScheduler } from '../services/schedulerService';
 import promptSuggestionsHandler from './prompt-suggestions';
 import contentIdeasHandler from './content-ideas';
-import { groundingUsageHandler, testAccountStatusHandler, testAccountResetHandler } from './admin';
+import { groundingUsageHandler, testAccountStatusHandler, testAccountResetHandler, testAccountRetryHandler } from './admin';
 import { questionsHandler as interviewQuestionsHandler, draftHandler as interviewDraftHandler } from './interview';
 import { listHandler as brandLinksListHandler, saveHandler as brandLinksSaveHandler, deleteHandler as brandLinksDeleteHandler } from './brand-links';
 import { optionsHandler as topicOptionsHandler, questionsHandler as topicQuestionsHandler } from './topic';
@@ -162,6 +162,7 @@ app.post('/api/content-ideas', contentIdeasHandler);
 app.get('/api/admin/grounding-usage', groundingUsageHandler);
 app.get('/api/admin/test-account', testAccountStatusHandler);
 app.post('/api/admin/test-account/reset', testAccountResetHandler);
+app.post('/api/admin/test-account/retry', testAccountRetryHandler);
 app.post('/api/interview/questions', interviewQuestionsHandler);
 app.post('/api/interview/draft', interviewDraftHandler);
 app.get('/api/brand-links', brandLinksListHandler);
