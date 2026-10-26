@@ -69,7 +69,7 @@ export default function Settings() {
   }, [location.search]);
 
   const apiKey = getApiKey();
-  const plan = user?.subscriptionStatus === 'active' && user?.stripePriceId
+  const plan = user?.isAdmin ? 'Staff' : user?.subscriptionStatus === 'active' && user?.stripePriceId
     ? (PRICE_TO_PLAN[user.stripePriceId] ?? 'Pro')
     : 'Free';
   const usageCount = user?.usage?.count ?? 0;
