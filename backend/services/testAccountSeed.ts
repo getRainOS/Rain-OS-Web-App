@@ -36,7 +36,7 @@ export const SEEDS: Seed[] = [
   { lane: 'vibe_coders', url: 'https://carrd.co', brand: 'Carrd' },
   // Developers: indie open-source projects and their docs
   { lane: 'developers', url: 'https://htmx.org/docs/', brand: 'htmx' },
-  { lane: 'developers', url: 'https://hono.dev/docs/', brand: 'Hono' },
+  { lane: 'developers', url: 'https://alpinejs.dev/start-here', brand: 'Alpine.js' },
   { lane: 'developers', url: 'https://pocketbase.io/docs/', brand: 'PocketBase' },
   // Writers & Marketers: independent publications and blogs
   { lane: 'general', url: 'https://longreads.com', brand: 'Longreads' },
