@@ -731,14 +731,6 @@ button.emptyLink {
   border-radius: 8px;
 }
 
-.sampleBackdrop {
-  position: absolute;
-  inset: 0;
-  opacity: 0.25;
-  filter: blur(1.5px) saturate(0.7);
-  pointer-events: none;
-}
-
 .emptyStateOverlay {
   position: absolute;
   inset: 0;
