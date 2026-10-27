@@ -273,3 +273,9 @@ input, textarea, select {
   .printArea, .printArea * { visibility: visible; }
   .printArea { position: absolute; left: 0; top: 0; width: 100%; padding: 0 !important; border-radius: 0 !important; }
 }
+
+/* The rain OS logo lockup: mark plus wordmark, sized by --logo-size. */
+.rainLogo { display: inline-flex; align-items: center; gap: calc(var(--logo-size, 22px) * 0.4); color: var(--text); }
+.rainLogoMark { width: var(--logo-size, 22px); height: var(--logo-size, 22px); flex: none; }
+.rainLogoWord { font-size: var(--logo-size, 22px); font-weight: 650; letter-spacing: -0.03em; line-height: 1; }
+.rainLogoOs { font-weight: 500; color: var(--text-muted, var(--text)); }
