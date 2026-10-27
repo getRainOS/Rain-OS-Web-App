@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Sparkles, ArrowRight, CalendarClock, Check } from 'lucide-react';
 import { api } from '../api/client.js';
 import CheckProgress from './CheckProgress.jsx';
-import { getMySite } from '../lib/mySite.js';
+import { getSubjectKey } from '../lib/subjects.js';
 import { trackableSite } from './TrackedQueries.jsx';
 import styles from './PromptSuggestions.module.css';
 
@@ -11,7 +11,9 @@ const INTENT_LABEL = { discover: 'Discover', compare: 'Compare', decide: 'Decide
 // lockSite: the website comes from the chosen subject (Citation Monitor), so
 // there's no box to type a different one.
 export default function PromptSuggestions({ url, lane, tracking, onUse, renderUse, title = 'Not sure what to ask?', lockSite = false, brand, subject }) {
-  const [typedSite, setSite] = useState(url || getMySite());
+  // Default to the website of the brand picked on the dashboard (analyze-first),
+  // never a site remembered from some earlier check.
+  const [typedSite, setSite] = useState(url || (getSubjectKey().startsWith('site:') ? getSubjectKey().slice(5) : ''));
   const site = lockSite ? (url || '') : typedSite;
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
