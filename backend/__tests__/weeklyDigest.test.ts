@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 
 vi.mock('../services/db', () => ({ pool: { query: vi.fn() } }));
 
-import { summarizeWeek, digestEmail, sourceTip, sendWeeklyDigests } from '../services/weeklyDigest';
+import { summarizeWeek, digestEmail, sourceTip, digestDue, isTimeZone } from '../services/weeklyDigest';
 
 const check = (o: any) => ({ brand: 'Bright Smile Dental', url: 'https://brightsmiledental.com', cited: false, mentioned: false, sources: [], ...o });
 
@@ -50,9 +50,24 @@ describe('sourceTip', () => {
   });
 });
 
-describe('sendWeeklyDigests', () => {
-  it('only sends on Monday from 14:00 UTC', async () => {
-    expect(await sendWeeklyDigests(new Date('2026-10-27T15:00:00Z'))).toBe(0); // a Tuesday
-    expect(await sendWeeklyDigests(new Date('2026-10-26T09:00:00Z'))).toBe(0); // Monday morning UTC
+describe('digestDue', () => {
+  it('defaults to Monday from 9am US Eastern', () => {
+    expect(digestDue(new Date('2026-10-26T13:30:00Z'), null, null, null)).toBe(true);  // 9:30am EDT
+    expect(digestDue(new Date('2026-10-26T12:30:00Z'), null, null, null)).toBe(false); // 8:30am EDT
+    expect(digestDue(new Date('2026-10-27T15:00:00Z'), null, null, null)).toBe(false);
+  });
+
+  it('uses the chosen day and hour in the chosen time zone', () => {
+    // Friday 8am in Chicago is 13:00 UTC (CDT, UTC-5).
+    expect(digestDue(new Date('2026-10-23T13:30:00Z'), 5, 8, 'America/Chicago')).toBe(true);
+    expect(digestDue(new Date('2026-10-23T12:30:00Z'), 5, 8, 'America/Chicago')).toBe(false);
+    // Sunday 11pm in Los Angeles is already Monday in UTC.
+    expect(digestDue(new Date('2026-10-26T06:00:00Z'), 0, 22, 'America/Los_Angeles')).toBe(true);
+  });
+
+  it('rejects made-up time zones', () => {
+    expect(isTimeZone('America/Chicago')).toBe(true);
+    expect(isTimeZone('Mars/Base')).toBe(false);
+    expect(isTimeZone(5)).toBe(false);
   });
 });

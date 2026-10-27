@@ -38,6 +38,27 @@ export default function Settings() {
     if (typeof user?.citationAlerts === 'boolean') setAlertsEnabled(user.citationAlerts);
   }, [user?.citationAlerts]);
 
+  // When the weekly email arrives, in this browser's time zone. With nothing
+  // saved yet it goes out Monday morning.
+  const browserTz = (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch { return 'UTC'; } })();
+  const [digestDay, setDigestDay] = useState(1);
+  const [digestHour, setDigestHour] = useState(9);
+  const [scheduleNote, setScheduleNote] = useState('');
+  useEffect(() => {
+    if (user?.digestDay != null) setDigestDay(user.digestDay);
+    if (user?.digestHour != null) setDigestHour(user.digestHour);
+  }, [user?.digestDay, user?.digestHour]);
+  async function saveSchedule(day, hour) {
+    setDigestDay(day); setDigestHour(hour); setScheduleNote('');
+    try {
+      await api.setEmailSchedule(day, hour, browserTz);
+      setScheduleNote('Saved');
+      refreshUser?.();
+    } catch (err) {
+      setScheduleNote(err.message || 'Could not save. Try again.');
+    }
+  }
+
   async function handleAlertsChange(e) {
     const next = e.target.checked;
     setAlertsEnabled(next);
@@ -427,7 +448,7 @@ export default function Settings() {
           <label className={styles.switchRow} htmlFor="citation-alerts">
             <span className={styles.switchText}>
               <span className={styles.switchLabel}>Email me about my tracked questions</span>
-              <span className={styles.switchHint}>A short summary every Monday, plus an alert when an AI engine starts or stops citing you (confirmed by two checks in a row).</span>
+              <span className={styles.switchHint}>A short weekly summary, plus an alert when an AI engine starts or stops citing you (confirmed by two checks in a row).</span>
             </span>
             <input
               id="citation-alerts"
@@ -440,6 +461,25 @@ export default function Settings() {
             />
           </label>
           {alertsError && <p className={styles.switchError} role="alert">{alertsError}</p>}
+          {alertsEnabled && (
+            <div className={styles.scheduleRow}>
+              <span className={styles.switchHint}>Weekly summary arrives</span>
+              <Select
+                value={String(digestDay)}
+                onChange={v => saveSchedule(Number(v), digestHour)}
+                ariaLabel="Day of the weekly summary"
+                options={['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map((d, i) => ({ value: String(i), label: d }))}
+              />
+              <span className={styles.switchHint}>at</span>
+              <Select
+                value={String(digestHour)}
+                onChange={v => saveSchedule(digestDay, Number(v))}
+                ariaLabel="Hour of the weekly summary"
+                options={Array.from({ length: 24 }, (_, h) => ({ value: String(h), label: `${h % 12 || 12}:00 ${h < 12 ? 'am' : 'pm'}` }))}
+              />
+              <span className={styles.switchHint}>{(user?.digestTz || (scheduleNote === 'Saved' ? browserTz : 'America/New_York (default)')).replace(/_/g, ' ')}{scheduleNote ? ` · ${scheduleNote}` : ''}</span>
+            </div>
+          )}
         </div>
 
         <div className="card">

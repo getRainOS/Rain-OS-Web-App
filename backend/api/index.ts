@@ -59,6 +59,7 @@ import {
   updateHandler as trackedUpdateHandler,
   deleteHandler as trackedDeleteHandler,
   alertsHandler as citationAlertsHandler,
+  digestScheduleHandler,
 } from './tracked-queries';
 import { startScheduler } from '../services/schedulerService';
 import promptSuggestionsHandler from './prompt-suggestions';
@@ -158,6 +159,7 @@ app.post('/api/tracked-queries', trackedCreateHandler);
 app.patch('/api/tracked-queries/:id', trackedUpdateHandler);
 app.delete('/api/tracked-queries/:id', trackedDeleteHandler);
 app.patch('/api/citation-alerts', citationAlertsHandler);
+app.patch('/api/email-schedule', digestScheduleHandler);
 app.post('/api/prompt-suggestions', promptSuggestionsHandler);
 app.post('/api/content-ideas', contentIdeasHandler);
 app.get('/api/admin/grounding-usage', groundingUsageHandler);

@@ -110,6 +110,7 @@ export const api = {
   setTrackedQueryPaused: (id, paused) => request('PATCH', `/api/tracked-queries/${id}`, { paused }),
   deleteTrackedQuery: (id) => request('DELETE', `/api/tracked-queries/${id}`),
   setCitationAlerts: (enabled) => request('PATCH', '/api/citation-alerts', { enabled }),
+  setEmailSchedule: (day, hour, timezone) => request('PATCH', '/api/email-schedule', { day, hour, timezone }),
   resolveDomainCountries: (domains) => request('POST', '/api/citation-checks/regions', { domains }),
   brandVisibility: ({ name, brand, topic, url, ...rest }) => request('POST', '/api/brand-visibility', { name, brand, topic, url, ...rest }),
   brandVisHistory: () => request('GET', '/api/brand-visibility'),

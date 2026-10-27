@@ -236,6 +236,10 @@ CREATE INDEX IF NOT EXISTS idx_citation_checks_source_checked_at
 
 ALTER TABLE users ADD COLUMN IF NOT EXISTS citation_alerts BOOLEAN NOT NULL DEFAULT TRUE;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS last_digest_at TIMESTAMPTZ;
+-- When the weekly email goes out, in the user's own time zone (null: Monday 9am US Eastern).
+ALTER TABLE users ADD COLUMN IF NOT EXISTS digest_day SMALLINT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS digest_hour SMALLINT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS digest_tz TEXT;
 -- Two-letter US state the user is in, for location-aware ChatGPT checks.
 ALTER TABLE users ADD COLUMN IF NOT EXISTS location_state TEXT;
 

@@ -95,18 +95,37 @@ async function topFix(userId: string): Promise<{ text: string; href: string } | 
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-// Mondays from 14:00 UTC (morning across the US), once per user per week,
+export const isTimeZone = (tz: unknown): tz is string => {
+  if (typeof tz !== 'string' || !tz || tz.length > 64) return false;
+  try { new Intl.DateTimeFormat('en-US', { timeZone: tz }); return true; } catch { return false; }
+};
+
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+// Is it the user's chosen day, at or after their chosen hour, where they are?
+// No choice saved: Monday from 9am US Eastern.
+export const DEFAULT_DIGEST_TZ = 'America/New_York';
+export function digestDue(now: Date, day: number | null, hour: number | null, tz: string | null): boolean {
+  const zone = tz && isTimeZone(tz) ? tz : DEFAULT_DIGEST_TZ;
+  const wantDay = day ?? 1;
+  const wantHour = hour ?? 9;
+  const parts = new Intl.DateTimeFormat('en-US', { timeZone: zone, weekday: 'short', hour: 'numeric', hourCycle: 'h23' }).formatToParts(now);
+  const localDay = WEEKDAYS.indexOf(parts.find(p => p.type === 'weekday')?.value || '');
+  const localHour = Number(parts.find(p => p.type === 'hour')?.value);
+  return localDay === wantDay && localHour >= wantHour;
+}
+
+// On each user's chosen day and hour (default Monday 9am Eastern), once a week,
 // only for users who track questions, have alerts on and had checks this week.
 export async function sendWeeklyDigests(now = new Date(), limit = 50): Promise<number> {
-  if (now.getUTCDay() !== 1 || now.getUTCHours() < 14) return 0;
-  const users = await pool.query(
-    `SELECT u.id, u.email FROM users u
+  const candidates = await pool.query(
+    `SELECT u.id, u.email, u.digest_day, u.digest_hour, u.digest_tz FROM users u
      WHERE u.citation_alerts IS NOT FALSE
        AND (u.last_digest_at IS NULL OR u.last_digest_at < $1)
        AND EXISTS (SELECT 1 FROM tracked_queries t WHERE t.user_id = u.id)
-     LIMIT $2`, [new Date(now.getTime() - 6 * DAY_MS), limit]);
+     LIMIT 1000`, [new Date(now.getTime() - 6 * DAY_MS)]);
+  const due = (candidates.rows || []).filter(u => digestDue(now, u.digest_day, u.digest_hour, u.digest_tz)).slice(0, limit);
   let sent = 0;
-  for (const u of users.rows) {
+  for (const u of due) {
     // Mark first, so a failure can't resend on every tick.
     await pool.query(`UPDATE users SET last_digest_at = $2 WHERE id = $1`, [u.id, now]);
     const checks = await pool.query(
