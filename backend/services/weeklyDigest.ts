@@ -126,8 +126,13 @@ export async function sendWeeklyDigests(now = new Date(), limit = 50): Promise<n
   const due = (candidates.rows || []).filter(u => digestDue(now, u.digest_day, u.digest_hour, u.digest_tz)).slice(0, limit);
   let sent = 0;
   for (const u of due) {
-    // Mark first, so a failure can't resend on every tick.
-    await pool.query(`UPDATE users SET last_digest_at = $2 WHERE id = $1`, [u.id, now]);
+    // Claim the week first, in one atomic step: if another instance already
+    // claimed this user, this returns no row and we skip them.
+    const claimed = await pool.query(
+      `UPDATE users SET last_digest_at = $2 WHERE id = $1
+         AND (last_digest_at IS NULL OR last_digest_at < $3) RETURNING id`,
+      [u.id, now, new Date(now.getTime() - 6 * DAY_MS)]);
+    if (!claimed.rowCount) continue;
     const checks = await pool.query(
       `SELECT brand, url, cited, mentioned, sources, checked_at > $2 AS this_week FROM citation_checks
        WHERE user_id = $1 AND checked_at > $3`, [u.id, new Date(now.getTime() - 7 * DAY_MS), new Date(now.getTime() - 14 * DAY_MS)]);

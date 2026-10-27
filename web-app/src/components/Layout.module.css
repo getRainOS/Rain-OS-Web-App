@@ -137,7 +137,6 @@
   font-weight: 600;
   letter-spacing: -0.5px;
   color: var(--text);
-  margin-left: -28px;
 }
 
 .brandAccent { color: var(--cyan); }
@@ -657,7 +656,8 @@ button.userRow:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1
 .accountMenuDivider { height: 1px; margin: 6px 4px; background: rgba(255, 255, 255, 0.08); }
 
 /* Live demo: a small floating bar, so no screen's layout moves. */
-.demoBar { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 60; display: flex; align-items: center; gap: 14px; padding: 8px 10px 8px 16px; border: 1px solid rgba(43,143,227,0.5); border-radius: 999px; background: rgba(10,14,20,0.92); backdrop-filter: blur(8px); font-size: 13px; color: var(--text); box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-width: calc(100vw - 32px); }
+.demoBar { position: fixed; top: 0; left: 0; right: 0; height: 40px; box-sizing: border-box; z-index: 60; display: flex; align-items: center; justify-content: center; gap: 14px; padding: 0 16px; border-bottom: 1px solid rgba(43,143,227,0.35); background: #0b1420; font-size: 13px; color: var(--text); }
+.rootDemo { padding-top: 40px; box-sizing: border-box; }
 .demoBarCta { padding: 5px 12px; border-radius: 999px; background: #2B8FE3; color: #fff; text-decoration: none; font-weight: 500; white-space: nowrap; }
 .demoBarExit { background: none; border: 0; color: var(--text-dim); font-size: 13px; cursor: pointer; white-space: nowrap; }
 .demoBarExit:hover { color: var(--text); }
