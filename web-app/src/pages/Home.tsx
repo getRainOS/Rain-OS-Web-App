@@ -7,7 +7,6 @@ import {
   MapPin, ShoppingBag, PenLine, Sparkles, Code2, HelpCircle,
 } from 'lucide-react';
 import MarketingNav from '@/components/marketing/MarketingNav';
-import RainBackground from '@/components/marketing/RainBackground';
 import SiteFooter from '@/components/marketing/SiteFooter';
 import { Pricing, FAQ } from '@/components/marketing/MarketingComponents';
 import { useLiveEngines, joinNames } from '@/lib/liveEngines';
@@ -638,7 +637,6 @@ export default function Home() {
 
       <main>
         <section className="relative overflow-hidden">
-          <RainBackground />
           <div
             className="pointer-events-none absolute inset-x-0 top-0 h-[720px] z-[1]"
             style={{ background: 'radial-gradient(60% 50% at 50% 0%, rgba(43,143,227,0.16), transparent 70%)' }}

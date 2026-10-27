@@ -75,22 +75,6 @@ const LANES = LANE_META.map(l => ({ ...l, ...LANE_VISUALS[l.id] }));
 
 const SAMPLE_TREND = [42, 48, 45, 55, 60, 58, 67, 71, 68, 75].map((score, i) => ({ idx: i + 1, score }));
 
-const SAMPLE_PILLAR_LINES = [
-  { key: 'ai_readability', color: PILLAR_COLORS.ai_readability },
-  { key: 'digital_authority', color: PILLAR_COLORS.digital_authority },
-  { key: 'conversion_readiness', color: PILLAR_COLORS.conversion_readiness },
-  { key: 'rag_readiness', color: PILLAR_COLORS.rag_readiness },
-];
-
-const SAMPLE_PILLAR_TREND = [
-  { idx: 1, ai_readability: 40, digital_authority: 35, conversion_readiness: 45, rag_readiness: 30 },
-  { idx: 2, ai_readability: 48, digital_authority: 40, conversion_readiness: 50, rag_readiness: 38 },
-  { idx: 3, ai_readability: 45, digital_authority: 46, conversion_readiness: 52, rag_readiness: 42 },
-  { idx: 4, ai_readability: 58, digital_authority: 50, conversion_readiness: 60, rag_readiness: 50 },
-  { idx: 5, ai_readability: 65, digital_authority: 58, conversion_readiness: 62, rag_readiness: 55 },
-  { idx: 6, ai_readability: 71, digital_authority: 63, conversion_readiness: 68, rag_readiness: 60 },
-];
-
 const CONTENT_TYPE_TOGGLES = [
   { id: 'content', label: 'Content' },
   { id: 'url', label: 'URL' },
@@ -953,15 +937,6 @@ export default function Dashboard() {
           <div className={styles.chartEmpty}><span className="spinner" /></div>
         ) : !pillarAvgs.some(p => p.avg > 0) ? (
           <div className={styles.chartEmptyRich}>
-            <div className={styles.sampleBackdrop}>
-              <ResponsiveContainer width="100%" height={200}>
-                <LineChart data={SAMPLE_PILLAR_TREND}>
-                  {SAMPLE_PILLAR_LINES.map(l => (
-                    <Line key={l.key} type="monotone" dataKey={l.key} stroke={l.color} strokeWidth={2} dot={false} />
-                  ))}
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
             <div className={styles.emptyStateOverlay}>
               <Activity className={styles.emptyIcon} />
               <p>{focusSite ? `No page scans for ${focusSite} yet` : filtersActive && history.length > 0 ? 'No analyses match these filters' : 'No pillar data yet'}</p>
