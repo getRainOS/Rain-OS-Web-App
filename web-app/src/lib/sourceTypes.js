@@ -12,7 +12,7 @@ const TYPES = [
   {
     id: 'reviews', label: 'Review & directory sites',
     action: 'Claim your profile on these sites and ask happy customers for reviews there.',
-    domains: ['g2.com', 'capterra.com', 'trustpilot.com', 'yelp.com', 'tripadvisor.com', 'bbb.org', 'getapp.com', 'softwareadvice.com', 'angi.com', 'homeadvisor.com', 'thumbtack.com', 'clutch.co', 'producthunt.com', 'yellowpages.com', 'houzz.com', 'alternativeto.net', 'trustradius.com', 'sitejabber.com', 'consumerreports.org'],
+    domains: ['g2.com', 'capterra.com', 'trustpilot.com', 'yelp.com', 'tripadvisor.com', 'bbb.org', 'getapp.com', 'softwareadvice.com', 'angi.com', 'homeadvisor.com', 'thumbtack.com', 'clutch.co', 'producthunt.com', 'yellowpages.com', 'houzz.com', 'alternativeto.net', 'trustradius.com', 'sitejabber.com', 'consumerreports.org', 'zocdoc.com', 'healthgrades.com', 'vitals.com', 'avvo.com', 'findlaw.com', 'justia.com', 'opentable.com', 'mapquest.com', 'superpages.com', 'manta.com'],
   },
   {
     id: 'news', label: 'News & media',
