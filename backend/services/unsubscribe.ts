@@ -3,7 +3,9 @@
 // only ever works for the account it was sent to, and needs no sign-in.
 import { createHmac, timingSafeEqual } from 'crypto';
 
-const secret = () => `unsubscribe:${process.env.ENCRYPTION_SECRET || ''}`;
+// A dedicated secret when set (UNSUBSCRIBE_SECRET), so the email links don't
+// depend on the encryption key. Falls back to ENCRYPTION_SECRET until it's set.
+const secret = () => `unsubscribe:${process.env.UNSUBSCRIBE_SECRET || process.env.ENCRYPTION_SECRET || ''}`;
 export const apiUrl = () => process.env.API_PUBLIC_URL || 'https://api.getrainos.com';
 
 export function unsubscribeToken(userId: string): string {
