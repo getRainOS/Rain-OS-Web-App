@@ -187,7 +187,7 @@ export default function Layout({ children }) {
       <div className={`${styles.overlay} ${menuOpen ? styles.show : ''}`} onClick={() => setMenuOpen(false)} />
       <aside className={`${styles.sidebar} ${menuOpen ? styles.open : ''} ${collapsed ? styles.collapsed : ''}`}>
         <div className={styles.brand}>
-          {!collapsed && <Logo size={22} className={styles.brandWordmark} />}
+          {!collapsed && <Logo size={24} className={styles.brandWordmark} />}
         </div>
 
         <nav className={styles.nav} onClick={() => setMenuOpen(false)}>
@@ -218,11 +218,8 @@ export default function Layout({ children }) {
           {laneGroups ? (
             laneGroups.map(group => (
               <div key={group.label} className={styles.navGroup}>
-                <div className={styles.navLabelRow}>
+                <div className={styles.navLabelRow} title={groupTooltips[group.label] || undefined}>
                   <span className={styles.navLabel}>{isLocal ? (LOCAL_GROUP_LABELS[group.label] || group.label) : group.label}</span>
-                  {groupTooltips[group.label] && (
-                    <NavGroupTooltip text={groupTooltips[group.label]} />
-                  )}
                 </div>
                 {group.tools.map(key => (
                   <NavItem key={key} {...TOOLS[key]} label={key === 'urlScanner' ? urlScannerLabel(userLane) : TOOLS[key].label} />
@@ -249,7 +246,7 @@ export default function Layout({ children }) {
 
           {/* Account — always at bottom */}
           <div className={styles.navGroup}>
-            <span className={styles.navLabel}>Account</span>
+            <div className={styles.navLabelRow}><span className={styles.navLabel}>Account</span></div>
             <NavItem {...TOOLS.settings} />
             {user?.isAdmin && <NavItem {...TOOLS.adminUsage} />}
           </div>
@@ -378,17 +375,3 @@ function NavItem({ to, label, Icon, tooltip }) {
   );
 }
 
-function NavGroupTooltip({ text }) {
-  const [show, setShow] = useState(false);
-  return (
-    <div className={styles.groupTooltipWrap}
-      onMouseEnter={() => setShow(true)}
-      onMouseLeave={() => setShow(false)}
-    >
-      <span className={styles.groupInfoIcon}>?</span>
-      {show && (
-        <div className={styles.groupTooltip}>{text}</div>
-      )}
-    </div>
-  );
-}

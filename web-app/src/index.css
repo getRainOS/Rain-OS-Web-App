@@ -275,5 +275,5 @@ input, textarea, select {
 }
 
 /* The rain wordmark: sized by --logo-size; "ai" in the brand cyan. */
-.rainLogo { font-size: var(--logo-size, 22px); font-weight: 600; letter-spacing: -0.5px; line-height: 1; color: var(--text); }
+.rainLogo { font-family: var(--font-sans); font-size: var(--logo-size, 22px); font-weight: 600; letter-spacing: -0.04em; line-height: 1; color: var(--text); font-feature-settings: "cv11" 1; -webkit-font-smoothing: antialiased; }
 .rainLogoAccent { color: var(--cyan); }

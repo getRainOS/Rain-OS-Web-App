@@ -670,3 +670,9 @@ button.userRow:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1
 }
 .moreToggle:hover { color: var(--text); }
 .moreToggle .navLabel { margin: 0; }
+
+/* Collapsed: keep only icons. Group labels and the More tools toggle would
+   wrap into the narrow rail, so they become thin dividers between groups. */
+.sidebar.collapsed .navGroup .navLabelRow,
+.sidebar.collapsed .moreToggle { display: none; }
+.sidebar.collapsed .navGroup + .navGroup { border-top: 1px solid var(--border); margin-top: 8px; padding-top: 8px; }
