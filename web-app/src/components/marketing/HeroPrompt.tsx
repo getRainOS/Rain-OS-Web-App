@@ -26,7 +26,7 @@ const SCENES: Scene[] = [
     found: true,
   },
   {
-    // Product sellers
+    // Online sellers
     engine: 'Google AI Overview', dot: '#4285f4',
     prompt: 'best eco-friendly yoga mat under $100',
     intro: 'Popular eco-friendly yoga mats under $100 include:',

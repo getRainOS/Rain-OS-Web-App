@@ -341,30 +341,7 @@ export default function UrlScanner() {
             Once you've got the link, paste it into the box below and click <strong>Scan URL</strong>.
           </div>
         </details>
-      ) : (
-        <details style={{
-          marginBottom: '16px',
-          fontSize: '13px',
-          color: 'var(--text-dim)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-sm)',
-          padding: '10px 14px',
-        }}>
-          <summary style={{ cursor: 'pointer', color: 'var(--text)', fontWeight: 500 }}>
-            Don't have a URL yet? Find your preview link →
-          </summary>
-          <div style={{ marginTop: '10px', lineHeight: 1.6 }}>
-            Most page builders already have a live preview URL, even before you deploy:
-            <ul style={{ marginTop: '6px', paddingLeft: '18px' }}>
-              <li><strong>Bolt / StackBlitz:</strong> right-click the preview pane → "Open in new tab", or use the Share button.</li>
-              <li><strong>Lovable:</strong> copy the preview URL from the address bar, or click Publish for a permanent link.</li>
-              <li><strong>v0:</strong> open the preview's "..." menu → "Open in new tab" for a live Vercel URL.</li>
-              <li><strong>Replit:</strong> your app is live at yourrepl.username.repl.co (or .replit.dev) while the dev server is running.</li>
-              <li><strong>Framer / Webflow:</strong> use the Staging or Preview link from your project's Share settings.</li>
-            </ul>
-          </div>
-        </details>
-      )}
+      ) : null}
 
       <form onSubmit={handleScan} className={styles.form}>
         <div className={styles.inputRow}>
@@ -391,7 +368,7 @@ export default function UrlScanner() {
         <RecentPicker mode="page" onPick={v => setUrl(normalizeUrlInput(v))} />
         <div className={styles.cityRow}>
           <label htmlFor="us-brand" className={styles.cityLabel}>Business or brand name <span>Optional</span></label>
-          <input id="us-brand" type="text" className={styles.cityInput} placeholder="Leave empty to use the name on your page" value={brandName}
+          <input id="us-brand" type="text" className={styles.cityInput} placeholder="We’ll read it from your page, e.g. Black Sheep Bikes" value={brandName}
             onChange={e => setBrandName(e.target.value)} maxLength={120} />
         </div>
         {userLane === 'local_business' || showCity ? (

@@ -1,4 +1,4 @@
-// services/lanes.ts — the lane (Writers & Marketers, Product Sellers, …) a
+// services/lanes.ts — the lane (Writers & Marketers, Online Sellers, …) a
 // request was made from. The app sends it as X-Rain-Lane on every call, so
 // each check is saved with the lane it was run in.
 import type express from 'express';

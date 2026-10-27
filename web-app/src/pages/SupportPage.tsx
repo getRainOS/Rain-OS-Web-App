@@ -58,7 +58,7 @@ const faqGroups = [
     items: [
       {
         q: 'What does the Rain Score mean?',
-        a: 'The Rain Score is a weighted 0–100 measure of how well your content is optimized for AI engines. The weights change based on your lane: Writers & Marketers (AI Readability 36%, Digital Authority 27%, Conversion Readiness 27%, RAG Readiness 10%), Product Sellers (Product Discoverability 50%, AI Readability 20%, Digital Authority 15%, Conversion Readiness 15%, RAG Readiness 10%), Developers and Vibe Coders (AI Readability 32%, Digital Authority 32%, Conversion Readiness 26%, RAG Readiness 10%), and Local Businesses (Digital Authority 36%, AI Readability 27%, Conversion Readiness 27%, RAG Readiness 10%). Each pillar has sub-scores so you know exactly what to improve.',
+        a: 'The Rain Score is a weighted 0–100 measure of how well your content is optimized for AI engines. The weights change based on your lane: Writers & Marketers (AI Readability 36%, Digital Authority 27%, Conversion Readiness 27%, RAG Readiness 10%), Online Sellers (Product Discoverability 50%, AI Readability 20%, Digital Authority 15%, Conversion Readiness 15%, RAG Readiness 10%), Developers and Vibe Coders (AI Readability 32%, Digital Authority 32%, Conversion Readiness 26%, RAG Readiness 10%), and Local Businesses (Digital Authority 36%, AI Readability 27%, Conversion Readiness 27%, RAG Readiness 10%). Each pillar has sub-scores so you know exactly what to improve.',
       },
       {
         q: 'Why is my score different between URL Scanner and Content Analyzer?',

@@ -338,7 +338,7 @@ function PlatformSection() {
 
 const LANE_ROWS = [
   { name: 'Writers & Marketers', who: 'Articles, blogs, landing pages', href: '/content-writers', w: [36, 27, 27, 0, 0, 10] },
-  { name: 'Product Sellers', who: 'Shopify, Etsy, Amazon, DTC stores', href: '/product-sellers', w: [20, 15, 15, 50, 0, 10] },
+  { name: 'Online Sellers', who: 'Shopify, Etsy, Amazon, DTC stores', href: '/product-sellers', w: [20, 15, 15, 50, 0, 10] },
   { name: 'Developers', who: 'Docs, READMEs, API references', href: '/developers', w: [32, 32, 26, 0, 0, 10] },
   { name: 'Vibe Coders', who: 'Apps built with Bolt, Lovable, Cursor, v0', href: '/vibe-coders', w: [32, 32, 26, 0, 0, 10] },
   { name: 'Local Businesses', who: 'Service businesses people find nearby', href: '/local-business', w: [20, 20, 20, 0, 30, 10] },

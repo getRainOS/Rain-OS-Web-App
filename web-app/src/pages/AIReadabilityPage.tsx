@@ -83,7 +83,7 @@ export default function AIReadabilityPage() {
             The six pillars of scoring
           </h2>
           <p className="text-neutral-400 leading-relaxed mb-6">
-            Every analysis returns a 0–100 Rain Score built from six pillars. The exact weights depend on your content type — writers, product sellers, developers, vibe coders, and local businesses each get a different blend. Here is how they work.
+            Every analysis returns a 0–100 Rain Score built from six pillars. The exact weights depend on your content type — writers, online sellers, developers, vibe coders, and local businesses each get a different blend. Here is how they work.
           </p>
 
           <div className="space-y-6">
@@ -94,7 +94,7 @@ export default function AIReadabilityPage() {
                 AI Readability
               </h3>
               <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                Can the AI read and understand your content clearly? This pillar checks the structural basics that make content machine-readable. Weight varies by lane — 36% for writers, 20% for product sellers, 32% for developers and vibe coders, 20% for local business.
+                Can the AI read and understand your content clearly? This pillar checks the structural basics that make content machine-readable. Weight varies by lane — 36% for writers, 20% for online sellers, 32% for developers and vibe coders, 20% for local business.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
@@ -123,7 +123,7 @@ export default function AIReadabilityPage() {
                 Digital Authority
               </h3>
               <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                Does the AI trust your content? This pillar checks the signals that make an AI confident your content is reliable. Weight varies by lane — 27% for writers, 15% for product sellers, 32% for developers and vibe coders, 20% for local business.
+                Does the AI trust your content? This pillar checks the signals that make an AI confident your content is reliable. Weight varies by lane — 27% for writers, 15% for online sellers, 32% for developers and vibe coders, 20% for local business.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
@@ -152,7 +152,7 @@ export default function AIReadabilityPage() {
                 Conversion Readiness
               </h3>
               <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                Is your content organized so that AI can extract the answer and point the user to the next step? Weight varies by lane — 27% for writers, 15% for product sellers, 26% for developers and vibe coders, 20% for local business.
+                Is your content organized so that AI can extract the answer and point the user to the next step? Weight varies by lane — 27% for writers, 15% for online sellers, 26% for developers and vibe coders, 20% for local business.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
@@ -177,11 +177,11 @@ export default function AIReadabilityPage() {
             {/* Pillar 4 — Product Discoverability */}
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
               <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-white mr-2">0% (general) → 50% (product sellers)</span>
+                <span className="text-white mr-2">0% (general) → 50% (online sellers)</span>
                 Product Discoverability
               </h3>
               <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                For product-focused content, this pillar measures how well AI can surface your products in shopping and discovery contexts. It is 0% for writers, developers, and local business — but jumps to 50% for product sellers, where it becomes the most important pillar.
+                For product-focused content, this pillar measures how well AI can surface your products in shopping and discovery contexts. It is 0% for writers, developers, and local business — but jumps to 50% for online sellers, where it becomes the most important pillar.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
@@ -243,7 +243,7 @@ export default function AIReadabilityPage() {
                 Local Presence
               </h3>
               <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                For local service businesses, this pillar measures how confidently AI can recommend you for a "near me" query. It is 0% for writers, product sellers, developers, and vibe coders — but jumps to 30% for local businesses, where it is the single largest pillar.
+                For local service businesses, this pillar measures how confidently AI can recommend you for a "near me" query. It is 0% for writers, online sellers, developers, and vibe coders — but jumps to 30% for local businesses, where it is the single largest pillar.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-neutral-300">

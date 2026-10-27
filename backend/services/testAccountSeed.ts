@@ -20,7 +20,7 @@ export const SEEDS: Seed[] = [
   { lane: 'local_business', url: 'https://www.yoderplumbing.com', brand: 'Yoder Plumbing', state: 'OH' },
   { lane: 'local_business', url: 'https://www.kryderlaw.com', brand: 'The Kryder Law Group', state: 'IL' },
   { lane: 'local_business', url: 'https://ugclimbing.com', brand: 'Übergrippen', state: 'CO' },
-  // Product Sellers: independent brand stores (likely Shopify, not verified)
+  // Online Sellers: independent brand stores (likely Shopify, not verified)
   { lane: 'product_sellers', url: 'https://ugmonk.com', brand: 'Ugmonk' },
   { lane: 'product_sellers', url: 'https://fellowproducts.com', brand: 'Fellow' },
   { lane: 'product_sellers', url: 'https://www.manduka.com', brand: 'Manduka' },
