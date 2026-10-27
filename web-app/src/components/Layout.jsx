@@ -173,7 +173,7 @@ export default function Layout({ children }) {
   const groupTooltips = isLocal ? LOCAL_GROUP_TOOLTIPS : GROUP_TOOLTIPS;
 
   return (
-    <div className={styles.root}>
+    <div className={`${styles.root} ${isDemo() ? styles.rootDemo : ''}`}>
       {isDemo() && (
         <div className={styles.demoBar} role="status">
           <span>You're exploring a demo with sample data.</span>
