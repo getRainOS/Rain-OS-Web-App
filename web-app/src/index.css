@@ -274,7 +274,6 @@ input, textarea, select {
   .printArea { position: absolute; left: 0; top: 0; width: 100%; padding: 0 !important; border-radius: 0 !important; }
 }
 
-/* The rain logo lockup: drops plus the lowercase wordmark, sized by --logo-size. */
-.rainLogo { display: inline-flex; align-items: center; gap: calc(var(--logo-size, 22px) * 0.3); color: var(--text); }
-.rainLogoMark { height: calc(var(--logo-size, 22px) * 1.05); width: auto; flex: none; }
-.rainLogoWord { font-size: var(--logo-size, 22px); font-weight: 600; letter-spacing: -0.035em; line-height: 1; color: var(--text); }
+/* The rain wordmark: sized by --logo-size; "ai" in the brand cyan. */
+.rainLogo { font-size: var(--logo-size, 22px); font-weight: 600; letter-spacing: -0.5px; line-height: 1; color: var(--text); }
+.rainLogoAccent { color: var(--cyan); }

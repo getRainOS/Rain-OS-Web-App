@@ -187,7 +187,7 @@ export default function Layout({ children }) {
       <div className={`${styles.overlay} ${menuOpen ? styles.show : ''}`} onClick={() => setMenuOpen(false)} />
       <aside className={`${styles.sidebar} ${menuOpen ? styles.open : ''} ${collapsed ? styles.collapsed : ''}`}>
         <div className={styles.brand}>
-          {collapsed ? <Logo mark size={28} /> : <Logo size={24} />}
+          {!collapsed && <Logo size={22} className={styles.brandWordmark} />}
         </div>
 
         <nav className={styles.nav} onClick={() => setMenuOpen(false)}>
