@@ -1,3 +1,4 @@
+import Logo from '../components/Logo.jsx';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Printer } from 'lucide-react';
@@ -131,7 +132,7 @@ export default function Report() {
 
       <article className={`${styles.paper} printArea`}>
         <header className={styles.cover}>
-          <div className={styles.kicker}>rain OS · AI Visibility Assessment</div>
+          <div className={styles.kicker}><Logo size={20} /> <span>AI visibility assessment</span></div>
           <h1 className={styles.coverTitle}>{subject?.name || 'Your business'}</h1>
           <p className={styles.coverMeta}>
             {[lane, subject?.website, `Prepared ${longDay(new Date())}`, user?.email ? `for ${user.email}` : null].filter(Boolean).join('  ·  ')}

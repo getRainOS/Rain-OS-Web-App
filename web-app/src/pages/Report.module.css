@@ -11,7 +11,7 @@
   background: #fff; color: #1a1a1a; border-radius: 4px; padding: 0 0 40px; font-size: 13px; line-height: 1.55;
   font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif; }
 .cover { background: var(--ink); color: #fff; padding: 40px 52px 34px; border-radius: 4px 4px 0 0; }
-.kicker { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #a9c2e6; }
+.kicker { display: flex; align-items: center; gap: 10px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; }
 .coverTitle { margin: 14px 0 8px; font-family: Georgia, 'Times New Roman', serif; font-size: 34px; font-weight: 400; letter-spacing: -0.01em; color: #fff; }
 .coverMeta { margin: 0; font-size: 12.5px; color: #c9d4e3; }
 
