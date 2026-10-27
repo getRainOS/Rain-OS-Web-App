@@ -7,7 +7,8 @@ const FROM_ADDRESS = 'rain OS <support@getrainos.com>';
 
 export const getAppUrl = () => process.env.APP_URL || 'https://getrainos.com';
 
-export const sendEmail = async (to: string, subject: string, html: string): Promise<void> => {
+// unsubscribeUrl: adds List-Unsubscribe headers, so mail apps show their own one-click Unsubscribe.
+export const sendEmail = async (to: string, subject: string, html: string, unsubscribeUrl?: string): Promise<void> => {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.error('RESEND_API_KEY is not set — skipping email send.');
@@ -25,6 +26,7 @@ export const sendEmail = async (to: string, subject: string, html: string): Prom
       to,
       subject,
       html,
+      ...(unsubscribeUrl ? { headers: { 'List-Unsubscribe': `<${unsubscribeUrl}>`, 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' } } : {}),
     }),
   });
 
@@ -79,7 +81,8 @@ export const escapeHtml = (s: string): string =>
 // Sent only when a tracked query flips between cited and not cited.
 export const sendCitationStatusEmail = async (
   to: string,
-  data: { name: string; topic: string; changes: Array<{ engine: string; cited: boolean }> }
+  data: { name: string; topic: string; changes: Array<{ engine: string; cited: boolean }> },
+  unsubscribeUrl?: string
 ): Promise<void> => {
   const name = escapeHtml(data.name);
   const topic = escapeHtml(data.topic);
@@ -106,9 +109,9 @@ export const sendCitationStatusEmail = async (
           Open Citation Monitor
         </a>
       </p>
-      <p style="color: #666; font-size: 13px;">We only email when two checks in a row agree. <a href="${getAppUrl()}/settings" style="color:#666;">Turn these alerts off in Settings</a>.</p>
+      <p style="color: #666; font-size: 13px;">We only email when two checks in a row agree. <a href="${unsubscribeUrl || `${getAppUrl()}/settings`}" style="color:#666;">Unsubscribe</a>.</p>
     </div>
   `;
   const subject = gained.length && !lost.length ? `Now cited: ${data.name}` : lost.length && !gained.length ? `No longer cited: ${data.name}` : `Citations changed: ${data.name}`;
-  await sendEmail(to, subject, html);
+  await sendEmail(to, subject, html, unsubscribeUrl);
 };

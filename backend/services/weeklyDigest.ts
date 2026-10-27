@@ -3,6 +3,7 @@
 // analyses already saved (the weekly tracking runs), so it costs no AI calls.
 import { pool } from './db';
 import { escapeHtml, getAppUrl, sendEmail } from './emailService';
+import { unsubscribeUrl } from './unsubscribe';
 
 export interface DigestCheck { brand?: string | null; url?: string | null; cited?: boolean | null; mentioned?: boolean | null; sources?: Array<{ domain?: string; url?: string }> | null }
 
@@ -51,7 +52,7 @@ export function summarizeWeek(week: DigestCheck[], lastWeek: DigestCheck[]): Wee
   };
 }
 
-export function digestEmail(s: WeekSummary, fix: { text: string; href: string } | null): { subject: string; html: string } {
+export function digestEmail(s: WeekSummary, fix: { text: string; href: string } | null, unsubscribe?: string): { subject: string; html: string } {
   const app = getAppUrl();
   const rate = (r: number, a: number) => (a ? r / a : 0);
   const now = rate(s.recommended, s.answers);
@@ -73,7 +74,7 @@ export function digestEmail(s: WeekSummary, fix: { text: string; href: string } 
       ${s.topSource ? `<h2 style="font-size: 15px; margin: 0 0 6px;">Where AI looked</h2>
       <p style="margin: 0 0 20px;">Most answers used ${escapeHtml(s.topSource)}. ${escapeHtml(sourceTip(s.topSource))}</p>` : ''}
       <p style="margin: 0 0 20px;">${button(`${app}/dashboard`, 'Open your dashboard')}</p>
-      <p style="color: #666; font-size: 12px;">You get this because you track questions in rain OS. <a href="${app}/settings" style="color:#666;">Turn off these emails in Settings</a>.</p>
+      <p style="color: #666; font-size: 12px;">You get this because you track questions in rain OS. <a href="${unsubscribe || `${app}/settings`}" style="color:#666;">Unsubscribe</a>.</p>
     </div>`;
   const subject = s.recommended ? `AI recommended you ${s.recommended} of ${s.answers} times this week` : 'Your week in AI answers';
   return { subject, html };
@@ -113,8 +114,9 @@ export async function sendWeeklyDigests(now = new Date(), limit = 50): Promise<n
        WHERE user_id = $1 AND checked_at > $3`, [u.id, new Date(now.getTime() - 7 * DAY_MS), new Date(now.getTime() - 14 * DAY_MS)]);
     const week = checks.rows.filter(c => c.this_week);
     if (!week.length) continue;
-    const { subject, html } = digestEmail(summarizeWeek(week, checks.rows.filter(c => !c.this_week)), await topFix(u.id));
-    await sendEmail(u.email, subject, html);
+    const unsub = unsubscribeUrl(u.id);
+    const { subject, html } = digestEmail(summarizeWeek(week, checks.rows.filter(c => !c.this_week)), await topFix(u.id), unsub);
+    await sendEmail(u.email, subject, html, unsub);
     sent++;
   }
   if (sent) console.log(`[digest] sent ${sent} weekly emails`);
