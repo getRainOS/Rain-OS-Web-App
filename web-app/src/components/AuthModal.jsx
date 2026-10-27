@@ -1,3 +1,4 @@
+import Logo from './Logo.jsx';
 import { useState } from 'react';
 import { supabase } from '../lib/supabase.js';
 import { setApiKey, api } from '../api/client.js';
@@ -96,10 +97,7 @@ export default function AuthModal({ onAuth, onBack, initialMode = 'signup', pend
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        <div className={styles.logo}>
-          <span className={styles.logoRain}>rain</span>
-          <span className={styles.logoOS}> OS</span>
-        </div>
+        <div className={styles.logo}><Logo size={30} /></div>
 
         <h1 className={styles.title}>
           {isReset ? 'Reset your password' : isSignup ? 'Start for free' : 'Welcome back'}

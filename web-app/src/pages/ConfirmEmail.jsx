@@ -1,3 +1,4 @@
+import Logo from '../components/Logo.jsx';
 import { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import styles from './AuthGate.module.css';
@@ -40,10 +41,7 @@ export default function ConfirmEmail() {
     <div className={styles.root}>
       <div className={styles.bg} />
       <div className={styles.card}>
-        <div className={styles.logo}>
-          <span className={styles.logoText}>rain</span>
-          <span className={styles.logoOS}> OS</span>
-        </div>
+        <div className={styles.logo}><Logo size={30} /></div>
 
         {status === 'loading' && (
           <>

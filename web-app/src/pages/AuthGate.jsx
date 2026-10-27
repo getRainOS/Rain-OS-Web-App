@@ -1,3 +1,4 @@
+import Logo from '../components/Logo.jsx';
 import { useState } from 'react';
 import { setApiKey, api } from '../api/client.js';
 import styles from './AuthGate.module.css';
@@ -30,10 +31,7 @@ export default function AuthGate({ onAuth, onBack }) {
     <div className={styles.root}>
       <div className={styles.bg} />
       <div className={styles.card}>
-        <div className={styles.logo}>
-          <span className={styles.logoText}>rain</span>
-          <span className={styles.logoOS}> OS</span>
-        </div>
+        <div className={styles.logo}><Logo size={30} /></div>
         <h1 className={styles.title}>AI Readability Optimizer</h1>
         <p className={styles.sub}>Enter your API key to get started</p>
 

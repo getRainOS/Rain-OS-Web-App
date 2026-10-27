@@ -1,3 +1,4 @@
+import Logo from './Logo.jsx';
 import { isDemo, exitDemo } from '../lib/demo.js';
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -186,7 +187,7 @@ export default function Layout({ children }) {
       <div className={`${styles.overlay} ${menuOpen ? styles.show : ''}`} onClick={() => setMenuOpen(false)} />
       <aside className={`${styles.sidebar} ${menuOpen ? styles.open : ''} ${collapsed ? styles.collapsed : ''}`}>
         <div className={styles.brand}>
-          {!collapsed && <span className={styles.brandWordmark}>r<span className={styles.brandAccent}>ai</span>n</span>}
+          {collapsed ? <Logo mark size={28} /> : <Logo size={24} />}
         </div>
 
         <nav className={styles.nav} onClick={() => setMenuOpen(false)}>
