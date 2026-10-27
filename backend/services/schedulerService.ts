@@ -9,6 +9,7 @@ import { availableEngines, engineLabel } from './engines';
 import { stepAlertState, type EngineAlertState } from './alertState';
 import { sendCitationStatusEmail } from './emailService';
 import { sendWeeklyDigests } from './weeklyDigest';
+import { unsubscribeUrl } from './unsubscribe';
 import { planTrackingCap, enforcePlanCap, hasMatchableSite, WEEK_MS, MAX_JITTER_MS } from './trackedQueryService';
 
 const TICK_MS = 10 * 60 * 1000;
@@ -109,7 +110,7 @@ export async function runTrackedQuery(row: any): Promise<'ran' | 'skipped' | 'fa
     changes.push(...(await runOtherEngines(row, user)));
     // One email per run, listing every engine whose status really changed.
     if (changes.length && user.citationAlerts !== false) {
-      await sendCitationStatusEmail(user.email, { name: row.name, topic: row.topic, changes });
+      await sendCitationStatusEmail(user.email, { name: row.name, topic: row.topic, changes }, unsubscribeUrl(user.id));
     }
     return 'ran';
   } catch (err) {

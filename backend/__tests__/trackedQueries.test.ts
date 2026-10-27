@@ -138,7 +138,7 @@ describe('runTrackedQuery', () => {
     findUserById.mockResolvedValue(proUser);
     runCitationCheck.mockResolvedValue({ topic: 'best widgets', url: 'https://me.com', cited: true, sources: [], summary: '' });
     await runTrackedQuery({ ...row, pending_cited: true });
-    expect(sendCitationStatusEmail).toHaveBeenCalledWith('u@example.com', { name: 'Q', topic: 'best widgets', changes: [{ engine: 'Gemini', cited: true }] });
+    expect(sendCitationStatusEmail).toHaveBeenCalledWith('u@example.com', { name: 'Q', topic: 'best widgets', changes: [{ engine: 'Gemini', cited: true }] }, expect.stringContaining('/api/email/unsubscribe?u='));
     const upd = query.mock.calls.find(c => String(c[0]).includes('pending_cited = NULL'));
     expect(upd![1]).toEqual([7, true]);
   });
@@ -150,7 +150,7 @@ describe('runTrackedQuery', () => {
     runCitationCheck.mockResolvedValue({ topic: 'best widgets', url: 'https://me.com', cited: false, sources: [], summary: '' });
     runEngineCitationCheck.mockResolvedValue({ topic: 'best widgets', url: 'https://me.com', cited: true, sources: [], summary: '' });
     await runTrackedQuery({ ...row, engine_state: { chatgpt: { cited: false, pending: true } } });
-    expect(sendCitationStatusEmail).toHaveBeenCalledWith('u@example.com', { name: 'Q', topic: 'best widgets', changes: [{ engine: 'ChatGPT', cited: true }] });
+    expect(sendCitationStatusEmail).toHaveBeenCalledWith('u@example.com', { name: 'Q', topic: 'best widgets', changes: [{ engine: 'ChatGPT', cited: true }] }, expect.stringContaining('/api/email/unsubscribe?u='));
     const upd = query.mock.calls.find(c => String(c[0]).includes('engine_state'));
     expect(JSON.parse(upd![1][1])).toEqual({ chatgpt: { cited: true, pending: null } });
     otherEngines.on = false;
