@@ -5,9 +5,9 @@
 const RESEND_API_URL = 'https://api.resend.com/emails';
 const FROM_ADDRESS = 'rain OS <support@getrainos.com>';
 
-const getAppUrl = () => process.env.APP_URL || 'https://getrainos.com';
+export const getAppUrl = () => process.env.APP_URL || 'https://getrainos.com';
 
-const sendEmail = async (to: string, subject: string, html: string): Promise<void> => {
+export const sendEmail = async (to: string, subject: string, html: string): Promise<void> => {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.error('RESEND_API_KEY is not set — skipping email send.');
@@ -73,7 +73,7 @@ export const sendWelcomeEmail = async (to: string): Promise<void> => {
   await sendEmail(to, 'Welcome to rain OS', html);
 };
 
-const escapeHtml = (s: string): string =>
+export const escapeHtml = (s: string): string =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
 // Sent only when a tracked query flips between cited and not cited.
