@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api/client.js';
+import { useApp } from '../context/AppContext.jsx';
 import Select from './Select.jsx';
 import { buildSubjects, subjectHint, getSubjectKey, setSubjectKey } from '../lib/subjects.js';
 import styles from './SubjectPicker.module.css';
@@ -9,14 +10,15 @@ import styles from './SubjectPicker.module.css';
 // already analyzed. Calls onChange(subject) with the chosen one (or null when
 // there is nothing analyzed yet). `initialKey` picks one on arrival.
 export default function SubjectPicker({ onChange, initialKey, label = 'What are you checking?', note }) {
+  const { userLane } = useApp();
   const [subjects, setSubjects] = useState(null);
   const [key, setKey] = useState(initialKey || getSubjectKey());
 
   useEffect(() => {
     api.history({ limit: 200 })
-      .then(({ data }) => setSubjects(buildSubjects(Array.isArray(data) ? data : data?.items ?? data?.data ?? [])))
+      .then(({ data }) => setSubjects(buildSubjects(Array.isArray(data) ? data : data?.items ?? data?.data ?? [], userLane)))
       .catch(() => setSubjects([]));
-  }, []);
+  }, [userLane]);
 
   const chosen = subjects?.find(s => s.key === key) || subjects?.[0] || null;
   useEffect(() => { if (subjects) onChange?.(chosen); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [subjects, chosen?.key]);

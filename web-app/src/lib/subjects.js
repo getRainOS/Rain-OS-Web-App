@@ -21,8 +21,11 @@ function nameFromTitles(titles) {
 }
 const time = h => new Date(h.analyzed_at || 0).getTime();
 
-export function buildSubjects(history) {
-  const items = Array.isArray(history) ? history : [];
+// lane: only what was analyzed in that lane, so a blog post from the Writers
+// lane doesn't show up as a choice for an online store.
+export function buildSubjects(history, lane) {
+  const all = Array.isArray(history) ? history : [];
+  const items = lane ? all.filter(h => !h.lane || h.lane === lane) : all;
   const sites = new Map();
   for (const h of [...items].sort((a, b) => time(b) - time(a))) {
     if (h.repo || !h.url) continue;
