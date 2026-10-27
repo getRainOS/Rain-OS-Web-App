@@ -14,6 +14,7 @@ import NewAnalysisMenu from '../components/NewAnalysisMenu.jsx';
 import CitationMapCard from '../components/CitationMapCard.jsx';
 import MapsGridCard from '../components/MapsGridCard.jsx';
 import { enginesOf } from '../lib/engines.js';
+import AnswerSourcesCard from '../components/AnswerSourcesCard.jsx';
 import { buildSubjects, subjectHint, checkBelongs, getSubjectKey, setSubjectKey } from '../lib/subjects.js';
 import {
   AreaChart, Area, XAxis, YAxis,
@@ -1094,6 +1095,8 @@ export default function Dashboard() {
           </>
         )}
       </div>
+
+      <AnswerSourcesCard subject={subject} cardClass={styles.chartCard} titleClass={styles.chartTitle} subClass={styles.chartSub} />
 
       {/* ── Quick wins: the one place for fixes. The piece shown in Pillar
            Breakdown, its weakest pillar first, plus a count for other pieces. ── */}
