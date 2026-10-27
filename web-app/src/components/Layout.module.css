@@ -662,3 +662,11 @@ button.userRow:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1
 .demoBarExit { background: none; border: 0; color: var(--text-dim); font-size: 13px; cursor: pointer; white-space: nowrap; }
 .demoBarExit:hover { color: var(--text); }
 @media (max-width: 560px) { .demoBar > span { display: none; } }
+
+/* "More tools": the tools a lane doesn't show, one click away. */
+.moreToggle {
+  display: flex; align-items: center; justify-content: space-between; width: 100%;
+  background: none; border: 0; padding: 0 8px; margin-bottom: 4px; cursor: pointer; color: var(--text-muted, var(--text-secondary));
+}
+.moreToggle:hover { color: var(--text); }
+.moreToggle .navLabel { margin: 0; }

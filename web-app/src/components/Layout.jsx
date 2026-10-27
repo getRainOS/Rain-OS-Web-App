@@ -8,7 +8,7 @@ import {
   LayoutDashboard, FileText, Globe, GitBranch, Radar, Eye,
   BarChart2, Settings, ArrowUp, LogOut, Wand2, Menu, X,
   ChevronLeft, ChevronRight, ChevronsUpDown, MessageSquareText, Lightbulb, CreditCard, Target, ScanSearch,
-  Activity, Package } from 'lucide-react';
+  Activity, Package, ChevronDown } from 'lucide-react';
 import KnowledgeBase from './KnowledgeBase.jsx';
 import { urlScannerLabel } from '../lib/laneLabels.js';
 import { PRICE_TO_PLAN } from '../lib/plans.js';
@@ -39,23 +39,21 @@ const TOOLS = {
   settings:   { to: '/settings',         label: 'Settings',            Icon: Settings,         tooltip: 'Change your solution lane, API settings, and account preferences.' },
 };
 
-// Every lane gets every tool — a lane is a scoring context (which pillars
-// apply, how they're weighted, what the sidebar calls things), not a gate
-// on which tools you're allowed to reach. A developer can still have
-// marketing copy to optimize; a writer can still have a repo. Only the
-// ordering changes per lane, surfacing the most relevant tool for that
-// lane first.
+// Each lane's sidebar shows only the tools that kind of user acts on, so a
+// busy business owner isn't faced with tools built for marketers or coders.
+// Nothing is gated: the rest sit under "More tools" at the bottom, and the
+// lane still sets the scoring (which pillars apply and how they're weighted).
 const LANE_GROUPS = {
   general: [
-    { label: 'Optimize',   tools: ['analyze', 'urlScanner', 'repo'] },
+    { label: 'Optimize',   tools: ['analyze', 'urlScanner'] },
     { label: 'Prompts',    tools: ['questions', 'improve'] },
     { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
     { label: 'Improve',    tools: ['fullcheck', 'opportunities'] },
   ],
   product_sellers: [
-    { label: 'Optimize',   tools: ['urlScanner', 'products', 'analyze', 'repo'] },
-    { label: 'Prompts',    tools: ['questions', 'improve'] },
-    { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
+    { label: 'Optimize',   tools: ['urlScanner', 'products', 'analyze'] },
+    { label: 'Prompts',    tools: ['questions'] },
+    { label: 'Visibility', tools: ['citation', 'visibility'] },
     { label: 'Improve',    tools: ['fullcheck', 'opportunities'] },
   ],
   developers: [
@@ -65,10 +63,9 @@ const LANE_GROUPS = {
     { label: 'Improve',    tools: ['fullcheck', 'opportunities'] },
   ],
   local_business: [
-    { label: 'Optimize',   tools: ['urlScanner', 'analyze', 'repo'] },
-    { label: 'Prompts',    tools: ['questions', 'improve'] },
-    { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
-    { label: 'Improve',    tools: ['fullcheck', 'opportunities'] },
+    { label: 'Optimize',   tools: ['urlScanner'] },
+    { label: 'Visibility', tools: ['citation', 'visibility'] },
+    { label: 'Improve',    tools: ['opportunities'] },
   ],
   vibe_coders: [
     { label: 'Optimize',   tools: ['repo', 'urlScanner', 'analyze'] },
@@ -76,6 +73,14 @@ const LANE_GROUPS = {
     { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
     { label: 'Improve',    tools: ['fullcheck', 'opportunities'] },
   ],
+};
+
+// Every tool a lane can reach, in sidebar order; the ones a lane doesn't show
+// go under "More tools".
+const ALL_LANE_TOOLS = ['urlScanner', 'products', 'analyze', 'repo', 'questions', 'improve', 'citation', 'sov', 'visibility', 'fullcheck', 'opportunities'];
+const moreToolsFor = lane => {
+  const shown = new Set((LANE_GROUPS[lane] || []).flatMap(g => g.tools));
+  return ALL_LANE_TOOLS.filter(t => !shown.has(t) && (t !== 'products' || lane === 'product_sellers'));
 };
 
 const GROUP_TOOLTIPS = {
@@ -159,6 +164,10 @@ export default function Layout({ children }) {
 
   const laneMeta = userLane ? LANE_META[userLane] : null;
   const laneGroups = userLane ? LANE_GROUPS[userLane] : null;
+  const moreTools = userLane ? moreToolsFor(userLane) : [];
+  const onHiddenTool = moreTools.some(k => window.location.pathname.startsWith(TOOLS[k].to));
+  const [moreOpen, setMoreOpen] = useState(() => { try { return localStorage.getItem('rain_os_more_tools') === '1'; } catch { return false; } });
+  const toggleMore = () => setMoreOpen(o => { try { localStorage.setItem('rain_os_more_tools', o ? '0' : '1'); } catch {} return !o; });
   const isLocal = userLane === 'local_business';
   const groupTooltips = isLocal ? LOCAL_GROUP_TOOLTIPS : GROUP_TOOLTIPS;
 
@@ -222,6 +231,18 @@ export default function Layout({ children }) {
           ) : (
             <div className={styles.noLaneMessage}>
               <p>Select a lane in Settings to unlock your personalized toolset.</p>
+            </div>
+          )}
+
+          {laneGroups && moreTools.length > 0 && (
+            <div className={styles.navGroup}>
+              <button type="button" className={styles.moreToggle} onClick={toggleMore} aria-expanded={moreOpen || onHiddenTool}>
+                <span className={styles.navLabel}>More tools</span>
+                <ChevronDown style={{ width: 12, height: 12, transform: moreOpen || onHiddenTool ? 'rotate(180deg)' : 'none' }} />
+              </button>
+              {(moreOpen || onHiddenTool) && moreTools.map(key => (
+                <NavItem key={key} {...TOOLS[key]} label={key === 'urlScanner' ? urlScannerLabel(userLane) : TOOLS[key].label} />
+              ))}
             </div>
           )}
 
