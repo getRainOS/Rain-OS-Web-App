@@ -4,7 +4,7 @@ import styles from './LaneWeights.module.css';
 // uses (backend moduleRubric / analyzeContent). Same graphic as the home page.
 export const LANE_WEIGHTS = [
   { id: 'general', name: 'Writers & Marketers', who: 'Articles, blogs, landing pages', w: [36, 27, 27, 0, 0, 10] },
-  { id: 'product_sellers', name: 'Product Sellers', who: 'Shopify, Etsy, Amazon, DTC stores', w: [20, 15, 15, 50, 0, 10] },
+  { id: 'product_sellers', name: 'Online Sellers', who: 'Shopify, Etsy, Amazon, DTC stores', w: [20, 15, 15, 50, 0, 10] },
   { id: 'developers', name: 'Developers', who: 'Docs, READMEs, API references', w: [32, 32, 26, 0, 0, 10] },
   { id: 'vibe_coders', name: 'Vibe Coders', who: 'Apps built with Bolt, Lovable, Cursor, v0', w: [32, 32, 26, 0, 0, 10] },
   { id: 'local_business', name: 'Local Businesses', who: 'Service businesses people find nearby', w: [20, 20, 20, 0, 30, 10] },

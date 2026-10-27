@@ -1,7 +1,7 @@
 import { CheckCircle2, AlertCircle, ShoppingBag } from 'lucide-react';
 import styles from './LocalPageCheck.module.css';
 
-// URL Scanner, Product Sellers: what AI shopping answers can read off this
+// URL Scanner, Online Sellers: what AI shopping answers can read off this
 // page, measured exactly from the page and its schema (and, for Shopify, the
 // store's variant data). Not part of the score.
 export default function ProductPageCheck({ check }) {

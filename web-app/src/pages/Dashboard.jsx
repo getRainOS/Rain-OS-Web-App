@@ -587,7 +587,7 @@ export default function Dashboard() {
   // newest) scopes the Cited by AI, Mentioned by AI and Share of Voice cards.
   // Everything you've analyzed (a website, a piece of content or a repo). The
   // chosen one scopes the whole dashboard; monitoring checks save its key.
-  const subjects = useMemo(() => buildSubjects(history), [history]);
+  const subjects = useMemo(() => buildSubjects(history, userLane), [history, userLane]);
   const subject = subjects.find(x => x.key === subjectChoice) || subjects[0] || null;
   const subjectRuns = useMemo(() => {
     if (!subject) return null;
@@ -944,7 +944,7 @@ export default function Dashboard() {
           This score is an AI's rating, not a measurement. Gemini reads your content and scores it against the same checklist every time, so you can compare pages and track progress. It doesn't count things like words or page speed.
         </WhatDoesThisMean>
         {userLane === 'product_sellers' && (
-          <WhatDoesThisMean tagline="AI's read on how shoppable your page looks — specific to product sellers.">
+          <WhatDoesThisMean tagline="AI's read on how shoppable your page looks — specific to online sellers.">
             This pillar grades whether an AI could confidently describe, compare, and recommend your product from your page alone — clear pricing, specs, and availability — the same AI-judgment method as your other pillars, but scored for shopping questions specifically.
           </WhatDoesThisMean>
         )}

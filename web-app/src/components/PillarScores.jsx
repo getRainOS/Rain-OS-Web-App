@@ -515,7 +515,7 @@ export default function PillarScores({ result, lane, fixCounts }) {
       </div>
 
       {lane === 'product_sellers' && (
-        <WhatDoesThisMean tagline="AI's read on how shoppable your page looks — specific to product sellers.">
+        <WhatDoesThisMean tagline="AI's read on how shoppable your page looks — specific to online sellers.">
           This pillar grades whether an AI could confidently describe, compare, and recommend your product from your page alone — clear pricing, specs, and availability — the same AI-judgment method as your other pillars, but scored for shopping questions specifically.
         </WhatDoesThisMean>
       )}

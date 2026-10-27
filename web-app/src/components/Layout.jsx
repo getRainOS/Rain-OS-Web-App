@@ -16,7 +16,7 @@ import styles from './Layout.module.css';
 
 const LANE_META = {
   general:         { label: 'Writers & Marketers',    color: '#f5f5f5' },
-  product_sellers: { label: 'Product Sellers',        color: '#f5f5f5' },
+  product_sellers: { label: 'Online Sellers',        color: '#f5f5f5' },
   developers:      { label: 'Developers',             color: '#f5f5f5' },
   local_business:  { label: 'Local Service Business', color: '#f5f5f5' },
   vibe_coders:     { label: 'Vibe Coders',             color: '#f5f5f5' },

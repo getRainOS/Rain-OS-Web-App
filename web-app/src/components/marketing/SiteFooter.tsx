@@ -16,7 +16,7 @@ const COLUMNS = [
     title: 'Solutions',
     links: [
       { label: 'Writers & Marketers', to: '/content-writers' },
-      { label: 'Product Sellers', to: '/product-sellers' },
+      { label: 'Online Sellers', to: '/product-sellers' },
       { label: 'Developers', to: '/developers' },
       { label: 'Vibe Coders', to: '/vibe-coders' },
       { label: 'Local Businesses', to: '/local-business' },

@@ -11,7 +11,7 @@ const SOLUTIONS = [
     color: '#e5e5e5',
   },
   {
-    label: 'Product Sellers',
+    label: 'Online Sellers',
     href: '/product-sellers',
     desc: 'Ecommerce, DTC, product pages',
     color: '#e5e5e5',

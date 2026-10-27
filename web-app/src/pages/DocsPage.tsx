@@ -188,7 +188,7 @@ export default function DocsPage() {
                         Icon: SearchCheck,
                         name: 'Product Discoverability',
                         weight: '0% (general)',
-                        desc: 'For product-focused content: how well AI surfaces products in shopping and discovery contexts. 50% weight in the Product Sellers module.',
+                        desc: 'For product-focused content: how well AI surfaces products in shopping and discovery contexts. 50% weight in the Online Sellers module.',
                         subScores: ['Product Variant Coverage', 'Merchant Identity', 'Pricing Transparency', 'Availability Signals', 'Comparative Context'],
                       },
                       {
@@ -269,7 +269,7 @@ export default function DocsPage() {
                       {
                         color: '#e5e5e5',
                         Icon: Package,
-                        name: 'Product Sellers',
+                        name: 'Online Sellers',
                         badge: 'Product Discoverability module',
                         desc: 'Dedicated scoring for ecommerce and product pages. Product Discoverability jumps to 50% weight, covering pricing transparency, variant coverage, availability signals, merchant identity, and comparative context. AI Readability 20%, Digital Authority 15%, Conversion Readiness 15%, RAG Readiness 10%.',
                         module: 'product_sellers',
