@@ -1602,3 +1602,19 @@ button.emptyLink {
 .kpiMap { display: flex; flex-direction: column; gap: 0; min-width: 0; }
 .kpiMap > section { margin-top: 0; }
 .brandBarLabel { font-size: 13px; color: var(--text-dim); font-weight: 500; }
+
+/* Local businesses: the one-line answer, and the toggle to the full dashboard. */
+.verdictAsk { margin: 0 0 4px; font-size: 14px; color: var(--text-secondary, var(--text)); }
+.verdictAnswer { margin: 0 0 6px; font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); font-variant-numeric: tabular-nums; }
+.verdictAnswer[data-state="yes"] { color: #22c55e; }
+.verdictAnswer[data-state="some"] { color: #f59e0b; }
+.verdictAnswer[data-state="no"] { color: #ef4444; }
+.verdictDots { display: flex; gap: 5px; margin-top: 12px; }
+.verdictDots span { width: 10px; height: 10px; border-radius: 50%; background: var(--border); }
+.verdictDots span[data-yes="1"] { background: #22c55e; }
+.detailsToggle {
+  display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%;
+  margin: 4px 0 16px; padding: 12px; border: 1px dashed var(--border); border-radius: 12px;
+  background: none; color: var(--text-secondary, var(--text)); font-size: 13px; cursor: pointer;
+}
+.detailsToggle:hover { color: var(--text); border-color: var(--text-muted, var(--border)); }
