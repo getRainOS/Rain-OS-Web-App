@@ -462,6 +462,7 @@ export default function Dashboard() {
   const [sovLoading, setSovLoading] = useState(true);
   const urlWantsLaneSelect = searchParams.get('selectLane') === '1';
   const [showLaneSelector, setShowLaneSelector] = useState(!userLane || urlWantsLaneSelect);
+  const [showDetails, setShowDetails] = useState(false);
   const [typeFilter, setTypeFilter] = useState('all');
   const laneSectionRef = useRef(null);
   const typeFilterAutoSet = useRef(false);
@@ -910,65 +911,8 @@ export default function Dashboard() {
     },
   ];
 
-  return (
-    <div className={`${styles.root} fade-in`}>
-      {/* ── Header ── */}
-      <div className={styles.header}>
-        <div>
-          <h1 className={styles.greeting}>
-            {greeting}{displayName ? `, ${displayName}` : ''}
-          </h1>
-          <p className={styles.headerSub}>
-            {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-          </p>
-        </div>
-        <div className={styles.headerBtns}>
-          <button onClick={() => navigate('/report')} className={styles.fullBtn}>Report</button>
-          <NewAnalysisMenu lane={userLane} firstTime={!loading && history.length === 0} />
-        </div>
-      </div>
-
-      {/* ── Lane Banner / Selector ── */}
-      <div ref={laneSectionRef}>
-        {showLaneSelector ? (
-          <LaneSelector current={userLane} onSelect={(id) => { setUserLane(id); setShowLaneSelector(false); }} />
-        ) : null}
-      </div>
-
-      {!showLaneSelector && (<>
-
-      {/* ── Create Content hero — one-time per-lane onboarding prompt, gone once the lane has any analysis history ── */}
-      {!loading && history.length === 0 && (
-        <div className={styles.contentHero}>
-          <div className={styles.contentHeroIcon}>
-            <Sparkles size={18} />
-          </div>
-          <h2 className={styles.contentHeroTitle}>{dashboardHeroCopy.title}</h2>
-          <p className={styles.contentHeroSub}>{dashboardHeroCopy.sub}</p>
-          <button onClick={() => navigate(dashboardHeroCopy.route)} className={`btn btn-primary ${styles.contentHeroBtn}`}>
-            {dashboardHeroCopy.cta}
-            <ArrowRight size={14} />
-          </button>
-          <span className={styles.contentHeroCaption}>
-            <Sparkles size={11} /> Scored in seconds, not days
-          </span>
-        </div>
-      )}
-
-
-      {!loading && subjects.length > 0 && (
-        <div className={styles.focusBar}>
-          <span className={styles.brandBarLabel}>Brand, website or content</span>
-          <Select
-            className={styles.focusSelect}
-            value={subject?.key || ''}
-            onChange={k => { setSubjectChoice(k); setSubjectKey(k); }}
-            ariaLabel="What the dashboard shows"
-            options={subjects.map(x => ({ value: x.key, label: x.name, hint: subjectHint(x) }))}
-          />
-        </div>
-      )}
-
+  // Pillar Breakdown: the top of the full dashboard; behind "Show details" for local businesses.
+  const pillarSection = (<>
       {/* ── Pillar Breakdown (above the fold, full-width hero) ── */}
       <div className={`${styles.chartCard} ${styles.dottedBg}`} style={{ marginBottom: 12 }}>
         <div className={styles.chartHeader}>
@@ -1096,7 +1040,70 @@ export default function Dashboard() {
         )}
       </div>
 
-      <AnswerSourcesCard subject={subject} cardClass={styles.chartCard} titleClass={styles.chartTitle} subClass={styles.chartSub} />
+  </>);
+
+  return (
+    <div className={`${styles.root} fade-in`}>
+      {/* ── Header ── */}
+      <div className={styles.header}>
+        <div>
+          <h1 className={styles.greeting}>
+            {greeting}{displayName ? `, ${displayName}` : ''}
+          </h1>
+          <p className={styles.headerSub}>
+            {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+          </p>
+        </div>
+        <div className={styles.headerBtns}>
+          <button onClick={() => navigate('/report')} className={styles.fullBtn}>Report</button>
+          <NewAnalysisMenu lane={userLane} firstTime={!loading && history.length === 0} />
+        </div>
+      </div>
+
+      {/* ── Lane Banner / Selector ── */}
+      <div ref={laneSectionRef}>
+        {showLaneSelector ? (
+          <LaneSelector current={userLane} onSelect={(id) => { setUserLane(id); setShowLaneSelector(false); }} />
+        ) : null}
+      </div>
+
+      {!showLaneSelector && (<>
+
+      {/* ── Create Content hero — one-time per-lane onboarding prompt, gone once the lane has any analysis history ── */}
+      {!loading && history.length === 0 && (
+        <div className={styles.contentHero}>
+          <div className={styles.contentHeroIcon}>
+            <Sparkles size={18} />
+          </div>
+          <h2 className={styles.contentHeroTitle}>{dashboardHeroCopy.title}</h2>
+          <p className={styles.contentHeroSub}>{dashboardHeroCopy.sub}</p>
+          <button onClick={() => navigate(dashboardHeroCopy.route)} className={`btn btn-primary ${styles.contentHeroBtn}`}>
+            {dashboardHeroCopy.cta}
+            <ArrowRight size={14} />
+          </button>
+          <span className={styles.contentHeroCaption}>
+            <Sparkles size={11} /> Scored in seconds, not days
+          </span>
+        </div>
+      )}
+
+
+      {!loading && subjects.length > 0 && (
+        <div className={styles.focusBar}>
+          <span className={styles.brandBarLabel}>Brand, website or content</span>
+          <Select
+            className={styles.focusSelect}
+            value={subject?.key || ''}
+            onChange={k => { setSubjectChoice(k); setSubjectKey(k); }}
+            ariaLabel="What the dashboard shows"
+            options={subjects.map(x => ({ value: x.key, label: x.name, hint: subjectHint(x) }))}
+          />
+        </div>
+      )}
+
+      {isLocal && <LocalVerdict subject={subject} checks={citationScoped} topic={citationLatestTopic} brandRate={brandVisTotal > 0 ? brandVisRate : null} styles={styles} />}
+
+      {!isLocal && pillarSection}
 
       {/* ── Quick wins: the one place for fixes. The piece shown in Pillar
            Breakdown, its weakest pillar first, plus a count for other pieces. ── */}
@@ -1144,6 +1151,18 @@ export default function Dashboard() {
           </div>
         );
       })()}
+
+      <AnswerSourcesCard subject={subject} cardClass={styles.chartCard} titleClass={styles.chartTitle} subClass={styles.chartSub} />
+
+      {/* Local businesses see the essentials; the full dashboard is one click away. */}
+      {isLocal && (
+        <button type="button" className={styles.detailsToggle} onClick={() => setShowDetails(d => !d)} aria-expanded={showDetails}>
+          {showDetails ? 'Hide details' : 'Show details: scores, trends and history'} <ChevronDown size={14} style={{ transform: showDetails ? 'rotate(180deg)' : 'none' }} />
+        </button>
+      )}
+
+      {(!isLocal || showDetails) && (<>
+      {isLocal && pillarSection}
 
       {/* ── Tool Snapshot Cards ── */}
       <div className={styles.chartHeader}>
@@ -1430,6 +1449,40 @@ export default function Dashboard() {
       </div>
 
       </>)}
+
+      </>)}
+    </div>
+  );
+}
+
+// Local businesses' headline: is AI recommending you? From the most recently
+// checked question's saved checks (named or cited counts as yes).
+function LocalVerdict({ subject, checks, topic, brandRate, styles }) {
+  if (!subject) return null;
+  const href = `/citation-monitor?subject=${encodeURIComponent(subject.key)}`;
+  const total = checks.length;
+  const yes = checks.filter(c => c.mentioned === true || !!c.cited).length;
+  const state = !total ? 'none' : yes === 0 ? 'no' : yes / total >= 0.5 ? 'yes' : 'some';
+  const headline = { none: 'Not checked yet', no: 'Not yet', some: 'Sometimes', yes: 'Yes' }[state];
+  return (
+    <div className={`${styles.chartCard} ${styles.verdictCard}`} style={{ marginBottom: 12 }}>
+      <div className={styles.chartHeader}>
+        <div>
+          <p className={styles.verdictAsk}>Is AI recommending {subject.name}?</p>
+          <h2 className={styles.verdictAnswer} data-state={state}>{headline}</h2>
+          <p className={styles.chartSub}>
+            {total
+              ? <>Named or cited in {yes} of your last {total} check{total === 1 ? '' : 's'} of “{topic}”{brandRate != null ? ` · mentioned in ${brandRate}% of sentiment checks` : ''}.</>
+              : 'Check a question your customers ask, like “best dentist near me”, to see if AI recommends you.'}
+          </p>
+          {total > 0 && (
+            <div className={styles.verdictDots} aria-label="Recent checks, oldest first">
+              {checks.slice(0, 10).reverse().map((c, i) => <span key={i} data-yes={c.mentioned === true || !!c.cited ? '1' : '0'} />)}
+            </div>
+          )}
+        </div>
+        <Link to={href} className={styles.improveBtn}>{total ? 'Check again' : 'Check now'} <ArrowRight size={14} /></Link>
+      </div>
     </div>
   );
 }
