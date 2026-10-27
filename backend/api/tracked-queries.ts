@@ -1,6 +1,7 @@
 // api/tracked-queries.ts — manage weekly citation tracking.
 import express from 'express';
-import { findUserByApiKey, setCitationAlerts } from '../services/dbService';
+import { isTimeZone } from '../services/weeklyDigest';
+import { findUserByApiKey, setCitationAlerts, setDigestSchedule } from '../services/dbService';
 import {
   listTrackedQueries,
   createTrackedQuery,
@@ -149,6 +150,22 @@ export async function alertsHandler(req: express.Request, res: express.Response)
   try {
     await setCitationAlerts(user.id, enabled);
     return res.status(200).json({ success: true, alertsEnabled: enabled });
+  } catch (err) {
+    return sendError(res, err, 'alerts');
+  }
+}
+
+// PATCH { day: 0-6, hour: 0-23, timezone: 'America/Chicago' }: when the weekly email goes out.
+export async function digestScheduleHandler(req: express.Request, res: express.Response) {
+  const user = await authUser(req, res);
+  if (!user) return;
+  const { day, hour, timezone } = req.body as { day?: unknown; hour?: unknown; timezone?: unknown };
+  if (!Number.isInteger(day) || (day as number) < 0 || (day as number) > 6 || !Number.isInteger(hour) || (hour as number) < 0 || (hour as number) > 23 || !isTimeZone(timezone)) {
+    return res.status(400).json({ error: 'bad_request', message: 'Pick a day, an hour and a valid time zone.' } as ApiError);
+  }
+  try {
+    await setDigestSchedule(user.id, day as number, hour as number, timezone as string);
+    return res.status(200).json({ success: true, digestDay: day, digestHour: hour, digestTz: timezone });
   } catch (err) {
     return sendError(res, err, 'alerts');
   }

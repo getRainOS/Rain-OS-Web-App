@@ -117,6 +117,9 @@ const mapRowToUser = (row: any, hashedApiKey?: string): User => {
         confirmationToken: row.confirmation_token,
         usage: staff ? { ...row.usage, limit: Math.max(row.usage?.limit ?? 0, STAFF_USAGE_LIMIT) } : row.usage,
         citationAlerts: row.citation_alerts !== false,
+        digestDay: row.digest_day ?? null,
+        digestHour: row.digest_hour ?? null,
+        digestTz: row.digest_tz ?? null,
         locationState: row.location_state ?? null,
         createdAt: row.created_at,
     };
@@ -1018,6 +1021,10 @@ export const deleteAnalysis = async (
 
 export const setCitationAlerts = async (userId: string, enabled: boolean): Promise<void> => {
   await pool.query('UPDATE users SET citation_alerts = $2 WHERE id = $1', [userId, enabled]);
+};
+
+export const setDigestSchedule = async (userId: string, day: number, hour: number, tz: string): Promise<void> => {
+  await pool.query('UPDATE users SET digest_day = $2, digest_hour = $3, digest_tz = $4 WHERE id = $1', [userId, day, hour, tz]);
 };
 
 // Permanently removes an account. Every table keyed to the user cascades from

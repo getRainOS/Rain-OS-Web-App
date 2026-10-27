@@ -42,6 +42,9 @@ limit: number;
 resetDate?: string;
 };
 citationAlerts?: boolean;
+digestDay?: number | null;   // 0 Sunday … 6 Saturday
+digestHour?: number | null;  // 0–23, in digestTz
+digestTz?: string | null;    // IANA time zone, e.g. America/Chicago
 locationState?: string | null;
 createdAt: Date;
 }
