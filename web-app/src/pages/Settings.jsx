@@ -423,11 +423,11 @@ export default function Settings() {
         </div>
 
         <div className="card">
-          <h2 className={styles.sectionTitle}>Citation alerts</h2>
+          <h2 className={styles.sectionTitle}>Email updates</h2>
           <label className={styles.switchRow} htmlFor="citation-alerts">
             <span className={styles.switchText}>
-              <span className={styles.switchLabel}>Email me when a tracked question changes</span>
-              <span className={styles.switchHint}>Sent only when an AI engine starts or stops citing you, confirmed by two checks in a row.</span>
+              <span className={styles.switchLabel}>Email me about my tracked questions</span>
+              <span className={styles.switchHint}>A short summary every Monday, plus an alert when an AI engine starts or stops citing you (confirmed by two checks in a row).</span>
             </span>
             <input
               id="citation-alerts"

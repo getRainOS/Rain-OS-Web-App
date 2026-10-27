@@ -8,6 +8,7 @@ import { normaliseLocation } from './engines/location';
 import { availableEngines, engineLabel } from './engines';
 import { stepAlertState, type EngineAlertState } from './alertState';
 import { sendCitationStatusEmail } from './emailService';
+import { sendWeeklyDigests } from './weeklyDigest';
 import { planTrackingCap, enforcePlanCap, hasMatchableSite, WEEK_MS, MAX_JITTER_MS } from './trackedQueryService';
 
 const TICK_MS = 10 * 60 * 1000;
@@ -199,6 +200,11 @@ export function startScheduler(): void {
       await runSchedulerTick();
     } catch (err) {
       console.error('[scheduler] tick failed:', err instanceof Error ? err.message : err);
+    }
+    try {
+      await sendWeeklyDigests();
+    } catch (err) {
+      console.error('[digest] failed:', err instanceof Error ? err.message : err);
     } finally {
       running = false;
     }
