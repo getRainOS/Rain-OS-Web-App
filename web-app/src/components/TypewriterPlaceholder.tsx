@@ -14,6 +14,18 @@ const DELETE_SPEED = 30;
 const PAUSE_AFTER_TYPE = 2000;
 const PAUSE_BEFORE_NEXT = 300;
 
+interface TypewriterPlaceholderProps {
+  value: string;
+  isFocused: boolean;
+  padding?: string;
+  fontSize?: string;
+  lineHeight?: string;
+  color?: string;
+  fontFamily?: string;
+  fontWeight?: string | number;
+  topOffset?: number;
+}
+
 export default function TypewriterPlaceholder({
   value,
   isFocused,
@@ -24,9 +36,9 @@ export default function TypewriterPlaceholder({
   fontFamily = 'inherit',
   fontWeight = 'inherit',
   topOffset = 0,
-}) {
-  const overlayRef = useRef(null);
-  const stateRef = useRef({
+}: TypewriterPlaceholderProps) {
+  const overlayRef = useRef<HTMLDivElement | null>(null);
+  const stateRef = useRef<{ phraseIndex: number; charIndex: number; deleting: boolean; timer: number | null }>({
     phraseIndex: 0,
     charIndex: 0,
     deleting: false,
@@ -36,13 +48,14 @@ export default function TypewriterPlaceholder({
   useEffect(() => {
     const overlay = overlayRef.current;
     if (!overlay) return;
+    const node: HTMLDivElement = overlay;
     const s = stateRef.current;
 
     function tick() {
       const phrase = PHRASES[s.phraseIndex];
       if (s.deleting) {
         s.charIndex--;
-        overlay.textContent = phrase.slice(0, s.charIndex);
+        node.textContent = phrase.slice(0, s.charIndex);
         if (s.charIndex === 0) {
           s.deleting = false;
           s.phraseIndex = (s.phraseIndex + 1) % PHRASES.length;
@@ -52,7 +65,7 @@ export default function TypewriterPlaceholder({
         }
       } else {
         s.charIndex++;
-        overlay.textContent = phrase.slice(0, s.charIndex);
+        node.textContent = phrase.slice(0, s.charIndex);
         if (s.charIndex === phrase.length) {
           s.deleting = true;
           s.timer = setTimeout(tick, PAUSE_AFTER_TYPE);
@@ -68,7 +81,7 @@ export default function TypewriterPlaceholder({
     overlay.textContent = '';
     s.timer = setTimeout(tick, PAUSE_BEFORE_NEXT);
 
-    return () => clearTimeout(s.timer);
+    return () => clearTimeout(s.timer ?? undefined);
   }, []);
 
   const show = !value && !isFocused;

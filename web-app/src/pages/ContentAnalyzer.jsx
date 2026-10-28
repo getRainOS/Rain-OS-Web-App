@@ -7,7 +7,7 @@ import PillarScores from '../components/PillarScores.jsx';
 import MetricBars from '../components/MetricBars.jsx';
 import QuickTools from '../components/QuickTools.jsx';
 import ArtifactBlock from '../components/ArtifactBlock.jsx';
-import TypewriterPlaceholder from '../components/TypewriterPlaceholder.jsx';
+import TypewriterPlaceholder from '../components/TypewriterPlaceholder.tsx';
 import { FileText, PenLine, ShoppingBag, LayoutTemplate, BookOpen, MessageSquare, Sparkles, Lock } from 'lucide-react';
 import PageHeader from '../components/PageHeader.jsx';
 import CheckProgress from '../components/CheckProgress.jsx';

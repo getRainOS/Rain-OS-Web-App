@@ -702,7 +702,7 @@ export function RepoDemo({ isVisible }: { isVisible: boolean }) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ScoreCards pillars={repoPillars} animScores={animScores} demoFixed={demoFixed} phase={phase} />
           <div className="space-y-4">
-            <TerminalPanel header="rain-os scan" phase={phase} phaseColor={phaseColor} phaseLabel={phaseLabel} phaseDotColor={phaseDotColor} lines={terminalLines} processing={phase === 'scanning' || phase === 'rescanning' || phase === 'generating_prompt' || phase === 'applying'} />
+            <TerminalPanel header="rain-os scan" phase={phase} phaseColor={phaseColor ?? ''} phaseLabel={phaseLabel ?? ''} phaseDotColor={phaseDotColor ?? ''} lines={terminalLines} processing={phase === 'scanning' || phase === 'rescanning' || phase === 'generating_prompt' || phase === 'applying'} />
             <AnimatePresence>
               {showPromptPanel && (
                 <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} transition={{ duration: 0.5 }} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">

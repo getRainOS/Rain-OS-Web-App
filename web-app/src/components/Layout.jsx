@@ -1,4 +1,4 @@
-import Logo from './Logo.jsx';
+import Logo from './Logo.tsx';
 import { isDemo, exitDemo } from '../lib/demo.js';
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';

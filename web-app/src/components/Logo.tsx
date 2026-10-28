@@ -1,8 +1,14 @@
-import { WORDMARK } from './logoPaths.js';
+import { WORDMARK } from './logoPaths';
 
 // The rain wordmark as an SVG that inherits the text color. `size` is the
 // height in pixels; the width follows the artwork's proportions.
-export default function Logo({ size = 24, className = '', label = 'rain' }) {
+interface LogoProps {
+  size?: number;
+  className?: string;
+  label?: string;
+}
+
+export default function Logo({ size = 24, className = '', label = 'rain' }: LogoProps) {
   return (
     <svg
       className={`rainLogo ${className}`}

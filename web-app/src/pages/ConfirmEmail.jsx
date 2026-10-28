@@ -1,4 +1,4 @@
-import Logo from '../components/Logo.jsx';
+import Logo from '../components/Logo.tsx';
 import { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import styles from './AuthGate.module.css';

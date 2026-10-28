@@ -2,7 +2,7 @@
 // "r", "a" and "n" as drawn; "a" and "i" share a baseline foot; the i's dot is a
 // teardrop. Paths are filled with currentColor, so the mark takes the text color:
 // white on the dark app, black on light pages. Generated once; edit with care.
-export const WORDMARK = {
+export const WORDMARK: { viewBox: string; ty: number; paths: string[] } = {
   viewBox: '-40 0 3176 1580',
   ty: 1540,
   paths: [
