@@ -16,9 +16,9 @@
   height: 32px;
   flex-shrink: 0;
   border-radius: 8px;
-  border: 1px solid rgba(43, 143, 227, 0.3);
-  background: rgba(43, 143, 227, 0.1);
-  color: #8ac2f4;
+  border: 1px solid rgba(255,255,255, 0.3);
+  background: rgba(255,255,255, 0.1);
+  color: #bdbdbd;
 }
 
 .title {
@@ -69,8 +69,8 @@
 .input:hover { border-color: rgba(255, 255, 255, 0.18); }
 
 .input:focus {
-  border-color: rgba(43, 143, 227, 0.7);
-  box-shadow: 0 0 0 3px rgba(43, 143, 227, 0.18);
+  border-color: rgba(255,255,255, 0.7);
+  box-shadow: 0 0 0 3px rgba(255,255,255, 0.18);
 }
 
 .input::placeholder { color: rgba(255, 255, 255, 0.28); }

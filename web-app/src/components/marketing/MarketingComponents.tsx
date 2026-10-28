@@ -71,7 +71,7 @@ export const LocalBusinessBadge = () => {
   return (
     <a
       href="/local-business"
-      className="inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white transition-all hover:scale-105 active:scale-95"
+      className="inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-black transition-all hover:scale-105 active:scale-95"
       style={{ background: 'var(--cyan)' }}
     >
       <MapPin className="w-4 h-4" />
@@ -466,7 +466,7 @@ export const Pricing = () => {
                 
                 <a
                   href="/login"
-                  className={`block w-full text-center py-3 rounded-lg font-medium transition-colors mb-8 ${p.isPopular ? 'text-white' : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'}`}
+                  className={`block w-full text-center py-3 rounded-lg font-medium transition-colors mb-8 ${p.isPopular ? 'text-black' : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'}`}
                   style={p.isPopular ? { background: 'var(--cyan)' } : undefined}
                 >
                   {p.buttonText}
@@ -564,7 +564,7 @@ export const CTA = () => {
             <p className="text-lg text-neutral-400 max-w-2xl mx-auto mb-10">
               Start optimizing for the future of search today. Join thousands of creators ensuring their content survives the AI shift.
             </p>
-            <a href="/login" className="text-white px-8 py-4 rounded-xl font-medium transition-all hover:scale-105" style={{ background: 'var(--cyan)' }}>
+            <a href="/login" className="text-black px-8 py-4 rounded-xl font-medium transition-all hover:scale-105" style={{ background: 'var(--cyan)' }}>
               Get Started for Free
             </a>
           </div>
@@ -692,7 +692,7 @@ export const ThreeModesSection = ({ onGetStarted }: { onGetStarted?: () => void 
           <div className="mt-12 text-center">
             <button
               onClick={onGetStarted}
-              className="inline-flex items-center gap-2 px-7 py-3 rounded-xl text-white text-sm font-bold transition-all hover:scale-105 active:scale-95"
+              className="inline-flex items-center gap-2 px-7 py-3 rounded-xl text-black text-sm font-bold transition-all hover:scale-105 active:scale-95"
               style={{ background: 'var(--cyan)' }}
             >
               Try all three free

@@ -107,7 +107,7 @@ export function getItemType(item) {
 
 /* ── Gas Gauge Arc ── */
 
-export function GaugeArc({ score = 0, color = '#1C73C4', size = 120 }) {
+export function GaugeArc({ score = 0, color = '#d4d4d4', size = 120 }) {
   const cx = size / 2;
   const cy = size * 0.54;
   const r = size * 0.36;
@@ -324,7 +324,7 @@ export function DotRow({ values }) {
         <span
           key={i}
           className={styles.dot}
-          style={{ background: hit ? '#2B8FE3' : 'rgba(255,255,255,0.12)' }}
+          style={{ background: hit ? '#ffffff' : 'rgba(255,255,255,0.12)' }}
         />
       ))}
     </div>

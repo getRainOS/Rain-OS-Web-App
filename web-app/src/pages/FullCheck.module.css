@@ -22,7 +22,7 @@
   font-size: 14px;
   outline: none;
 }
-.input:focus { border-color: rgba(43, 143, 227, 0.7); box-shadow: 0 0 0 3px rgba(43, 143, 227, 0.18); }
+.input:focus { border-color: rgba(255,255,255, 0.7); box-shadow: 0 0 0 3px rgba(255,255,255, 0.18); }
 .input::placeholder { color: rgba(255, 255, 255, 0.28); }
 
 .primary, .secondary {
@@ -35,7 +35,7 @@
 .secondary { border: 1px solid var(--border-strong); background: transparent; color: var(--text); }
 .secondary:hover:not(:disabled) { background: rgba(255, 255, 255, 0.06); }
 .secondary:disabled { opacity: 0.5; cursor: default; }
-.primary:focus-visible, .secondary:focus-visible, .q:focus-visible { outline: 2px solid #2B8FE3; outline-offset: 2px; }
+.primary:focus-visible, .secondary:focus-visible, .q:focus-visible { outline: 2px solid #ffffff; outline-offset: 2px; }
 .form > .primary { margin-top: 14px; justify-self: start; }
 
 .qList { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 8px; }
@@ -46,9 +46,9 @@
 }
 .q:hover:not(:disabled) { border-color: rgba(255, 255, 255, 0.22); }
 .q:disabled { opacity: 0.45; cursor: default; }
-.qOn { border-color: rgba(43, 143, 227, 0.6); background: rgba(43, 143, 227, 0.07); color: var(--text); }
+.qOn { border-color: rgba(255,255,255, 0.6); background: rgba(255,255,255, 0.07); color: var(--text); }
 .box { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 18px; height: 18px; border-radius: 5px; border: 1px solid var(--border-strong); }
-.qOn .box { background: #2B8FE3; border-color: #2B8FE3; color: #fff; }
+.qOn .box { background: #ffffff; border-color: #ffffff; color: #fff; }
 
 .addRow { display: flex; gap: 8px; margin-top: 8px; }
 
@@ -86,7 +86,7 @@
 .badBadge { color: var(--red); border-color: rgba(235, 87, 87, 0.35); background: rgba(235, 87, 87, 0.08); }
 .fail { font-size: 13px; color: var(--text-dim); }
 
-.link { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; color: #8ac2f4; text-decoration: none; }
+.link { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; color: #bdbdbd; text-decoration: none; }
 .link:hover { text-decoration: underline; }
 
 .footer { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }

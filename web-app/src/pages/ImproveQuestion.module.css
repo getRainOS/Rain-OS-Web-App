@@ -30,7 +30,7 @@
 }
 
 .input { height: 40px; padding-block: 0; }
-.input:focus, .textarea:focus { border-color: rgba(43, 143, 227, 0.7); box-shadow: 0 0 0 3px rgba(43, 143, 227, 0.18); }
+.input:focus, .textarea:focus { border-color: rgba(255,255,255, 0.7); box-shadow: 0 0 0 3px rgba(255,255,255, 0.18); }
 .input::placeholder, .textarea::placeholder { color: rgba(255, 255, 255, 0.28); }
 
 .hint { margin: 2px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--text-dim); }
@@ -42,14 +42,14 @@
   padding: 0;
   border: 0;
   background: none;
-  color: #8ac2f4;
+  color: #bdbdbd;
   font: inherit;
   font-size: 13px;
   cursor: pointer;
 }
 .linkBtn:hover { text-decoration: underline; }
-.linkBtn:focus-visible, .inlineLink:focus-visible { outline: 2px solid #2B8FE3; outline-offset: 2px; }
-.inlineLink { color: #8ac2f4; }
+.linkBtn:focus-visible, .inlineLink:focus-visible { outline: 2px solid #ffffff; outline-offset: 2px; }
+.inlineLink { color: #bdbdbd; }
 
 .sourcesBox { margin-top: 12px; padding-top: 14px; border-top: 1px solid var(--border); }
 .sourceList { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; font-size: 13px; color: var(--text-muted); }
@@ -108,10 +108,10 @@
 .fix { margin: 8px 0 0; font-size: 14px; line-height: 1.6; color: var(--text); }
 
 .draftHead { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.draft { margin: 10px 0 8px; padding: 12px 14px; border-left: 2px solid #2B8FE3; background: rgba(255, 255, 255, 0.03); font-size: 14px; line-height: 1.6; color: var(--text); }
+.draft { margin: 10px 0 8px; padding: 12px 14px; border-left: 2px solid #ffffff; background: rgba(255, 255, 255, 0.03); font-size: 14px; line-height: 1.6; color: var(--text); }
 .copyBtn { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 6px; border: 1px solid var(--border-strong); background: transparent; color: var(--text); font: inherit; font-size: 12.5px; cursor: pointer; }
 .copyBtn:hover { background: rgba(255, 255, 255, 0.06); }
 
 .next { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--text-dim); }
-.nextLink { display: inline-flex; align-items: center; gap: 5px; color: #8ac2f4; text-decoration: none; }
+.nextLink { display: inline-flex; align-items: center; gap: 5px; color: #bdbdbd; text-decoration: none; }
 .nextLink:hover { text-decoration: underline; }

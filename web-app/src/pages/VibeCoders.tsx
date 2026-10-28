@@ -107,7 +107,7 @@ export default function VibeCoders() {
                 onClick={() => navigate('/login')}
                 className="flex items-center gap-2 text-white rounded-xl px-8 py-3.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
                 style={{ background: 'var(--cyan)' }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = '#1C73C4')}
+                onMouseEnter={(e) => (e.currentTarget.style.background = '#d4d4d4')}
                 onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--cyan)')}
               >
                 Scan my repo or URL free
@@ -460,7 +460,7 @@ export default function VibeCoders() {
                   onClick={() => navigate('/login')}
                   className="flex items-center gap-2 text-white rounded-xl px-8 py-3.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
                 style={{ background: 'var(--cyan)' }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = '#1C73C4')}
+                onMouseEnter={(e) => (e.currentTarget.style.background = '#d4d4d4')}
                 onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--cyan)')}
                 >
                   Scan my repo or URL free

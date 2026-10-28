@@ -20,8 +20,8 @@
 }
 
 .trigger:hover { border-color: rgba(255, 255, 255, 0.24); }
-.trigger[aria-expanded="true"] { border-color: rgba(43, 143, 227, 0.7); }
-.trigger:focus-visible { outline: 2px solid #2B8FE3; outline-offset: 2px; }
+.trigger[aria-expanded="true"] { border-color: rgba(255,255,255, 0.7); }
+.trigger:focus-visible { outline: 2px solid #ffffff; outline-offset: 2px; }
 
 .value, .placeholder { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .placeholder { color: var(--text-dim); }
@@ -71,7 +71,7 @@
 .option[aria-selected="true"] { color: var(--text); }
 .optionLabel { min-width: 0; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .optionHint { font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); }
-.tick { flex-shrink: 0; color: #2B8FE3; }
+.tick { flex-shrink: 0; color: #ffffff; }
 
 @media (prefers-reduced-motion: reduce) {
   .menu { animation: none; }

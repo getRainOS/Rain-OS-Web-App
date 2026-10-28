@@ -1,3 +1,4 @@
+import { captureFrontendError } from '../lib/monitoring.js';
 import { Component } from 'react';
 
 // Without this, any render error unmounts the whole app and leaves a blank
@@ -10,6 +11,7 @@ export default class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, info) {
+    captureFrontendError(error, info);
     console.error('[ui] render error:', error, info?.componentStack);
     const where = (info?.componentStack || '').split('\n').map(l => l.trim()).filter(Boolean).slice(0, 3).join(' < ');
     this.setState({ where });

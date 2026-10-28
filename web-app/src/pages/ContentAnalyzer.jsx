@@ -441,7 +441,7 @@ export default function ContentAnalyzer() {
                 maxLength={120}
               />
               {addingLink && !url.trim() && (
-                <p style={{ margin: '6px 0 0', fontSize: 12.5, color: '#2B8FE3' }}>
+                <p style={{ margin: '6px 0 0', fontSize: 12.5, color: '#ffffff' }}>
                   Paste the link where this is published, then choose Re-analyze. It then shows up in Citation Monitor as a website you can track.
                 </p>
               )}

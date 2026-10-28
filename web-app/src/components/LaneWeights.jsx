@@ -9,7 +9,7 @@ export const LANE_WEIGHTS = [
   { id: 'vibe_coders', name: 'Vibe Coders', who: 'Apps built with Bolt, Lovable, Cursor, v0', w: [32, 32, 26, 0, 0, 10] },
   { id: 'local_business', name: 'Local Businesses', who: 'Service businesses people find nearby', w: [20, 20, 20, 0, 30, 10] },
 ];
-const SEG = ['#2B8FE3', '#5aa9ef', '#8ac2f4', '#c7b8ff', '#ffb86b', '#6b7280'];
+const SEG = ['#ffffff', '#bdbdbd', '#bdbdbd', '#c5c5c5', '#ffb86b', '#6b7280'];
 const SHORT = ['Easy for AI to read', 'Trust', 'Clear next step', 'Product details', 'Local info', 'Easy to quote'];
 
 export default function LaneWeights({ current }) {

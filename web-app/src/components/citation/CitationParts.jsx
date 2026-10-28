@@ -130,12 +130,12 @@ export function RankingsChart({ history, map }) {
             {rivals.map((d, i) => (
               <Line key={d} type="monotone" dataKey={d} stroke={RANK_LINE_COLORS[i]} strokeWidth={1.5} strokeDasharray="4 3" dot={{ r: 3.5, fill: RANK_LINE_COLORS[i], strokeWidth: 0 }} connectNulls={false} isAnimationActive={false} />
             ))}
-            <Line type="monotone" dataKey="You" stroke="#2B8FE3" strokeWidth={2.5} dot={{ r: 5, fill: '#2B8FE3', strokeWidth: 0 }} connectNulls={false} isAnimationActive={false} />
+            <Line type="monotone" dataKey="You" stroke="#ffffff" strokeWidth={2.5} dot={{ r: 5, fill: '#ffffff', strokeWidth: 0 }} connectNulls={false} isAnimationActive={false} />
           </LineChart>
         </ResponsiveContainer>
       </div>
       <div className={styles.rankLegend}>
-        <span><i style={{ background: '#2B8FE3' }} />You</span>
+        <span><i style={{ background: '#ffffff' }} />You</span>
         {rivals.map((d, i) => <span key={d}><i style={{ background: RANK_LINE_COLORS[i] }} />{d}</span>)}
       </div>
     </div>

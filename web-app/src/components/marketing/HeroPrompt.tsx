@@ -27,7 +27,7 @@ const SCENES: Scene[] = [
   },
   {
     // Online sellers
-    engine: 'Google AI Overview', dot: '#4285f4',
+    engine: 'Google AI Overview', dot: '#7e7e7e',
     prompt: 'best eco-friendly yoga mat under $100',
     intro: 'Popular eco-friendly yoga mats under $100 include:',
     items: [
@@ -39,7 +39,7 @@ const SCENES: Scene[] = [
   },
   {
     // Writers and marketers
-    engine: 'Perplexity', dot: '#20b8cd',
+    engine: 'Perplexity', dot: '#8d8d8d',
     prompt: 'How should a freelance designer price their first projects?',
     intro: 'Most guides suggest starting from a day rate, then moving to project pricing:',
     items: [
@@ -63,7 +63,7 @@ const SCENES: Scene[] = [
   },
   {
     // Developers
-    engine: 'Google AI Mode', dot: '#a142f4',
+    engine: 'Google AI Mode', dot: '#737373',
     prompt: 'How do I add rate limiting to an Express API?',
     intro: 'The usual approach is middleware. Common options:',
     items: [
@@ -110,7 +110,7 @@ export default function HeroPrompt() {
   return (
     <div className="relative mx-auto max-w-3xl" style={{ perspective: 1400 }}>
       <div className="pointer-events-none absolute -inset-10 rounded-[40px] blur-3xl opacity-60"
-        style={{ background: 'radial-gradient(50% 50% at 50% 40%, rgba(43,143,227,0.22), transparent 70%)' }} />
+        style={{ background: 'radial-gradient(50% 50% at 50% 40%, rgba(255,255,255,0.22), transparent 70%)' }} />
       <motion.div
         className="relative rounded-2xl border border-white/10 bg-[#0b0b0c]/95 shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] text-left"
         style={{ transformStyle: 'preserve-3d' }}
@@ -134,7 +134,7 @@ export default function HeroPrompt() {
           <div className="flex justify-end">
             <div className="max-w-[85%] rounded-2xl rounded-br-md bg-white/[0.07] px-4 py-2.5 text-[15px] text-white">
               {s.prompt.slice(0, typed)}
-              {phase === 'typing' && <span className="inline-block w-[2px] h-[1em] bg-[#2B8FE3] align-[-2px] ml-0.5 animate-pulse" />}
+              {phase === 'typing' && <span className="inline-block w-[2px] h-[1em] bg-[#ffffff] align-[-2px] ml-0.5 animate-pulse" />}
             </div>
           </div>
 
@@ -169,8 +169,8 @@ export default function HeroPrompt() {
                             scale: pop ? 1.04 : 1,
                           }}
                           transition={{ type: 'spring', stiffness: 120, damping: 15 }}
-                          className={`relative flex items-start gap-3 rounded-xl border px-3.5 py-3 ${pop ? 'border-[#2B8FE3] bg-[#0f1a26]' : 'border-white/[0.07] bg-white/[0.02]'}`}
-                          style={pop ? { boxShadow: '0 24px 60px -12px rgba(43,143,227,0.55)' } : undefined}
+                          className={`relative flex items-start gap-3 rounded-xl border px-3.5 py-3 ${pop ? 'border-[#ffffff] bg-[#0f1a26]' : 'border-white/[0.07] bg-white/[0.02]'}`}
+                          style={pop ? { boxShadow: '0 24px 60px -12px rgba(255,255,255,0.55)' } : undefined}
                         >
                           <span className="text-[12px] text-neutral-500 pt-0.5 w-4" style={MONO}>{k + 1}</span>
                           <div className="min-w-0 flex-1">
@@ -182,7 +182,7 @@ export default function HeroPrompt() {
                             <motion.span
                               initial={{ opacity: 0, scale: 0.6, y: 6 }} animate={{ opacity: 1, scale: 1, y: 0 }}
                               transition={{ delay: 0.25, type: 'spring', stiffness: 260, damping: 18 }}
-                              className="absolute -top-3 right-3 inline-flex items-center gap-1 rounded-full bg-[#2B8FE3] px-2.5 py-1 text-[11.5px] font-medium text-white shadow-lg"
+                              className="absolute -top-3 right-3 inline-flex items-center gap-1 rounded-full bg-[#ffffff] px-2.5 py-1 text-[11.5px] font-medium text-white shadow-lg"
                             >
                               <Check className="w-3 h-3" /> That's you · cited #{k + 1}
                             </motion.span>
@@ -222,7 +222,7 @@ export default function HeroPrompt() {
       {/* Which scene is showing */}
       <div className="mt-6 flex justify-center gap-1.5" aria-hidden="true">
         {SCENES.map((_, k) => (
-          <span key={k} className={`h-1 rounded-full transition-all duration-500 ${k === i ? 'w-6 bg-[#2B8FE3]' : 'w-1.5 bg-white/20'}`} />
+          <span key={k} className={`h-1 rounded-full transition-all duration-500 ${k === i ? 'w-6 bg-[#ffffff]' : 'w-1.5 bg-white/20'}`} />
         ))}
       </div>
     </div>

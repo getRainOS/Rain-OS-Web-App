@@ -617,7 +617,7 @@
 .youTag { font-size: 10.5px; padding: 1px 6px; border: 1px solid var(--border); border-radius: 4px; color: var(--text-dim); }
 .shareBarCell { display: flex; align-items: center; gap: 10px; }
 .shareBar { flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
-.shareBar span { display: block; height: 100%; background: #3b9cf5; border-radius: 3px; }
+.shareBar span { display: block; height: 100%; background: #898989; border-radius: 3px; }
 .sharePct { width: 40px; text-align: right; font-variant-numeric: tabular-nums; color: var(--text); }
 .sharePos { font-variant-numeric: tabular-nums; color: var(--text-dim); }
 .shareNote { margin: 10px 0 16px; font-size: 12px; color: var(--text-dim); }
