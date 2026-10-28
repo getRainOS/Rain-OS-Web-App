@@ -3,7 +3,7 @@
 
 // Fix: Import Buffer to make it available in this module.
 import { Buffer } from 'buffer';
-import type { User, SubscriptionStatus, PillarRecommendation } from '../types';
+import type { User, SubscriptionStatus, PillarRecommendation, CitedSource } from '../types';
 import { randomBytes, createHash, createCipheriv, createDecipheriv } from 'crypto';
 import { hashPassword } from './passwords';
 import { pool } from './db';
@@ -557,7 +557,7 @@ export interface CitationCheckRecord {
   url: string | null;
   cited: boolean;
   alignmentScore: number;
-  sources: any[];
+  sources: CitedSource[];
   recommendations: string[];
   summary: string | null;
   source: 'manual' | 'scheduled';
@@ -598,7 +598,7 @@ export const saveCitationCheck = async (
     url: string | null;
     cited: boolean;
     alignmentScore: number;
-    sources: any[];
+    sources: CitedSource[];
     recommendations: string[];
     summary?: string;
     source?: 'manual' | 'scheduled';
@@ -722,7 +722,7 @@ export interface BrandVisibilityRecord {
   sentiment: string;
   sentiment_explanation: string | null;
   answer_excerpt: string | null;
-  sources: any[];
+  sources: CitedSource[];
   competitors: string[];
   recommendations: string[];
   summary: string | null;
@@ -764,7 +764,7 @@ export const saveBrandVisibilityCheck = async (
     sentiment?: string;
     sentiment_explanation?: string;
     answer_excerpt?: string;
-    sources?: any[];
+    sources?: CitedSource[];
     competitors?: string[];
     recommendations?: string[];
     summary?: string;
