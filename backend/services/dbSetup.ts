@@ -306,18 +306,83 @@ BEGIN
 END $$;
 `;
 
+// Schema changes are numbered migrations. A migration runs once, in its own
+// transaction, and is recorded in schema_migrations. To change the schema, add
+// a new entry at the end of MIGRATIONS; never edit one that has shipped.
+// 001 is the original setup: every statement in it is idempotent, so databases
+// created before migrations existed run it safely and just get recorded.
+export interface Migration {
+  id: string;
+  statements: string[];
+}
+
+export const MIGRATIONS: Migration[] = [
+  {
+    id: '001_baseline',
+    statements: [
+      createTableQuery,
+      addGithubColumnsQuery,
+      addEmailConfirmationColumnsQuery,
+      addNameColumnQuery,
+      createOAuthStatesQuery,
+      createDomainCountriesQuery,
+      createTrackedQueriesQuery,
+    ],
+  },
+];
+
+// Stops two instances from migrating at once when they start together.
+const MIGRATION_LOCK_KEY = 7342001;
+
+export function pendingMigrations(all: Migration[], applied: Set<string>): Migration[] {
+  return all.filter(m => !applied.has(m.id));
+}
+
+interface MigrationClient {
+  query: (text: string, values?: unknown[]) => Promise<{ rows: Array<Record<string, unknown>> }>;
+  release: () => void;
+}
+
+export async function runMigrations(
+  db: { connect: () => Promise<MigrationClient> },
+  all: Migration[] = MIGRATIONS
+): Promise<string[]> {
+  const client = await db.connect();
+  const ran: string[] = [];
+  try {
+    await client.query('SELECT pg_advisory_lock($1)', [MIGRATION_LOCK_KEY]);
+    await client.query(`CREATE TABLE IF NOT EXISTS schema_migrations (
+      id TEXT PRIMARY KEY,
+      applied_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`);
+    const done = await client.query('SELECT id FROM schema_migrations');
+    const applied = new Set(done.rows.map(r => String(r.id)));
+    for (const m of pendingMigrations(all, applied)) {
+      await client.query('BEGIN');
+      try {
+        for (const statement of m.statements) await client.query(statement);
+        await client.query('INSERT INTO schema_migrations (id) VALUES ($1)', [m.id]);
+        await client.query('COMMIT');
+        ran.push(m.id);
+        console.log(`[migrations] applied ${m.id}`);
+      } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+      }
+    }
+  } finally {
+    await client.query('SELECT pg_advisory_unlock($1)', [MIGRATION_LOCK_KEY]).catch(() => {});
+    client.release();
+  }
+  return ran;
+}
+
 export const setupDatabase = async () => {
   try {
-    await pool.query(createTableQuery);
-    await pool.query(addGithubColumnsQuery);
-    await pool.query(addEmailConfirmationColumnsQuery);
-    await pool.query(addNameColumnQuery);
-    await pool.query(createOAuthStatesQuery);
-    await pool.query(createDomainCountriesQuery);
-    await pool.query(createTrackedQueriesQuery);
-    console.log('Database table "users" is ready.');
+    await runMigrations(pool);
+    console.log('Database is ready.');
   } catch (error) {
-    console.error('Error setting up database table:', error);
+    console.error('Error setting up database:', error);
     process.exit(1);
   }
 };
