@@ -7,7 +7,7 @@
 
 /* The report is white "paper" in a consulting house style: serif action
    titles, a navy accent, numbered exhibits with source lines. */
-.paper { --ink: #0b1f3a; --accent: #1f4e8c; --muted: #5b6573; --rule: #d9dde3;
+.paper { --ink: #1c1c1c; --accent: #474747; --muted: #5b6573; --rule: #d9dde3;
   background: #fff; color: #1a1a1a; border-radius: 4px; padding: 0 0 40px; font-size: 13px; line-height: 1.55;
   font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif; }
 .cover { background: var(--ink); color: #fff; padding: 40px 52px 34px; border-radius: 4px 4px 0 0; }
@@ -40,7 +40,7 @@
 .barLabel small { font-size: 10.5px; color: var(--muted); }
 .barTrack { position: relative; height: 14px; background: #eef1f5; }
 .barFill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); }
-.barFill[data-weak="1"] { background: #8aa8d1; }
+.barFill[data-weak="1"] { background: #a4a4a4; }
 .barFill[data-own="1"] { background: var(--ink); }
 .barMark { position: absolute; top: -3px; bottom: -3px; border-left: 1.5px dashed var(--ink); }
 .barValue { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--ink); }

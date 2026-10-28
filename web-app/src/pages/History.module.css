@@ -509,5 +509,5 @@
 
 /* Overall score as the app's standard thin bar (pillar scores on hover). */
 .itemBar { display: block; width: 88px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.08); overflow: hidden; flex-shrink: 0; }
-.itemBar span { display: block; height: 100%; background: #2B8FE3; border-radius: 2px; }
+.itemBar span { display: block; height: 100%; background: #ffffff; border-radius: 2px; }
 @media (max-width: 640px) { .itemBar { display: none; } }

@@ -18,19 +18,19 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
       <section className="pt-36 pb-20 px-6 relative overflow-hidden">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="inline-flex items-center gap-2 rounded-md border border-[#2B8FE3]/30 bg-[#2B8FE3]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[#8ac2f4] mb-6">
+            <div className="inline-flex items-center gap-2 rounded-md border border-[#ffffff]/30 bg-[#ffffff]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[#bdbdbd] mb-6">
               <MapPin className="w-3.5 h-3.5" /> For Local Businesses
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.05] mb-6" style={{ letterSpacing: '-0.04em' }}>
               When someone asks AI<br />
-              <span className="text-[#5aa9ef]">"who's the best plumber near me?"</span><br />
+              <span className="text-[#bdbdbd]">"who's the best plumber near me?"</span><br />
               will they find you?
             </h1>
             <p className="text-neutral-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
               ChatGPT, Google's AI Overviews, Perplexity and Claude are answering local business questions millions of times a day. rain OS checks what each one says about your city, and helps your business show up and get called.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/login" className="inline-flex items-center gap-2 bg-[#2B8FE3] hover:bg-[#1C73C4] text-white rounded-md px-7 py-3.5 text-sm font-medium transition-colors">
+              <a href="/login" className="inline-flex items-center gap-2 bg-[#ffffff] hover:bg-neutral-200 text-white rounded-md px-7 py-3.5 text-sm font-medium transition-colors">
                 Analyze my business site
                 <ArrowRight className="w-4 h-4" />
               </a>
@@ -46,7 +46,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
       <section className="py-20 px-6 border-t border-white/[0.06]">
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
-            <span className="text-[#5aa9ef] font-bold tracking-wider text-xs uppercase mb-3 block">The new reality</span>
+            <span className="text-[#bdbdbd] font-bold tracking-wider text-xs uppercase mb-3 block">The new reality</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">People stopped Googling. They're asking AI.</h2>
             <p className="text-neutral-400 max-w-2xl mx-auto text-lg leading-relaxed">
               Your customers used to type keywords into Google and scroll through results. Now they ask ChatGPT or their phone's AI assistant a full question — and get one answer back. If you're not in that answer, you don't exist.
@@ -103,9 +103,9 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
             {[
               {
                 step: '01',
-                color: 'text-[#5aa9ef]',
-                borderColor: 'border-[#2B8FE3]/30',
-                bgColor: 'bg-[#2B8FE3]/10',
+                color: 'text-[#bdbdbd]',
+                borderColor: 'border-[#ffffff]/30',
+                bgColor: 'bg-[#ffffff]/10',
                 icon: Search,
                 title: 'We analyze your website',
                 body: 'Paste your homepage copy or give us your URL. rain OS reads your site the way AI engines do — not as a pretty webpage, but as raw information. We score it across the exact signals that AI systems use to decide what to recommend.',
@@ -187,7 +187,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
       <section className="py-20 px-6 border-t border-white/[0.06]">
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
-            <span className="text-[#5aa9ef] font-bold tracking-wider text-xs uppercase mb-3 block">What we score</span>
+            <span className="text-[#bdbdbd] font-bold tracking-wider text-xs uppercase mb-3 block">What we score</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Three of six pillars AI checks about your business</h2>
             <p className="text-neutral-400 max-w-2xl mx-auto">These are three of the six signals that AI engines use when deciding whether to recommend your business — alongside Local Presence (NAP consistency, service area, review signals), the single largest pillar in this lane at 30% weight. Most local business sites score poorly across the board — which means a huge opportunity for you.</p>
           </motion.div>
@@ -330,7 +330,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
           <div className="bg-white/[0.03] border border-white/10 rounded-3xl overflow-hidden">
             <div className="grid grid-cols-2 border-b border-white/10 bg-white/5">
               <div className="p-5 font-bold text-neutral-400 text-sm">Without rain OS</div>
-              <div className="p-5 font-bold text-[#5aa9ef] text-sm border-l border-white/5">With rain OS</div>
+              <div className="p-5 font-bold text-[#bdbdbd] text-sm border-l border-white/5">With rain OS</div>
             </div>
             {[
               ['Your website is invisible to AI search', 'AI engines can read, trust, and cite your business'],
@@ -348,7 +348,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                   {without}
                 </div>
                 <div className="p-5 flex items-start gap-2 text-sm text-neutral-300 border-l border-white/5">
-                  <CheckCircle2 className="w-4 h-4 text-[#5aa9ef] mt-0.5 shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-[#bdbdbd] mt-0.5 shrink-0" />
                   {with_}
                 </div>
               </div>
@@ -378,14 +378,14 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
       <section className="py-24 px-6 border-t border-white/[0.06] relative overflow-hidden">
         <div className="max-w-2xl mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <MapPin className="w-10 h-10 text-[#5aa9ef] mx-auto mb-6" />
+            <MapPin className="w-10 h-10 text-[#bdbdbd] mx-auto mb-6" />
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-5">
               Start getting found by AI today
             </h2>
             <p className="text-neutral-400 text-lg mb-8 leading-relaxed">
               Sign up, choose Local Businesses as your lane, and scan your homepage. rain OS shows you exactly where you're losing customers to AI search, and how to fix it.
             </p>
-            <a href="/login" className="inline-flex items-center gap-2 bg-[#2B8FE3] hover:bg-[#1C73C4] text-white rounded-md px-8 py-4 text-base font-medium transition-colors">
+            <a href="/login" className="inline-flex items-center gap-2 bg-[#ffffff] hover:bg-neutral-200 text-white rounded-md px-8 py-4 text-base font-medium transition-colors">
               Analyze my business free
               <ArrowRight className="w-5 h-5" />
             </a>

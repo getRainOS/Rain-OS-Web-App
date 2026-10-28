@@ -1427,9 +1427,9 @@ button.emptyLink {
   flex-wrap: wrap;
   margin-top: 14px;
   padding: 12px 14px;
-  border: 1px solid rgba(43, 143, 227, 0.25);
+  border: 1px solid rgba(255,255,255, 0.25);
   border-radius: 10px;
-  background: rgba(43, 143, 227, 0.06);
+  background: rgba(255,255,255, 0.06);
 }
 
 .improveText { display: grid; gap: 3px; min-width: 0; }
@@ -1531,7 +1531,7 @@ button.emptyLink {
 .recentMore:hover { color: var(--text); }
 
 .focusHelp { position: relative; display: inline-flex; }
-.focusHelpBtn { display: inline-flex; background: none; border: 0; padding: 4px; cursor: pointer; color: var(--accent, #3b9cf5); }
+.focusHelpBtn { display: inline-flex; background: none; border: 0; padding: 4px; cursor: pointer; color: var(--accent, #898989); }
 .focusHelpBtn:hover { color: var(--text); }
 .focusHelpPop { position: absolute; top: 100%; left: 0; z-index: 20; width: 340px; max-width: 80vw; margin-top: 6px; padding: 12px 14px; background: var(--surface, #141414); border: 1px solid var(--border); border-radius: 6px; font-size: 12.5px; line-height: 1.5; color: var(--text-dim); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
 .focusHelpPop p { margin: 0; }
@@ -1545,9 +1545,9 @@ button.emptyLink {
 .brandViewSelect { min-width: 170px; }
 
 /* The lane already chosen: logo blue border, faint blue fill. */
-.laneCardCurrent { border-color: #2B8FE3; background: rgba(43, 143, 227, 0.08); }
-.laneCardCurrent:hover { border-color: #2B8FE3; background: rgba(43, 143, 227, 0.12); }
-.laneCardCurrent .laneCardCta { color: #2B8FE3; opacity: 1; }
+.laneCardCurrent { border-color: #ffffff; background: rgba(255,255,255, 0.08); }
+.laneCardCurrent:hover { border-color: #ffffff; background: rgba(255,255,255, 0.12); }
+.laneCardCurrent .laneCardCta { color: #ffffff; opacity: 1; }
 .laneCardStats { margin-top: 10px; font-size: 12px; color: var(--text-dim); }
 .laneWeightsHead { margin-top: 36px; text-align: left; }
 .laneWeightsHead h3 { margin: 0; font-size: 15px; font-weight: 600; color: var(--text); }
@@ -1555,11 +1555,11 @@ button.emptyLink {
 
 /* Ranked pillars: the standard thin bar under each row (see MetricBars). */
 .heroRankBar { flex-basis: 100%; display: block; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.08); overflow: hidden; margin-top: 6px; }
-.heroRankBar span { display: block; height: 100%; background: #2B8FE3; border-radius: 2px; }
+.heroRankBar span { display: block; height: 100%; background: #ffffff; border-radius: 2px; }
 
 /* Recent analyses: overall score as the standard thin bar. */
 .analysisBar { display: block; width: 72px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.08); overflow: hidden; flex-shrink: 0; }
-.analysisBar span { display: block; height: 100%; background: #2B8FE3; border-radius: 2px; }
+.analysisBar span { display: block; height: 100%; background: #ffffff; border-radius: 2px; }
 @media (max-width: 640px) { .analysisBar { display: none; } }
 
 /* Pillar scores as score rings beside the trend chart. */
@@ -1571,8 +1571,8 @@ button.emptyLink {
    layouts wrap, so the selected card is outlined instead. */
 .toolCardButton { font: inherit; color: inherit; text-align: left; cursor: pointer; width: 100%; }
 .toolCardMapHint { margin-top: auto; font-size: 12px; color: var(--text-dim); }
-.toolCardSelected .toolCardMapHint { color: #2B8FE3; }
-.toolCardSelected, .toolCardSelected:hover { border-color: #2B8FE3; }
+.toolCardSelected .toolCardMapHint { color: #ffffff; }
+.toolCardSelected, .toolCardSelected:hover { border-color: #ffffff; }
 
 @media (min-width: 1280px) {
   .toolCards { align-items: stretch; margin-bottom: 0; }
@@ -1585,7 +1585,7 @@ button.emptyLink {
     padding-bottom: 29px;
     background: var(--bg-card, #111);
     border-color: var(--border);
-    border-top: 2px solid #2B8FE3;
+    border-top: 2px solid #ffffff;
     border-bottom-color: var(--bg-card, #111);
     border-radius: 10px 10px 0 0;
   }

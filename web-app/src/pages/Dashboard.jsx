@@ -1006,7 +1006,7 @@ export default function Dashboard() {
               {recentPieces.slice(0, recentMore ? 30 : 7).map((piece, i) => {
                 const item = piece.latest;
                 const type = getItemType(item);
-                const typeColor = type === 'URL' ? '#8f93c7' : type === 'Repo' ? '#7cae8f' : '#6b9bc4';
+                const typeColor = type === 'URL' ? '#989898' : type === 'Repo' ? '#7cae8f' : '#919191';
                 const TypeIcon = type === 'URL' ? Globe : type === 'Repo' ? GitBranch : FileText;
                 return (
                   <div key={i} className={styles.analysisRow}>

@@ -560,7 +560,7 @@ export default function ShareOfVoice() {
                           contentStyle={{ background: '#0a0a0a', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, fontSize: 12 }}
                           formatter={v => [`${v} of 3 prompts`, 'Mentioned']}
                         />
-                        <Line type="monotone" dataKey="mentions" stroke="#2B8FE3" strokeWidth={2.5} dot={{ r: 5, fill: '#2B8FE3', strokeWidth: 0 }} isAnimationActive={false} />
+                        <Line type="monotone" dataKey="mentions" stroke="#ffffff" strokeWidth={2.5} dot={{ r: 5, fill: '#ffffff', strokeWidth: 0 }} isAnimationActive={false} />
                       </LineChart>
                     </ResponsiveContainer>
                   </div>

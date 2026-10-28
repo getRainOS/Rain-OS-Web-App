@@ -46,7 +46,7 @@ export default function BrandNameLine({ analysisId, brand, fromPage }) {
         : <>No brand name found on this page.</>}
       <span style={{ color: 'var(--text-dim)' }}>· used to check whether AI names you</span>
       {analysisId && (
-        <button type="button" onClick={() => setEditing(true)} style={{ background: 'none', border: 'none', color: '#2B8FE3', cursor: 'pointer', padding: 0, fontSize: 13 }}>
+        <button type="button" onClick={() => setEditing(true)} style={{ background: 'none', border: 'none', color: '#ffffff', cursor: 'pointer', padding: 0, fontSize: 13 }}>
           {saved ? 'Edit' : 'Add one'}
         </button>
       )}

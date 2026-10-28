@@ -20,9 +20,9 @@
   /* ── Accent: now chart-only (every UI-chrome use was swept to
      monochrome) — bright/fluorescent for the single-series trend
      line and scatter plot that still reach for it ── */
-  --accent: #2B8FE3; /* logo blue; the standard bar and line colour */
-  --accent-hover: #4FA3EA;
-  --accent-glow: rgba(43,143,227,0.15);
+  --accent: #ffffff; /* the standard bar and line colour: white on the dark app */
+  --accent-hover: #d4d4d4;
+  --accent-glow: rgba(255,255,255,0.08);
 
   /* ── Text ── */
   --text: #f5f5f5;
@@ -31,7 +31,7 @@
   --text-faint: rgba(255,255,255,0.18);
 
   /* ── Pillar / status colors: muted, professional ── */
-  --cyan:   #2B8FE3;
+  --cyan:   #ffffff;
   --green:  #4ade80;
   --orange: #fb923c;
   --red:    #f87171;
@@ -192,7 +192,7 @@ input, textarea, select {
   height: 10px;
   border: 0;
   border-radius: 50%;
-  background: #2B8FE3;
+  background: #ffffff;
   animation: softPulse 1.2s ease-in-out infinite;
 }
 @keyframes softPulse {

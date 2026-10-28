@@ -2,7 +2,7 @@
 .crumb {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 5px 6px 5px 12px; border-radius: 8px;
-  border: 1px solid rgba(43, 143, 227, 0.35); background: rgba(43, 143, 227, 0.1);
+  border: 1px solid rgba(255,255,255, 0.35); background: rgba(255,255,255, 0.1);
   color: var(--text); font-size: 13px; font-weight: 500;
 }
 .crumbX { display: inline-grid; place-items: center; width: 20px; height: 20px; border: 0; background: transparent; color: var(--text-muted); border-radius: 5px; cursor: pointer; }

@@ -2,7 +2,7 @@ import styles from './ScoreDonut.module.css';
 
 // A crisp score ring: thin arc on a faint track, the score in the centre as a
 // tabular number, label and optional change underneath.
-export default function ScoreDonut({ score, label, color = '#2B8FE3', size = 72, stroke = 5, delta = null }) {
+export default function ScoreDonut({ score, label, color = '#ffffff', size = 72, stroke = 5, delta = null }) {
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   const pct = Math.max(0, Math.min(100, Number(score) || 0));

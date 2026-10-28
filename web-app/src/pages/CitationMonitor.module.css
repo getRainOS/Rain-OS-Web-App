@@ -198,9 +198,9 @@
 }
 
 .input:focus {
-  border-color: rgba(43, 143, 227, 0.7);
+  border-color: rgba(255,255,255, 0.7);
   background: rgba(0, 0, 0, 0.5);
-  box-shadow: 0 0 0 3px rgba(43, 143, 227, 0.18);
+  box-shadow: 0 0 0 3px rgba(255,255,255, 0.18);
 }
 
 .input::placeholder { color: rgba(255, 255, 255, 0.28); }
@@ -1142,8 +1142,8 @@
 }
 
 .consoleSourceMine {
-  border-color: rgba(43, 143, 227, 0.4);
-  background: rgba(43, 143, 227, 0.1);
+  border-color: rgba(255,255,255, 0.4);
+  background: rgba(255,255,255, 0.1);
   color: var(--text);
 }
 
@@ -1380,11 +1380,11 @@
 
 .typeSeg { min-width: 4px; }
 
-.typeSeg[data-type="you"],      .typeDot[data-type="you"]      { background: #2B8FE3; }
+.typeSeg[data-type="you"],      .typeDot[data-type="you"]      { background: #ffffff; }
 .typeSeg[data-type="forums"],   .typeDot[data-type="forums"]   { background: #F2994A; }
 .typeSeg[data-type="reviews"],  .typeDot[data-type="reviews"]  { background: #27AE60; }
 .typeSeg[data-type="news"],     .typeDot[data-type="news"]     { background: #BB6BD9; }
-.typeSeg[data-type="reference"],.typeDot[data-type="reference"]{ background: #56CCF2; }
+.typeSeg[data-type="reference"],.typeDot[data-type="reference"]{ background: #adadad; }
 .typeSeg[data-type="video"],    .typeDot[data-type="video"]    { background: #EB5757; }
 .typeSeg[data-type="social"],   .typeDot[data-type="social"]   { background: #F2C94C; }
 .typeSeg[data-type="shopping"], .typeDot[data-type="shopping"] { background: #6FCF97; }
@@ -1483,7 +1483,7 @@
 .gptLocked p { margin: 4px 0 0; font-size: 13px; color: var(--text-dim); max-width: 520px; }
 
 /* Content without a website: how to make it trackable. */
-.unpublishedCard { margin-top: 16px; padding: 16px 18px; border: 1px solid rgba(43,143,227,0.35); border-radius: 12px; background: rgba(43,143,227,0.05); }
+.unpublishedCard { margin-top: 16px; padding: 16px 18px; border: 1px solid rgba(255,255,255,0.35); border-radius: 12px; background: rgba(255,255,255,0.05); }
 .unpublishedTitle { margin: 0 0 6px; font-size: 14px; font-weight: 600; color: var(--text); }
 .unpublishedText { margin: 0; font-size: 13px; line-height: 1.6; color: var(--text-muted); max-width: 720px; }
 .unpublishedActions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
