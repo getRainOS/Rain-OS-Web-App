@@ -2,6 +2,7 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 // api/index.ts
 import express from 'express';
+import { captureError } from '../services/monitoring';
 import cors from 'cors';
 import { setupDatabase } from '../services/dbSetup';
 import process from 'process';
@@ -233,6 +234,14 @@ app.get( '/v1/ai/content/:contentId', aiContentHandler);
 app.get( '/v1/ai/diagnostics/:contentId', aiDiagnosticsHandler);
 // Note: /v1/v1/* paths removed — they were duplicates from a copy-paste error
 // in the original index.ts and had no legitimate callers.
+// Last-resort handler: report the error, and never leak its details to the client.
+app.use((err: any, req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  captureError(err, { route: req.path, method: req.method });
+  console.error('Unhandled request error:', err?.message || err);
+  if (res.headersSent) return;
+  res.status(500).json({ error: 'internal_server_error', message: 'Something went wrong. Please try again.' });
+});
+
 app.listen(port, () => {
 console.log(`rain OS backend listening on port ${port}`);
 startScheduler();
@@ -242,6 +251,7 @@ startServer().catch((err) => {
 
 
 
+captureError(err, { phase: 'startup' });
 console.error('Failed to start server:', err);
 process.exit(1);
 });
