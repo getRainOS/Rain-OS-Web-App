@@ -1,4 +1,4 @@
-import Logo from '@/components/Logo.jsx';
+import Logo from '@/components/Logo.tsx';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Menu, X } from 'lucide-react';

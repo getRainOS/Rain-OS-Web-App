@@ -1,4 +1,4 @@
-import Logo from './Logo.jsx';
+import Logo from './Logo.tsx';
 import { useState } from 'react';
 import { supabase } from '../lib/supabase.js';
 import { setApiKey, api } from '../api/client.js';

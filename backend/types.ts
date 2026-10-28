@@ -234,3 +234,11 @@ export interface NormalizationFingerprint {
   citation: number;
   visibility: number;
   }
+
+// One AI-cited source as saved with a check or analysis (engines build these).
+export interface CitedSource {
+  title: string;
+  url: string;
+  domain: string;
+  snippet?: string;
+}

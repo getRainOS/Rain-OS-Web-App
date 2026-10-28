@@ -1,4 +1,4 @@
-import Logo from '../components/Logo.jsx';
+import Logo from '../components/Logo.tsx';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Printer } from 'lucide-react';

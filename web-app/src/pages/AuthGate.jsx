@@ -1,4 +1,4 @@
-import Logo from '../components/Logo.jsx';
+import Logo from '../components/Logo.tsx';
 import { useState } from 'react';
 import { setApiKey, api } from '../api/client.js';
 import styles from './AuthGate.module.css';
