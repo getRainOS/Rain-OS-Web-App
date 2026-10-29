@@ -168,11 +168,12 @@ function Card({ tone, label, note, answer }: { tone: 'before' | 'after'; label: 
   );
 }
 
-const ROTATE_MS = 9000; // how long each lane stays on screen
+const ROTATE_MS = 4000; // how long each lane stays on screen before the next one
 
 export default function IllustratedExample() {
   const [index, setIndex] = useState(0);
   const [inView, setInView] = useState(false);
+  const [locked, setLocked] = useState(false); // a tab press keeps that lane on screen
   const sectionRef = useRef<HTMLElement | null>(null);
   const ex = EXAMPLES[index];
   const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -187,10 +188,15 @@ export default function IllustratedExample() {
   }, []);
 
   useEffect(() => {
-    if (reduceMotion || !inView) return;
+    if (reduceMotion || !inView || locked) return;
     const t = window.setInterval(() => setIndex(i => (i + 1) % EXAMPLES.length), ROTATE_MS);
     return () => window.clearInterval(t);
-  }, [inView, reduceMotion]);
+  }, [inView, reduceMotion, locked]);
+
+  const pick = (i: number) => {
+    setIndex(i);
+    setLocked(true);
+  };
 
   return (
     <section ref={sectionRef} className="relative z-10 py-24 border-t border-white/[0.06]">
@@ -201,6 +207,20 @@ export default function IllustratedExample() {
           <p className="mt-4 text-neutral-400 max-w-2xl mx-auto">
             The same question, before and after two fixes, for each kind of business.
           </p>
+        </div>
+
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-2" role="tablist" aria-label="Lane examples">
+          {EXAMPLES.map((e, i) => (
+            <button
+              key={e.id}
+              role="tab"
+              aria-selected={i === index}
+              onClick={() => pick(i)}
+              className={`h-9 px-4 rounded-full text-[13px] border transition-colors ${i === index ? 'bg-white text-black border-white' : 'border-white/15 text-neutral-300 hover:border-white/30'}`}
+            >
+              {e.tab}
+            </button>
+          ))}
         </div>
 
         <motion.div className="mt-8" key={ex.id} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.4 }}>
