@@ -13,6 +13,7 @@ import CitationMapCard from '../components/CitationMapCard.jsx';
 import MapsGridCard from '../components/MapsGridCard.jsx';
 import { enginesOf } from '../lib/engines.js';
 import AnswerSourcesCard from '../components/AnswerSourcesCard.jsx';
+import AiCrawlerCard from '../components/AiCrawlerCard.jsx';
 import { buildSubjects, subjectHint, checkBelongs, getSubjectKey, setSubjectKey } from '../lib/subjects.js';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid } from 'recharts';
 import { FileText, Globe, GitBranch, ArrowRight, Activity, Zap, Heart, Radar, BarChart2, Lock, Sparkles, HelpCircle, ChevronDown } from 'lucide-react';
@@ -756,6 +757,7 @@ export default function Dashboard() {
       })()}
 
       <AnswerSourcesCard subject={subject} cardClass={styles.chartCard} titleClass={styles.chartTitle} subClass={styles.chartSub} />
+      <AiCrawlerCard cardClass={styles.chartCard} titleClass={styles.chartTitle} subClass={styles.chartSub} />
 
       {/* Local businesses see the essentials; the full dashboard is one click away. */}
       {isLocal && (
