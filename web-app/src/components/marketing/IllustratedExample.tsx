@@ -168,63 +168,42 @@ function Card({ tone, label, note, answer }: { tone: 'before' | 'after'; label: 
   );
 }
 
-const ROTATE_MS = 9000;      // how long each lane stays on screen
-const RESUME_AFTER_CLICK_MS = 30000; // a manual pick pauses rotation for a while
+const ROTATE_MS = 9000; // how long each lane stays on screen
 
 export default function IllustratedExample() {
   const [index, setIndex] = useState(0);
-  const [hovering, setHovering] = useState(false);
-  const [pausedUntil, setPausedUntil] = useState(0);
-  const pauseTimer = useRef<number | undefined>(undefined);
+  const [inView, setInView] = useState(false);
+  const sectionRef = useRef<HTMLElement | null>(null);
   const ex = EXAMPLES[index];
   const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
-  // Rotate through the lanes on their own, unless paused or reduced motion is on.
+  // Run only while the section is on screen, so it starts when someone arrives.
   useEffect(() => {
-    if (reduceMotion || hovering || Date.now() < pausedUntil) return;
+    const el = sectionRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.35 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (reduceMotion || !inView) return;
     const t = window.setInterval(() => setIndex(i => (i + 1) % EXAMPLES.length), ROTATE_MS);
     return () => window.clearInterval(t);
-  }, [hovering, pausedUntil, reduceMotion, index]);
-
-  useEffect(() => () => window.clearTimeout(pauseTimer.current), []);
-
-  const pick = (i: number) => {
-    setIndex(i);
-    setPausedUntil(Date.now() + RESUME_AFTER_CLICK_MS);
-    window.clearTimeout(pauseTimer.current);
-    pauseTimer.current = window.setTimeout(() => setPausedUntil(0), RESUME_AFTER_CLICK_MS);
-  };
+  }, [inView, reduceMotion]);
 
   return (
-    <section
-      className="relative z-10 py-24 border-t border-white/[0.06]"
-      onMouseEnter={() => setHovering(true)}
-      onMouseLeave={() => setHovering(false)}
-    >
+    <section ref={sectionRef} className="relative z-10 py-24 border-t border-white/[0.06]">
       <div className="max-w-5xl mx-auto px-6">
         <div className="text-center">
           <div className="text-[11px] uppercase tracking-[0.16em] text-neutral-500" style={MONO}>Example</div>
           <h2 className="mt-3 text-3xl md:text-4xl font-semibold tracking-[-0.03em] text-white">What a before and after looks like</h2>
           <p className="mt-4 text-neutral-400 max-w-2xl mx-auto">
-            The same question, before and after two fixes. Pick the lane that fits you.
+            The same question, before and after two fixes, for each kind of business.
           </p>
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-2" role="tablist" aria-label="Lane examples">
-          {EXAMPLES.map((e, i) => (
-            <button
-              key={e.id}
-              role="tab"
-              aria-selected={i === index}
-              onClick={() => pick(i)}
-              className={`h-9 px-4 rounded-full text-[13px] border transition-colors ${i === index ? 'bg-white text-black border-white' : 'border-white/15 text-neutral-300 hover:border-white/30'}`}
-            >
-              {e.tab}
-            </button>
-          ))}
-        </div>
-
-        <motion.div key={ex.id} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.4 }}>
+        <motion.div className="mt-8" key={ex.id} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.4 }}>
           <Drawing strokes={ex.drawing} />
 
           <div className="mt-6 text-center">
