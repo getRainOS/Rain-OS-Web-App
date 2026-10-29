@@ -21,7 +21,17 @@ export default function Logo({ size = 24, className = '', label = 'rain' }: Logo
       fill="currentColor"
     >
       {showDashes && DASHES.map((d, i) => (
-        <rect key={i} x={d.x} y={d.y} width={26} height={d.h} rx={13} fillOpacity={d.o} />
+        <line
+          key={i}
+          x1={d.x + 13}
+          y1={d.y + 13}
+          x2={d.x + 13}
+          y2={d.y + d.h - 13}
+          stroke="currentColor"
+          strokeWidth={2.5}
+          strokeLinecap="round"
+          vectorEffect="non-scaling-stroke"
+        />
       ))}
       <path d={WORDMARK.path} />
     </svg>

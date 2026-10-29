@@ -16,4 +16,4 @@ export const DASHES: Array<{ x: number; y: number; h: number; o: number }> = [
     { x: 160, y: -1600, h: 120, o: 1 },
 ];
 
-export const DASH_MIN_SIZE = 40;
+export const DASH_MIN_SIZE = 0;
