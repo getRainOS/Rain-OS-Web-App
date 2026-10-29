@@ -1,4 +1,5 @@
 import React from 'react';
+import PlumberIllustration from './PlumberIllustration';
 
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
 
@@ -43,6 +44,8 @@ export default function IllustratedExample() {
             A plumber in Austin asked AI for an emergency plumber. The same question, before and after two fixes.
           </p>
         </div>
+
+        <PlumberIllustration className="mx-auto mt-10 w-full max-w-sm text-white" />
 
         <div className="mt-6 text-center">
           <span className="inline-block rounded-md border border-white/10 bg-black px-4 py-2 text-[14px] text-neutral-200">{QUESTION}</span>
