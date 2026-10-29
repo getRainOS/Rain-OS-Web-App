@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
@@ -168,12 +168,39 @@ function Card({ tone, label, note, answer }: { tone: 'before' | 'after'; label: 
   );
 }
 
+const ROTATE_MS = 9000;      // how long each lane stays on screen
+const RESUME_AFTER_CLICK_MS = 30000; // a manual pick pauses rotation for a while
+
 export default function IllustratedExample() {
-  const [laneId, setLaneId] = useState(EXAMPLES[0].id);
-  const ex = EXAMPLES.find(e => e.id === laneId) ?? EXAMPLES[0];
+  const [index, setIndex] = useState(0);
+  const [hovering, setHovering] = useState(false);
+  const [pausedUntil, setPausedUntil] = useState(0);
+  const pauseTimer = useRef<number | undefined>(undefined);
+  const ex = EXAMPLES[index];
+  const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+  // Rotate through the lanes on their own, unless paused or reduced motion is on.
+  useEffect(() => {
+    if (reduceMotion || hovering || Date.now() < pausedUntil) return;
+    const t = window.setInterval(() => setIndex(i => (i + 1) % EXAMPLES.length), ROTATE_MS);
+    return () => window.clearInterval(t);
+  }, [hovering, pausedUntil, reduceMotion, index]);
+
+  useEffect(() => () => window.clearTimeout(pauseTimer.current), []);
+
+  const pick = (i: number) => {
+    setIndex(i);
+    setPausedUntil(Date.now() + RESUME_AFTER_CLICK_MS);
+    window.clearTimeout(pauseTimer.current);
+    pauseTimer.current = window.setTimeout(() => setPausedUntil(0), RESUME_AFTER_CLICK_MS);
+  };
 
   return (
-    <section className="relative z-10 py-24 border-t border-white/[0.06]">
+    <section
+      className="relative z-10 py-24 border-t border-white/[0.06]"
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+    >
       <div className="max-w-5xl mx-auto px-6">
         <div className="text-center">
           <div className="text-[11px] uppercase tracking-[0.16em] text-neutral-500" style={MONO}>Example</div>
@@ -184,13 +211,13 @@ export default function IllustratedExample() {
         </div>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-2" role="tablist" aria-label="Lane examples">
-          {EXAMPLES.map(e => (
+          {EXAMPLES.map((e, i) => (
             <button
               key={e.id}
               role="tab"
-              aria-selected={e.id === ex.id}
-              onClick={() => setLaneId(e.id)}
-              className={`h-9 px-4 rounded-full text-[13px] border transition-colors ${e.id === ex.id ? 'bg-white text-black border-white' : 'border-white/15 text-neutral-300 hover:border-white/30'}`}
+              aria-selected={i === index}
+              onClick={() => pick(i)}
+              className={`h-9 px-4 rounded-full text-[13px] border transition-colors ${i === index ? 'bg-white text-black border-white' : 'border-white/15 text-neutral-300 hover:border-white/30'}`}
             >
               {e.tab}
             </button>
