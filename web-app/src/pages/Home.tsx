@@ -11,6 +11,7 @@ import SiteFooter from '@/components/marketing/SiteFooter';
 import { Pricing, FAQ } from '@/components/marketing/MarketingComponents';
 import { useLiveEngines, joinNames } from '@/lib/liveEngines';
 import HeroPrompt from '@/components/marketing/HeroPrompt';
+import IllustratedExample from '@/components/marketing/IllustratedExample';
 
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
 
@@ -683,6 +684,7 @@ export default function Home() {
         </section>
 
         <WhoSection onStart={start} />
+        <IllustratedExample />
         <HowItWorks />
 
         <section className="relative z-10 border-y border-white/[0.06] bg-white/[0.01]">
