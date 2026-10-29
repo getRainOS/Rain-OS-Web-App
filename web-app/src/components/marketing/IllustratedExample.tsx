@@ -211,7 +211,7 @@ export default function IllustratedExample() {
         </motion.div>
 
         <p className="mt-6 text-center text-[12px] text-neutral-500" style={MONO}>
-          Illustrative examples. All business names are invented, and these are not customers or results.
+          Illustrative examples. All business names are invented, and these are not customers or results. Real results vary and take time: checks run weekly, and changes to a page can take weeks to show up in AI answers.
         </p>
       </div>
     </section>
