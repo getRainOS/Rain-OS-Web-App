@@ -10,10 +10,10 @@ export const WORDMARK: { viewBox: string; path: string } = {
 };
 
 export const DASHES: Array<{ x: number; y: number; h: number; o: number }> = [
-    { x: 170, y: -1820, h: 250, o: 1 },
-    { x: 275, y: -1700, h: 180, o: 1 },
-    { x: 380, y: -1900, h: 120, o: 1 },
-    { x: 160, y: -1600, h: 120, o: 1 },
+    { x: 153, y: -1820, h: 250, o: 1 },
+    { x: 258, y: -1700, h: 180, o: 1 },
+    { x: 363, y: -1900, h: 120, o: 1 },
+    { x: 143, y: -1600, h: 120, o: 1 },
 ];
 
 export const DASH_MIN_SIZE = 0;
