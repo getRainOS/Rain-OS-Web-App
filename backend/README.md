@@ -1,6 +1,6 @@
 # Rain OS: Headless AI Readability Analysis Engine
 
-This repository contains the backend API for Rain OS, a headless service that analyzes web content to score and improve its AI Readability for Answer Engine Optimization (AEO). This service is designed to be consumed by other applications, such as a WordPress plugin or a custom frontend dashboard.
+This repository contains the backend API for Rain OS, a headless service that analyzes web content to score and improve its AI Readability for Answer Engine Optimization (AEO). This service is designed to be consumed by other applications, such as the rain OS web app or a custom frontend dashboard.
 
 ## Features
 
