@@ -195,46 +195,6 @@ export interface UrlScanRequest {
 url: string;
 industry?: string;
 }
-// ─── AI Readiness / plugin-facing types (unchanged) ──────────────────────────
-export interface NormalizedChunk {
-chunkId: string;
-type: 'heading' | 'paragraph' | 'list' | 'table';
-text: string;
-wordCount: number;
-headingLevel?: number;
-index: number;
-}
-export interface RecommendationArtifact {
-  type: 'json-ld' | 'llms-txt' | 'robots-txt' | 'html';
-  content: string;
-  filename?: string;
-}
-
-export interface AIRecommendation {
-scope: 'chunk' | 'section' | 'document';
-chunkId?: string;
-sectionId?: string;
-category: 'readability' | 'structure' | 'freshness' | 'citation' |'visibility';
-severity: 'low' | 'medium' | 'high';
-issue: string;
-recommendation: string;
-expectedImpact: number;
-artifact?: RecommendationArtifact;
-}
-
-export interface NormalizationFingerprint {
-  structureHash: string;
-  outboundLinksHash: string;
-  freshnessHash: string;
-  }
-  export interface AIReadinessScores {
-  readability: number;
-  structure: number;
-  freshness: number;
-  citation: number;
-  visibility: number;
-  }
-
 // One AI-cited source as saved with a check or analysis (engines build these).
 export interface CitedSource {
   title: string;

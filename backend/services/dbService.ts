@@ -521,29 +521,6 @@ export const incrementUsageAndSaveAnalysis = async (
 };
 
 // --------------------------
-// AI content profile cache (additive)
-// --------------------------
-
-export const upsertAiContentProfile = async (contentId: string, profileData: any, fingerprint?: any): Promise<void> => {
-  await pool.query(
-    `INSERT INTO ai_content_profiles (content_id, profile_data, fingerprint, updated_at)
-     VALUES ($1, $2, $3, NOW())
-     ON CONFLICT (content_id)
-     DO UPDATE SET profile_data = $2, fingerprint = COALESCE($3, ai_content_profiles.fingerprint), updated_at = NOW()`,
-    [contentId, JSON.stringify(profileData), fingerprint ? JSON.stringify(fingerprint) : null]
-  );
-};
-
-export const getAiContentProfile = async (contentId: string): Promise<{ profile_data: any; fingerprint: any } | null> => {
-  const res = await pool.query('SELECT profile_data, fingerprint FROM ai_content_profiles WHERE content_id = $1', [contentId]);
-  if (!res.rows[0]) return null;
-  return {
-    profile_data: res.rows[0].profile_data,
-    fingerprint: res.rows[0].fingerprint,
-  };
-};
-
-// --------------------------
 // Citation Monitor history
 // --------------------------
 

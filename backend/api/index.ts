@@ -42,10 +42,6 @@ import createCheckoutSessionHandler from './stripe/create-checkout-session';
 import createPortalSessionHandler from './stripe/create-portal-session';
 import stripeWebhookHandler from './stripe/webhook';
 // AI readiness
-import aiSiteLlmsHandler from './ai/site-llms';
-import aiNormalizeHandler from './ai/normalize';
-import aiContentHandler from './ai/content';
-import aiDiagnosticsHandler from './ai/diagnostics';
 // GitHub OAuth + Repo Analysis
 import githubOauthHandler from './github/oauth';
 import githubCallbackHandler from './github/callback';
@@ -72,8 +68,6 @@ import { listHandler as brandLinksListHandler, saveHandler as brandLinksSaveHand
 import { optionsHandler as topicOptionsHandler, questionsHandler as topicQuestionsHandler } from './topic';
 import questionGapHandler from './question-gap';
 // ─── CORS configuration ───────────────────────────────────────────────────────
-// IMPORTANT: Keep origin: '*' so the WordPress plugin works from any site.
-// Restricting origin here would 403 every WP install that has the plugin.
 // The web app (app.getrainos.com) works fine with wildcard origin.
 // If you need credentials: true for a specific frontend route in the future,
 // add a separate router with a scoped CORS config — do not change this globalone.
@@ -222,16 +216,7 @@ app.post('/api/github/analyze', analyzeRepoHandler);
 app.delete('/api/github/disconnect', disconnectGithubHandler);
 app.post('/api/github/preview-fixes', githubPreviewFixesHandler);
 app.post('/api/github/push-fixes', githubPushFixesHandler);
-// ─── Plugin-facing endpoints ───────────────────────────────────────────────
 // ─── AI Readiness endpoints ────────────────────────────────────────────────
-app.get( '/ai/site/llms', aiSiteLlmsHandler);
-app.post('/ai/normalize', aiNormalizeHandler);
-app.get( '/ai/content/:contentId', aiContentHandler);
-app.get( '/ai/diagnostics/:contentId', aiDiagnosticsHandler);
-app.get( '/v1/ai/site/llms', aiSiteLlmsHandler);
-app.post('/v1/ai/normalize', aiNormalizeHandler);
-app.get( '/v1/ai/content/:contentId', aiContentHandler);
-app.get( '/v1/ai/diagnostics/:contentId', aiDiagnosticsHandler);
 // Note: /v1/v1/* paths removed — they were duplicates from a copy-paste error
 // in the original index.ts and had no legitimate callers.
 // Last-resort handler: report the error, and never leak its details to the client.
