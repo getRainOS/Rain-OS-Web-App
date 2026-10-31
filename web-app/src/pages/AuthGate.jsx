@@ -31,7 +31,7 @@ export default function AuthGate({ onAuth, onBack }) {
     <div className={styles.root}>
       <div className={styles.bg} />
       <div className={styles.card}>
-        <div className={styles.logo}><Logo size={30} /></div>
+        <div className={styles.logo}><Logo size={40} /></div>
         <h1 className={styles.title}>AI Readability Optimizer</h1>
         <p className={styles.sub}>Enter your API key to get started</p>
 
