@@ -40,7 +40,7 @@ export default function Opportunities() {
   return (
     <div className={`${styles.page} fade-in`}>
       <PageHeader
-        title="Opportunities"
+        title="To-Do List"
         subtitle="What to do next to show up in AI answers, built from your checks and scans. Most important first."
         about={[
           { heading: 'Where these come from', body: 'Questions where Gemini didn’t cite you or ranked you low, forums and review sites it keeps citing for your questions, and pages that scored under 60 in URL Scanner.' },

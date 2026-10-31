@@ -276,7 +276,7 @@ export default function CitationMonitor() {
   return (
     <div className={`${styles.page} fade-in`}>
       <PageHeader
-        title="Citation Monitor"
+        title="Is AI Citing Me?"
         subtitle="Check whether AI engines cite your site when people ask about the topics you care about."
         about={[
           { heading: 'What the result means', body: 'Two results for each answer. Mentioned: the AI named your brand (needs only a name). Cited: it linked to your website as a source (needs a website). Each is what one real AI answer did at that moment, so track it over time rather than reading one check as a lasting rank.' },

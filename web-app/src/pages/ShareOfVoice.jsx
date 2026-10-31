@@ -250,7 +250,7 @@ export default function ShareOfVoice() {
     <div className={`${styles.page} fade-in`}>
 
       <PageHeader
-        title="Share of Voice"
+        title="Who AI Recommends"
         subtitle="See how often AI mentions and cites you for a topic, and which competitors show up instead."
         about={[
           { heading: 'What the numbers mean', body: 'Mentions and citation share are literal counts from three real AI answers, not a score. Re-run over time to see whether your presence is growing.' },

@@ -250,7 +250,7 @@ export default function RepoAnalysis() {
   if (reposLoading) {
     return (
       <div className={styles.root}>
-        <PageHeader title="Repo Analysis" subtitle="Connect a GitHub repository and see how easily AI can read and explain your project." />
+        <PageHeader title="GitHub Code Check" subtitle="Connect a GitHub repository and see how easily AI can read and explain your project." />
         <div className={styles.loadingState}>
           <span className="spinner" />
         </div>
@@ -263,7 +263,7 @@ export default function RepoAnalysis() {
 
   return (
     <div className={`${styles.root} fade-in`}>
-      <PageHeader title="Repo Analysis" subtitle="Connect a GitHub repository and see how easily AI can read and explain your project." />
+      <PageHeader title="GitHub Code Check" subtitle="Connect a GitHub repository and see how easily AI can read and explain your project." />
 
       {connectSuccess && (
         <div className={styles.connectSuccessBanner}>

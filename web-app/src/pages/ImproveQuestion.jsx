@@ -100,7 +100,7 @@ export default function ImproveQuestion() {
   return (
     <div className={`${styles.page} fade-in`}>
       <PageHeader
-        title="Improve a Question"
+        title="Fix One Question"
         subtitle="See what the pages Gemini cited do differently, and get the specific changes that give you the best shot at being chosen for one question."
         about={[
           { heading: 'How this differs from the Rain Score', body: 'The Rain Score rates a page in general. This looks at one question: the sources Gemini actually cited for it, and what yours would need to compete. Each step is tagged with the pillar it belongs to.' },
