@@ -49,7 +49,7 @@ export default function SiteFooter() {
         <div className="grid grid-cols-2 md:grid-cols-[1.4fr_repeat(4,1fr)] gap-10">
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="font-bold text-2xl tracking-tighter text-white" aria-label="rain OS home">
-              <Logo size={26} />
+              <Logo size={30} />
             </Link>
             <p className="mt-4 text-[13px] text-neutral-500 leading-relaxed max-w-[240px]">
               Answer Engine Optimization for teams that want to be the source AI cites.

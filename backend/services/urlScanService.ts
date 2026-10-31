@@ -1,6 +1,7 @@
 // services/urlScanService.ts — Cheerio HTML analysis. Zero API cost.
 import * as cheerio from 'cheerio';
 import { checkAllCrawlers, type CrawlerStatus } from './robotsCheck';
+import { safeFetch } from './safeFetch';
 
 export type DetectedPlatform = 'wordpress' | 'shopify' | 'wix' | 'squarespace' | 'custom';
 
@@ -488,7 +489,7 @@ export async function scanUrlForTechnicalSignals(
   let hasLlmsTxt = false;
   let llmsTxtIsThin = false;
   try {
-    const r = await fetch(`${parsedUrl.protocol}//${parsedUrl.host}/llms.txt`, {
+    const r = await safeFetch(`${parsedUrl.protocol}//${parsedUrl.host}/llms.txt`, {
       signal: AbortSignal.timeout(5000),
     });
     if (r.ok) {
@@ -504,7 +505,7 @@ export async function scanUrlForTechnicalSignals(
   // ─── robots.txt check (AI crawler access) ───────────────────────────────────
   let robotsTxtBody: string | null = null;
   try {
-    const r = await fetch(`${parsedUrl.protocol}//${parsedUrl.host}/robots.txt`, {
+    const r = await safeFetch(`${parsedUrl.protocol}//${parsedUrl.host}/robots.txt`, {
       signal: AbortSignal.timeout(5000),
     });
     if (r.ok) robotsTxtBody = await r.text();

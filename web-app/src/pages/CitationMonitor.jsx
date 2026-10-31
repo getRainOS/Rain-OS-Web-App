@@ -276,10 +276,10 @@ export default function CitationMonitor() {
   return (
     <div className={`${styles.page} fade-in`}>
       <PageHeader
-        title="Citation Monitor"
-        subtitle="Check whether AI engines cite your site when people ask about the topics you care about."
+        title="Is AI Citing Me?"
+        subtitle="Check whether AI links to your website when people ask about the topics you care about."
         about={[
-          { heading: 'What the result means', body: 'Two results for each answer. Mentioned: the AI named your brand (needs only a name). Cited: it linked to your website as a source (needs a website). Each is what one real AI answer did at that moment, so track it over time rather than reading one check as a lasting rank.' },
+          { heading: 'What the result means', body: 'Each answer gives two results. Mentioned: AI named your business. Linked: AI included a link to your website as a source. Each one is what AI did at that moment, so check again over time instead of treating one check as a permanent ranking.' },
           { heading: 'How the check works', body: 'We ask each AI engine your exact question live (Gemini with Google Search, ChatGPT and the others through their real answers) and look for your domain among the sources each one cites. One phrasing per check, so run a few variations before drawing conclusions.' },
         ]}
         actions={view !== 'new' && <NewCheckButton onClick={() => setView('new')} />}

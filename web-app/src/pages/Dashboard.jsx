@@ -237,6 +237,8 @@ export default function Dashboard() {
   const shownType = focusSite ? 'url' : activeFocus ? (pieces[0] ? getItemType(pieces[0].latest).toLowerCase() : typeFilter) : typeFilter;
 
   const filtersActive = typeFilter !== 'all';
+  // The filter is the reason nothing shows, not just that one is set.
+  const filterHidesAll = filtersActive && history.length > 0 && filteredHistory.length === 0;
   const clearFilters = () => { setTypeFilter('all'); };
   const typeRoute = CONTENT_TYPE_ROUTES[typeFilter] || LANE_DEFAULT_ROUTES[userLane] || '/analyze';
 
@@ -361,6 +363,8 @@ export default function Dashboard() {
       score: h.overall_score ?? 0,
       date: h.analyzed_at ? timeAgo(h.analyzed_at) : '',
     }));
+  // One analysis is not a trend yet; say that rather than blaming the filter.
+  const oneAnalysis = chartData.length === 1;
 
   const pieceRuns = selectedPiece ? selectedPiece.runs : [];
   const shownRuns = pieceRuns.slice(-chartRange);
@@ -463,13 +467,13 @@ export default function Dashboard() {
     {
       key: 'citation',
       subject: citationLatestTopic ? `“${citationLatestTopic}”` : null,
-      label: isLocal ? 'Cited by AI' : 'Citation Monitor',
+      label: isLocal ? 'Linked by AI' : 'Is AI Citing Me?',
       to: '/citation-monitor',
       hasData: citationTotal > 0,
       value: citationTotal > 0 ? `${citationRate}%` : null,
       sub: citationTotal > 0
-        ? `${citeByName ? 'Named' : 'Cited'} in ${citationCitedCount} of your last ${citationTotal} check${citationTotal > 1 ? 's' : ''}`
-        : 'No data yet. Check a question your customers ask to see if AI cites you.',
+        ? `${citeByName ? 'Named' : 'Linked'} in ${citationCitedCount} of your last ${citationTotal} check${citationTotal > 1 ? 's' : ''}`
+        : 'No data yet. Check a question your customers ask to see if AI links to you.',
       Icon: Radar,
       dots: citationTotal > 0 ? citationScoped.slice(0, 8).reverse().map(c => (citeByName ? c.mentioned === true : !!c.cited)) : null,
       tooltip: `How often ${citationTotal ? enginesOf(citationScoped) : 'AI'} cited your site for the question you checked most recently, over its last 10 checks. Each check asks the engine live.`,
@@ -477,7 +481,7 @@ export default function Dashboard() {
     {
       key: 'brand',
       subject: brandVisLatestBrand,
-      label: isLocal ? 'Mentioned by AI' : 'Brand Sentiment',
+      label: isLocal ? 'Mentioned by AI' : 'How AI Describes Me',
       to: '/brand-visibility',
       hasData: brandVisTotal > 0,
       value: brandVisTotal > 0 ? `${brandVisRate}%` : null,
@@ -485,12 +489,12 @@ export default function Dashboard() {
         ? `Mentioned in ${brandVisMentionedCount} of your last ${brandVisTotal} check${brandVisTotal > 1 ? 's' : ''}`
         : 'No data yet. Run a check to see how AI describes you.',
       Icon: Heart,
-      tooltip: `How often ${brandVisTotal ? enginesOf(brandVisScoped) : 'AI'} mentioned your brand by name in your recent Brand Sentiment checks for this brand.`,
+      tooltip: `How often ${brandVisTotal ? enginesOf(brandVisScoped) : 'AI'} mentioned your brand by name in your recent "How AI Describes Me" checks for this brand.`,
     },
     {
       key: 'sov',
       subject: sovLatestBrand,
-      label: isLocal ? 'Mentioned in 3 asks' : 'Share of Voice',
+      label: isLocal ? 'Mentioned in 3 asks' : 'Who AI Recommends',
       to: '/share-of-voice',
       hasData: sovTotal > 0,
       // Newer checks carry a real share against competitors; older ones only
@@ -505,7 +509,7 @@ export default function Dashboard() {
       dots: sovTotal > 0
         ? sovScoped.slice(0, 8).reverse().map(h => (h.mentionedCount ?? h.citedCount ?? h.cited_count ?? 0) > 0)
         : null,
-      tooltip: 'Your share of all brand mentions across the answers in your latest Share of Voice check, compared with competitors. Older checks without competitors show how often you were mentioned instead.',
+      tooltip: 'Your share of all brand mentions across the answers in your latest "Who AI Recommends" check, compared with competitors. Older checks without competitors show how often you were mentioned instead.',
     },
     {
       key: 'usage',
@@ -567,10 +571,10 @@ export default function Dashboard() {
           <div className={styles.chartEmptyRich}>
             <div className={styles.emptyStateOverlay}>
               <Activity className={styles.emptyIcon} />
-              <p>{focusSite ? `No page scans for ${focusSite} yet` : filtersActive && history.length > 0 ? 'No analyses match these filters' : 'No pillar data yet'}</p>
+              <p>{focusSite ? `No page scans for ${focusSite} yet` : filterHidesAll ? 'No analyses match these filters' : 'No pillar data yet'}</p>
               {focusSite ? (
                 <Link to={`/url-scanner?url=${encodeURIComponent(focusSite)}`} className={styles.emptyLink}>Scan a page on {focusSite} →</Link>
-              ) : filtersActive && history.length > 0 ? (
+              ) : filterHidesAll ? (
                 <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
               ) : (
                 <Link to={typeRoute} className={styles.emptyLink}>Run analysis →</Link>
@@ -891,7 +895,7 @@ export default function Dashboard() {
             <div>
               <h2 className={styles.chartTitle}>Score Trend</h2>
               <p className={styles.chartSub}>Last {chartRange} analyses</p>
-              <span className={styles.chartHelp} title="How your overall content scores have changed over time — higher means AI engines are more likely to cite your content.">
+              <span className={styles.chartHelp} title="How your overall scores have changed over time. Higher means AI is more likely to quote your pages.">
                 <HelpCircle size={11} />
               </span>
             </div>
@@ -915,24 +919,24 @@ export default function Dashboard() {
                   <AreaChart data={SAMPLE_TREND} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
                     <defs>
                       <linearGradient id="scoreGradSample" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="var(--accent)" stopOpacity={0.08} />
-                        <stop offset="100%" stopColor="var(--accent)" stopOpacity={0} />
+                        <stop offset="0%" stopColor="#2B8FE3" stopOpacity={0.08} />
+                        <stop offset="100%" stopColor="#2B8FE3" stopOpacity={0} />
                       </linearGradient>
                     </defs>
-                    <Area type="monotone" dataKey="score" stroke="var(--accent)" strokeWidth={1.5}
+                    <Area type="monotone" dataKey="score" stroke="#2B8FE3" strokeWidth={1.5}
                       fill="url(#scoreGradSample)" dot={false} />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
               <div className={styles.emptyStateOverlay}>
                 <Activity className={styles.emptyIcon} />
-                <p>{focusSite ? `No page scans for ${focusSite} yet` : filtersActive && history.length > 0 ? 'No analyses match these filters' : 'Run your first analysis to see trends here'}</p>
+                <p>{focusSite ? `No page scans for ${focusSite} yet` : oneAnalysis ? 'Run one more analysis to see your trend here' : filterHidesAll ? 'No analyses match these filters' : 'Run your first analysis to see trends here'}</p>
                 {focusSite ? (
                   <Link to={`/url-scanner?url=${encodeURIComponent(focusSite)}`} className={styles.emptyLink}>Scan a page →</Link>
-                ) : filtersActive && history.length > 0 ? (
+                ) : filterHidesAll && !oneAnalysis ? (
                   <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
                 ) : (
-                  <Link to={typeRoute} className={styles.emptyLink}>Get started →</Link>
+                  <Link to="/full-check" className={styles.emptyLink}>Check my website →</Link>
                 )}
               </div>
             </div>
@@ -942,8 +946,8 @@ export default function Dashboard() {
                     <CartesianGrid vertical={false} stroke="rgba(255,255,255,0.06)" />
                 <defs>
                   <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--accent)" stopOpacity={0.08} />
-                    <stop offset="100%" stopColor="var(--accent)" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#2B8FE3" stopOpacity={0.08} />
+                    <stop offset="100%" stopColor="#2B8FE3" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="idx" stroke="transparent"
@@ -951,9 +955,9 @@ export default function Dashboard() {
                 <YAxis domain={[0, 100]} stroke="transparent"
                   tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
                 <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
-                <Area type="monotone" dataKey="score" stroke="var(--accent)" strokeWidth={1.5}
+                <Area type="monotone" dataKey="score" stroke="#2B8FE3" strokeWidth={1.5}
                   fill="url(#scoreGrad)" dot={false}
-                  activeDot={{ r: 4, fill: 'var(--accent)', strokeWidth: 0 }} />
+                  activeDot={{ r: 4, fill: '#2B8FE3', strokeWidth: 0 }} />
               </AreaChart>
             </ResponsiveContainer>
           )}
@@ -965,7 +969,7 @@ export default function Dashboard() {
             <div>
               <h2 className={styles.chartTitle}>Recent Analyses</h2>
               <p className={styles.chartSub}>Your latest scores, across content, URLs and repos</p>
-              <span className={styles.chartHelp} title="Your latest analyses with overall scores and pillar breakdowns — click any row to view the full analysis.">
+              <span className={styles.chartHelp} title="Your latest checks with overall scores and the score for each area. Click any row to see the full check.">
                 <HelpCircle size={11} />
               </span>
             </div>
@@ -997,7 +1001,7 @@ export default function Dashboard() {
                 {history.length > 0 ? (
                   <button type="button" className={styles.emptyLink} onClick={() => changeFocus('')}>Show everything →</button>
                 ) : (
-                  <Link to={typeRoute} className={styles.emptyLink}>Run your first →</Link>
+                  <Link to="/full-check" className={styles.emptyLink}>Check my website →</Link>
                 )}
               </div>
             </div>

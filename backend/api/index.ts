@@ -1,5 +1,7 @@
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import { costlyLimiter } from '../services/costlyLimiter';
+import { isAllowedOrigin } from '../services/corsOrigins';
 // api/index.ts
 import express from 'express';
 import { captureError } from '../services/monitoring';
@@ -42,10 +44,6 @@ import createCheckoutSessionHandler from './stripe/create-checkout-session';
 import createPortalSessionHandler from './stripe/create-portal-session';
 import stripeWebhookHandler from './stripe/webhook';
 // AI readiness
-import aiSiteLlmsHandler from './ai/site-llms';
-import aiNormalizeHandler from './ai/normalize';
-import aiContentHandler from './ai/content';
-import aiDiagnosticsHandler from './ai/diagnostics';
 // GitHub OAuth + Repo Analysis
 import githubOauthHandler from './github/oauth';
 import githubCallbackHandler from './github/callback';
@@ -72,13 +70,11 @@ import { listHandler as brandLinksListHandler, saveHandler as brandLinksSaveHand
 import { optionsHandler as topicOptionsHandler, questionsHandler as topicQuestionsHandler } from './topic';
 import questionGapHandler from './question-gap';
 // ─── CORS configuration ───────────────────────────────────────────────────────
-// IMPORTANT: Keep origin: '*' so the WordPress plugin works from any site.
-// Restricting origin here would 403 every WP install that has the plugin.
 // The web app (app.getrainos.com) works fine with wildcard origin.
 // If you need credentials: true for a specific frontend route in the future,
 // add a separate router with a scoped CORS config — do not change this globalone.
 const corsOptions: cors.CorsOptions = {
-origin: '*',
+origin: (origin, callback) => callback(null, isAllowedOrigin(origin)),
 methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
 allowedHeaders: ['Content-Type', 'Authorization', 'X-Rain-Lane'],
 exposedHeaders: ['X-Usage-Info'],
@@ -104,6 +100,8 @@ const apiLimiter = rateLimit({
 });
 app.use('/api', apiLimiter);
 app.use('/v1/api', apiLimiter);
+// Paid AI and data-provider calls: a tighter limit per user (see services/costlyLimiter.ts).
+app.use(['/api/analyze', '/v1/api/analyze', '/api/rewrite', '/v1/api/rewrite', '/api/url-scan', '/v1/api/url-scan', '/api/brand-visibility', '/v1/api/brand-visibility', '/api/sov', '/v1/api/sov', '/api/citation-check', '/v1/api/citation-check', '/api/prompt-suggestions', '/v1/api/prompt-suggestions', '/api/local-listing', '/v1/api/local-listing', '/api/maps-grid', '/v1/api/maps-grid', '/api/products/import-store', '/v1/api/products/import-store', '/api/products/import-page', '/v1/api/products/import-page'], costlyLimiter);
 // ─── Health ────────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => res.status(200).json({ status: 'ok',
 timestamp: new Date().toISOString() }));
@@ -222,16 +220,7 @@ app.post('/api/github/analyze', analyzeRepoHandler);
 app.delete('/api/github/disconnect', disconnectGithubHandler);
 app.post('/api/github/preview-fixes', githubPreviewFixesHandler);
 app.post('/api/github/push-fixes', githubPushFixesHandler);
-// ─── Plugin-facing endpoints ───────────────────────────────────────────────
 // ─── AI Readiness endpoints ────────────────────────────────────────────────
-app.get( '/ai/site/llms', aiSiteLlmsHandler);
-app.post('/ai/normalize', aiNormalizeHandler);
-app.get( '/ai/content/:contentId', aiContentHandler);
-app.get( '/ai/diagnostics/:contentId', aiDiagnosticsHandler);
-app.get( '/v1/ai/site/llms', aiSiteLlmsHandler);
-app.post('/v1/ai/normalize', aiNormalizeHandler);
-app.get( '/v1/ai/content/:contentId', aiContentHandler);
-app.get( '/v1/ai/diagnostics/:contentId', aiDiagnosticsHandler);
 // Note: /v1/v1/* paths removed — they were duplicates from a copy-paste error
 // in the original index.ts and had no legitimate callers.
 // Last-resort handler: report the error, and never leak its details to the client.

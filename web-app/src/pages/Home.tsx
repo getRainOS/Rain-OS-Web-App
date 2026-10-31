@@ -11,6 +11,7 @@ import SiteFooter from '@/components/marketing/SiteFooter';
 import { Pricing, FAQ } from '@/components/marketing/MarketingComponents';
 import { useLiveEngines, joinNames } from '@/lib/liveEngines';
 import HeroPrompt from '@/components/marketing/HeroPrompt';
+import IllustratedExample from '@/components/marketing/IllustratedExample';
 
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
 
@@ -202,7 +203,7 @@ const PLATFORM = [
     body: 'One score from 0 to 100, built from the six things AI looks at and adjusted for your kind of business. Every check is explained, so you know what moved it.',
     tools: [
       { Icon: FileText, name: 'Content Optimizer', desc: 'Score drafts before you publish' },
-      { Icon: Globe, name: 'URL Scanner', desc: 'llms.txt, schema, crawler access, structure' },
+      { Icon: Globe, name: 'Check a Web Page', desc: 'AI-friendly files, page details, whether AI can get in, page layout' },
       { Icon: GitBranch, name: 'Repo Analysis', desc: 'Audit an app straight from GitHub' },
     ],
   },
@@ -211,12 +212,12 @@ const PLATFORM = [
     label: 'Monitor',
     Icon: Radar,
     title: 'See whether AI cites you',
-    body: 'Ask the questions your customers ask. We put them to {engines}, searching the live web, and show every website each one pointed to.',
+    body: 'Ask the questions your customers ask. We put them to {engines}, searching the live web, and show every website each one linked to.',
     tools: [
-      { Icon: Radar, name: 'Citation Monitor', desc: 'Cited or not, with the full source list' },
+      { Icon: Radar, name: 'Is AI Citing Me?', desc: 'Whether AI links to you, with the full list of sources' },
       { Icon: CalendarClock, name: 'Weekly tracking', desc: 'Re-checked every week, alerts on change' },
-      { Icon: BarChart2, name: 'Share of Voice', desc: 'Your mentions versus competitors' },
-      { Icon: Eye, name: 'Brand Sentiment', desc: 'How AI describes your brand' },
+      { Icon: BarChart2, name: 'Who AI Recommends', desc: 'How often AI names you compared with competitors' },
+      { Icon: Eye, name: 'How AI Describes Me', desc: 'How AI describes your brand' },
     ],
   },
   {
@@ -234,7 +235,7 @@ const PLATFORM = [
 ];
 
 const SHOTS: Record<string, { src: string; alt: string; label: string; w: number; h: number }> = {
-  measure: { src: '/screens/measure.png', alt: 'rain OS URL Scanner results: overall score, four pillar scores and the technical checks that need fixing', label: 'URL SCANNER', w: 1072, h: 1066 },
+  measure: { src: '/screens/measure.png', alt: 'rain OS URL Scanner results: overall score, four area scores and the technical checks that need fixing', label: 'URL SCANNER', w: 1072, h: 1066 },
   monitor: { src: '/screens/monitor.png', alt: 'rain OS Tracked weekly list: each question, whether you were cited, and a history of past checks', label: 'TRACKED WEEKLY', w: 1072, h: 756 },
   fix: { src: '/screens/fix.png', alt: 'rain OS recommendation with a plain-English fix and a copy-ready technical fix', label: 'RECOMMENDATIONS', w: 1072, h: 1080 },
 };
@@ -397,7 +398,7 @@ function LanesSection() {
 function MethodSection() {
   const engines = joinNames(useLiveEngines());
   const steps = [
-    { n: '01', title: 'We ask the engines', body: `Your exact question goes to ${engines}, searching the live web, the same way a customer would ask it.` },
+    { n: '01', title: 'We ask the AI tools', body: `Your exact question goes to ${engines}, searching the live web, the same way a customer would ask it.` },
     { n: '02', title: 'We read the sources', body: 'We collect every source the answer cites and match them against your domain. Cited or not is a fact, not an estimate.' },
     { n: '03', title: 'We show our work', body: 'You get the answer excerpt, the full source list and the competitors who were cited instead, saved so you can compare over time.' },
   ];
@@ -460,13 +461,13 @@ function WhyGoogleSection() {
     <section id="why-google" className="relative z-10 py-28 border-t border-white/[0.06]">
       <div className="max-w-6xl mx-auto px-6">
         <Reveal>
-          <Eyebrow>The engines we check</Eyebrow>
+          <Eyebrow>The AI tools we check</Eyebrow>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance max-w-3xl">
             We ask the AI your customers actually use.
           </h2>
           <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-2xl">
             rain OS puts your questions to {joinNames(live)}, searching the live web, and shows exactly which sites each one cited and where you ranked.
-            {' '}One question, every engine, side by side.
+            {' '}One question, every AI tool, side by side.
           </p>
         </Reveal>
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -620,8 +621,8 @@ function HowItWorks() {
 /* ── Page ───────────────────────────────────────────────────────────────── */
 
 const SPECS = [
-  { k: '6', v: 'scoring pillars, weighted for your type of business' },
-  { k: '6', v: 'AI engines checked, from any US state or country' },
+  { k: '6', v: 'scored areas, weighted for your type of business' },
+  { k: '6', v: 'AI tools checked, from any US state or country' },
   { k: 'Live', v: 'checks against real AI answers' },
   { k: 'Weekly', v: 're-checks with email alerts' },
 ];
@@ -665,7 +666,7 @@ export default function Home() {
                 </a>
               </div>
               <ul className="mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 text-[13px] text-neutral-400">
-                {[`Checks ${engines.length} AI engines`, 'Free to start', 'No credit card', 'No technical skills needed'].map(t => (
+                {[`Checks ${engines.length} AI tools`, 'Free to start', 'No credit card', 'No technical skills needed'].map(t => (
                   <li key={t} className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-[#ffffff]" />{t}</li>
                 ))}
               </ul>
@@ -683,6 +684,7 @@ export default function Home() {
         </section>
 
         <WhoSection onStart={start} />
+        <IllustratedExample />
         <HowItWorks />
 
         <section className="relative z-10 border-y border-white/[0.06] bg-white/[0.01]">

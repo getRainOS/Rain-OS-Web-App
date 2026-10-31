@@ -5,6 +5,7 @@
 // Only facts that are actually there are filled; nothing is guessed here.
 import * as cheerio from 'cheerio';
 import { cleanFacts, type ProductFacts } from './productFacts';
+import { safeFetch } from './safeFetch';
 
 const UA = { 'User-Agent': 'RainOS-Importer/1.0 (+https://getrainos.com)' };
 const MAX_PAGES = 4;         // 4 × 250 = up to 1,000 products
@@ -18,7 +19,7 @@ async function getJson(url: string, timeoutMs = 15000): Promise<any> {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
-    const r = await fetch(url, { signal: ctrl.signal, headers: { ...UA, Accept: 'application/json' } });
+    const r = await safeFetch(url, { signal: ctrl.signal, headers: { ...UA, Accept: 'application/json' } });
     if (!r.ok) return { __status: r.status };
     return await r.json().catch(() => ({ __status: 'not-json' }));
   } catch (e: any) {
@@ -135,7 +136,7 @@ export async function importProductPage(pageUrl: string): Promise<ProductFacts> 
   const t = setTimeout(() => ctrl.abort(), 15000);
   let html = '';
   try {
-    const r = await fetch(u.toString(), { signal: ctrl.signal, headers: UA });
+    const r = await safeFetch(u.toString(), { signal: ctrl.signal, headers: UA });
     if (!r.ok) throw new ImportError(`The page returned an error (${r.status}).`);
     html = await r.text();
   } catch (e: any) {

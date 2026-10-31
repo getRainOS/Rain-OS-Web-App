@@ -481,6 +481,20 @@
   white-space: nowrap;
 }
 
+/* Phones: the tag drops under the text, lined up with it, instead of squeezing the text. */
+@media (max-width: 480px) {
+  .quickWinRow {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  .quickWinText {
+    min-width: 0;
+  }
+  .quickWinTag {
+    margin-left: 28px;
+  }
+}
+
 /* ── Charts Row ── */
 .chartsRow {
   display: grid;
@@ -1610,3 +1624,10 @@ button.emptyLink {
   background: none; color: var(--text-secondary, var(--text)); font-size: 13px; cursor: pointer;
 }
 .detailsToggle:hover { color: var(--text); border-color: var(--text-muted, var(--border)); }
+
+/* Phone: card headers stack, so the text has the full width and the button sits below it. */
+@media (max-width: 560px) {
+  .chartHeader { flex-direction: column; align-items: stretch; gap: 14px; }
+  .chartHeader > a,
+  .chartHeader > button { align-self: flex-start; }
+}

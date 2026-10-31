@@ -111,7 +111,7 @@ const docPillars = [
     bg: 'rgba(255,255,255,0.1)',
     border: 'rgba(255,255,255,0.25)',
     Icon: Layers,
-    name: 'RAG Readiness',
+    name: 'Easy to Quote',
     weight: '10%',
     desc: 'How well your docs work with vector database retrieval: semantic mapping, chunking quality, hierarchical formatting, and explicit Q&A structures.',
     scores: ['Semantic Mapping', 'Chunking Quality', 'Hierarchical Formatting', 'Explicit Q&A', 'Authority Signals'],
@@ -269,7 +269,7 @@ export default function Developers() {
                 Four of six pillars, reweighted for developer docs.
               </h2>
               <p className="text-neutral-400 max-w-xl leading-relaxed">
-                rain OS scores your docs using the same six-pillar engine that powers all our analyses. For developer content, we reweight the pillars so structure and authority matter most — exactly what AI needs to cite your README, API docs, and guides.
+                rain OS scores your docs using the same six-area scoring that powers all our analyses. For developer content, we reweight the pillars so structure and authority matter most — exactly what AI needs to cite your README, API docs, and guides.
               </p>
             </motion.div>
 

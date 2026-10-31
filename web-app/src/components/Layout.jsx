@@ -24,20 +24,20 @@ const LANE_META = {
 };
 
 const TOOLS = {
-  dashboard:  { to: '/dashboard',        label: 'Dashboard',           Icon: LayoutDashboard, tooltip: 'Your home base — scores, trends, and performance at a glance.' },
-  analyze:    { to: '/analyze',          label: 'Content Optimizer',   Icon: FileText,         tooltip: 'Paste your content and get an AI readability score plus fix recommendations.' },
-  urlScanner: { to: '/url-scanner',      label: 'URL Scanner',         Icon: Globe,            tooltip: 'Enter a website URL to check how well AI can read and understand your pages.' },
-  products:   { to: '/products',         label: 'Product Fact Sheets', Icon: Package,          tooltip: 'Enter each product\'s facts once (price, variants, specs, shipping). The AI rewrite uses them, and they generate your product schema.' },
-  repo:       { to: '/repo-analysis',    label: 'Repo Analysis',       Icon: GitBranch,        tooltip: 'Connect your GitHub repo to score docs and source code for AI readability.' },
-  questions:  { to: '/prompt-research',  label: 'AI Question Research', Icon: MessageSquareText, tooltip: 'Find the questions your customers ask AI, then check or track them.' },
-  fullcheck:  { to: '/full-check',       label: 'Full Check',          Icon: ScanSearch,       tooltip: 'Enter your website and run the page scan and the AI visibility checks together, with one report.' },
-  improve:    { to: '/improve',         label: 'Improve a Question',  Icon: Target,           tooltip: 'Pick a question, compare your page with the sources AI cited, and get the specific changes that help you get chosen.' },
-  opportunities: { to: '/opportunities', label: 'Opportunities',    Icon: Lightbulb,        tooltip: 'Your to-do list for showing up in AI answers, built from your checks and scans.' },
-  citation:   { to: '/citation-monitor', label: 'Citation Monitor',    Icon: Radar,            tooltip: 'Check whether AI engines cite your site for the questions your customers ask.' },
-  visibility: { to: '/brand-visibility', label: 'Brand Sentiment',       Icon: Eye,              tooltip: 'See how AI engines describe your brand: is the tone positive and are the facts right?' },
-  sov:        { to: '/share-of-voice',   label: 'Share of Voice',      Icon: BarChart2,        tooltip: 'See how often AI names your brand versus competitors when it answers your topic.' },
+  dashboard:  { to: '/dashboard',        label: 'Dashboard',           Icon: LayoutDashboard, tooltip: 'Your home base: your scores and trends at a glance.' },
+  analyze:    { to: '/analyze',          label: 'Check My Writing',   Icon: FileText,         tooltip: 'Paste your writing and see how easy it is for AI to read, with tips to improve it.' },
+  urlScanner: { to: '/url-scanner',      label: 'Check a Web Page',         Icon: Globe,            tooltip: 'Enter a web page address to see how easily AI can read it, and what to fix.' },
+  products:   { to: '/products',         label: 'Product Details', Icon: Package,          tooltip: 'Enter each product once: price, sizes, materials, shipping. AI uses these facts when it answers shoppers.' },
+  repo:       { to: '/repo-analysis',    label: 'GitHub Code Check',       Icon: GitBranch,        tooltip: 'Connect your GitHub project to see how easily AI can read its docs and code.' },
+  questions:  { to: '/prompt-research',  label: 'Find Customer Questions', Icon: MessageSquareText, tooltip: 'Find the questions your customers ask AI, then check them or track them each week.' },
+  fullcheck:  { to: '/full-check',       label: 'Full Check',          Icon: ScanSearch,       tooltip: 'Enter your website and get one report: how readable your pages are, and whether AI mentions you.' },
+  improve:    { to: '/improve',         label: 'Fix One Question',  Icon: Target,           tooltip: 'Pick one question, compare your page with the sites AI quoted, and get the changes that could get you quoted too.' },
+  opportunities: { to: '/opportunities', label: 'To-Do List',    Icon: Lightbulb,        tooltip: 'Your list of what to do next to show up in AI answers, most important first.' },
+  citation:   { to: '/citation-monitor', label: 'Is AI Citing Me?',    Icon: Radar,            tooltip: 'See whether AI links to your website when customers ask the questions you care about.' },
+  visibility: { to: '/brand-visibility', label: 'How AI Describes Me',       Icon: Eye,              tooltip: 'See what AI says about your business: is it positive, and are the facts right?' },
+  sov:        { to: '/share-of-voice',   label: 'Who AI Recommends',      Icon: BarChart2,        tooltip: 'See how often AI names your business compared with competitors when customers ask about your topic.' },
   adminUsage: { to: '/admin/usage',      label: 'Usage (staff)',       Icon: Activity,         tooltip: 'Daily Google Search calls against the free allowance. Only rain OS staff see this.' },
-  settings:   { to: '/settings',         label: 'Settings',            Icon: Settings,         tooltip: 'Change your solution lane, API settings, and account preferences.' },
+  settings:   { to: '/settings',         label: 'Settings',            Icon: Settings,         tooltip: 'Change your business type, connections, and account details.' },
 };
 
 // Each lane's sidebar shows only the tools that kind of user acts on, so a
@@ -46,33 +46,33 @@ const TOOLS = {
 // lane still sets the scoring (which pillars apply and how they're weighted).
 const LANE_GROUPS = {
   general: [
-    { label: 'Optimize',   tools: ['analyze', 'urlScanner'] },
-    { label: 'Prompts',    tools: ['questions', 'improve'] },
-    { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
-    { label: 'Improve',    tools: ['fullcheck', 'opportunities'] },
+    { label: 'Make It Readable',   tools: ['analyze', 'urlScanner'] },
+    { label: 'Customer Questions',    tools: ['questions', 'improve'] },
+    { label: 'Am I Showing Up', tools: ['citation', 'sov', 'visibility'] },
+    { label: 'Fix It',    tools: ['fullcheck', 'opportunities'] },
   ],
   product_sellers: [
-    { label: 'Optimize',   tools: ['urlScanner', 'products', 'analyze'] },
-    { label: 'Prompts',    tools: ['questions'] },
-    { label: 'Visibility', tools: ['citation', 'visibility'] },
-    { label: 'Improve',    tools: ['fullcheck', 'opportunities'] },
+    { label: 'Make It Readable',   tools: ['urlScanner', 'products', 'analyze'] },
+    { label: 'Customer Questions',    tools: ['questions'] },
+    { label: 'Am I Showing Up', tools: ['citation', 'visibility'] },
+    { label: 'Fix It',    tools: ['fullcheck', 'opportunities'] },
   ],
   developers: [
-    { label: 'Optimize',   tools: ['repo', 'urlScanner', 'analyze'] },
-    { label: 'Prompts',    tools: ['questions', 'improve'] },
-    { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
-    { label: 'Improve',    tools: ['fullcheck', 'opportunities'] },
+    { label: 'Make It Readable',   tools: ['repo', 'urlScanner', 'analyze'] },
+    { label: 'Customer Questions',    tools: ['questions', 'improve'] },
+    { label: 'Am I Showing Up', tools: ['citation', 'sov', 'visibility'] },
+    { label: 'Fix It',    tools: ['fullcheck', 'opportunities'] },
   ],
   local_business: [
-    { label: 'Optimize',   tools: ['urlScanner'] },
-    { label: 'Visibility', tools: ['citation', 'visibility'] },
-    { label: 'Improve',    tools: ['opportunities'] },
+    { label: 'Make It Readable',   tools: ['urlScanner'] },
+    { label: 'Am I Showing Up', tools: ['citation', 'visibility'] },
+    { label: 'Fix It',    tools: ['opportunities'] },
   ],
   vibe_coders: [
-    { label: 'Optimize',   tools: ['repo', 'urlScanner', 'analyze'] },
-    { label: 'Prompts',    tools: ['questions', 'improve'] },
-    { label: 'Visibility', tools: ['citation', 'sov', 'visibility'] },
-    { label: 'Improve',    tools: ['fullcheck', 'opportunities'] },
+    { label: 'Make It Readable',   tools: ['repo', 'urlScanner', 'analyze'] },
+    { label: 'Customer Questions',    tools: ['questions', 'improve'] },
+    { label: 'Am I Showing Up', tools: ['citation', 'sov', 'visibility'] },
+    { label: 'Fix It',    tools: ['fullcheck', 'opportunities'] },
   ],
 };
 
@@ -85,25 +85,25 @@ const moreToolsFor = lane => {
 };
 
 const GROUP_TOOLTIPS = {
-  Prompts:    'Find the questions your customers ask AI, and improve your page for a specific one.',
-  Visibility: 'See whether and how AI mentions you for those questions.',
-  Improve:    'Check where you stand and find the biggest gaps to fix first.',
-  Optimize:   'Make your content, pages and code easy for AI to read and quote.',
+  'Customer Questions':    'The questions your customers ask AI. Pick one to see how to get your page chosen for it.',
+  'Am I Showing Up': 'See whether AI mentions your business for those questions, and what it says.',
+  'Fix It':    'Find the biggest gaps first, and what to do about each one.',
+  'Make It Readable':   'Make your pages and writing easy for AI to read and quote.',
 };
 
 const LOCAL_GROUP_TOOLTIPS = {
-  Prompts:    'Find the questions local customers ask AI about businesses like yours, and improve your page for a specific one.',
-  Visibility: 'Check if AI tools recommend your business when local customers ask.',
-  Improve:    'Plain-English checks to get your business recommended more often.',
-  Optimize:   'Make your site easy for AI to read, so it can recommend you.',
+  'Customer Questions':    'The questions local customers ask AI. Pick one to see how to get your business chosen for it.',
+  'Am I Showing Up': 'See whether AI recommends your business when local customers ask.',
+  'Fix It':    'Simple steps to get your business recommended more often.',
+  'Make It Readable':   'Make your website easy for AI to read, so it can recommend you.',
 };
 
 // Local Service Business gets its own section labels in the sidebar — not
 // just reworded tooltips — so the lane reads as a distinct experience
 // rather than the generic tool groups with a relabeled pillar or two.
 const LOCAL_GROUP_LABELS = {
-  Visibility: 'Reputation',
-  Improve:    'Get Found',
+  'Am I Showing Up': 'Reputation',
+  'Fix It':    'Get Found',
 };
 
 export default function Layout({ children }) {
@@ -187,7 +187,7 @@ export default function Layout({ children }) {
       <div className={`${styles.overlay} ${menuOpen ? styles.show : ''}`} onClick={() => setMenuOpen(false)} />
       <aside className={`${styles.sidebar} ${menuOpen ? styles.open : ''} ${collapsed ? styles.collapsed : ''}`}>
         <div className={styles.brand}>
-          {!collapsed && <Logo size={30} className={styles.brandWordmark} />}
+          {!collapsed && <Logo size={40} className={styles.brandWordmark} />}
         </div>
 
         <nav className={styles.nav} onClick={() => setMenuOpen(false)}>

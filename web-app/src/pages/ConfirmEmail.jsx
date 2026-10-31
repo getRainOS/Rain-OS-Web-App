@@ -41,7 +41,7 @@ export default function ConfirmEmail() {
     <div className={styles.root}>
       <div className={styles.bg} />
       <div className={styles.card}>
-        <div className={styles.logo}><Logo size={30} /></div>
+        <div className={styles.logo}><Logo size={40} /></div>
 
         {status === 'loading' && (
           <>

@@ -273,3 +273,8 @@ input, textarea, select {
   .printArea, .printArea * { visibility: visible; }
   .printArea { position: absolute; left: 0; top: 0; width: 100%; padding: 0 !important; border-radius: 0 !important; }
 }
+
+/* The falling dashes are a desktop detail; phones get the clean word. */
+@media (max-width: 767px) {
+  .rainDashes { display: none; }
+}

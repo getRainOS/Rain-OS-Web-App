@@ -44,7 +44,7 @@ export default function Questions() {
   return (
     <div className={`${styles.page} fade-in`}>
       <PageHeader
-        title="AI Question Research"
+        title="Find Customer Questions"
         subtitle="Start with the questions your customers ask AI. Check any of them in one click, or track the important ones every week."
         about={[
           { heading: 'Why questions come first', body: 'People ask ChatGPT, Gemini and Google AI questions in plain language. Whether you show up depends on the exact question, so every check in rain OS starts from one.' },

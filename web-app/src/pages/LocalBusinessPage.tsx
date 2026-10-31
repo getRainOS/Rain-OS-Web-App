@@ -108,7 +108,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 bgColor: 'bg-[#ffffff]/10',
                 icon: Search,
                 title: 'We analyze your website',
-                body: 'Paste your homepage copy or give us your URL. rain OS reads your site the way AI engines do — not as a pretty webpage, but as raw information. We score it across the exact signals that AI systems use to decide what to recommend.',
+                body: 'Paste your homepage copy or give us your URL. rain OS reads your site the way AI tools do — not as a pretty webpage, but as raw information. We score it across the exact signals that AI systems use to decide what to recommend.',
                 detail: 'Works on any local business website — even simple ones built on Squarespace, Wix, or WordPress.',
               },
               {
@@ -189,7 +189,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
             <span className="text-[#bdbdbd] font-bold tracking-wider text-xs uppercase mb-3 block">What we score</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Three of six pillars AI checks about your business</h2>
-            <p className="text-neutral-400 max-w-2xl mx-auto">These are three of the six signals that AI engines use when deciding whether to recommend your business — alongside Local Presence (NAP consistency, service area, review signals), the single largest pillar in this lane at 30% weight. Most local business sites score poorly across the board — which means a huge opportunity for you.</p>
+            <p className="text-neutral-400 max-w-2xl mx-auto">These are three of the six signals that AI tools use when deciding whether to recommend your business — alongside Local Presence (NAP consistency, service area, review signals), the single largest pillar in this lane at 30% weight. Most local business sites score poorly across the board — which means a huge opportunity for you.</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -213,8 +213,8 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 weight: '20%',
                 title: 'Digital Authority',
                 tagline: 'Does AI trust your business?',
-                body: 'AI checks whether your business is a legitimate, trustworthy source. This means things like your NAP (Name, Address, Phone) being consistent, having reviews mentioned, having clear business details, and technical trust signals like schema markup.',
-                fixes: ['Consistent NAP across your site and Google Business Profile', 'Display reviews, certifications, and years in business', 'Add LocalBusiness schema markup to your homepage'],
+                body: 'AI checks whether your business is a legitimate, trustworthy source. This means things like your NAP (Name, Address, Phone) being consistent, having reviews mentioned, having clear business details, and technical trust signals like structured data.',
+                fixes: ['Consistent NAP across your site and Google Business Profile', 'Display reviews, certifications, and years in business', 'Add LocalBusiness structured data to your homepage'],
               },
               {
                 icon: MousePointerClick,
@@ -298,7 +298,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 color: 'text-emerald-400',
                 border: 'border-emerald-500/20',
                 bg: 'rgba(16,185,129,0.05)',
-                title: 'AI citations in conversational search',
+                title: 'AI links in conversational search',
                 body: 'When someone asks Perplexity or ChatGPT "who\'s the best [your service] in [your city]?" — the answer is pulled from sources AI can read and trust. If your website isn\'t structured for AI extraction, you won\'t be mentioned.',
                 insight: 'This is the highest-value new source of local leads, and most businesses don\'t even know it exists yet.',
               },
@@ -333,11 +333,11 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
               <div className="p-5 font-bold text-[#bdbdbd] text-sm border-l border-white/5">With rain OS</div>
             </div>
             {[
-              ['Your website is invisible to AI search', 'AI engines can read, trust, and cite your business'],
+              ['Your website is invisible to AI search', 'AI tools can read, trust, and recommend your business'],
               ['You don\'t know why competitors get called instead of you', 'You get a clear score showing exactly what to fix'],
               ['Generic SEO advice that doesn\'t apply to local business', 'Local-specific recommendations written in plain English'],
-              ['No idea how customers find you via AI', 'Citation Monitor tracks when ChatGPT, Google AI Overviews, Perplexity and Claude recommend you'],
-              ['Your website info conflicts with your Google listing', 'Your name, address and phone are checked across your site, schema and Google Business Profile'],
+              ['No idea how customers find you via AI', 'Is AI Citing Me? tracks when ChatGPT, Google AI Overviews, Perplexity and Claude recommend you'],
+              ['Your website info conflicts with your Google listing', 'Your name, address and phone are checked across your site, structured data and Google Business Profile'],
               ['You guess what AI says in the next town over', 'Check any question as a customer in any US state or country would see it'],
               ['You don\'t know how you compare on Google Maps or reviews', 'See your Google Business Profile, rating, reviews that mention your city, and Maps position next to competitors'],
               ['Customers land on your site and don\'t call', 'Conversion Readiness score shows you every reason they bounce'],
@@ -362,7 +362,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
         <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
           {[
             { value: '30%', label: 'of the score comes from Local Presence', color: 'text-white' },
-            { value: '6', label: 'Pillars scored for every local business analysis', color: 'text-white' },
+            { value: '6', label: 'Areas scored for every local business check', color: 'text-white' },
             { value: 'Free', label: 'to start — no credit card needed', color: 'text-white' },
           ].map((stat, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}

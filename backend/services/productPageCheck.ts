@@ -4,6 +4,7 @@
 // for Shopify stores each variant's price, SKU and barcode from the store's
 // public product data. Runs on the HTML the URL Scanner already fetched.
 import * as cheerio from 'cheerio';
+import { safeFetch } from './safeFetch';
 
 export interface ProductCheckItem { id: string; label: string; pass: boolean; detail: string; fix?: string }
 export interface ProductPageCheck {
@@ -134,7 +135,7 @@ export async function fetchShopifyVariants(pageUrl: string, timeoutMs = 5000): P
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
-    const r = await fetch(`${u.origin}${u.pathname.replace(/\/$/, '')}.json`, { signal: ctrl.signal, headers: { 'User-Agent': 'RainOS-Scanner/1.0 (+https://getrainos.com)' } });
+    const r = await safeFetch(`${u.origin}${u.pathname.replace(/\/$/, '')}.json`, { signal: ctrl.signal, headers: { 'User-Agent': 'RainOS-Scanner/1.0 (+https://getrainos.com)' } });
     if (!r.ok) return null;
     const j: any = await r.json();
     const vs = j?.product?.variants;

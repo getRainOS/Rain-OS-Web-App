@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run"
   },
   "dependencies": {
     "@sentry/react": "^8.55.2",
@@ -17,7 +18,7 @@
     "lucide-react": "^0.469.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.28.0",
+    "react-router-dom": "^7.18.5",
     "react-simple-maps": "^5.0.5",
     "recharts": "^2.13.3",
     "tailwind-merge": "^3.5.0",
@@ -25,9 +26,13 @@
     "world-atlas": "^2.0.2"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
-    "vite": "^6.0.5"
+    "jsdom": "^25.0.1",
+    "vite": "^6.0.5",
+    "vitest": "^4.1.12"
   }
 }
