@@ -105,10 +105,10 @@ export default function Report() {
       ? `AI already names or cites ${name} in ${recommendedPct}% of the answers checked. The task is to hold that position as answers refresh.`
       : `AI names or cites ${name} in ${recommendedPct}% of the answers checked, so most customers asking AI are pointed elsewhere.`);
     if (weakest) findings.push(weakest.score < STRONG
-      ? `${weakest.label} scores ${weakest.score}/100, the lowest of ${pillars.length} pillars and below the ${STRONG} we consider strong. It is where fixes will move the overall score most.`
-      : `Every pillar scores ${STRONG} or above; ${weakest.label} is the lowest at ${weakest.score}/100.`);
+      ? `${weakest.label} scores ${weakest.score}/100, the lowest of ${pillars.length} areas and below the ${STRONG} we consider strong. It is where fixes will move the overall score most.`
+      : `Every area scores ${STRONG} or above; ${weakest.label} is the lowest at ${weakest.score}/100.`);
     if (sources.types[0]) findings.push(`${sources.types[0].label} supply ${Math.round(sources.types[0].share * 100)}% of the sources AI uses for these questions (e.g. ${sources.types[0].domains.slice(0, 2).map(d => d.domain).join(', ')}). ${sources.types[0].action}`);
-    else if (!citations.length) findings.push('No AI answers have been checked yet. Run a citation check to see whether AI recommends you and which sites it trusts instead.');
+    else if (!citations.length) findings.push('No AI answers have been checked yet. Run a check to see whether AI recommends you and which sites it trusts instead.');
 
     return { latest, runs, citations, brand, sov, yes, recommendedPct, mentionedPct, sovPct, pillars, sources, recs, title, findings };
   }, [data, subject]);
@@ -159,7 +159,7 @@ export default function Report() {
             </section>
 
             {view.pillars.length > 0 && (
-              <Exhibit n={1} title={`Pillar scores: ${view.pillars.filter(p => p.score < STRONG).length ? `${view.pillars.filter(p => p.score < STRONG).length} of ${view.pillars.length} pillars sit below ${STRONG}` : `all ${view.pillars.length} pillars are at ${STRONG} or above`}`}
+              <Exhibit n={1} title={`Scores by area: ${view.pillars.filter(p => p.score < STRONG).length ? `${view.pillars.filter(p => p.score < STRONG).length} of ${view.pillars.length} areas score below ${STRONG}` : `all ${view.pillars.length} areas score ${STRONG} or above`}`}
                 source={`Source: rain OS analysis of ${view.latest.url || view.latest.title || subject.name}, ${day(view.latest.analyzed_at)}. Dashed line marks ${STRONG}, the threshold we treat as strong.`}>
                 <div className={styles.bars}>
                   {[...view.pillars].sort((a, b) => b.score - a.score).map(p => (
@@ -227,7 +227,7 @@ export default function Report() {
             </section>
 
             <footer className={styles.foot}>
-              <strong>Methodology.</strong> AI readiness scores come from rain OS's analysis of the page or content against the signals AI engines use to choose sources, weighted for the {lane || 'selected'} lane. "Recommended" counts answers that name the brand or cite its website. AI answers vary between runs and change over time, so read single checks as a snapshot and trends as the signal.
+              <strong>Methodology.</strong> Scores come from our check of the page or content against what AI looks for when it chooses sources, weighted for the {lane || 'selected'} lane. "Recommended" counts answers that name the business or link to its website. AI answers vary between runs and change over time, so read single checks as a snapshot and trends as the signal.
             </footer>
           </>
         )}

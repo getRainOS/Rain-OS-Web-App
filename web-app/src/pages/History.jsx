@@ -119,7 +119,7 @@ export default function History() {
         if (err.status === 401) {
           setCitationsError('Session expired. Please sign out and re-enter your API key.');
         } else if (err.status >= 500) {
-          setCitationsError('Citation history service temporarily unavailable.');
+          setCitationsError('Your check history isn\'t available right now. Try again in a moment.');
         }
       })
       .finally(() => {
@@ -142,7 +142,7 @@ export default function History() {
         if (err.status === 401) {
           setBrandVisError('Session expired. Please sign out and re-enter your API key.');
         } else if (err.status >= 500) {
-          setBrandVisError('Brand Sentiment history service temporarily unavailable.');
+          setBrandVisError('Your check history isn\'t available right now. Try again in a moment.');
         }
       })
       .finally(() => {
@@ -439,7 +439,7 @@ export default function History() {
           className={`${styles.tab} ${tab === 'citations' ? styles.tabActive : ''}`}
           onClick={() => setTab('citations')}
         >
-          Citations
+          Is AI Citing Me?
         </button>
         <button
           role="tab"
@@ -447,7 +447,7 @@ export default function History() {
           className={`${styles.tab} ${tab === 'brand-sentiment' ? styles.tabActive : ''}`}
           onClick={() => setTab('brand-sentiment')}
         >
-          Brand Sentiment
+          How AI Describes Me
         </button>
         <button
           role="tab"
@@ -455,7 +455,7 @@ export default function History() {
           className={`${styles.tab} ${tab === 'share-of-voice' ? styles.tabActive : ''}`}
           onClick={() => setTab('share-of-voice')}
         >
-          Share of Voice
+          Who AI Recommends
         </button>
       </div>
 
@@ -622,8 +622,8 @@ export default function History() {
 
           {!citationsLoading && citations.length === 0 && !citationsError && !undoToast && (
             <div className={styles.empty}>
-              <p>No citation checks yet.</p>
-              <p className={styles.emptySub}>Run a check from Citation Monitor to start tracking citations over time.</p>
+              <p>No checks yet.</p>
+              <p className={styles.emptySub}>Run a check from Is AI Citing Me? to start tracking over time.</p>
             </div>
           )}
 
@@ -661,7 +661,7 @@ export default function History() {
               <div className={styles.bulkBar}>
                 {confirmClearAll ? (
                   <div className={styles.deleteConfirm}>
-                    <span className={styles.deleteConfirmText}>Clear all {citations.length} citation checks?</span>
+                    <span className={styles.deleteConfirmText}>Clear all {citations.length} checks?</span>
                     <button
                       type="button"
                       className={`${styles.deleteAction} ${styles.deleteActionConfirm}`}
@@ -696,7 +696,7 @@ export default function History() {
 
               {filteredCitations.length === 0 && (
                 <div className={styles.empty}>
-                  <p>No citation checks match your search.</p>
+                  <p>No checks match your search.</p>
                   <p className={styles.emptySub}>
                     <button type="button" className={styles.clearAllBtn} onClick={() => { setCitationsSearch(''); setCitationsStatusFilter('all'); }}>
                       Clear search &amp; filters
@@ -837,8 +837,8 @@ export default function History() {
 
           {!brandVisLoading && brandVis.length === 0 && !brandVisError && !undoToast && (
             <div className={styles.empty}>
-              <p>No Brand Sentiment checks yet.</p>
-              <p className={styles.emptySub}>Run a check from Brand Sentiment to start tracking how AI describes your brand.</p>
+              <p>No checks yet.</p>
+              <p className={styles.emptySub}>Run a check from How AI Describes Me to start tracking what AI says about your business.</p>
             </div>
           )}
 
