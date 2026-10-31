@@ -329,21 +329,6 @@ export const MIGRATIONS: Migration[] = [
       createTrackedQueriesQuery,
     ],
   },
-  {
-    id: '002_bot_visits',
-    statements: [
-      `CREATE TABLE IF NOT EXISTS bot_visits (
-        user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        site TEXT NOT NULL,
-        day DATE NOT NULL,
-        bot TEXT NOT NULL,
-        path TEXT NOT NULL,
-        visits INTEGER NOT NULL DEFAULT 0,
-        PRIMARY KEY (user_id, site, day, bot, path)
-      )`,
-      `CREATE INDEX IF NOT EXISTS idx_bot_visits_user_day ON bot_visits(user_id, day)`,
-    ],
-  },
 ];
 
 // Stops two instances from migrating at once when they start together.
