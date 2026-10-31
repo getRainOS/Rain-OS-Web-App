@@ -133,7 +133,7 @@ export default function ProductFacts() {
     <div className="fade-in">
       <PageHeader
         title="Product Details"
-        subtitle="The facts AI shopping answers compare products on, entered once per product. The AI rewrite uses them as verified facts, and each sheet generates your product's structured data."
+        subtitle="The facts AI uses to compare products, entered once per product. The AI rewrite uses them as verified facts, and each sheet creates the product details AI reads."
       />
 
       <div className={`card ${styles.importBar}`}>

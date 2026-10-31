@@ -198,7 +198,7 @@ export default function BrandVisibility() {
         title="How AI Describes Me"
         subtitle="See whether AI mentions your brand, how it describes you, and what to do if it doesn't."
         about={[
-          { heading: 'What the result means', body: 'Whether you are mentioned is a direct check of the AI engine\'s answer. The tone label is AI\'s judgment of the exact sentences that mention you, which we show so you can judge them yourself.' },
+          { heading: 'What the result means', body: 'Whether you are mentioned is a direct check of what AI answered. The tone label is AI\'s judgment of the sentences that mention you. We show those sentences so you can judge them yourself.' },
           { heading: 'How the check works', body: 'We ask the AI engine you pick (Gemini uses live Google Search) and report mentions, citations and tone as given. One engine and one phrasing per check, so it suits spot checks better than full brand monitoring.' },
         ]}
         actions={(tab !== 'check' || result) && <NewCheckButton onClick={() => { setResult(null); setError(''); setTab('check'); }} />}
