@@ -33,7 +33,7 @@ export default function AuthModal({ onAuth, onBack, initialMode = 'signup', pend
 
   async function handleEmailAuth(e) {
     e.preventDefault();
-    if (!email.trim() || !password.trim()) return;
+    if (!email.trim() || (!isReset && !password.trim())) return;
     setLoading(true);
     setError('');
     setMessage('');
