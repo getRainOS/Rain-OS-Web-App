@@ -3,6 +3,17 @@ import express from 'express';
 import request from 'supertest';
 import type { User } from '../types';
 
+// These tests use placeholder hosts and stub fetch themselves. The address
+// guard has its own tests (safeFetch.test.ts), so it passes through here.
+vi.mock('../services/safeFetch', async () => {
+  const actual = await vi.importActual<typeof import('../services/safeFetch')>('../services/safeFetch');
+  return {
+    ...actual,
+    assertPublicHttpUrl: async (u: string) => new URL(u),
+    safeFetch: (u: string, init?: RequestInit) => fetch(u, init),
+  };
+});
+
 // ─── Mock dbService so we never touch a real database ────────────────────────
 const findUserByApiKey = vi.fn();
 const incrementUsageAndSaveAnalysis = vi.fn();

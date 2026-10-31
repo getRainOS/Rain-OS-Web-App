@@ -10,6 +10,7 @@ import { checkProductPage, fetchShopifyVariants } from '../services/productPageC
 import { runPageSpeed, isGoogleApiConfigured } from '../services/googleApisService';
 import { classifyGeminiError } from '../services/geminiErrors';
 import type { ApiError } from '../types';
+import { safeFetch } from '../services/safeFetch';
 
 function getApiKey(req: express.Request): string | null {
   const h = req.headers.authorization;
@@ -94,7 +95,7 @@ export default async function handler(req: express.Request, res: express.Respons
     const timeout = setTimeout(() => ctrl.abort(), 15000);
     let rawHtml: string;
     try {
-      const r = await fetch(url, {
+      const r = await safeFetch(url, {
         signal: ctrl.signal,
         headers: { 'User-Agent': 'RainOS-Scanner/1.0 (+https://getrainos.com)' },
       });
