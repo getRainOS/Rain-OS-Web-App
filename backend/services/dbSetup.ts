@@ -329,6 +329,12 @@ export const MIGRATIONS: Migration[] = [
       createTrackedQueriesQuery,
     ],
   },
+  {
+    // Removes the bot_visits table left by the AI crawler visits feature, which
+    // was reverted. Safe to re-run: IF EXISTS.
+    id: '003_drop_bot_visits',
+    statements: ['DROP TABLE IF EXISTS bot_visits'],
+  },
 ];
 
 // Stops two instances from migrating at once when they start together.
