@@ -111,13 +111,25 @@ export default function SourceNetwork() {
         ctx!.moveTo(q.x, q.y);
         ctx!.lineTo(s.x, s.y);
         ctx!.stroke();
+
+        // A light travels from the question out along each lit line, forever.
+        if (!still && lit > 0.2) {
+          const f = (t * 0.00014 + k / sites.length) % 1;
+          const px = q.x + (s.x - q.x) * f;
+          const py = q.y + (s.y - q.y) * f;
+          ctx!.fillStyle = `rgba(255,255,255,${lit * 0.9})`;
+          ctx!.beginPath();
+          ctx!.arc(px, py, 2, 0, Math.PI * 2);
+          ctx!.fill();
+        }
       });
 
       for (const p of pts) {
         const lit = p.n.site ? Math.min(1, Math.max(0, progress * 1.2)) : 0;
+        const breathe = !still && p.n.site ? Math.sin(t * 0.002 + p.n.phase) * 0.5 : 0;
         ctx!.fillStyle = `rgba(255,255,255,${p.n.site ? 0.45 + lit * 0.55 : 0.5})`;
         ctx!.beginPath();
-        ctx!.arc(p.x, p.y, p.n.site ? p.n.r + 1.5 : p.n.r, 0, Math.PI * 2);
+        ctx!.arc(p.x, p.y, (p.n.site ? p.n.r + 1.5 : p.n.r) + breathe, 0, Math.PI * 2);
         ctx!.fill();
       }
     }
