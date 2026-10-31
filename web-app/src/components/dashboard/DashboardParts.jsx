@@ -351,7 +351,7 @@ export function LaneSelector({ onSelect, current }) {
             {helpOpen && (
               <div className={styles.focusHelpPop} role="note" style={{ textAlign: 'left', fontWeight: 400 }}>
                 <p><strong>Analyses</strong> score a page, post or repo: Content Optimizer, URL Scanner and Repo Analysis.</p>
-                <p><strong>Checks</strong> ask AI engines a question: Citation Monitor, Share of Voice and Brand Sentiment. One Citation Monitor run counts once, however many engines it asks. Automatic weekly re-checks aren't counted.</p>
+                <p><strong>Checks</strong> ask AI engines a question: Is AI Citing Me?, Who AI Recommends and How AI Describes Me. One Citation Monitor run counts once, however many engines it asks. Automatic weekly re-checks aren't counted.</p>
                 <p>Each is counted in the lane you were in when you ran it. Checks from before lanes were recorded aren't included; they're all still in History.</p>
               </div>
             )}
