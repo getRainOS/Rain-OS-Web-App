@@ -34,7 +34,7 @@ const PLANS = [
     price: '$29',
     period: '/ month',
     priceId: PRICE_IDS.PRO,
-    description: 'Everything in Free, plus the full AEO suite for content creators and growing brands.',
+    description: 'Everything in Free, plus the full set of checks for writers, sellers and small businesses.',
     color: 'var(--text)',
     featured: true,
     limit: '200 analyses / month',
@@ -57,7 +57,7 @@ const PLANS = [
     price: '$99',
     period: '/ month',
     priceId: PRICE_IDS.BUSINESS,
-    description: 'Premium AI intelligence for scaling brands and agencies.',
+    description: 'More questions and weekly checks, for a business that wants to watch its AI presence closely.',
     color: 'var(--text)',
     limit: '500 analyses / month',
     features: [

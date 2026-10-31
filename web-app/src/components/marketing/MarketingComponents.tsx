@@ -430,7 +430,7 @@ export const Pricing = () => {
     {
       plan: "Business", price: "$99", period: "/ mo", checkCount: "500 analyses / month",
       accentColor: "#e5e5e5",
-      description: "Premium AI intelligence for scaling brands, agencies, and teams that need to track and grow their presence inside AI answers.",
+      description: "More questions and weekly checks, for a business that wants to watch its AI presence closely.",
       buttonText: "Get Started",
       features: [
         { label: "Everything in Pro", included: true },
