@@ -43,7 +43,7 @@ export async function runPageSpeed(url: string, strategy: 'mobile' | 'desktop' =
   }
 
   const apiUrl = `${PAGESPEED_ENDPOINT}?url=${encodeURIComponent(url)}&strategy=${strategy}&key=${GOOGLE_API_KEY}&category=PERFORMANCE`;
-  const res = await fetch(apiUrl, { timeout: 20000 } as any);
+  const res = await fetch(apiUrl, { signal: AbortSignal.timeout(20000) });
   if (!res.ok) {
     const err = await res.text();
     throw new Error(`PageSpeed API error: ${res.status} — ${err.slice(0, 200)}`);
