@@ -891,7 +891,7 @@ export default function Dashboard() {
             <div>
               <h2 className={styles.chartTitle}>Score Trend</h2>
               <p className={styles.chartSub}>Last {chartRange} analyses</p>
-              <span className={styles.chartHelp} title="How your overall content scores have changed over time — higher means AI engines are more likely to cite your content.">
+              <span className={styles.chartHelp} title="How your overall scores have changed over time. Higher means AI is more likely to quote your pages.">
                 <HelpCircle size={11} />
               </span>
             </div>
@@ -965,7 +965,7 @@ export default function Dashboard() {
             <div>
               <h2 className={styles.chartTitle}>Recent Analyses</h2>
               <p className={styles.chartSub}>Your latest scores, across content, URLs and repos</p>
-              <span className={styles.chartHelp} title="Your latest analyses with overall scores and pillar breakdowns — click any row to view the full analysis.">
+              <span className={styles.chartHelp} title="Your latest checks with overall scores and the score for each area. Click any row to see the full check.">
                 <HelpCircle size={11} />
               </span>
             </div>
