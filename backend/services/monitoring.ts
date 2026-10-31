@@ -20,9 +20,12 @@ if (dsn) {
     },
   });
   process.on('unhandledRejection', err => Sentry.captureException(err));
+  // After an uncaught exception the process is in an unknown state. Report it,
+  // then exit so the host restarts a clean process.
   process.on('uncaughtException', err => {
     Sentry.captureException(err);
     console.error('uncaught exception:', err);
+    Sentry.flush(2000).finally(() => process.exit(1));
   });
 }
 
