@@ -34,7 +34,7 @@ If Gemini is grounded in Google Search, then the pages Google can find, read and
 
 **Why rain OS is built around it**
 
-We check real Google Search grounding, not a simulation. Citation Monitor asks Gemini about the topics you care about and shows whether it cites your brand, using live search data.
+We check real Google Search grounding, not a simulation. Is AI Citing Me? asks Gemini about the topics you care about and shows whether it cites your brand, using live search data.
 
 See whether Gemini cites your brand for the topics that matter to you — powered by real Google Search grounding, not a simulation.
 
@@ -48,7 +48,7 @@ It does not cover ChatGPT, Perplexity, Claude, Bing or voice assistants. It also
 
 **Where to start**
 
-Run your most important page through the Content Optimizer, then use Citation Monitor to see how Gemini talks about your brand today. Fix what is unclear, publish, and check again.`
+Run your most important page through the Content Optimizer, then use Is AI Citing Me? to see how Gemini talks about your brand today. Fix what is unclear, publish, and check again.`
   },
   {
     slug: 'ai-readability-for-everyone',
@@ -88,7 +88,7 @@ The internet was supposed to level the playing field. AI search can do the same 
 
 We reject that assumption entirely.
 
-Every day, millions of people create value on the internet. They write. They build. They serve their communities. They do not need to be SEO experts, schema markup wizards, or prompt engineers to deserve visibility. They need tools that translate the complexity of AI search into clear, actionable guidance.
+Every day, millions of people create value on the internet. They write. They build. They serve their communities. They do not need to be SEO experts, structured data wizards, or prompt engineers to deserve visibility. They need tools that translate the complexity of AI search into clear, actionable guidance.
 
 That is the principle behind every feature we build at rain OS.
 
@@ -119,7 +119,7 @@ When someone asks ChatGPT *"What is the best CRM for a small business?"* or asks
 It is different from traditional SEO in a few critical ways:
 
 **1. Structured, extractable content wins.**
-AI models love clear headings, concise paragraphs, and direct answers. If your article buries the answer in paragraph seven, the AI will skip it. If your FAQ page uses proper schema markup, the AI will grab it.
+AI models love clear headings, concise paragraphs, and direct answers. If your article buries the answer in paragraph seven, the AI will skip it. If your FAQ page uses proper structured data, the AI will grab it.
 
 **2. Authority signals matter more than backlinks.**
 AI models are trained on the entire web. They know which sources are reliable. They recognize brand names, expert credentials, and consistent factual accuracy. Building real authority — not just link volume — is the new currency.
@@ -127,7 +127,7 @@ AI models are trained on the entire web. They know which sources are reliable. T
 **3. Conversational queries are the new keywords.**
 People ask *"Why does my sourdough collapse?"* not *"sourdough collapse troubleshooting."* Your content needs to match the way real humans ask questions.
 
-At rain OS, we built our scoring system around these realities. Our six pillars — AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, Local Presence, and RAG Readiness — are designed to measure exactly what AI systems look for.
+At rain OS, we built our scoring system around these realities. Our six areas — AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, Local Presence, and Easy to Quote — are designed to measure exactly what AI systems look for.
 
 If you want to be the answer, you need to optimize for the engine that delivers answers.`
   },
@@ -152,7 +152,7 @@ It used to be simple: rank on Google Maps, collect reviews, show up for *"plumbe
 When AI answers these questions, it pulls from a different set of signals than traditional local SEO. Understanding those signals is how you win.
 
 **Signal 1: Structured business data**
-AI models need to extract your name, address, phone, hours, and services without ambiguity. LocalBusiness schema markup is no longer optional — it is essential. If your hours are buried in an image or your address is inconsistent across the web, the AI may skip you.
+AI models need to extract your name, address, phone, hours, and services without ambiguity. LocalBusiness structured data is no longer optional — it is essential. If your hours are buried in an image or your address is inconsistent across the web, the AI may skip you.
 
 **Signal 2: Service clarity**
 AI cannot infer what you do. Your services need to be explicitly listed with plain-language descriptions and, ideally, pricing transparency. *"Drain cleaning: $150-$300"* is infinitely more extractable than *"competitive rates."*
@@ -254,7 +254,7 @@ We are not in the interpretation business. That is the LLM's job, and frankly, m
 
 rain OS is the translation layer between your content and the AI that will interpret it.
 
-We analyze your content across six critical pillars — AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, Local Presence, and RAG Readiness — not because these are arbitrary checkboxes, but because each one corresponds to a dimension of translatability. Each one asks: can an AI system read this content clearly, understand what it means, trust what it says, surface it in search, and retrieve it when it's relevant?
+We analyze your content across six critical pillars — AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, Local Presence, and Easy to Quote — not because these are arbitrary checkboxes, but because each one corresponds to a dimension of translatability. Each one asks: can an AI system read this content clearly, understand what it means, trust what it says, surface it in search, and retrieve it when it's relevant?
 
 When we score your content for AI Readability, we are asking: is this written in a way that translates? Is the semantic meaning clear? Is the language precise without being dense? Is the logical flow evident?
 
