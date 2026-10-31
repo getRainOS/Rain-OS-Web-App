@@ -11,6 +11,7 @@ import SiteFooter from '@/components/marketing/SiteFooter';
 import { Pricing, FAQ } from '@/components/marketing/MarketingComponents';
 import { useLiveEngines, joinNames } from '@/lib/liveEngines';
 import HeroPrompt from '@/components/marketing/HeroPrompt';
+import SourceNetwork from '@/components/marketing/SourceNetwork';
 import IllustratedExample from '@/components/marketing/IllustratedExample';
 
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
@@ -539,6 +540,27 @@ const WHO = [
   { Icon: Code2, title: 'I write code and docs', body: 'READMEs, documentation and API references. Help AI explain your project correctly.', to: '/developers' },
 ];
 
+function SourceNetworkSection() {
+  return (
+    <section className="relative z-10 py-28 border-t border-white/[0.06] overflow-hidden">
+      <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
+        <Reveal>
+          <Eyebrow>Where AI gets its answers</Eyebrow>
+          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
+            Each answer draws on many sites. Get on the list.
+          </h2>
+          <p className="mt-5 text-neutral-400 text-lg leading-relaxed">
+            When someone asks an AI a question, it pulls from a handful of sites it trusts. rain OS shows you which ones, and which of them point to you.
+          </p>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <SourceNetwork />
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 function WhoSection({ onStart }: { onStart: () => void }) {
   return (
     <section id="who" className="relative z-10 py-24 border-t border-white/[0.06] scroll-mt-16">
@@ -683,6 +705,7 @@ export default function Home() {
           </div>
         </section>
 
+        <SourceNetworkSection />
         <WhoSection onStart={start} />
         <IllustratedExample />
         <HowItWorks />
