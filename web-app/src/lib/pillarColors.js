@@ -19,10 +19,10 @@ export const PILLAR_COLORS = {
 };
 
 export const PILLAR_CHART_COLORS = {
-  ai_readability: '#cacaca',
-  digital_authority: '#aeaeae',
-  conversion_readiness: '#969696',
-  product_discoverability: '#dddddd',
-  rag_readiness: '#808080',
-  local_presence: '#acacac',
+  ai_readability: '#A6D4F7',
+  digital_authority: '#7CBBF0',
+  conversion_readiness: '#58A6E8',
+  product_discoverability: '#C6E3FA',
+  rag_readiness: '#3F8FD9',
+  local_presence: '#8FB3D6',
 };
