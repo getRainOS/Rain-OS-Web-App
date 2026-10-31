@@ -6,7 +6,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 const SOLUTIONS = [
   {
-    label: 'Content Writers and Agencies',
+    label: 'Writers',
     href: '/content-writers',
     desc: 'Blog posts, articles, marketing copy',
     color: '#e5e5e5',
@@ -18,7 +18,7 @@ const SOLUTIONS = [
     color: '#e5e5e5',
   },
   {
-    label: 'Developers',
+    label: 'Independent Developers',
     href: '/developers',
     desc: 'Tech docs, READMEs, API references',
     color: '#e5e5e5',

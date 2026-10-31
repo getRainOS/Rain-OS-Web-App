@@ -46,10 +46,10 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
 
 const HERO_EXAMPLES = [
   {
-    query: 'best project management tool for small agencies',
+    query: 'best plumber near me for a water heater repair',
     cited: true,
     rank: 2,
-    sources: ['g2.com', 'yourbrand.com', 'zapier.com', 'reddit.com'],
+    sources: ['yelp.com', 'yourbrand.com', 'angi.com', 'reddit.com'],
     history: [null, null, 3, null, 2, 2, 3, 2] as (number | null)[],
   },
   {
