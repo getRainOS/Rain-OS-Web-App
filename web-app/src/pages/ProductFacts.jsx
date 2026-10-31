@@ -132,7 +132,7 @@ export default function ProductFacts() {
   return (
     <div className="fade-in">
       <PageHeader
-        title="Product Fact Sheets"
+        title="Product Details"
         subtitle="The facts AI shopping answers compare products on, entered once per product. The AI rewrite uses them as verified facts, and each sheet generates your product's structured data."
       />
 

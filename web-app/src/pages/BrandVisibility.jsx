@@ -195,7 +195,7 @@ export default function BrandVisibility() {
   return (
     <div className={styles.page}>
       <PageHeader
-        title="Brand Sentiment"
+        title="How AI Describes Me"
         subtitle="See whether AI mentions your brand, how it describes you, and what to do if it doesn't."
         about={[
           { heading: 'What the result means', body: 'Whether you are mentioned is a direct check of the AI engine\'s answer. The tone label is AI\'s judgment of the exact sentences that mention you, which we show so you can judge them yourself.' },
