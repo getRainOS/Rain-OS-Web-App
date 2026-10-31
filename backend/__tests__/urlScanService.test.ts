@@ -1,6 +1,17 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { scanUrlForTechnicalSignals, detectPlatform } from '../services/urlScanService';
 
+// These tests use placeholder hosts and stub fetch themselves. The address
+// guard has its own tests (safeFetch.test.ts), so it passes through here.
+vi.mock('../services/safeFetch', async () => {
+  const actual = await vi.importActual<typeof import('../services/safeFetch')>('../services/safeFetch');
+  return {
+    ...actual,
+    assertPublicHttpUrl: async (u: string) => new URL(u),
+    safeFetch: (u: string, init?: RequestInit) => fetch(u, init),
+  };
+});
+
 // ─── Mock global fetch for the llms.txt and robots.txt probes ────────────────
 // Each test can override `llmsTxtOk` / `llmsTxtBody` / `robotsTxtBody` to
 // control the result. llmsTxtBody defaults to a realistic, non-thin body so

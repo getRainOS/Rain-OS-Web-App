@@ -5,6 +5,17 @@ import { shopifyToFacts, importShopifyStore, pageToFacts, importProductPage, nor
 import { cleanFacts, verifiedFacts, factsForPrompt, factsCompleteness } from '../services/productFacts';
 import { mergeImported } from '../services/productFactService';
 
+// These tests use placeholder hosts and stub fetch themselves. The address
+// guard has its own tests (safeFetch.test.ts), so it passes through here.
+vi.mock('../services/safeFetch', async () => {
+  const actual = await vi.importActual<typeof import('../services/safeFetch')>('../services/safeFetch');
+  return {
+    ...actual,
+    assertPublicHttpUrl: async (u: string) => new URL(u),
+    safeFetch: (u: string, init?: RequestInit) => fetch(u, init),
+  };
+});
+
 vi.mock('../services/db', () => ({ pool: { query: vi.fn() } }));
 const store = JSON.parse(readFileSync(join(__dirname, 'fixtures/shopify/products.json'), 'utf8'));
 const res = (body: any, status = 200) => ({ ok: status < 400, status, json: async () => body, text: async () => (typeof body === 'string' ? body : JSON.stringify(body)) });
