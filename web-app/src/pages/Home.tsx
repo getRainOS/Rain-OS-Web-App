@@ -12,6 +12,7 @@ import { Pricing, FAQ } from '@/components/marketing/MarketingComponents';
 import { useLiveEngines, joinNames } from '@/lib/liveEngines';
 import HeroPrompt from '@/components/marketing/HeroPrompt';
 import SourceNetwork from '@/components/marketing/SourceNetwork';
+import ScrollWords from '@/components/marketing/ScrollWords';
 import IllustratedExample from '@/components/marketing/IllustratedExample';
 
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
@@ -546,9 +547,10 @@ function SourceNetworkSection() {
       <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
         <Reveal>
           <Eyebrow>Where AI gets its answers</Eyebrow>
-          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
-            Each answer draws on many sites. Get on the list.
-          </h2>
+          <ScrollWords
+            text="Each answer draws on many sites. Get on the list."
+            className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance"
+          />
           <p className="mt-5 text-neutral-400 text-lg leading-relaxed">
             When someone asks an AI a question, it pulls from a handful of sites it trusts. rain OS shows you which ones, and which of them point to you.
           </p>
