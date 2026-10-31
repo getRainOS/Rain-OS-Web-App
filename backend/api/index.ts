@@ -3,7 +3,6 @@ import rateLimit from 'express-rate-limit';
 // api/index.ts
 import express from 'express';
 import { captureError } from '../services/monitoring';
-import { ingestBotVisitsHandler, botVisitsSummaryHandler } from './bot-visits';
 import cors from 'cors';
 import { setupDatabase } from '../services/dbSetup';
 import process from 'process';
@@ -169,8 +168,6 @@ app.get('/api/admin/test-account', testAccountStatusHandler);
 app.post('/api/admin/test-account/reset', testAccountResetHandler);
 app.post('/api/admin/test-account/retry', testAccountRetryHandler);
 app.get('/api/email/unsubscribe', unsubscribePageHandler);
-app.post('/api/bot-visits', express.json({ limit: '64kb' }), ingestBotVisitsHandler);
-app.get('/api/bot-visits', botVisitsSummaryHandler);
 app.post('/api/email/unsubscribe', express.urlencoded({ extended: false }), unsubscribeHandler);
 app.post('/api/interview/questions', interviewQuestionsHandler);
 app.post('/api/interview/draft', interviewDraftHandler);
