@@ -72,7 +72,7 @@ export default function VibeCoders() {
               </h1>
 
               <p className="text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto leading-relaxed">
-                Bolt, Lovable, Cursor, and v0 build beautiful sites fast. But AI crawlers can't read them. Missing schema, no llms.txt, JS-rendered content — if LLMs can't parse your page, you won't be cited.
+                Bolt, Lovable, Cursor, and v0 build beautiful sites fast. But AI crawlers can't read them. Missing structured data, no llms.txt, JS-rendered content — if LLMs can't parse your page, you won't be cited.
               </p>
             </motion.div>
 
@@ -170,7 +170,7 @@ export default function VibeCoders() {
                 },
                 {
                   label: 'What AI actually reads',
-                  body: "ChatGPT, Gemini, and Perplexity read your llms.txt, meta tags, schema markup, and robots.txt before they ever render your React components. If those are missing, you're not in the index.",
+                  body: "ChatGPT, Gemini, and Perplexity read your llms.txt, meta tags, structured data, and robots.txt before they ever render your React components. If those are missing, you're not in the index.",
                   highlight: true,
                 },
                 {
@@ -400,7 +400,7 @@ export default function VibeCoders() {
                 <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
                 <span className="ml-3 text-xs text-neutral-500 font-mono">getrainos.com/dashboard</span>
               </div>
-              <img src="/screenshots/dashboard-chart.png" alt="rain OS pillar breakdown dashboard showing AI Readability, Digital Authority, Conversion Readiness, and RAG Readiness trendlines" className="w-full block" />
+              <img src="/screenshots/dashboard-chart.png" alt="rain OS pillar breakdown dashboard showing AI Readability, Digital Authority, Conversion Readiness, and Easy to Quote trendlines" className="w-full block" />
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-start">
@@ -418,7 +418,7 @@ export default function VibeCoders() {
                   <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
                   <span className="ml-3 text-xs text-neutral-500 font-mono">getrainos.com/citation-monitor</span>
                 </div>
-                <img src="/screenshots/citation-map.png" alt="rain OS citation map showing which countries AI engines are citing your domain from" className="w-full block" />
+                <img src="/screenshots/citation-map.png" alt="rain OS citation map showing which countries AI tools are citing your domain from" className="w-full block" />
               </motion.div>
 
               <motion.div

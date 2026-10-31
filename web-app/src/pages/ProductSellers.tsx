@@ -55,7 +55,7 @@ const pdSignals = [
 const problems = [
   {
     label: 'The problem',
-    body: 'AI shopping assistants can\'t recommend what they can\'t clearly read. No schema, vague prices, missing variants — your product becomes invisible.',
+    body: 'AI shopping assistants can\'t recommend what they can\'t clearly read. No structured data, vague prices, missing variants — your product becomes invisible.',
     dim: true,
   },
   {
@@ -85,7 +85,7 @@ const comparisons = [
   { signal: 'AI Readability scoring', standard: false, rain: true },
   { signal: 'Digital Authority scoring', standard: false, rain: true },
   { signal: 'Conversion Readiness scoring', standard: false, rain: true },
-  { signal: 'RAG Readiness scoring', standard: false, rain: true },
+  { signal: 'Easy to Quote scoring', standard: false, rain: true },
   { signal: 'Traditional SEO scoring', standard: true, rain: true },
 ];
 
@@ -114,7 +114,7 @@ export default function ProductSellers() {
               </h1>
 
               <p className="text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto leading-relaxed">
-                Shopping bots can't recommend what they can't parse. If your pricing, variants, and availability aren't in structured schema, AI shopping assistants skip you for a competitor who is. rain OS scores your product pages against exactly what agentic commerce needs — then shows you what to fix.
+                Shopping bots can't recommend what they can't parse. If your pricing, variants, and availability aren't in structured data, AI shopping assistants skip you for a competitor who is. rain OS scores your product pages against exactly what agentic commerce needs — then shows you what to fix.
               </p>
             </motion.div>
 
@@ -174,7 +174,7 @@ export default function ProductSellers() {
                 AI shopping is here. Most product pages aren't ready.
               </h2>
               <p className="text-neutral-400 max-w-2xl mx-auto leading-relaxed">
-                When someone asks ChatGPT "what's the best X to buy?", AI engines surface products based on structured signals — schema markup, pricing clarity, variant coverage — not keyword density. Most product pages fail these checks invisibly.
+                When someone asks ChatGPT "what's the best X to buy?", AI tools surface products based on structured signals — structured data, pricing clarity, variant coverage — not keyword density. Most product pages fail these checks invisibly.
               </p>
             </motion.div>
 

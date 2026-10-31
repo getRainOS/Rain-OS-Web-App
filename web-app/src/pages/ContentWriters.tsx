@@ -26,7 +26,7 @@ const pillars = [
     border: 'rgba(255,255,255,0.25)',
     Icon: ShieldCheck,
     name: 'Digital Authority',
-    desc: 'The trust signals that make AI engines choose your content over a competitor\'s.',
+    desc: 'The trust signals that make AI tools choose your content over a competitor\'s.',
   },
   {
     color: '#e5e5e5',
@@ -49,16 +49,16 @@ const pillars = [
     bg: 'rgba(255,255,255,0.1)',
     border: 'rgba(255,255,255,0.25)',
     Icon: Layers,
-    name: 'RAG Readiness',
-    desc: 'How well your content is structured for vector database retrieval and AI embedding systems.',
+    name: 'Easy to Quote',
+    desc: 'How easily AI can pull a single answer out of your content and quote it.',
   },
 ];
 
 const features = [
   {
     Icon: Bot,
-    title: 'AI Engine Scoring',
-    desc: 'See how an AI reads your content, scored across six weighted pillars, with the fixes that matter most.',
+    title: 'How AI Reads Your Content',
+    desc: 'See how an AI reads your content, scored across six weighted areas, with the fixes that matter most.',
   },
   {
     Icon: BarChart3,
@@ -68,11 +68,11 @@ const features = [
   {
     Icon: Search,
     title: 'SEO + AEO Gap Analysis',
-    desc: 'Surface the gaps between what search engines and AI engines need — and fix both in a single pass.',
+    desc: 'Surface the gaps between what search engines and AI tools need — and fix both in a single pass.',
   },
   {
     Icon: Radar,
-    title: 'Citation Monitor',
+    title: 'Is AI Citing Me?',
     desc: 'See whether ChatGPT, Google AI Overviews, Perplexity and Claude cite you for the topics you care about, and track it every week.',
   },
   {
@@ -89,7 +89,7 @@ const features = [
 
 const steps = [
   { num: '01', title: 'Paste your content', desc: 'Drop any blog post, article, or landing page copy into the analyzer.' },
-  { num: '02', title: 'Get your Rain Score', desc: 'Receive a weighted score across our six-pillar engine with a full signal breakdown.' },
+  { num: '02', title: 'Get your Rain Score', desc: 'Receive one weighted score across six areas with a full signal breakdown.' },
   { num: '03', title: 'Fix and re-score', desc: 'Apply the recommendations, re-run the analysis, and watch your score climb.' },
 ];
 
@@ -118,12 +118,12 @@ export default function ContentWriters() {
                 style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
                 Write content that{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-white/40 to-white/20">
-                  AI engines cite
+                  AI tools cite
                 </span>
               </h1>
 
               <p className="text-neutral-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
-                AI engines read your best work, answer the question, and the reader never clicks through. rain OS scores your content against what actually earns a citation — and Citation Monitor shows you exactly which topics AI is already citing you for, and which it's giving to a competitor instead.
+                AI tools read your best work, answer the question, and the reader never clicks through. rain OS scores your content against what actually earns a citation — and the Is AI Citing Me? check shows you exactly which topics AI is already citing you for, and which it's giving to a competitor instead.
               </p>
             </motion.div>
 
@@ -199,7 +199,7 @@ export default function ContentWriters() {
                 SEO alone won't get you cited
               </h2>
               <p className="text-neutral-400 max-w-2xl mx-auto leading-relaxed">
-                When someone asks ChatGPT or Perplexity a question, AI engines select sources based on structure, authority, and clarity — not keyword density. Most content fails these checks invisibly, even content that ranks well on Google.
+                When someone asks ChatGPT or Perplexity a question, AI tools select sources based on structure, authority, and clarity — not keyword density. Most content fails these checks invisibly, even content that ranks well on Google.
               </p>
             </motion.div>
 
@@ -246,7 +246,7 @@ export default function ContentWriters() {
               <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">How we score</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Five of six pillars. One Rain Score.</h2>
               <p className="text-neutral-400 max-w-xl leading-relaxed">
-                Every analysis returns a weighted score across the dimensions that determine whether AI engines cite your content.
+                Every analysis returns a weighted score across the dimensions that determine whether AI tools cite your content.
               </p>
             </motion.div>
 
