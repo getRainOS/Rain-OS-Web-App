@@ -16,7 +16,7 @@ const sections = [
     title: 'Description of Service',
     body: [
       'rain OS provides Answer Engine Optimization (AEO) and Generative Engine Optimization (GEO) analysis tools that score your content, URLs, and source code repositories for AI readability, citation authority, and conversion readiness.',
-      'The Service is offered as a web application at getrainos.com and (in future) a Chrome extension. These Terms apply to all clients and access methods.',
+      'The Service is offered as a web application at getrainos.com. These Terms apply to all clients and access methods.',
     ],
   },
   {
