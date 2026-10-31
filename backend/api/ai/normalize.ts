@@ -1,12 +1,14 @@
 import express from 'express';
 import { upsertAiContentProfileFromNormalize } from '../../services/aiReadiness/analysisService';
 import type { ApiError } from '../../types';
+import { requireApiKey } from './requireApiKey';
 
 /**
  * POST /ai/normalize
  * Body (plugin sends): { contentId: string, text?: string, html?: string, canonicalUrl?: string, lastModified?: string, outboundLinks?: string[] }
  */
 export default async function handler(req: express.Request, res: express.Response) {
+  if (!(await requireApiKey(req, res))) return;
   try {
     const { contentId, text, html, canonicalUrl, lastModified, outboundLinks } = (req.body || {}) as any;
 
