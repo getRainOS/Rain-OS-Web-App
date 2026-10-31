@@ -11,7 +11,7 @@ if (dsn) {
     environment: process.env.RAILWAY_ENVIRONMENT_NAME || process.env.NODE_ENV || 'development',
     tracesSampleRate: 0,
     // Never send request bodies or headers: they can hold API keys and passwords.
-    sendDefaultPii: false,
+    // (sendDefaultPii is off by default in v11, and beforeSend strips these below.)
     beforeSend(event) {
       delete event.request?.data;
       delete event.request?.headers;
