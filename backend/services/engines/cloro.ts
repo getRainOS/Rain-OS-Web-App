@@ -58,8 +58,11 @@ export async function cloroAnswer(engine: string, prompt: string, opts: { countr
     if (!res.ok || json?.success === false) {
       const code = json?.error?.code;
       const unavailable = code === 'MODEL_UNAVAILABLE' || res.status >= 500;
+      // The vendor's own message can name accounts or credit balances, so it is
+      // logged here and never shown to the user.
+      if (!unavailable) console.error(`[cloro] ${engine} failed (${res.status}, ${code || 'no code'}):`, json?.error?.message);
       throw new EngineError(
-        unavailable ? `${ENGINE_NAMES[engine] || engine} is temporarily unavailable. Try again later.` : (json?.error?.message || `Request failed (${res.status})`),
+        unavailable ? `${ENGINE_NAMES[engine] || engine} is temporarily unavailable. Try again later.` : `${ENGINE_NAMES[engine] || engine} could not complete this check. Try again later.`,
         unavailable ? 503 : 502,
         code
       );
