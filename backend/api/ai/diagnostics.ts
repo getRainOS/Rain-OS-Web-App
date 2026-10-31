@@ -1,11 +1,13 @@
 import express from 'express';
 import { getAiReadinessDiagnostics } from '../../services/aiReadiness/analysisService';
+import { requireApiKey } from './requireApiKey';
 
 /**
  * GET /ai/diagnostics/:contentId
  * Keep deterministic and low cost.
  */
 export default async function handler(req: express.Request, res: express.Response) {
+  if (!(await requireApiKey(req, res))) return;
   const contentId = String(req.params.contentId || '').trim();
   if (!contentId) return res.status(204).send();
 
