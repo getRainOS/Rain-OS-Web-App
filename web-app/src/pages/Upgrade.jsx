@@ -136,7 +136,7 @@ export default function Upgrade() {
 
   return (
     <div className={`${styles.root} fade-in`}>
-      <PageHeader title="Plans" subtitle="Pick the plan that fits how much you check. Change or cancel any time." />
+      <PageHeader title="Plans" subtitle="An analysis is one check of one page or one question. Pick the plan that fits how many you run. Change or cancel any time." />
 
       {error && <p className={styles.error}>{error}</p>}
 
