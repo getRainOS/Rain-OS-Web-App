@@ -1,5 +1,6 @@
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import { costlyLimiter } from '../services/costlyLimiter';
 // api/index.ts
 import express from 'express';
 import { captureError } from '../services/monitoring';
@@ -98,6 +99,8 @@ const apiLimiter = rateLimit({
 });
 app.use('/api', apiLimiter);
 app.use('/v1/api', apiLimiter);
+// Paid AI and data-provider calls: a tighter limit per user (see services/costlyLimiter.ts).
+app.use(['/api/analyze', '/v1/api/analyze', '/api/rewrite', '/v1/api/rewrite', '/api/url-scan', '/v1/api/url-scan', '/api/brand-visibility', '/v1/api/brand-visibility', '/api/sov', '/v1/api/sov', '/api/citation-check', '/v1/api/citation-check', '/api/prompt-suggestions', '/v1/api/prompt-suggestions', '/api/local-listing', '/v1/api/local-listing', '/api/maps-grid', '/v1/api/maps-grid', '/api/products/import-store', '/v1/api/products/import-store', '/api/products/import-page', '/v1/api/products/import-page'], costlyLimiter);
 // ─── Health ────────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => res.status(200).json({ status: 'ok',
 timestamp: new Date().toISOString() }));
