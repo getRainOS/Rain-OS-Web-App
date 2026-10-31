@@ -53,15 +53,15 @@ export default function CitationMapCard({ source = 'cited', kpiLabel, checks = [
     >
       <div className={styles.head}>
         <div>
-          <h2 id="citation-map-heading" className={styles.title}>Where AI's sources are based</h2>
+          <h2 id="citation-map-heading" className={styles.title}>Where AI's sources come from</h2>
           <p className={styles.sub}>
             {latest
               ? `${top.length ? `Sites ${engines} cited ${about} are mostly based in ${top.map(r => r.name).join(', ')}.` : `Sites ${engines} cited ${about}.`}`
               : tab === 'cited'
-                ? 'Run a Citation Monitor check to see where the websites AI cites are based.'
+                ? 'Run an "Is AI Citing Me?" check to see where the websites AI links to come from.'
                 : tab === 'sov'
-                  ? 'Run a Share of Voice check to see where the websites AI cites are based.'
-                  : 'Run a Brand Sentiment check to see where the websites AI cites are based.'}
+                  ? 'Run a "Who AI Recommends" check to see where the websites AI links to come from.'
+                  : 'Run a "How AI Describes Me" check to see where the websites AI links to come from.'}
           </p>
         </div>
         {kpiLabel && <span className={styles.showing}>Showing: {kpiLabel}</span>}

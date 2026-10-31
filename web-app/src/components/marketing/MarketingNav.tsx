@@ -105,7 +105,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
       >
         <div className="flex items-center justify-between w-full max-w-6xl px-6 h-16">
           <a href="/" className={"font-bold text-2xl tracking-tighter shrink-0 text-white"}>
-            <Logo size={26} />
+            <Logo size={34} />
           </a>
 
           {/* Desktop nav */}
@@ -224,7 +224,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
               {/* Mobile menu header */}
               <div className={"flex items-center justify-between px-5 py-4 border-b border-white/[0.06]"}>
                 <span className={"font-bold text-xl tracking-tighter text-white"}>
-                  <Logo size={26} />
+                  <Logo size={34} />
                 </span>
                 <button
                   onClick={() => setMobileOpen(false)}

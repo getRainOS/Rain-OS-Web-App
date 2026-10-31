@@ -97,7 +97,7 @@ export default function AuthModal({ onAuth, onBack, initialMode = 'signup', pend
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        <div className={styles.logo}><Logo size={30} /></div>
+        <div className={styles.logo}><Logo size={40} /></div>
 
         <h1 className={styles.title}>
           {isReset ? 'Reset your password' : isSignup ? 'Start for free' : 'Welcome back'}
