@@ -188,6 +188,26 @@ export async function runSchedulerTick(): Promise<{ claimed: number; ran: number
 let timer: NodeJS.Timeout | null = null;
 let running = false;
 
+// One tick at a time across every instance: the daily check ceiling is read
+// and then spent, which two instances could both do at once.
+const SCHEDULER_LOCK_KEY = 7342002;
+
+export async function withSchedulerLock(work: () => Promise<void>): Promise<boolean> {
+  const client = await pool.connect();
+  try {
+    const got = await client.query('SELECT pg_try_advisory_lock($1) AS ok', [SCHEDULER_LOCK_KEY]);
+    if (!got.rows[0]?.ok) return false;
+    try {
+      await work();
+    } finally {
+      await client.query('SELECT pg_advisory_unlock($1)', [SCHEDULER_LOCK_KEY]).catch(() => {});
+    }
+    return true;
+  } finally {
+    client.release();
+  }
+}
+
 export function startScheduler(): void {
   if (process.env.SCHEDULER_ENABLED === 'false') {
     console.log('[scheduler] disabled by SCHEDULER_ENABLED=false');
@@ -198,14 +218,20 @@ export function startScheduler(): void {
     if (running) return;
     running = true;
     try {
-      await runSchedulerTick();
+      await withSchedulerLock(async () => {
+        try {
+          await runSchedulerTick();
+        } catch (err) {
+          console.error('[scheduler] tick failed:', err instanceof Error ? err.message : err);
+        }
+        try {
+          await sendWeeklyDigests();
+        } catch (err) {
+          console.error('[digest] failed:', err instanceof Error ? err.message : err);
+        }
+      });
     } catch (err) {
-      console.error('[scheduler] tick failed:', err instanceof Error ? err.message : err);
-    }
-    try {
-      await sendWeeklyDigests();
-    } catch (err) {
-      console.error('[digest] failed:', err instanceof Error ? err.message : err);
+      console.error('[scheduler] could not run:', err instanceof Error ? err.message : err);
     } finally {
       running = false;
     }
