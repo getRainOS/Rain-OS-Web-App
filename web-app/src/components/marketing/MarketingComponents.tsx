@@ -340,11 +340,11 @@ export const ReadabilityIntelligence = () => {
 export const ComparisonTable = () => {
   const features = [
     { name: 'Keyword & Readability Scoring', seo: true, rain: true },
-    { name: 'AI Readability Score (LLM parse-ability)', seo: false, rain: true },
-    { name: 'Digital Authority & Citation Signals', seo: false, rain: true },
+    { name: 'AI Readability Score (how easily AI reads your page)', seo: false, rain: true },
+    { name: 'Digital Authority & Trust Signals', seo: false, rain: true },
     { name: 'Conversion Readiness Analysis', seo: false, rain: true },
     { name: 'Product Discoverability for AI Shopping', seo: false, rain: true },
-    { name: 'RAG Chunking Quality Score', seo: false, rain: true },
+    { name: 'Easy-to-Quote Score', seo: false, rain: true },
     { name: 'Information Gain Score', seo: false, rain: true },
     { name: 'Query Alignment Score', seo: false, rain: true },
     { name: 'Semantic Redundancy Detection', seo: false, rain: true },
@@ -397,34 +397,34 @@ export const Pricing = () => {
       buttonText: "Get Started",
       features: [
         { label: "Content Optimizer", included: true },
-        { label: "All 6 core scoring pillars", included: true },
+        { label: "All 6 scored areas", included: true },
         { label: "Actionable recommendations", included: true },
         { label: "URL Scanner", included: false },
         { label: "Repo Analysis (GitHub)", included: false },
-        { label: "Citation Monitor", included: false },
+        { label: "Is AI Citing Me?", included: false },
         { label: "Weekly citation tracking", included: false },
-        { label: "Brand Sentiment", included: false },
-        { label: "Share of Voice", included: false },
+        { label: "How AI Describes Me", included: false },
+        { label: "Who AI Recommends", included: false },
       ]
     },
     {
       plan: "Pro", price: "$29", period: "/ mo", checkCount: "200 analyses / month", isPopular: true,
       accentColor: "#e5e5e5",
-      description: "Everything in Free, plus citation checks on ChatGPT, Google AI Overviews, AI Mode, Gemini, Perplexity and Claude.",
+      description: "Everything in Free, plus checks of whether AI links to you on ChatGPT, Google AI Overviews, AI Mode, Gemini, Perplexity and Claude.",
       buttonText: "Get Started",
       features: [
         { label: "Everything in Free", included: true },
         { label: "Content Optimizer", included: true },
         { label: "URL Scanner", included: true },
         { label: "Repo Analysis (GitHub)", included: true },
-        { label: "Citation Monitor on 6 AI engines", included: true },
-        { label: "Weekly citation tracking (10 questions)", included: true },
+        { label: "Is AI Citing Me? on 6 AI tools", included: true },
+        { label: "Weekly tracking of AI links (10 questions)", included: true },
         { label: "Check from any US state or country", included: true },
         { label: "Local checks: Google Business Profile, reviews, Maps", included: true },
         { label: "Quick Tools — titles, meta, summarize", included: true },
         { label: "Score History", included: true },
-        { label: "Brand Sentiment", included: false },
-        { label: "Share of Voice", included: false },
+        { label: "How AI Describes Me", included: false },
+        { label: "Who AI Recommends", included: false },
       ]
     },
     {
@@ -434,10 +434,10 @@ export const Pricing = () => {
       buttonText: "Get Started",
       features: [
         { label: "Everything in Pro", included: true },
-        { label: "Citation Monitor", included: true },
-        { label: "Weekly citation tracking (30 questions)", included: true },
-        { label: "Brand Sentiment on every engine", included: true },
-        { label: "Share of Voice on every engine", included: true },
+        { label: "Is AI Citing Me?", included: true },
+        { label: "Weekly tracking of AI links (30 questions)", included: true },
+        { label: "How AI Describes Me on every AI tool", included: true },
+        { label: "Who AI Recommends on every AI tool", included: true },
       ]
     }
   ];
@@ -526,13 +526,13 @@ export const FAQ = () => {
   const engines = joinNames(useLiveEngines());
   const faqs = [
     { q: "Who is rain OS for?", a: "Anyone whose customers now ask AI before they search: writers and marketers, online sellers, developers, people shipping apps with AI builders, and local service businesses. You pick the lane that fits, and rain OS weights its scoring for the way that kind of business gets found." },
-    { q: "What is Answer Engine Optimization?", a: "Answer Engine Optimization (AEO) is the work of making your pages easy for AI assistants to read, trust and cite. When ChatGPT, Gemini or Perplexity answer a question, they draw on a handful of sources. AEO is about being one of them." },
-    { q: "How is the Rain Score calculated?", a: "Every analysis is scored across six pillars: AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, Local Presence and RAG Readiness. The weights depend on your lane. Writers & Marketers get 36/27/27/0/0/10, Online Sellers 20/15/15/50/0/10, Developers and Vibe Coders 32/32/26/0/0/10, and Local Businesses 20/20/20/0/30/10. The result is one score from 0 to 100 with a breakdown for every pillar." },
-    { q: "Which AI engines do you check?", a: `The Rain Score measures structural signals every AI engine relies on, such as headings, schema, llms.txt, crawler access and answer-ready content, so it applies to ChatGPT, Gemini, Perplexity and others. Live citation checks, weekly tracking, Share of Voice and Brand Sentiment run on ${engines}, from the US state or country you choose.` },
-    { q: "Why not just ask Gemini myself?", a: "You can, and for a quick look it's worth doing. But what you see is shaped by your own account, search history and location, so it may not match what a customer sees. The app also shows only a few links, not the full list of sources it used or where you rank among them. rain OS asks the same question through Gemini with live Google Search grounding, without your personal history, and shows every cited source in order with your position. It saves each result so you can see changes over time, can re-check your key questions weekly, and tells you what to fix when you're not cited. Results can still vary between runs, because AI answers do."},
-    { q: "How does weekly tracking work?", a: "On Pro and Business, choose Track weekly on any Citation Monitor result. rain OS re-runs that question every week, keeps the history, and emails you when any engine starts or stops citing your site. Pro tracks up to 10 questions and Business up to 30. Scheduled checks don't use your monthly analyses." },
+    { q: "What does it mean to get cited by AI?", a: "It means making your pages easy for AI assistants to read, trust and quote. Some people call this Answer Engine Optimization (AEO). When ChatGPT, Gemini or Perplexity answer a question, they draw on a handful of sources. AEO is about being one of them." },
+    { q: "How is the score calculated?", a: "Every check is scored across six areas: AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, Local Presence and RAG Readiness. The weights depend on your lane. Writers & Marketers get 36/27/27/0/0/10, Online Sellers 20/15/15/50/0/10, Developers and Vibe Coders 32/32/26/0/0/10, and Local Businesses 20/20/20/0/30/10. The result is one score from 0 to 100 with a breakdown for every area." },
+    { q: "Which AI tools do you check?", a: `The Rain Score measures structural signals every AI tool relies on, such as clear headings, structured page details, an AI-friendly files list, whether AI can access the page and answer-ready content, so it applies to ChatGPT, Gemini, Perplexity and others. Live checks of AI answers, weekly tracking, Who AI Recommends and How AI Describes Me run on ${engines}, from the US state or country you choose.` },
+    { q: "Why not just ask Gemini myself?", a: "You can, and for a quick look it's worth doing. But what you see is shaped by your own account, search history and location, so it may not match what a customer sees. The app also shows only a few links, not the full list of sources it used or where you rank among them. rain OS asks the same question through Gemini with live Google Search results, without your personal history, and shows every source it linked to, in order, with your position. It saves each result so you can see changes over time, can re-check your key questions weekly, and tells you what to fix when you're not cited. Results can still vary between runs, because AI answers do."},
+    { q: "How does weekly tracking work?", a: "On Pro and Business, choose Track weekly on any Is AI Citing Me? result. rain OS re-runs that question every week, keeps the history, and emails you when any AI tool starts or stops linking to your site. Pro tracks up to 10 questions and Business up to 30. Scheduled checks don't use your monthly analyses." },
     { q: "Can rain OS fix my content, or just analyze it?", a: "Both. Every result comes with prioritized recommendations in plain language and in technical terms. You can rewrite content for AI in one click, generate titles and meta descriptions, copy a fix prompt tailored to Bolt, Lovable, Cursor and other builders, or have rain OS open a pull request with the fixes on your GitHub repository." },
-    { q: "What counts as an analysis?", a: "A content analysis, URL scan, repo analysis, citation check, AI rewrite, Share of Voice check or Brand Sentiment check each use one analysis. Free includes 5 to start, Pro includes 200 a month and Business includes 500 a month." },
+    { q: "What counts as an analysis?", a: "A writing check, web page scan, GitHub check, AI link check, AI rewrite, Who AI Recommends check or How AI Describes Me check each use one analysis. Free includes 5 to start, Pro includes 200 a month and Business includes 500 a month." },
     { q: "Do you guarantee that AI will cite me?", a: "No, and anyone who does is guessing. AI answers change with the question, the model and the day. What we guarantee is that every check is real, every score is explained, and you can see exactly what to improve." },
     { q: "Is my data secure?", a: "Your API key is encrypted at rest with AES-256, payments are handled by Stripe, and GitHub access uses OAuth, so we never see your password. Content you analyze is sent to Google's Gemini API to run the analysis and saved to your account so you can see your history." },
   ];
