@@ -52,7 +52,7 @@ export default function SiteFooter() {
               <Logo size={30} />
             </Link>
             <p className="mt-4 text-[13px] text-neutral-500 leading-relaxed max-w-[240px]">
-              Answer Engine Optimization for teams that want to be the source AI cites.
+              Be seen by AI.
             </p>
           </div>
           {COLUMNS.map(col => (
