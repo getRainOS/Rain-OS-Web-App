@@ -1,6 +1,7 @@
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { costlyLimiter } from '../services/costlyLimiter';
+import { isAllowedOrigin } from '../services/corsOrigins';
 // api/index.ts
 import express from 'express';
 import { captureError } from '../services/monitoring';
@@ -73,7 +74,7 @@ import questionGapHandler from './question-gap';
 // If you need credentials: true for a specific frontend route in the future,
 // add a separate router with a scoped CORS config — do not change this globalone.
 const corsOptions: cors.CorsOptions = {
-origin: '*',
+origin: (origin, callback) => callback(null, isAllowedOrigin(origin)),
 methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
 allowedHeaders: ['Content-Type', 'Authorization', 'X-Rain-Lane'],
 exposedHeaders: ['X-Usage-Info'],
