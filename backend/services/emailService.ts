@@ -17,6 +17,8 @@ export const sendEmail = async (to: string, subject: string, html: string, unsub
 
   const res = await fetch(RESEND_API_URL, {
     method: 'POST',
+    // A stuck email call must not stall the weekly scheduler run that sent it.
+    signal: AbortSignal.timeout(15000),
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${apiKey}`,

@@ -58,6 +58,7 @@ export default async function handler(req: express.Request, res: express.Respons
     // Exchange code for access token
     const tokenRes = await fetch('https://github.com/login/oauth/access_token', {
       method: 'POST',
+      signal: AbortSignal.timeout(15000),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -84,6 +85,7 @@ export default async function handler(req: express.Request, res: express.Respons
 
     // Fetch GitHub user profile
     const profileRes = await fetch('https://api.github.com/user', {
+      signal: AbortSignal.timeout(15000),
       headers: {
         'Authorization': `Bearer ${accessToken}`,
         'Accept': 'application/vnd.github+json',
