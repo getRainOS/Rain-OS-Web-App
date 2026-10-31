@@ -31,10 +31,10 @@ export default function AIReadabilityPage() {
             What we measure
           </span>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
-            How rain OS Scores Content for AI Citation
+            How rain OS Scores Your Content So AI Will Quote It
           </h1>
           <p className="text-lg text-neutral-400 leading-relaxed mb-6">
-            Every piece of content you create — blog posts, product pages, docs, or landing pages — gets scored across six pillars. The weights change based on what you are optimizing for, but the goal is the same: make sure AI can read, trust, and cite your content.
+            Every piece of content you create — blog posts, product pages, docs, or landing pages — gets scored across six areas. The weights change based on what you are optimizing for, but the goal is the same: make sure AI can read, trust, and cite your content.
           </p>
         </motion.div>
       </div>
@@ -80,10 +80,10 @@ export default function AIReadabilityPage() {
             <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center shrink-0">
               <BrainCircuit className="w-5 h-5 text-white" />
             </div>
-            The six pillars of scoring
+            The six areas of scoring
           </h2>
           <p className="text-neutral-400 leading-relaxed mb-6">
-            Every analysis returns a 0–100 Rain Score built from six pillars. The exact weights depend on your content type — writers, online sellers, developers, vibe coders, and local businesses each get a different blend. Here is how they work.
+            Every analysis returns a 0–100 Rain Score built from six areas. The exact weights depend on your content type — writers, online sellers, developers, vibe coders, and local businesses each get a different blend. Here is how they work.
           </p>
 
           <div className="space-y-6">
@@ -94,7 +94,7 @@ export default function AIReadabilityPage() {
                 AI Readability
               </h3>
               <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                Can the AI read and understand your content clearly? This pillar checks the structural basics that make content machine-readable. Weight varies by lane — 36% for writers, 20% for online sellers, 32% for developers and vibe coders, 20% for local business.
+                Can the AI read and understand your content clearly? This area checks the structural basics that make content machine-readable. Weight varies by lane — 36% for writers, 20% for online sellers, 32% for developers and vibe coders, 20% for local business.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
@@ -103,7 +103,7 @@ export default function AIReadabilityPage() {
                 </li>
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Schema markup — structured data that tells AI what each part of your page means</span>
+                  <span>Structured data — labels that tell AI what each part of your page means</span>
                 </li>
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
@@ -111,7 +111,7 @@ export default function AIReadabilityPage() {
                 </li>
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>LLM-ready files — llms.txt or similar that give AI a clean map of your content</span>
+                  <span>AI-friendly files — llms.txt or similar that give AI a clean map of your content</span>
                 </li>
               </ul>
             </div>
@@ -123,12 +123,12 @@ export default function AIReadabilityPage() {
                 Digital Authority
               </h3>
               <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                Does the AI trust your content? This pillar checks the signals that make an AI confident your content is reliable. Weight varies by lane — 27% for writers, 15% for online sellers, 32% for developers and vibe coders, 20% for local business.
+                Does the AI trust your content? This area checks the signals that make an AI confident your content is reliable. Weight varies by lane — 27% for writers, 15% for online sellers, 32% for developers and vibe coders, 20% for local business.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Credible sources — citations and links that back up your claims</span>
+                  <span>Credible sources — links that back up your claims</span>
                 </li>
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
@@ -136,7 +136,7 @@ export default function AIReadabilityPage() {
                 </li>
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>robots.txt and canonicals — clear signals about which content to index and which to avoid</span>
+                  <span>Access rules (robots.txt and canonicals) — clear signals about which pages to include and which to skip</span>
                 </li>
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
@@ -181,12 +181,12 @@ export default function AIReadabilityPage() {
                 Product Discoverability
               </h3>
               <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                For product-focused content, this pillar measures how well AI can surface your products in shopping and discovery contexts. It is 0% for writers, developers, and local business — but jumps to 50% for online sellers, where it becomes the most important pillar.
+                For product-focused content, this area measures how well AI can surface your products in shopping and discovery contexts. It is 0% for writers, developers, and local business — but jumps to 50% for online sellers, where it becomes the most important area.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Product schema completeness — all required fields for AI shopping engines</span>
+                  <span>Product details completeness — every required field filled in for AI shopping tools</span>
                 </li>
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
@@ -207,19 +207,19 @@ export default function AIReadabilityPage() {
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
               <h3 className="text-base font-semibold text-white mb-3">
                 <span className="text-white mr-2">10% (all lanes)</span>
-                RAG Readiness
+                Easy to Quote
               </h3>
               <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                How well is your content optimized for Retrieval-Augmented Generation (RAG) systems — vector databases, embedding models, and chunk-based retrieval? This stays at 10% across every lane. It is distinct from citation scoring: RAG readiness measures whether an AI retrieval system can accurately find, chunk, and synthesize your content.
+                How easily can AI pull a single answer out of your content and quote it? This stays at 10% across every lane. It is separate from the checks on who is cited: this area measures whether an AI can accurately find the right section of your content and use it.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Information density — deep, exhaustive coverage per content chunk</span>
+                  <span>Depth — thorough coverage of each section</span>
                 </li>
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Semantic mapping — rich vocabulary, synonyms, entity relationships</span>
+                  <span>Related wording — rich vocabulary, synonyms, and links between related ideas</span>
                 </li>
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
@@ -243,7 +243,7 @@ export default function AIReadabilityPage() {
                 Local Presence
               </h3>
               <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                For local service businesses, this pillar measures how confidently AI can recommend you for a "near me" query. It is 0% for writers, online sellers, developers, and vibe coders — but jumps to 30% for local businesses, where it is the single largest pillar.
+                For local service businesses, this area measures how confidently AI can recommend you for a "near me" query. It is 0% for writers, online sellers, developers, and vibe coders — but jumps to 30% for local businesses, where it is the single largest area.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
@@ -252,7 +252,7 @@ export default function AIReadabilityPage() {
                 </li>
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>LocalBusiness schema — structured data AI uses to confirm who you are and where you serve</span>
+                  <span>Local business details — structured data AI uses to confirm who you are and where you serve</span>
                 </li>
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
@@ -264,7 +264,7 @@ export default function AIReadabilityPage() {
                 </li>
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
                   <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Local citation signals — consistent mentions across directories and Google Business Profile</span>
+                  <span>Listings and reviews — consistent mentions across directories and Google Business Profile</span>
                 </li>
               </ul>
             </div>
@@ -314,7 +314,7 @@ export default function AIReadabilityPage() {
           </h2>
           <div className="space-y-4 text-neutral-400 leading-relaxed">
             <p>
-              rain OS scans your content, URL, or repository and scores it across all six pillars — using the right weights for your lane. You get a single number — your Rain Score — plus a breakdown of exactly which signals are strong and which are missing.
+              rain OS scans your content, URL, or repository and scores it across all six areas — using the right weights for your lane. You get a single number — your Rain Score — plus a breakdown of exactly which signals are strong and which are missing.
             </p>
             <p>
               More importantly, you get specific recommendations. Not vague advice like "improve your SEO." Exact, actionable steps like "Add an FAQ section with these questions" or "Your H2 structure is missing — add these three subheadings."
