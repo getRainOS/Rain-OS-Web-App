@@ -481,6 +481,20 @@
   white-space: nowrap;
 }
 
+/* Phones: the tag drops under the text, lined up with it, instead of squeezing the text. */
+@media (max-width: 480px) {
+  .quickWinRow {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  .quickWinText {
+    min-width: 0;
+  }
+  .quickWinTag {
+    margin-left: 28px;
+  }
+}
+
 /* ── Charts Row ── */
 .chartsRow {
   display: grid;
