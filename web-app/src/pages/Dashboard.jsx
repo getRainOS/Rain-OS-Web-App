@@ -237,6 +237,8 @@ export default function Dashboard() {
   const shownType = focusSite ? 'url' : activeFocus ? (pieces[0] ? getItemType(pieces[0].latest).toLowerCase() : typeFilter) : typeFilter;
 
   const filtersActive = typeFilter !== 'all';
+  // The filter is the reason nothing shows, not just that one is set.
+  const filterHidesAll = filtersActive && history.length > 0 && filteredHistory.length === 0;
   const clearFilters = () => { setTypeFilter('all'); };
   const typeRoute = CONTENT_TYPE_ROUTES[typeFilter] || LANE_DEFAULT_ROUTES[userLane] || '/analyze';
 
@@ -361,6 +363,8 @@ export default function Dashboard() {
       score: h.overall_score ?? 0,
       date: h.analyzed_at ? timeAgo(h.analyzed_at) : '',
     }));
+  // One analysis is not a trend yet; say that rather than blaming the filter.
+  const oneAnalysis = chartData.length === 1;
 
   const pieceRuns = selectedPiece ? selectedPiece.runs : [];
   const shownRuns = pieceRuns.slice(-chartRange);
@@ -567,10 +571,10 @@ export default function Dashboard() {
           <div className={styles.chartEmptyRich}>
             <div className={styles.emptyStateOverlay}>
               <Activity className={styles.emptyIcon} />
-              <p>{focusSite ? `No page scans for ${focusSite} yet` : filtersActive && history.length > 0 ? 'No analyses match these filters' : 'No pillar data yet'}</p>
+              <p>{focusSite ? `No page scans for ${focusSite} yet` : filterHidesAll ? 'No analyses match these filters' : 'No pillar data yet'}</p>
               {focusSite ? (
                 <Link to={`/url-scanner?url=${encodeURIComponent(focusSite)}`} className={styles.emptyLink}>Scan a page on {focusSite} →</Link>
-              ) : filtersActive && history.length > 0 ? (
+              ) : filterHidesAll ? (
                 <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
               ) : (
                 <Link to={typeRoute} className={styles.emptyLink}>Run analysis →</Link>
@@ -926,10 +930,10 @@ export default function Dashboard() {
               </div>
               <div className={styles.emptyStateOverlay}>
                 <Activity className={styles.emptyIcon} />
-                <p>{focusSite ? `No page scans for ${focusSite} yet` : filtersActive && history.length > 0 ? 'No analyses match these filters' : 'Run your first analysis to see trends here'}</p>
+                <p>{focusSite ? `No page scans for ${focusSite} yet` : oneAnalysis ? 'Run one more analysis to see your trend here' : filterHidesAll ? 'No analyses match these filters' : 'Run your first analysis to see trends here'}</p>
                 {focusSite ? (
                   <Link to={`/url-scanner?url=${encodeURIComponent(focusSite)}`} className={styles.emptyLink}>Scan a page →</Link>
-                ) : filtersActive && history.length > 0 ? (
+                ) : filterHidesAll && !oneAnalysis ? (
                   <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
                 ) : (
                   <Link to="/full-check" className={styles.emptyLink}>Check my website →</Link>
