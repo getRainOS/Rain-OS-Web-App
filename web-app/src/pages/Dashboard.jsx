@@ -932,7 +932,7 @@ export default function Dashboard() {
                 ) : filtersActive && history.length > 0 ? (
                   <button type="button" className={styles.emptyLink} onClick={clearFilters}>Clear filters →</button>
                 ) : (
-                  <Link to={typeRoute} className={styles.emptyLink}>Get started →</Link>
+                  <Link to="/full-check" className={styles.emptyLink}>Check my website →</Link>
                 )}
               </div>
             </div>
@@ -997,7 +997,7 @@ export default function Dashboard() {
                 {history.length > 0 ? (
                   <button type="button" className={styles.emptyLink} onClick={() => changeFocus('')}>Show everything →</button>
                 ) : (
-                  <Link to={typeRoute} className={styles.emptyLink}>Run your first →</Link>
+                  <Link to="/full-check" className={styles.emptyLink}>Check my website →</Link>
                 )}
               </div>
             </div>
