@@ -103,7 +103,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
           isScrolled ? 'bg-black/75 backdrop-blur-xl border-white/[0.08]' : 'bg-transparent border-transparent'
         }`}
       >
-        <div className="flex items-center justify-between w-full max-w-6xl px-6 h-16">
+        <div className="flex items-center justify-between w-full max-w-[1440px] px-6 h-16">
           <a href="/" className={"font-bold text-2xl tracking-tighter shrink-0 text-white"}>
             <Logo size={34} />
           </a>

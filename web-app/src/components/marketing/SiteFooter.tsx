@@ -45,7 +45,7 @@ const COLUMNS = [
 export default function SiteFooter() {
   return (
     <footer className="relative z-10 border-t border-white/[0.07] bg-black">
-      <div className="max-w-6xl mx-auto px-6 pt-16 pb-10">
+      <div className="max-w-[1440px] mx-auto px-6 pt-16 pb-10">
         <div className="grid grid-cols-2 md:grid-cols-[1.4fr_repeat(4,1fr)] gap-10">
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="font-bold text-2xl tracking-tighter text-white" aria-label="rain OS home">

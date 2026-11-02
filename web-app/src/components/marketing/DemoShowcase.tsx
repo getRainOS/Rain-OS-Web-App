@@ -122,7 +122,7 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
 
   return (
     <section className="py-20 relative z-10 border-t border-white/[0.06]">
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-[1440px] mx-auto px-6">
 
         {/* Section header */}
         <div className="text-center mb-14">
