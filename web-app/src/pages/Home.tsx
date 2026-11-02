@@ -673,7 +673,7 @@ export default function Home() {
                 For local businesses, sellers and builders
                 <ArrowRight className="w-3 h-3 text-neutral-500" />
               </a>
-              <h1 className="mt-7 text-[44px] leading-[1.02] sm:text-6xl md:text-[72px] lg:text-[64px] xl:text-[76px] font-semibold tracking-[-0.045em] text-balance">
+              <h1 className="mt-7 text-[44px] leading-[1.02] sm:text-6xl md:text-[60px] lg:text-[58px] xl:text-[64px] font-semibold tracking-[-0.045em] text-balance">
                 Be the answer
                 <br />
                 <span className="text-neutral-500">AI gives.</span>
