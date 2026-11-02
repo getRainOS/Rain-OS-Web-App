@@ -108,7 +108,7 @@ export default function HeroPrompt() {
   const revealed = phase === 'reveal';
 
   return (
-    <div className="relative mx-auto max-w-3xl" style={{ perspective: 1400 }}>
+    <div className="relative mx-auto w-full" style={{ perspective: 1400 }}>
       <div className="pointer-events-none absolute -inset-10 rounded-[40px] blur-3xl opacity-60"
         style={{ background: 'radial-gradient(50% 50% at 50% 40%, rgba(255,255,255,0.22), transparent 70%)' }} />
       <motion.div

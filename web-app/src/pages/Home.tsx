@@ -697,7 +697,7 @@ export default function Home() {
             </motion.div>
 
             <motion.div
-              className="min-w-0 w-full max-w-5xl"
+              className="min-w-0 w-full max-w-[1100px]"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
