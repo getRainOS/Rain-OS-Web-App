@@ -182,7 +182,7 @@ export default function HeroPrompt() {
                             <motion.span
                               initial={{ opacity: 0, scale: 0.6, y: 6 }} animate={{ opacity: 1, scale: 1, y: 0 }}
                               transition={{ delay: 0.25, type: 'spring', stiffness: 260, damping: 18 }}
-                              className="absolute -top-3 right-3 inline-flex items-center gap-1 rounded-full bg-[#ffffff] px-2.5 py-1 text-[11.5px] font-medium text-white shadow-lg"
+                              className="absolute -top-3 right-3 inline-flex items-center gap-1 rounded-full bg-[#ffffff] px-2.5 py-1 text-[11.5px] font-medium text-black shadow-lg"
                             >
                               <Check className="w-3 h-3" /> That's you · cited #{k + 1}
                             </motion.span>
