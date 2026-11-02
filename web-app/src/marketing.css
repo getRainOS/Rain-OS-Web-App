@@ -130,3 +130,17 @@
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+/* The hero light breathes gently once it has brightened. */
+.hero-glow-live {
+  animation: hero-glow-breathe 7s ease-in-out infinite;
+}
+
+@keyframes hero-glow-breathe {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.25); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-glow-live { animation: none; }
+}
