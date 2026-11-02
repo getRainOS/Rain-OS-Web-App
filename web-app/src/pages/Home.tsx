@@ -656,6 +656,12 @@ export default function Home() {
   const engines = useLiveEngines();
   const navigate = useNavigate();
   const start = () => navigate('/login');
+  const [glowOn, setGlowOn] = useState(false);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setGlowOn(true), 1000);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   return (
     <div className="relative min-h-screen bg-black text-white antialiased">
@@ -667,6 +673,12 @@ export default function Home() {
           <div
             className="pointer-events-none absolute inset-x-0 top-0 h-[720px] z-[1]"
             style={{ background: 'radial-gradient(60% 50% at 50% 0%, rgba(255,255,255,0.28), transparent 70%)' }}
+          />
+          {/* One shade brighter after a second on the page, then a slow breath. */}
+          <div
+            aria-hidden="true"
+            className={`pointer-events-none absolute inset-x-0 top-0 h-[720px] z-[1] transition-opacity duration-[1500ms] ease-out hero-glow-live ${glowOn ? 'opacity-100' : 'opacity-0'}`}
+            style={{ background: 'radial-gradient(60% 50% at 50% 0%, rgba(255,255,255,0.2), transparent 70%)' }}
           />
           <div className="relative z-10 max-w-[1440px] mx-auto px-6 pt-32 md:pt-36 pb-16 flex flex-col items-center gap-16">
             <motion.div className="text-center max-w-4xl mx-auto" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
