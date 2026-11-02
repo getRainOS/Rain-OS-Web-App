@@ -115,41 +115,60 @@ const EXAMPLES: LaneExample[] = [
   },
 ];
 
-// Draws each stroke in turn, then fills the solid shapes.
+// The flat palette from the blog covers and the site's illustrations.
+const GROUND = '#F4EFE4';
+const INK = '#161616';
+const FILLS = ['#D8432A', '#F59A1B', '#1F4FBF'];
+
+// Draws each stroke in turn on a cream panel, then fills the solid shapes with
+// flat colour. Same paths and timing as before; the look matches the blog covers.
 function Drawing({ strokes }: { strokes: Stroke[] }) {
   return (
     <motion.svg
       viewBox="0 0 320 200"
-      className="mx-auto w-full max-w-sm text-white"
+      className="mx-auto w-full max-w-sm"
       role="img"
       aria-label="Illustration for this example"
       fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
+      stroke={INK}
+      strokeWidth={3}
       strokeLinecap="round"
       strokeLinejoin="round"
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.4 }}
     >
-      {strokes.map((s, i) => (
-        <motion.path
-          key={i}
-          d={s.d}
-          fill={s.solid ? 'currentColor' : 'none'}
-          variants={{
-            hidden: { pathLength: 0, fillOpacity: 0, opacity: 1 },
-            show: {
-              pathLength: 1,
-              fillOpacity: s.solid ? 0.9 : 0,
-              transition: {
-                pathLength: { duration: 0.8, delay: i * 0.12, ease: 'easeInOut' },
-                fillOpacity: { duration: 0.5, delay: i * 0.12 + 0.6 },
+      <motion.rect
+        x="0"
+        y="0"
+        width="320"
+        height="200"
+        rx="14"
+        fill={GROUND}
+        stroke="none"
+        variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { duration: 0.4 } } }}
+      />
+      {strokes.map((s, i) => {
+        const fill = s.solid ? FILLS[i % FILLS.length] : 'none';
+        return (
+          <motion.path
+            key={i}
+            d={s.d}
+            fill={fill}
+            variants={{
+              hidden: { pathLength: 0, fillOpacity: 0, opacity: 1 },
+              show: {
+                pathLength: 1,
+                fillOpacity: 1,
+                transition: {
+                  pathLength: { duration: 0.8, delay: i * 0.12, ease: 'easeInOut' },
+                  fillOpacity: { duration: 0.5, delay: i * 0.12 + 0.6 },
+                },
               },
-            },
-          }}
-        />
-      ))}
+            }}
+          />
+        );
+      })}
     </motion.svg>
   );
 }
