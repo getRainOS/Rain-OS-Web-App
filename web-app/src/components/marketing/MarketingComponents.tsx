@@ -623,7 +623,7 @@ export const ThreeModesSection = ({ onGetStarted }: { onGetStarted?: () => void 
 
   return (
     <section className="py-24 px-6 relative z-10 border-t border-white/[0.06]">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-[1440px] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

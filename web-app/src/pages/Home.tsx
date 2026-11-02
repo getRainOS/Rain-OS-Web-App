@@ -266,7 +266,7 @@ function PlatformSection() {
   const current = { ...found, body: found.body.replace('{engines}', engines) };
   return (
     <section id="product" className="relative z-10 py-28 border-t border-white/[0.06]">
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-[1440px] mx-auto px-6">
         <Reveal>
           <Eyebrow>The platform</Eyebrow>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">
@@ -352,7 +352,7 @@ const SHORT = ['Easy for AI to read', 'Trust', 'Clear next step', 'Product detai
 function LanesSection() {
   return (
     <section className="relative z-10 py-28 border-t border-white/[0.06]">
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-[1440px] mx-auto px-6">
         <Reveal>
           <Eyebrow>Scored for your kind of business</Eyebrow>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">
@@ -406,7 +406,7 @@ function MethodSection() {
   ];
   return (
     <section className="relative z-10 py-28 border-t border-white/[0.06]">
-      <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-14 items-start">
+      <div className="max-w-[1440px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-14 items-start">
         <Reveal>
           <Eyebrow>Method</Eyebrow>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
@@ -461,7 +461,7 @@ function WhyGoogleSection() {
   ];
   return (
     <section id="why-google" className="relative z-10 py-28 border-t border-white/[0.06]">
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-[1440px] mx-auto px-6">
         <Reveal>
           <Eyebrow>The AI tools we check</Eyebrow>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance max-w-3xl">
@@ -497,7 +497,7 @@ function WhyGoogleSection() {
 function TrackingSection() {
   return (
     <section className="relative z-10 py-28 border-t border-white/[0.06]">
-      <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+      <div className="max-w-[1440px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
         <Reveal className="order-2 lg:order-1">
           <div className="rounded-xl border border-white/10 bg-[#0a0a0a] overflow-hidden max-w-md">
             <div className="flex items-center gap-2 px-5 h-11 border-b border-white/[0.07]">
@@ -544,7 +544,7 @@ const WHO = [
 function SourceNetworkSection() {
   return (
     <section className="relative z-10 py-28 border-t border-white/[0.06] overflow-hidden">
-      <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
+      <div className="max-w-[1440px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
         <Reveal>
           <Eyebrow>Where AI gets its answers</Eyebrow>
           <ScrollWords
@@ -566,7 +566,7 @@ function SourceNetworkSection() {
 function WhoSection({ onStart }: { onStart: () => void }) {
   return (
     <section id="who" className="relative z-10 py-24 border-t border-white/[0.06] scroll-mt-16">
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-[1440px] mx-auto px-6">
         <Reveal className="text-center">
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
             What are you working on?
@@ -621,7 +621,7 @@ function HowItWorks() {
   ];
   return (
     <section className="relative z-10 py-24 border-t border-white/[0.06]">
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-[1440px] mx-auto px-6">
         <Reveal>
           <Eyebrow>How it works</Eyebrow>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Three steps. No setup.</h2>
@@ -666,7 +666,7 @@ export default function Home() {
             className="pointer-events-none absolute inset-x-0 top-0 h-[720px] z-[1]"
             style={{ background: 'radial-gradient(60% 50% at 50% 0%, rgba(255,255,255,0.16), transparent 70%)' }}
           />
-          <div className="relative z-10 max-w-6xl mx-auto px-6 pt-32 md:pt-36 pb-16 grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-12 lg:gap-14 items-center">
+          <div className="relative z-10 max-w-[1440px] mx-auto px-6 pt-32 md:pt-36 pb-16 grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-12 lg:gap-14 items-center">
             <motion.div className="text-center lg:text-left" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <a href="#who" className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] pl-3 pr-2.5 h-7 text-[12px] text-neutral-300 hover:border-white/20 transition-colors">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#ffffff]" />
@@ -713,7 +713,7 @@ export default function Home() {
         <HowItWorks />
 
         <section className="relative z-10 border-y border-white/[0.06] bg-white/[0.01]">
-          <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4">
+          <div className="max-w-[1440px] mx-auto grid grid-cols-2 md:grid-cols-4">
             {SPECS.map((s, k) => (
               <div key={s.v} className={`px-6 py-8 ${k % 2 === 1 ? 'border-l' : ''} ${k >= 2 ? 'border-t md:border-t-0' : ''} ${k === 2 ? 'md:border-l' : ''} border-white/[0.06]`}>
                 <div className="text-2xl md:text-3xl font-semibold tracking-tight text-white">{s.k}</div>
@@ -724,7 +724,7 @@ export default function Home() {
         </section>
 
         <section className="relative z-10 py-28">
-          <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-14 items-end">
+          <div className="max-w-[1440px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-14 items-end">
             <Reveal>
               <Eyebrow>The shift</Eyebrow>
               <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
@@ -747,7 +747,7 @@ export default function Home() {
         </section>
 
         <section className="relative z-10 py-28 border-t border-white/[0.06]">
-          <div className="max-w-6xl mx-auto px-6">
+          <div className="max-w-[1440px] mx-auto px-6">
             <Reveal className="text-center">
               <Eyebrow>Inside the app</Eyebrow>
               <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
@@ -774,7 +774,7 @@ export default function Home() {
         <TrackingSection />
 
         <section id="pricing" className="relative z-10 pt-28 border-t border-white/[0.06]">
-          <div className="max-w-6xl mx-auto px-6 text-center">
+          <div className="max-w-[1440px] mx-auto px-6 text-center">
             <Reveal>
               <Eyebrow>Pricing</Eyebrow>
               <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white">Start free. Upgrade when it works.</h2>
