@@ -28,7 +28,7 @@ export default function Logo({ size = 24, className = '', label = 'rain' }: Logo
         aria-hidden="true"
         style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", fontWeight: 600, fontSize: size * 1.05, lineHeight: 1, letterSpacing: '-0.045em' }}
       >
-        r<span style={{ letterSpacing: '-0.13em' }}>a</span>in
+        r<span style={{ letterSpacing: '-0.2em' }}>a</span>in
       </span>
     </span>
   );
