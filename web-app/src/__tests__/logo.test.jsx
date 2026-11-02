@@ -1,24 +1,16 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
 import Logo from '../components/Logo.tsx';
-import { STREAKS } from '../components/logoPaths.ts';
 
 describe('Logo', () => {
-  it('draws the rain as white round-ended streaks above the word', () => {
-    const { container } = render(<Logo size={40} />);
-    const streaks = container.querySelectorAll('.rainDashes line');
-    expect(streaks.length).toBe(STREAKS.length);
-    expect(container.querySelectorAll('circle').length).toBe(0);
-    for (const s of streaks) {
-      expect(s.parentElement.getAttribute('stroke')).toBe('#ffffff');
-      expect(s.parentElement.getAttribute('stroke-linecap')).toBe('round');
-    }
+  it('draws the plain wordmark as one path', () => {
+    const { container } = render(<Logo size={20} />);
+    expect(container.querySelectorAll('svg > path').length).toBe(1);
+    expect(container.querySelectorAll('line, circle, rect').length).toBe(0);
   });
 
   it('keeps the word in the text color, not white', () => {
-    const { container } = render(<Logo size={40} />);
-    const word = container.querySelector('svg > path');
-    expect(word).toBeTruthy();
+    const { container } = render(<Logo size={20} />);
     expect(container.querySelector('svg').getAttribute('fill')).toBe('currentColor');
   });
 });
