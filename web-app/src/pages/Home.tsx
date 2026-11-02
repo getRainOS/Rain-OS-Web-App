@@ -666,7 +666,7 @@ export default function Home() {
         <section className="relative overflow-hidden">
           <div
             className="pointer-events-none absolute inset-x-0 top-0 h-[720px] z-[1]"
-            style={{ background: 'radial-gradient(60% 50% at 50% 0%, rgba(255,255,255,0.16), transparent 70%)' }}
+            style={{ background: 'radial-gradient(60% 50% at 50% 0%, rgba(255,255,255,0.28), transparent 70%)' }}
           />
           <div className="relative z-10 max-w-[1440px] mx-auto px-6 pt-32 md:pt-36 pb-16 flex flex-col items-center gap-16">
             <motion.div className="text-center max-w-4xl mx-auto" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
