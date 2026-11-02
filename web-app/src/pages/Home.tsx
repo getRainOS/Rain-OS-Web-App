@@ -666,8 +666,8 @@ export default function Home() {
             className="pointer-events-none absolute inset-x-0 top-0 h-[720px] z-[1]"
             style={{ background: 'radial-gradient(60% 50% at 50% 0%, rgba(255,255,255,0.16), transparent 70%)' }}
           />
-          <div className="relative z-10 max-w-[1440px] mx-auto px-6 pt-32 md:pt-36 pb-16 grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-12 lg:gap-14 items-center">
-            <motion.div className="text-center lg:text-left" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <div className="relative z-10 max-w-[1440px] mx-auto px-6 pt-32 md:pt-36 pb-16 flex flex-col items-center gap-16">
+            <motion.div className="text-center max-w-4xl mx-auto" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <a href="#who" className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] pl-3 pr-2.5 h-7 text-[12px] text-neutral-300 hover:border-white/20 transition-colors">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#ffffff]" />
                 For local businesses, sellers and builders
@@ -678,10 +678,10 @@ export default function Home() {
                 <br />
                 <span className="text-neutral-500">AI gives.</span>
               </h1>
-              <p className="mt-7 text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto lg:mx-0 leading-relaxed text-balance lg:text-pretty">
+              <p className="mt-7 text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto leading-relaxed text-balance">
                 More people now ask AI where to buy, who to hire and what to use. rain OS checks whether ChatGPT, Google's AI answers, Perplexity and Claude recommend you, and walks you through fixing it in plain English.
               </p>
-              <div className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3">
+              <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button onClick={start} className="h-11 px-6 rounded-md bg-white text-black text-[15px] font-medium hover:bg-neutral-200 transition-colors inline-flex items-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
                   Check my site free <ArrowRight className="w-4 h-4" />
                 </button>
@@ -689,7 +689,7 @@ export default function Home() {
                   Try the live demo <ArrowRight className="w-4 h-4 text-neutral-400" />
                 </a>
               </div>
-              <ul className="mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 text-[13px] text-neutral-400">
+              <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] text-neutral-400">
                 {[`Checks ${engines.length} AI tools`, 'Free to start', 'No credit card', 'No technical skills needed'].map(t => (
                   <li key={t} className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-[#ffffff]" />{t}</li>
                 ))}
@@ -697,7 +697,7 @@ export default function Home() {
             </motion.div>
 
             <motion.div
-              className="min-w-0"
+              className="min-w-0 w-full max-w-5xl"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
