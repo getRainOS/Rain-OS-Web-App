@@ -3,8 +3,7 @@ import { motion } from 'framer-motion';
 import {
   MapPin, Search, PhoneCall, Star, BrainCircuit, ShieldCheck, MousePointerClick,
   ArrowRight, CheckCircle2, AlertTriangle, Sparkles, Globe, MessageSquare,
-  TrendingUp, Users, Eye, Zap, Clock, Building2, Scissors, Wrench, UtensilsCrossed,
-  Stethoscope, ChevronRight, Bot
+  TrendingUp, Users, Bot, Wrench, Scissors, UtensilsCrossed, Stethoscope, Building2
 } from 'lucide-react';
 import MarketingNav from '@/components/marketing/MarketingNav';
 
@@ -22,34 +21,34 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
               <MapPin className="w-3.5 h-3.5" /> For Local Businesses
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.05] mb-6" style={{ letterSpacing: '-0.04em' }}>
-              When someone asks AI<br />
+              Someone asks AI<br />
               <span className="text-[#bdbdbd]">"who's the best plumber near me?"</span><br />
-              will they find you?
+              Does it name you?
             </h1>
             <p className="text-neutral-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
-              ChatGPT, Google's AI Overviews, Perplexity and Claude are answering local business questions millions of times a day. rain OS checks what each one says about your city, and helps your business show up and get called.
+              More people ask ChatGPT, Google's AI answers, Perplexity and Claude who to call. rain OS checks what each one says about your business, and tells you what to change, in plain English.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="/login" className="inline-flex items-center gap-2 bg-[#ffffff] hover:bg-neutral-200 text-white rounded-md px-7 py-3.5 text-sm font-medium transition-colors">
-                Analyze my business site
+                Check my business site free
                 <ArrowRight className="w-4 h-4" />
               </a>
               <a href="/pricing" className="inline-flex items-center gap-2 border border-white/10 hover:border-white/20 text-neutral-300 hover:text-white rounded-xl px-7 py-3.5 text-sm font-semibold transition-all">
-                See pricing
+                See plans
               </a>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* The problem — plain language */}
+      {/* The problem */}
       <section className="py-20 px-6 border-t border-white/[0.06]">
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
             <span className="text-[#bdbdbd] font-bold tracking-wider text-xs uppercase mb-3 block">The new reality</span>
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">People stopped Googling. They're asking AI.</h2>
+            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">People ask AI now, not just Google.</h2>
             <p className="text-neutral-400 max-w-2xl mx-auto text-lg leading-relaxed">
-              Your customers used to type keywords into Google and scroll through results. Now they ask ChatGPT or their phone's AI assistant a full question — and get one answer back. If you're not in that answer, you don't exist.
+              Customers used to search Google and pick from a list. Now many ask an AI one question and get one answer. If your business isn't in that answer, they won't see you.
             </p>
           </motion.div>
 
@@ -60,24 +59,24 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 color: 'text-sky-400',
                 bg: 'bg-sky-500/10',
                 border: 'border-sky-500/20',
-                title: 'AI gives one answer',
-                body: 'When someone asks "best hair salon in Austin," ChatGPT doesn\'t show 10 results. It picks a few — or just one. If your site isn\'t optimized, it won\'t be picked.',
+                title: 'AI names a few businesses',
+                body: 'Ask "best hair salon in Austin" and the AI names a few places, sometimes just one. If your website doesn\'t clearly say what you do and where, it won\'t be one of them.',
               },
               {
                 icon: PhoneCall,
                 color: 'text-emerald-400',
                 bg: 'bg-emerald-500/10',
                 border: 'border-emerald-500/20',
-                title: 'Google\'s AI calls your phone',
-                body: 'Google now uses AI (called Duplex) to call local businesses and check if you\'re available. If you\'re unreachable or your info is wrong, Google marks you as hard to reach and sends customers elsewhere.',
+                title: 'Your details have to match',
+                body: 'AI compares your website with your Google Business Profile. If your name, address or phone number is different in each place, AI trusts you less.',
               },
               {
                 icon: AlertTriangle,
                 color: 'text-amber-400',
                 bg: 'bg-amber-500/10',
                 border: 'border-amber-500/20',
-                title: 'Old SEO isn\'t enough',
-                body: 'You might rank on page 1 of Google but still be invisible to AI. Traditional keyword tricks don\'t work in AI search. Your content needs to be structured so AI can actually read and trust it.',
+                title: 'Google ranking isn\'t enough',
+                body: 'You can be on page one of Google and still be missing from AI answers. AI reads plain, clear pages. Keyword tricks don\'t help.',
               },
             ].map((card, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
@@ -91,12 +90,12 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
         </div>
       </section>
 
-      {/* How it works — visual flow */}
+      {/* How it works */}
       <section className="py-20 px-6 border-t border-white/[0.06]">
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
             <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-3 block">How rain OS works for local businesses</span>
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">From invisible to cited in three steps</h2>
+            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">From invisible to recommended in three steps</h2>
           </motion.div>
 
           <div className="flex flex-col gap-0">
@@ -107,9 +106,9 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 borderColor: 'border-[#ffffff]/30',
                 bgColor: 'bg-[#ffffff]/10',
                 icon: Search,
-                title: 'We analyze your website',
-                body: 'Paste your homepage copy or give us your URL. rain OS reads your site the way AI tools do — not as a pretty webpage, but as raw information. We score it across the exact signals that AI systems use to decide what to recommend.',
-                detail: 'Works on any local business website — even simple ones built on Squarespace, Wix, or WordPress.',
+                title: 'We read your website',
+                body: 'Paste your homepage text or enter your web address. rain OS reads your site the way an AI tool does, and checks the things AI uses to decide who to recommend.',
+                detail: 'Works with simple sites built on Squarespace, Wix or WordPress.',
               },
               {
                 step: '02',
@@ -117,9 +116,9 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 borderColor: 'border-sky-400/30',
                 bgColor: 'bg-sky-500/10',
                 icon: BrainCircuit,
-                title: 'You get a clear score and specific fixes',
-                body: 'We score your content across three areas: how clearly AI can read it, how trustworthy your business looks to AI systems, and how likely your site is to turn an AI-referred visitor into a call or booking.',
-                detail: 'No confusing technical jargon. Every recommendation is written in plain English with a clear explanation of why it matters.',
+                title: 'You get a score and clear fixes',
+                body: 'We score your site in three areas: how easily AI can read it, whether it looks trustworthy, and whether a visitor is likely to call or book.',
+                detail: 'Every fix is written in plain English, with the reason it matters.',
               },
               {
                 step: '03',
@@ -127,9 +126,9 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 borderColor: 'border-emerald-400/30',
                 bgColor: 'bg-emerald-500/10',
                 icon: TrendingUp,
-                title: 'You fix it — and track your growth',
-                body: 'Make the changes on your website and re-run the analysis. Every scan is saved so you can see exactly how your score improves over time. Most local businesses see meaningful gains in the first two rounds.',
-                detail: 'You can paste changes directly into Cursor, Bolt, or your web designer — we write the recommendations to be copy-paste ready.',
+                title: 'Fix it and check again',
+                body: 'Make the changes and run the check again. Every check is saved, so you can see your score go up over time.',
+                detail: 'Send the fixes to your web designer, or paste them into your site builder.',
               },
             ].map((step, i) => (
               <motion.div key={i} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
@@ -160,8 +159,8 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
             <span className="text-neutral-500 font-bold tracking-wider text-xs uppercase mb-3 block">Who this is for</span>
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Built for every type of local business</h2>
-            <p className="text-neutral-400 max-w-xl mx-auto">If customers search for your service in their area, you need this. It doesn't matter how big or small your business is.</p>
+            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Built for local businesses of every size</h2>
+            <p className="text-neutral-400 max-w-xl mx-auto">If customers search for your service in your area, this is for you.</p>
           </motion.div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
@@ -183,13 +182,15 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
         </div>
       </section>
 
-      {/* Feature breakdown */}
+      {/* What we score */}
       <section className="py-20 px-6 border-t border-white/[0.06]">
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
             <span className="text-[#bdbdbd] font-bold tracking-wider text-xs uppercase mb-3 block">What we score</span>
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Three of six pillars AI checks about your business</h2>
-            <p className="text-neutral-400 max-w-2xl mx-auto">These are three of the six signals that AI tools use when deciding whether to recommend your business — alongside Local Presence (NAP consistency, service area, review signals), the single largest pillar in this lane at 30% weight. Most local business sites score poorly across the board — which means a huge opportunity for you.</p>
+            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Three things AI checks on your website</h2>
+            <p className="text-neutral-400 max-w-2xl mx-auto">
+              AI looks at six areas before it recommends a business. These three are about your website. The other three include Local Presence, which covers your Google listing, reviews and service area, and makes up 30% of the score.
+            </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -201,9 +202,9 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 border: 'border-sky-500/20',
                 weight: '20%',
                 title: 'AI Readability',
-                tagline: 'Can AI actually understand your services?',
-                body: 'AI doesn\'t browse your website like a human — it reads raw text. If your services are buried in images, if your pages are vague ("we do it all!"), or if your site is mostly built with JavaScript that AI can\'t see, you score low here.',
-                fixes: ['Write clear, specific service descriptions', 'List your services with prices and areas served', 'Avoid vague phrases — be specific about what you do'],
+                tagline: 'Can AI understand what you offer?',
+                body: 'AI reads the words on your page. If your services are only in images, your pages are vague ("we do it all!"), or the content only appears after a script runs, AI may miss it.',
+                fixes: ['Describe each service in specific words', 'List your services, prices and the areas you serve', 'Replace vague phrases with what you actually do'],
               },
               {
                 icon: ShieldCheck,
@@ -213,8 +214,8 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 weight: '20%',
                 title: 'Digital Authority',
                 tagline: 'Does AI trust your business?',
-                body: 'AI checks whether your business is a legitimate, trustworthy source. This means things like your NAP (Name, Address, Phone) being consistent, having reviews mentioned, having clear business details, and technical trust signals like structured data.',
-                fixes: ['Consistent NAP across your site and Google Business Profile', 'Display reviews, certifications, and years in business', 'Add LocalBusiness structured data to your homepage'],
+                body: 'AI checks that your business looks real and consistent. Your name, address and phone should match everywhere, and your site should show reviews and clear business details.',
+                fixes: ['Use the same name, address and phone on your site and Google', 'Show reviews, licenses and years in business', 'Add business details in a format search tools read (called schema markup)'],
               },
               {
                 icon: MousePointerClick,
@@ -223,9 +224,9 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 border: 'border-violet-500/20',
                 weight: '20%',
                 title: 'Conversion Readiness',
-                tagline: 'When AI sends someone to your site, do they call?',
-                body: 'Getting traffic from AI is only half the battle. Your site also needs to immediately tell visitors how to contact you, what you offer, why to trust you, and make it effortless to book or call.',
-                fixes: ['Phone number visible above the fold on every page', 'Clear call-to-action (Book now / Get a free quote)', 'Hours, service area, and emergency availability clearly stated'],
+                tagline: 'When a visitor arrives, do they call?',
+                body: 'A visitor from AI still has to act. Your site should tell them what you do, why to trust you, and how to call or book in a few seconds.',
+                fixes: ['Show your phone number at the top of every page', 'Use a clear button: "Book now" or "Get a free quote"', 'State your hours, service area and emergency availability'],
               },
             ].map((pillar, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
@@ -234,7 +235,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                   <div className={`w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center`}>
                     <pillar.icon className={`w-5 h-5 ${pillar.color}`} />
                   </div>
-                  <span className={`text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-white/5 border border-white/10 ${pillar.color}`}>{pillar.weight} weight</span>
+                  <span className={`text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-white/5 border border-white/10 ${pillar.color}`}>{pillar.weight} of score</span>
                 </div>
                 <h3 className={`text-xl font-bold ${pillar.color} mb-1`}>{pillar.title}</h3>
                 <p className="text-neutral-500 text-xs font-medium italic mb-4">{pillar.tagline}</p>
@@ -253,14 +254,14 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
         </div>
       </section>
 
-      {/* Google Business Profile + AI Calling section */}
+      {/* Google */}
       <section className="py-20 px-6 border-t border-white/[0.06]">
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
-            <span className="text-amber-400 font-bold tracking-wider text-xs uppercase mb-3 block">The bigger picture</span>
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Google's AI ecosystem is already calling your customers</h2>
+            <span className="text-amber-400 font-bold tracking-wider text-xs uppercase mb-3 block">Your Google listing</span>
+            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Your listing and your website should agree</h2>
             <p className="text-neutral-400 max-w-2xl mx-auto leading-relaxed">
-              AI isn't just answering questions — it's actively contacting local businesses on behalf of customers. Here's what's happening right now, and how to stay ahead of it.
+              Google's AI can check details like your hours, prices and availability for customers. Your website and your Google Business Profile should tell the same story.
             </p>
           </motion.div>
 
@@ -271,36 +272,36 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 color: 'text-sky-400',
                 border: 'border-sky-500/20',
                 bg: 'rgba(14,165,233,0.05)',
-                title: 'Google Business Profile interactions',
-                body: 'Your Google Business Profile tracks calls, direction requests, website clicks, and messages. As of mid-2024, Google removed its built-in call history — so if you\'re not tracking calls through your own records or a third-party tool, you\'re flying blind.',
-                insight: 'rain OS scores how well your website supports what your GBP promises — so visitors who click through actually convert.',
+                title: 'Your Google Business Profile',
+                body: 'Your Google listing shows calls, directions and website clicks. Visitors who click through should find what the listing promises.',
+                insight: 'rain OS checks that your website backs up your listing.',
               },
               {
                 icon: Bot,
                 color: 'text-violet-400',
                 border: 'border-violet-500/20',
                 bg: 'rgba(139,92,246,0.05)',
-                title: 'Google\'s AI agent calls your store',
-                body: 'Google Duplex calls local businesses to verify hours, pricing, and availability on behalf of customers. Businesses that answer and provide accurate info get featured in AI-generated summaries. Those that don\'t appear as "businesses we couldn\'t reach."',
-                insight: 'Having clear, accurate info on your website reduces these calls and improves your standing in AI summaries.',
+                title: 'Accurate details help',
+                body: 'When your hours, prices and phone number are right and easy to find, it is easier for Google\'s AI to recommend you.',
+                insight: 'Keep the same details on your website and your listing.',
               },
               {
                 icon: Star,
                 color: 'text-amber-400',
                 border: 'border-amber-500/20',
                 bg: 'rgba(245,158,11,0.05)',
-                title: 'Local Service Ads and AI visibility',
-                body: 'Google\'s Local Service Ads (pay-per-lead) show above organic results for searches like "emergency plumber near me." But even LSA performance is influenced by your profile\'s overall trustworthiness — which starts with your website.',
-                insight: 'A strong rain OS score makes your whole local presence more credible, supporting both organic and paid visibility.',
+                title: 'Paid ads and trust',
+                body: 'Paid Google ads show above normal results. How trustworthy your business looks online still matters, and your website is a big part of that.',
+                insight: 'A clear website supports both paid and free visibility.',
               },
               {
                 icon: MessageSquare,
                 color: 'text-emerald-400',
                 border: 'border-emerald-500/20',
                 bg: 'rgba(16,185,129,0.05)',
-                title: 'AI links in conversational search',
-                body: 'When someone asks Perplexity or ChatGPT "who\'s the best [your service] in [your city]?" — the answer is pulled from sources AI can read and trust. If your website isn\'t structured for AI extraction, you won\'t be mentioned.',
-                insight: 'This is the highest-value new source of local leads, and most businesses don\'t even know it exists yet.',
+                title: 'AI chat answers',
+                body: 'When someone asks Perplexity or ChatGPT for the best service in your city, the answer comes from pages AI can read. A clear site gives you a chance to be named.',
+                insight: 'This is a growing source of new customers, and many businesses don\'t track it yet.',
               },
             ].map((card, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
@@ -320,11 +321,11 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
         </div>
       </section>
 
-      {/* What you get — comparison */}
+      {/* Comparison */}
       <section className="py-20 px-6 border-t border-white/[0.06]">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">What you actually get from rain OS</h2>
+            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">What you get from rain OS</h2>
           </motion.div>
 
           <div className="bg-white/[0.03] border border-white/10 rounded-3xl overflow-hidden">
@@ -333,14 +334,14 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
               <div className="p-5 font-bold text-[#bdbdbd] text-sm border-l border-white/5">With rain OS</div>
             </div>
             {[
-              ['Your website is invisible to AI search', 'AI tools can read, trust, and recommend your business'],
-              ['You don\'t know why competitors get called instead of you', 'You get a clear score showing exactly what to fix'],
-              ['Generic SEO advice that doesn\'t apply to local business', 'Local-specific recommendations written in plain English'],
-              ['No idea how customers find you via AI', 'Is AI Citing Me? tracks when ChatGPT, Google AI Overviews, Perplexity and Claude recommend you'],
-              ['Your website info conflicts with your Google listing', 'Your name, address and phone are checked across your site, structured data and Google Business Profile'],
-              ['You guess what AI says in the next town over', 'Check any question as a customer in any US state or country would see it'],
-              ['You don\'t know how you compare on Google Maps or reviews', 'See your Google Business Profile, rating, reviews that mention your city, and Maps position next to competitors'],
-              ['Customers land on your site and don\'t call', 'Conversion Readiness score shows you every reason they bounce'],
+              ['AI doesn\'t mention your business', 'See whether ChatGPT, Google, Perplexity and Claude name you'],
+              ['You don\'t know why a competitor gets picked instead', 'A score with the exact things to fix'],
+              ['Generic advice that doesn\'t fit a local business', 'Fixes written for local businesses, in plain English'],
+              ['You don\'t know how customers find you through AI', 'Is AI Citing Me? shows when AI links to your site'],
+              ['Your website and Google listing don\'t match', 'Your name, address and phone checked across both'],
+              ['You guess what AI says in the next town over', 'See the answer a customer gets, for the question they ask'],
+              ['You don\'t know how you compare on Google Maps', 'See your rating, reviews and Maps position next to competitors'],
+              ['Visitors land on your site and leave', 'See the reasons visitors leave without calling'],
             ].map(([without, with_], i) => (
               <div key={i} className="grid grid-cols-2 border-b border-white/[0.05] last:border-0 hover:bg-white/[0.02] transition-colors">
                 <div className="p-5 flex items-start gap-2 text-sm text-neutral-500">
@@ -357,13 +358,13 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
         </div>
       </section>
 
-      {/* Simple stat row */}
+      {/* Stats */}
       <section className="py-16 px-6 border-t border-white/[0.06]">
         <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
           {[
-            { value: '30%', label: 'of the score comes from Local Presence', color: 'text-white' },
-            { value: '6', label: 'Areas scored for every local business check', color: 'text-white' },
-            { value: 'Free', label: 'to start — no credit card needed', color: 'text-white' },
+            { value: '30%', label: 'of the score comes from your Google listing, reviews and service area', color: 'text-white' },
+            { value: '6', label: 'areas scored for every local business check', color: 'text-white' },
+            { value: 'Free', label: 'to start, no credit card needed', color: 'text-white' },
           ].map((stat, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
               className="bg-white/[0.03] border border-white/10 rounded-2xl p-7">
@@ -380,13 +381,13 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <MapPin className="w-10 h-10 text-[#bdbdbd] mx-auto mb-6" />
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-5">
-              Start getting found by AI today
+              Find out what AI says about your business
             </h2>
             <p className="text-neutral-400 text-lg mb-8 leading-relaxed">
-              Sign up, choose Local Businesses as your lane, and scan your homepage. rain OS shows you exactly where you're losing customers to AI search, and how to fix it.
+              Sign up, pick Local Businesses, and check your homepage. rain OS shows where you're missing out and what to fix first.
             </p>
             <a href="/login" className="inline-flex items-center gap-2 bg-[#ffffff] hover:bg-neutral-200 text-white rounded-md px-8 py-4 text-base font-medium transition-colors">
-              Analyze my business free
+              Check my business free
               <ArrowRight className="w-5 h-5" />
             </a>
             <p className="text-neutral-600 text-xs mt-4">Free plan includes 5 analyses in total. No credit card required.</p>
