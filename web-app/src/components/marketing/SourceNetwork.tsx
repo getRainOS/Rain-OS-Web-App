@@ -166,13 +166,14 @@ export default function SourceNetwork() {
       readProgress();
     }
     window.addEventListener('resize', onResize);
-    window.addEventListener('scroll', onScroll, { passive: true });
+    // Capture, so scrolling inside <body> (where this site scrolls) reaches us.
+    window.addEventListener('scroll', onScroll, { passive: true, capture: true });
 
     return () => {
       cancelAnimationFrame(raf);
       observer.disconnect();
       window.removeEventListener('resize', onResize);
-      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('scroll', onScroll, { capture: true });
     };
   }, []);
 
