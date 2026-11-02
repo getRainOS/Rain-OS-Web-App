@@ -1,5 +1,3 @@
-import { WORDMARK } from './logoPaths';
-
 interface LogoProps {
   size?: number;
   className?: string;
@@ -7,8 +5,9 @@ interface LogoProps {
 }
 
 // The rain mark: a white circle with three uneven rain lines in black, drawn
-// beside the word. `size` is the height in pixels of both parts. The word
-// inherits the text color.
+// beside the word. `size` is the height in pixels of both parts. The word is
+// real text in Inter, not an outline, so the browser snaps its strokes to the
+// screen and it stays as sharp as the rest of the page. It inherits the text color.
 export default function Logo({ size = 24, className = '', label = 'rain' }: LogoProps) {
   return (
     <span
@@ -25,9 +24,12 @@ export default function Logo({ size = 24, className = '', label = 'rain' }: Logo
           <line x1="66" y1="16" x2="66" y2="40" />
         </g>
       </svg>
-      <svg viewBox={WORDMARK.viewBox} aria-hidden="true" style={{ height: size, width: 'auto', display: 'block' }} fill="currentColor">
-        <path d={WORDMARK.path} />
-      </svg>
+      <span
+        aria-hidden="true"
+        style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", fontWeight: 600, fontSize: size * 1.05, lineHeight: 1, letterSpacing: '-0.045em' }}
+      >
+        rain
+      </span>
     </span>
   );
 }
