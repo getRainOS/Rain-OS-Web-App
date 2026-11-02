@@ -12,6 +12,7 @@ import { Pricing, FAQ } from '@/components/marketing/MarketingComponents';
 import { useLiveEngines, joinNames } from '@/lib/liveEngines';
 import HeroPrompt from '@/components/marketing/HeroPrompt';
 import SourceNetwork from '@/components/marketing/SourceNetwork';
+import RainBackground from '@/components/marketing/RainBackground';
 import ScrollWords from '@/components/marketing/ScrollWords';
 import IllustratedExample from '@/components/marketing/IllustratedExample';
 
@@ -657,10 +658,11 @@ export default function Home() {
   const start = () => navigate('/login');
 
   return (
-    <div className="min-h-screen bg-black text-white antialiased">
+    <div className="relative min-h-screen bg-black text-white antialiased">
+      <RainBackground />
       <MarketingNav onGetStartedClick={start} onLoginClick={() => navigate('/login?mode=login')} />
 
-      <main>
+      <main className="relative">
         <section className="relative overflow-hidden">
           <div
             className="pointer-events-none absolute inset-x-0 top-0 h-[720px] z-[1]"
