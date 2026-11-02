@@ -6,9 +6,9 @@ import { ENGINE_ICONS } from './engineIcons';
 // turn; a bright point travels along each lit line, forever. The layout is
 // fixed, so every visit draws the same picture.
 
-// `icon` keys into ENGINE_ICONS. ChatGPT has no mark here yet, so it is a name only.
+// `icon` keys into ENGINE_ICONS, or 'chatgpt' for the blossom drawn below.
 const ENGINES: { name: string; icon?: string }[] = [
-  { name: 'ChatGPT' },
+  { name: 'ChatGPT', icon: 'chatgpt' },
   { name: 'Google AI Overviews', icon: 'google' },
   { name: 'Google AI Mode', icon: 'google' },
   { name: 'Gemini', icon: 'gemini' },
@@ -17,6 +17,21 @@ const ENGINES: { name: string; icon?: string }[] = [
 ];
 
 const ICON_SIZE = 16;
+
+// The ChatGPT blossom, drawn as six loops around a centre. Drawn rather than
+// traced, so it stays crisp at this size.
+function drawBlossom(ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number, alpha: number) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = size * 0.11;
+  for (let i = 0; i < 6; i++) {
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, size * 0.2, size * 0.42, (i * Math.PI) / 3, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
 
 const LABEL_FONT = '12px "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace';
 
@@ -112,7 +127,10 @@ export default function SourceNetwork() {
         // The brand mark, in its own colour, then the name.
         let textX = e.x + 14;
         const icon = e.icon ? icons[e.icon] : undefined;
-        if (icon) {
+        if (e.icon === 'chatgpt') {
+          drawBlossom(ctx!, e.x + 14 + ICON_SIZE / 2, e.y, ICON_SIZE, 0.45 + lit * 0.55);
+          textX = e.x + 14 + ICON_SIZE + 8;
+        } else if (icon) {
           ctx!.save();
           ctx!.globalAlpha = 0.45 + lit * 0.55;
           ctx!.translate(e.x + 14, e.y - ICON_SIZE / 2);
