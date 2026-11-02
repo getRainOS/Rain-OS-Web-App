@@ -1,11 +1,22 @@
 import { useEffect, useRef } from 'react';
+import { ENGINE_ICONS } from './engineIcons';
 
 // One question on the left, lines out to the AI tools rain OS checks, each
-// marked by its name at the end of the line. Scrolling lights the lines in
+// marked by its brand mark and name at the end of the line. Scrolling lights the lines in
 // turn; a bright point travels along each lit line, forever. The layout is
 // fixed, so every visit draws the same picture.
 
-const ENGINES = ['ChatGPT', 'Google AI Overviews', 'Google AI Mode', 'Gemini', 'Perplexity', 'Claude'];
+// `icon` keys into ENGINE_ICONS. ChatGPT has no mark here yet, so it is a name only.
+const ENGINES: { name: string; icon?: string }[] = [
+  { name: 'ChatGPT' },
+  { name: 'Google AI Overviews', icon: 'google' },
+  { name: 'Google AI Mode', icon: 'google' },
+  { name: 'Gemini', icon: 'gemini' },
+  { name: 'Perplexity', icon: 'perplexity' },
+  { name: 'Claude', icon: 'claude' },
+];
+
+const ICON_SIZE = 16;
 
 const LABEL_FONT = '12px "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace';
 
@@ -34,10 +45,15 @@ export default function SourceNetwork() {
     let raf = 0;
     const still = isStill();
 
+    // Each brand mark as a Path2D, built once.
+    const icons = Object.fromEntries(
+      Object.entries(ENGINE_ICONS).map(([key, icon]) => [key, { hex: icon.hex, path: new Path2D(icon.path) }]),
+    );
+
     // Endpoints: spread down the right side, one per engine.
     function endpoints() {
-      return ENGINES.map((name, k) => ({
-        name,
+      return ENGINES.map((engine, k) => ({
+        ...engine,
         x: width * 0.6,
         y: height * (0.12 + (k / (ENGINES.length - 1)) * 0.76),
       }));
@@ -93,10 +109,24 @@ export default function SourceNetwork() {
         ctx!.arc(e.x, e.y, 3 + breathe, 0, Math.PI * 2);
         ctx!.fill();
 
+        // The brand mark, in its own colour, then the name.
+        let textX = e.x + 14;
+        const icon = e.icon ? icons[e.icon] : undefined;
+        if (icon) {
+          ctx!.save();
+          ctx!.globalAlpha = 0.45 + lit * 0.55;
+          ctx!.translate(e.x + 14, e.y - ICON_SIZE / 2);
+          ctx!.scale(ICON_SIZE / 24, ICON_SIZE / 24);
+          ctx!.fillStyle = icon.hex;
+          ctx!.fill(icon.path);
+          ctx!.restore();
+          textX = e.x + 14 + ICON_SIZE + 8;
+        }
+
         ctx!.font = LABEL_FONT;
         ctx!.fillStyle = `rgba(255,255,255,${0.35 + lit * 0.6})`;
         ctx!.textBaseline = 'middle';
-        ctx!.fillText(e.name, e.x + 14, e.y);
+        ctx!.fillText(e.name, textX, e.y);
       });
 
       // The question.
@@ -152,6 +182,9 @@ export default function SourceNetwork() {
   return (
     <div ref={wrapRef} className="relative h-[340px] md:h-[440px] w-full">
       <canvas ref={canvasRef} aria-hidden="true" className="absolute inset-0" />
+      <ul className="sr-only">
+        {ENGINES.map(e => <li key={e.name}>{e.name}</li>)}
+      </ul>
     </div>
   );
 }
