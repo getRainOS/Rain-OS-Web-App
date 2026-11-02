@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 // with its own length, speed and brightness, so the drops fall at different
 // paces. Decorative only. Reduced-motion visitors and phones get no rain.
 
-const STREAK_COUNT = 36;
+const STREAK_COUNT = 26;
 
 type Streak = { x: number; y: number; len: number; speed: number; alpha: number };
 
@@ -19,7 +19,7 @@ function makeStreaks(width: number, height: number): Streak[] {
     y: rand() * height,
     len: 40 + rand() * 90,
     speed: 0.02 + rand() * 0.05,
-    alpha: 0.04 + rand() * 0.07,
+    alpha: 0.03 + rand() * 0.04,
   }));
 }
 
