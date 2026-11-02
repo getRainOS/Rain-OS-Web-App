@@ -131,12 +131,11 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8, scale: 0.97 }}
                     transition={{ duration: 0.15, ease: 'easeOut' }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-64 rounded-2xl overflow-hidden"
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-64 rounded-xl overflow-hidden"
                     style={{
-                      background: 'rgba(6,10,24,0.95)',
-                      border: '1px solid rgba(255,255,255,0.08)',
-                      boxShadow: '0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04)',
-                      backdropFilter: 'blur(24px)',
+                      background: '#000',
+                      border: '1px solid rgba(255,255,255,0.12)',
+                      boxShadow: '0 24px 60px rgba(0,0,0,0.9)',
                     }}
                   >
                     <div className="p-1.5">
