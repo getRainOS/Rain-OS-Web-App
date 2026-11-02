@@ -1,39 +1,39 @@
 import Logo from '@/components/Logo.tsx';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Menu, X } from 'lucide-react';
+import { ChevronDown, Menu, X, ArrowRight, PenLine, ShoppingBag, Code2, Sparkles, MapPin } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const SOLUTIONS = [
   {
     label: 'Writers',
     href: '/content-writers',
-    desc: 'Blog posts, articles, marketing copy',
-    color: '#e5e5e5',
+    icon: PenLine,
+    plain: 'Get your blog posts and articles picked up when people ask AI for ideas.',
   },
   {
     label: 'Online Sellers',
     href: '/product-sellers',
-    desc: 'Ecommerce, DTC, product pages',
-    color: '#e5e5e5',
+    icon: ShoppingBag,
+    plain: 'Get your products recommended when shoppers ask AI what to buy.',
   },
   {
     label: 'Independent Developers',
     href: '/developers',
-    desc: 'Tech docs, READMEs, API references',
-    color: '#e5e5e5',
+    icon: Code2,
+    plain: 'Make your project docs clear enough that AI explains them correctly.',
   },
   {
     label: 'Vibe Coders',
     href: '/vibe-coders',
-    desc: 'Bolt, Lovable, Cursor, v0 builders',
-    color: '#e5e5e5',
+    icon: Sparkles,
+    plain: 'Get the apps you build with Lovable, Bolt or Cursor found by AI.',
   },
   {
     label: 'Local Businesses',
     href: '/local-business',
-    desc: 'SEO + AEO for local & service businesses',
-    color: '#e5e5e5',
+    icon: MapPin,
+    plain: 'Get named when someone asks AI for a plumber, salon or cafe near them.',
   },
 ];
 
@@ -131,28 +131,41 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8, scale: 0.97 }}
                     transition={{ duration: 0.15, ease: 'easeOut' }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-64 rounded-xl overflow-hidden"
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[560px] rounded-xl overflow-hidden"
                     style={{
                       background: '#000',
                       border: '1px solid rgba(255,255,255,0.12)',
                       boxShadow: '0 24px 60px rgba(0,0,0,0.9)',
                     }}
                   >
-                    <div className="p-1.5">
-                      {filteredSolutions.map((s) => (
-                        <a
-                          key={s.label}
-                          href={s.href}
-                          className={"flex flex-col px-4 py-3 rounded-xl transition-colors group hover:bg-white/[0.05]"}
-                        >
-                          <span className={"text-sm font-medium transition-colors text-white group-hover:text-white"}>
-                            {s.label}
-                          </span>
-                          <span className={"text-xs mt-0.5 text-neutral-500"}>{s.desc}</span>
-                        </a>
-                      ))}
+                    <div className="p-2 grid grid-cols-2 gap-1">
+                      {filteredSolutions.map((s) => {
+                        const Icon = s.icon;
+                        return (
+                          <a
+                            key={s.label}
+                            href={s.href}
+                            className="flex gap-3 p-3 rounded-lg transition-colors group hover:bg-white/[0.06]"
+                          >
+                            <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-white/10 text-neutral-300 group-hover:text-white">
+                              <Icon className="w-4 h-4" />
+                            </span>
+                            <span className="flex flex-col">
+                              <span className="text-sm font-medium text-white">{s.label}</span>
+                              <span className="mt-0.5 text-xs leading-relaxed text-neutral-400">{s.plain}</span>
+                            </span>
+                          </a>
+                        );
+                      })}
                     </div>
-                  </motion.div>
+                    <a
+                      href="/login"
+                      className="flex items-center justify-between border-t border-white/10 px-5 py-3 text-xs text-neutral-300 hover:text-white"
+                    >
+                      <span>Not sure which fits? Check your site free.</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </a>
+                                  </motion.div>
                 )}
               </AnimatePresence>
             </div>
@@ -255,7 +268,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
                     />
                     <div>
                       <div className={"text-sm font-medium text-white"}>{s.label}</div>
-                      <div className={"text-xs text-neutral-500"}>{s.desc}</div>
+                      <div className={"text-xs text-neutral-500"}>{s.plain}</div>
                     </div>
                   </a>
                 ))}
