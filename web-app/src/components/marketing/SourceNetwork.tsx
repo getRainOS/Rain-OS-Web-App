@@ -1,35 +1,13 @@
 import { useEffect, useRef } from 'react';
 
-// A network drawing: one question on the left, many sites on the right, with
-// lines from the question to the sites AI would cite. Scrolling lights the lines
-// in turn. The layout is fixed, so every visit draws the same picture.
+// One question on the left, lines out to the AI tools rain OS checks, each
+// marked by its name at the end of the line. Scrolling lights the lines in
+// turn; a bright point travels along each lit line, forever. The layout is
+// fixed, so every visit draws the same picture.
 
-type Node = { x: number; y: number; r: number; phase: number; site: boolean };
+const ENGINES = ['ChatGPT', 'Google AI Overviews', 'Google AI Mode', 'Gemini', 'Perplexity', 'Claude'];
 
-const SITE_COUNT = 9;
-const DOT_COUNT = 34;
-const LINK_DISTANCE = 96; // px, between dots, for the faint background mesh
-
-function makeNodes(): Node[] {
-  let seed = 7;
-  const rand = () => {
-    seed = (seed * 9301 + 49297) % 233280;
-    return seed / 233280;
-  };
-  const nodes: Node[] = [{ x: 0.1, y: 0.5, r: 4.5, phase: 0, site: false }];
-  for (let i = 0; i < DOT_COUNT; i++) {
-    nodes.push({
-      x: 0.36 + rand() * 0.6,
-      y: 0.06 + rand() * 0.88,
-      r: 1 + rand() * 1.5,
-      phase: rand() * Math.PI * 2,
-      site: i < SITE_COUNT,
-    });
-  }
-  return nodes;
-}
-
-const NODES = makeNodes();
+const LABEL_FONT = '12px "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace';
 
 function isStill(): boolean {
   if (typeof window === 'undefined') return true;
@@ -56,6 +34,15 @@ export default function SourceNetwork() {
     let raf = 0;
     const still = isStill();
 
+    // Endpoints: spread down the right side, one per engine.
+    function endpoints() {
+      return ENGINES.map((name, k) => ({
+        name,
+        x: width * 0.6,
+        y: height * (0.12 + (k / (ENGINES.length - 1)) * 0.76),
+      }));
+    }
+
     function size() {
       const dpr = window.devicePixelRatio || 1;
       width = wrap!.clientWidth;
@@ -76,62 +63,47 @@ export default function SourceNetwork() {
 
     function draw(t: number) {
       ctx!.clearRect(0, 0, width, height);
-      const pts = NODES.map(n => {
-        const drift = still ? 0 : Math.sin(t * 0.0004 + n.phase) * 4;
-        const drift2 = still ? 0 : Math.cos(t * 0.00032 + n.phase) * 3;
-        return { x: n.x * width + drift, y: n.y * height + drift2, n };
-      });
+      const q = { x: width * 0.06, y: height * 0.5 };
+      const ends = endpoints();
 
-      // Faint mesh between nearby dots.
-      ctx!.lineWidth = 1;
-      for (let i = 0; i < pts.length; i++) {
-        for (let j = i + 1; j < pts.length; j++) {
-          const dx = pts[i].x - pts[j].x;
-          const dy = pts[i].y - pts[j].y;
-          if (dx * dx + dy * dy < LINK_DISTANCE * LINK_DISTANCE) {
-            ctx!.strokeStyle = 'rgba(255,255,255,0.07)';
-            ctx!.beginPath();
-            ctx!.moveTo(pts[i].x, pts[i].y);
-            ctx!.lineTo(pts[j].x, pts[j].y);
-            ctx!.stroke();
-          }
-        }
-      }
-
-      // Lines from the question to each site. Each one lights up as the
-      // visitor scrolls past its turn.
-      const q = pts[0];
-      const sites = pts.filter(p => p.n.site);
-      sites.forEach((s, k) => {
-        const start = (k / sites.length) * 0.8;
+      ends.forEach((e, k) => {
+        const start = (k / ends.length) * 0.8;
         const lit = Math.min(1, Math.max(0, (progress - start) / 0.2));
-        ctx!.strokeStyle = `rgba(255,255,255,${0.1 + lit * 0.7})`;
+
+        ctx!.strokeStyle = `rgba(255,255,255,${0.12 + lit * 0.7})`;
         ctx!.lineWidth = 1 + lit;
         ctx!.beginPath();
         ctx!.moveTo(q.x, q.y);
-        ctx!.lineTo(s.x, s.y);
+        ctx!.lineTo(e.x, e.y);
         ctx!.stroke();
 
         // A light travels from the question out along each lit line, forever.
         if (!still && lit > 0.2) {
-          const f = (t * 0.00014 + k / sites.length) % 1;
-          const px = q.x + (s.x - q.x) * f;
-          const py = q.y + (s.y - q.y) * f;
+          const f = (t * 0.00014 + k / ends.length) % 1;
           ctx!.fillStyle = `rgba(255,255,255,${lit * 0.9})`;
           ctx!.beginPath();
-          ctx!.arc(px, py, 2, 0, Math.PI * 2);
+          ctx!.arc(q.x + (e.x - q.x) * f, q.y + (e.y - q.y) * f, 2, 0, Math.PI * 2);
           ctx!.fill();
         }
+
+        // The endpoint dot and its name.
+        const breathe = !still ? Math.sin(t * 0.002 + k) * 0.5 : 0;
+        ctx!.fillStyle = `rgba(255,255,255,${0.45 + lit * 0.55})`;
+        ctx!.beginPath();
+        ctx!.arc(e.x, e.y, 3 + breathe, 0, Math.PI * 2);
+        ctx!.fill();
+
+        ctx!.font = LABEL_FONT;
+        ctx!.fillStyle = `rgba(255,255,255,${0.35 + lit * 0.6})`;
+        ctx!.textBaseline = 'middle';
+        ctx!.fillText(e.name, e.x + 14, e.y);
       });
 
-      for (const p of pts) {
-        const lit = p.n.site ? Math.min(1, Math.max(0, progress * 1.2)) : 0;
-        const breathe = !still && p.n.site ? Math.sin(t * 0.002 + p.n.phase) * 0.5 : 0;
-        ctx!.fillStyle = `rgba(255,255,255,${p.n.site ? 0.45 + lit * 0.55 : 0.5})`;
-        ctx!.beginPath();
-        ctx!.arc(p.x, p.y, (p.n.site ? p.n.r + 1.5 : p.n.r) + breathe, 0, Math.PI * 2);
-        ctx!.fill();
-      }
+      // The question.
+      ctx!.fillStyle = '#ffffff';
+      ctx!.beginPath();
+      ctx!.arc(q.x, q.y, 4.5, 0, Math.PI * 2);
+      ctx!.fill();
     }
 
     function loop(t: number) {
