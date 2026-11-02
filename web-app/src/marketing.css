@@ -7,8 +7,12 @@
     text-rendering: optimizeLegibility;
   }
 
+  body {
+    font-feature-settings: "cv01", "cv05", "ss03";
+  }
+
   h1, h2, h3 {
-    font-feature-settings: "cv11" on, "ss01" on, "calt" on;
+    font-feature-settings: "cv01", "cv05", "ss03";
     letter-spacing: -0.03em;
   }
 
