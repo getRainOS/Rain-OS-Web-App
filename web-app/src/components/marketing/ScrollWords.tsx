@@ -29,10 +29,11 @@ export default function ScrollWords({ text, className = '' }: { text: string; cl
     }
 
     update();
-    window.addEventListener('scroll', update, { passive: true });
+    // Capture, so scrolling inside <body> (where this site scrolls) reaches us.
+    window.addEventListener('scroll', update, { passive: true, capture: true });
     window.addEventListener('resize', update);
     return () => {
-      window.removeEventListener('scroll', update);
+      window.removeEventListener('scroll', update, { capture: true });
       window.removeEventListener('resize', update);
     };
   }, [text]);
