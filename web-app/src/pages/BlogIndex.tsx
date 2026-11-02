@@ -6,6 +6,7 @@ import { BLOG_POSTS, BlogPost } from '../data/blogPosts';
 import MarketingNav from '@/components/marketing/MarketingNav';
 
 import SiteFooter from '@/components/marketing/SiteFooter';
+import BlogCover from '@/components/marketing/BlogCover';
 export default function BlogIndex() {
   const navigate = useNavigate();
 
@@ -100,10 +101,9 @@ function FeaturedCard({ post, onClick }: { post: BlogPost; onClick: () => void }
       className="cursor-pointer rounded-2xl border border-white/[0.06] bg-white/[0.03] overflow-hidden hover:border-white/[0.12] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/40"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-        <div
-          className="min-h-[200px] md:min-h-[280px] bg-cover bg-center"
-          style={{ backgroundImage: `url(${post.image})` }}
-        />
+        <div className="min-h-[200px] md:min-h-[280px] overflow-hidden">
+          <BlogCover slug={post.slug} />
+        </div>
         <div className="p-6 md:p-8 flex flex-col justify-center">
           <span className="text-xs font-semibold uppercase tracking-wider text-white mb-3">
             {post.category}
@@ -136,10 +136,9 @@ function PostRow({ post, onClick }: { post: BlogPost; onClick: () => void }) {
       onClick={onClick}
       className="cursor-pointer rounded-xl border border-white/[0.06] bg-white/[0.02] p-5 flex items-center gap-5 hover:border-white/[0.12] hover:bg-white/[0.04] transition-all duration-200"
     >
-      <div
-        className="w-20 h-20 rounded-lg bg-cover bg-center shrink-0 hidden sm:block"
-        style={{ backgroundImage: `url(${post.image})` }}
-      />
+      <div className="w-20 h-20 rounded-lg overflow-hidden shrink-0 hidden sm:block">
+        <BlogCover slug={post.slug} />
+      </div>
       <div className="flex-1 min-w-0">
         <span className="text-[11px] font-semibold uppercase tracking-wider text-white mb-2 block">
           {post.category}
