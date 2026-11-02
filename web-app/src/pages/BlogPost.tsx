@@ -6,6 +6,7 @@ import { getPostBySlug } from '../data/blogPosts';
 import MarketingNav from '@/components/marketing/MarketingNav';
 
 import SiteFooter from '@/components/marketing/SiteFooter';
+import BlogCover from '@/components/marketing/BlogCover';
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
@@ -112,13 +113,9 @@ export default function BlogPost() {
           transition={{ duration: 0.5 }}
           className="mb-12"
         >
-          <div
-            className="w-full rounded-2xl bg-cover bg-center"
-            style={{
-              backgroundImage: `url(${post.image})`,
-              height: 'clamp(200px, 30vw, 380px)',
-            }}
-          />
+          <div className="w-full rounded-2xl overflow-hidden" style={{ height: 'clamp(200px, 30vw, 380px)' }}>
+            <BlogCover slug={post.slug} />
+          </div>
         </motion.div>
 
         {/* Author */}
