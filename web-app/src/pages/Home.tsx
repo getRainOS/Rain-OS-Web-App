@@ -673,12 +673,10 @@ export default function Home() {
                 For local businesses, sellers and builders
                 <ArrowRight className="w-3 h-3 text-neutral-500" />
               </a>
-              <h1 className="mt-7 text-[44px] leading-[1.02] sm:text-6xl md:text-[60px] lg:text-[58px] xl:text-[64px] font-semibold tracking-[-0.045em] text-balance">
-                Be the answer
-                <br />
-                <span className="text-neutral-500">AI gives.</span>
+              <h1 className="mt-7 text-[clamp(26px,4.6vw,64px)] leading-[1.02] font-semibold tracking-[-0.045em] whitespace-nowrap">
+                Be the answer <span className="text-neutral-500">AI gives.</span>
               </h1>
-              <p className="mt-7 text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto leading-relaxed text-balance">
+              <p className="mt-7 text-lg md:text-xl text-neutral-400 mx-auto leading-relaxed text-balance" style={{ maxWidth: 'calc(clamp(26px, 4.6vw, 64px) * 10.25)' }}>
                 More people now ask AI where to buy, who to hire and what to use. rain OS checks whether ChatGPT, Google's AI answers, Perplexity and Claude recommend you, and walks you through fixing it in plain English.
               </p>
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
