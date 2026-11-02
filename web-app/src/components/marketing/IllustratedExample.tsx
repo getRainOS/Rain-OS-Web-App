@@ -209,14 +209,14 @@ export default function IllustratedExample() {
           </p>
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-2" role="tablist" aria-label="Lane examples">
+        <div className="mt-8 flex flex-wrap items-center justify-center rounded-md border border-white/12 bg-white/[0.02] p-1" role="tablist" aria-label="Lane examples">
           {EXAMPLES.map((e, i) => (
             <button
               key={e.id}
               role="tab"
               aria-selected={i === index}
               onClick={() => pick(i)}
-              className={`h-9 px-4 rounded-full text-[13px] border transition-colors ${i === index ? 'bg-white text-black border-white' : 'border-white/15 text-neutral-300 hover:border-white/30'}`}
+              className={`h-8 px-4 rounded-[4px] text-[13px] transition-colors ${i === index ? 'bg-white text-black' : 'text-neutral-400 hover:text-white'}`}
             >
               {e.tab}
             </button>
