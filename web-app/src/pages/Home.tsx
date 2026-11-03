@@ -48,6 +48,27 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
 
 // Where your site ranked in Gemini's sources on each check (1 is the top).
 // Gaps are checks where it wasn't cited. Same idea as the app's "Position over time" chart.
+const RESULT_STEPS = [
+  {
+    src: '/screens/results-overall.png',
+    alt: 'rain OS results: the overall AEO score, the four area bars and the area list',
+    title: 'The overall score',
+    body: 'One number out of 100, with a plain label, then four bars for the areas that make it up.',
+  },
+  {
+    src: '/screens/results-areas.png',
+    alt: 'rain OS results: each area with its score, a status and how many fixes it needs',
+    title: 'Each area, with its fixes',
+    body: 'Every area shows its score and status, and how many fixes it needs. Open one to see what drives its score.',
+  },
+  {
+    src: '/screens/results-fixes.png',
+    alt: 'rain OS results: the summary, with the plain-English read of the content',
+    title: 'The summary and the fixes',
+    body: 'A plain-English summary of how ready the piece is, then the fixes to make, in the order that matters most.',
+  },
+];
+
 const ANALYZE_STEPS = [
   'Reading your content',
   'Measuring structure and readability',
@@ -687,6 +708,36 @@ export default function Home() {
             <Reveal delay={0.1} className="mt-12 max-w-5xl mx-auto">
               <AnalyzeConsole />
             </Reveal>
+          </div>
+        </section>
+
+        <section className="relative z-10 py-28 border-t border-white/[0.06]">
+          <div className="max-w-[1440px] mx-auto px-6">
+            <Reveal className="text-center">
+              <Eyebrow>When it finishes</Eyebrow>
+              <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
+                One score, then the fixes, in order.
+              </h2>
+              <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-2xl mx-auto">
+                The results open with an overall score. Each area shows its own score, what drives it, and how many fixes it needs.
+              </p>
+            </Reveal>
+            <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-5">
+              {RESULT_STEPS.map((r, k) => (
+                <Reveal key={r.src} delay={0.06 * k}>
+                  <figure className="h-full rounded-xl border border-white/10 bg-[#0a0a0a] p-4 flex flex-col">
+                    <div className="rounded-md overflow-hidden border border-white/[0.07] bg-black">
+                      <img src={r.src} alt={r.alt} loading="lazy" className="w-full h-auto block" />
+                    </div>
+                    <figcaption className="mt-4">
+                      <span className="text-[11px] text-neutral-500" style={MONO}>{`0${k + 1}`}</span>
+                      <div className="mt-1 text-[16px] font-medium text-white">{r.title}</div>
+                      <p className="mt-1.5 text-[14px] text-neutral-400 leading-relaxed">{r.body}</p>
+                    </figcaption>
+                  </figure>
+                </Reveal>
+              ))}
+            </div>
           </div>
         </section>
 
