@@ -69,8 +69,8 @@ export default function SourceNetwork() {
     function endpoints() {
       return ENGINES.map((engine, k) => ({
         ...engine,
-        x: width * 0.58,
-        y: height * (0.05 + (k / (ENGINES.length - 1)) * 0.9),
+        x: width * 0.6,
+        y: height * (0.12 + (k / (ENGINES.length - 1)) * 0.76),
       }));
     }
 
@@ -108,31 +108,13 @@ export default function SourceNetwork() {
         ctx!.lineTo(e.x, e.y);
         ctx!.stroke();
 
-        // Two lights travel from the question out along each lit line, each at
-        // its own pace, forever. They glow so the lines read as live.
+        // A light travels from the question out along each lit line, forever.
         if (!still && lit > 0.2) {
-          const speed = 0.00011 + (k % 3) * 0.00005;
-          for (let j = 0; j < 2; j++) {
-            const f = (t * speed + k / ends.length + j * 0.5) % 1;
-            ctx!.save();
-            ctx!.shadowColor = 'rgba(255,255,255,0.9)';
-            ctx!.shadowBlur = 8;
-            ctx!.fillStyle = `rgba(255,255,255,${lit * 0.9})`;
-            ctx!.beginPath();
-            ctx!.arc(q.x + (e.x - q.x) * f, q.y + (e.y - q.y) * f, 2.2, 0, Math.PI * 2);
-            ctx!.fill();
-            ctx!.restore();
-          }
-        }
-
-        // A ring expands from each lit endpoint, once every few seconds.
-        if (!still && lit > 0.5) {
-          const r = ((t * 0.0004 + k * 0.17) % 1) * 14;
-          ctx!.strokeStyle = `rgba(255,255,255,${0.35 * (1 - r / 14) * lit})`;
-          ctx!.lineWidth = 1;
+          const f = (t * 0.00014 + k / ends.length) % 1;
+          ctx!.fillStyle = `rgba(255,255,255,${lit * 0.9})`;
           ctx!.beginPath();
-          ctx!.arc(e.x, e.y, 4 + r, 0, Math.PI * 2);
-          ctx!.stroke();
+          ctx!.arc(q.x + (e.x - q.x) * f, q.y + (e.y - q.y) * f, 2, 0, Math.PI * 2);
+          ctx!.fill();
         }
 
         // The endpoint dot and its name.
@@ -165,15 +147,7 @@ export default function SourceNetwork() {
         ctx!.fillText(e.name, textX, e.y);
       });
 
-      // The question, with a ring that expands from it every couple of seconds.
-      if (!still) {
-        const r = ((t * 0.00045) % 1) * 22;
-        ctx!.strokeStyle = `rgba(255,255,255,${0.3 * (1 - r / 22)})`;
-        ctx!.lineWidth = 1;
-        ctx!.beginPath();
-        ctx!.arc(q.x, q.y, 5 + r, 0, Math.PI * 2);
-        ctx!.stroke();
-      }
+      // The question.
       ctx!.fillStyle = '#ffffff';
       ctx!.beginPath();
       ctx!.arc(q.x, q.y, 4.5, 0, Math.PI * 2);
