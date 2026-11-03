@@ -175,9 +175,28 @@ const SHOTS: Record<string, { src: string; alt: string; label: string; w: number
   fix: { src: '/screens/fix.png', alt: 'rain OS recommendation with a plain-English fix and a copy-ready technical fix', label: 'RECOMMENDATIONS', w: 1072, h: 1080 },
 };
 
-// Screenshots of the real app, rendered with example data.
+// Screenshots of the real app, rendered with example data. The URL scanner
+// shows its bar charts and its trend chart as two separate, smaller cards side
+// by side, each with its own caption.
 function PlatformVisual({ id }: { id: string }) {
   const shot = SHOTS[id];
+  if (id === 'measure') {
+    return (
+      <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <figure className="min-w-0">
+          <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>SCORES BY AREA</div>
+          <div className="relative rounded-md overflow-hidden border border-white/[0.07] h-[300px]">
+            <img src={shot.src} alt={shot.alt} width={shot.w} height={shot.h} loading="lazy" className="w-full h-auto block object-top" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
+          </div>
+        </figure>
+        <figure className="min-w-0">
+          <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>TREND BY AREA</div>
+          <TrendCard />
+        </figure>
+      </div>
+    );
+  }
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-4">
@@ -188,7 +207,6 @@ function PlatformVisual({ id }: { id: string }) {
         <img src={shot.src} alt={shot.alt} width={shot.w} height={shot.h} loading="lazy" className="w-full h-auto block" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
       </div>
-      {id === 'measure' && <TrendCard />}
     </div>
   );
 }

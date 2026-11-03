@@ -31,7 +31,7 @@ export default function TrendCard() {
     <div className="mt-4 rounded-md border border-white/[0.07] bg-black p-4">
       <div className="flex items-center justify-between mb-3">
         <span className="text-[11px] text-neutral-500" style={{ fontFamily: "'Geist Mono', ui-monospace, monospace" }}>
-          TREND BY AREA, LAST 8 WEEKS
+          LAST 8 WEEKS
         </span>
         <span className="text-[11px] text-neutral-500" style={{ fontFamily: "'Geist Mono', ui-monospace, monospace" }}>EXAMPLE DATA</span>
       </div>
