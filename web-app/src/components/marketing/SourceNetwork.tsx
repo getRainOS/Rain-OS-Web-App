@@ -66,11 +66,21 @@ export default function SourceNetwork() {
     );
 
     // Endpoints: spread down the right side, one per engine.
+    // Each endpoint sits at its own place, so the lines leave the question at
+    // different angles and reach different lengths.
+    const SPOTS = [
+      { x: 0.7, y: 0.1 },
+      { x: 0.52, y: 0.26 },
+      { x: 0.64, y: 0.4 },
+      { x: 0.46, y: 0.58 },
+      { x: 0.68, y: 0.74 },
+      { x: 0.56, y: 0.92 },
+    ];
     function endpoints() {
       return ENGINES.map((engine, k) => ({
         ...engine,
-        x: width * 0.6,
-        y: height * (0.12 + (k / (ENGINES.length - 1)) * 0.76),
+        x: width * SPOTS[k].x,
+        y: height * SPOTS[k].y,
       }));
     }
 
