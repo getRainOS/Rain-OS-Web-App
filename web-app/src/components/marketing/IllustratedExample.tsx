@@ -116,12 +116,11 @@ const EXAMPLES: LaneExample[] = [
 ];
 
 // The flat palette from the blog covers and the site's illustrations.
-const GROUND = '#F4EFE4';
-const INK = '#161616';
+const LINE = '#F4EFE4';
 const FILLS = ['#D8432A', '#F59A1B', '#1F4FBF'];
 
-// Draws each stroke in turn on a cream panel, then fills the solid shapes with
-// flat colour. Same paths and timing as before; the look matches the blog covers.
+// Draws each stroke in turn in off-white on the black page, then fills the solid
+// shapes with flat colour from the blog palette.
 function Drawing({ strokes }: { strokes: Stroke[] }) {
   return (
     <motion.svg
@@ -130,7 +129,7 @@ function Drawing({ strokes }: { strokes: Stroke[] }) {
       role="img"
       aria-label="Illustration for this example"
       fill="none"
-      stroke={INK}
+      stroke={LINE}
       strokeWidth={3}
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -138,16 +137,6 @@ function Drawing({ strokes }: { strokes: Stroke[] }) {
       whileInView="show"
       viewport={{ once: true, amount: 0.4 }}
     >
-      <motion.rect
-        x="0"
-        y="0"
-        width="320"
-        height="200"
-        rx="14"
-        fill={GROUND}
-        stroke="none"
-        variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { duration: 0.4 } } }}
-      />
       {strokes.map((s, i) => {
         const fill = s.solid ? FILLS[i % FILLS.length] : 'none';
         return (
