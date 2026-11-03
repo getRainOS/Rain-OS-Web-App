@@ -13,6 +13,7 @@ import { useLiveEngines, joinNames } from '@/lib/liveEngines';
 import HeroPrompt from '@/components/marketing/HeroPrompt';
 import SourceNetwork from '@/components/marketing/SourceNetwork';
 import RainBackground from '@/components/marketing/RainBackground';
+import TrendCard from '@/components/marketing/TrendCard';
 import ScrollWords from '@/components/marketing/ScrollWords';
 import IllustratedExample from '@/components/marketing/IllustratedExample';
 
@@ -166,6 +167,7 @@ function PlatformVisual({ id }: { id: string }) {
         <img src={shot.src} alt={shot.alt} width={shot.w} height={shot.h} loading="lazy" className="w-full h-auto block" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
       </div>
+      {id === 'measure' && <TrendCard />}
     </div>
   );
 }
