@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import MarketingNav from '@/components/marketing/MarketingNav';
 import SiteFooter from '@/components/marketing/SiteFooter';
-import { Pricing, FAQ } from '@/components/marketing/MarketingComponents';
+import { FAQ } from '@/components/marketing/MarketingComponents';
 import { useLiveEngines, joinNames } from '@/lib/liveEngines';
 import HeroPrompt from '@/components/marketing/HeroPrompt';
 import SourceNetwork from '@/components/marketing/SourceNetwork';
@@ -45,65 +45,25 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
 /* ── Hero product frame ─────────────────────────────────────────────────── */
 
 
-const HERO_EXAMPLES = [
-  {
-    query: 'best plumber near me for a water heater repair',
-    cited: true,
-    rank: 2,
-    sources: ['yelp.com', 'yourbrand.com', 'angi.com', 'reddit.com'],
-    history: [null, null, 3, null, 2, 2, 3, 2] as (number | null)[],
-  },
-  {
-    query: 'how do I make my Shopify store show up in AI shopping answers',
-    cited: false,
-    rank: 0,
-    sources: ['shopify.com', 'wired.com', 'theverge.com', 'competitor.co'],
-    history: [2, 3, null, null, null, 4, null, null] as (number | null)[],
-  },
-  {
-    query: 'emergency plumber open now near Austin',
-    cited: true,
-    rank: 1,
-    sources: ['yourbrand.com', 'yelp.com', 'angi.com', 'bbb.org'],
-    history: [null, 2, 1, 1, null, 1, 1, 1] as (number | null)[],
-  },
-];
-
 // Where your site ranked in Gemini's sources on each check (1 is the top).
 // Gaps are checks where it wasn't cited. Same idea as the app's "Position over time" chart.
-function PositionLine({ history }: { history: (number | null)[] }) {
-  const W = 220, H = 64, padX = 10, padY = 8, maxRank = 4;
-  const x = (k: number) => padX + (k * (W - padX * 2)) / (history.length - 1);
-  const y = (r: number) => padY + ((r - 1) * (H - padY * 2)) / (maxRank - 1);
-  const segments: string[] = [];
-  let cur: string[] = [];
-  history.forEach((r, k) => {
-    if (r == null) { if (cur.length > 1) segments.push(cur.join(' ')); cur = []; return; }
-    cur.push(`${x(k)},${y(r)}`);
-  });
-  if (cur.length > 1) segments.push(cur.join(' '));
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full max-w-[260px]" role="img" aria-label="Your position over the last 8 checks">
-      {[1, 2, 3, 4].map(r => (
-        <line key={r} x1={padX} x2={W - padX} y1={y(r)} y2={y(r)} stroke="rgba(255,255,255,0.07)" />
-      ))}
-      {segments.map((pts, k) => (
-        <polyline key={k} points={pts} fill="none" stroke="#ffffff" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
-      ))}
-      {history.map((r, k) => r == null ? null : <circle key={k} cx={x(k)} cy={y(r)} r="3" fill="#ffffff" />)}
-    </svg>
-  );
-}
+const ANALYZE_STEPS = [
+  'Reading your content',
+  'Measuring structure and readability',
+  'Scoring each pillar',
+  'Writing your fixes',
+];
 
-function HeroConsole() {
+// The analysis screen in the app, shown as it runs: each step fills in turn.
+function AnalyzeConsole() {
   const reduce = useReducedMotion();
-  const [i, setI] = useState(0);
+  const [step, setStep] = useState(1);
   useEffect(() => {
     if (reduce) return;
-    const t = setInterval(() => setI(n => (n + 1) % HERO_EXAMPLES.length), 5200);
+    const t = setInterval(() => setStep(n => (n + 1) % (ANALYZE_STEPS.length + 1)), 1400);
     return () => clearInterval(t);
   }, [reduce]);
-  const ex = HERO_EXAMPLES[i];
+  const done = reduce ? ANALYZE_STEPS.length : step;
 
   return (
     <div className="relative rounded-xl border border-white/10 bg-[#0a0a0a] shadow-[0_40px_120px_-40px_rgba(255,255,255,0.35)] overflow-hidden text-left">
@@ -111,84 +71,34 @@ function HeroConsole() {
         <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
         <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
         <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
-        <span className="ml-3 text-[11px] text-neutral-500 truncate" style={MONO}>getrainos.com/citation-monitor</span>
-        <span className="ml-auto text-[10px] text-neutral-600 hidden sm:inline" style={MONO}>EXAMPLE DATA</span>
+        <span className="ml-3 text-[11px] text-neutral-500 truncate" style={MONO}>getrainos.com/analyze</span>
+        <span className="ml-auto text-[10px] text-neutral-600 hidden sm:inline" style={MONO}>EXAMPLE</span>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-[1.35fr_1fr]">
-        <div className="p-5 md:p-6 border-b md:border-b-0 md:border-r border-white/[0.07] min-w-0">
-          <div className="text-[10px] uppercase tracking-[0.14em] text-neutral-500 mb-2" style={MONO}>Question</div>
-          <div className="flex items-center gap-2 rounded-md border border-white/10 bg-black px-3 h-10 mb-5 min-w-0">
-            <Search className="w-3.5 h-3.5 text-neutral-500 shrink-0" />
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={ex.query}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.25 }}
-                className="text-[13px] text-neutral-200 truncate"
-              >
-                {ex.query}
-              </motion.span>
-            </AnimatePresence>
-          </div>
-
-          <div className="flex items-center justify-between mb-3">
-            <div className="text-[10px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>Sources Gemini cited</div>
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={String(ex.cited) + i}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className={`text-[11px] font-medium px-2 py-0.5 rounded border ${ex.cited ? 'text-[#4ade80] border-[#4ade80]/25 bg-[#4ade80]/[0.06]' : 'text-[#f87171] border-[#f87171]/25 bg-[#f87171]/[0.06]'}`}
-              >
-                {ex.cited ? `Cited · source ${ex.rank}` : 'Not cited'}
-              </motion.span>
-            </AnimatePresence>
-          </div>
-          <ol className="space-y-1.5">
-            {ex.sources.map((d, k) => {
-              const mine = d === 'yourbrand.com';
-              return (
-                <motion.li
-                  key={ex.query + d}
-                  initial={{ opacity: 0, x: -6 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.08 * k }}
-                  className={`flex items-center gap-3 rounded-md px-3 h-9 text-[13px] ${mine ? 'bg-[#ffffff]/10 border border-[#ffffff]/30 text-white' : 'border border-white/[0.06] text-neutral-400'}`}
+      <div className="p-6 md:p-8">
+        <div className="text-[15px] font-medium text-white mb-6">Analyzing your content</div>
+        <ul className="space-y-4">
+          {ANALYZE_STEPS.map((label, k) => {
+            const isDone = k < done;
+            const isActive = k === done;
+            return (
+              <li key={label} className="flex items-center gap-3">
+                <span
+                  className={`flex h-5 w-5 items-center justify-center rounded-full border ${
+                    isDone ? 'border-white bg-white' : isActive ? 'border-white/60' : 'border-white/15'
+                  }`}
                 >
-                  <span className="text-[11px] text-neutral-600 w-4" style={MONO}>{k + 1}</span>
-                  <span className="truncate">{d}</span>
-                  {mine && <span className="ml-auto text-[10px] text-[#ffffff]" style={MONO}>YOU</span>}
-                </motion.li>
-              );
-            })}
-          </ol>
-        </div>
-
-        <div className="p-5 md:p-6 min-w-0">
-          <div className="text-[10px] uppercase tracking-[0.14em] text-neutral-500 mb-2" style={MONO}>Your position</div>
-          <AnimatePresence mode="wait">
-            <motion.div key={ex.query} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mb-8">
-              {ex.cited ? (
-                <div className="flex items-baseline gap-2">
-                  <span className="text-[44px] leading-none font-semibold tracking-[-0.03em] text-white tabular-nums">#{ex.rank}</span>
-                  <span className="text-sm text-neutral-500">of {ex.sources.length}</span>
-                </div>
-              ) : (
-                <div className="text-[32px] leading-none font-semibold tracking-[-0.02em] text-[#f87171]">Not cited</div>
-              )}
-              <p className="mt-3 text-[13px] text-neutral-400 leading-relaxed">
-                {ex.cited
-                  ? `Gemini cited your site as source ${ex.rank} for this question.`
-                  : `Your site wasn't among the ${ex.sources.length} sources. rain OS shows what your page needs.`}
-              </p>
-            </motion.div>
-          </AnimatePresence>
-          <div className="text-[10px] uppercase tracking-[0.14em] text-neutral-500 mb-2" style={MONO}>Position over time</div>
-          <PositionLine history={ex.history} />
+                  {isActive && <span className="h-2 w-2 rounded-full bg-white animate-pulse" />}
+                </span>
+                <span className={`text-[14px] ${isDone || isActive ? 'text-neutral-100' : 'text-neutral-600'}`}>{label}</span>
+              </li>
+            );
+          })}
+        </ul>
+        <div className="mt-7 h-1 w-full overflow-hidden rounded-full bg-white/10">
+          <div
+            className="h-full rounded-full bg-white transition-[width] duration-700 ease-out"
+            style={{ width: `${Math.min(100, (done / ANALYZE_STEPS.length) * 100)}%` }}
+          />
         </div>
       </div>
     </div>
@@ -766,18 +676,14 @@ export default function Home() {
             <Reveal className="text-center">
               <Eyebrow>Inside the app</Eyebrow>
               <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
-                Every source, in order. Your place among them.
+                Paste your page. See each step as it runs.
               </h2>
               <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-2xl mx-auto">
-                Ask the question your customers ask. See exactly which sites the AI cited, where you ranked, and how that changes week to week.
+                rain OS reads your writing, measures it, scores it and writes the fixes in plain English.
               </p>
-              <div className="mt-8 text-[11px] uppercase tracking-[0.16em] text-neutral-600" style={MONO}>Checks answers from</div>
-              <div className="mt-3 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[14px] text-neutral-300">
-                {engines.map(e => <span key={e}>{e}</span>)}
-              </div>
             </Reveal>
             <Reveal delay={0.1} className="mt-12 max-w-5xl mx-auto">
-              <HeroConsole />
+              <AnalyzeConsole />
             </Reveal>
           </div>
         </section>
@@ -787,16 +693,6 @@ export default function Home() {
         <LanesSection />
         <MethodSection />
         <TrackingSection />
-
-        <section id="pricing" className="relative z-10 pt-28 border-t border-white/[0.06]">
-          <div className="max-w-[1440px] mx-auto px-6 text-center">
-            <Reveal>
-              <Eyebrow>Pricing</Eyebrow>
-              <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white">Start free. Upgrade when it works.</h2>
-            </Reveal>
-          </div>
-          <Pricing />
-        </section>
 
         <section className="relative z-10 border-t border-white/[0.06]">
           <FAQ />
