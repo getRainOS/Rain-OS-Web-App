@@ -69,12 +69,12 @@ export default function SourceNetwork() {
     // Each endpoint sits at its own place, so the lines leave the question at
     // different angles and reach different lengths.
     const SPOTS = [
-      { x: 0.7, y: 0.1 },
-      { x: 0.52, y: 0.26 },
-      { x: 0.64, y: 0.4 },
-      { x: 0.46, y: 0.58 },
-      { x: 0.68, y: 0.74 },
-      { x: 0.56, y: 0.92 },
+      { x: 0.6, y: 0.08 },
+      { x: 0.37, y: 0.22 },
+      { x: 0.62, y: 0.34 },
+      { x: 0.38, y: 0.5 },
+      { x: 0.6, y: 0.7 },
+      { x: 0.4, y: 0.9 },
     ];
     function endpoints() {
       return ENGINES.map((engine, k) => ({
@@ -104,7 +104,7 @@ export default function SourceNetwork() {
 
     function draw(t: number) {
       ctx!.clearRect(0, 0, width, height);
-      const q = { x: width * 0.06, y: height * 0.5 };
+      const q = { x: width * 0.5, y: height * 0.5 };
       const ends = endpoints();
 
       ends.forEach((e, k) => {
@@ -135,26 +135,28 @@ export default function SourceNetwork() {
         ctx!.fill();
 
         // The brand mark, in its own colour, then the name.
-        let textX = e.x + 14;
+        // Labels open toward the side their endpoint is on: right of the dot on
+        // the right, left of it on the left.
+        ctx!.font = LABEL_FONT;
+        ctx!.textBaseline = 'middle';
         const icon = e.icon ? icons[e.icon] : undefined;
+        const hasIcon = !!icon;
+        const blockW = (hasIcon ? ICON_SIZE + 8 : 0) + ctx!.measureText(e.name).width;
+        const onLeft = e.x < q.x;
+        const startX = onLeft ? e.x - 14 - blockW : e.x + 14;
         if (e.icon === 'chatgpt') {
-          drawBlossom(ctx!, e.x + 14 + ICON_SIZE / 2, e.y, ICON_SIZE, 0.45 + lit * 0.55);
-          textX = e.x + 14 + ICON_SIZE + 8;
+          drawBlossom(ctx!, startX + ICON_SIZE / 2, e.y, ICON_SIZE, 0.45 + lit * 0.55);
         } else if (icon) {
           ctx!.save();
           ctx!.globalAlpha = 0.45 + lit * 0.55;
-          ctx!.translate(e.x + 14, e.y - ICON_SIZE / 2);
+          ctx!.translate(startX, e.y - ICON_SIZE / 2);
           ctx!.scale(ICON_SIZE / 24, ICON_SIZE / 24);
           ctx!.fillStyle = icon.hex;
           ctx!.fill(icon.path);
           ctx!.restore();
-          textX = e.x + 14 + ICON_SIZE + 8;
         }
-
-        ctx!.font = LABEL_FONT;
         ctx!.fillStyle = `rgba(255,255,255,${0.35 + lit * 0.6})`;
-        ctx!.textBaseline = 'middle';
-        ctx!.fillText(e.name, textX, e.y);
+        ctx!.fillText(e.name, startX + (hasIcon ? ICON_SIZE + 8 : 0), e.y);
       });
 
       // The question.
