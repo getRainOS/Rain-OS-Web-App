@@ -375,6 +375,44 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
         </div>
       </section>
 
+      {/* Keep the site working */}
+      <section className="py-20 px-6 border-t border-white/[0.06]">
+        <div className="max-w-5xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
+            <span className="text-[#bdbdbd] font-bold tracking-wider text-xs uppercase mb-3 block">Keep it working</span>
+            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">A site that AI and Google can reach, and that stays safe</h2>
+            <p className="text-neutral-400 max-w-2xl mx-auto">A good score doesn't last if the site goes offline, gets blocked from search, or gets hacked. These checks are worth doing once and again after big changes.</p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                title: 'Pick the right setup',
+                body: 'A site builder like Squarespace, Wix or WordPress handles sitemaps, redirects and updates for you. A custom-built site means you maintain those yourself. If you publish new pages often, use a builder for that part.',
+              },
+              {
+                title: 'Stay reachable',
+                body: 'Make sure robots.txt does not block Googlebot, and that your site has a sitemap. Check that your hosting plan has not been paused for inactivity, and that your site loads without errors.',
+              },
+              {
+                title: 'Protect the site',
+                body: 'Use an established form service instead of a custom form. Keep your platform and plugins updated, and watch Google Search Console for security warnings. If your code is on GitHub, turn on Dependabot alerts.',
+              },
+            ].map((card, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                className="rounded-2xl p-7 border border-white/10 bg-white/[0.03]">
+                <h3 className="text-lg font-bold text-white mb-3">{card.title}</h3>
+                <p className="text-neutral-400 text-sm leading-relaxed">{card.body}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <p className="mt-10 text-center text-neutral-400 text-sm max-w-2xl mx-auto leading-relaxed">
+            If you use an AI tool to edit your site, save your important SEO settings, such as canonical tags and redirects, and why they exist, in the tool's instructions. Then ask it not to change them without asking you first.
+          </p>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-24 px-6 border-t border-white/[0.06] relative overflow-hidden">
         <div className="max-w-2xl mx-auto text-center">
