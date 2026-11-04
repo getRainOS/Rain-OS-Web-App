@@ -76,12 +76,18 @@ export default function SourceNetwork() {
       { x: 0.6, y: 0.7 },
       { x: 0.4, y: 0.9 },
     ];
-    function endpoints() {
-      return ENGINES.map((engine, k) => ({
-        ...engine,
-        x: width * SPOTS[k].x,
-        y: height * SPOTS[k].y,
-      }));
+    // Each endpoint, with a slow float around its spot. Still for reduced motion
+    // and phones, so the layout is fixed there.
+    function endpoints(t: number) {
+      return ENGINES.map((engine, k) => {
+        const dx = still ? 0 : Math.sin(t * 0.0005 + k * 1.7) * 5;
+        const dy = still ? 0 : Math.cos(t * 0.0004 + k * 2.3) * 4;
+        return {
+          ...engine,
+          x: width * SPOTS[k].x + dx,
+          y: height * SPOTS[k].y + dy,
+        };
+      });
     }
 
     function size() {
@@ -105,7 +111,7 @@ export default function SourceNetwork() {
     function draw(t: number) {
       ctx!.clearRect(0, 0, width, height);
       const q = { x: width * 0.5, y: height * 0.5 };
-      const ends = endpoints();
+      const ends = endpoints(t);
 
       ends.forEach((e, k) => {
         const start = (k / ends.length) * 0.8;
