@@ -80,8 +80,8 @@ export default function SourceNetwork() {
     // and phones, so the layout is fixed there.
     function endpoints(t: number) {
       return ENGINES.map((engine, k) => {
-        const dx = still ? 0 : Math.sin(t * 0.0005 + k * 1.7) * 5;
-        const dy = still ? 0 : Math.cos(t * 0.0004 + k * 2.3) * 4;
+        const dx = still ? 0 : Math.sin(t * 0.0008 + k * 1.7) * 10;
+        const dy = still ? 0 : Math.cos(t * 0.0006 + k * 2.3) * 8;
         return {
           ...engine,
           x: width * SPOTS[k].x + dx,
