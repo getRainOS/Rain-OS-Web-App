@@ -51,6 +51,7 @@ function RecoItem({ r, i }) {
       <span className={styles.recoNum}>{i + 1}</span>
       <div className={styles.recoContent}>
         <span className={styles.recoText}>{text}</span>
+        {isObj && r.pillar && <span className="eyebrow" style={{ marginTop: 4, display: 'block' }}>{r.pillar}</span>}
         {(nonTechnicalFix || technicalFix || artifact) && (
           <div className={styles.fixGroup}>
             {nonTechnicalFix && (

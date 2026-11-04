@@ -101,6 +101,8 @@ export interface UrlScanRecommendation {
   issue: string;
   recommendation: string;
   severity: 'low' | 'medium' | 'high';
+  // The scoring pillar this fix moves, so it is shown under that pillar.
+  pillar?: 'AI Readability' | 'Digital Authority' | 'Conversion Readiness' | 'Product Discoverability' | 'RAG Readiness' | 'Local Presence';
   artifact?: {
     type: 'json-ld' | 'llms-txt' | 'robots-txt' | 'html';
     content: string;
@@ -720,6 +722,7 @@ export async function scanUrlForTechnicalSignals(
       issue: 'robots.txt blocks Googlebot',
       recommendation: 'Allow Googlebot in robots.txt so Google can index the page.',
       severity: 'high',
+      pillar: 'AI Readability',
       artifact: {
         type: 'html',
         content: 'User-agent: Googlebot\nAllow: /',
@@ -735,6 +738,7 @@ export async function scanUrlForTechnicalSignals(
       issue: 'No sitemap found',
       recommendation: 'Publish a sitemap at /sitemap.xml and list it in robots.txt.',
       severity: 'low',
+      pillar: 'AI Readability',
       artifact: {
         type: 'html',
         content: 'Sitemap: https://yourdomain.com/sitemap.xml',
