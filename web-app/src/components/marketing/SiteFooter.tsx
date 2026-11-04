@@ -51,8 +51,8 @@ export default function SiteFooter() {
             <Link to="/" className="font-bold text-2xl tracking-tighter text-white" aria-label="rain OS home">
               <Logo size={22} />
             </Link>
-            <p className="mt-4 text-[13px] text-neutral-500 leading-relaxed max-w-[240px]">
-              Be seen by AI.
+            <p className="mt-1.5 text-[13px] text-neutral-500 leading-relaxed max-w-[240px]">
+              Be seen.
             </p>
           </div>
           {COLUMNS.map(col => (
