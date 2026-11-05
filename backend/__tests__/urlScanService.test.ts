@@ -634,3 +634,25 @@ describe('scanUrlForTechnicalSignals — Product/LocalBusiness schema field dete
     expect(r.signals.productSchemaHasBrand).toBe(false);
   });
 });
+
+describe('scanUrlForTechnicalSignals — vibe coder checks (shown, not scored)', () => {
+  it('flags a canonical that points to another page, for vibe_coders only', async () => {
+    const head = '<link rel="canonical" href="https://x.test/promo/whitening" />';
+    const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>', head), 'https://x.test/services/whitening', 'vibe_coders');
+    expect(r.signals.canonicalPointsElsewhere).toBe(true);
+    expect(r.displaySignals.find((d) => d.label === 'Canonical Points Here')?.pass).toBe(false);
+    expect(r.recommendations.find((x) => x.issue === 'Canonical tag points to another page')).toBeDefined();
+    const general = await scanUrlForTechnicalSignals(wrap('<p>x</p>', head), 'https://x.test/services/whitening');
+    expect(general.displaySignals.find((d) => d.label === 'Canonical Points Here')).toBeUndefined();
+  });
+
+  it('flags a form that posts to the site itself, and passes one that uses a form service', async () => {
+    const own = await scanUrlForTechnicalSignals(wrap('<form action="/api/contact"><input /></form>'), 'https://x.test/', 'vibe_coders');
+    expect(own.signals.hasCustomFormHandler).toBe(true);
+    expect(own.displaySignals.find((d) => d.label === 'Form Handling')?.pass).toBe(false);
+    const service = await scanUrlForTechnicalSignals(
+      wrap('<form action="https://formspree.io/f/abc"><input /></form>'), 'https://x.test/', 'vibe_coders');
+    expect(service.signals.hasCustomFormHandler).toBe(false);
+    expect(service.displaySignals.find((d) => d.label === 'Form Handling')?.pass).toBe(true);
+  });
+});
