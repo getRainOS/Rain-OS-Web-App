@@ -57,6 +57,9 @@ export interface TechnicalSignals {
   hasMetaDescription: boolean;
   metaDescriptionLength: number;
   hasCanonicalTag: boolean;
+  // Vibe coder checks, shown in the report but not scored.
+  canonicalPointsElsewhere: boolean;
+  hasCustomFormHandler: boolean;
   hasOpenGraphTags: boolean;
   hasTwitterCards: boolean;
   hasViewportMeta: boolean;
@@ -97,6 +100,8 @@ export interface UrlScanRecommendation {
   issue: string;
   recommendation: string;
   severity: 'low' | 'medium' | 'high';
+  // The scoring pillar this fix moves, when it is known.
+  pillar?: string;
   artifact?: {
     type: 'json-ld' | 'llms-txt' | 'robots-txt' | 'html';
     content: string;
@@ -447,6 +452,26 @@ export async function scanUrlForTechnicalSignals(
   signals.hasMetaDescription = md.length > 0;
   signals.metaDescriptionLength = md.length;
   signals.hasCanonicalTag = $('link[rel="canonical"]').length > 0;
+  // A canonical that names another page is how AI edits quietly break a page's
+  // search identity (the promo-page problem). Compare host and path only.
+  const canonicalHref = $('link[rel="canonical"]').attr('href');
+  signals.canonicalPointsElsewhere = false;
+  if (canonicalHref) {
+    try {
+      const c = new URL(canonicalHref, pageUrl);
+      const norm = (u: URL) => u.host + u.pathname.replace(/\/$/, '');
+      signals.canonicalPointsElsewhere = norm(c) !== norm(parsedUrl);
+    } catch { /* unparseable canonical: not counted */ }
+  }
+  // A form that posts to the site's own server is a custom handler, the kind
+  // the article warns about. Forms that post to a third-party service are not.
+  signals.hasCustomFormHandler = $('form').toArray().some(el => {
+    const action = ($(el).attr('action') || '').trim();
+    if (!action) return true;
+    try {
+      return new URL(action, pageUrl).host === parsedUrl.host;
+    } catch { return false; }
+  });
   signals.hasOpenGraphTags = $('meta[property^="og:"]').length > 0;
   signals.hasTwitterCards = $('meta[name^="twitter:"]').length > 0;
   signals.hasViewportMeta = $('meta[name="viewport"]').length > 0;
@@ -807,6 +832,45 @@ export async function scanUrlForTechnicalSignals(
   }
 
   const displaySignals = formatSignalsForDisplay(signals);
+
+  // Vibe coder checks: shown with the report and given a fix, but not part of
+  // the score, so existing scans keep their numbers.
+  if (module === 'vibe_coders') {
+    displaySignals.push({
+      label: 'Canonical Points Here',
+      pass: !signals.canonicalPointsElsewhere,
+      detail: signals.canonicalPointsElsewhere
+        ? 'The canonical tag names a different page. Search may treat this page as a copy of that one.'
+        : 'The canonical tag points to this page.',
+    });
+    displaySignals.push({
+      label: 'Form Handling',
+      pass: !signals.hasCustomFormHandler,
+      detail: signals.hasCustomFormHandler
+        ? 'A form posts to your own server. Custom handlers often lack spam and validation protection.'
+        : 'Forms post to a third-party service, or there are no forms.',
+    });
+    if (signals.canonicalPointsElsewhere) {
+      recs.push({
+        issue: 'Canonical tag points to another page',
+        recommendation: 'Point this page\'s canonical tag at this page, unless it is a deliberate copy.',
+        severity: 'medium',
+        pillar: 'AI Readability',
+        nonTechnicalFix: 'In your builder, open this page\'s SEO settings and check the canonical or "preferred URL" field. Set it to this page\'s own address. If you are not sure, ask your AI tool to show the canonical tag and leave it alone.',
+        technicalFix: technicalNote('a canonical tag that points to this page'),
+      });
+    }
+    if (signals.hasCustomFormHandler) {
+      recs.push({
+        issue: 'Contact form uses a custom handler',
+        recommendation: 'Send form submissions through an established form service instead of your own server.',
+        severity: 'medium',
+        pillar: 'Conversion Readiness',
+        nonTechnicalFix: 'Use the form block from your builder, or a form service such as Formspree, Tally or Google Forms, and connect it to the page. Then submit a test message to check it arrives.',
+        technicalFix: 'For your developer: replace the custom form handler with an established form service, keep spam protection on, and test a submission end to end.',
+      });
+    }
+  }
 
   return { signals, displaySignals, extractedText, recommendations: recs, detectedPlatform: platform };
 }
