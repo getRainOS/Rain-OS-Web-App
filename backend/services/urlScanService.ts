@@ -343,18 +343,15 @@ function productSchemaGuide(platform: DetectedPlatform): string {
 }
 
 function localBusinessSchemaGuide(platform: DetectedPlatform): string {
-  switch (platform) {
-    case 'wordpress':
-      return "If you use Yoast SEO or a similar plugin, fill in your Local SEO settings (business name, address, phone, hours) — it generates this schema for you.";
-    case 'wix':
-      return "Fill in your business info under Wix's Business Info settings — Wix's local SEO tools generate structured data from it.";
-    case 'squarespace':
-      return "Add your business info under Squarespace's Business Information settings. For complete LocalBusiness schema you'll likely still need the code fix below.";
-    case 'shopify':
-      return 'Shopify is built around product sales rather than local-business listings — check if your theme has a business info or contact section, otherwise use the code fix below.';
-    default:
-      return 'Check whether your site builder has a "business info" or "local SEO" section — several generate this automatically once filled in.';
-  }
+  // Plain steps for the owner. Takes about 15 minutes, once. Platform-specific
+  // where we know the builder; otherwise the general version.
+  const steps: Record<string, string> = {
+    wordpress: 'In WordPress, install the free Yoast SEO plugin (Plugins → Add New). Open Yoast → Settings → Site representation and fill in your business name, address, phone and logo. Then open Yoast → Local SEO and add your opening hours. About 15 minutes, once.',
+    wix: 'In Wix, open your dashboard and go to Settings → Business Info (or Site Settings → Business Info). Fill in your name, address, phone and hours, and save. Wix builds the details AI reads from this. About 10 minutes, once.',
+    squarespace: 'In Squarespace, go to Settings → Business Information and fill in your name, address, phone and hours. Save, then check your contact page shows the same details. About 10 minutes, once. Ask your developer if you also want the full business markup.',
+    shopify: 'In Shopify, go to Settings → Store details and fill in your business name, address and phone. Check your theme has a contact or business info section. About 15 minutes, once.',
+  };
+  return steps[platform] ?? 'Look for a "business info" or "local SEO" section in your site builder (often under Settings). Fill in your business name, address, phone and opening hours, and save. If you cannot find it, ask your builder\'s support. About 15 minutes, once.';
 }
 
 function articleSchemaGuide(platform: DetectedPlatform): string {
@@ -649,8 +646,8 @@ export async function scanUrlForTechnicalSignals(
       }],
     }, null, 2);
     recs.push({
-      issue: 'Missing LocalBusiness schema markup',
-      recommendation: "Add LocalBusiness schema with your name, address, phone, and hours. This is the most direct way to tell AI assistants you're a real, findable local business when customers ask who's nearby.",
+      issue: "AI can't find your business details on the page",
+      recommendation: "Add your business name, address, phone and opening hours where your site builder keeps business info. This is how AI assistants know you're a real local business when customers ask who's nearby.",
       severity: 'high',
       artifact: {
         type: 'json-ld',
@@ -658,7 +655,7 @@ export async function scanUrlForTechnicalSignals(
         filename: 'local-business-schema.json',
       },
       nonTechnicalFix: localBusinessSchemaGuide(platform),
-      technicalFix: technicalNote('this LocalBusiness schema block'),
+      technicalFix: 'For your developer: add the LocalBusiness block shown here to the page head, and check it against the details on the page.',
     });
   } else if (!signals.hasSchemaMarkup) {
     const jsonLdContent = JSON.stringify({
