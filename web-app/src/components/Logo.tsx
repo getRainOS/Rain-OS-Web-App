@@ -27,7 +27,7 @@ export default function Logo({ size = 24, className = '', label = 'rain', markOn
       role="img"
       aria-label={label}
       className={`rainLogo inline-flex items-center ${className}`}
-      style={{ gap: size * 0.3, height: size, color: 'inherit' }}
+      style={{ gap: size * 0.3, lineHeight: 1, color: 'inherit' }}
     >
       <svg viewBox="0 0 100 100" aria-hidden="true" style={{ height: size, width: size, display: 'block', flexShrink: 0 }}>
         <circle cx="50" cy="50" r="50" fill="#ffffff" />
