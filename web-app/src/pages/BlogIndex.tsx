@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Clock, Calendar, ChevronRight, BookOpen } from 'lucide-react';
@@ -13,6 +13,11 @@ export default function BlogIndex() {
   const sortedPosts = [...BLOG_POSTS].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   const featuredPost = sortedPosts[0];
   const remainingPosts = sortedPosts.slice(1);
+  // 'all' shows every audience; otherwise only that reader's posts.
+  const [audienceFilter, setAudienceFilter] = useState('all');
+  const visibleAudiences = audienceFilter === 'all'
+    ? BLOG_AUDIENCES
+    : BLOG_AUDIENCES.filter(a => a.id === audienceFilter);
 
   return (
     <div style={{ minHeight: '100vh', background: '#000000', color: '#f1f5f9' }}>
@@ -74,7 +79,21 @@ export default function BlogIndex() {
             </div>
             All posts
           </h2>
-          {BLOG_AUDIENCES.map(group => {
+          <div className="mb-8 flex flex-wrap items-center gap-3">
+            <label htmlFor="blog-audience" className="text-sm text-neutral-400">Show posts for</label>
+            <select
+              id="blog-audience"
+              value={audienceFilter}
+              onChange={e => setAudienceFilter(e.target.value)}
+              className="h-9 rounded-md border border-white/10 bg-black px-3 text-sm text-white"
+            >
+              <option value="all">Everyone and all lanes</option>
+              {BLOG_AUDIENCES.map(a => (
+                <option key={a.id} value={a.id}>{a.label.replace(/^For /, '').replace(/^./, c => c.toUpperCase())}</option>
+              ))}
+            </select>
+          </div>
+          {visibleAudiences.map(group => {
             const groupPosts = remainingPosts.filter(p => p.audience === group.id);
             if (groupPosts.length === 0) return null;
             return (
