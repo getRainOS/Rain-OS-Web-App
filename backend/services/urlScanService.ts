@@ -1,6 +1,6 @@
 // services/urlScanService.ts — Cheerio HTML analysis. Zero API cost.
 import * as cheerio from 'cheerio';
-import { checkAllCrawlers, checkCrawlerAccess, type CrawlerAccess, type CrawlerStatus } from './robotsCheck';
+import { checkAllCrawlers, type CrawlerStatus } from './robotsCheck';
 import { safeFetch } from './safeFetch';
 
 export type DetectedPlatform = 'wordpress' | 'shopify' | 'wix' | 'squarespace' | 'custom';
@@ -76,10 +76,6 @@ export interface TechnicalSignals {
   // subcategory breakdown, not the flat Technical Signals list below.
   hasRobotsTxt: boolean;
   aiCrawlerAccess: CrawlerStatus[];
-  // Googlebot is how search results get the page. Blocked here means it can't index it.
-  googlebotAccess: CrawlerAccess;
-  // A sitemap helps search engines find every page. Listed in robots.txt or at /sitemap.xml.
-  hasSitemap: boolean;
   // Discovery
   hasFavicon: boolean;
   hasRssFeed: boolean;
@@ -101,8 +97,6 @@ export interface UrlScanRecommendation {
   issue: string;
   recommendation: string;
   severity: 'low' | 'medium' | 'high';
-  // The scoring pillar this fix moves, so it is shown under that pillar.
-  pillar?: 'AI Readability' | 'Digital Authority' | 'Conversion Readiness' | 'Product Discoverability' | 'RAG Readiness' | 'Local Presence';
   artifact?: {
     type: 'json-ld' | 'llms-txt' | 'robots-txt' | 'html';
     content: string;
@@ -219,20 +213,6 @@ export function formatSignalsForDisplay(s: TechnicalSignals): DisplaySignal[] {
       detail: s.isIndexable
         ? 'Page is not set to noindex — AI crawlers can index it.'
         : 'robots meta is set to noindex — AI crawlers are blocked from this page.',
-    },
-    {
-      label: 'Googlebot Access',
-      pass: s.googlebotAccess !== 'blocked',
-      detail: s.googlebotAccess === 'blocked'
-        ? 'robots.txt blocks Googlebot, so Google cannot index this page.'
-        : 'Googlebot is not blocked by robots.txt.',
-    },
-    {
-      label: 'Sitemap',
-      pass: s.hasSitemap,
-      detail: s.hasSitemap
-        ? 'A sitemap was found, so search engines can find every page.'
-        : 'No sitemap found. Add one, or let your site builder generate it, so search engines can find every page.',
     },
     {
       label: 'Hreflang',
@@ -529,20 +509,6 @@ export async function scanUrlForTechnicalSignals(
   } catch { /* unreachable or timeout — treat as no robots.txt */ }
   signals.hasRobotsTxt = robotsTxtBody !== null;
   signals.aiCrawlerAccess = checkAllCrawlers(robotsTxtBody);
-  signals.googlebotAccess = checkCrawlerAccess(robotsTxtBody || '', 'Googlebot');
-
-  // ─── Sitemap ─────────────────────────────────────────────────────────────
-  // Counted if robots.txt names one, or if /sitemap.xml loads.
-  let hasSitemap = /^\s*sitemap\s*:/im.test(robotsTxtBody || '');
-  if (!hasSitemap) {
-    try {
-      const r = await safeFetch(`${parsedUrl.protocol}//${parsedUrl.host}/sitemap.xml`, {
-        signal: AbortSignal.timeout(5000),
-      });
-      hasSitemap = r.ok;
-    } catch { /* no sitemap */ }
-  }
-  signals.hasSitemap = hasSitemap;
 
   // ─── Images ─────────────────────────────────────────────────────────────────
   const allImgs = $('img');
@@ -711,38 +677,6 @@ export async function scanUrlForTechnicalSignals(
       },
       nonTechnicalFix: metaFieldGuide(platform, 'Meta description'),
       technicalFix: technicalNote('this meta description tag'),
-    });
-  }
-
-  if (signals.googlebotAccess === 'blocked') {
-    recs.push({
-      issue: 'robots.txt blocks Googlebot',
-      recommendation: 'Allow Googlebot in robots.txt so Google can index the page.',
-      severity: 'high',
-      pillar: 'AI Readability',
-      artifact: {
-        type: 'html',
-        content: 'User-agent: Googlebot\nAllow: /',
-        filename: 'robots.txt',
-      },
-      nonTechnicalFix: 'Open your robots.txt (yourdomain.com/robots.txt) and remove any rule that blocks Googlebot. Most site builders have a setting for this under SEO or search visibility.',
-      technicalFix: technicalNote('this Googlebot rule in robots.txt'),
-    });
-  }
-
-  if (!signals.hasSitemap) {
-    recs.push({
-      issue: 'No sitemap found',
-      recommendation: 'Publish a sitemap at /sitemap.xml and list it in robots.txt.',
-      severity: 'low',
-      pillar: 'AI Readability',
-      artifact: {
-        type: 'html',
-        content: 'Sitemap: https://yourdomain.com/sitemap.xml',
-        filename: 'robots.txt',
-      },
-      nonTechnicalFix: 'Most site builders (Shopify, Wix, Squarespace, WordPress) make a sitemap automatically. Check your site settings for "sitemap", and submit it in Google Search Console.',
-      technicalFix: technicalNote('a sitemap at /sitemap.xml and a Sitemap line in robots.txt'),
     });
   }
 
