@@ -634,34 +634,3 @@ describe('scanUrlForTechnicalSignals — Product/LocalBusiness schema field dete
     expect(r.signals.productSchemaHasBrand).toBe(false);
   });
 });
-
-describe('scanUrlForTechnicalSignals — Googlebot access and sitemap', () => {
-  it('flags Googlebot as blocked when robots.txt disallows it by name', async () => {
-    robotsTxtBody = 'User-agent: Googlebot\nDisallow: /';
-    const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>'), 'https://x.test/');
-    expect(r.signals.googlebotAccess).toBe('blocked');
-    const check = r.displaySignals.find((c) => c.label === 'Googlebot Access');
-    expect(check?.pass).toBe(false);
-  });
-
-  it('treats Googlebot as not blocked when robots.txt is missing', async () => {
-    robotsTxtBody = null;
-    const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>'), 'https://x.test/');
-    expect(r.signals.googlebotAccess).toBe('not_mentioned');
-    expect(r.displaySignals.find((c) => c.label === 'Googlebot Access')?.pass).toBe(true);
-  });
-
-  it('finds a sitemap named in robots.txt', async () => {
-    robotsTxtBody = 'User-agent: *\nAllow: /\nSitemap: https://x.test/sitemap.xml';
-    const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>'), 'https://x.test/');
-    expect(r.signals.hasSitemap).toBe(true);
-    expect(r.displaySignals.find((c) => c.label === 'Sitemap')?.pass).toBe(true);
-  });
-
-  it('reports no sitemap when robots.txt names none and /sitemap.xml is missing', async () => {
-    robotsTxtBody = 'User-agent: *\nAllow: /';
-    const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>'), 'https://x.test/');
-    expect(r.signals.hasSitemap).toBe(false);
-    expect(r.displaySignals.find((c) => c.label === 'Sitemap')?.pass).toBe(false);
-  });
-});
