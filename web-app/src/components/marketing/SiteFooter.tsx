@@ -48,7 +48,7 @@ export default function SiteFooter() {
       <div className="max-w-[1440px] mx-auto px-6 pt-16 pb-10">
         <div className="grid grid-cols-2 md:grid-cols-[1.4fr_repeat(4,1fr)] gap-10">
           <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="font-bold text-2xl tracking-tighter text-white" aria-label="rain OS home">
+            <Link to="/" className="block w-fit leading-none text-white" aria-label="rain OS home">
               <Logo size={22} />
             </Link>
             <p className="mt-1.5 text-[13px] text-neutral-500 leading-relaxed max-w-[240px]">
