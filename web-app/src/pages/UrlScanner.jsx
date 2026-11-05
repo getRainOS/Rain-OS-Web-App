@@ -40,11 +40,11 @@ function UrlScannerGithubPushPanel({ result, scannedUrl }) {
 
 const TOP_FIXES = 3;
 
-function RecoItem({ r, i }) {
+function RecoItem({ r, i, hideNonTechnical = false }) {
   const isObj = typeof r === 'object' && r !== null;
   const text = isObj ? (r.recommendation || r.text) : r;
   const artifact = isObj ? r.artifact : null;
-  const nonTechnicalFix = isObj ? r.nonTechnicalFix : null;
+  const nonTechnicalFix = !hideNonTechnical && isObj ? r.nonTechnicalFix : null;
   const technicalFix = isObj ? r.technicalFix : null;
   return (
     <li className={styles.recoItem}>
@@ -506,25 +506,10 @@ export default function UrlScanner() {
           )}
 
           {recommendations.length > 0 && (
-            <div className={`card ${styles.recoCard}`}>
-              <h3 className={styles.sectionTitle}>Recommendations</h3>
-              {result?.detected_platform && result.detected_platform !== 'custom' && (
-                <p style={{ fontSize: 12, color: 'var(--text-dim)', marginTop: -8, marginBottom: 14 }}>
-                  Detected platform: {PLATFORM_DISPLAY_NAME[result.detected_platform] || result.detected_platform} — guidance below is tailored to it where possible.
-                </p>
-              )}
-              <ul className={styles.recoList}>
-                {recommendations.slice(0, TOP_FIXES).map((r, i) => <RecoItem key={i} r={r} i={i} />)}
-              </ul>
-              {recommendations.length > TOP_FIXES && (
-                <details className={styles.moreFixes}>
-                  <summary>{recommendations.length - TOP_FIXES} more fixes</summary>
-                  <ul className={styles.recoList}>
-                    {recommendations.slice(TOP_FIXES).map((r, i) => <RecoItem key={i} r={r} i={i + TOP_FIXES} />)}
-                  </ul>
-                </details>
-              )}
-            </div>
+            <FixViews
+              recommendations={recommendations}
+              detectedPlatform={result?.detected_platform}
+            />
           )}
 
           {recommendations.length > 0 && (
@@ -544,6 +529,64 @@ export default function UrlScanner() {
         </div>
       )}
       <PastAnalyses kind="url" refreshKey={result} />
+    </div>
+  );
+}
+
+// Two views of the same fixes. Owners see the steps they can take themselves,
+// with no code. Anything that needs code goes to a developer, behind its own tab.
+function FixViews({ recommendations, detectedPlatform }) {
+  const [view, setView] = useState('owner');
+  const ownerRecs = recommendations.filter(r => r && r.nonTechnicalFix);
+  const devRecs = recommendations.filter(r => r && (r.technicalFix || r.artifact));
+  const list = view === 'owner' ? ownerRecs : devRecs;
+  const hideNonTechnical = view === 'developer';
+  const tabStyle = active => ({
+    padding: '8px 14px',
+    borderRadius: 999,
+    border: '1px solid var(--border)',
+    background: active ? 'var(--text)' : 'transparent',
+    color: active ? 'var(--bg)' : 'var(--text-muted)',
+    fontSize: 13,
+    cursor: 'pointer',
+  });
+
+  return (
+    <div className={`card ${styles.recoCard}`}>
+      <h3 className={styles.sectionTitle}>Your fixes</h3>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 14 }}>
+        <button type="button" style={tabStyle(view === 'owner')} onClick={() => setView('owner')}>
+          Do it yourself ({ownerRecs.length})
+        </button>
+        <button type="button" style={tabStyle(view === 'developer')} onClick={() => setView('developer')}>
+          For your developer ({devRecs.length})
+        </button>
+      </div>
+      <p style={{ fontSize: 13, color: 'var(--text-dim)', marginTop: -4, marginBottom: 14 }}>
+        {view === 'owner'
+          ? 'These take a few minutes each, in your site builder, and need no code.'
+          : 'These need someone who edits your site\'s code. Send this list to them as it is.'}
+        {view === 'owner' && detectedPlatform && detectedPlatform !== 'custom' && (
+          <> Steps are for {PLATFORM_DISPLAY_NAME[detectedPlatform] || detectedPlatform}.</>
+        )}
+      </p>
+      {list.length === 0 ? (
+        <p style={{ fontSize: 13, color: 'var(--text-dim)' }}>Nothing here for this page.</p>
+      ) : (
+        <>
+          <ul className={styles.recoList}>
+            {list.slice(0, TOP_FIXES).map((r, i) => <RecoItem key={i} r={r} i={i} hideNonTechnical={hideNonTechnical} />)}
+          </ul>
+          {list.length > TOP_FIXES && (
+            <details className={styles.moreFixes}>
+              <summary>{list.length - TOP_FIXES} more fixes</summary>
+              <ul className={styles.recoList}>
+                {list.slice(TOP_FIXES).map((r, i) => <RecoItem key={i} r={r} i={i + TOP_FIXES} hideNonTechnical={hideNonTechnical} />)}
+              </ul>
+            </details>
+          )}
+        </>
+      )}
     </div>
   );
 }
