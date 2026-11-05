@@ -48,6 +48,26 @@ function applyTechnicalAdjustments(base: number, signals: Record<string, any>): 
  */
 // Vibe coder checks, scored only in the vibe_coders lane. A canonical that names
 // another page weakens AI Readability; a custom form handler weakens the overall.
+// What a failed page load means for search and AI, in plain words. A page that
+// returns an error is one Google may stop showing, so the owner needs to know why.
+const SEARCH_CONSOLE_HINT = 'To see how Google views this page, open Google Search Console, go to Pages, and look under "Why pages aren\'t indexed".';
+
+export function fetchFailureMessage(status: number): string {
+  if (status === 401 || status === 403) {
+    return `This page is blocked (HTTP ${status}). Google and AI tools can't read it. This is usually bot protection, a password, or a security setting. Check your hosting or security settings, and allow Googlebot. ${SEARCH_CONSOLE_HINT}`;
+  }
+  if (status === 404) {
+    return `This page wasn't found (HTTP 404). Check the address, or whether the page was moved or deleted. Google drops pages that stay missing. ${SEARCH_CONSOLE_HINT}`;
+  }
+  if (status === 429) {
+    return 'The site is limiting visits (HTTP 429). Try again in a few minutes.';
+  }
+  if (status >= 500) {
+    return `The site had a server error (HTTP ${status}). Google slows down visits to sites that keep erroring. Check your hosting status, then try again. ${SEARCH_CONSOLE_HINT}`;
+  }
+  return `Server returned HTTP ${status}.`;
+}
+
 function vibeAdjustment(signals: Record<string, any>, target: 'overall' | 'aiReadability'): number {
   let adj = 0;
   if (signals.canonicalPointsElsewhere) adj -= target === 'aiReadability' ? 4 : 3;
@@ -112,7 +132,7 @@ export default async function handler(req: express.Request, res: express.Respons
       if (!r.ok) {
         return res.status(422).json({
           error: 'fetch_failed',
-          message: `Server returned HTTP ${r.status}`,
+          message: fetchFailureMessage(r.status),
         } as ApiError);
       }
       rawHtml = await r.text();

@@ -410,3 +410,20 @@ describe('POST /api/url-scan — happy path', () => {
     errSpy.mockRestore();
   });
 });
+
+describe('fetchFailureMessage — plain reasons for a page that fails to load', () => {
+  it('explains a blocked page and points to bot protection and Search Console', async () => {
+    const { fetchFailureMessage } = await import('../api/url-scan');
+    const m = fetchFailureMessage(403);
+    expect(m).toMatch(/blocked \(HTTP 403\)/);
+    expect(m).toMatch(/bot protection/);
+    expect(m).toMatch(/Search Console/);
+  });
+
+  it('gives distinct messages for missing, rate-limited and server-error pages', async () => {
+    const { fetchFailureMessage } = await import('../api/url-scan');
+    expect(fetchFailureMessage(404)).toMatch(/wasn't found/);
+    expect(fetchFailureMessage(429)).toMatch(/limiting visits/);
+    expect(fetchFailureMessage(503)).toMatch(/server error \(HTTP 503\)/);
+  });
+});
