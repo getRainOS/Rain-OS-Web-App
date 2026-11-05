@@ -608,13 +608,13 @@ export default function Home() {
         <section className="relative overflow-hidden">
           <div
             className="pointer-events-none absolute inset-x-0 top-0 h-[960px] z-[1]"
-            style={{ background: 'radial-gradient(60% 50% at 50% 0%, rgba(255,255,255,0.28), transparent 70%)', maskImage: 'linear-gradient(to bottom, #000 35%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, #000 35%, transparent 100%)' }}
+            style={{ background: 'radial-gradient(75% 60% at 50% 0%, rgba(255,255,255,0.16), rgba(255,255,255,0.05) 45%, transparent 75%)', maskImage: 'linear-gradient(to bottom, #000 20%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, #000 20%, transparent 100%)' }}
           />
           {/* One shade brighter after a second on the page, then a slow breath. */}
           <div
             aria-hidden="true"
             className={`pointer-events-none absolute inset-x-0 top-0 h-[960px] z-[1] transition-opacity duration-[1500ms] ease-out hero-glow-live ${glowOn ? 'opacity-100' : 'opacity-0'}`}
-            style={{ background: 'radial-gradient(60% 50% at 50% 0%, rgba(255,255,255,0.2), transparent 70%)', maskImage: 'linear-gradient(to bottom, #000 35%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, #000 35%, transparent 100%)' }}
+            style={{ background: 'radial-gradient(75% 60% at 50% 0%, rgba(255,255,255,0.1), rgba(255,255,255,0.03) 45%, transparent 75%)', maskImage: 'linear-gradient(to bottom, #000 20%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, #000 20%, transparent 100%)' }}
           />
           <div className="relative z-10 max-w-[1440px] mx-auto px-6 pt-32 md:pt-36 pb-16 flex flex-col items-center gap-16">
             <motion.div className="text-center max-w-4xl mx-auto" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
