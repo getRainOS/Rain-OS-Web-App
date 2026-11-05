@@ -500,6 +500,358 @@ You will not walk away a senior engineer. That's not the goal. The goal is closi
 
 rain OS was built the same way — vibe coded, then understood, in that order, on purpose. If you're building something you're not sure you fully understand yet, that's not a reason to stop. It's a reason to start listening.`
   },
+  {
+    slug: 'write-readme-for-ai-to-explain',
+    audience: 'developers',
+    title: "Write a README that AI explains correctly",
+    subtitle: "When someone asks an AI what your project does, the answer comes from your README. Here is how to make sure it is right.",
+    date: '2026-10-05',
+    readTime: '2 min read',
+    category: "Developer docs",
+    image: '',
+    author: 'rain OS Team',
+    authorRole: 'Founders',
+    body: `When a developer asks an AI assistant what your library does, how to install it, or whether it fits their stack, the answer is assembled from the text it can find. For most open source projects, the main source is the README.
+
+A README that reads well to a person can still confuse an AI. Long introductions, vague taglines and a feature list with no context give the model little to work with.
+
+**Lead with one plain sentence**
+
+Say what the project is, who it is for, and what problem it solves, in the first sentence. "A small router for Cloudflare Workers that gives you typed routes and middleware in about 14 KB" is something an AI can repeat accurately. "The next-generation developer experience platform" is not.
+
+**State the requirements and the install command**
+
+List the runtime versions, the platforms and the install command in plain text, not only in an image or a GIF. AI tools copy these exactly, so the text needs to be correct.
+
+**Show one complete example**
+
+Include one short example that runs as written, with its output. Assistants often reuse examples, so an example that is out of date will be repeated.
+
+**Say what it is not**
+
+A line such as "This is not a database or a full framework" helps an AI avoid recommending your project for the wrong job.
+
+**Keep it current**
+
+When a version changes, update the install command, the example and the requirements in the same commit. Stale details are the ones an assistant will repeat with confidence.
+
+Run the check yourself: ask an AI tool what your project does and whether it fits a given task. If the answer is wrong, the fix is usually in the first paragraph.`,
+  },
+  {
+    slug: 'api-docs-readable-to-ai',
+    audience: 'developers',
+    title: "Make your API docs readable to AI tools",
+    subtitle: "Assistants answer \"how do I call this endpoint\" from your reference pages. Structure the page so the answer is exact.",
+    date: '2026-10-08',
+    readTime: '2 min read',
+    category: "Developer docs",
+    image: '',
+    author: 'rain OS Team',
+    authorRole: 'Founders',
+    body: `Developers now ask an AI to write the request for them. If your API reference is hard to parse, the assistant guesses at parameters, types and error codes, and the guess ends up in production code.
+
+**One endpoint per heading**
+
+Give each endpoint its own heading that includes the method and path, such as "POST /v1/orders". Assistants match on headings, so a clear one makes the right section easy to find.
+
+**Parameters as a table**
+
+Put each parameter in a table with its name, type, whether it is required, and what it does. A table is easy for a model to read exactly. A paragraph that mentions five parameters is easy to misread.
+
+**A real request and response**
+
+Show one complete request with headers and body, and the response that comes back. Use the actual field names. Placeholders like "your_value_here" are copied as they are.
+
+**Errors with their codes**
+
+List every error code with the status it returns and what to do about it. "Returns 429 when you exceed 100 requests per minute, retry after the Retry-After header" is far more useful than "rate limits apply".
+
+**Versions and changes**
+
+State which version the page describes, and keep a short changelog. An assistant that reads an old page will otherwise recommend a parameter that was removed.
+
+Test it: paste your reference page into an assistant and ask it to write a call to one endpoint. Check the code it gives you against the page. Every mismatch is a line in your docs that needs to be clearer.`,
+  },
+  {
+    slug: 'error-messages-ai-can-find',
+    audience: 'developers',
+    title: "Put your error messages where AI can find them",
+    subtitle: "When a developer pastes an error into an AI tool, the fix depends on whether your docs explain that exact message.",
+    date: '2026-10-12',
+    readTime: '2 min read',
+    category: "Developer docs",
+    image: '',
+    author: 'rain OS Team',
+    authorRole: 'Founders',
+    body: `A common support path now starts with an error message pasted into an assistant. If your docs do not contain that message, the assistant has to guess what it means, and it often guesses wrong.
+
+**Document the exact text**
+
+Copy the error message as your library prints it, including the code and the surrounding words. Paraphrases are not found by a search on the exact text a developer pastes.
+
+**Explain the cause and the fix**
+
+For each error, write two or three sentences: what causes it, and the change that fixes it. Keep the fix to something a developer can copy.
+
+**Give each error a stable code**
+
+Codes such as "ERR_INVALID_TOKEN" stay the same across versions, so a link to the error stays useful. Messages change wording more often than codes do.
+
+**Link the error from the reference**
+
+Put a link from each endpoint or function that can raise the error to its entry. Assistants follow links, and a reference that points to the error makes the connection explicit.
+
+**Keep one page for all errors**
+
+A single errors page, with a clear heading for each code, is easy to search and easy for an assistant to read in full.
+
+Check it: take one error from your logs, paste it into an assistant, and see whether the answer matches your docs. If it doesn't, add the message and the fix to the errors page.`,
+  },
+  {
+    slug: 'llms-txt-for-your-docs',
+    audience: 'developers',
+    title: "Give AI tools a short map of your docs",
+    subtitle: "A plain text file that lists your most important pages can help assistants find the right reference, if you keep it accurate.",
+    date: '2026-10-15',
+    readTime: '2 min read',
+    category: "Developer docs",
+    image: '',
+    author: 'rain OS Team',
+    authorRole: 'Founders',
+    body: `Some AI tools can read a short index file that points to a project's most important pages. The convention is proposed rather than standard, so it is a supplement, not a replacement, for good docs. It is cheap to add, and it helps most when your docs are large.
+
+**What goes in it**
+
+A title, a one-line summary of the project, and a short list of links to the pages a developer needs most: getting started, the main reference, the errors page and the changelog. Each link should have a one-line description.
+
+**Keep it short**
+
+Ten to twenty links is enough. A file that lists every page is no help to an assistant, which has to read it first.
+
+**Use plain text, and real URLs**
+
+Write it as plain text in a file at the root of your site. Use full, working URLs. A link that redirects or returns an error is worse than no link.
+
+**Update it with the docs**
+
+When you add or remove a major page, update the file in the same change. A stale index sends an assistant to pages that no longer exist.
+
+**Still write the docs well**
+
+The index tells an assistant where to look. The pages still have to answer the question. Start with the README, the reference and the errors page, and add the index once those are clear.
+
+Check it: open the file in a browser and follow every link. If one is broken, fix it before you publish.`,
+  },
+  {
+    slug: 'code-examples-ai-can-copy',
+    audience: 'developers',
+    title: "Write code examples an AI can copy correctly",
+    subtitle: "Assistants reuse the examples in your docs almost word for word. A broken example becomes broken code in a hundred projects.",
+    date: '2026-10-19',
+    readTime: '2 min read',
+    category: "Developer docs",
+    image: '',
+    author: 'rain OS Team',
+    authorRole: 'Founders',
+    body: `Most developers who use an AI tool for code start from an example. If the example in your docs is incomplete, outdated or only works with a setup it does not mention, the assistant will reproduce that problem with confidence.
+
+**Make it run as written**
+
+Every example should run from a clean install, with the imports and setup it needs. Test each one before you publish, and again after each release.
+
+**Show the output**
+
+Put the expected output directly under the code. It gives an assistant something to check its own answer against, and it tells the developer what success looks like.
+
+**Name the version**
+
+If the example depends on a version, say so next to it, such as "requires v3 or later". Otherwise an assistant will mix the new syntax with an old version.
+
+**One task per example**
+
+Short examples that do one thing are easier to copy and adapt than a long one that does five things at once.
+
+**Avoid hidden setup**
+
+If the example needs an environment variable, a config file or an account, list it before the code. A setup step left out of the text is the first thing an assistant will miss.
+
+Check it: ask an assistant to adapt your example to a small change. Run what it returns. If it fails, the failure usually points to a missing line in your docs.`,
+  },
+  {
+    slug: 'what-shopping-ai-needs-from-product-page',
+    audience: 'sellers',
+    title: "What shopping AI needs from a product page",
+    subtitle: "When a shopper asks an AI for a product, the answer comes from facts on your page. Here are the facts that matter most.",
+    date: '2026-10-06',
+    readTime: '2 min read',
+    category: "Online sellers",
+    image: '',
+    author: 'rain OS Team',
+    authorRole: 'Founders',
+    body: `A shopper who asks an AI "best waterproof travel wallet under $80" gets a short list, often with a price and a reason. The assistant only recommends products whose facts it can read and compare. A product page that says "premium quality" and "perfect for any journey" gives it nothing to work with.
+
+**The product name and model**
+
+State the exact name and model number in the title and the first lines of the page. Shoppers search with these, and assistants match on them.
+
+**The price, with its currency**
+
+Show the price as a number with its currency, and the sale price with what it is compared against. "$69, was $85" is a fact. "Great value" is not.
+
+**Availability**
+
+Say whether the product is in stock, and how many are left if you know. "In stock, ships in 2 business days" can be quoted. "Available soon" cannot.
+
+**Specifications with units**
+
+Give the materials, dimensions, weight and capacity with their units. "Fits a 14-inch laptop, 320 g" is specific. "Lightweight and spacious" is not.
+
+**Who it is for**
+
+Write one plain sentence on who the product suits and the use it fits, such as "best for hot yoga and travel." Assistants use this to match a product to a question.
+
+Check it: ask an assistant to recommend a product in your category, then look at what it says about yours. If it has none of these facts, the page is missing them.`,
+  },
+  {
+    slug: 'exact-prices-beat-adjectives',
+    audience: 'sellers',
+    title: "Why exact prices beat adjectives",
+    subtitle: "Shopping assistants compare numbers. A price written as a number is in the comparison. A price written as \"contact us\" is not.",
+    date: '2026-10-09',
+    readTime: '2 min read',
+    category: "Online sellers",
+    image: '',
+    author: 'rain OS Team',
+    authorRole: 'Founders',
+    body: `When an assistant compares products, it needs numbers it can line up. Price, size, weight and capacity are the usual comparison points. If your page hides them behind a form or writes them as words, your product drops out of the comparison.
+
+**Write the price as a number**
+
+Use "$69" rather than "from $69 to $89" wherever the price is fixed. If the price varies by option, list each option with its own price on the page.
+
+**Do not hide the price behind a request**
+
+"Request a quote" or "call for pricing" tells a shopper nothing and tells an assistant nothing it can compare. If a price really varies, give the range and what changes it.
+
+**Show the comparison you are making**
+
+If your product is on sale, say what it is compared against, such as "was $85". This is a fact a shopper can check.
+
+**Keep the numbers the same everywhere**
+
+The price on your product page, your listing and your feed should match. Assistants that see two different prices will often leave the product out.
+
+**Describe the value in numbers**
+
+Instead of "great value," write what it does for the price: "10 years of warranty for $69." A number and a term are a fact. The adjective is an opinion.
+
+Check it: find your price on three pages of your site and on your marketplace listing. If the numbers differ, fix them first.`,
+  },
+  {
+    slug: 'sku-gtin-mpn-why-they-matter',
+    audience: 'sellers',
+    title: "SKU, GTIN and MPN: the identifiers that help AI find you",
+    subtitle: "A shopper may search by a barcode number or a model number. If your page does not state them, the search cannot match you.",
+    date: '2026-10-13',
+    readTime: '2 min read',
+    category: "Online sellers",
+    image: '',
+    author: 'rain OS Team',
+    authorRole: 'Founders',
+    body: `Product identifiers are the codes that tell one product from another. There are three you will meet most often. A SKU is your own internal code. A GTIN is the barcode number, such as a UPC or EAN. An MPN is the manufacturer's part number.
+
+**Why shoppers use them**
+
+A shopper who copies a barcode into a search, or a buyer who needs an exact replacement part, is looking for one specific product. An identifier on your page is a direct match.
+
+**Put them in plain text**
+
+Write the GTIN and MPN on the product page as text, near the title, rather than only in an image or a file. Assistants read text, not photos of barcodes.
+
+**Use the right code for each product**
+
+Use the barcode that is printed on the product. If you do not have a GTIN, say so, rather than making one up. An invented number is a fact that is wrong.
+
+**Keep the identifiers consistent**
+
+The same GTIN should appear on every variant page and listing for that product. Different numbers on different pages make the product look like several products.
+
+**Include the variant**
+
+If a product comes in several colours or sizes, each variant can have its own identifier. List them with the variant name, so a search for one size finds that size.
+
+Check it: pick one product, search for its barcode number in a search engine, and see whether your page appears. If it does not, check that the number is written as text on the page.`,
+  },
+  {
+    slug: 'shipping-returns-warranty-say-it-plainly',
+    audience: 'sellers',
+    title: "Shipping, returns and warranty: say them plainly",
+    subtitle: "These are the questions shoppers ask an assistant before they buy. If your page answers them in plain words, the assistant can answer too.",
+    date: '2026-10-16',
+    readTime: '2 min read',
+    category: "Online sellers",
+    image: '',
+    author: 'rain OS Team',
+    authorRole: 'Founders',
+    body: `Before buying, shoppers want to know how long delivery takes, what it costs, whether they can return the item and whether it is covered if it breaks. These answers decide many purchases. They are also the facts an assistant is most likely to be asked about.
+
+**Shipping time and cost**
+
+Give the delivery time in days, the cost in dollars, and any threshold for free shipping. "Free shipping on orders over $50, arrives in 3 to 5 business days" can be quoted in full.
+
+**Returns**
+
+State the return window in days, who pays for the return, and any conditions. "30-day returns, return shipping is free, item must be unused" covers the questions a shopper asks.
+
+**Warranty**
+
+Say how long the warranty lasts, what it covers and how to claim. "2-year warranty against manufacturing defects, contact us with your order number" is specific.
+
+**Where to put them**
+
+Put shipping, returns and warranty on the product page, not only in a policies page. Assistants often read the product page first.
+
+**Keep them in one place**
+
+Use the same wording everywhere the policy appears. A shipping time that differs between your checkout and your listing undermines both.
+
+Check it: ask an assistant "how long does shipping take from [your store] and can I return it?" If the answer is wrong or missing, the policy is not clear enough on the page.`,
+  },
+  {
+    slug: 'reviews-ai-can-quote',
+    audience: 'sellers',
+    title: "Reviews AI can quote: how to show them",
+    subtitle: "Shoppers trust reviews, and assistants quote them. A rating with no count, or reviews hidden in a widget, gives them little to use.",
+    date: '2026-10-20',
+    readTime: '2 min read',
+    category: "Online sellers",
+    image: '',
+    author: 'rain OS Team',
+    authorRole: 'Founders',
+    body: `Reviews are one of the strongest signals a shopper uses, and an assistant that recommends a product often mentions what buyers said. If your reviews are in a script that loads late, or only show an average star rating, the assistant has very little to repeat.
+
+**Show the rating and the count**
+
+"4.6 stars from 218 reviews" is a fact. "Highly rated" is a claim with no number behind it. Show both the average and how many reviews it is based on.
+
+**Put a few reviews in the page text**
+
+Include a handful of recent reviews directly in the product page, with the reviewer's first name, the date and the rating. Keep them as text, not an image.
+
+**Show a range, not only the best**
+
+Include some critical reviews as well as the good ones. A page with only five-star reviews looks like a page that is hiding something, to a shopper and to an assistant.
+
+**Quote what buyers say about use**
+
+Reviews that say "held up on a 3-day hike in the rain" give an assistant a specific use to match. Choose reviews that describe the product in use.
+
+**Do not write reviews yourself**
+
+Fake or invented reviews are against the rules of most platforms, and they are easy to spot. Collect real reviews, and ask buyers for them after delivery.
+
+Check it: look at your product page with scripts turned off. If the reviews disappear, they are not reliably visible to shoppers' assistants either.`,
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
