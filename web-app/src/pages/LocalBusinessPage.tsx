@@ -384,15 +384,11 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
             <p className="text-neutral-400 max-w-2xl mx-auto">A good score doesn't last if the site goes offline, gets blocked from search, or gets hacked. These checks are worth doing once and again after big changes.</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
                 title: 'Pick the right setup',
-                body: 'A site builder like Squarespace, Wix or WordPress handles sitemaps, redirects and updates for you. Use it for anything you update often, such as your services, prices and hours.',
-              },
-              {
-                title: 'Put your words on the page',
-                body: 'Your services, prices, hours and reviews should be visible as soon as the page opens. If a builder adds them with a script that loads later, AI tools may not see them. Ask your builder whether the text is on the page itself.',
+                body: 'A site builder like Squarespace, Wix or WordPress handles sitemaps, redirects and updates for you. A custom-built site means you maintain those yourself. If you publish new pages often, use a builder for that part.',
               },
               {
                 title: 'Stay reachable',
@@ -400,24 +396,20 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
               },
               {
                 title: 'Protect the site',
-                body: 'Use an established form service for your contact form instead of a custom one. Keep your builder and its apps updated, and watch Google Search Console for security warnings. If a developer maintains your site, ask them to turn on dependency alerts.',
-              },
-              {
-                title: 'Check after every change',
-                body: 'Updates to your builder can change page settings, such as your web address or search settings. After any change, open your key pages and check the title, the address and that the page loads.',
-              },
-              {
-                title: 'Save your settings for your AI tool',
-                body: 'If you use an AI tool to edit your site, write down your important search settings, such as redirects and the preferred address of each page, and why they exist. Tell the tool not to change them without asking you first.',
+                body: 'Use an established form service instead of a custom form. Keep your platform and plugins updated, and watch Google Search Console for security warnings. If your code is on GitHub, turn on Dependabot alerts.',
               },
             ].map((card, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
                 className="rounded-2xl p-7 border border-white/10 bg-white/[0.03]">
                 <h3 className="text-lg font-bold text-white mb-3">{card.title}</h3>
                 <p className="text-neutral-400 text-sm leading-relaxed">{card.body}</p>
               </motion.div>
             ))}
           </div>
+
+          <p className="mt-10 text-center text-neutral-400 text-sm max-w-2xl mx-auto leading-relaxed">
+            If you use an AI tool to edit your site, save your important SEO settings, such as canonical tags and redirects, and why they exist, in the tool's instructions. Then ask it not to change them without asking you first.
+          </p>
         </div>
       </section>
 
