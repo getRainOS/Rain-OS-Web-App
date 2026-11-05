@@ -46,6 +46,15 @@ function applyTechnicalAdjustments(base: number, signals: Record<string, any>): 
  * style: being blocked or missing the file costs points; being allowed or
  * simply not mentioned (robots.txt's opt-out default) is neutral, not a bonus.
  */
+// Vibe coder checks, scored only in the vibe_coders lane. A canonical that names
+// another page weakens AI Readability; a custom form handler weakens the overall.
+function vibeAdjustment(signals: Record<string, any>, target: 'overall' | 'aiReadability'): number {
+  let adj = 0;
+  if (signals.canonicalPointsElsewhere) adj -= target === 'aiReadability' ? 4 : 3;
+  if (signals.hasCustomFormHandler && target === 'overall') adj -= 2;
+  return adj;
+}
+
 function applyAiReadabilityAdjustment(base: number, signals: Record<string, any>): number {
   let adj = 0;
   if (!signals.hasRobotsTxt) adj -= 2;
@@ -133,11 +142,14 @@ export default async function handler(req: express.Request, res: express.Respons
     const gemini = await analyzeContent(scan.extractedText, industry || 'General / Other', analysisModule);
 
     // ─── Adjust score with technical signals ─────────────────────────────────
-    const adjustedScore = applyTechnicalAdjustments(gemini.overallScore, scan.signals);
+    const vibe = analysisModule === 'vibe_coders';
+    const adjustedScore = Math.max(0, Math.min(100, applyTechnicalAdjustments(gemini.overallScore, scan.signals)
+      + (vibe ? vibeAdjustment(scan.signals, 'overall') : 0)));
     const adjustedPillarScores = gemini.pillarScores
       ? {
           ...gemini.pillarScores,
-          aiReadability: applyAiReadabilityAdjustment(gemini.pillarScores.aiReadability, scan.signals),
+          aiReadability: Math.max(0, Math.min(100, applyAiReadabilityAdjustment(gemini.pillarScores.aiReadability, scan.signals)
+            + (vibe ? vibeAdjustment(scan.signals, 'aiReadability') : 0))),
         }
       : gemini.pillarScores;
 
