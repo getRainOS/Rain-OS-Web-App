@@ -385,7 +385,7 @@ describe('scanUrlForTechnicalSignals — recommendations', () => {
 
   it('recommends LocalBusiness schema (not Article) for local_business missing it', async () => {
     const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>'), 'https://x.test/', 'local_business');
-    const lbRec = r.recommendations.find((x) => x.issue === 'Missing LocalBusiness schema markup');
+    const lbRec = r.recommendations.find((x) => x.issue === "AI can't find your business details on the page");
     expect(lbRec).toBeDefined();
     expect(lbRec!.artifact?.content).toContain('"@type": "LocalBusiness"');
     expect(lbRec!.artifact?.content).toContain('"telephone"');
@@ -534,7 +534,7 @@ describe('scanUrlForTechnicalSignals — two-part remediation guidance', () => {
   it('gives local_business Wix-specific non-technical guidance for missing LocalBusiness schema', async () => {
     const html = wrap('<p>x</p>', '<link rel="stylesheet" href="https://static.wixstatic.com/site.css" />');
     const r = await scanUrlForTechnicalSignals(html, 'https://x.test/', 'local_business');
-    const rec = r.recommendations.find((x) => x.issue === 'Missing LocalBusiness schema markup');
+    const rec = r.recommendations.find((x) => x.issue === "AI can't find your business details on the page");
     expect(rec?.nonTechnicalFix).toMatch(/Wix/);
   });
 
