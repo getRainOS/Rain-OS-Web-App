@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Clock, Calendar, ChevronRight, BookOpen } from 'lucide-react';
-import { BLOG_POSTS, BlogPost } from '../data/blogPosts';
+import { BLOG_POSTS, BLOG_AUDIENCES, BlogPost } from '../data/blogPosts';
 import MarketingNav from '@/components/marketing/MarketingNav';
 
 import SiteFooter from '@/components/marketing/SiteFooter';
@@ -74,19 +74,31 @@ export default function BlogIndex() {
             </div>
             All posts
           </h2>
-          <div className="space-y-4">
-            {remainingPosts.map((post, i) => (
-              <motion.div
-                key={post.slug}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
-              >
-                <PostRow post={post} onClick={() => navigate(`/blog/${post.slug}`)} />
-              </motion.div>
-            ))}
-          </div>
+          {BLOG_AUDIENCES.map(group => {
+            const groupPosts = remainingPosts.filter(p => p.audience === group.id);
+            if (groupPosts.length === 0) return null;
+            return (
+              <div key={group.id} className="mb-10">
+                <div className="mb-4">
+                  <h3 className="text-base font-semibold text-white">{group.label}</h3>
+                  <p className="text-sm text-neutral-500">{group.blurb}</p>
+                </div>
+                <div className="space-y-4">
+                  {groupPosts.map((post, i) => (
+                    <motion.div
+                      key={post.slug}
+                      initial={{ opacity: 0, y: 12 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: i * 0.1 }}
+                    >
+                      <PostRow post={post} onClick={() => navigate(`/blog/${post.slug}`)} />
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </motion.div>
       </div>
       <SiteFooter />
