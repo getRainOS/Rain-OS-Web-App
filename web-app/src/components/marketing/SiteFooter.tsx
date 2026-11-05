@@ -52,7 +52,7 @@ export default function SiteFooter() {
               <Logo size={22} />
             </Link>
             <p className="mt-0 text-[13px] text-neutral-500 leading-snug max-w-[240px]">
-              Be seen.
+              Be <span className="text-white">seen.</span>
             </p>
           </div>
           {COLUMNS.map(col => (
