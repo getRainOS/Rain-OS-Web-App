@@ -572,6 +572,11 @@ function FixViews({ recommendations, detectedPlatform }) {
           <> Steps are for {PLATFORM_DISPLAY_NAME[detectedPlatform] || detectedPlatform}.</>
         )}
       </p>
+      {view === 'owner' && (
+        <p style={{ fontSize: 13, color: 'var(--text-dim)', marginTop: 0, marginBottom: 14 }}>
+          To see how Google views your pages, open Google Search Console, go to Pages, and check "Why pages aren't indexed". Pages listed there as blocked (403), not found (404) or server error (5xx) are not showing in search.
+        </p>
+      )}
       {list.length === 0 ? (
         <p style={{ fontSize: 13, color: 'var(--text-dim)' }}>Nothing here for this page.</p>
       ) : (
