@@ -1,5 +1,18 @@
+// The reader each post is written for. The blog index groups posts by these.
+export type BlogAudience = 'local_business' | 'sellers' | 'vibe_coders' | 'developers' | 'writers' | 'everyone';
+
+export const BLOG_AUDIENCES: { id: BlogAudience; label: string; blurb: string }[] = [
+  { id: 'local_business', label: 'For local businesses', blurb: 'Getting found when customers ask AI who is nearby.' },
+  { id: 'sellers', label: 'For online sellers', blurb: 'Getting products recommended when shoppers ask AI.' },
+  { id: 'vibe_coders', label: 'For vibe coders', blurb: 'Shipping an AI-built site that AI and search can read.' },
+  { id: 'developers', label: 'For developers', blurb: 'Docs and code that AI explains correctly.' },
+  { id: 'writers', label: 'For writers and marketers', blurb: 'Content that gets cited, not just read.' },
+  { id: 'everyone', label: 'For everyone', blurb: 'How AI search works and why it matters.' },
+];
+
 export interface BlogPost {
   slug: string;
+  audience: BlogAudience;
   title: string;
   subtitle: string;
   date: string;
@@ -14,6 +27,7 @@ export interface BlogPost {
 export const BLOG_POSTS: BlogPost[] = [
   {
     slug: 'what-is-google-search-grounding',
+    audience: 'everyone',
     title: 'What Is Google Search Grounding? (And Why rain OS Is Built Around It)',
     subtitle: 'Grounding is how Gemini checks live Google Search before it answers. Here is what that means for anyone trying to be found.',
     date: '2026-09-19',
@@ -52,6 +66,7 @@ Run your most important page through the Content Optimizer, then use Is AI Citin
   },
   {
     slug: 'ai-readability-for-everyone',
+    audience: 'everyone',
     title: 'Why AI Readability Matters for Everyone',
     subtitle: 'The internet was built to democratize information. AI search is the next frontier — and it should work for all voices, not just the loud ones.',
     date: '2026-05-10',
@@ -76,6 +91,7 @@ The internet was supposed to level the playing field. AI search can do the same 
   },
   {
     slug: 'technology-is-for-all-people',
+    audience: 'everyone',
     title: 'Technology Is for All People',
     subtitle: 'The best tools do not serve the few who can afford them. They serve the many who need them.',
     date: '2026-05-06',
@@ -102,6 +118,7 @@ If you are a developer, a writer, a shop owner, or a nonprofit organizer — thi
   },
   {
     slug: 'what-is-answer-engine-optimization',
+    audience: 'everyone',
     title: 'What Is Answer Engine Optimization?',
     subtitle: 'AEO is how you make sure AI systems like ChatGPT and Perplexity cite your content when people ask questions.',
     date: '2026-04-28',
@@ -133,6 +150,7 @@ If you want to be the answer, you need to optimize for the engine that delivers 
   },
   {
     slug: 'local-businesses-ai-search',
+    audience: 'local_business',
     title: 'How Local Businesses Can Get Found by AI',
     subtitle: 'AI search is replacing "near me" queries. Here is how your local business stays visible when customers ask ChatGPT for recommendations.',
     date: '2026-04-20',
@@ -169,6 +187,7 @@ The businesses that adapt to AI search now will own local discovery for the next
   },
   {
     slug: 'future-of-search-is-conversational',
+    audience: 'everyone',
     title: 'The Future of Search Is Conversational',
     subtitle: 'From ten blue links to direct answers: what the shift means for every business, creator, and publisher on the web.',
     date: '2026-04-12',
@@ -204,6 +223,7 @@ The shift to conversational search is not coming. It is here. rain OS helps you 
   },
   {
     slug: 'translation-vs-interpretation',
+    audience: 'writers',
     title: 'Translation vs. Interpretation: Why Your Content Needs Both to Survive the AI Era',
     subtitle: 'Understanding the difference between translation and interpretation is the key to understanding what rain OS does, why it works, and why optimizing for AI readability is not optional.',
     date: '2026-05-28',
@@ -328,6 +348,7 @@ rain OS makes sure your translation is ready.`
   },
   {
     slug: 'the-vibe-coding-trap',
+    audience: 'vibe_coders',
     title: 'The Vibe Coding Trap: Why Building Is Easy and Launching Is the New Moat',
     subtitle: 'Vibe coding did not democratize software. It democratized the feeling of having built software. That distinction is about to matter enormously.',
     date: '2026-06-25',
@@ -404,6 +425,7 @@ Build the business.`
   },
   {
     slug: 'coding-above-your-weight-class',
+    audience: 'vibe_coders',
     title: 'Coding Above Your Weight Class',
     subtitle: 'Vibe coding will let you step into the ring with an opponent you cannot see. Here is how to know your weight class — and how to grow into the one you are punching above.',
     date: '2026-07-02',
