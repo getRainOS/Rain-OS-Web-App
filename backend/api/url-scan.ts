@@ -37,10 +37,6 @@ function applyTechnicalAdjustments(base: number, signals: Record<string, any>): 
   if (signals.missingAltTextRatio > 0.5) adj -= 3;
   if (!signals.hasDescriptiveAnchors) adj -= 1;
   if (!signals.isWordCountSufficient) adj -= 2;
-  // Googlebot blocked means the page cannot be indexed at all; no sitemap makes
-  // pages harder to find. Same weights as the AI Readability adjustment below.
-  if (signals.googlebotAccess === 'blocked') adj -= 5;
-  if (signals.hasSitemap === false) adj -= 2;
   return Math.max(0, Math.min(100, Math.round(base + adj)));
 }
 
@@ -57,9 +53,6 @@ function applyAiReadabilityAdjustment(base: number, signals: Record<string, any>
     ? signals.aiCrawlerAccess.filter((c: { access: string }) => c.access === 'blocked').length
     : 0;
   adj -= blocked * 3;
-  // Googlebot and sitemap sit in AI Readability with the robots.txt checks.
-  if (signals.googlebotAccess === 'blocked') adj -= 5;
-  if (signals.hasSitemap === false) adj -= 2;
   return Math.max(0, Math.min(100, Math.round(base + adj)));
 }
 
