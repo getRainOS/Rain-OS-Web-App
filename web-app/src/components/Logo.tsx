@@ -14,10 +14,10 @@ export default function Logo({ size = 24, className = '', label = 'rain', markOn
     return (
       <svg role="img" aria-label={label} viewBox="0 0 100 100" className={className} style={{ height: size, width: size, display: 'block', margin: '0 auto' }}>
         <circle cx="50" cy="50" r="50" fill="#ffffff" />
-        <g stroke="#000" strokeWidth="6" strokeLinecap="round">
-          <line x1="34" y1="26" x2="34" y2="50" />
-          <line x1="50" y1="38" x2="50" y2="80" />
-          <line x1="66" y1="16" x2="66" y2="40" />
+        <g stroke="#000" strokeWidth="11" strokeLinecap="round">
+          <line x1="31" y1="25" x2="31" y2="52" />
+          <line x1="50" y1="36" x2="50" y2="78" />
+          <line x1="69" y1="14" x2="69" y2="42" />
         </g>
       </svg>
     );
@@ -31,10 +31,10 @@ export default function Logo({ size = 24, className = '', label = 'rain', markOn
     >
       <svg viewBox="0 0 100 100" aria-hidden="true" style={{ height: size, width: size, display: 'block', flexShrink: 0 }}>
         <circle cx="50" cy="50" r="50" fill="#ffffff" />
-        <g stroke="#000" strokeWidth="6" strokeLinecap="round">
-          <line x1="34" y1="26" x2="34" y2="50" />
-          <line x1="50" y1="38" x2="50" y2="80" />
-          <line x1="66" y1="16" x2="66" y2="40" />
+        <g stroke="#000" strokeWidth="11" strokeLinecap="round">
+          <line x1="31" y1="25" x2="31" y2="52" />
+          <line x1="50" y1="36" x2="50" y2="78" />
+          <line x1="69" y1="14" x2="69" y2="42" />
         </g>
       </svg>
       <span
