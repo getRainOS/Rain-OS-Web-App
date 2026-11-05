@@ -441,6 +441,70 @@ export default function VibeCoders() {
           </div>
         </section>
 
+        {/* Before you ship */}
+        <section className="py-24 px-6 border-t border-white/10">
+          <div className="max-w-5xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-14"
+            >
+              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Before you ship</span>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Six things AI-built sites get wrong</h2>
+              <p className="text-neutral-400 max-w-xl mx-auto leading-relaxed">
+                Fast builds skip the parts search and AI tools rely on. These checks are worth running before launch and again after big changes.
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[
+                {
+                  title: 'Decide if you need a CMS first',
+                  body: 'AI can build a custom blog or any section you update often, but it only includes what you ask for. An established CMS handles sitemaps, redirects and drafts for you. Use one for content that changes.',
+                },
+                {
+                  title: 'Keep important content in the initial HTML',
+                  body: 'If your reviews, product copy or FAQs appear only after JavaScript runs, crawlers may see an empty page. Ask the AI to render that content in the initial HTML, then check View Page Source (not Inspect).',
+                },
+                {
+                  title: 'Protect SEO elements from AI edits',
+                  body: 'AI tools often change more than you asked. A canonical tag on a promo page can be rewritten to point at itself. Save your canonicals, redirects and their reasons in your project instructions, and tell the AI not to change them without asking.',
+                },
+                {
+                  title: 'Give the AI the business details schema needs',
+                  body: 'AI writes valid schema, but it guesses context: whether a solo practitioner is a Person or an Organization, which LocalBusiness subtype fits, and which profiles belong in sameAs. Decide those yourself, then check the output against the real page.',
+                },
+                {
+                  title: 'Check your platform after every change',
+                  body: 'Improvements for new projects do not always apply to existing ones. When a platform moves a project to a new setup, your pages change, including the HTML crawlers receive. Test everything before you republish.',
+                },
+                {
+                  title: 'Make sure Googlebot can reach you',
+                  body: 'Hosting, databases and bot protection can block crawlers. A free database plan may pause after inactivity, and bot rules can treat Googlebot like any other bot. Check robots.txt, your sitemap and the Page Indexing report in Search Console.',
+                },
+              ].map((card, i) => (
+                <motion.div
+                  key={card.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.05 }}
+                  className="rounded-2xl p-7 border border-white/10 bg-white/[0.03]"
+                >
+                  <h3 className="text-lg font-bold text-white mb-3">{card.title}</h3>
+                  <p className="text-neutral-400 text-sm leading-relaxed">{card.body}</p>
+                </motion.div>
+              ))}
+            </div>
+
+            <p className="mt-10 text-center text-neutral-500 text-sm max-w-2xl mx-auto leading-relaxed">
+              Also: put forms, uploads and inputs behind an established form service rather than a custom handler, turn on Dependabot alerts for your repo, and watch Search Console's Security Issues report. Hacked sites can end up with spam pages and warnings in search results.
+            </p>
+          </div>
+        </section>
+
         {/* CTA */}
         <section className="py-28 px-6 border-t border-white/10">
           <div className="max-w-3xl mx-auto text-center">
