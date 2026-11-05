@@ -133,6 +133,8 @@ ${scoreNote}
 
 Please make only the specific changes listed below — don't refactor, restructure, or modify any other part of the project, and don't change existing functionality, styling, or content beyond what's needed for each fix.
 
+Do not change any existing canonical tags, redirects, robots.txt rules, sitemap settings or meta robots tags unless one of the changes above asks for it. If a change seems to need one of them, stop and ask me first. These settings are easy to break and hard to notice.
+
 Where you need to create new files, generate the content and tell me which files to create. Where existing files need edits, show me the exact changes to make.
 
 ${artifacts.length > 0 ? 'Here are file contents you can use:\n\n' + artifacts.join('\n\n') : ''}
