@@ -51,6 +51,9 @@ function RecoItem({ r, i, hideNonTechnical = false }) {
       <span className={styles.recoNum}>{i + 1}</span>
       <div className={styles.recoContent}>
         <span className={styles.recoText}>{text}</span>
+        {!hideNonTechnical && isObj && r.scoreImpact > 0 && (
+          <span className="eyebrow" style={{ marginTop: 4, display: 'block' }}>About +{r.scoreImpact} points</span>
+        )}
         {(nonTechnicalFix || technicalFix || artifact) && (
           <div className={styles.fixGroup}>
             {nonTechnicalFix && (
@@ -541,6 +544,7 @@ function FixViews({ recommendations, detectedPlatform }) {
   const [view, setView] = useState('owner');
   const ownerRecs = recommendations.filter(r => r && r.nonTechnicalFix);
   const devRecs = recommendations.filter(r => r && (r.technicalFix || r.artifact));
+  const ownerPoints = ownerRecs.reduce((sum, r) => sum + (r.scoreImpact || 0), 0);
   const list = view === 'owner' ? ownerRecs : devRecs;
   const hideNonTechnical = view === 'developer';
   const tabStyle = active => ({
@@ -572,6 +576,11 @@ function FixViews({ recommendations, detectedPlatform }) {
           <> Steps are for {PLATFORM_DISPLAY_NAME[detectedPlatform] || detectedPlatform}.</>
         )}
       </p>
+      {view === 'owner' && ownerPoints > 0 && (
+        <p style={{ fontSize: 14, color: 'var(--text)', marginTop: 0, marginBottom: 10 }}>
+          These steps could add about <strong>{ownerPoints} points</strong> to your score.
+        </p>
+      )}
       {view === 'owner' && (
         <p style={{ fontSize: 13, color: 'var(--text-dim)', marginTop: 0, marginBottom: 14 }}>
           To see how Google views your pages, open Google Search Console, go to Pages, and check "Why pages aren't indexed". Pages listed there as blocked (403), not found (404) or server error (5xx) are not showing in search.
