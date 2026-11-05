@@ -100,7 +100,7 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-50 flex justify-center border-b transition-colors duration-300 ${
-          isScrolled ? 'bg-black/75 backdrop-blur-xl border-white/[0.08]' : 'bg-transparent border-transparent'
+          'bg-black border-white/[0.08]'
         }`}
       >
         <div className="flex items-center justify-between w-full max-w-[1440px] px-6 h-16">
