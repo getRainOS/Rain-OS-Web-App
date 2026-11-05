@@ -656,3 +656,12 @@ describe('scanUrlForTechnicalSignals — vibe coder checks (shown, not scored)',
     expect(service.displaySignals.find((d) => d.label === 'Form Handling')?.pass).toBe(true);
   });
 });
+
+describe('scanUrlForTechnicalSignals — estimated score impact on each fix', () => {
+  it('gives a fix its estimated points, and zero for fixes not in the table', async () => {
+    const r = await scanUrlForTechnicalSignals(wrap('<p>x</p>'), 'https://x.test/');
+    const meta = r.recommendations.find((x) => x.issue === 'Meta description absent');
+    expect(meta?.scoreImpact).toBe(5);
+    expect(r.recommendations.every((x) => typeof x.scoreImpact === 'number')).toBe(true);
+  });
+});

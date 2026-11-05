@@ -96,8 +96,32 @@ export interface TechnicalSignals {
   extractedText: string;
 }
 
+// Points each fix is worth, from the same weights the scoring uses in the
+// URL scan handler (applyTechnicalAdjustments). Estimates, not exact: a fix can
+// lift a pillar by more than it lifts the overall score.
+export const FIX_SCORE_POINTS: Record<string, number> = {
+  'JavaScript-rendered content blocking AI crawlers': 8,
+  'Meta description absent': 5,
+  'Page is set to noindex': 5,
+  "AI can't find your business details on the page": 4,
+  'Missing schema markup': 4,
+  'Missing Product schema markup': 4,
+  'Missing semantic HTML': 4,
+  'Images missing alt text': 3,
+  'Canonical tag points to another page': 3,
+  'Improper heading hierarchy': 2,
+  'Contact form uses a custom handler': 2,
+  'Missing canonical tag': 1,
+  'Open Graph tags missing': 1,
+  'Missing mobile viewport meta tag': 1,
+  'Twitter / X card tags missing': 1,
+  'Generic anchor text': 1,
+};
+
 export interface UrlScanRecommendation {
   issue: string;
+  // Estimated points this fix can add to the score (see FIX_SCORE_POINTS).
+  scoreImpact?: number;
   recommendation: string;
   severity: 'low' | 'medium' | 'high';
   // The scoring pillar this fix moves, when it is known.
@@ -872,5 +896,6 @@ export async function scanUrlForTechnicalSignals(
     }
   }
 
-  return { signals, displaySignals, extractedText, recommendations: recs, detectedPlatform: platform };
+  const scoredRecs = recs.map(r => ({ ...r, scoreImpact: FIX_SCORE_POINTS[r.issue] ?? 0 }));
+  return { signals, displaySignals, extractedText, recommendations: scoredRecs, detectedPlatform: platform };
 }
