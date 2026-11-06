@@ -160,6 +160,14 @@ export default function HeroPrompt() {
                   ))}
                 </div>
               )}
+              {phase === 'typing' && (
+                <div className="space-y-2.5 pt-2" aria-hidden="true">
+                  {['w-[72%]', 'w-[56%]', 'w-[38%]'].map((w, d) => (
+                    <motion.div key={d} className={`h-2.5 rounded-full bg-white/[0.06] ${w}`}
+                      animate={{ opacity: [0.35, 0.8, 0.35] }} transition={{ duration: 2, repeat: Infinity, delay: d * 0.2 }} />
+                  ))}
+                </div>
+              )}
               {(phase === 'answer' || revealed) && (
                 <>
                   <p className="text-[14px] text-neutral-300">{s.intro}</p>
