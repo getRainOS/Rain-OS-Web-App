@@ -37,6 +37,29 @@ function drawBlossom(ctx: CanvasRenderingContext2D, cx: number, cy: number, size
   ctx.restore();
 }
 
+// The silver drop from the brand mock-up: a teardrop with a metallic gradient and
+// a soft highlight. The point faces up, so it reads as falling.
+function drawSilverDrop(ctx: CanvasRenderingContext2D, x: number, y: number) {
+  ctx.save();
+  const g = ctx.createLinearGradient(x - 6, y - 6, x + 6, y + 6);
+  g.addColorStop(0, '#ffffff');
+  g.addColorStop(0.35, '#c9ced6');
+  g.addColorStop(0.6, '#8d95a1');
+  g.addColorStop(1, '#e9edf2');
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.moveTo(x, y - 9);
+  ctx.bezierCurveTo(x + 5, y - 3, x + 5.5, y + 5, x, y + 5);
+  ctx.bezierCurveTo(x - 5.5, y + 5, x - 5, y - 3, x, y - 9);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.beginPath();
+  ctx.ellipse(x - 2, y - 1, 1.6, 2.6, -0.35, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
 function isStill(): boolean {
   if (typeof window === 'undefined') return true;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -112,14 +135,7 @@ export default function SourceNetwork() {
         ctx!.moveTo(cx, tail);
         ctx!.lineTo(cx, head);
         ctx!.stroke();
-        ctx!.save();
-        ctx!.shadowColor = 'rgba(255,255,255,0.9)';
-        ctx!.shadowBlur = 8;
-        ctx!.fillStyle = 'rgba(255,255,255,0.9)';
-        ctx!.beginPath();
-        ctx!.arc(cx, head, 2.2, 0, Math.PI * 2);
-        ctx!.fill();
-        ctx!.restore();
+        drawSilverDrop(ctx!, cx, head);
       }
 
       ENGINES.forEach((e, k) => {
