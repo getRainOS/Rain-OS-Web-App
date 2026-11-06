@@ -55,6 +55,35 @@ const ANALYZE_STEPS = [
   'Writing your fixes',
 ];
 
+// Sample fixes, one set per way rain OS applies them. Each row shows the finding
+// it was written for, then the fix. Illustrative wording, not output from a real scan.
+const FIX_MODES = [
+  {
+    label: 'Written content',
+    rows: [
+      { was: 'Answer starts after a 58-word intro', now: 'Open with the answer in the first sentence' },
+      { was: 'Heading reads "Our approach"', now: 'Rename it to what the section answers: "How pricing works"' },
+      { was: 'No dates or figures in the claims', now: 'Add the year and one number a reader can check' },
+    ],
+  },
+  {
+    label: 'URL scanner',
+    rows: [
+      { was: 'Meta description absent', now: 'Add a 150-character summary to the page head' },
+      { was: 'Images missing alt text', now: 'Describe each product photo in its alt attribute' },
+      { was: 'Missing Product schema markup', now: 'Add Product markup with price and availability' },
+    ],
+  },
+  {
+    label: 'Repo scanner',
+    rows: [
+      { was: 'No JSON-LD schema markup in index.html', now: 'Add a business or product JSON-LD block' },
+      { was: 'Meta description missing from index.html', now: 'Add a meta description tag to index.html' },
+      { was: 'No LICENSE file', now: 'Add a LICENSE file to the repository root' },
+    ],
+  },
+];
+
 // The analysis screen in the app, shown as it runs: each step fills in turn.
 function AnalyzeConsole() {
   const reduce = useReducedMotion();
@@ -65,6 +94,14 @@ function AnalyzeConsole() {
     return () => clearInterval(t);
   }, [reduce]);
   const done = reduce ? ANALYZE_STEPS.length : step;
+
+  // Once the steps finish, cycle through the three kinds of fix.
+  const [mode, setMode] = useState(0);
+  useEffect(() => {
+    if (reduce || done < ANALYZE_STEPS.length) return;
+    const t = setInterval(() => setMode(n => (n + 1) % FIX_MODES.length), 3200);
+    return () => clearInterval(t);
+  }, [reduce, done]);
 
   return (
     <div className="relative rounded-xl border border-white/10 bg-[#0a0a0a] shadow-[0_40px_120px_-40px_rgba(255,255,255,0.35)] overflow-hidden text-left">
@@ -102,10 +139,22 @@ function AnalyzeConsole() {
           />
         </div>
         <div className={`mt-7 transition-opacity duration-700 ${done >= ANALYZE_STEPS.length || reduce ? 'opacity-100' : 'opacity-0'}`}>
-          <div className="mb-3 text-[11px] text-neutral-500" style={MONO}>WHEN IT FINISHES: THE SCORE, THEN THE FIXES</div>
-          <div className="rounded-md overflow-hidden border border-white/[0.07] max-h-[260px]">
-            <img src="/screens/results-overall.png" alt="rain OS results: the overall AEO score and the four area bars" width={755} height={640} loading="lazy" className="w-full h-auto block object-top" />
+          <div className="mb-3 text-[11px] text-neutral-500" style={MONO}>WHEN IT FINISHES: THE FIXES</div>
+          <div className="flex flex-wrap gap-1.5 mb-4">
+            {FIX_MODES.map((m, k) => (
+              <span key={m.label} className={`px-2.5 py-1 rounded-full text-[12px] border ${k === mode ? 'border-white bg-white text-black' : 'border-white/10 text-neutral-400'}`}>
+                {m.label}
+              </span>
+            ))}
           </div>
+          <motion.ul key={mode} initial={reduce ? false : { opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="space-y-2.5">
+            {FIX_MODES[mode].rows.map(r => (
+              <li key={r.now} className="rounded-md border border-white/[0.07] bg-white/[0.02] px-3.5 py-2.5">
+                <div className="text-[12px] text-neutral-500">Was: {r.was}</div>
+                <div className="text-[14px] text-neutral-100">Now: {r.now}</div>
+              </li>
+            ))}
+          </motion.ul>
         </div>
       </div>
     </div>
