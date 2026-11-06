@@ -59,7 +59,7 @@ const ANALYZE_STEPS = [
 // it was written for, then the fix. Illustrative wording, not output from a real scan.
 const FIX_MODES = [
   {
-    label: 'Written content',
+    label: 'Content analyzer',
     rows: [
       { was: 'Answer starts after a 58-word intro', now: 'Open with the answer in the first sentence' },
       { was: 'Heading reads "Our approach"', now: 'Rename it to what the section answers: "How pricing works"' },
@@ -75,7 +75,7 @@ const FIX_MODES = [
     ],
   },
   {
-    label: 'Repo scanner',
+    label: 'Repo analysis',
     rows: [
       { was: 'No JSON-LD schema markup in index.html', now: 'Add a business or product JSON-LD block' },
       { was: 'Meta description missing from index.html', now: 'Add a meta description tag to index.html' },
@@ -91,20 +91,18 @@ function AnalyzeConsole() {
   // Each step takes 1.4s. Once all are done, hold long enough to show every fix set.
   const FIX_HOLD_MS = 3500;
   useEffect(() => {
-    if (reduce) return;
-    const delay = step === ANALYZE_STEPS.length ? FIX_MODES.length * FIX_HOLD_MS : 1400;
-    const t = setTimeout(() => setStep(n => (n + 1) % (ANALYZE_STEPS.length + 1)), delay);
+    if (reduce || step >= ANALYZE_STEPS.length) return;
+    const t = setTimeout(() => setStep(n => n + 1), 1400);
     return () => clearTimeout(t);
   }, [step, reduce]);
   const done = reduce ? ANALYZE_STEPS.length : step;
 
-  // Once the steps finish, show each kind of fix in turn, starting from the first.
+  // Once the steps finish they stay done; the fixes then cycle through each analyzer.
   const [mode, setMode] = useState(0);
   useEffect(() => {
     if (reduce || done < ANALYZE_STEPS.length) return;
-    setMode(0);
-    const timers = FIX_MODES.slice(1).map((_, k) => setTimeout(() => setMode(k + 1), (k + 1) * FIX_HOLD_MS));
-    return () => timers.forEach(clearTimeout);
+    const t = setInterval(() => setMode(n => (n + 1) % FIX_MODES.length), FIX_HOLD_MS);
+    return () => clearInterval(t);
   }, [reduce, done]);
 
   return (
@@ -144,19 +142,26 @@ function AnalyzeConsole() {
         </div>
         <div className={`mt-7 transition-opacity duration-700 ${done >= ANALYZE_STEPS.length || reduce ? 'opacity-100' : 'opacity-0'}`}>
           <div className="mb-3 text-[11px] text-neutral-500" style={MONO}>WHEN IT FINISHES: THE FIXES</div>
-          <div className="flex flex-wrap gap-1.5 mb-4">
+          <div className="relative flex gap-5 border-b border-white/[0.07] mb-4">
             {FIX_MODES.map((m, k) => (
-              <span key={m.label} className={`px-2.5 py-1 rounded-full text-[12px] border ${k === mode ? 'border-white bg-white text-black' : 'border-white/10 text-neutral-400'}`}>
+              <span key={m.label} className={`relative pb-2.5 text-[13px] transition-colors duration-300 ${k === mode ? 'text-white' : 'text-neutral-600'}`}>
                 {m.label}
+                {k === mode && (
+                  <motion.span layoutId="fix-tab" className="absolute left-0 right-0 -bottom-px h-px bg-white shadow-[0_0_10px_rgba(255,255,255,0.9)]" transition={{ type: 'spring', stiffness: 380, damping: 32 }} />
+                )}
               </span>
             ))}
           </div>
-          <motion.ul key={mode} initial={reduce ? false : { opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="space-y-2.5">
-            {FIX_MODES[mode].rows.map(r => (
-              <li key={r.now} className="rounded-md border border-white/[0.07] bg-white/[0.02] px-3.5 py-2.5">
-                <div className="text-[12px] text-neutral-500">Was: {r.was}</div>
-                <div className="text-[14px] text-neutral-100">Now: {r.now}</div>
-              </li>
+          <motion.ul key={mode} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} className="space-y-2">
+            {FIX_MODES[mode].rows.map((r, k) => (
+              <motion.li key={r.now} initial={reduce ? false : { opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.08 * k, duration: 0.35 }}
+                className="flex items-start gap-3 rounded-lg border border-white/[0.08] bg-gradient-to-r from-white/[0.05] to-transparent px-3.5 py-2.5">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white text-black text-[11px] font-semibold" style={MONO}>{k + 1}</span>
+                <div className="min-w-0">
+                  <div className="text-[12px] text-neutral-600 line-through decoration-neutral-700">{r.was}</div>
+                  <div className="text-[14px] text-white">{r.now}</div>
+                </div>
+              </motion.li>
             ))}
           </motion.ul>
         </div>
