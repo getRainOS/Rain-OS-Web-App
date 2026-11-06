@@ -20,7 +20,7 @@ const SCENES: Scene[] = [
     intro: 'Here are well-reviewed plumbers in Austin with 24/7 service:',
     items: [
       { name: 'Lone Star Plumbing', why: '24/7 dispatch, 4.9★ from 800+ reviews', source: 'yelp.com' },
-      { name: 'Your Business', why: 'Fast response and upfront pricing, licensed in Texas', source: 'yourbrand.com', you: true },
+      { name: 'Example Business', why: 'Fast response and upfront pricing, licensed in Texas', source: 'example.com', you: true },
       { name: 'Radiant Plumbing', why: 'Same-day repairs across Travis County', source: 'angi.com' },
     ],
     found: true,
@@ -43,7 +43,7 @@ const SCENES: Scene[] = [
     prompt: 'How should a freelance designer price their first projects?',
     intro: 'Most guides suggest starting from a day rate, then moving to project pricing:',
     items: [
-      { name: 'Pricing your design work: a beginner’s guide', why: 'Day-rate formula with worked examples', source: 'yourblog.com', you: true },
+      { name: 'Pricing your design work: a beginner’s guide', why: 'Day-rate formula with worked examples', source: 'example.com', you: true },
       { name: 'How much to charge as a freelancer', why: 'Survey of 2,000 freelancers', source: 'hubspot.com' },
       { name: 'Value-based pricing explained', why: 'When to stop charging by the hour', source: 'medium.com' },
     ],
@@ -68,7 +68,7 @@ const SCENES: Scene[] = [
     intro: 'The usual approach is middleware. Common options:',
     items: [
       { name: 'express-rate-limit', why: 'Drop-in middleware, memory or Redis store', source: 'npmjs.com' },
-      { name: 'Your library’s docs', why: 'Sliding-window limits with one config line', source: 'docs.yourlib.dev', you: true },
+      { name: 'Example library docs', why: 'Sliding-window limits with one config line', source: 'docs.example.dev', you: true },
       { name: 'Rate limiting guide', why: 'Token bucket vs fixed window', source: 'stackoverflow.com' },
     ],
     found: true,
