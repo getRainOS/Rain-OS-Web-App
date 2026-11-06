@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { ENGINE_ICONS } from './engineIcons';
 
-// One question on the left, lines out to the AI tools rain OS checks, each
-// marked by its brand mark and name at the end of the line. Scrolling lights the lines in
-// turn; a bright point travels along each lit line, forever. The layout is
-// fixed, so every visit draws the same picture.
+// Rain falls from a soft edge across the top and lands on the AI tools rain OS
+// checks. Each tool's drop is aimed at its logo, and the logo glows where it
+// lands. Thin ambient streaks fall behind them. Scrolling lights the drops in
+// turn. The layout is fixed, so every visit draws the same picture.
 
 // `icon` keys into ENGINE_ICONS, or 'chatgpt' for the blossom drawn below.
 const ENGINES: { name: string; icon?: string }[] = [
@@ -17,6 +17,9 @@ const ENGINES: { name: string; icon?: string }[] = [
 ];
 
 const ICON_SIZE = 16;
+const LABEL_FONT = '12px "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace';
+const AMBIENT_COUNT = 16;
+const EDGE_Y = 0.04; // the cloud edge, as a share of the height
 
 // The ChatGPT blossom, drawn as six loops around a centre. Drawn rather than
 // traced, so it stays crisp at this size.
@@ -33,13 +36,39 @@ function drawBlossom(ctx: CanvasRenderingContext2D, cx: number, cy: number, size
   ctx.restore();
 }
 
-const LABEL_FONT = '12px "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace';
+// Endpoints, one per engine: where each drop lands. Spread both sides, up and down.
+const SPOTS = [
+  { x: 0.6, y: 0.08 },
+  { x: 0.37, y: 0.22 },
+  { x: 0.62, y: 0.34 },
+  { x: 0.38, y: 0.5 },
+  { x: 0.6, y: 0.7 },
+  { x: 0.4, y: 0.9 },
+];
 
 function isStill(): boolean {
   if (typeof window === 'undefined') return true;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const phone = window.matchMedia('(max-width: 767px)').matches;
   return reduced || phone;
+}
+
+type Ambient = { x: number; y: number; len: number; speed: number; slant: number; alpha: number };
+
+function makeAmbient(width: number, height: number): Ambient[] {
+  let seed = 23;
+  const rand = () => {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280;
+  };
+  return Array.from({ length: AMBIENT_COUNT }, () => ({
+    x: rand() * width,
+    y: rand() * height,
+    len: 30 + rand() * 80,
+    speed: 0.02 + rand() * 0.04,
+    slant: (rand() - 0.5) * 0.5,
+    alpha: 0.04 + rand() * 0.05,
+  }));
 }
 
 export default function SourceNetwork() {
@@ -58,6 +87,8 @@ export default function SourceNetwork() {
     let progress = 0; // 0 to 1: how far the visitor has scrolled through the section
     let visible = false;
     let raf = 0;
+    let last = 0;
+    let ambient: Ambient[] = [];
     const still = isStill();
 
     // Each brand mark as a Path2D, built once.
@@ -65,19 +96,8 @@ export default function SourceNetwork() {
       Object.entries(ENGINE_ICONS).map(([key, icon]) => [key, { hex: icon.hex, path: new Path2D(icon.path) }]),
     );
 
-    // Endpoints: spread down the right side, one per engine.
-    // Each endpoint sits at its own place, so the lines leave the question at
-    // different angles and reach different lengths.
-    const SPOTS = [
-      { x: 0.6, y: 0.08 },
-      { x: 0.37, y: 0.22 },
-      { x: 0.62, y: 0.34 },
-      { x: 0.38, y: 0.5 },
-      { x: 0.6, y: 0.7 },
-      { x: 0.4, y: 0.9 },
-    ];
-    // Each endpoint, with a slow float around its spot. Still for reduced motion
-    // and phones, so the layout is fixed there.
+    // Endpoints with a slow float around each spot. Still for reduced motion and
+    // phones, so the layout is fixed there.
     function endpoints(t: number) {
       return ENGINES.map((engine, k) => {
         const dx = still ? 0 : Math.sin(t * 0.0008 + k * 1.7) * 10;
@@ -99,6 +119,7 @@ export default function SourceNetwork() {
       canvas!.style.width = `${width}px`;
       canvas!.style.height = `${height}px`;
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ambient = makeAmbient(width, height);
     }
 
     function readProgress() {
@@ -108,53 +129,99 @@ export default function SourceNetwork() {
       progress = Math.min(1, Math.max(0, (vh - rect.top) / span));
     }
 
-    function draw(t: number) {
+    function draw(t: number, dt: number) {
       ctx!.clearRect(0, 0, width, height);
-      const q = { x: width * 0.5, y: height * 0.5 };
-      const ends = endpoints(t);
+      const edgeY = height * EDGE_Y;
 
+      // The cloud edge: a soft line across the top that fades at both ends.
+      const edge = ctx!.createLinearGradient(0, 0, width, 0);
+      edge.addColorStop(0, 'rgba(255,255,255,0)');
+      edge.addColorStop(0.5, `rgba(255,255,255,${0.12 + progress * 0.2})`);
+      edge.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx!.strokeStyle = edge;
+      ctx!.lineWidth = 1;
+      ctx!.beginPath();
+      ctx!.moveTo(0, edgeY);
+      ctx!.lineTo(width, edgeY);
+      ctx!.stroke();
+
+      // Ambient rain: thin, faint streaks falling in the background.
+      if (!still) {
+        for (const a of ambient) {
+          a.y += a.speed * dt;
+          if (a.y - a.len > height) {
+            a.y = edgeY - a.len;
+            a.x = Math.random() * width;
+          }
+          ctx!.strokeStyle = `rgba(255,255,255,${a.alpha})`;
+          ctx!.beginPath();
+          ctx!.moveTo(a.x - a.slant * a.len, a.y - a.len);
+          ctx!.lineTo(a.x, a.y);
+          ctx!.stroke();
+        }
+      }
+
+      const ends = endpoints(t);
       ends.forEach((e, k) => {
         const start = (k / ends.length) * 0.8;
         const lit = Math.min(1, Math.max(0, (progress - start) / 0.2));
 
-        ctx!.strokeStyle = `rgba(255,255,255,${0.12 + lit * 0.7})`;
-        ctx!.lineWidth = 1 + lit;
-        ctx!.beginPath();
-        ctx!.moveTo(q.x, q.y);
-        ctx!.lineTo(e.x, e.y);
-        ctx!.stroke();
+        // The drop: starts at the cloud edge, angled away from the centre, and
+        // falls to this tool's logo. Each drop has its own pace.
+        const sx = Math.min(width, Math.max(0, e.x + (e.x - width / 2) * 0.5));
+        const period = 3200 + k * 380;
+        const f = still ? 0.85 : ((t / period) + k * 0.37) % 1;
+        const hx = sx + (e.x - sx) * f;
+        const hy = edgeY + (e.y - edgeY) * f;
+        const tailLen = 0.22;
+        const tx = sx + (e.x - sx) * Math.max(0, f - tailLen);
+        const ty = edgeY + (e.y - edgeY) * Math.max(0, f - tailLen);
 
-        // A light travels from the question out along each lit line, forever.
-        if (!still && lit > 0.2) {
-          const f = (t * 0.00014 + k / ends.length) % 1;
+        if (lit > 0.1) {
+          const grad = ctx!.createLinearGradient(tx, ty, hx, hy);
+          grad.addColorStop(0, 'rgba(255,255,255,0)');
+          grad.addColorStop(1, `rgba(255,255,255,${0.15 + lit * 0.55})`);
+          ctx!.strokeStyle = grad;
+          ctx!.lineWidth = 1.2;
+          ctx!.beginPath();
+          ctx!.moveTo(tx, ty);
+          ctx!.lineTo(hx, hy);
+          ctx!.stroke();
+
+          ctx!.save();
+          ctx!.shadowColor = 'rgba(255,255,255,0.9)';
+          ctx!.shadowBlur = 8;
           ctx!.fillStyle = `rgba(255,255,255,${lit * 0.9})`;
           ctx!.beginPath();
-          ctx!.arc(q.x + (e.x - q.x) * f, q.y + (e.y - q.y) * f, 2, 0, Math.PI * 2);
+          ctx!.arc(hx, hy, 2, 0, Math.PI * 2);
           ctx!.fill();
+          ctx!.restore();
         }
 
-        // The endpoint dot and its name.
-        const breathe = !still ? Math.sin(t * 0.002 + k) * 0.5 : 0;
-        ctx!.fillStyle = `rgba(255,255,255,${0.45 + lit * 0.55})`;
-        ctx!.beginPath();
-        ctx!.arc(e.x, e.y, 3 + breathe, 0, Math.PI * 2);
-        ctx!.fill();
+        // The landing: a ring on the logo, which brightens as the drop arrives.
+        const landed = still ? 0 : Math.max(0, (f - 0.9) / 0.1);
+        if (lit > 0.1 && landed > 0) {
+          ctx!.strokeStyle = `rgba(255,255,255,${0.35 * landed * lit})`;
+          ctx!.lineWidth = 1;
+          ctx!.beginPath();
+          ctx!.arc(e.x, e.y, 4 + landed * 10, 0, Math.PI * 2);
+          ctx!.stroke();
+        }
 
-        // The brand mark, in its own colour, then the name.
-        // Labels open toward the side their endpoint is on: right of the dot on
-        // the right, left of it on the left.
+        // The logo mark and its name.
+        const icon = e.icon ? icons[e.icon] : undefined;
         ctx!.font = LABEL_FONT;
         ctx!.textBaseline = 'middle';
-        const icon = e.icon ? icons[e.icon] : undefined;
         const hasIcon = e.icon === 'chatgpt' || !!icon;
         const blockW = (hasIcon ? ICON_SIZE + 8 : 0) + ctx!.measureText(e.name).width;
-        const onLeft = e.x < q.x;
+        const onLeft = e.x < width / 2;
         const startX = onLeft ? e.x - 14 - blockW : e.x + 14;
+        const glow = 0.45 + lit * 0.55 + landed * 0.3;
         if (e.icon === 'chatgpt') {
-          drawBlossom(ctx!, startX + ICON_SIZE / 2, e.y, ICON_SIZE, 0.45 + lit * 0.55);
+          drawBlossom(ctx!, startX + ICON_SIZE / 2, e.y, ICON_SIZE, glow);
         } else if (icon) {
           ctx!.save();
-          ctx!.globalAlpha = 0.45 + lit * 0.55;
+          ctx!.globalAlpha = glow;
           ctx!.translate(startX, e.y - ICON_SIZE / 2);
           ctx!.scale(ICON_SIZE / 24, ICON_SIZE / 24);
           ctx!.fillStyle = icon.hex;
@@ -164,28 +231,25 @@ export default function SourceNetwork() {
         ctx!.fillStyle = `rgba(255,255,255,${0.35 + lit * 0.6})`;
         ctx!.fillText(e.name, startX + (hasIcon ? ICON_SIZE + 8 : 0), e.y);
       });
-
-      // The question.
-      ctx!.fillStyle = '#ffffff';
-      ctx!.beginPath();
-      ctx!.arc(q.x, q.y, 4.5, 0, Math.PI * 2);
-      ctx!.fill();
     }
 
     function loop(t: number) {
       if (!visible) {
         raf = 0;
+        last = 0;
         return;
       }
+      const dt = last ? Math.min(64, t - last) : 16;
+      last = t;
       readProgress();
-      draw(t);
+      draw(t, dt);
       raf = requestAnimationFrame(loop);
     }
 
     function redraw() {
       size();
       readProgress();
-      draw(0);
+      draw(0, 0);
     }
 
     redraw();
