@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { ENGINE_ICONS } from './engineIcons';
 
-// One rain drop falls down the middle of the section. As it passes each row,
-// that AI tool's logo and name come down into place beneath it, one by one.
-// Scrolling lights them in turn. The layout is fixed, so every visit draws the
-// same picture. Phones and reduced-motion visitors see the names still.
+// One question on the left, lines out to the AI tools rain OS checks, each
+// marked by its brand mark and name at the end of the line. Scrolling lights the lines in
+// turn; a bright point travels along each lit line, forever. The layout is
+// fixed, so every visit draws the same picture.
 
 // `icon` keys into ENGINE_ICONS, or 'chatgpt' for the blossom drawn below.
 const ENGINES: { name: string; icon?: string }[] = [
@@ -17,10 +17,6 @@ const ENGINES: { name: string; icon?: string }[] = [
 ];
 
 const ICON_SIZE = 16;
-const LABEL_FONT = '12px "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace';
-const CYCLE_MS = 6000; // one drop, from the top to the bottom, then again
-const LAND_SPAN = 0.06; // how much of the cycle a label takes to come down
-const FALL_PX = 18; // how far above its place each label starts
 
 // The ChatGPT blossom, drawn as six loops around a centre. Drawn rather than
 // traced, so it stays crisp at this size.
@@ -37,28 +33,7 @@ function drawBlossom(ctx: CanvasRenderingContext2D, cx: number, cy: number, size
   ctx.restore();
 }
 
-// The silver drop from the brand mock-up: a teardrop with a metallic gradient and
-// a soft highlight. The point faces up, so it reads as falling.
-function drawSilverDrop(ctx: CanvasRenderingContext2D, x: number, y: number) {
-  ctx.save();
-  const g = ctx.createLinearGradient(x - 6, y - 6, x + 6, y + 6);
-  g.addColorStop(0, '#ffffff');
-  g.addColorStop(0.35, '#c9ced6');
-  g.addColorStop(0.6, '#8d95a1');
-  g.addColorStop(1, '#e9edf2');
-  ctx.fillStyle = g;
-  ctx.beginPath();
-  ctx.moveTo(x, y - 9);
-  ctx.bezierCurveTo(x + 5, y - 3, x + 5.5, y + 5, x, y + 5);
-  ctx.bezierCurveTo(x - 5.5, y + 5, x - 5, y - 3, x, y - 9);
-  ctx.closePath();
-  ctx.fill();
-  ctx.fillStyle = 'rgba(255,255,255,0.85)';
-  ctx.beginPath();
-  ctx.ellipse(x - 2, y - 1, 1.6, 2.6, -0.35, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-}
+const LABEL_FONT = '12px "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace';
 
 function isStill(): boolean {
   if (typeof window === 'undefined') return true;
@@ -90,6 +65,31 @@ export default function SourceNetwork() {
       Object.entries(ENGINE_ICONS).map(([key, icon]) => [key, { hex: icon.hex, path: new Path2D(icon.path) }]),
     );
 
+    // Endpoints: spread down the right side, one per engine.
+    // Each endpoint sits at its own place, so the lines leave the question at
+    // different angles and reach different lengths.
+    const SPOTS = [
+      { x: 0.6, y: 0.08 },
+      { x: 0.37, y: 0.22 },
+      { x: 0.62, y: 0.34 },
+      { x: 0.38, y: 0.5 },
+      { x: 0.6, y: 0.7 },
+      { x: 0.4, y: 0.9 },
+    ];
+    // Each endpoint, with a slow float around its spot. Still for reduced motion
+    // and phones, so the layout is fixed there.
+    function endpoints(t: number) {
+      return ENGINES.map((engine, k) => {
+        const dx = still ? 0 : Math.sin(t * 0.0008 + k * 1.7) * 10;
+        const dy = still ? 0 : Math.cos(t * 0.0006 + k * 2.3) * 8;
+        return {
+          ...engine,
+          x: width * SPOTS[k].x + dx,
+          y: height * SPOTS[k].y + dy,
+        };
+      });
+    }
+
     function size() {
       const dpr = window.devicePixelRatio || 1;
       width = wrap!.clientWidth;
@@ -108,73 +108,68 @@ export default function SourceNetwork() {
       progress = Math.min(1, Math.max(0, (vh - rect.top) / span));
     }
 
-    // Where each row sits: a single column, evenly spaced down the section.
-    function rowY(k: number) {
-      return height * (0.14 + (k / (ENGINES.length - 1)) * 0.72);
-    }
-
     function draw(t: number) {
       ctx!.clearRect(0, 0, width, height);
-      const cx = width / 2;
-      // Position within the drop's cycle: 0 at the top, 1 at the bottom.
-      const f = still ? 1 : (t % CYCLE_MS) / CYCLE_MS;
-      // Let the labels fade back out just before the drop starts again.
-      const fadeOut = still ? 1 : Math.min(1, Math.max(0, (1 - f) / 0.08));
+      const q = { x: width * 0.5, y: height * 0.5 };
+      const ends = endpoints(t);
 
-      if (!still) {
-        // The drop: a short streak with a bright head, falling down the middle.
-        const head = f * height;
-        const tail = Math.max(0, head - height * 0.12);
-        const grad = ctx!.createLinearGradient(cx, tail, cx, head);
-        grad.addColorStop(0, 'rgba(255,255,255,0)');
-        grad.addColorStop(1, 'rgba(255,255,255,0.7)');
-        ctx!.strokeStyle = grad;
-        ctx!.lineWidth = 1.5;
-        ctx!.lineCap = 'round';
+      ends.forEach((e, k) => {
+        const start = (k / ends.length) * 0.8;
+        const lit = Math.min(1, Math.max(0, (progress - start) / 0.2));
+
+        ctx!.strokeStyle = `rgba(255,255,255,${0.12 + lit * 0.7})`;
+        ctx!.lineWidth = 1 + lit;
         ctx!.beginPath();
-        ctx!.moveTo(cx, tail);
-        ctx!.lineTo(cx, head);
+        ctx!.moveTo(q.x, q.y);
+        ctx!.lineTo(e.x, e.y);
         ctx!.stroke();
-        drawSilverDrop(ctx!, cx, head);
-      }
 
-      ENGINES.forEach((e, k) => {
-        const y = rowY(k);
-        // When the drop reaches this row, the label comes down into place.
-        const arrive = still ? 1 : Math.min(1, Math.max(0, (f - y / height) / LAND_SPAN));
-        // Ease the fall, so each label settles rather than stops dead.
-        const ease = 1 - Math.pow(1 - arrive, 3);
-        const drop = (1 - ease) * -FALL_PX;
-        const lit = Math.min(1, Math.max(0, (progress - (k / ENGINES.length) * 0.8) / 0.2));
-        const alpha = ease * fadeOut;
-        if (alpha <= 0) return;
+        // A light travels from the question out along each lit line, forever.
+        if (!still && lit > 0.2) {
+          const f = (t * 0.00014 + k / ends.length) % 1;
+          ctx!.fillStyle = `rgba(255,255,255,${lit * 0.9})`;
+          ctx!.beginPath();
+          ctx!.arc(q.x + (e.x - q.x) * f, q.y + (e.y - q.y) * f, 2, 0, Math.PI * 2);
+          ctx!.fill();
+        }
 
-        // The logo mark and its name, centred on the column.
-        const icon = e.icon ? icons[e.icon] : undefined;
-        const hasIcon = e.icon === 'chatgpt' || !!icon;
+        // The endpoint dot and its name.
+        const breathe = !still ? Math.sin(t * 0.002 + k) * 0.5 : 0;
+        ctx!.fillStyle = `rgba(255,255,255,${0.45 + lit * 0.55})`;
+        ctx!.beginPath();
+        ctx!.arc(e.x, e.y, 3 + breathe, 0, Math.PI * 2);
+        ctx!.fill();
+
+        // The brand mark, in its own colour, then the name.
+        // Labels open toward the side their endpoint is on: right of the dot on
+        // the right, left of it on the left.
         ctx!.font = LABEL_FONT;
         ctx!.textBaseline = 'middle';
-        const nameW = ctx!.measureText(e.name).width;
-        const blockW = (hasIcon ? ICON_SIZE + 8 : 0) + nameW;
-        const startX = cx - blockW / 2;
-        const ty = y + drop;
-        const glow = (0.45 + lit * 0.55) * alpha;
-
+        const icon = e.icon ? icons[e.icon] : undefined;
+        const hasIcon = !!icon;
+        const blockW = (hasIcon ? ICON_SIZE + 8 : 0) + ctx!.measureText(e.name).width;
+        const onLeft = e.x < q.x;
+        const startX = onLeft ? e.x - 14 - blockW : e.x + 14;
         if (e.icon === 'chatgpt') {
-          drawBlossom(ctx!, startX + ICON_SIZE / 2, ty, ICON_SIZE, glow);
+          drawBlossom(ctx!, startX + ICON_SIZE / 2, e.y, ICON_SIZE, 0.45 + lit * 0.55);
         } else if (icon) {
           ctx!.save();
-          ctx!.globalAlpha = glow;
-          ctx!.translate(startX, ty - ICON_SIZE / 2);
+          ctx!.globalAlpha = 0.45 + lit * 0.55;
+          ctx!.translate(startX, e.y - ICON_SIZE / 2);
           ctx!.scale(ICON_SIZE / 24, ICON_SIZE / 24);
           ctx!.fillStyle = icon.hex;
           ctx!.fill(icon.path);
           ctx!.restore();
         }
-        ctx!.globalAlpha = 1;
-        ctx!.fillStyle = `rgba(255,255,255,${(0.35 + lit * 0.6) * alpha})`;
-        ctx!.fillText(e.name, startX + (hasIcon ? ICON_SIZE + 8 : 0), ty);
+        ctx!.fillStyle = `rgba(255,255,255,${0.35 + lit * 0.6})`;
+        ctx!.fillText(e.name, startX + (hasIcon ? ICON_SIZE + 8 : 0), e.y);
       });
+
+      // The question.
+      ctx!.fillStyle = '#ffffff';
+      ctx!.beginPath();
+      ctx!.arc(q.x, q.y, 4.5, 0, Math.PI * 2);
+      ctx!.fill();
     }
 
     function loop(t: number) {
