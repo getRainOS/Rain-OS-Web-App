@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 
-// Faint white rain falling behind the page content. Each streak is a thin line
-// with its own angle, length, speed and brightness, so the drops fall in
-// different directions and at different paces. Decorative only. Reduced-motion visitors and phones get no rain.
+// Very faint white rain falling straight down behind the page content. Each
+// streak has its own length, speed and brightness, so the drops fall at
+// different paces. Decorative only. Reduced-motion visitors and phones get no rain.
 
 const STREAK_COUNT = 14;
 
@@ -19,8 +19,8 @@ function makeStreaks(width: number, height: number): Streak[] {
     y: rand() * height,
     len: 30 + rand() * 120,
     speed: 0.02 + rand() * 0.05,
-    alpha: 0.02 + rand() * 0.025,
-    slant: (rand() - 0.5) * 0.7,
+    alpha: 0.008 + rand() * 0.012,
+    slant: 0,
   }));
 }
 
