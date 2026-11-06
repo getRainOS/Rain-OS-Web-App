@@ -184,7 +184,7 @@ export default function HeroPrompt() {
                               transition={{ delay: 0.25, type: 'spring', stiffness: 260, damping: 18 }}
                               className="absolute -top-3 right-3 inline-flex items-center gap-1 rounded-full bg-[#ffffff] px-2.5 py-1 text-[11.5px] font-medium text-black shadow-lg"
                             >
-                              <Check className="w-3 h-3" /> Your site · listed #{k + 1}
+                              <Check className="w-3 h-3" /> {it.source} · #{k + 1}
                             </motion.span>
                           )}
                         </motion.li>
