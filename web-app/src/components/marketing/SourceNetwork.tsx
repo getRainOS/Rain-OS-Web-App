@@ -198,14 +198,19 @@ export default function SourceNetwork() {
           ctx!.restore();
         }
 
-        // The landing: a ring on the logo, which brightens as the drop arrives.
+        // The landing: two ripples spread out from the logo, like a drop hitting
+        // water. They flatten as they widen, and fade as they go.
         const landed = still ? 0 : Math.max(0, (f - 0.9) / 0.1);
         if (lit > 0.1 && landed > 0) {
-          ctx!.strokeStyle = `rgba(255,255,255,${0.35 * landed * lit})`;
-          ctx!.lineWidth = 1;
-          ctx!.beginPath();
-          ctx!.arc(e.x, e.y, 4 + landed * 10, 0, Math.PI * 2);
-          ctx!.stroke();
+          for (let r = 0; r < 2; r++) {
+            const spread = Math.min(1, landed * 1.6 - r * 0.25);
+            if (spread <= 0) continue;
+            ctx!.strokeStyle = `rgba(255,255,255,${0.4 * (1 - spread) * lit})`;
+            ctx!.lineWidth = 1;
+            ctx!.beginPath();
+            ctx!.ellipse(e.x, e.y, 6 + spread * 18, 2 + spread * 5, 0, 0, Math.PI * 2);
+            ctx!.stroke();
+          }
         }
 
         // The logo mark and its name.
