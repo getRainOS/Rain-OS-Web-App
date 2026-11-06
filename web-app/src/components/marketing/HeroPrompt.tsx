@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { Sparkles, X, ArrowRight } from 'lucide-react';
+import { Sparkles, X, ArrowRight, ArrowUp } from 'lucide-react';
 
 // The hero: someone asks an AI a question, the answer lists a few businesses,
 // then the card tilts and either your result pops out ("cited") or a note
@@ -129,13 +129,21 @@ export default function HeroPrompt() {
           <span className="text-[10px] text-neutral-600" style={MONO}>EXAMPLE</span>
         </div>
 
-        <div className="px-5 sm:px-7 py-6 min-h-[360px]" style={{ transformStyle: 'preserve-3d' }}>
-          {/* The question */}
-          <div className="flex justify-end">
-            <div className="max-w-[85%] rounded-2xl rounded-br-md bg-white/[0.07] px-4 py-2.5 text-[15px] text-white">
-              {s.prompt.slice(0, typed)}
-              {phase === 'typing' && <span className="inline-block w-[2px] h-[1em] bg-[#ffffff] align-[-2px] ml-0.5 animate-pulse" />}
-            </div>
+        <div className="px-5 sm:px-7 py-6 min-h-[440px] flex flex-col" style={{ transformStyle: 'preserve-3d' }}>
+          {/* The question: sent from the box at the bottom, it rises to the top */}
+          <div className="min-h-[44px]">
+            {phase !== 'typing' && (
+              <motion.div
+                initial={reduce ? false : { opacity: 0, y: 150 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                className="flex justify-end"
+              >
+                <div className="max-w-[85%] rounded-2xl rounded-br-md bg-white/[0.07] px-4 py-2.5 text-[15px] text-white">
+                  {s.prompt}
+                </div>
+              </motion.div>
+            )}
           </div>
 
           {/* The answer */}
@@ -207,6 +215,25 @@ export default function HeroPrompt() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* The box the question is typed into */}
+          <div className="mt-auto pt-6">
+            <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3">
+              <div className="min-w-0 flex-1 text-[15px] text-white">
+                {phase === 'typing' ? (
+                  <>
+                    {s.prompt.slice(0, typed)}
+                    <span className="inline-block w-[2px] h-[1em] bg-[#ffffff] align-[-2px] ml-0.5 animate-pulse" />
+                  </>
+                ) : (
+                  <span className="text-neutral-600">Ask anything</span>
+                )}
+              </div>
+              <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${phase === 'typing' && typed === s.prompt.length ? 'bg-white text-black' : 'bg-white/10 text-neutral-500'}`}>
+                <ArrowUp className="w-4 h-4" />
+              </span>
+            </div>
+          </div>
         </div>
       </motion.div>
 
