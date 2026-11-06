@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { Sparkles, Check, X, ArrowRight } from 'lucide-react';
+import { Sparkles, X, ArrowRight } from 'lucide-react';
 
 // The hero: someone asks an AI a question, the answer lists a few businesses,
 // then the card tilts and either your result pops out ("cited") or a note
@@ -178,15 +178,6 @@ export default function HeroPrompt() {
                             <div className="text-[13px] text-neutral-400 truncate">{it.why}</div>
                           </div>
                           <span className="text-[11px] text-neutral-500 pt-1 hidden sm:inline" style={MONO}>{it.source}</span>
-                          {pop && (
-                            <motion.span
-                              initial={{ opacity: 0, scale: 0.6, y: 6 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-                              transition={{ delay: 0.25, type: 'spring', stiffness: 260, damping: 18 }}
-                              className="absolute -top-3 right-3 inline-flex items-center gap-1 rounded-full bg-[#ffffff] px-2.5 py-1 text-[11.5px] font-medium text-black shadow-lg"
-                            >
-                              <Check className="w-3 h-3" /> That's you · cited #{k + 1}
-                            </motion.span>
-                          )}
                         </motion.li>
                       );
                     })}
