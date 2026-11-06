@@ -88,19 +88,23 @@ const FIX_MODES = [
 function AnalyzeConsole() {
   const reduce = useReducedMotion();
   const [step, setStep] = useState(1);
+  // Each step takes 1.4s. Once all are done, hold long enough to show every fix set.
+  const FIX_HOLD_MS = 3500;
   useEffect(() => {
     if (reduce) return;
-    const t = setInterval(() => setStep(n => (n + 1) % (ANALYZE_STEPS.length + 1)), 1400);
-    return () => clearInterval(t);
-  }, [reduce]);
+    const delay = step === ANALYZE_STEPS.length ? FIX_MODES.length * FIX_HOLD_MS : 1400;
+    const t = setTimeout(() => setStep(n => (n + 1) % (ANALYZE_STEPS.length + 1)), delay);
+    return () => clearTimeout(t);
+  }, [step, reduce]);
   const done = reduce ? ANALYZE_STEPS.length : step;
 
-  // Once the steps finish, cycle through the three kinds of fix.
+  // Once the steps finish, show each kind of fix in turn, starting from the first.
   const [mode, setMode] = useState(0);
   useEffect(() => {
     if (reduce || done < ANALYZE_STEPS.length) return;
-    const t = setInterval(() => setMode(n => (n + 1) % FIX_MODES.length), 3200);
-    return () => clearInterval(t);
+    setMode(0);
+    const timers = FIX_MODES.slice(1).map((_, k) => setTimeout(() => setMode(k + 1), (k + 1) * FIX_HOLD_MS));
+    return () => timers.forEach(clearTimeout);
   }, [reduce, done]);
 
   return (
