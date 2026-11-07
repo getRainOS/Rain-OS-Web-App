@@ -104,20 +104,22 @@ function AnalyzeConsole() {
   const [runIdx, setRunIdx] = useState(0); // the analyzer running now
   const [shownIdx, setShownIdx] = useState(-1); // the analyzer whose results are on screen
   const FIX_HOLD_MS = 3500;
-  // Each analyzer runs the four steps (1.4s each). Its results then stay on screen
-  // while the next analyzer runs, and replace the old results only once it finishes.
+  // Each lane runs the four steps (1.4s each), shows its result, then clears
+  // before the next lane starts.
   useEffect(() => {
     if (reduce) return;
     if (step < ANALYZE_STEPS.length) {
       const t = setTimeout(() => setStep(n => n + 1), 1400);
       return () => clearTimeout(t);
     }
+    // Result shows, holds, then clears; the next lane starts after the blank.
     setShownIdx(runIdx);
-    const t = setTimeout(() => {
+    const clear = setTimeout(() => setShownIdx(-1), FIX_HOLD_MS);
+    const next = setTimeout(() => {
       setRunIdx(n => (n + 1) % FIX_MODES.length);
       setStep(0);
-    }, FIX_HOLD_MS);
-    return () => clearTimeout(t);
+    }, FIX_HOLD_MS + 700);
+    return () => { clearTimeout(clear); clearTimeout(next); };
   }, [step, runIdx, reduce]);
   const done = reduce ? ANALYZE_STEPS.length : step;
   const shown = reduce ? 0 : shownIdx;
