@@ -133,31 +133,21 @@ function AnalyzeConsole() {
         <span className="ml-auto text-[10px] text-neutral-600 hidden sm:inline" style={MONO}>EXAMPLE</span>
       </div>
       <div className="p-6 md:p-8">
-        {/* Lane rail: the lanes the running analyzer is for light up, joined by a moving light */}
-        <div className="relative mb-7">
-          <div className="absolute left-0 right-0 top-1/2 h-px bg-white/10" />
-          {!reduce && done < ANALYZE_STEPS.length && (
-            <motion.div
-              className="absolute top-1/2 h-px w-1/3 -translate-y-1/2 bg-gradient-to-r from-transparent via-white to-transparent shadow-[0_0_12px_rgba(255,255,255,0.9)]"
-              animate={{ left: ['-35%', '105%'] }}
-              transition={{ duration: 2.2, repeat: Infinity, ease: 'linear' }}
-            />
-          )}
-          <div className="relative flex flex-wrap justify-between gap-2">
-            {LANES.map((lane, k) => {
-              const on = FIX_MODES[runIdx].lanes.includes(k);
-              const Icon = lane.icon;
-              return (
-                <span key={lane.name}
-                  className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-[12px] bg-[#0a0a0a] transition-all duration-500 ${
-                    on ? 'border-white text-white shadow-[0_0_22px_rgba(255,255,255,0.6)]' : 'border-white/10 text-neutral-600'
-                  }`}>
-                  <Icon className="w-3.5 h-3.5" />
-                  {lane.name}
-                </span>
-              );
-            })}
-          </div>
+        {/* Lanes: the ones the running analyzer is for are lit */}
+        <div className="flex flex-wrap gap-2 mb-6">
+          {LANES.map((lane, k) => {
+            const on = FIX_MODES[runIdx].lanes.includes(k);
+            const Icon = lane.icon;
+            return (
+              <span key={lane.name}
+                className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[12px] transition-colors duration-500 ${
+                  on ? 'border-white/80 text-white' : 'border-white/[0.08] text-neutral-700'
+                }`}>
+                <Icon className="w-3 h-3" />
+                {lane.name}
+              </span>
+            );
+          })}
         </div>
         <div className="text-[15px] font-medium text-white mb-6">Running {FIX_MODES[runIdx].label}</div>
         <ul className="space-y-4">
