@@ -57,9 +57,20 @@ const ANALYZE_STEPS = [
 
 // Sample fixes, one set per way rain OS applies them. Each row shows the finding
 // it was written for, then the fix. Illustrative wording, not output from a real scan.
+// The lanes rain OS serves. Each analyzer lists the lanes most likely to use it;
+// the other lanes stay visible, dimmer, because every analyzer helps all of them.
+const LANES = [
+  { name: 'Local businesses', icon: MapPin },
+  { name: 'Online sellers', icon: ShoppingBag },
+  { name: 'Writers and marketers', icon: PenLine },
+  { name: 'Independent developers', icon: Code2 },
+  { name: 'Vibe coders', icon: Sparkles },
+];
+
 const FIX_MODES = [
   {
-    label: 'Content analyzer',
+    label: 'Check my writing',
+    lanes: [2],
     rows: [
       { was: 'Answer starts after a 58-word intro', now: 'Open with the answer in the first sentence' },
       { was: 'Heading reads "Our approach"', now: 'Rename it to what the section answers: "How pricing works"' },
@@ -68,6 +79,7 @@ const FIX_MODES = [
   },
   {
     label: 'URL scanner',
+    lanes: [0, 1],
     rows: [
       { was: 'Meta description absent', now: 'Add a 150-character summary to the page head' },
       { was: 'Images missing alt text', now: 'Describe each product photo in its alt attribute' },
@@ -76,6 +88,7 @@ const FIX_MODES = [
   },
   {
     label: 'Repo analysis',
+    lanes: [3, 4],
     rows: [
       { was: 'No JSON-LD schema markup in index.html', now: 'Add a business or product JSON-LD block' },
       { was: 'Meta description missing from index.html', now: 'Add a meta description tag to index.html' },
@@ -120,7 +133,33 @@ function AnalyzeConsole() {
         <span className="ml-auto text-[10px] text-neutral-600 hidden sm:inline" style={MONO}>EXAMPLE</span>
       </div>
       <div className="p-6 md:p-8">
-        <div className="text-[15px] font-medium text-white mb-6">Analyzing with {FIX_MODES[runIdx].label}</div>
+        {/* Lane rail: the lanes the running analyzer is for light up, joined by a moving light */}
+        <div className="relative mb-7">
+          <div className="absolute left-0 right-0 top-1/2 h-px bg-white/10" />
+          {!reduce && done < ANALYZE_STEPS.length && (
+            <motion.div
+              className="absolute top-1/2 h-px w-1/3 -translate-y-1/2 bg-gradient-to-r from-transparent via-white to-transparent shadow-[0_0_12px_rgba(255,255,255,0.9)]"
+              animate={{ left: ['-35%', '105%'] }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: 'linear' }}
+            />
+          )}
+          <div className="relative flex flex-wrap justify-between gap-2">
+            {LANES.map((lane, k) => {
+              const on = FIX_MODES[runIdx].lanes.includes(k);
+              const Icon = lane.icon;
+              return (
+                <span key={lane.name}
+                  className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-[12px] bg-[#0a0a0a] transition-all duration-500 ${
+                    on ? 'border-white text-white shadow-[0_0_22px_rgba(255,255,255,0.6)]' : 'border-white/10 text-neutral-600'
+                  }`}>
+                  <Icon className="w-3.5 h-3.5" />
+                  {lane.name}
+                </span>
+              );
+            })}
+          </div>
+        </div>
+        <div className="text-[15px] font-medium text-white mb-6">Running {FIX_MODES[runIdx].label}</div>
         <ul className="space-y-4">
           {ANALYZE_STEPS.map((label, k) => {
             const isDone = k < done;
