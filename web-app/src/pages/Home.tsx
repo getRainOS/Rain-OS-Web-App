@@ -140,7 +140,7 @@ function AnalyzeConsole() {
             style={{ width: `${Math.min(100, (done / ANALYZE_STEPS.length) * 100)}%` }}
           />
         </div>
-        <div className={`mt-7 transition-opacity duration-700 ${done >= ANALYZE_STEPS.length || reduce ? 'opacity-100' : 'opacity-0'}`}>
+        <div className="mt-7">
           <div className="mb-3 text-[11px] text-neutral-500" style={MONO}>WHEN IT FINISHES: THE FIXES</div>
           <div className="relative flex gap-5 border-b border-white/[0.07] mb-4">
             {FIX_MODES.map((m, k) => (
@@ -152,6 +152,7 @@ function AnalyzeConsole() {
               </span>
             ))}
           </div>
+          <div className={`transition-opacity duration-700 ${done >= ANALYZE_STEPS.length || reduce ? 'opacity-100' : 'opacity-0'}`}>
           <motion.ul key={mode} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} className="space-y-2">
             {FIX_MODES[mode].rows.map((r, k) => (
               <motion.li key={r.now} initial={reduce ? false : { opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.08 * k, duration: 0.35 }}
@@ -164,6 +165,7 @@ function AnalyzeConsole() {
               </motion.li>
             ))}
           </motion.ul>
+          </div>
         </div>
       </div>
     </div>
