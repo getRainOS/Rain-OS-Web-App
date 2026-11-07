@@ -88,22 +88,27 @@ const FIX_MODES = [
 function AnalyzeConsole() {
   const reduce = useReducedMotion();
   const [step, setStep] = useState(0);
-  const [mode, setMode] = useState(0);
+  const [runIdx, setRunIdx] = useState(0); // the analyzer running now
+  const [shownIdx, setShownIdx] = useState(-1); // the analyzer whose results are on screen
   const FIX_HOLD_MS = 3500;
-  // Each analyzer runs the four steps (1.4s each), shows its fixes, then the next analyzer starts from the top.
+  // Each analyzer runs the four steps (1.4s each). Its results then stay on screen
+  // while the next analyzer runs, and replace the old results only once it finishes.
   useEffect(() => {
     if (reduce) return;
     if (step < ANALYZE_STEPS.length) {
       const t = setTimeout(() => setStep(n => n + 1), 1400);
       return () => clearTimeout(t);
     }
+    setShownIdx(runIdx);
     const t = setTimeout(() => {
-      setMode(n => (n + 1) % FIX_MODES.length);
+      setRunIdx(n => (n + 1) % FIX_MODES.length);
       setStep(0);
     }, FIX_HOLD_MS);
     return () => clearTimeout(t);
-  }, [step, mode, reduce]);
+  }, [step, runIdx, reduce]);
   const done = reduce ? ANALYZE_STEPS.length : step;
+  const shown = reduce ? 0 : shownIdx;
+  const shownMode = FIX_MODES[Math.max(shown, 0)];
 
   return (
     <div className="relative rounded-xl border border-white/10 bg-[#0a0a0a] shadow-[0_40px_120px_-40px_rgba(255,255,255,0.35)] overflow-hidden text-left">
@@ -115,7 +120,7 @@ function AnalyzeConsole() {
         <span className="ml-auto text-[10px] text-neutral-600 hidden sm:inline" style={MONO}>EXAMPLE</span>
       </div>
       <div className="p-6 md:p-8">
-        <div className="text-[15px] font-medium text-white mb-6">Analyzing with {FIX_MODES[mode].label}</div>
+        <div className="text-[15px] font-medium text-white mb-6">Analyzing with {FIX_MODES[runIdx].label}</div>
         <ul className="space-y-4">
           {ANALYZE_STEPS.map((label, k) => {
             const isDone = k < done;
@@ -141,20 +146,20 @@ function AnalyzeConsole() {
           />
         </div>
         <div className="mt-7">
-          <div className="mb-3 text-[11px] text-neutral-500" style={MONO}>WHEN IT FINISHES: THE FIXES</div>
+          <div className="mb-3 text-[11px] text-neutral-500" style={MONO}>THE FIXES</div>
           <div className="relative flex gap-5 border-b border-white/[0.07] mb-4">
             {FIX_MODES.map((m, k) => (
-              <span key={m.label} className={`relative pb-2.5 text-[13px] transition-colors duration-300 ${k === mode ? 'text-white' : 'text-neutral-600'}`}>
+              <span key={m.label} className={`relative pb-2.5 text-[13px] transition-colors duration-300 ${k === shown ? 'text-white' : 'text-neutral-600'}`}>
                 {m.label}
-                {k === mode && (
+                {k === shown && (
                   <motion.span layoutId="fix-tab" className="absolute left-0 right-0 -bottom-px h-px bg-white shadow-[0_0_10px_rgba(255,255,255,0.9)]" transition={{ type: 'spring', stiffness: 380, damping: 32 }} />
                 )}
               </span>
             ))}
           </div>
-          <div className={`transition-opacity duration-700 ${done >= ANALYZE_STEPS.length || reduce ? 'opacity-100' : 'opacity-0'}`}>
-          <motion.ul key={mode} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} className="space-y-2">
-            {FIX_MODES[mode].rows.map((r, k) => (
+          <div className={`transition-opacity duration-700 ${shown >= 0 ? 'opacity-100' : 'opacity-0'}`}>
+          <motion.ul key={shown} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} className="space-y-2">
+            {shownMode.rows.map((r, k) => (
               <motion.li key={r.now} initial={reduce ? false : { opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.08 * k, duration: 0.35 }}
                 className="flex items-start gap-3 rounded-lg border border-white/[0.08] bg-gradient-to-r from-white/[0.05] to-transparent px-3.5 py-2.5">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white text-black text-[11px] font-semibold" style={MONO}>{k + 1}</span>
