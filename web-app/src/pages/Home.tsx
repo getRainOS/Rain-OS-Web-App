@@ -81,18 +81,18 @@ const FIX_MODES = [
     label: 'URL scanner',
     lanes: [0, 1],
     rows: [
-      { was: 'Meta description absent', now: 'Add a 150-character summary to the page head' },
-      { was: 'Images missing alt text', now: 'Describe each product photo in its alt attribute' },
+      { was: "AI can't find your business details on the page", now: 'Put your address, hours and phone in plain text' },
       { was: 'Missing Product schema markup', now: 'Add Product markup with price and availability' },
+      { was: 'Meta description absent', now: 'Add a 150-character summary to the page head' },
     ],
   },
   {
     label: 'Repo analysis',
     lanes: [3, 4],
     rows: [
-      { was: 'No JSON-LD schema markup in index.html', now: 'Add a business or product JSON-LD block' },
-      { was: 'Meta description missing from index.html', now: 'Add a meta description tag to index.html' },
-      { was: 'No LICENSE file', now: 'Add a LICENSE file to the repository root' },
+      { was: 'No JSON-LD schema markup found in index.html or layout files', now: 'Add a JSON-LD block to the page template' },
+      { was: 'Meta description missing from index.html and layout templates', now: 'Add a meta description to the page template' },
+      { was: 'README lacks a clear call to action', now: 'Add one line on what to do first, under the title' },
     ],
   },
 ];
