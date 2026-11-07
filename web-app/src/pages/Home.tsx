@@ -87,23 +87,23 @@ const FIX_MODES = [
 // The analysis screen in the app, shown as it runs: each step fills in turn.
 function AnalyzeConsole() {
   const reduce = useReducedMotion();
-  const [step, setStep] = useState(1);
-  // Each step takes 1.4s. Once all are done, hold long enough to show every fix set.
-  const FIX_HOLD_MS = 3500;
-  useEffect(() => {
-    if (reduce || step >= ANALYZE_STEPS.length) return;
-    const t = setTimeout(() => setStep(n => n + 1), 1400);
-    return () => clearTimeout(t);
-  }, [step, reduce]);
-  const done = reduce ? ANALYZE_STEPS.length : step;
-
-  // Once the steps finish they stay done; the fixes then cycle through each analyzer.
+  const [step, setStep] = useState(0);
   const [mode, setMode] = useState(0);
+  const FIX_HOLD_MS = 3500;
+  // Each analyzer runs the four steps (1.4s each), shows its fixes, then the next analyzer starts from the top.
   useEffect(() => {
-    if (reduce || done < ANALYZE_STEPS.length) return;
-    const t = setInterval(() => setMode(n => (n + 1) % FIX_MODES.length), FIX_HOLD_MS);
-    return () => clearInterval(t);
-  }, [reduce, done]);
+    if (reduce) return;
+    if (step < ANALYZE_STEPS.length) {
+      const t = setTimeout(() => setStep(n => n + 1), 1400);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => {
+      setMode(n => (n + 1) % FIX_MODES.length);
+      setStep(0);
+    }, FIX_HOLD_MS);
+    return () => clearTimeout(t);
+  }, [step, mode, reduce]);
+  const done = reduce ? ANALYZE_STEPS.length : step;
 
   return (
     <div className="relative rounded-xl border border-white/10 bg-[#0a0a0a] shadow-[0_40px_120px_-40px_rgba(255,255,255,0.35)] overflow-hidden text-left">
@@ -115,7 +115,7 @@ function AnalyzeConsole() {
         <span className="ml-auto text-[10px] text-neutral-600 hidden sm:inline" style={MONO}>EXAMPLE</span>
       </div>
       <div className="p-6 md:p-8">
-        <div className="text-[15px] font-medium text-white mb-6">Analyzing your content</div>
+        <div className="text-[15px] font-medium text-white mb-6">Analyzing with {FIX_MODES[mode].label}</div>
         <ul className="space-y-4">
           {ANALYZE_STEPS.map((label, k) => {
             const isDone = k < done;
