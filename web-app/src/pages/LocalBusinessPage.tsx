@@ -29,7 +29,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
               More people ask ChatGPT, Google's AI answers, Perplexity and Claude who to call. rain OS checks what each one says about your business, and tells you what to change, in plain English.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/login" className="inline-flex items-center gap-2 bg-[#ffffff] hover:bg-neutral-200 text-white rounded-md px-7 py-3.5 text-sm font-medium transition-colors">
+              <a href="/login" className="inline-flex items-center gap-2 bg-[#ffffff] hover:bg-neutral-200 text-black rounded-md px-7 py-3.5 text-sm font-medium transition-colors">
                 Check my business site free
                 <ArrowRight className="w-4 h-4" />
               </a>
@@ -386,7 +386,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
             <p className="text-neutral-400 text-lg mb-8 leading-relaxed">
               Sign up, pick Local Businesses, and check your homepage. rain OS shows where you're missing out and what to fix first.
             </p>
-            <a href="/login" className="inline-flex items-center gap-2 bg-[#ffffff] hover:bg-neutral-200 text-white rounded-md px-8 py-4 text-base font-medium transition-colors">
+            <a href="/login" className="inline-flex items-center gap-2 bg-[#ffffff] hover:bg-neutral-200 text-black rounded-md px-8 py-4 text-base font-medium transition-colors">
               Check my business free
               <ArrowRight className="w-5 h-5" />
             </a>
