@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Private areas: signed-in app pages and account flows
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /settings
+Disallow: /history
+Disallow: /report
+Disallow: /analyze
+Disallow: /login
+Disallow: /auth
+Disallow: /confirm
+Disallow: /api/
+
+Sitemap: https://getrainos.com/sitemap.xml
