@@ -516,10 +516,6 @@ function WhyGoogleSection() {
             </Reveal>
           ))}
         </div>
-        <p className="mt-6 text-[13px] text-neutral-500 max-w-3xl leading-relaxed">
-          Each check shows what that engine answered at that moment, from the location you choose. AI answers vary between runs, which is why
-          weekly tracking matters more than any single check. The Rain Score measures what every assistant relies on, like clear answers, structure and schema, so the fixes apply everywhere.
-        </p>
       </div>
     </section>
   );
