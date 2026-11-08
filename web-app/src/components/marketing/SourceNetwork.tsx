@@ -146,7 +146,9 @@ export default function SourceNetwork() {
         ctx!.font = LABEL_FONT;
         ctx!.textBaseline = 'middle';
         const icon = e.icon ? icons[e.icon] : undefined;
-        const hasIcon = !!icon;
+        // The ChatGPT blossom is drawn, not in ENGINE_ICONS, so it has to count here too;
+        // otherwise the name is set on top of it.
+        const hasIcon = e.icon === 'chatgpt' || !!icon;
         const blockW = (hasIcon ? ICON_SIZE + 8 : 0) + ctx!.measureText(e.name).width;
         const onLeft = e.x < q.x;
         const startX = onLeft ? e.x - 14 - blockW : e.x + 14;
