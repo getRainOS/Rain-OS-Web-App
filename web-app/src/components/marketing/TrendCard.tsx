@@ -1,3 +1,4 @@
+import { motion, useReducedMotion } from 'framer-motion';
 import { PILLAR_CHART_COLORS } from '@/lib/pillarColors.js';
 
 // A trend chart for the platform section: one line per pillar over eight weeks,
@@ -24,6 +25,7 @@ function valueAt(start: number, end: number, week: number, seed: number) {
 }
 
 export default function TrendCard() {
+  const reduce = useReducedMotion();
   const x = (w: number) => PAD + (w / (WEEKS - 1)) * (W - PAD * 2);
   const y = (v: number) => PAD + (1 - v / 100) * (H - PAD * 2);
 
@@ -31,7 +33,7 @@ export default function TrendCard() {
     <div className="mt-4 rounded-md border border-white/[0.07] bg-black p-4">
       <div className="flex items-center justify-between mb-3">
         <span className="text-[11px] text-neutral-500" style={{ fontFamily: "'Geist Mono', ui-monospace, monospace" }}>
-          LAST 8 WEEKS
+          LAST 8 ANALYSES
         </span>
         <span className="text-[11px] text-neutral-500" style={{ fontFamily: "'Geist Mono', ui-monospace, monospace" }}>EXAMPLE DATA</span>
       </div>
@@ -39,9 +41,24 @@ export default function TrendCard() {
         {[0, 50, 100].map(v => (
           <line key={v} x1={PAD} x2={W - PAD} y1={y(v)} y2={y(v)} stroke="rgba(255,255,255,0.06)" />
         ))}
+        {/* The lines draw in one after another, once the bars above have grown. */}
         {SERIES.map((s, i) => {
-          const pts = Array.from({ length: WEEKS }, (_, w) => `${x(w)},${y(valueAt(s.start, s.end, w, i))}`).join(' ');
-          return <polyline key={s.key} points={pts} fill="none" stroke={PILLAR_CHART_COLORS[s.key]} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />;
+          const d = Array.from({ length: WEEKS }, (_, w) => `${w === 0 ? 'M' : 'L'} ${x(w)} ${y(valueAt(s.start, s.end, w, i))}`).join(' ');
+          return (
+            <motion.path
+              key={s.key}
+              d={d}
+              fill="none"
+              stroke={PILLAR_CHART_COLORS[s.key]}
+              strokeWidth={2}
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              initial={reduce ? false : { pathLength: 0 }}
+              whileInView={{ pathLength: 1 }}
+              viewport={{ once: true, amount: 0.4 }}
+              transition={{ duration: 1.6, delay: 1.4 + i * 0.15, ease: 'easeInOut' }}
+            />
+          );
         })}
       </svg>
       <ul className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2 text-[12px] text-neutral-400">
