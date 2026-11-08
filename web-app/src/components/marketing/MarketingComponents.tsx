@@ -467,7 +467,7 @@ export const Pricing = () => {
                 <a
                   href="/login"
                   className={`block w-full text-center py-3 rounded-lg font-medium transition-colors mb-8 ${p.isPopular ? 'text-black' : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'}`}
-                  style={p.isPopular ? { background: 'var(--cyan)' } : undefined}
+                  style={p.isPopular ? { background: '#ffffff', color: '#000000' } : undefined}
                 >
                   {p.buttonText}
                 </a>
