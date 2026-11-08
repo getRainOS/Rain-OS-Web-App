@@ -30,6 +30,13 @@ export default function ScoreDonut({ score, label, color = '#ffffff', size = 96,
             strokeDasharray={`${(pct / 100) * length} ${length}`}
             className={styles.arc}
           />
+          {/* The needle: the same meter as the marketing site. */}
+          <g transform={`rotate(${-90 + pct * 1.8} ${cx} ${cy})`}>
+            <path d={`M ${cx - 2.5} ${cy} L ${cx} ${cy - (r - 6)} L ${cx + 2.5} ${cy} Z`} fill={color} />
+          </g>
+          <circle cx={cx} cy={cy} r={3.5} fill={color} />
+          <text x={cx - r} y={cy + 10} textAnchor="middle" fontSize={7} fill="#737373">0</text>
+          <text x={cx + r} y={cy + 10} textAnchor="middle" fontSize={7} fill="#737373">100</text>
         </svg>
         <span className={styles.value}>{score == null ? '—' : Math.round(pct)}</span>
       </div>
