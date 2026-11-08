@@ -4,7 +4,7 @@ import { PILLAR_CHART_COLORS } from '@/lib/pillarColors.js';
 // A trend chart for the platform section: one line per pillar over eight weeks,
 // in the same colours the app's trend lines use. Example data, labelled as such.
 const WEEKS = 8;
-const SERIES: { key: keyof typeof PILLAR_CHART_COLORS; label: string; start: number; end: number }[] = [
+export const SERIES: { key: keyof typeof PILLAR_CHART_COLORS; label: string; start: number; end: number }[] = [
   { key: 'ai_readability', label: 'AI Readability', start: 48, end: 74 },
   { key: 'digital_authority', label: 'Digital Authority', start: 55, end: 70 },
   { key: 'conversion_readiness', label: 'Conversion Readiness', start: 40, end: 61 },

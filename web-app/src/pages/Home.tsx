@@ -14,7 +14,7 @@ import HeroPrompt from '@/components/marketing/HeroPrompt';
 import SourceNetwork from '@/components/marketing/SourceNetwork';
 import RainBackground from '@/components/marketing/RainBackground';
 import TrendCard from '@/components/marketing/TrendCard';
-import AreaBars from '@/components/marketing/AreaBars';
+import PillarGauges from '@/components/marketing/PillarGauges';
 import ScrollWords from '@/components/marketing/ScrollWords';
 import IllustratedExample from '@/components/marketing/IllustratedExample';
 
@@ -266,8 +266,8 @@ function PlatformVisual({ id }: { id: string }) {
     return (
       <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <figure className="min-w-0">
-          <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>SCORES BY AREA</div>
-          <AreaBars />
+          <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>SCORE BY AREA</div>
+          <PillarGauges />
         </figure>
         <figure className="min-w-0">
           <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>TREND BY AREA</div>
@@ -774,8 +774,8 @@ export default function Home() {
             </Reveal>
             <Reveal delay={0.1}>
               <div className="rounded-xl border border-white/10 bg-[#0a0a0a] p-8">
-                <div className="text-7xl md:text-8xl font-semibold tracking-[-0.05em] text-white tabular-nums">47%</div>
-                <p className="mt-3 text-[15px] text-neutral-300 leading-relaxed">fewer clicks on regular search results when Google shows an AI summary. Users clicked a link on 8% of those visits, compared with 15% without one.</p>
+                <div className="text-7xl md:text-8xl font-semibold tracking-[-0.05em] tabular-nums" style={{ color: '#A8203E' }}>47%</div>
+                <p className="mt-3 text-[15px] text-neutral-300 leading-relaxed">Fewer people click through to websites when Google shows an AI answer. With an AI answer, 8 out of 100 searches end in a click to a site. Without one, it's 15.</p>
                 <a href="https://www.pewresearch.org/short-reads/2025/07/22/google-users-are-less-likely-to-click-on-links-when-an-ai-summary-appears-in-the-results/" target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-1 text-[12px] text-neutral-500 hover:text-neutral-300" style={MONO}>
                   PEW RESEARCH CENTER, JULY 2025 <ArrowUpRight className="w-3 h-3" />
                 </a>
