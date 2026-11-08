@@ -9,6 +9,7 @@ import { Sparkles, X, ArrowRight, ArrowUp } from 'lucide-react';
 // The wave behind the question box: one period repeats across two copies, so the
 // drift loops without a seam. Built from two sine waves whose periods divide the width.
 const WAVE_W = 2400;
+const WAVE_FILL_EXTRA = ` L${WAVE_W} 120 L0 120 Z`;
 const WAVE_PATH = (() => {
   const pts: string[] = [];
   for (let x = 0; x <= WAVE_W; x += 10) {
@@ -17,6 +18,7 @@ const WAVE_PATH = (() => {
   }
   return pts.join(' ');
 })();
+const WAVE_FILL = WAVE_PATH + WAVE_FILL_EXTRA;
 
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
 
@@ -239,7 +241,7 @@ export default function HeroPrompt() {
           {/* The box the question is typed into */}
           <div className="relative mt-auto pt-6">
             {/* A glowing wave behind the box, drifting sideways */}
-            <div className="pointer-events-none absolute inset-x-0 -bottom-10 h-36 overflow-hidden blur-md" aria-hidden="true">
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 overflow-hidden" aria-hidden="true">
               <motion.svg
                 viewBox={`0 0 ${WAVE_W} 120`}
                 preserveAspectRatio="none"
@@ -247,8 +249,14 @@ export default function HeroPrompt() {
                 animate={reduce ? undefined : { x: ['0%', '-50%'] }}
                 transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
               >
-                <path d={WAVE_PATH} fill="none" stroke="#ffffff" strokeWidth={3} opacity={0.55} />
-                <path d={WAVE_PATH} fill="none" stroke="#3B82F6" strokeWidth={6} opacity={0.25} transform="translate(0 6)" />
+                <defs>
+                  <linearGradient id="rainWaveGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stopColor="#00d2ff" stopOpacity="0.8" />
+                    <stop offset="1" stopColor="#3a7bd5" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+                <path d={WAVE_FILL} fill="url(#rainWaveGrad)" className="blur-[3px]" />
+                <path d={WAVE_PATH} fill="none" stroke="#7dd3fc" strokeWidth={2} opacity={0.9} />
               </motion.svg>
             </div>
             <div className="relative flex items-center gap-3 rounded-2xl border border-white/10 bg-[#0b0b0c]/85 px-4 py-3">
