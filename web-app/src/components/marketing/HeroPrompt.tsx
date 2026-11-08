@@ -6,6 +6,18 @@ import { Sparkles, X, ArrowRight, ArrowUp } from 'lucide-react';
 // then the card tilts and either your result pops out ("cited") or a note
 // says you're missing. Example data: one scene per lane, each on a different engine.
 
+// The wave behind the question box: one period repeats across two copies, so the
+// drift loops without a seam. Built from two sine waves whose periods divide the width.
+const WAVE_W = 2400;
+const WAVE_PATH = (() => {
+  const pts: string[] = [];
+  for (let x = 0; x <= WAVE_W; x += 10) {
+    const y = 60 + 22 * Math.sin((2 * Math.PI * x) / 300) + 10 * Math.sin((2 * Math.PI * x) / 150);
+    pts.push(`${x === 0 ? 'M' : 'L'}${x} ${y.toFixed(1)}`);
+  }
+  return pts.join(' ');
+})();
+
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
 
 type Item = { name: string; why: string; source: string; you?: boolean };
@@ -225,8 +237,21 @@ export default function HeroPrompt() {
           </AnimatePresence>
 
           {/* The box the question is typed into */}
-          <div className="mt-auto pt-6">
-            <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3">
+          <div className="relative mt-auto pt-6">
+            {/* A glowing wave behind the box, drifting sideways */}
+            <div className="pointer-events-none absolute inset-x-0 -bottom-10 h-36 overflow-hidden blur-md" aria-hidden="true">
+              <motion.svg
+                viewBox={`0 0 ${WAVE_W} 120`}
+                preserveAspectRatio="none"
+                className="absolute inset-y-0 left-0 h-full w-[200%]"
+                animate={reduce ? undefined : { x: ['0%', '-50%'] }}
+                transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+              >
+                <path d={WAVE_PATH} fill="none" stroke="#ffffff" strokeWidth={3} opacity={0.55} />
+                <path d={WAVE_PATH} fill="none" stroke="#3B82F6" strokeWidth={6} opacity={0.25} transform="translate(0 6)" />
+              </motion.svg>
+            </div>
+            <div className="relative flex items-center gap-3 rounded-2xl border border-white/10 bg-[#0b0b0c]/85 px-4 py-3">
               <div className="min-w-0 flex-1 text-[15px] text-white">
                 {phase === 'typing' ? (
                   <>
