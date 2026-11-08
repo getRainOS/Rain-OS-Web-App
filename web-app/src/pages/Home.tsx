@@ -14,6 +14,7 @@ import HeroPrompt from '@/components/marketing/HeroPrompt';
 import SourceNetwork from '@/components/marketing/SourceNetwork';
 import RainBackground from '@/components/marketing/RainBackground';
 import TrendCard from '@/components/marketing/TrendCard';
+import AreaBars from '@/components/marketing/AreaBars';
 import ScrollWords from '@/components/marketing/ScrollWords';
 import IllustratedExample from '@/components/marketing/IllustratedExample';
 
@@ -266,10 +267,7 @@ function PlatformVisual({ id }: { id: string }) {
       <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <figure className="min-w-0">
           <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>SCORES BY AREA</div>
-          <div className="relative rounded-md overflow-hidden border border-white/[0.07] h-[300px]">
-            <img src={shot.src} alt={shot.alt} width={shot.w} height={shot.h} loading="lazy" className="w-full h-auto block object-top" />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
-          </div>
+          <AreaBars />
         </figure>
         <figure className="min-w-0">
           <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>TREND BY AREA</div>
