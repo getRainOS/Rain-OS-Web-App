@@ -241,9 +241,9 @@ export default function HeroPrompt() {
               >
                 <defs>
                   <linearGradient id="rainFlutterGrad" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0" stopColor="#3B82F6" stopOpacity="0" />
-                    <stop offset="0.5" stopColor="#3B82F6" stopOpacity="0.45" />
-                    <stop offset="1" stopColor="#3B82F6" stopOpacity="0" />
+                    <stop offset="0" stopColor="#2563EB" stopOpacity="0" />
+                    <stop offset="0.5" stopColor="#2563EB" stopOpacity="0.9" />
+                    <stop offset="1" stopColor="#2563EB" stopOpacity="0" />
                   </linearGradient>
                 </defs>
                 <path d={FLUTTER_PATH} fill="none" stroke="url(#rainFlutterGrad)" strokeWidth={3} strokeLinecap="round" />
