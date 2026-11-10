@@ -231,7 +231,7 @@ export default function HeroPrompt() {
           {/* The box the question is typed into */}
           <div className="relative mt-auto pt-6">
             {/* A soft blue glow along the top edge of the box, fluttering gently in and out */}
-            <div className="pointer-events-none absolute inset-x-[4%] -top-3 h-6 blur-[5px]" aria-hidden="true">
+            <div className="pointer-events-none absolute inset-x-[4%] top-[9px] h-6 blur-[5px]" aria-hidden="true">
               <motion.svg
                 viewBox="0 0 1200 40"
                 preserveAspectRatio="none"
