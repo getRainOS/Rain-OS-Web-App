@@ -725,7 +725,7 @@ export default function Home() {
                 </button>
               </div>
               <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] text-neutral-400">
-                {[`Checks ${engines.length} AI tools`, 'Free to start', 'No credit card', 'No technical skills needed'].map(t => (
+                {[`Checks ${engines.length} AI tools`, 'No credit card', 'No technical skills needed'].map(t => (
                   <li key={t} className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-[#ffffff]" />{t}</li>
                 ))}
               </ul>
