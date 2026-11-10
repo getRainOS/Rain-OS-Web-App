@@ -237,7 +237,7 @@ export default function HeroPrompt() {
                 preserveAspectRatio="none"
                 className="h-full w-full overflow-visible"
                 animate={reduce ? undefined : { y: [0, -3, 0, 2, 0] }}
-                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
               >
                 <defs>
                   <linearGradient id="rainFlutterGrad" x1="0" y1="0" x2="1" y2="0">
