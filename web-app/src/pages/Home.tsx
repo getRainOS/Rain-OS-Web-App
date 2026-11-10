@@ -717,7 +717,7 @@ export default function Home() {
                 Be the answer <span className="text-neutral-500">AI gives.</span>
               </h1>
               <p className="mt-7 text-lg md:text-xl text-neutral-400 mx-auto leading-relaxed text-balance" style={{ maxWidth: 'calc(clamp(26px, 4.6vw, 64px) * 10.25)' }}>
-                More people now ask AI where to buy, who to hire and what to use. rain OS checks whether ChatGPT, Google's AI answers, Perplexity and Claude recommend you, and walks you through fixing it in plain English.
+                More people now ask AI where to buy, who to hire and what to use. rain OS checks whether {joinNames(engines)} recommend you, and walks you through fixing it in plain English.
               </p>
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button onClick={start} className="h-11 px-6 rounded-md bg-white text-black text-[15px] font-medium hover:bg-neutral-200 transition-colors inline-flex items-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
