@@ -579,7 +579,7 @@ function SourceNetworkSection() {
             className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance"
           />
           <p className="mt-5 text-neutral-400 text-lg leading-relaxed">
-            When someone asks an AI a question, it pulls from a handful of sites it trusts. rain OS shows you which ones, and which of them point to you.
+            To answer a question, an AI reads a few websites and quotes from them. rain OS shows you which websites each AI used for your questions, and whether yours is one of them.
           </p>
         </Reveal>
         <Reveal delay={0.1}>
