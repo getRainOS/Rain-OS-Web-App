@@ -6,19 +6,9 @@ import { Sparkles, X, ArrowRight, ArrowUp } from 'lucide-react';
 // then the card tilts and either your result pops out ("cited") or a note
 // says you're missing. Example data: one scene per lane, each on a different engine.
 
-// The wave behind the question box: one period repeats across two copies, so the
-// drift loops without a seam. Built from two sine waves whose periods divide the width.
-const WAVE_W = 2400;
-const WAVE_FILL_EXTRA = ` L${WAVE_W} 120 L0 120 Z`;
-const WAVE_PATH = (() => {
-  const pts: string[] = [];
-  for (let x = 0; x <= WAVE_W; x += 10) {
-    const y = 60 + 22 * Math.sin((2 * Math.PI * x) / 300) + 10 * Math.sin((2 * Math.PI * x) / 150);
-    pts.push(`${x === 0 ? 'M' : 'L'}${x} ${y.toFixed(1)}`);
-  }
-  return pts.join(' ');
-})();
-const WAVE_FILL = WAVE_PATH + WAVE_FILL_EXTRA;
+// The soft blue line along the top edge of the question box. It is a single gentle
+// curve, faded at both ends, that rises and falls slightly.
+const FLUTTER_PATH = 'M0 20 Q 300 12 600 20 T 1200 20';
 
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
 
@@ -240,23 +230,23 @@ export default function HeroPrompt() {
 
           {/* The box the question is typed into */}
           <div className="relative mt-auto pt-6">
-            {/* A glowing wave behind the box, drifting sideways */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 overflow-hidden" aria-hidden="true">
+            {/* A soft blue glow along the top edge of the box, fluttering gently in and out */}
+            <div className="pointer-events-none absolute inset-x-[4%] -top-3 h-6 blur-[5px]" aria-hidden="true">
               <motion.svg
-                viewBox={`0 0 ${WAVE_W} 120`}
+                viewBox="0 0 1200 40"
                 preserveAspectRatio="none"
-                className="absolute inset-y-0 left-0 h-full w-[200%]"
-                animate={reduce ? undefined : { x: ['0%', '-50%'] }}
-                transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+                className="h-full w-full overflow-visible"
+                animate={reduce ? undefined : { y: [0, -3, 0, 2, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
               >
                 <defs>
-                  <linearGradient id="rainWaveGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0" stopColor="#00d2ff" stopOpacity="0.8" />
-                    <stop offset="1" stopColor="#3a7bd5" stopOpacity="0" />
+                  <linearGradient id="rainFlutterGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stopColor="#3B82F6" stopOpacity="0" />
+                    <stop offset="0.5" stopColor="#3B82F6" stopOpacity="0.45" />
+                    <stop offset="1" stopColor="#3B82F6" stopOpacity="0" />
                   </linearGradient>
                 </defs>
-                <path d={WAVE_FILL} fill="url(#rainWaveGrad)" className="blur-[3px]" />
-                <path d={WAVE_PATH} fill="none" stroke="#7dd3fc" strokeWidth={2} opacity={0.9} />
+                <path d={FLUTTER_PATH} fill="none" stroke="url(#rainFlutterGrad)" strokeWidth={3} strokeLinecap="round" />
               </motion.svg>
             </div>
             <div className="relative flex items-center gap-3 rounded-2xl border border-white/10 bg-[#0b0b0c]/85 px-4 py-3">
