@@ -60,7 +60,7 @@ const problems = [
   },
   {
     label: 'What\'s changed',
-    body: 'ChatGPT, Perplexity, and Gemini now surface product recommendations directly. The brands with clean, structured product data win.',
+    body: 'ChatGPT, Perplexity, and Gemini now surface product recommendations directly. OpenAI lets sellers claim their business in ChatGPT and connect product feeds with prices and availability. Claim the profile, keep the feed current, and check the product pages it points to.',
     highlight: true,
   },
   {
