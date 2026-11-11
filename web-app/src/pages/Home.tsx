@@ -713,12 +713,15 @@ export default function Home() {
                 For local businesses, sellers and builders
                 <ArrowRight className="w-3 h-3 text-neutral-500" />
               </a>
+              {/* The subtitle takes the headline's width: w-0 + min-w-full stops it widening the block. */}
+              <div className="mx-auto w-fit">
               <h1 className="mt-7 text-[clamp(26px,4.6vw,64px)] leading-[1.02] font-semibold tracking-[-0.045em] whitespace-nowrap">
                 Be the answer <span className="text-neutral-500">AI gives.</span>
               </h1>
-              <p className="mt-7 text-lg md:text-xl text-neutral-400 mx-auto leading-relaxed text-balance" style={{ maxWidth: 'calc(clamp(26px, 4.6vw, 64px) * 10.25)' }}>
+              <p className="mt-7 w-0 min-w-full text-lg md:text-xl text-neutral-400 leading-relaxed text-balance text-center">
                 More people now ask AI where to buy, who to hire and what to use. rain OS checks whether {joinNames(engines)} recommend you, and walks you through fixing it in plain English.
               </p>
+              </div>
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button onClick={start} className="h-11 px-6 rounded-md bg-white text-black text-[15px] font-medium hover:bg-neutral-200 transition-colors inline-flex items-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
                   Check my site free <ArrowRight className="w-4 h-4" />
