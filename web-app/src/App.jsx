@@ -25,6 +25,7 @@ import ProductFacts from './pages/ProductFacts.jsx';
 import Upgrade from './pages/Upgrade.jsx';
 import Settings from './pages/Settings.jsx';
 import ConfirmEmail from './pages/ConfirmEmail.jsx';
+import ScrollToTop from './components/ScrollToTop.jsx';
 
 const Home = lazy(() => import('./pages/Home.tsx'));
 const LocalBusinessPage = lazy(() => import('./pages/LocalBusinessPage.tsx'));
@@ -172,6 +173,7 @@ export default function App() {
   return (
     <AppContext.Provider value={{ apiKey, user, setUser, onLogout, refreshUser, refreshUserUntilPlanChanges, userLane, setUserLane }}>
       <BrowserRouter>
+        <ScrollToTop />
         <AppRoutes apiKey={apiKey} onAuth={onAuth} onLogout={onLogout} refreshUser={refreshUser} />
       </BrowserRouter>
     </AppContext.Provider>
