@@ -720,7 +720,7 @@ function EngineCycle({ names }: { names: string[] }) {
     return () => clearInterval(t);
   }, [reduce, names.length]);
   return (
-    <div className="mt-4 flex justify-center" style={{ fontSize: 'clamp(26px, 4.6vw, 64px)' }}>
+    <div className="mt-4 flex justify-center" style={{ fontSize: 'clamp(21px, 3.7vw, 51px)' }}>
       <AnimatePresence mode="wait">
         <motion.span
           key={names[i]}
