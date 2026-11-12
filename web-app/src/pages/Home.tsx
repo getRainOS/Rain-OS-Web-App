@@ -716,7 +716,7 @@ function EngineCycle({ names }: { names: string[] }) {
   const [i, setI] = useState(0);
   useEffect(() => {
     if (reduce) return;
-    const t = setInterval(() => setI(n => (n + 1) % names.length), 1800);
+    const t = setInterval(() => setI(n => (n + 1) % names.length), 3000);
     return () => clearInterval(t);
   }, [reduce, names.length]);
   return (
