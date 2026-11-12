@@ -51,7 +51,7 @@ export default function SiteFooter() {
             <Link to="/" className="block w-fit leading-none text-white" aria-label="rain OS home">
               <Logo size={22} />
             </Link>
-            <p className="mt-1 text-[12px] text-neutral-500 leading-none">Optimization systems</p>
+            <p className="mt-1 text-[12px] text-neutral-500 leading-none">Optimization Systems</p>
             <p className="mt-2 text-[13px] text-neutral-500 leading-snug max-w-[240px]">
               Be <span className="text-white">seen.</span>
             </p>
