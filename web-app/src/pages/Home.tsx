@@ -704,7 +704,7 @@ function EngineMark({ name }: { name: string }) {
   if (!icon) return null;
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className="h-[0.8em] w-[0.8em] shrink-0">
-      <path d={icon.path} fill={icon.hex} />
+      <path d={icon.path} fill="#ffffff" />
     </svg>
   );
 }
@@ -720,7 +720,7 @@ function EngineCycle({ names }: { names: string[] }) {
     return () => clearInterval(t);
   }, [reduce, names.length]);
   return (
-    <div className="mt-4 flex justify-center" style={{ fontSize: 'clamp(21px, 3.7vw, 51px)' }}>
+    <div className="mt-4 flex justify-center" style={{ fontSize: 'clamp(15px, 2.6vw, 36px)' }}>
       <AnimatePresence mode="wait">
         <motion.span
           key={names[i]}
