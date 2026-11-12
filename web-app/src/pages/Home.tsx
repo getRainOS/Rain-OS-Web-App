@@ -678,6 +678,33 @@ const SPECS = [
   { k: 'Weekly', v: 're-checks with email alerts' },
 ];
 
+// Under the headline: each AI tool's name in turn, blurring in and out.
+function EngineCycle({ names }: { names: string[] }) {
+  const reduce = useReducedMotion();
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (reduce) return;
+    const t = setInterval(() => setI(n => (n + 1) % names.length), 1800);
+    return () => clearInterval(t);
+  }, [reduce, names.length]);
+  return (
+    <div className="mt-4 flex h-8 items-center justify-center text-lg md:text-xl">
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={names[i]}
+          initial={reduce ? false : { opacity: 0, y: 10, filter: 'blur(4px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
+          transition={{ duration: 0.45 }}
+          className="whitespace-nowrap font-medium text-white"
+        >
+          {names[i]}
+        </motion.span>
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export default function Home() {
   const engines = useLiveEngines();
   const navigate = useNavigate();
@@ -718,6 +745,7 @@ export default function Home() {
               <h1 className="mt-7 text-[clamp(26px,4.6vw,64px)] leading-[1.02] font-semibold tracking-[-0.045em] whitespace-nowrap">
                 Be the answer <span className="text-neutral-500">AI gives.</span>
               </h1>
+              <EngineCycle names={engines} />
               <p className="mt-7 w-0 min-w-full text-lg md:text-xl text-neutral-400 leading-relaxed text-center">
                 More people now ask AI where to buy, who to hire and what to use. rain OS checks whether {joinNames(engines)} recommend you, and walks you through fixing it in plain English.
               </p>
