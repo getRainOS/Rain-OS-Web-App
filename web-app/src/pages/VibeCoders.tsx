@@ -350,7 +350,7 @@ export default function VibeCoders() {
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-neutral-400">Weight in overall score</span>
                       <span className="text-xs font-bold" style={{ color: p.color }}>
-                        {i === 0 ? '32%' : i === 1 ? '32%' : i === 2 ? '26%' : i === 3 ? '0%' : '10%'}
+                        {i === 3 ? '0%' : '25%'}
                       </span>
                     </div>
                     <div className="mt-2 h-1.5 rounded-full bg-white/5 overflow-hidden">

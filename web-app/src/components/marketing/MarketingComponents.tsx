@@ -84,7 +84,7 @@ export const FourPillars = () => {
   const pillars = [
     {
       name: 'AI Readability',
-      weight: '36%',
+      weight: '25%',
       tagline: 'Can AI actually read your source?',
       description: 'Vibe-coded sites render great in a browser, but AI crawlers read the raw HTML. This scores how well your source actually translates into machine-extractable answers — the #1 gap in AI-generated sites.',
       color: 'white',
@@ -98,7 +98,7 @@ export const FourPillars = () => {
     },
     {
       name: 'Digital Authority',
-      weight: '27%',
+      weight: '25%',
       tagline: 'Is your site a source AI will quote?',
       description: 'AI tools built your site fast, but they skipped the trust markup. This pillar scores the schema, entity clarity, and credibility signals that make AI engines treat your domain as a quotable source.',
       color: 'white',
@@ -112,7 +112,7 @@ export const FourPillars = () => {
     },
     {
       name: 'Conversion Readiness',
-      weight: '27%',
+      weight: '25%',
       tagline: 'Does your site convert AI-referred visitors?',
       description: "Getting traffic from AI is only half the job. This pillar scores whether your site's copy actually converts that traffic — CTA clarity, trust proof, and friction that vibe-coded landing pages routinely miss.",
       color: 'white',
@@ -126,7 +126,7 @@ export const FourPillars = () => {
     },
     {
       name: 'Easy to Quote',
-      weight: '10%',
+      weight: '25%',
       tagline: 'Can AI retrieval systems find and synthesize your content?',
       description: 'Easy to Quote measures how well your content is optimized for Retrieval-Augmented Generation (RAG) systems \u2014 vector databases, embedding models, and chunk-based retrieval. It checks information density, semantic mapping, hierarchical formatting, and structured Q&A.',
       color: 'white',
