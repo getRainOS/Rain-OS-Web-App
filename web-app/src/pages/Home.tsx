@@ -7,6 +7,7 @@ import {
   MapPin, ShoppingBag, PenLine, Sparkles, Code2, HelpCircle,
 } from 'lucide-react';
 import MarketingNav from '@/components/marketing/MarketingNav';
+import { ENGINE_ICONS } from '@/components/marketing/engineIcons';
 import SiteFooter from '@/components/marketing/SiteFooter';
 import { FAQ } from '@/components/marketing/MarketingComponents';
 import { useLiveEngines, joinNames } from '@/lib/liveEngines';
@@ -678,7 +679,38 @@ const SPECS = [
   { k: 'Weekly', v: 're-checks with email alerts' },
 ];
 
-// Under the headline: each AI tool's name in turn, blurring in and out.
+// Each engine's mark. ChatGPT's blossom is drawn here; the rest are brand marks from engineIcons.
+const ENGINE_MARK: Record<string, string> = {
+  ChatGPT: 'chatgpt',
+  'Google AI Overviews': 'google',
+  'Google AI Mode': 'google',
+  Gemini: 'gemini',
+  Perplexity: 'perplexity',
+  Claude: 'claude',
+};
+
+function EngineMark({ name }: { name: string }) {
+  const key = ENGINE_MARK[name];
+  if (key === 'chatgpt') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-[0.8em] w-[0.8em] shrink-0" fill="none" stroke="#ffffff" strokeWidth={1.6}>
+        {[0, 1, 2, 3, 4, 5].map(k => (
+          <ellipse key={k} cx={12} cy={12} rx={4.2} ry={9} transform={`rotate(${k * 30} 12 12)`} />
+        ))}
+      </svg>
+    );
+  }
+  const icon = key ? ENGINE_ICONS[key] : undefined;
+  if (!icon) return null;
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-[0.8em] w-[0.8em] shrink-0">
+      <path d={icon.path} fill={icon.hex} />
+    </svg>
+  );
+}
+
+// Under the headline: each AI tool's name and mark in turn, blurring in and out,
+// at the headline's size.
 function EngineCycle({ names }: { names: string[] }) {
   const reduce = useReducedMotion();
   const [i, setI] = useState(0);
@@ -688,7 +720,7 @@ function EngineCycle({ names }: { names: string[] }) {
     return () => clearInterval(t);
   }, [reduce, names.length]);
   return (
-    <div className="mt-4 flex h-8 items-center justify-center text-lg md:text-xl">
+    <div className="mt-4 flex justify-center" style={{ fontSize: 'clamp(26px, 4.6vw, 64px)' }}>
       <AnimatePresence mode="wait">
         <motion.span
           key={names[i]}
@@ -696,8 +728,9 @@ function EngineCycle({ names }: { names: string[] }) {
           animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
           transition={{ duration: 0.45 }}
-          className="whitespace-nowrap font-medium text-white"
+          className="inline-flex items-center gap-[0.25em] whitespace-nowrap font-semibold leading-[1.1] tracking-[-0.03em] text-white"
         >
+          <EngineMark name={names[i]} />
           {names[i]}
         </motion.span>
       </AnimatePresence>
@@ -747,7 +780,7 @@ export default function Home() {
               </h1>
               <EngineCycle names={engines} />
               <p className="mt-7 w-0 min-w-full text-lg md:text-xl text-neutral-400 leading-relaxed text-center">
-                More people now ask AI where to buy, who to hire and what to use. rain OS checks whether {joinNames(engines)} recommend you, and walks you through fixing it in plain English.
+                More people now ask AI where to buy, who to hire and what to use. rain OS checks whether AI mentions you, and walks you through fixing it in plain English.
               </p>
               </div>
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
