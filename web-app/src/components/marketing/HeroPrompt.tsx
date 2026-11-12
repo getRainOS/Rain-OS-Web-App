@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence, useReducedMotion, useInView } from 'framer-motion';
 import { Sparkles, X, ArrowRight, ArrowUp } from 'lucide-react';
 
 // The hero: someone asks an AI a question, the answer lists a few businesses,
@@ -83,6 +83,9 @@ type Phase = 'typing' | 'thinking' | 'answer' | 'reveal';
 
 export default function HeroPrompt() {
   const reduce = useReducedMotion();
+  // The example stays still until it scrolls into view, then runs once.
+  const ref = useRef<HTMLDivElement | null>(null);
+  const started = useInView(ref, { once: true, amount: 0.3 });
   const [i, setI] = useState(0);
   const [phase, setPhase] = useState<Phase>(reduce ? 'reveal' : 'typing');
   const [typed, setTyped] = useState(reduce ? SCENES[0].prompt.length : 0);
@@ -90,7 +93,7 @@ export default function HeroPrompt() {
   const s = SCENES[i];
 
   useEffect(() => {
-    if (reduce) return;
+    if (reduce || !started) return;
     let t: ReturnType<typeof setTimeout>;
     if (phase === 'typing') {
       if (typed < s.prompt.length) t = setTimeout(() => setTyped(n => n + 1), 32);
@@ -107,12 +110,12 @@ export default function HeroPrompt() {
       }, 3600);
     }
     return () => clearTimeout(t);
-  }, [phase, typed, shown, s, reduce]);
+  }, [phase, typed, shown, s, reduce, started]);
 
   const revealed = phase === 'reveal';
 
   return (
-    <div className="relative mx-auto w-full" style={{ perspective: 1400 }}>
+    <div ref={ref} className="relative mx-auto w-full" style={{ perspective: 1400 }}>
       <div className="pointer-events-none absolute -inset-10 rounded-[40px] blur-3xl opacity-60"
         style={{ background: 'radial-gradient(50% 50% at 50% 40%, rgba(255,255,255,0.22), transparent 70%)' }} />
       <motion.div
@@ -236,7 +239,7 @@ export default function HeroPrompt() {
                 viewBox="0 0 1200 40"
                 preserveAspectRatio="none"
                 className="h-full w-full overflow-visible"
-                animate={reduce ? undefined : { y: [0, -3, 0, 2, 0] }}
+                animate={reduce || !started ? undefined : { y: [0, -3, 0, 2, 0] }}
                 transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
               >
                 <defs>
