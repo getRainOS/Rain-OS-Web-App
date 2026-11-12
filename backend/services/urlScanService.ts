@@ -48,6 +48,9 @@ export interface TechnicalSignals {
   localBusinessSchemaHasPhone: boolean;
   localBusinessSchemaHasHours: boolean;
   localBusinessSchemaHasGeo: boolean;
+  // Plain visible text (not markup): a licence statement and a rating or review count.
+  hasLicenceText: boolean;
+  hasReviewText: boolean;
   // Semantic structure
   hasSemanticHtml: boolean;
   semanticTagsFound: string[];
@@ -99,9 +102,16 @@ export interface TechnicalSignals {
 // Points each fix is worth, from the same weights the scoring uses in the
 // URL scan handler (applyTechnicalAdjustments). Estimates, not exact: a fix can
 // lift a pillar by more than it lifts the overall score.
+// Plain-text patterns. They read the visible wording of the page. They miss some
+// valid licence formats, and they can't see reviews loaded by a script.
+const LICENCE_TEXT_RE = /\blicen[cs]ed (in|by|with) [A-Za-z]{3,}|\blicen[cs]e (no\.?|number|#) ?[A-Z0-9][A-Z0-9-]{3,}|\blic\.? ?(no\.?|#) ?[A-Z0-9][A-Z0-9-]{3,}/i;
+const REVIEW_TEXT_RE = /\b[0-5](\.\d)? ?(★|stars?\b|out of 5)|\b\d[\d,]*\+? (reviews|ratings)\b/i;
+
 export const FIX_SCORE_POINTS: Record<string, number> = {
   'JavaScript-rendered content blocking AI crawlers': 8,
   'Meta description absent': 5,
+  'No licence details in plain text': 3,
+  'No review rating or count in plain text': 3,
   'Page is set to noindex': 5,
   "AI can't find your business details on the page": 4,
   'Missing schema markup': 4,
@@ -462,6 +472,10 @@ export async function scanUrlForTechnicalSignals(
   signals.localBusinessSchemaHasPhone = localBusinessSchemaHasPhone;
   signals.localBusinessSchemaHasHours = localBusinessSchemaHasHours;
   signals.localBusinessSchemaHasGeo = localBusinessSchemaHasGeo;
+
+  const pageText = $('body').text().replace(/\s+/g, ' ');
+  signals.hasLicenceText = LICENCE_TEXT_RE.test(pageText);
+  signals.hasReviewText = REVIEW_TEXT_RE.test(pageText);
 
   // ─── Semantic HTML ──────────────────────────────────────────────────────────
   const semTags = ['article', 'section', 'main', 'nav', 'aside', 'header', 'footer'];
@@ -894,6 +908,25 @@ export async function scanUrlForTechnicalSignals(
         technicalFix: 'For your developer: replace the custom form handler with an established form service, keep spam protection on, and test a submission end to end.',
       });
     }
+  }
+
+  if (module === 'local_business' && !signals.hasLicenceText) {
+    recs.push({
+      issue: 'No licence details in plain text',
+      recommendation: 'Put your licence on the page as words, not only in an image or a PDF. AI reads the text, so this is how it can tell you are licensed.',
+      severity: 'medium',
+      nonTechnicalFix: 'Write your licence in the footer or on the contact page, for example "Licensed in Texas, Lic. #12345". Use the number from your licence certificate. In most site builders the footer is under Design, then Footer, or under Settings.',
+      technicalFix: 'For your developer: add the business licence as visible text in the footer or contact section, not only in an image or PDF.',
+    });
+  }
+  if (module === 'local_business' && !signals.hasReviewText) {
+    recs.push({
+      issue: 'No review rating or count in plain text',
+      recommendation: 'State your rating and number of reviews as text on the page, so AI can quote them. Use your real figures and keep them current.',
+      severity: 'medium',
+      nonTechnicalFix: 'Add one line to your homepage with your rating and review count, for example "4.9 ★ from 800+ reviews", and link it to your Google profile. Use the current numbers from Google and update them when they change. Most site builders let you add this as a text block.',
+      technicalFix: 'For your developer: show the rating and review count as plain text on the homepage, linked to the business profile. Avoid loading it only through a script, because the scanner reads the page text.',
+    });
   }
 
   const scoredRecs = recs.map(r => ({ ...r, scoreImpact: FIX_SCORE_POINTS[r.issue] ?? 0 }));
