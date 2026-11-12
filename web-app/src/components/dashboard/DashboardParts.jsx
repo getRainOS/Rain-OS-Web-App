@@ -29,7 +29,7 @@ export const PILLARS = [
   { key: 'digital_authority',       label: 'Digital Authority',    color: PILLAR_CHART_COLORS.digital_authority, Icon: ShieldCheck },
   { key: 'conversion_readiness',    label: 'Conversion Readiness', color: PILLAR_CHART_COLORS.conversion_readiness, Icon: MousePointerClick },
   { key: 'product_discoverability', label: 'Product Discoverability',color: PILLAR_CHART_COLORS.product_discoverability, Icon: SearchCheck },
-  { key: 'rag_readiness',           label: 'RAG Readiness',        color: PILLAR_CHART_COLORS.rag_readiness, Icon: Layers },
+  { key: 'rag_readiness',           label: 'Easy to Quote',        color: PILLAR_CHART_COLORS.rag_readiness, Icon: Layers },
   { key: 'local_presence',          label: 'Local Presence',       color: PILLAR_CHART_COLORS.local_presence, Icon: MapPin },
 ];
 

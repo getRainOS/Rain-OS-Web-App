@@ -203,7 +203,7 @@ export default function AIReadabilityPage() {
               </ul>
             </div>
 
-            {/* Pillar 5 — RAG Readiness */}
+            {/* Pillar 5 — Easy to Quote */}
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
               <h3 className="text-base font-semibold text-white mb-3">
                 <span className="text-white mr-2">10% (all lanes)</span>

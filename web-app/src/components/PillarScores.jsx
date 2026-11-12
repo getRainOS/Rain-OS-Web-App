@@ -164,7 +164,7 @@ const PILLARS = [
   {
     key: 'rag_readiness',
     camel: 'ragReadiness',
-    label: 'RAG Readiness',
+    label: 'Easy to Quote',
     color: PILLAR_COLORS.rag_readiness,
     sub: 'RAG retrieval & synthesis quality',
     detailKey: 'rag_readiness_detail',

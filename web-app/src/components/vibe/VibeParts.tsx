@@ -70,7 +70,7 @@ export const repoPillars = [
     bg: 'rgba(255,255,255,0.04)',
     border: 'rgba(255,255,255,0.12)',
     Icon: Layers,
-    name: 'RAG Readiness',
+    name: 'Easy to Quote',
     score: 40,
     maxScore: 88,
     subSignals: [

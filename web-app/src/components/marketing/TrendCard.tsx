@@ -9,7 +9,7 @@ export const SERIES: { key: keyof typeof PILLAR_CHART_COLORS; label: string; sta
   { key: 'digital_authority', label: 'Digital Authority', start: 55, end: 70 },
   { key: 'conversion_readiness', label: 'Conversion Readiness', start: 40, end: 61 },
   { key: 'product_discoverability', label: 'Product Discoverability', start: 52, end: 66 },
-  { key: 'rag_readiness', label: 'RAG Readiness', start: 36, end: 58 },
+  { key: 'rag_readiness', label: 'Easy to Quote', start: 36, end: 58 },
   { key: 'local_presence', label: 'Local Presence', start: 60, end: 79 },
 ];
 

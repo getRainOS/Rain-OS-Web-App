@@ -44,7 +44,7 @@ export const EXPORTS = {
       { label: 'AI Readability', get: r => r.ai_readability },
       { label: 'Digital Authority', get: r => r.digital_authority },
       { label: 'Conversion Readiness', get: r => r.conversion_readiness },
-      { label: 'RAG Readiness', get: r => r.rag_readiness },
+      { label: 'Easy to Quote', get: r => r.rag_readiness },
       { label: 'Product Discoverability', get: r => r.product_discoverability },
       { label: 'Local Presence', get: r => r.local_presence },
     ],

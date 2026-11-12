@@ -13,7 +13,7 @@ const KB_DATA = {
         desc: 'Trust signals that make AI engines choose your content over competitors. Schema markup, citations, entity recognition, and topical depth.' },
       { key: 'conversion',        label: 'Conversion Readiness',   weight: '27%', color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick,
         desc: 'How effectively your content turns AI-referred readers into customers. Strong CTAs, social proof, and clear value propositions.' },
-      { key: 'rag_readiness',     label: 'RAG Readiness',        weight: '10%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
+      { key: 'rag_readiness',     label: 'Easy to Quote',        weight: '10%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
         desc: 'How well your content is optimized for Retrieval-Augmented Generation (RAG) systems — vector databases, embedding models, and chunk-based retrieval. Measures information density, semantic mapping, and structured Q&A.' },
     ],
     tools: [
@@ -43,7 +43,7 @@ const KB_DATA = {
         desc: 'Brand trust signals — reviews, certifications, and third-party mentions that make AI confident recommending you.' },
       { key: 'conversion',      label: 'Conversion Readiness',   weight: '15%', color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick,
         desc: 'Purchase intent signals like clear pricing, availability, and compelling calls to action.' },
-      { key: 'rag_readiness',   label: 'RAG Readiness',         weight: '10%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
+      { key: 'rag_readiness',   label: 'Easy to Quote',         weight: '10%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
         desc: 'How well your product descriptions are optimized for AI retrieval and vector database search. Structured Q&A and semantic mapping help AI surface your products for relevant queries.' },
     ],
     tools: [
@@ -71,7 +71,7 @@ const KB_DATA = {
         desc: 'Trust signals that make AI engines treat your domain as a quotable source. Schema, entity clarity, and credibility markup.' },
       { key: 'conversion',        label: 'Conversion Readiness',   weight: '26%', color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick,
         desc: 'How effectively your AI-built site turns visitors into users. CTAs, onboarding clarity, and feature explanations.' },
-      { key: 'rag_readiness',     label: 'RAG Readiness',        weight: '10%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
+      { key: 'rag_readiness',     label: 'Easy to Quote',        weight: '10%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
         desc: 'How well your project docs and README are optimized for AI retrieval and vector database search. Structured Q&A and semantic mapping matter.' },
     ],
     tools: [
@@ -100,7 +100,7 @@ const KB_DATA = {
         desc: 'Coverage of API endpoints, error handling, code examples, and installation steps. Missing sections cost you visibility.' },
       { key: 'technical_clarity', label: 'Conversion Readiness', weight: '26%', color: PILLAR_COLORS.conversion_readiness, Icon: ShieldCheck,
         desc: 'Plain-language explanations alongside technical depth. AI prefers docs that explain the "why" not just the "how".' },
-      { key: 'rag_readiness',     label: 'RAG Readiness',      weight: '10%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
+      { key: 'rag_readiness',     label: 'Easy to Quote',      weight: '10%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
         desc: 'How well your docs are optimized for AI retrieval and vector database search. Structured Q&A and semantic mapping matter.' },
     ],
     tools: [
@@ -131,7 +131,7 @@ const KB_DATA = {
         desc: 'Credentials, years in business, reviews and sources that make AI confident recommending you.' },
       { key: 'conversion_readiness', label: 'Conversion Readiness', weight: '20%', color: PILLAR_COLORS.conversion_readiness, Icon: ShieldCheck,
         desc: 'A clear way to book or call, prices or ranges, and what happens next.' },
-      { key: 'rag_readiness',    label: 'RAG Readiness',      weight: '10%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
+      { key: 'rag_readiness',    label: 'Easy to Quote',      weight: '10%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
         desc: 'How well your local business content is optimized for AI retrieval. Structured Q&A, service descriptions, and semantic mapping help AI surface you for local queries.' },
     ],
     tools: [

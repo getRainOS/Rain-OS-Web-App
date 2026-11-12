@@ -1,7 +1,7 @@
 // services/repoAnalysisService.ts
 // Fetches key source files from a GitHub repo and scores them against
 // the 5 AEO pillars: AI Readability, Digital Authority,
-// Conversion Readiness, Product Discoverability, and RAG Readiness.
+// Conversion Readiness, Product Discoverability, and Easy to Quote.
 import { checkAllCrawlers, scoreAiCrawlerAccess, type CrawlerStatus } from './robotsCheck';
 
 // Below this many trimmed characters, a committed llms.txt is treated as
@@ -297,7 +297,7 @@ function scoreProductDiscoverability(signals: RepoSignals): number {
 }
 
 /**
- * RAG Readiness measures how well a repo's documentation would serve a
+ * Easy to Quote measures how well a repo's documentation would serve a
  * retrieval-augmented system — not just whether docs exist, but whether
  * they're structured, deep, and externally grounded enough to retrieve and
  * cite well. Deliberately doesn't try to approximate every one of Gemini's

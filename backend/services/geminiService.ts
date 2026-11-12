@@ -230,7 +230,7 @@ export function contentTypeRubric(contentType?: string): string | null {
 export function moduleRubric(module: string): string {
   return module === 'product_sellers'
   ? `MODULE: product_sellers
-MODULE_WEIGHTS: AI Readability 20%, Digital Authority 15%, Conversion Readiness 15%, Product Discoverability 50%, Local Presence Signals 0%, RAG Readiness 10%
+MODULE_WEIGHTS: AI Readability 20%, Digital Authority 15%, Conversion Readiness 15%, Product Discoverability 50%, Local Presence Signals 0%, Easy to Quote 10%
 For this module, Product Discoverability is the PRIMARY scoring focus — AI shopping answers recommend products whose facts they can extract and compare. Score it with maximum precision:
 PRODUCT DISCOVERABILITY:
 - Identity: brand, exact product/model name, and an identifier (SKU, GTIN/UPC, MPN) stated plainly
@@ -247,15 +247,15 @@ CONVERSION READINESS signals: a clear add-to-cart or buy action, price near the 
 Do not score Local Presence Signals — set to 0.`
   : module === 'developers'
   ? `MODULE: developers
-MODULE_WEIGHTS: AI Readability (Documentation Structure) 32%, Digital Authority (Technical Completeness) 32%, Conversion Readiness (Technical Clarity) 26%, Product Discoverability 0% (not applicable), Local Presence Signals 0% (not applicable), RAG Readiness 10%
+MODULE_WEIGHTS: AI Readability (Documentation Structure) 32%, Digital Authority (Technical Completeness) 32%, Conversion Readiness (Technical Clarity) 26%, Product Discoverability 0% (not applicable), Local Presence Signals 0% (not applicable), Easy to Quote 10%
 For this module, score AI Readability as Documentation Structure (navigation, TOC, getting started), Digital Authority as Documentation Authority (API completeness, error coverage, versioning), and Conversion Readiness as Technical Clarity (code example quality, step determinism, snippet extractability). Do not score Product Discoverability or Local Presence Signals — set both to 0.`
   : module === 'vibe_coders'
   ? `MODULE: vibe_coders
-MODULE_WEIGHTS: AI Readability 32%, Digital Authority 32%, Conversion Readiness 26%, Product Discoverability 0%, Local Presence Signals 0%, RAG Readiness 10%
+MODULE_WEIGHTS: AI Readability 32%, Digital Authority 32%, Conversion Readiness 26%, Product Discoverability 0%, Local Presence Signals 0%, Easy to Quote 10%
 This is an app or product built with an AI builder (landing page, app copy, docs). Score AI Readability on whether AI can tell in one sentence what the app does and for whom; Digital Authority on the maker's credibility, real use cases, pricing and limits stated plainly, privacy and data handling; Conversion Readiness on a clear sign-up or try action and what happens next. Do not score Product Discoverability or Local Presence Signals — set both to 0.`
   : module === 'local_business'
   ? `MODULE: local_business
-MODULE_WEIGHTS: AI Readability 20%, Digital Authority 20%, Conversion Readiness 20%, Product Discoverability 0%, Local Presence Signals 30%, RAG Readiness 10%
+MODULE_WEIGHTS: AI Readability 20%, Digital Authority 20%, Conversion Readiness 20%, Product Discoverability 0%, Local Presence Signals 30%, Easy to Quote 10%
 For this module, Local Presence Signals is the PRIMARY scoring focus — local businesses live or die on whether AI can find and trust their location, hours, and reputation. Score it with maximum precision:
 LOCAL PRESENCE SIGNALS:
 - NAP (Name, Address, Phone) consistency and completeness in page content
@@ -280,9 +280,9 @@ CONVERSION READINESS signals:
 - Trust signals: licenses, insurance, certifications, guarantees
 Do not score Product Discoverability — set to 0.`
   : `MODULE: general
-MODULE_WEIGHTS: AI Readability 36%, Digital Authority 27%, Conversion Readiness 27%, Product Discoverability 0%, Local Presence Signals 0%, RAG Readiness 10%
+MODULE_WEIGHTS: AI Readability 36%, Digital Authority 27%, Conversion Readiness 27%, Product Discoverability 0%, Local Presence Signals 0%, Easy to Quote 10%
 For this module, do not weight Product Discoverability or Local Presence Signals in the overall score. Score both conservatively (40-60 range) but neither affects the overall Rain Score.
-RAG Readiness is scored at 10% weight and always included. It measures RAG-system retrieval quality.`;
+Easy to Quote is scored at 10% weight and always included. It measures RAG-system retrieval quality.`;
 }
 
 export async function analyzeContent(
@@ -323,7 +323,7 @@ systemInstruction: SYSTEM_INSTRUCTION,
 contents: [{ role: 'user', parts: [{ text: prompt }] }],
 generationConfig: {
 // Zero temperature plus a fixed seed: the same content should score the
-// same on a rerun. Gemini-judged pillars (like RAG Readiness) otherwise
+// same on a rerun. Gemini-judged pillars (like Easy to Quote) otherwise
 // drift by a few points between identical runs.
 temperature: 0,
 seed: 7,
@@ -377,12 +377,12 @@ parsed.phase2_sub_scores.semanticRedundancyScore = 100 - raw_redundancy;
 const p = parsed.pillarScores || {};
 // Module-specific pillar weights
 const moduleWeights = module === 'product_sellers'
-  ? { ar: 0.20, da: 0.15, cr: 0.15, pd: 0.50, lp: 0.00, rr: 0.10 }
+  ? { ar: 0.20, da: 0.20, cr: 0.20, pd: 0.20, lp: 0.00, rr: 0.20 }
   : module === 'developers' || module === 'vibe_coders'
-  ? { ar: 0.32, da: 0.32, cr: 0.26, pd: 0.00, lp: 0.00, rr: 0.10 }
+  ? { ar: 0.25, da: 0.25, cr: 0.25, pd: 0.00, lp: 0.00, rr: 0.25 }
   : module === 'local_business'
-  ? { ar: 0.20, da: 0.20, cr: 0.20, pd: 0.00, lp: 0.30, rr: 0.10 }
-  : { ar: 0.36, da: 0.27, cr: 0.27, pd: 0.00, lp: 0.00, rr: 0.10 }; // general (Writers & Marketers)
+  ? { ar: 0.20, da: 0.20, cr: 0.20, pd: 0.00, lp: 0.20, rr: 0.20 }
+  : { ar: 0.25, da: 0.25, cr: 0.25, pd: 0.00, lp: 0.00, rr: 0.25 }; // general (Writers & Marketers)
 const computedOverall = Math.round(
 (p.aiReadability || 0) * moduleWeights.ar +
 (p.digitalAuthority || 0) * moduleWeights.da +
@@ -424,7 +424,7 @@ const subScores: SubScore[] = [
     { category: 'localPresence', score:
     clamp(parsed.pillarScores?.localPresence || 0), label: 'Local Presence' },
     { category: 'ragReadiness', score:
-    clamp(parsed.pillarScores?.ragReadiness || 0), label: 'RAG Readiness' },
+    clamp(parsed.pillarScores?.ragReadiness || 0), label: 'Easy to Quote' },
     { category: 'informationDensity', score:
     clamp(parsed.rag_readiness_detail?.informationDensity || 0), label: 'Information Density' },
     { category: 'semanticMapping', score:

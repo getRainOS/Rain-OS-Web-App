@@ -15,7 +15,7 @@ export const TARGET = 95;
 
 const PILLARS: Array<[keyof AnalysisResponse['pillarScores'], string]> = [
   ['aiReadability', 'AI Readability'], ['digitalAuthority', 'Digital Authority'], ['conversionReadiness', 'Conversion Readiness'],
-  ['productDiscoverability', 'Product Discoverability'], ['localPresence', 'Local Presence'], ['ragReadiness', 'RAG Readiness'],
+  ['productDiscoverability', 'Product Discoverability'], ['localPresence', 'Local Presence'], ['ragReadiness', 'Easy to Quote'],
 ];
 // Pillars that count toward the overall score in each lane.
 const COUNTED: Record<string, string[]> = {
