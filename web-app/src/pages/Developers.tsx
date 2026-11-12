@@ -266,7 +266,7 @@ export default function Developers() {
                 Documentation Scoring Framework
               </span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
-                Four of six pillars, reweighted for developer docs.
+                Four core pillars at 25% each, for developer docs.
               </h2>
               <p className="text-neutral-400 max-w-xl leading-relaxed">
                 rain OS scores your docs using the same six-area scoring that powers all our analyses. For developer content, we reweight the pillars so structure and authority matter most — exactly what AI needs to cite your README, API docs, and guides.

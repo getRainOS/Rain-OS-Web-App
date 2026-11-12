@@ -37,7 +37,7 @@ export default function TrendCard() {
         </span>
         <span className="text-[11px] text-neutral-500" style={{ fontFamily: "'Geist Mono', ui-monospace, monospace" }}>EXAMPLE DATA</span>
       </div>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto block" role="img" aria-label="Trend lines for six areas over eight weeks">
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto block" role="img" aria-label="Trend lines for each pillar over eight weeks">
         {[0, 50, 100].map(v => (
           <line key={v} x1={PAD} x2={W - PAD} y1={y(v)} y2={y(v)} stroke="rgba(255,255,255,0.06)" />
         ))}

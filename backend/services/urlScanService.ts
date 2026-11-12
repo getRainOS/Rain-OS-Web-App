@@ -107,6 +107,30 @@ export interface TechnicalSignals {
 const LICENCE_TEXT_RE = /\blicen[cs]ed (in|by|with) [A-Za-z]{3,}|\blicen[cs]e (no\.?|number|#) ?[A-Z0-9][A-Z0-9-]{3,}|\blic\.? ?(no\.?|#) ?[A-Z0-9][A-Z0-9-]{3,}/i;
 const REVIEW_TEXT_RE = /\b[0-5](\.\d)? ?(★|stars?\b|out of 5)|\b\d[\d,]*\+? (reviews|ratings)\b/i;
 
+// The pillar each fix moves, shown to owners so they can see which area it helps.
+export const FIX_PILLAR: Record<string, string> = {
+  'Missing Product schema markup': 'Product Discoverability',
+  "AI can't find your business details on the page": 'Local Presence',
+  'No licence details in plain text': 'Local Presence',
+  'No review rating or count in plain text': 'Local Presence',
+  'Missing schema markup': 'AI Readability',
+  'Missing semantic HTML': 'AI Readability',
+  'Improper heading hierarchy': 'AI Readability',
+  'Meta description absent': 'AI Readability',
+  'JavaScript-rendered content blocking AI crawlers': 'AI Readability',
+  'llms.txt is too thin to be useful': 'AI Readability',
+  'llms.txt absent': 'AI Readability',
+  'Missing mobile viewport meta tag': 'AI Readability',
+  'Page is set to noindex': 'AI Readability',
+  'Images missing alt text': 'AI Readability',
+  'Missing canonical tag': 'Digital Authority',
+  'Canonical tag points to another page': 'Digital Authority',
+  'Open Graph tags missing': 'Digital Authority',
+  'Twitter / X card tags missing': 'Digital Authority',
+  'Generic anchor text': 'Conversion Readiness',
+  'Contact form uses a custom handler': 'Conversion Readiness',
+};
+
 export const FIX_SCORE_POINTS: Record<string, number> = {
   'JavaScript-rendered content blocking AI crawlers': 8,
   'Meta description absent': 5,
@@ -929,6 +953,6 @@ export async function scanUrlForTechnicalSignals(
     });
   }
 
-  const scoredRecs = recs.map(r => ({ ...r, scoreImpact: FIX_SCORE_POINTS[r.issue] ?? 0 }));
+  const scoredRecs = recs.map(r => ({ ...r, pillar: r.pillar ?? FIX_PILLAR[r.issue], scoreImpact: FIX_SCORE_POINTS[r.issue] ?? 0 }));
   return { signals, displaySignals, extractedText, recommendations: scoredRecs, detectedPlatform: platform };
 }

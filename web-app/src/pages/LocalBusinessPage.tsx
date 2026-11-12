@@ -189,7 +189,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
             <span className="text-[#bdbdbd] font-bold tracking-wider text-xs uppercase mb-3 block">What we score</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Three things AI checks on your website</h2>
             <p className="text-neutral-400 max-w-2xl mx-auto">
-              AI looks at six areas before it recommends a business. These three are about your website. The other three include Local Presence, which covers your Google listing, reviews and service area, and makes up 30% of the score.
+              AI looks at five pillars before it recommends a local business. Four are about your website and how you're described. The fifth, Local Presence, covers your Google listing, reviews and service area, and makes up 20% of the score.
             </p>
           </motion.div>
 

@@ -89,7 +89,7 @@ const features = [
 
 const steps = [
   { num: '01', title: 'Paste your content', desc: 'Drop any blog post, article, or landing page copy into the analyzer.' },
-  { num: '02', title: 'Get your Rain Score', desc: 'Receive one weighted score across six areas with a full signal breakdown.' },
+  { num: '02', title: 'Get your Rain Score', desc: 'Receive one weighted score across the pillars for your lane, with a full signal breakdown.' },
   { num: '03', title: 'Fix and re-score', desc: 'Apply the recommendations, re-run the analysis, and watch your score climb.' },
 ];
 
@@ -244,7 +244,7 @@ export default function ContentWriters() {
               className="mb-12"
             >
               <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">How we score</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Five of six pillars. One Rain Score.</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Four core pillars. One Rain Score.</h2>
               <p className="text-neutral-400 max-w-xl leading-relaxed">
                 Every analysis returns a weighted score across the dimensions that determine whether AI tools cite your content.
               </p>
