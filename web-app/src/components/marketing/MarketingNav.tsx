@@ -105,7 +105,10 @@ export default function MarketingNav({ onLoginClick, onGetStartedClick, light }:
       >
         <div className="flex items-center justify-between w-full max-w-[1440px] px-6 h-16">
           <a href="/" className={"font-bold text-2xl tracking-tighter shrink-0 text-white"}>
-            <Logo size={22} />
+            <span className="flex flex-col items-start leading-none">
+              <Logo size={22} />
+              <span className="mt-1 text-[10px] font-normal tracking-normal text-neutral-500">Optimization Systems</span>
+            </span>
           </a>
 
           {/* Desktop nav */}
