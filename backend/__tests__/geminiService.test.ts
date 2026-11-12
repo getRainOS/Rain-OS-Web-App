@@ -435,19 +435,19 @@ describe('analyzeContent', () => {
 
   // ── Overall score correction ───────────────────────────────────────────────
   it('corrects overallScore when Gemini value is >10 off from computed weighted average', async () => {
-    // pillar weights: aiReadability*0.30 + digitalAuthority*0.25 + conversionReadiness*0.25 + productDiscoverability*0.20
-    // 70*0.30 + 60*0.25 + 55*0.25 + 50*0.20 = 21 + 15 + 13.75 + 10 = 59.75 → round → 60
-    // Gemini claims 90 (30 off) → corrected to 60
+    // general weights: four core pillars at 25% each (ragReadiness is 0 in the fixture)
+    // 70*0.25 + 60*0.25 + 55*0.25 + 0*0.25 = 46.25 → round → 46
+    // Gemini claims 90 (44 off) → corrected to 46
     mockResponseText = makeValidGeminiResponse({ overallScore: 90 });
     const result = await analyzeContent('Content here.', 'General / Other');
-    expect(result.overallScore).toBe(56);
+    expect(result.overallScore).toBe(46);
   });
 
   it('keeps Gemini overallScore when within 10 points of computed weighted average', async () => {
-    // computed = 60; Gemini says 65 (5 off) → stays 65
-    mockResponseText = makeValidGeminiResponse({ overallScore: 65 });
+    // computed = 46; Gemini says 50 (4 off) → stays 50
+    mockResponseText = makeValidGeminiResponse({ overallScore: 50 });
     const result = await analyzeContent('Content here.', 'General / Other');
-    expect(result.overallScore).toBe(65);
+    expect(result.overallScore).toBe(50);
   });
 
   // ── local_business module: Local Presence weighted at 30% ─────────────────
@@ -469,10 +469,10 @@ describe('analyzeContent', () => {
   });
 
   it('ignores Local Presence in the overall score for non-local_business modules', async () => {
-    // general weights: ar*0.36 + da*0.27 + cr*0.27 + lp*0.00 + rr*0.10
-    // 70*0.36 + 60*0.27 + 55*0.27 = 25.2 + 16.2 + 14.85 = 56.25 → round → 56
-    // If localPresence (95) were weighted at all, this would not equal 56.
-    // Gemini claims 10 (46 off from the correctly-computed 56) to force correction.
+    // general weights: ar, da, cr and rr at 25% each; lp at 0%
+    // 70*0.25 + 60*0.25 + 55*0.25 = 46.25 → round → 46
+    // If localPresence (95) were weighted at all, this would not equal 46.
+    // Gemini claims 10 (36 off from the correctly-computed 46) to force correction.
     mockResponseText = makeValidGeminiResponse({
       overallScore: 10,
       pillarScores: {
@@ -484,7 +484,7 @@ describe('analyzeContent', () => {
       },
     });
     const result = await analyzeContent('Content here.', 'General / Other');
-    expect(result.overallScore).toBe(56);
+    expect(result.overallScore).toBe(46);
   });
 
   it('clamps the final overallScore to [0, 100]', async () => {

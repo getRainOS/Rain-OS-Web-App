@@ -9,7 +9,7 @@ const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 export type GapMode = 'citation' | 'share_of_voice' | 'sentiment';
 export type GapPillar =
   | 'AI Readability' | 'Digital Authority' | 'Conversion Readiness'
-  | 'Product Discoverability' | 'Local Presence' | 'RAG Readiness';
+  | 'Product Discoverability' | 'Local Presence' | 'Easy to Quote';
 
 export interface GapSource { domain: string; title?: string; snippet?: string }
 
@@ -31,7 +31,7 @@ export interface QuestionGap {
 
 const PILLARS: GapPillar[] = [
   'AI Readability', 'Digital Authority', 'Conversion Readiness',
-  'Product Discoverability', 'Local Presence', 'RAG Readiness',
+  'Product Discoverability', 'Local Presence', 'Easy to Quote',
 ];
 
 export const MAX_SOURCES = 8;

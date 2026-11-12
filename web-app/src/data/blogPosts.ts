@@ -144,7 +144,7 @@ AI models are trained on the entire web. They know which sources are reliable. T
 **3. Conversational queries are the new keywords.**
 People ask *"Why does my sourdough collapse?"* not *"sourdough collapse troubleshooting."* Your content needs to match the way real humans ask questions.
 
-At rain OS, we built our scoring system around these realities. Our six areas — AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, Local Presence, and Easy to Quote — are designed to measure exactly what AI systems look for.
+At rain OS, we built our scoring system around these realities. Our pillars — AI Readability, Digital Authority, Conversion Readiness, Easy to Quote, and the lane pillar for sellers and local businesses (Product Discoverability or Local Presence) — are designed to measure exactly what AI systems look for.
 
 If you want to be the answer, you need to optimize for the engine that delivers answers.`
   },
@@ -274,7 +274,7 @@ We are not in the interpretation business. That is the LLM's job, and frankly, m
 
 rain OS is the translation layer between your content and the AI that will interpret it.
 
-We analyze your content across six critical pillars — AI Readability, Digital Authority, Conversion Readiness, Product Discoverability, Local Presence, and Easy to Quote — not because these are arbitrary checkboxes, but because each one corresponds to a dimension of translatability. Each one asks: can an AI system read this content clearly, understand what it means, trust what it says, surface it in search, and retrieve it when it's relevant?
+We analyze your content across the pillars that matter for your lane — AI Readability, Digital Authority, Conversion Readiness, Easy to Quote, and one lane pillar for sellers and local businesses — not because these are arbitrary checkboxes, but because each one corresponds to a dimension of translatability. Each one asks: can an AI system read this content clearly, understand what it means, trust what it says, surface it in search, and retrieve it when it's relevant?
 
 When we score your content for AI Readability, we are asking: is this written in a way that translates? Is the semantic meaning clear? Is the language precise without being dense? Is the logical flow evident?
 

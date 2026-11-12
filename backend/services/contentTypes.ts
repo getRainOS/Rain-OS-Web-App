@@ -328,7 +328,7 @@ const TEMPLATES: Record<string, string> = {
   serviceAreaClarity: 'Name the city and the neighbourhoods or towns you serve in the main heading and first paragraph.',
   reviewSignalStrength: 'Quote or link real local reviews, ideally ones that mention your city or service.',
   localCitationSignals: 'Link to your listings on Google, Yelp and local directories, and make sure the details match.',
-  // RAG Readiness
+  // Easy to Quote
   informationDensity: 'Replace filler with facts: every paragraph should carry a number, name, step or specific detail.',
   semanticMapping: "Use the words your readers would search for, and the topic's standard terms, in headings and first sentences.",
   narrativeNuance: 'Add the "it depends" detail: when the advice applies, when it does not, and the trade-offs.',

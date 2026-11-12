@@ -11,7 +11,7 @@ import MarketingNav from '@/components/marketing/MarketingNav';
 import SiteFooter from '@/components/marketing/SiteFooter';
 const sections = [
   { id: 'getting-started', label: 'Getting Started' },
-  { id: 'six-areas', label: 'The Six Areas' },
+  { id: 'six-areas', label: 'The Pillars' },
   { id: 'solutions', label: 'Solution Modules' },
   { id: 'analysis-modes', label: 'Analysis Modes' },
   { id: 'api-reference', label: 'API Reference' },
@@ -142,7 +142,7 @@ export default function DocsPage() {
                 </div>
               </Section>
 
-              <Section id="six-areas" title="The Six Areas">
+              <Section id="six-areas" title="The Pillars">
                 <div className="space-y-6">
                   <p className="text-neutral-400 leading-relaxed">
                     Every analysis returns a weighted Rain Score built from six core pillars. These are the exact signals
@@ -157,7 +157,7 @@ export default function DocsPage() {
                         border: 'rgba(255,255,255,0.2)',
                         Icon: BrainCircuit,
                         name: 'AI Readability',
-                        weight: '36%',
+                        weight: '25%',
                         desc: 'How well AI systems can parse, chunk, and extract answers from your content. Covers structural clarity, answer-first formatting, semantic precision, context sufficiency, and section concept isolation.',
                         subScores: ['Structural Clarity', 'Answer-First Formatting', 'Semantic Precision', 'Context Sufficiency', 'Section Concept Isolation'],
                       },
@@ -167,7 +167,7 @@ export default function DocsPage() {
                         border: 'rgba(255,255,255,0.2)',
                         Icon: ShieldCheck,
                         name: 'Digital Authority',
-                        weight: '27%',
+                        weight: '25%',
                         desc: 'Whether your content signals expertise, trustworthiness, and citability to AI. Covers citation signals, entity clarity, topical authority, freshness signals, and social proof markup.',
                         subScores: ['Citation Signals', 'Entity Clarity', 'Topical Authority', 'Freshness Signals', 'Social Proof Markup'],
                       },
@@ -177,7 +177,7 @@ export default function DocsPage() {
                         border: 'rgba(255,255,255,0.2)',
                         Icon: MousePointerClick,
                         name: 'Conversion Readiness',
-                        weight: '27%',
+                        weight: '25%',
                         desc: 'Whether your content guides the reader toward a clear next action. Covers CTA clarity, trust signals, value proposition, and friction reduction.',
                         subScores: ['CTA Clarity', 'Trust Signals', 'Value Proposition', 'Friction Reduction'],
                       },
@@ -188,7 +188,7 @@ export default function DocsPage() {
                         Icon: SearchCheck,
                         name: 'Product Discoverability',
                         weight: '0% (general)',
-                        desc: 'For product-focused content: how well AI surfaces products in shopping and discovery contexts. 50% weight in the Online Sellers module.',
+                        desc: 'For product-focused content: how well AI surfaces products in shopping and discovery contexts. 20% weight in the Online Sellers module, and not scored in other lanes.',
                         subScores: ['Product Variant Coverage', 'Merchant Identity', 'Pricing Transparency', 'Availability Signals', 'Comparative Context'],
                       },
                       {
@@ -197,7 +197,7 @@ export default function DocsPage() {
                         border: 'rgba(255,255,255,0.2)',
                         Icon: Layers,
                         name: 'Easy to Quote',
-                        weight: '10%',
+                        weight: '25%',
                         desc: 'How well content is optimized for Retrieval-Augmented Generation (RAG) systems — vector databases, embedding models, and chunk-based retrieval.',
                         subScores: ['Information Density', 'Semantic Mapping', 'Narrative Nuance', 'Hierarchical Formatting', 'Explicit Q&A', 'Authority Signals'],
                       },
@@ -243,7 +243,7 @@ export default function DocsPage() {
                     <h3 className="text-sm font-semibold text-white mb-2">Overall Score Calculation</h3>
                     <CodeBlock
                       lang="formula"
-                      code={`Rain Score = (AI Readability × 0.36) + (Digital Authority × 0.27) + (Conversion Readiness × 0.27) + (Product Discoverability × 0.00) + (Local Presence × 0.00) + (Easy to Quote × 0.10)`}
+                      code={`Rain Score = (AI Readability × 0.25) + (Digital Authority × 0.25) + (Conversion Readiness × 0.25) + (Easy to Quote × 0.25)  [writers, developers, vibe coders]; sellers and local businesses add their lane pillar and use 0.20 for each of their five`}
                     />
                   </div>
                 </div>
@@ -263,7 +263,7 @@ export default function DocsPage() {
                         Icon: BrainCircuit,
                         name: 'Writers & Marketers',
                         badge: 'General module',
-                        desc: 'The default module. Optimized for blog posts, articles, landing pages, and marketing copy. Uses the six-area scoring framework (AI Readability 36%, Digital Authority 27%, Conversion Readiness 27%, Product Discoverability 0% by default, Easy to Quote 10%).',
+                        desc: 'The default module. Optimized for blog posts, articles, landing pages, and marketing copy. Uses four core pillars at 25% each: AI Readability, Digital Authority, Conversion Readiness and Easy to Quote.',
                         module: 'general',
                       },
                       {
@@ -271,7 +271,7 @@ export default function DocsPage() {
                         Icon: Package,
                         name: 'Online Sellers',
                         badge: 'Product Discoverability module',
-                        desc: 'Dedicated scoring for ecommerce and product pages. Product Discoverability jumps to 50% weight, covering pricing transparency, variant coverage, availability signals, merchant identity, and comparative context. AI Readability 20%, Digital Authority 15%, Conversion Readiness 15%, Easy to Quote 10%.',
+                        desc: 'Dedicated scoring for ecommerce and product pages. Five pillars at 20% each: AI Readability, Digital Authority, Conversion Readiness, Product Discoverability (covering pricing transparency, variant coverage, availability signals, merchant identity and comparative context) and Easy to Quote.',
                         module: 'product_sellers',
                       },
                       {
@@ -279,7 +279,7 @@ export default function DocsPage() {
                         Icon: BookOpen,
                         name: 'Developers',
                         badge: 'Documentation module',
-                        desc: 'Specialized scoring for technical documentation. Reweights the six-area scoring so AI Readability (32%), Digital Authority (32%), and Conversion Readiness (26%) matter most, with Easy to Quote at 10% — built for READMEs, API references, guides, and developer docs.',
+                        desc: 'Specialized scoring for technical documentation. Four core pillars at 25% each: AI Readability, Digital Authority, Conversion Readiness and Easy to Quote — built for READMEs, API references, guides, and developer docs.',
                         module: 'developers',
                       },
                       {
@@ -287,7 +287,7 @@ export default function DocsPage() {
                         Icon: Zap,
                         name: 'Vibe Coders',
                         badge: 'Vibe builder module',
-                        desc: 'Same scoring weights as the Developers module (32/32/26/10), but positioned for builders using Bolt, Lovable, Cursor, v0, and Replit. Scans GitHub repos to catch gaps that URL scanning misses — missing llms.txt, JS-only rendering, no schema, and incomplete meta tags.',
+                        desc: 'Same scoring weights as the Developers module (four pillars at 25% each), but positioned for builders using Bolt, Lovable, Cursor, v0, and Replit. Scans GitHub repos to catch gaps that URL scanning misses — missing llms.txt, JS-only rendering, no schema, and incomplete meta tags.',
                         module: 'vibe_coders',
                       },
                       {
@@ -295,7 +295,7 @@ export default function DocsPage() {
                         Icon: MapPin,
                         name: 'Local Businesses',
                         badge: 'Local SEO module',
-                        desc: 'Built for service businesses and local shops. Local Presence rises to 30% because local trust signals are primary. AI Readability 20%, Digital Authority 20%, Conversion Readiness 20%, Easy to Quote 10%. Checks NAP consistency, LocalBusiness schema, review signals, Google Business Profile mentions, and click-to-call CTAs.',
+                        desc: 'Built for service businesses and local shops. Five pillars at 20% each: AI Readability, Digital Authority, Conversion Readiness, Local Presence (local trust signals) and Easy to Quote. Checks NAP consistency, LocalBusiness schema, review signals, Google Business Profile mentions, and click-to-call CTAs.',
                         module: 'local_business',
                       },
                     ].map((s) => (

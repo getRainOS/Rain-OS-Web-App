@@ -1,16 +1,17 @@
 import styles from './LaneWeights.module.css';
 
-// How each lane weights the six pillars — the real percentages the scorer
+// How each lane weights the pillars: four core pillars, plus the lane's own pillar for sellers and local businesses — the real percentages the scorer
 // uses (backend moduleRubric / analyzeContent). Same graphic as the home page.
 export const LANE_WEIGHTS = [
-  { id: 'general', name: 'Writers & Marketers', who: 'Articles, blogs, landing pages', w: [36, 27, 27, 0, 0, 10] },
-  { id: 'product_sellers', name: 'Online Sellers', who: 'Shopify, Etsy, Amazon, DTC stores', w: [20, 15, 15, 50, 0, 10] },
-  { id: 'developers', name: 'Developers', who: 'Docs, READMEs, API references', w: [32, 32, 26, 0, 0, 10] },
-  { id: 'vibe_coders', name: 'Vibe Coders', who: 'Apps built with Bolt, Lovable, Cursor, v0', w: [32, 32, 26, 0, 0, 10] },
-  { id: 'local_business', name: 'Local Businesses', who: 'Service businesses people find nearby', w: [20, 20, 20, 0, 30, 10] },
+  { id: 'general', name: 'Writers & Marketers', who: 'Articles, blogs, landing pages', w: [25, 25, 25, 0, 0, 25] },
+  { id: 'product_sellers', name: 'Online Sellers', who: 'Shopify, Etsy, Amazon, DTC stores', w: [20, 20, 20, 20, 0, 20] },
+  { id: 'developers', name: 'Developers', who: 'Docs, READMEs, API references', w: [25, 25, 25, 0, 0, 25] },
+  { id: 'vibe_coders', name: 'Vibe Coders', who: 'Apps built with Bolt, Lovable, Cursor, v0', w: [25, 25, 25, 0, 0, 25] },
+  { id: 'local_business', name: 'Local Businesses', who: 'Service businesses people find nearby', w: [20, 20, 20, 0, 20, 20] },
 ];
-const SEG = ['#ffffff', '#bdbdbd', '#bdbdbd', '#c5c5c5', '#ffb86b', '#6b7280'];
-const SHORT = ['Easy for AI to read', 'Trust', 'Clear next step', 'Product details', 'Local info', 'Easy to quote'];
+// One colour per pillar, the same as the trend lines.
+const SEG = ['#ffffff', '#3B82F6', '#F97316', '#14B8A6', '#A78BFA', '#EF4444'];
+const SHORT = ['AI Readability', 'Digital Authority', 'Conversion Readiness', 'Product Discoverability', 'Local Presence', 'Easy to Quote'];
 
 export default function LaneWeights({ current }) {
   return (

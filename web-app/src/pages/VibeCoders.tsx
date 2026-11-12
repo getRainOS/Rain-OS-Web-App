@@ -282,7 +282,7 @@ export default function VibeCoders() {
               className="text-center mb-14"
             >
               <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Scoring breakdown</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Five of six pillars, granular signals</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Granular signals across every pillar</h2>
               <p className="text-neutral-400 max-w-xl mx-auto leading-relaxed mb-3">
                 Every repo scan and URL check breaks down into these five core areas.
               </p>
@@ -350,7 +350,7 @@ export default function VibeCoders() {
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-neutral-400">Weight in overall score</span>
                       <span className="text-xs font-bold" style={{ color: p.color }}>
-                        {i === 0 ? '32%' : i === 1 ? '32%' : i === 2 ? '26%' : i === 3 ? '0%' : '10%'}
+                        {i === 3 ? '0%' : '25%'}
                       </span>
                     </div>
                     <div className="mt-2 h-1.5 rounded-full bg-white/5 overflow-hidden">

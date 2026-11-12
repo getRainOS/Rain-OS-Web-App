@@ -7,13 +7,13 @@ import styles from './KnowledgeBase.module.css';
 const KB_DATA = {
   general: {
     pillars: [
-      { key: 'ai_readability',    label: 'AI Readability',       weight: '36%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
+      { key: 'ai_readability',    label: 'AI Readability',       weight: '25%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
         desc: 'How easily ChatGPT, Gemini, and Perplexity extract answers from your content. Focus on clear headings, answer-first formatting, and semantic structure.' },
-      { key: 'digital_authority', label: 'Digital Authority',      weight: '27%', color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck,
+      { key: 'digital_authority', label: 'Digital Authority',      weight: '25%', color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck,
         desc: 'Trust signals that make AI engines choose your content over competitors. Schema markup, citations, entity recognition, and topical depth.' },
-      { key: 'conversion',        label: 'Conversion Readiness',   weight: '27%', color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick,
+      { key: 'conversion',        label: 'Conversion Readiness',   weight: '25%', color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick,
         desc: 'How effectively your content turns AI-referred readers into customers. Strong CTAs, social proof, and clear value propositions.' },
-      { key: 'rag_readiness',     label: 'RAG Readiness',        weight: '10%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
+      { key: 'rag_readiness',     label: 'Easy to Quote',        weight: '25%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
         desc: 'How well your content is optimized for Retrieval-Augmented Generation (RAG) systems — vector databases, embedding models, and chunk-based retrieval. Measures information density, semantic mapping, and structured Q&A.' },
     ],
     tools: [
@@ -35,15 +35,15 @@ const KB_DATA = {
 
   product_sellers: {
     pillars: [
-      { key: 'discoverability', label: 'Product Discoverability', weight: '50%', color: PILLAR_COLORS.product_discoverability, Icon: SearchCheck,
+      { key: 'discoverability', label: 'Product Discoverability', weight: '20%', color: PILLAR_COLORS.product_discoverability, Icon: SearchCheck,
         desc: 'How easily AI shopping engines find and recommend your products. Structured data, rich descriptions, and attribute completeness matter most.' },
       { key: 'ai_readability',  label: 'AI Readability',          weight: '20%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
         desc: 'How well AI can parse your product descriptions and extract key features, benefits, and comparisons.' },
-      { key: 'authority',       label: 'Digital Authority',      weight: '15%', color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck,
+      { key: 'authority',       label: 'Digital Authority',      weight: '20%', color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck,
         desc: 'Brand trust signals — reviews, certifications, and third-party mentions that make AI confident recommending you.' },
-      { key: 'conversion',      label: 'Conversion Readiness',   weight: '15%', color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick,
+      { key: 'conversion',      label: 'Conversion Readiness',   weight: '20%', color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick,
         desc: 'Purchase intent signals like clear pricing, availability, and compelling calls to action.' },
-      { key: 'rag_readiness',   label: 'RAG Readiness',         weight: '10%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
+      { key: 'rag_readiness',   label: 'Easy to Quote',         weight: '25%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
         desc: 'How well your product descriptions are optimized for AI retrieval and vector database search. Structured Q&A and semantic mapping help AI surface your products for relevant queries.' },
     ],
     tools: [
@@ -65,13 +65,13 @@ const KB_DATA = {
 
   vibe_coders: {
     pillars: [
-      { key: 'ai_readability',    label: 'AI Readability',       weight: '32%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
+      { key: 'ai_readability',    label: 'AI Readability',       weight: '25%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
         desc: 'How well your vibe-coded landing pages and app copy translate into machine-extractable answers. Headings, structure, and semantic HTML matter.' },
-      { key: 'digital_authority', label: 'Digital Authority',      weight: '32%', color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck,
+      { key: 'digital_authority', label: 'Digital Authority',      weight: '25%', color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck,
         desc: 'Trust signals that make AI engines treat your domain as a quotable source. Schema, entity clarity, and credibility markup.' },
-      { key: 'conversion',        label: 'Conversion Readiness',   weight: '26%', color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick,
+      { key: 'conversion',        label: 'Conversion Readiness',   weight: '25%', color: PILLAR_COLORS.conversion_readiness, Icon: MousePointerClick,
         desc: 'How effectively your AI-built site turns visitors into users. CTAs, onboarding clarity, and feature explanations.' },
-      { key: 'rag_readiness',     label: 'RAG Readiness',        weight: '10%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
+      { key: 'rag_readiness',     label: 'Easy to Quote',        weight: '25%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
         desc: 'How well your project docs and README are optimized for AI retrieval and vector database search. Structured Q&A and semantic mapping matter.' },
     ],
     tools: [
@@ -94,13 +94,13 @@ const KB_DATA = {
 
   developers: {
     pillars: [
-      { key: 'doc_structure',    label: 'AI Readability',      weight: '32%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
+      { key: 'doc_structure',    label: 'AI Readability',      weight: '25%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
         desc: 'README and documentation organization. Clear hierarchy, navigation, and heading structure so AI can index your docs properly.' },
-      { key: 'tech_completeness', label: 'Digital Authority',    weight: '32%', color: PILLAR_COLORS.digital_authority, Icon: GitBranch,
+      { key: 'tech_completeness', label: 'Digital Authority',    weight: '25%', color: PILLAR_COLORS.digital_authority, Icon: GitBranch,
         desc: 'Coverage of API endpoints, error handling, code examples, and installation steps. Missing sections cost you visibility.' },
-      { key: 'technical_clarity', label: 'Conversion Readiness', weight: '26%', color: PILLAR_COLORS.conversion_readiness, Icon: ShieldCheck,
+      { key: 'technical_clarity', label: 'Conversion Readiness', weight: '25%', color: PILLAR_COLORS.conversion_readiness, Icon: ShieldCheck,
         desc: 'Plain-language explanations alongside technical depth. AI prefers docs that explain the "why" not just the "how".' },
-      { key: 'rag_readiness',     label: 'RAG Readiness',      weight: '10%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
+      { key: 'rag_readiness',     label: 'Easy to Quote',      weight: '25%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
         desc: 'How well your docs are optimized for AI retrieval and vector database search. Structured Q&A and semantic mapping matter.' },
     ],
     tools: [
@@ -131,7 +131,7 @@ const KB_DATA = {
         desc: 'Credentials, years in business, reviews and sources that make AI confident recommending you.' },
       { key: 'conversion_readiness', label: 'Conversion Readiness', weight: '20%', color: PILLAR_COLORS.conversion_readiness, Icon: ShieldCheck,
         desc: 'A clear way to book or call, prices or ranges, and what happens next.' },
-      { key: 'rag_readiness',    label: 'RAG Readiness',      weight: '10%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
+      { key: 'rag_readiness',    label: 'Easy to Quote',      weight: '25%', color: PILLAR_COLORS.rag_readiness, Icon: Layers,
         desc: 'How well your local business content is optimized for AI retrieval. Structured Q&A, service descriptions, and semantic mapping help AI surface you for local queries.' },
     ],
     tools: [

@@ -9,7 +9,7 @@ export const SERIES: { key: keyof typeof PILLAR_CHART_COLORS; label: string; sta
   { key: 'digital_authority', label: 'Digital Authority', start: 55, end: 70 },
   { key: 'conversion_readiness', label: 'Conversion Readiness', start: 40, end: 61 },
   { key: 'product_discoverability', label: 'Product Discoverability', start: 52, end: 66 },
-  { key: 'rag_readiness', label: 'RAG Readiness', start: 36, end: 58 },
+  { key: 'rag_readiness', label: 'Easy to Quote', start: 36, end: 58 },
   { key: 'local_presence', label: 'Local Presence', start: 60, end: 79 },
 ];
 
@@ -37,7 +37,7 @@ export default function TrendCard() {
         </span>
         <span className="text-[11px] text-neutral-500" style={{ fontFamily: "'Geist Mono', ui-monospace, monospace" }}>EXAMPLE DATA</span>
       </div>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto block" role="img" aria-label="Trend lines for six areas over eight weeks">
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto block" role="img" aria-label="Trend lines for each pillar over eight weeks">
         {[0, 50, 100].map(v => (
           <line key={v} x1={PAD} x2={W - PAD} y1={y(v)} y2={y(v)} stroke="rgba(255,255,255,0.06)" />
         ))}

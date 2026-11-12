@@ -16,7 +16,7 @@ const PILLARS = [
   { name: 'Digital Authority', color: '#ffffff', short: 'Authority' },
   { name: 'Conversion Readiness', color: '#ffffff', short: 'Conversion' },
   { name: 'Product Discoverability', color: '#ffffff', short: 'Discoverability' },
-  { name: 'RAG Readiness', color: '#ffffff', short: 'RAG' },
+  { name: 'Easy to Quote', color: '#ffffff', short: 'RAG' },
 ];
 
 export default function VibeWorkflowDiagram() {

@@ -82,7 +82,7 @@ const docPillars = [
     border: 'rgba(255,255,255,0.25)',
     Icon: Layers,
     name: 'Doc Structure',
-    weight: '32%',
+    weight: '25%',
     desc: 'How well AI can parse, chunk, and extract answers from your docs. Structural clarity, semantic precision, and section isolation.',
     scores: ['Structural Clarity', 'Answer-First Formatting', 'Semantic Precision', 'Context Sufficiency', 'Section Isolation'],
   },
@@ -92,7 +92,7 @@ const docPillars = [
     border: 'rgba(255,255,255,0.25)',
     Icon: Code2,
     name: 'Tech Completeness',
-    weight: '32%',
+    weight: '25%',
     desc: 'Does your content signal expertise and trustworthiness to AI? Citation signals, entity clarity, topical authority, and freshness.',
     scores: ['Citation Signals', 'Entity Clarity', 'Topical Authority', 'Freshness Signals', 'Social Proof'],
   },
@@ -102,7 +102,7 @@ const docPillars = [
     border: 'rgba(255,255,255,0.25)',
     Icon: Cpu,
     name: 'Technical Clarity',
-    weight: '26%',
+    weight: '25%',
     desc: 'Does your content guide the reader toward a clear next action? CTA clarity, trust signals, value proposition, and friction reduction.',
     scores: ['CTA Clarity', 'Trust Signals', 'Value Proposition', 'Friction Reduction'],
   },
@@ -112,7 +112,7 @@ const docPillars = [
     border: 'rgba(255,255,255,0.25)',
     Icon: Layers,
     name: 'Easy to Quote',
-    weight: '10%',
+    weight: '25%',
     desc: 'How well your docs work with vector database retrieval: semantic mapping, chunking quality, hierarchical formatting, and explicit Q&A structures.',
     scores: ['Semantic Mapping', 'Chunking Quality', 'Hierarchical Formatting', 'Explicit Q&A', 'Authority Signals'],
   },
@@ -266,7 +266,7 @@ export default function Developers() {
                 Documentation Scoring Framework
               </span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
-                Four of six pillars, reweighted for developer docs.
+                Four core pillars at 25% each, for developer docs.
               </h2>
               <p className="text-neutral-400 max-w-xl leading-relaxed">
                 rain OS scores your docs using the same six-area scoring that powers all our analyses. For developer content, we reweight the pillars so structure and authority matter most — exactly what AI needs to cite your README, API docs, and guides.

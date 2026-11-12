@@ -371,15 +371,15 @@ function PlatformSection() {
 /* ── Lanes with real weights ────────────────────────────────────────────── */
 
 const LANE_ROWS = [
-  { name: 'Writers & Marketers', who: 'Articles, blogs, landing pages', href: '/content-writers', w: [36, 27, 27, 0, 0, 10] },
-  { name: 'Online Sellers', who: 'Shopify, Etsy, Amazon, DTC stores', href: '/product-sellers', w: [20, 15, 15, 50, 0, 10] },
-  { name: 'Developers', who: 'Docs, READMEs, API references', href: '/developers', w: [32, 32, 26, 0, 0, 10] },
-  { name: 'Vibe Coders', who: 'Apps built with Bolt, Lovable, Cursor, v0', href: '/vibe-coders', w: [32, 32, 26, 0, 0, 10] },
-  { name: 'Local Businesses', who: 'Service businesses people find nearby', href: '/local-business', w: [20, 20, 20, 0, 30, 10] },
+  { name: 'Writers & Marketers', who: 'Articles, blogs, landing pages', href: '/content-writers', w: [25, 25, 25, 0, 0, 25] },
+  { name: 'Online Sellers', who: 'Shopify, Etsy, Amazon, DTC stores', href: '/product-sellers', w: [20, 20, 20, 20, 0, 20] },
+  { name: 'Developers', who: 'Docs, READMEs, API references', href: '/developers', w: [25, 25, 25, 0, 0, 25] },
+  { name: 'Vibe Coders', who: 'Apps built with Bolt, Lovable, Cursor, v0', href: '/vibe-coders', w: [25, 25, 25, 0, 0, 25] },
+  { name: 'Local Businesses', who: 'Service businesses people find nearby', href: '/local-business', w: [20, 20, 20, 0, 20, 20] },
 ];
 
-const SEG = ['#ffffff', '#bdbdbd', '#bdbdbd', '#c5c5c5', '#ffb86b', '#6b7280'];
-const SHORT = ['Easy for AI to read', 'Trust', 'Clear next step', 'Product details', 'Local info', 'Easy to quote'];
+const SEG = ['#ffffff', '#3B82F6', '#F97316', '#14B8A6', '#A78BFA', '#EF4444'];
+const SHORT = ['AI Readability', 'Digital Authority', 'Conversion Readiness', 'Product Discoverability', 'Local Presence', 'Easy to Quote'];
 
 function LanesSection() {
   return (

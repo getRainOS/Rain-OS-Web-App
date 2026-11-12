@@ -62,7 +62,7 @@ function lengthWarning(contentType, text) {
 
 const PILLAR_NAMES = {
   ai_readability: 'AI Readability', digital_authority: 'Digital Authority', conversion_readiness: 'Conversion Readiness',
-  product_discoverability: 'Product Discoverability', rag_readiness: 'RAG Readiness', local_presence: 'Local Presence',
+  product_discoverability: 'Product Discoverability', rag_readiness: 'Easy to Quote', local_presence: 'Local Presence',
 };
 const PILLAR_CAMEL = {
   ai_readability: 'aiReadability', digital_authority: 'digitalAuthority', conversion_readiness: 'conversionReadiness',

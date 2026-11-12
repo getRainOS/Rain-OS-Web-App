@@ -22,7 +22,7 @@ const PILLAR_KEY = {
   'Digital Authority': 'digital_authority',
   'Conversion Readiness': 'conversion_readiness',
   'Product Discoverability': 'product_discoverability',
-  'RAG Readiness': 'rag_readiness',
+  'Easy to Quote': 'rag_readiness',
   'Local Presence': 'local_presence',
 };
 
