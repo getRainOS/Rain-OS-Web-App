@@ -840,7 +840,7 @@ export default function Home() {
               <div className="rounded-xl border border-white/10 bg-[#0a0a0a] p-8">
                 <div className="text-7xl md:text-8xl font-semibold tracking-[-0.05em] tabular-nums" style={{ color: '#A8203E' }}>47%</div>
                 <p className="mt-3 text-[15px] text-neutral-300 leading-relaxed">Fewer people click through to websites when Google shows an AI answer.</p>
-                <a href="https://www.pewresearch.org/short-reads/2025/07/22/google-users-are-less-likely-to-click-on-links-when-an-ai-summary-appears-in-the-results/" target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-1 text-[12px] text-neutral-500 hover:text-neutral-300" style={MONO}>
+                <a href="https://www.pewresearch.org/short-reads/2025/07/22/google-users-are-less-likely-to-click-on-links-when-an-ai-summary-appears-in-the-results/" target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-[12px] text-neutral-500 hover:text-neutral-300" style={MONO}>
                   PEW RESEARCH CENTER, JULY 2025 <ArrowUpRight className="w-3 h-3" />
                 </a>
               </div>
