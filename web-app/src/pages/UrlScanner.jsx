@@ -576,6 +576,11 @@ function FixViews({ recommendations, detectedPlatform }) {
           <> Steps are for {PLATFORM_DISPLAY_NAME[detectedPlatform] || detectedPlatform}.</>
         )}
       </p>
+      {view === 'owner' && recommendations.some(r => r && /plain text/.test(r.issue || '')) && (
+        <p style={{ fontSize: 13, color: 'var(--text-dim)', marginTop: 0, marginBottom: 14 }}>
+          The licence and review checks read the wording on your page. They can miss a valid licence number in an unusual format, and they can't see reviews that load through a script. Check each item against your own records.
+        </p>
+      )}
       {view === 'owner' && ownerPoints > 0 && (
         <p style={{ fontSize: 14, color: 'var(--text)', marginTop: 0, marginBottom: 10 }}>
           These steps could add about <strong>{ownerPoints} points</strong> to your score.
