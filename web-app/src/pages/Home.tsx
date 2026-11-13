@@ -232,10 +232,10 @@ const PLATFORM = [
     title: 'See whether AI cites you',
     body: 'Ask the questions your customers ask. We put them to {engines}, searching the live web, and show every website each one linked to.',
     tools: [
-      { Icon: Radar, name: 'Is AI Citing Me?', desc: 'Whether AI links to you, with the full list of sources' },
+      { Icon: Radar, name: 'Is AI Citing Me?', desc: 'Whether each AI tool links to your pages as a source, and which pages', href: '/citation-monitor' },
       { Icon: CalendarClock, name: 'Weekly tracking', desc: 'Re-checked every week, alerts on change' },
-      { Icon: BarChart2, name: 'Who AI Recommends', desc: 'How often AI names you compared with competitors' },
-      { Icon: Eye, name: 'How AI Describes Me', desc: 'How AI describes your brand' },
+      { Icon: BarChart2, name: 'Who AI Recommends', desc: 'How often each AI tool names your business, compared with your competitors', href: '/share-of-voice' },
+      { Icon: Eye, name: 'How AI Describes Me', desc: 'The description each AI gives of your business, and whether it reads as positive, neutral or negative', href: '/brand-visibility' },
     ],
   },
   {
@@ -348,15 +348,21 @@ function PlatformSection() {
                 <p className="px-6 pt-6 text-[14px] text-neutral-400 leading-relaxed lg:hidden">{current.body}</p>
                 <PlatformVisual id={active} />
                 <div className="grid grid-cols-1 sm:grid-cols-2 border-t border-white/[0.07]">
-                  {current.tools.map((t, k) => (
-                    <div key={t.name} className={`flex gap-3 p-5 ${k % 2 === 0 ? 'sm:border-r' : ''} ${k > 1 ? 'border-t' : ''} ${k === 1 ? 'border-t sm:border-t-0' : ''} border-white/[0.07]`}>
-                      <t.Icon className="w-4 h-4 text-neutral-500 mt-0.5 shrink-0" />
-                      <div className="min-w-0">
-                        <div className="text-[14px] text-white font-medium">{t.name}</div>
-                        <div className="text-[13px] text-neutral-500">{t.desc}</div>
-                      </div>
-                    </div>
-                  ))}
+                  {current.tools.map((t, k) => {
+                    const inner = (
+                      <>
+                        <t.Icon className="w-4 h-4 text-neutral-500 mt-0.5 shrink-0" />
+                        <div className="min-w-0">
+                          <div className="text-[14px] text-white font-medium">{t.name}</div>
+                          <div className="text-[13px] text-neutral-500">{t.desc}</div>
+                        </div>
+                      </>
+                    );
+                    const cls = `flex gap-3 p-5 ${k % 2 === 0 ? 'sm:border-r' : ''} ${k > 1 ? 'border-t' : ''} ${k === 1 ? 'border-t sm:border-t-0' : ''} border-white/[0.07]`;
+                    return 'href' in t && t.href
+                      ? <Link key={t.name} to={t.href} className={`${cls} group hover:bg-white/[0.02] transition-colors`}>{inner}</Link>
+                      : <div key={t.name} className={cls}>{inner}</div>;
+                  })}
                 </div>
               </motion.div>
             </AnimatePresence>
@@ -378,8 +384,6 @@ const LANE_ROWS = [
   { name: 'Local Businesses', who: 'Service businesses people find nearby', href: '/local-business', w: [20, 20, 20, 0, 20, 20] },
 ];
 
-const SEG = ['#ffffff', '#3B82F6', '#F97316', '#14B8A6', '#A78BFA', '#EF4444'];
-const SHORT = ['AI Readability', 'Digital Authority', 'Conversion Readiness', 'Product Discoverability', 'Local Presence', 'Easy to Quote'];
 
 function LanesSection() {
   return (
@@ -391,30 +395,17 @@ function LanesSection() {
             A bakery and a SaaS company don't get found the same way.
           </h2>
           <p className="mt-5 text-neutral-400 text-lg max-w-2xl leading-relaxed">
-            So we don't score them the same way. Pick yours and the Rain Score focuses on what decides whether AI recommends you. These are the real percentages.
+            So we don't score them the same way. Pick yours and the Rain Score focuses on what decides whether AI recommends you.
           </p>
         </Reveal>
 
         <Reveal delay={0.1} className="mt-14">
-          <div className="flex flex-wrap gap-x-5 gap-y-2 mb-6">
-            {SHORT.map((s, k) => (
-              <span key={s} className="flex items-center gap-2 text-[12px] text-neutral-400">
-                <span className="w-2.5 h-2.5 rounded-[2px]" style={{ background: SEG[k] }} />{s}
-              </span>
-            ))}
-          </div>
           <div className="rounded-xl border border-white/10 divide-y divide-white/[0.07] bg-[#0a0a0a]">
             {LANE_ROWS.map(l => (
               <Link key={l.name} to={l.href} className="group grid grid-cols-1 md:grid-cols-[260px_1fr_24px] gap-3 md:gap-8 items-center px-5 md:px-6 py-5 hover:bg-white/[0.02] transition-colors">
                 <div className="min-w-0">
                   <div className="text-[15px] text-white font-medium">{l.name}</div>
                   <div className="text-[13px] text-neutral-500 truncate">{l.who}</div>
-                </div>
-                <div className="flex h-7 rounded-md overflow-hidden" aria-label={l.w.map((v, k) => (v ? SHORT[k] : null)).filter(Boolean).join(', ')}>
-                  {l.w.map((v, k) => v > 0 && (
-                    <div key={k} className="flex items-center justify-center text-[11px] text-black/80 font-medium tabular-nums" style={{ width: `${v}%`, background: SEG[k], ...MONO }}>
-                    </div>
-                  ))}
                 </div>
                 <ArrowUpRight className="hidden md:block w-4 h-4 text-neutral-600 group-hover:text-white transition-colors" />
               </Link>
