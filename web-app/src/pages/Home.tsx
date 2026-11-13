@@ -291,6 +291,71 @@ function PlatformVisual({ id }: { id: string }) {
   );
 }
 
+/* ── What you can do: entry points, questions, and the analysis tools ─────── */
+
+const START_CARDS = [
+  { Icon: PenLine, title: 'Check your writing', href: '/analyze', body: 'Paste an article, blog post or landing page and get your Rain Score with a pillar breakdown.', who: 'For writers and marketers' },
+  { Icon: Globe, title: 'Scan a URL', href: '/url-scanner', body: 'Enter your website address and get the technical checks, each with a plain-English fix.', who: 'For local businesses and online sellers' },
+  { Icon: GitBranch, title: 'Scan a repo', href: '/repo-analysis', body: 'Connect a GitHub repository to check its docs, READMEs and app for AI readability.', who: 'For developers and vibe coders' },
+];
+
+const TOOL_CARDS = [
+  { Icon: Radar, title: 'Is AI Citing Me?', href: '/citation-monitor', body: 'Whether each AI tool links to your pages as a source, and which pages.' },
+  { Icon: BarChart2, title: 'Who AI Recommends', href: '/share-of-voice', body: 'How often each AI tool names your business, compared with your competitors.' },
+  { Icon: Eye, title: 'How AI Describes Me', href: '/brand-visibility', body: 'The description each AI gives of your business, and whether it reads as positive, neutral or negative.' },
+];
+
+function ToolGuideSection() {
+  return (
+    <section className="relative z-10 py-28 border-t border-white/[0.06]">
+      <div className="max-w-[1440px] mx-auto px-6">
+        <Reveal>
+          <Eyebrow>What you can do</Eyebrow>
+          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">
+            Start with your content. Read the results. Fix what's missing.
+          </h2>
+        </Reveal>
+
+        <Reveal delay={0.05} className="mt-14">
+          <div className="text-[12px] text-neutral-500 mb-4" style={MONO}>1 · START WITH WHAT YOU HAVE</div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {START_CARDS.map(c => (
+              <Link key={c.title} to={c.href} className="group rounded-xl border border-white/10 bg-[#0a0a0a] p-6 hover:bg-white/[0.02] transition-colors">
+                <c.Icon className="w-5 h-5 text-[#ffffff]" />
+                <div className="mt-4 text-[17px] text-white font-medium flex items-center gap-2">{c.title}<ArrowUpRight className="w-4 h-4 text-neutral-600 group-hover:text-white transition-colors" /></div>
+                <p className="mt-2 text-[14px] text-neutral-400 leading-relaxed">{c.body}</p>
+                <div className="mt-4 text-[12px] text-neutral-500" style={MONO}>{c.who}</div>
+              </Link>
+            ))}
+          </div>
+        </Reveal>
+
+        <Reveal delay={0.1} className="mt-10">
+          <div className="text-[12px] text-neutral-500 mb-4" style={MONO}>2 · FIND THE QUESTIONS YOUR CUSTOMERS ASK</div>
+          <Link to="/questions" className="group flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-xl border border-white/10 bg-[#0a0a0a] p-6 hover:bg-white/[0.02] transition-colors">
+            <p className="text-[15px] text-neutral-300 leading-relaxed max-w-2xl">Find the questions people ask AI about your kind of business, then fix the one that matters most, starting with the answer you're missing.</p>
+            <span className="text-[14px] text-white font-medium inline-flex items-center gap-2 shrink-0">Find customer questions <ArrowUpRight className="w-4 h-4" /></span>
+          </Link>
+        </Reveal>
+
+        <Reveal delay={0.15} className="mt-10">
+          <div className="text-[12px] text-neutral-500 mb-4" style={MONO}>3 · RUN AN ANALYSIS, THEN READ THE PILLAR BREAKDOWN</div>
+          <p className="text-neutral-400 text-[15px] max-w-2xl leading-relaxed mb-5">An analysis gives you one Rain Score and a pillar breakdown: the score split into the pillars that matter for your kind of business.</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {TOOL_CARDS.map(c => (
+              <Link key={c.title} to={c.href} className="group rounded-xl border border-white/10 bg-[#0a0a0a] p-6 hover:bg-white/[0.02] transition-colors">
+                <c.Icon className="w-5 h-5 text-[#ffffff]" />
+                <div className="mt-4 text-[17px] text-white font-medium flex items-center gap-2">{c.title}<ArrowUpRight className="w-4 h-4 text-neutral-600 group-hover:text-white transition-colors" /></div>
+                <p className="mt-2 text-[14px] text-neutral-400 leading-relaxed">{c.body}</p>
+              </Link>
+            ))}
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 function PlatformSection() {
   const [active, setActive] = useState('measure');
   const engines = joinNames(useLiveEngines());
@@ -858,6 +923,7 @@ export default function Home() {
         <WhyGoogleSection />
         <PlatformSection />
         <LanesSection />
+        <ToolGuideSection />
         <MethodSection />
         <TrackingSection />
 
