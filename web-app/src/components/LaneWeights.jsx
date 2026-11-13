@@ -28,9 +28,9 @@ export default function LaneWeights({ current }) {
               <div className={styles.name}>{l.name}{l.id === current && <span className={styles.badge}>Your lane</span>}</div>
               <div className={styles.sub}>{l.who}</div>
             </div>
-            <div className={styles.bar} aria-label={l.w.map((v, k) => (v ? `${SHORT[k]} ${v}%` : null)).filter(Boolean).join(', ')}>
+            <div className={styles.bar} aria-label={l.w.map((v, k) => (v ? SHORT[k] : null)).filter(Boolean).join(', ')}>
               {l.w.map((v, k) => v > 0 && (
-                <div key={k} style={{ width: `${v}%`, background: SEG[k] }}>{v}%</div>
+                <div key={k} style={{ width: `${v}%`, background: SEG[k] }} />
               ))}
             </div>
           </div>

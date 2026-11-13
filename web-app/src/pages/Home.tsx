@@ -410,10 +410,9 @@ function LanesSection() {
                   <div className="text-[15px] text-white font-medium">{l.name}</div>
                   <div className="text-[13px] text-neutral-500 truncate">{l.who}</div>
                 </div>
-                <div className="flex h-7 rounded-md overflow-hidden" aria-label={l.w.map((v, k) => `${SHORT[k]} ${v}%`).filter((_, k) => l.w[k]).join(', ')}>
+                <div className="flex h-7 rounded-md overflow-hidden" aria-label={l.w.map((v, k) => (v ? SHORT[k] : null)).filter(Boolean).join(', ')}>
                   {l.w.map((v, k) => v > 0 && (
                     <div key={k} className="flex items-center justify-center text-[11px] text-black/80 font-medium tabular-nums" style={{ width: `${v}%`, background: SEG[k], ...MONO }}>
-                      {v}%
                     </div>
                   ))}
                 </div>
