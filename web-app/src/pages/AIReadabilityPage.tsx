@@ -83,18 +83,18 @@ export default function AIReadabilityPage() {
             The six areas of scoring
           </h2>
           <p className="text-neutral-400 leading-relaxed mb-6">
-            Every analysis returns a 0–100 Rain Score built from four core pillars. Online sellers and local businesses also get one lane pillar, and each of their five pillars is weighted 20%. Everyone else gets the four core pillars at 25% each. Here is how they work.
+            Every analysis returns a 0–100 Rain Score built from four core pillars. Online sellers and local businesses also get one lane pillar. The pillars in your lane are weighted equally. Here is how they work.
           </p>
 
           <div className="space-y-6">
             {/* Pillar 1 */}
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
               <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-white mr-2">25% (all lanes)</span>
+                <span className="text-white mr-2">Core pillar, all lanes</span>
                 AI Readability
               </h3>
               <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                Can the AI read and understand your content clearly? This area checks the structural basics that make content machine-readable. Weight is 25% for writers, developers and vibe coders, and 20% for online sellers and local businesses.
+                Can the AI read and understand your content clearly? This area checks the structural basics that make content machine-readable. The weighting depends on your lane.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
@@ -119,11 +119,11 @@ export default function AIReadabilityPage() {
             {/* Pillar 2 */}
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
               <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-white mr-2">25% (all lanes)</span>
+                <span className="text-white mr-2">Core pillar, all lanes</span>
                 Digital Authority
               </h3>
               <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                Does the AI trust your content? This area checks the signals that make an AI confident your content is reliable. Weight is 25% for writers, developers and vibe coders, and 20% for online sellers and local businesses.
+                Does the AI trust your content? This area checks the signals that make an AI confident your content is reliable. The weighting depends on your lane.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
@@ -148,11 +148,11 @@ export default function AIReadabilityPage() {
             {/* Pillar 3 */}
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
               <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-white mr-2">25% (all lanes)</span>
+                <span className="text-white mr-2">Core pillar, all lanes</span>
                 Conversion Readiness
               </h3>
               <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                Is your content organized so that AI can extract the answer and point the user to the next step? Weight is 25% for writers, developers and vibe coders, and 20% for online sellers and local businesses.
+                Is your content organized so that AI can extract the answer and point the user to the next step? The weighting depends on your lane.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
@@ -177,11 +177,11 @@ export default function AIReadabilityPage() {
             {/* Pillar 4 — Product Discoverability */}
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
               <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-white mr-2">Online sellers only, 20%</span>
+                <span className="text-white mr-2">Online sellers only</span>
                 Product Discoverability
               </h3>
               <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                For product-focused content, this area measures how well AI can surface your products in shopping and discovery contexts. Only online sellers score this pillar, at 20%. Writers, developers, vibe coders and local businesses do not.
+                For product-focused content, this area measures how well AI can surface your products in shopping and discovery contexts. Only online sellers score this pillar. Writers, developers, vibe coders and local businesses do not.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
@@ -206,11 +206,11 @@ export default function AIReadabilityPage() {
             {/* Pillar 5 — Easy to Quote */}
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
               <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-white mr-2">25% (all lanes)</span>
+                <span className="text-white mr-2">Core pillar, all lanes</span>
                 Easy to Quote
               </h3>
               <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                How easily can AI pull a single answer out of your content and quote it? This is 25% for writers, developers and vibe coders, and 20% for online sellers and local businesses. It is separate from the checks on who is cited: this area measures whether an AI can accurately find the right section of your content and use it.
+                How easily can AI pull a single answer out of your content and quote it? It is weighted equally with the other core pillars in your lane. It is separate from the checks on who is cited: this area measures whether an AI can accurately find the right section of your content and use it.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-neutral-300">
@@ -239,11 +239,11 @@ export default function AIReadabilityPage() {
             {/* Pillar 6 — Local Presence */}
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
               <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-white mr-2">Local businesses only, 20%</span>
+                <span className="text-white mr-2">Local businesses only</span>
                 Local Presence
               </h3>
               <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                For local service businesses, this area measures how confidently AI can recommend you for a "near me" query. Only local businesses score this pillar, at 20%. Other lanes do not score it.
+                For local service businesses, this area measures how confidently AI can recommend you for a "near me" query. Only local businesses score this pillar. Other lanes do not score it.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm text-neutral-300">

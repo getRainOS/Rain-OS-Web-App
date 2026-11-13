@@ -58,7 +58,7 @@ const faqGroups = [
     items: [
       {
         q: 'What does the Rain Score mean?',
-        a: 'The Rain Score is a weighted 0–100 measure of how well your content is optimized for AI engines. The weights change based on your lane: Writers & Marketers, Developers and Vibe Coders get four core pillars at 25% each (AI Readability, Digital Authority, Conversion Readiness and Easy to Quote). Online Sellers and Local Businesses add their own pillar, Product Discoverability or Local Presence, and weight their five pillars at 20% each. Each pillar has sub-scores so you know exactly what to improve.',
+        a: 'The Rain Score is a weighted 0–100 measure of how well your content is optimized for AI engines. The pillars that count depend on your lane: writers, developers and vibe coders score four core pillars, and online sellers and local businesses add one lane pillar. Each pillar has sub-scores so you know exactly what to improve.',
       },
       {
         q: 'Why is my score different between URL Scanner and Content Analyzer?',

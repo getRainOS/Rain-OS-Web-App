@@ -189,7 +189,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
             <span className="text-[#bdbdbd] font-bold tracking-wider text-xs uppercase mb-3 block">What we score</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Three things AI checks on your website</h2>
             <p className="text-neutral-400 max-w-2xl mx-auto">
-              AI looks at five pillars before it recommends a local business. Four are about your website and how you're described. The fifth, Local Presence, covers your Google listing, reviews and service area, and makes up 20% of the score.
+              AI looks at five pillars before it recommends a local business. Four are about your website and how you're described. The fifth, Local Presence, covers your Google listing, reviews and service area.
             </p>
           </motion.div>
 
@@ -200,7 +200,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 color: 'text-sky-400',
                 bg: 'bg-sky-500/10',
                 border: 'border-sky-500/20',
-                weight: '20%',
+                weight: 'Core pillar',
                 title: 'AI Readability',
                 tagline: 'Can AI understand what you offer?',
                 body: 'AI reads the words on your page. If your services are only in images, your pages are vague ("we do it all!"), or the content only appears after a script runs, AI may miss it.',
@@ -211,7 +211,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 color: 'text-emerald-400',
                 bg: 'bg-emerald-500/10',
                 border: 'border-emerald-500/20',
-                weight: '20%',
+                weight: 'Core pillar',
                 title: 'Digital Authority',
                 tagline: 'Does AI trust your business?',
                 body: 'AI checks that your business looks real and consistent. Your name, address and phone should match everywhere, and your site should show reviews and clear business details.',
@@ -222,7 +222,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 color: 'text-violet-400',
                 bg: 'bg-violet-500/10',
                 border: 'border-violet-500/20',
-                weight: '20%',
+                weight: 'Core pillar',
                 title: 'Conversion Readiness',
                 tagline: 'When a visitor arrives, do they call?',
                 body: 'A visitor from AI still has to act. Your site should tell them what you do, why to trust you, and how to call or book in a few seconds.',
@@ -235,7 +235,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                   <div className={`w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center`}>
                     <pillar.icon className={`w-5 h-5 ${pillar.color}`} />
                   </div>
-                  <span className={`text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-white/5 border border-white/10 ${pillar.color}`}>{pillar.weight} of score</span>
+                  <span className={`text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-white/5 border border-white/10 ${pillar.color}`}>{pillar.weight}</span>
                 </div>
                 <h3 className={`text-xl font-bold ${pillar.color} mb-1`}>{pillar.title}</h3>
                 <p className="text-neutral-500 text-xs font-medium italic mb-4">{pillar.tagline}</p>
@@ -362,8 +362,8 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
       <section className="py-16 px-6 border-t border-white/[0.06]">
         <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
           {[
-            { value: '30%', label: 'of the score comes from your Google listing, reviews and service area', color: 'text-white' },
-            { value: '6', label: 'areas scored for every local business check', color: 'text-white' },
+            { value: '1', label: 'pillar for your Google listing, reviews and service area, scored alongside four core pillars', color: 'text-white' },
+            { value: '5', label: 'pillars scored for every local business check', color: 'text-white' },
             { value: 'Free', label: 'to start, no credit card needed', color: 'text-white' },
           ].map((stat, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
