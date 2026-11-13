@@ -780,7 +780,7 @@ export default function Home() {
               </h1>
               <EngineCycle names={engines} />
               <p className="mt-7 w-0 min-w-full text-lg md:text-xl text-neutral-400 leading-relaxed text-center">
-                More people now ask AI where to buy, who to hire and what to use. rain OS checks whether AI mentions you, and walks you through fixing it in plain English.
+                Being cited by AI is now the cost of entry for being online.
               </p>
               </div>
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
