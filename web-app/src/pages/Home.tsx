@@ -101,7 +101,7 @@ const FIX_MODES = [
 ];
 
 // The analysis screen in the app, shown as it runs: each step fills in turn.
-function AnalyzeConsole() {
+function AnalyzeConsole({ compact = false }: { compact?: boolean }) {
   const reduce = useReducedMotion();
   const [step, setStep] = useState(0);
   const [runIdx, setRunIdx] = useState(0); // the analyzer running now
@@ -154,7 +154,7 @@ function AnalyzeConsole() {
             );
           })}
         </div>
-        <div className="text-[15px] font-medium text-white mb-6">Running {FIX_MODES[runIdx].label}</div>
+        <div className="text-[15px] font-medium text-white mb-6">Analyzing your content</div>
         <ul className="space-y-4">
           {ANALYZE_STEPS.map((label, k) => {
             const isDone = k < done;
@@ -179,6 +179,7 @@ function AnalyzeConsole() {
             style={{ width: `${Math.min(100, (done / ANALYZE_STEPS.length) * 100)}%` }}
           />
         </div>
+        {!compact && (
         <div className="mt-7">
           <div className="mb-3 text-[11px] text-neutral-500" style={MONO}>THE FIXES</div>
           <div className="relative flex gap-5 border-b border-white/[0.07] mb-4">
@@ -206,6 +207,7 @@ function AnalyzeConsole() {
           </motion.ul>
           </div>
         </div>
+        )}
       </div>
     </div>
   );
@@ -286,8 +288,7 @@ const LANE_RUNS: { lane: string; before: PillarData; after: PillarData }[] = [
 const RUN_PHASES = [
   { id: 'before', ms: 3500 },
   { id: 'running', ms: 9000 },
-  { id: 'result', ms: 3500 },
-  { id: 'after', ms: 3500 },
+  { id: 'after', ms: 4000 },
 ] as const;
 
 function RotatingAnalysis() {
@@ -315,7 +316,7 @@ function RotatingAnalysis() {
           exit={{ opacity: 0, y: -12 }}
           transition={{ duration: 0.45 }}
         >
-          {id === 'running' ? <AnalyzeConsole /> : id === 'before' || id === 'result' ? <PillarVisual result={run.before} label={id === 'before' ? 'Before' : 'Result'} /> : <PillarVisual result={run.after} label="After fixes" />}
+          {id === 'running' ? <AnalyzeConsole compact /> : id === 'before' ? <PillarVisual result={run.before} label="Before" /> : <PillarVisual result={run.after} label="After fixes" before={run.before.overall} />}
         </motion.div>
       </AnimatePresence>
     </div>

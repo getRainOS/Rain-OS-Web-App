@@ -86,7 +86,7 @@ export const AFTER: PillarData = {
   ] as Pillar[],
 };
 
-export function PillarVisual({ result = BEFORE, label }: { result?: PillarData; label?: string }) {
+export function PillarVisual({ result = BEFORE, label, before }: { result?: PillarData; label?: string; before?: number }) {
   const reduce = useReducedMotion();
   return (
     <div className={frame}>
@@ -98,7 +98,15 @@ export function PillarVisual({ result = BEFORE, label }: { result?: PillarData; 
         </div>
         <div className="shrink-0 text-right">
           <div className="text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>OVERALL AEO SCORE</div>
-          <div className="text-4xl font-semibold tabular-nums text-white">{result.overall}<span className="text-lg text-neutral-500">/100</span></div>
+          {before !== undefined ? (
+            <div className="flex items-baseline justify-end gap-2 tabular-nums">
+              <span className="text-2xl font-semibold text-neutral-500 line-through decoration-neutral-600">{before}</span>
+              <span className="text-4xl font-semibold text-white">{result.overall}</span>
+              <span className="text-[13px] font-semibold text-[#3B82F6]">+{result.overall - before}</span>
+            </div>
+          ) : (
+            <div className="text-4xl font-semibold tabular-nums text-white">{result.overall}<span className="text-lg text-neutral-500">/100</span></div>
+          )}
         </div>
       </div>
       <div className="mt-6 grid h-52 items-end gap-3" style={{ gridTemplateColumns: `repeat(${result.pillars.length}, minmax(0, 1fr))` }}>
