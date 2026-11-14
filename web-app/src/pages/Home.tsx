@@ -256,6 +256,28 @@ const TOOLS = [
   },
 ];
 
+// A tool's name, large and bold, with each word rising in turn as it scrolls into view.
+function ToolTitle({ text }: { text: string }) {
+  const reduce = useReducedMotion();
+  const words = text.split(' ');
+  return (
+    <h3 className="text-4xl md:text-6xl font-bold tracking-[-0.035em] leading-[1.02] text-white">
+      {words.map((w, i) => (
+        <motion.span
+          key={`${w}-${i}`}
+          className="inline-block mr-[0.25em]"
+          initial={reduce ? false : { opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 0.6, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {w}
+        </motion.span>
+      ))}
+    </h3>
+  );
+}
+
 function ToolsSection() {
   return (
     <section id="product" className="relative z-10 py-28 border-t border-white/[0.06]">
@@ -271,8 +293,8 @@ function ToolsSection() {
             <Reveal key={t.key} delay={0.05 * k}>
               <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.4fr] gap-8 lg:gap-12 items-center rounded-2xl border border-white/10 bg-[#0a0a0a] p-6 md:p-10">
                 <div>
-                  <div className="text-[12px] text-neutral-500" style={MONO}>{t.eyebrow.toUpperCase()}</div>
-                  <h3 className="mt-3 text-2xl md:text-3xl font-semibold tracking-[-0.02em] text-white">{t.title}</h3>
+                  <ToolTitle text={t.eyebrow} />
+                  <p className="mt-3 text-2xl md:text-3xl font-semibold tracking-[-0.02em] text-white">{t.title}</p>
                   <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">{t.body}</p>
                   {t.ways.length > 0 && (
                     <>
