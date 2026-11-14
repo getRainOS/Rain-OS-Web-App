@@ -54,36 +54,54 @@ export default function AppShot({ src, alt, accent }: { src: string; alt: string
 // The analysis result, in the same vertical format the app shows: the business,
 // the overall score, and one column per pillar. Example data from a saved demo
 // analysis. Each column rises in turn when it scrolls into view.
+type Pillar = { key: keyof typeof PILLAR_CHART_COLORS; label: string; value: number };
+
 const RESULT = {
   business: 'Bright Smile Dental',
-  page: 'Home',
-  overall: 69,
+  page: 'Invisalign in Austin',
+  overall: 58,
   pillars: [
-    { key: 'ai_readability', label: 'AI Readability', value: 71 },
-    { key: 'digital_authority', label: 'Digital Authority', value: 66 },
-    { key: 'conversion_readiness', label: 'Conversion Readiness', value: 70 },
-    { key: 'rag_readiness', label: 'Easy to Quote', value: 61 },
-    { key: 'local_presence', label: 'Local Presence', value: 73 },
-  ] as const,
+    { key: 'ai_readability', label: 'AI Readability', value: 55 },
+    { key: 'digital_authority', label: 'Digital Authority', value: 61 },
+    { key: 'conversion_readiness', label: 'Conversion Readiness', value: 60 },
+    { key: 'rag_readiness', label: 'Easy to Quote', value: 52 },
+    { key: 'local_presence', label: 'Local Presence', value: 57 },
+  ] as Pillar[],
 };
 
-export function PillarVisual() {
+
+// The same page, checked again after its fixes: a real saved analysis from the demo.
+export const AFTER = {
+  business: 'Bright Smile Dental',
+  page: 'Invisalign in Austin',
+  overall: 74,
+  pillars: [
+    { key: 'ai_readability', label: 'AI Readability', value: 77 },
+    { key: 'digital_authority', label: 'Digital Authority', value: 70 },
+    { key: 'conversion_readiness', label: 'Conversion Readiness', value: 72 },
+    { key: 'rag_readiness', label: 'Easy to Quote', value: 66 },
+    { key: 'local_presence', label: 'Local Presence', value: 78 },
+  ] as Pillar[],
+};
+
+export function PillarVisual({ result = RESULT, label }: { result?: typeof RESULT; label?: string }) {
   const reduce = useReducedMotion();
   return (
     <div className={frame}>
       <div className="flex items-end justify-between gap-4">
         <div className="min-w-0">
-          <div className="truncate text-[15px] font-semibold text-white">{RESULT.business}</div>
-          <div className="text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>{RESULT.page.toUpperCase()}</div>
+          {label && <div className="mb-1 text-[11px] text-neutral-400" style={{ fontFamily: MONO }}>{label.toUpperCase()}</div>}
+          <div className="truncate text-[15px] font-semibold text-white">{result.business}</div>
+          <div className="text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>{result.page.toUpperCase()}</div>
         </div>
         <div className="shrink-0 text-right">
           <div className="text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>OVERALL AEO SCORE</div>
-          <div className="text-4xl font-semibold tabular-nums text-white">{RESULT.overall}<span className="text-lg text-neutral-500">/100</span></div>
+          <div className="text-4xl font-semibold tabular-nums text-white">{result.overall}<span className="text-lg text-neutral-500">/100</span></div>
         </div>
       </div>
-      <div className="mt-6 grid h-52 items-end gap-3" style={{ gridTemplateColumns: `repeat(${RESULT.pillars.length}, minmax(0, 1fr))` }}>
-        {RESULT.pillars.map((p, i) => (
-          <div key={p.key} className="flex h-full min-w-0 flex-col justify-end">
+      <div className="mt-6 grid h-52 items-end gap-3" style={{ gridTemplateColumns: `repeat(${result.pillars.length}, minmax(0, 1fr))` }}>
+        {result.pillars.map((p, i) => (
+          <div key={String(p.key)} className="flex h-full min-w-0 flex-col justify-end">
             <div className="mb-1.5 text-center text-[13px] font-semibold tabular-nums text-white">{p.value}</div>
             <motion.div
               className="w-full rounded-t-md"
