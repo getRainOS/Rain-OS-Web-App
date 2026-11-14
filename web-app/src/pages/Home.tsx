@@ -724,7 +724,7 @@ export default function Home() {
               </h1>
               <EngineCycle names={engines} />
               <p className="mt-7 w-0 min-w-full text-lg md:text-xl text-neutral-400 leading-relaxed text-center">
-                Being cited by AI is now the cost of entry for being online.
+                Being mentioned by AI is now the minimum cost of entry online. rain OS shows you where you stand and walks you through getting there, in plain English.
               </p>
               </div>
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
