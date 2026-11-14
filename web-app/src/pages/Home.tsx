@@ -234,7 +234,7 @@ const TOOLS = [
     body: 'Ask the questions your customers ask, and see whether each AI tool links to your pages as a source, and which pages it links to.',
     ways: [],
     href: '/citation-monitor',
-    visual: { src: '/screens/app/is-ai-citing-me.png', alt: 'The Is AI Citing Me? screen: enter a question, pick a business and see which AI tools cite it' },
+    visual: { src: '/screens/app/is-ai-citing-me.png', alt: 'The Is AI Citing Me? results: your position across checks, and which AI tools cite your business' },
   },
   {
     key: 'recommends',
@@ -243,7 +243,7 @@ const TOOLS = [
     body: 'Share of AI voice: how often each AI tool names your business compared with the competitors it names.',
     ways: [],
     href: '/share-of-voice',
-    visual: { src: '/screens/app/who-ai-recommends.png', alt: 'The Who AI Recommends screen: pick a business, add a question and competitors, and check share of AI voice' },
+    visual: { src: '/screens/app/who-ai-recommends.png', alt: 'The Who AI Recommends results: how often AI mentions your business for a topic, against competitors' },
   },
   {
     key: 'describes',
@@ -252,7 +252,7 @@ const TOOLS = [
     body: 'The wording each AI uses for your business, and whether it reads as positive, neutral or negative, so you know what to change.',
     ways: [],
     href: '/brand-visibility',
-    visual: { src: '/screens/app/how-ai-describes-me.png', alt: 'The How AI Describes Me screen: pick a business and check how AI describes it' },
+    visual: { src: '/screens/app/how-ai-describes-me.png', alt: 'The How AI Describes Me results: whether AI mentions your business, its sentiment, and how it describes you' },
   },
 ];
 
