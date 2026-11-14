@@ -16,7 +16,7 @@ import SourceNetwork from '@/components/marketing/SourceNetwork';
 import RainBackground from '@/components/marketing/RainBackground';
 import TrendCard from '@/components/marketing/TrendCard';
 import PillarGauges from '@/components/marketing/PillarGauges';
-import { PillarVisual, CitationVisual, ShareVisual, SentimentVisual } from '@/components/marketing/ToolVisuals';
+import AppShot from '@/components/marketing/ToolVisuals';
 import ScrollWords from '@/components/marketing/ScrollWords';
 import IllustratedExample from '@/components/marketing/IllustratedExample';
 
@@ -225,7 +225,7 @@ const TOOLS = [
       { label: 'Scan a repo', href: '/repo-analysis', note: 'Docs, READMEs and apps on GitHub' },
     ],
     href: '/analyze',
-    visual: 'pillar' as const,
+    visual: { src: '/screens/app/dashboard.png', alt: 'The rain OS dashboard: whether AI recommends the business, quick wins, and where AI gets its answers' },
   },
   {
     key: 'citing',
@@ -234,7 +234,7 @@ const TOOLS = [
     body: 'Ask the questions your customers ask, and see whether each AI tool links to your pages as a source, and which pages it links to.',
     ways: [],
     href: '/citation-monitor',
-    visual: 'citation' as const,
+    visual: { src: '/screens/app/is-ai-citing-me.png', alt: 'The Is AI Citing Me? screen: enter a question, pick a business and see which AI tools cite it' },
   },
   {
     key: 'recommends',
@@ -243,7 +243,7 @@ const TOOLS = [
     body: 'Share of AI voice: how often each AI tool names your business compared with the competitors it names.',
     ways: [],
     href: '/share-of-voice',
-    visual: 'share' as const,
+    visual: { src: '/screens/app/who-ai-recommends.png', alt: 'The Who AI Recommends screen: pick a business, add a question and competitors, and check share of AI voice' },
   },
   {
     key: 'describes',
@@ -252,16 +252,9 @@ const TOOLS = [
     body: 'The wording each AI uses for your business, and whether it reads as positive, neutral or negative, so you know what to change.',
     ways: [],
     href: '/brand-visibility',
-    visual: 'sentiment' as const,
+    visual: { src: '/screens/app/how-ai-describes-me.png', alt: 'The How AI Describes Me screen: pick a business and check how AI describes it' },
   },
 ];
-
-function ToolVisual({ kind }: { kind: 'pillar' | 'citation' | 'share' | 'sentiment' }) {
-  if (kind === 'pillar') return <PillarVisual />;
-  if (kind === 'citation') return <CitationVisual />;
-  if (kind === 'share') return <ShareVisual />;
-  return <SentimentVisual />;
-}
 
 function ToolsSection() {
   return (
@@ -282,7 +275,9 @@ function ToolsSection() {
                   <h3 className="mt-3 text-2xl md:text-3xl font-semibold tracking-[-0.02em] text-white">{t.title}</h3>
                   <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">{t.body}</p>
                   {t.ways.length > 0 && (
-                    <ul className="mt-5 space-y-2">
+                    <>
+                    <div className="mt-6 text-[12px] text-neutral-500" style={MONO}>FEATURES</div>
+                    <ul className="mt-3 space-y-2">
                       {t.ways.map(w => (
                         <li key={w.label}>
                           <Link to={w.href} className="group flex items-baseline justify-between gap-4 rounded-lg border border-white/[0.07] px-4 py-3 hover:bg-white/[0.02] transition-colors">
@@ -292,13 +287,11 @@ function ToolsSection() {
                         </li>
                       ))}
                     </ul>
+                    </>
                   )}
-                  <Link to={t.href} className="mt-6 inline-flex items-center gap-2 text-[14px] text-white font-medium hover:text-neutral-300 transition-colors">
-                    Open {t.eyebrow} <ArrowUpRight className="w-4 h-4" />
-                  </Link>
                 </div>
                 <div className="min-w-0">
-                  <ToolVisual kind={t.visual} />
+                  <AppShot src={t.visual.src} alt={t.visual.alt} />
                 </div>
               </div>
             </Reveal>
