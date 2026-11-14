@@ -16,6 +16,10 @@ export default function AppShot({ src, alt, accent }: { src: string; alt: string
         aria-hidden="true"
       />
       <div className="relative overflow-hidden rounded-xl border border-white/15 bg-[#0a0a0a] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)]">
+        <motion.div
+          animate={reduce ? undefined : { scale: [1, 1.025, 1] }}
+          transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+        >
         <motion.img
           src={src}
           alt={alt}
@@ -28,6 +32,17 @@ export default function AppShot({ src, alt, accent }: { src: string; alt: string
           viewport={view}
           transition={{ duration: 1, ease: EASE }}
         />
+        </motion.div>
+        {!reduce && (
+          <motion.div
+            className="pointer-events-none absolute inset-y-0 w-1/3"
+            style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)`, mixBlendMode: 'screen' }}
+            initial={{ left: '-40%' }}
+            whileInView={{ left: ['-40%', '110%'] }}
+            viewport={view}
+            transition={{ duration: 3.2, delay: 0.8, repeat: Infinity, repeatDelay: 4, ease: 'easeInOut' }}
+          />
+        )}
       </div>
     </div>
   );
