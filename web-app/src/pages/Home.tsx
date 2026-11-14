@@ -313,7 +313,7 @@ function ToolsSection() {
                   )}
                 </div>
                 <div className="min-w-0">
-                  {t.visual === 'pillar' ? <PillarVisual /> : <AppShot src={t.visual.src} alt={t.visual.alt} accent={t.visual.accent} />}
+                  {t.visual === 'pillar' ? <div className="space-y-6"><PillarVisual /><AnalyzeConsole /></div> : <AppShot src={t.visual.src} alt={t.visual.alt} accent={t.visual.accent} />}
                 </div>
               </div>
             </Reveal>
@@ -793,22 +793,6 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="relative z-10 py-28 border-t border-white/[0.06]">
-          <div className="max-w-[1440px] mx-auto px-6">
-            <Reveal className="text-center">
-              <Eyebrow>Inside the app</Eyebrow>
-              <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
-                Paste your page. See each step as it runs.
-              </h2>
-              <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-2xl mx-auto">
-                rain OS reads your writing, measures it, scores it and writes the fixes in plain English.
-              </p>
-            </Reveal>
-            <Reveal delay={0.1} className="mt-12 max-w-5xl mx-auto">
-              <AnalyzeConsole />
-            </Reveal>
-          </div>
-        </section>
 
         <WhyGoogleSection />
         <LanesSection />
