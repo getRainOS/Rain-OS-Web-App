@@ -225,7 +225,7 @@ const TOOLS = [
       { label: 'Scan a repo', href: '/repo-analysis', note: 'Docs, READMEs and apps on GitHub' },
     ],
     href: '/analyze',
-    visual: { src: '/screens/app/dashboard.png', alt: 'The rain OS dashboard: whether AI recommends the business, quick wins, and where AI gets its answers' },
+    visual: { src: '/screens/app/pillar-breakdown.png', alt: 'An analysis result in rain OS: the overall score, the score for each pillar, and the fixes for each pillar' },
   },
   {
     key: 'citing',
