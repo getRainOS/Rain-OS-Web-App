@@ -54,9 +54,11 @@ export default function AppShot({ src, alt, accent }: { src: string; alt: string
 // The analysis result, in the same vertical format the app shows: the business,
 // the overall score, and one column per pillar. Example data from a saved demo
 // analysis. Each column rises in turn when it scrolls into view.
+export type PillarData = { overall: number; business: string; page: string; pillars: Pillar[] };
+
 type Pillar = { key: keyof typeof PILLAR_CHART_COLORS; label: string; value: number };
 
-const RESULT = {
+export const BEFORE: PillarData = {
   business: 'Bright Smile Dental',
   page: 'Invisalign in Austin',
   overall: 58,
@@ -71,7 +73,7 @@ const RESULT = {
 
 
 // The same page, checked again after its fixes: a real saved analysis from the demo.
-export const AFTER = {
+export const AFTER: PillarData = {
   business: 'Bright Smile Dental',
   page: 'Invisalign in Austin',
   overall: 74,
@@ -84,7 +86,7 @@ export const AFTER = {
   ] as Pillar[],
 };
 
-export function PillarVisual({ result = RESULT, label }: { result?: typeof RESULT; label?: string }) {
+export function PillarVisual({ result = BEFORE, label }: { result?: PillarData; label?: string }) {
   const reduce = useReducedMotion();
   return (
     <div className={frame}>

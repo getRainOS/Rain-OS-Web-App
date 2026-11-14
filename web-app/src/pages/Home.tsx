@@ -16,7 +16,7 @@ import SourceNetwork from '@/components/marketing/SourceNetwork';
 import RainBackground from '@/components/marketing/RainBackground';
 import TrendCard from '@/components/marketing/TrendCard';
 import PillarGauges from '@/components/marketing/PillarGauges';
-import AppShot, { PillarVisual, AFTER } from '@/components/marketing/ToolVisuals';
+import AppShot, { PillarVisual, AFTER, BEFORE, type PillarData } from '@/components/marketing/ToolVisuals';
 import ScrollWords from '@/components/marketing/ScrollWords';
 import IllustratedExample from '@/components/marketing/IllustratedExample';
 
@@ -278,6 +278,50 @@ function ToolTitle({ text }: { text: string }) {
   );
 }
 
+// One picture, in turn: the chart, a run of the analysis, the chart again, then the
+// same page with a higher score. Each lane in LANE_RUNS gets its own turn.
+const LANE_RUNS: { lane: string; before: PillarData; after: PillarData }[] = [
+  { lane: 'Local businesses', before: BEFORE, after: AFTER },
+];
+const RUN_PHASES = [
+  { id: 'before', ms: 3500 },
+  { id: 'running', ms: 9000 },
+  { id: 'result', ms: 3500 },
+  { id: 'after', ms: 3500 },
+] as const;
+
+function RotatingAnalysis() {
+  const reduce = useReducedMotion();
+  const [phase, setPhase] = useState(0);
+  const [lane, setLane] = useState(0);
+  useEffect(() => {
+    if (reduce) return;
+    const t = setTimeout(() => {
+      const next = phase + 1;
+      if (next < RUN_PHASES.length) setPhase(next);
+      else { setPhase(0); setLane(n => (n + 1) % LANE_RUNS.length); }
+    }, RUN_PHASES[phase].ms);
+    return () => clearTimeout(t);
+  }, [phase, reduce]);
+  const run = LANE_RUNS[lane];
+  const id = RUN_PHASES[phase].id;
+  return (
+    <div className="min-h-[360px]">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`${lane}-${id}`}
+          initial={reduce ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -12 }}
+          transition={{ duration: 0.45 }}
+        >
+          {id === 'running' ? <AnalyzeConsole /> : id === 'before' || id === 'result' ? <PillarVisual result={run.before} label={id === 'before' ? 'Before' : 'Result'} /> : <PillarVisual result={run.after} label="After fixes" />}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+}
+
 function ToolsSection() {
   return (
     <section id="product" className="relative z-10 py-28 border-t border-white/[0.06]">
@@ -313,7 +357,7 @@ function ToolsSection() {
                   )}
                 </div>
                 <div className="min-w-0">
-                  {t.visual === 'pillar' ? <div className="space-y-6"><AnalyzeConsole /><PillarVisual label="Before" /><PillarVisual result={AFTER} label="After fixes" /></div> : <AppShot src={t.visual.src} alt={t.visual.alt} accent={t.visual.accent} />}
+                  {t.visual === 'pillar' ? <RotatingAnalysis /> : <AppShot src={t.visual.src} alt={t.visual.alt} accent={t.visual.accent} />}
                 </div>
               </div>
             </Reveal>
