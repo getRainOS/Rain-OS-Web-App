@@ -225,7 +225,7 @@ const TOOLS = [
       { label: 'Scan a repo', href: '/repo-analysis', note: 'Docs, READMEs and apps on GitHub' },
     ],
     href: '/analyze',
-    visual: { src: '/screens/app/pillar-breakdown.png', alt: 'An analysis result in rain OS: the overall score, the score for each pillar, and the fixes for each pillar' },
+    visual: { src: '/screens/app/hi-pillar.png', accent: 'rgba(216,67,42,0.55)', alt: 'An analysis result in rain OS: the overall score, the score for each pillar, and the fixes for each pillar' },
   },
   {
     key: 'citing',
@@ -234,7 +234,7 @@ const TOOLS = [
     body: 'Ask the questions your customers ask, and see whether each AI tool links to your pages as a source, and which pages it links to.',
     ways: [],
     href: '/citation-monitor',
-    visual: { src: '/screens/app/is-ai-citing-me.png', alt: 'The Is AI Citing Me? results: your position across checks, and which AI tools cite your business' },
+    visual: { src: '/screens/app/hi-citation.png', accent: 'rgba(245,154,27,0.5)', alt: 'The Is AI Citing Me? results: your position across checks, and which AI tools cite your business' },
   },
   {
     key: 'recommends',
@@ -243,7 +243,7 @@ const TOOLS = [
     body: 'Share of AI voice: how often each AI tool names your business compared with the competitors it names.',
     ways: [],
     href: '/share-of-voice',
-    visual: { src: '/screens/app/who-ai-recommends.png', alt: 'The Who AI Recommends results: how often AI mentions your business for a topic, against competitors' },
+    visual: { src: '/screens/app/hi-share.png', accent: 'rgba(31,79,191,0.6)', alt: 'The Who AI Recommends results: how often AI mentions your business for a topic, against competitors' },
   },
   {
     key: 'describes',
@@ -252,7 +252,7 @@ const TOOLS = [
     body: 'The wording each AI uses for your business, and whether it reads as positive, neutral or negative, so you know what to change.',
     ways: [],
     href: '/brand-visibility',
-    visual: { src: '/screens/app/how-ai-describes-me.png', alt: 'The How AI Describes Me results: whether AI mentions your business, its sentiment, and how it describes you' },
+    visual: { src: '/screens/app/hi-describe.png', accent: 'rgba(216,67,42,0.45)', alt: 'The How AI Describes Me results: whether AI mentions your business, its sentiment, and how it describes you' },
   },
 ];
 
@@ -269,7 +269,7 @@ function ToolsSection() {
         <div className="mt-14 space-y-6">
           {TOOLS.map((t, k) => (
             <Reveal key={t.key} delay={0.05 * k}>
-              <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-8 lg:gap-12 items-center rounded-2xl border border-white/10 bg-[#0a0a0a] p-6 md:p-10">
+              <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.4fr] gap-8 lg:gap-12 items-center rounded-2xl border border-white/10 bg-[#0a0a0a] p-6 md:p-10">
                 <div>
                   <div className="text-[12px] text-neutral-500" style={MONO}>{t.eyebrow.toUpperCase()}</div>
                   <h3 className="mt-3 text-2xl md:text-3xl font-semibold tracking-[-0.02em] text-white">{t.title}</h3>
@@ -291,7 +291,7 @@ function ToolsSection() {
                   )}
                 </div>
                 <div className="min-w-0">
-                  <AppShot src={t.visual.src} alt={t.visual.alt} />
+                  <AppShot src={t.visual.src} alt={t.visual.alt} accent={t.visual.accent} />
                 </div>
               </div>
             </Reveal>
