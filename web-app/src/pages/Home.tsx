@@ -16,7 +16,7 @@ import SourceNetwork from '@/components/marketing/SourceNetwork';
 import RainBackground from '@/components/marketing/RainBackground';
 import TrendCard from '@/components/marketing/TrendCard';
 import PillarGauges from '@/components/marketing/PillarGauges';
-import AppShot from '@/components/marketing/ToolVisuals';
+import AppShot, { PillarVisual } from '@/components/marketing/ToolVisuals';
 import ScrollWords from '@/components/marketing/ScrollWords';
 import IllustratedExample from '@/components/marketing/IllustratedExample';
 
@@ -225,7 +225,7 @@ const TOOLS = [
       { label: 'Scan a repo', href: '/repo-analysis', note: 'Docs, READMEs and apps on GitHub' },
     ],
     href: '/analyze',
-    visual: { src: '/screens/app/hi-pillar.png', accent: 'rgba(216,67,42,0.55)', alt: 'An analysis result in rain OS: the overall score, the score for each pillar, and the fixes for each pillar' },
+    visual: 'pillar' as const,
   },
   {
     key: 'citing',
@@ -313,7 +313,7 @@ function ToolsSection() {
                   )}
                 </div>
                 <div className="min-w-0">
-                  <AppShot src={t.visual.src} alt={t.visual.alt} accent={t.visual.accent} />
+                  {t.visual === 'pillar' ? <PillarVisual /> : <AppShot src={t.visual.src} alt={t.visual.alt} accent={t.visual.accent} />}
                 </div>
               </div>
             </Reveal>
