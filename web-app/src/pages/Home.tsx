@@ -16,6 +16,7 @@ import SourceNetwork from '@/components/marketing/SourceNetwork';
 import RainBackground from '@/components/marketing/RainBackground';
 import TrendCard from '@/components/marketing/TrendCard';
 import PillarGauges from '@/components/marketing/PillarGauges';
+import { PillarVisual, CitationVisual, ShareVisual, SentimentVisual } from '@/components/marketing/ToolVisuals';
 import ScrollWords from '@/components/marketing/ScrollWords';
 import IllustratedExample from '@/components/marketing/IllustratedExample';
 
@@ -210,230 +211,103 @@ function AnalyzeConsole() {
   );
 }
 
-/* ── Platform: measure / monitor / fix ──────────────────────────────────── */
+/* ── The tools: stacked, each with a dynamic picture ───────────────────── */
 
-const PLATFORM = [
+const TOOLS = [
   {
-    id: 'measure',
-    label: 'Measure',
-    Icon: Gauge,
-    title: 'Know how AI reads you',
-    body: 'One score from 0 to 100, built from the six things AI looks at and adjusted for your kind of business. Every check is explained, so you know what moved it.',
-    tools: [
-      { Icon: FileText, name: 'Content Optimizer', desc: 'Score drafts before you publish' },
-      { Icon: Globe, name: 'Check a Web Page', desc: 'AI-friendly files, page details, whether AI can get in, page layout' },
-      { Icon: GitBranch, name: 'Repo Analysis', desc: 'Audit an app straight from GitHub' },
+    key: 'analysis',
+    eyebrow: 'Run an analysis',
+    title: 'Get your Rain Score and pillar breakdown',
+    body: 'One score, split into the pillars that matter for your kind of business, with the fixes for each gap. Run it three ways:',
+    ways: [
+      { label: 'Check your writing', href: '/analyze', note: 'Articles, blogs and landing pages' },
+      { label: 'Scan a URL', href: '/url-scanner', note: 'Your website, with plain-English fixes' },
+      { label: 'Scan a repo', href: '/repo-analysis', note: 'Docs, READMEs and apps on GitHub' },
     ],
+    href: '/analyze',
+    visual: 'pillar' as const,
   },
   {
-    id: 'monitor',
-    label: 'Monitor',
-    Icon: Radar,
-    title: 'See whether AI cites you',
-    body: 'Ask the questions your customers ask. We put them to {engines}, searching the live web, and show every website each one linked to.',
-    tools: [
-      { Icon: Radar, name: 'Is AI Citing Me?', desc: 'Whether each AI tool links to your pages as a source, and which pages', href: '/citation-monitor' },
-      { Icon: CalendarClock, name: 'Weekly tracking', desc: 'Re-checked every week, alerts on change' },
-      { Icon: BarChart2, name: 'Who AI Recommends', desc: 'How often each AI tool names your business, compared with your competitors', href: '/share-of-voice' },
-      { Icon: Eye, name: 'How AI Describes Me', desc: 'The description each AI gives of your business, and whether it reads as positive, neutral or negative', href: '/brand-visibility' },
-    ],
+    key: 'citing',
+    eyebrow: 'Is AI Citing Me?',
+    title: 'See which AI tools cite your pages',
+    body: 'Ask the questions your customers ask, and see whether each AI tool links to your pages as a source, and which pages it links to.',
+    ways: [],
+    href: '/citation-monitor',
+    visual: 'citation' as const,
   },
   {
-    id: 'fix',
-    label: 'Fix',
-    Icon: Wand2,
-    title: 'Ship the fix, not a report',
-    body: 'Every problem comes with what to do in plain English, plus the technical version for whoever builds your site. Rewrite in one click, or let rain OS make the code change for you.',
-    tools: [
-      { Icon: Wand2, name: 'Rewrite for AI', desc: 'Restructure content for extraction' },
-      { Icon: FileText, name: 'Fix prompts', desc: 'Tailored to Bolt, Lovable, Cursor and more' },
-      { Icon: GitPullRequest, name: 'GitHub pull requests', desc: 'Fixes committed to a branch for review' },
-    ],
+    key: 'recommends',
+    eyebrow: 'Who AI Recommends',
+    title: 'See how often you are named, against competitors',
+    body: 'Share of AI voice: how often each AI tool names your business compared with the competitors it names.',
+    ways: [],
+    href: '/share-of-voice',
+    visual: 'share' as const,
+  },
+  {
+    key: 'describes',
+    eyebrow: 'How AI Describes Me',
+    title: 'See how AI describes your business',
+    body: 'The wording each AI uses for your business, and whether it reads as positive, neutral or negative, so you know what to change.',
+    ways: [],
+    href: '/brand-visibility',
+    visual: 'sentiment' as const,
   },
 ];
 
-const SHOTS: Record<string, { src: string; alt: string; label: string; w: number; h: number }> = {
-  measure: { src: '/screens/measure.png', alt: 'rain OS URL Scanner results: overall score, four area scores and the technical checks that need fixing', label: 'URL SCANNER', w: 1072, h: 1066 },
-  monitor: { src: '/screens/monitor.png', alt: 'rain OS Tracked weekly list: each question, whether you were cited, and a history of past checks', label: 'TRACKED WEEKLY', w: 1072, h: 756 },
-  fix: { src: '/screens/fix.png', alt: 'rain OS recommendation with a plain-English fix and a copy-ready technical fix', label: 'RECOMMENDATIONS', w: 1072, h: 1080 },
-};
-
-// Screenshots of the real app, rendered with example data. The URL scanner
-// shows its bar charts and its trend chart as two separate, smaller cards side
-// by side, each with its own caption.
-function PlatformVisual({ id }: { id: string }) {
-  const shot = SHOTS[id];
-  if (id === 'measure') {
-    return (
-      <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <figure className="min-w-0">
-          <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>SCORE BY AREA</div>
-          <PillarGauges />
-        </figure>
-        <figure className="min-w-0">
-          <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>TREND BY AREA</div>
-          <TrendCard />
-        </figure>
-      </div>
-    );
-  }
-  return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-[11px] text-neutral-500" style={MONO}>{shot.label}</span>
-        <span className="text-[11px] text-neutral-500" style={MONO}>EXAMPLE DATA</span>
-      </div>
-      <div className="relative rounded-md overflow-hidden border border-white/[0.07] max-h-[420px]">
-        <img src={shot.src} alt={shot.alt} width={shot.w} height={shot.h} loading="lazy" className="w-full h-auto block" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
-      </div>
-    </div>
-  );
+function ToolVisual({ kind }: { kind: 'pillar' | 'citation' | 'share' | 'sentiment' }) {
+  if (kind === 'pillar') return <PillarVisual />;
+  if (kind === 'citation') return <CitationVisual />;
+  if (kind === 'share') return <ShareVisual />;
+  return <SentimentVisual />;
 }
 
-/* ── What you can do: entry points, questions, and the analysis tools ─────── */
-
-const START_CARDS = [
-  { Icon: PenLine, title: 'Check your writing', href: '/analyze', body: 'Paste an article, blog post or landing page and get your Rain Score with a pillar breakdown.', who: 'For writers and marketers' },
-  { Icon: Globe, title: 'Scan a URL', href: '/url-scanner', body: 'Enter your website address and get the technical checks, each with a plain-English fix.', who: 'For local businesses and online sellers' },
-  { Icon: GitBranch, title: 'Scan a repo', href: '/repo-analysis', body: 'Connect a GitHub repository to check its docs, READMEs and app for AI readability.', who: 'For developers and vibe coders' },
-];
-
-const TOOL_CARDS = [
-  { Icon: Radar, title: 'Is AI Citing Me?', href: '/citation-monitor', body: 'Whether each AI tool links to your pages as a source, and which pages.' },
-  { Icon: BarChart2, title: 'Who AI Recommends', href: '/share-of-voice', body: 'How often each AI tool names your business, compared with your competitors.' },
-  { Icon: Eye, title: 'How AI Describes Me', href: '/brand-visibility', body: 'The description each AI gives of your business, and whether it reads as positive, neutral or negative.' },
-];
-
-function ToolGuideSection() {
-  return (
-    <section className="relative z-10 py-28 border-t border-white/[0.06]">
-      <div className="max-w-[1440px] mx-auto px-6">
-        <Reveal>
-          <Eyebrow>What you can do</Eyebrow>
-          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">
-            Start with your content. Read the results. Fix what's missing.
-          </h2>
-        </Reveal>
-
-        <Reveal delay={0.05} className="mt-14">
-          <div className="text-[12px] text-neutral-500 mb-4" style={MONO}>1 · START WITH WHAT YOU HAVE</div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {START_CARDS.map(c => (
-              <Link key={c.title} to={c.href} className="group rounded-xl border border-white/10 bg-[#0a0a0a] p-6 hover:bg-white/[0.02] transition-colors">
-                <c.Icon className="w-5 h-5 text-[#ffffff]" />
-                <div className="mt-4 text-[17px] text-white font-medium flex items-center gap-2">{c.title}<ArrowUpRight className="w-4 h-4 text-neutral-600 group-hover:text-white transition-colors" /></div>
-                <p className="mt-2 text-[14px] text-neutral-400 leading-relaxed">{c.body}</p>
-                <div className="mt-4 text-[12px] text-neutral-500" style={MONO}>{c.who}</div>
-              </Link>
-            ))}
-          </div>
-        </Reveal>
-
-        <Reveal delay={0.1} className="mt-10">
-          <div className="text-[12px] text-neutral-500 mb-4" style={MONO}>2 · FIND THE QUESTIONS YOUR CUSTOMERS ASK</div>
-          <Link to="/questions" className="group flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-xl border border-white/10 bg-[#0a0a0a] p-6 hover:bg-white/[0.02] transition-colors">
-            <p className="text-[15px] text-neutral-300 leading-relaxed max-w-2xl">Find the questions people ask AI about your kind of business, then fix the one that matters most, starting with the answer you're missing.</p>
-            <span className="text-[14px] text-white font-medium inline-flex items-center gap-2 shrink-0">Find customer questions <ArrowUpRight className="w-4 h-4" /></span>
-          </Link>
-        </Reveal>
-
-        <Reveal delay={0.15} className="mt-10">
-          <div className="text-[12px] text-neutral-500 mb-4" style={MONO}>3 · RUN AN ANALYSIS, THEN READ THE PILLAR BREAKDOWN</div>
-          <p className="text-neutral-400 text-[15px] max-w-2xl leading-relaxed mb-5">An analysis gives you one Rain Score and a pillar breakdown: the score split into the pillars that matter for your kind of business.</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {TOOL_CARDS.map(c => (
-              <Link key={c.title} to={c.href} className="group rounded-xl border border-white/10 bg-[#0a0a0a] p-6 hover:bg-white/[0.02] transition-colors">
-                <c.Icon className="w-5 h-5 text-[#ffffff]" />
-                <div className="mt-4 text-[17px] text-white font-medium flex items-center gap-2">{c.title}<ArrowUpRight className="w-4 h-4 text-neutral-600 group-hover:text-white transition-colors" /></div>
-                <p className="mt-2 text-[14px] text-neutral-400 leading-relaxed">{c.body}</p>
-              </Link>
-            ))}
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-function PlatformSection() {
-  const [active, setActive] = useState('measure');
-  const engines = joinNames(useLiveEngines());
-  const found = PLATFORM.find(p => p.id === active)!;
-  const current = { ...found, body: found.body.replace('{engines}', engines) };
+function ToolsSection() {
   return (
     <section id="product" className="relative z-10 py-28 border-t border-white/[0.06]">
       <div className="max-w-[1440px] mx-auto px-6">
         <Reveal>
-          <Eyebrow>The platform</Eyebrow>
+          <Eyebrow>The tools</Eyebrow>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">
             Measure it. Monitor it. Fix it.
           </h2>
-          <p className="mt-5 text-neutral-400 text-lg max-w-2xl leading-relaxed">
-            Most tools stop at a dashboard. rain OS closes the loop, from the first score to the change that earns the citation.
-          </p>
         </Reveal>
-
-        <div className="mt-14 grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-6">
-          <div role="tablist" aria-label="Platform" className="flex lg:flex-col gap-2 overflow-x-auto">
-            {PLATFORM.map(p => {
-              const on = p.id === active;
-              return (
-                <button
-                  key={p.id}
-                  role="tab"
-                  aria-selected={on}
-                  onClick={() => setActive(p.id)}
-                  className={`text-left rounded-lg border px-5 py-4 transition-colors min-w-[220px] lg:min-w-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#ffffff] ${on ? 'border-white/15 bg-white/[0.04]' : 'border-transparent hover:bg-white/[0.02]'}`}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <p.Icon className={`w-4 h-4 ${on ? 'text-[#ffffff]' : 'text-neutral-500'}`} />
-                    <span className={`text-[11px] uppercase tracking-[0.14em] ${on ? 'text-white' : 'text-neutral-500'}`} style={MONO}>{p.label}</span>
-                  </div>
-                  <div className={`mt-2 text-[17px] font-medium ${on ? 'text-white' : 'text-neutral-400'}`}>{p.title}</div>
-                  {on && <p className="mt-2 text-[14px] text-neutral-400 leading-relaxed hidden lg:block">{p.body.replace('{engines}', engines)}</p>}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* The product floats on a soft, out-of-focus backdrop: crisp UI over a muted horizon. */}
-          <div
-            className="rounded-2xl p-4 sm:p-8 min-w-0 self-start"
-            style={{
-              background:
-                'radial-gradient(120% 90% at 85% 0%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 55%),' +
-                'radial-gradient(90% 70% at 0% 100%, rgba(199,120,70,0.40) 0%, rgba(199,120,70,0) 60%),' +
-                'linear-gradient(180deg, #2b2b2b 0%, #10222b 55%, #1a1410 100%)',
-            }}
-          >
-          <div className="rounded-xl border border-white/10 bg-[#0a0a0a] overflow-hidden min-w-0 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.65)]">
-            <AnimatePresence mode="wait">
-              <motion.div key={active} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
-                <p className="px-6 pt-6 text-[14px] text-neutral-400 leading-relaxed lg:hidden">{current.body}</p>
-                <PlatformVisual id={active} />
-                <div className="grid grid-cols-1 sm:grid-cols-2 border-t border-white/[0.07]">
-                  {current.tools.map((t, k) => {
-                    const inner = (
-                      <>
-                        <t.Icon className="w-4 h-4 text-neutral-500 mt-0.5 shrink-0" />
-                        <div className="min-w-0">
-                          <div className="text-[14px] text-white font-medium">{t.name}</div>
-                          <div className="text-[13px] text-neutral-500">{t.desc}</div>
-                        </div>
-                      </>
-                    );
-                    const cls = `flex gap-3 p-5 ${k % 2 === 0 ? 'sm:border-r' : ''} ${k > 1 ? 'border-t' : ''} ${k === 1 ? 'border-t sm:border-t-0' : ''} border-white/[0.07]`;
-                    return 'href' in t && t.href
-                      ? <Link key={t.name} to={t.href} className={`${cls} group hover:bg-white/[0.02] transition-colors`}>{inner}</Link>
-                      : <div key={t.name} className={cls}>{inner}</div>;
-                  })}
+        <div className="mt-14 space-y-6">
+          {TOOLS.map((t, k) => (
+            <Reveal key={t.key} delay={0.05 * k}>
+              <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-8 lg:gap-12 items-center rounded-2xl border border-white/10 bg-[#0a0a0a] p-6 md:p-10">
+                <div>
+                  <div className="text-[12px] text-neutral-500" style={MONO}>{t.eyebrow.toUpperCase()}</div>
+                  <h3 className="mt-3 text-2xl md:text-3xl font-semibold tracking-[-0.02em] text-white">{t.title}</h3>
+                  <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">{t.body}</p>
+                  {t.ways.length > 0 && (
+                    <ul className="mt-5 space-y-2">
+                      {t.ways.map(w => (
+                        <li key={w.label}>
+                          <Link to={w.href} className="group flex items-baseline justify-between gap-4 rounded-lg border border-white/[0.07] px-4 py-3 hover:bg-white/[0.02] transition-colors">
+                            <span className="text-[14px] text-white font-medium">{w.label}</span>
+                            <span className="text-[13px] text-neutral-500 group-hover:text-neutral-300 transition-colors">{w.note}</span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <Link to={t.href} className="mt-6 inline-flex items-center gap-2 text-[14px] text-white font-medium hover:text-neutral-300 transition-colors">
+                    Open {t.eyebrow} <ArrowUpRight className="w-4 h-4" />
+                  </Link>
                 </div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-          </div>
+                <div className="min-w-0">
+                  <ToolVisual kind={t.visual} />
+                </div>
+              </div>
+            </Reveal>
+          ))}
         </div>
+        <Link to="/questions" className="mt-6 flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-[#0a0a0a] p-6 md:px-10 hover:bg-white/[0.02] transition-colors">
+          <span className="text-[15px] text-neutral-300">Find the questions your customers ask AI, then fix the one that matters most.</span>
+          <span className="shrink-0 text-[14px] text-white font-medium inline-flex items-center gap-2">Find customer questions <ArrowUpRight className="w-4 h-4" /></span>
+        </Link>
       </div>
     </section>
   );
@@ -921,9 +795,8 @@ export default function Home() {
         </section>
 
         <WhyGoogleSection />
-        <PlatformSection />
+        <ToolsSection />
         <LanesSection />
-        <ToolGuideSection />
         <MethodSection />
         <TrackingSection />
 
