@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
+import { PILLAR_CHART_COLORS } from '@/lib/pillarColors.js';
 
 // A real screenshot of the app's screen, shown large and sharp. It fades up as it
 // scrolls into view, then drifts slowly, and sits on a soft colour glow so it
@@ -43,6 +44,56 @@ export default function AppShot({ src, alt, accent }: { src: string; alt: string
             transition={{ duration: 3.2, delay: 0.8, repeat: Infinity, repeatDelay: 4, ease: 'easeInOut' }}
           />
         )}
+      </div>
+    </div>
+  );
+}
+
+// The analysis result, in the same vertical format the app shows: the business,
+// the overall score, and one column per pillar. Example data from a saved demo
+// analysis. Each column rises in turn when it scrolls into view.
+const RESULT = {
+  business: 'Bright Smile Dental',
+  page: 'Home',
+  overall: 69,
+  pillars: [
+    { key: 'ai_readability', label: 'AI Readability', value: 71 },
+    { key: 'digital_authority', label: 'Digital Authority', value: 66 },
+    { key: 'conversion_readiness', label: 'Conversion Readiness', value: 70 },
+    { key: 'rag_readiness', label: 'Easy to Quote', value: 61 },
+    { key: 'local_presence', label: 'Local Presence', value: 73 },
+  ] as const,
+};
+
+export function PillarVisual() {
+  const reduce = useReducedMotion();
+  return (
+    <div className={frame}>
+      <div className="flex items-end justify-between gap-4">
+        <div className="min-w-0">
+          <div className="truncate text-[15px] font-semibold text-white">{RESULT.business}</div>
+          <div className="text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>{RESULT.page.toUpperCase()}</div>
+        </div>
+        <div className="shrink-0 text-right">
+          <div className="text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>OVERALL AEO SCORE</div>
+          <div className="text-4xl font-semibold tabular-nums text-white">{RESULT.overall}<span className="text-lg text-neutral-500">/100</span></div>
+        </div>
+      </div>
+      <div className="mt-6 grid h-52 items-end gap-3" style={{ gridTemplateColumns: `repeat(${RESULT.pillars.length}, minmax(0, 1fr))` }}>
+        {RESULT.pillars.map((p, i) => (
+          <div key={p.key} className="flex h-full min-w-0 flex-col justify-end">
+            <div className="mb-1.5 text-center text-[13px] font-semibold tabular-nums text-white">{p.value}</div>
+            <motion.div
+              className="w-full rounded-t-md"
+              style={{ background: PILLAR_CHART_COLORS[p.key], height: `${p.value}%`, originY: 1 }}
+              initial={reduce ? false : { scaleY: 0 }}
+              whileInView={{ scaleY: 1 }}
+              viewport={view}
+              transition={{ duration: 0.9, delay: i * 0.12, ease: EASE }}
+            />
+            <div className="mt-2 text-center text-[11px] leading-tight text-neutral-400">{p.label}</div>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -3,6 +3,8 @@ import { ChevronDown, ChevronUp, Check, X } from 'lucide-react';
 import styles from './PillarScores.module.css';
 import { PILLAR_COLORS } from '../lib/pillarColors.js';
 import MetricBars from './MetricBars.jsx';
+import PillarColumns from './PillarColumns.jsx';
+import { PILLAR_CHART_COLORS } from '../lib/pillarColors.js';
 
 // A Gemini-judged sub-score (0-100) at or above this counts as a "pass" in
 // the breakdown below. The raw number is never shown — only pass/fail — so
@@ -451,10 +453,10 @@ export default function PillarScores({ result, lane, fixCounts }) {
       </WhatDoesThisMean>
 
       <div className={styles.barsCard}>
-        <MetricBars
+        <PillarColumns
           rows={visiblePillars.map(p => {
             const v = resolveScore(result, p.key, p.camel);
-            return { key: p.key, label: p.label, value: v ?? 0, display: v === null ? 'N/A' : Math.round(v) };
+            return { key: p.key, label: p.label, value: v ?? 0, display: v === null ? 'N/A' : Math.round(v), color: PILLAR_CHART_COLORS[p.key] };
           })}
         />
       </div>
