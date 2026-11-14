@@ -4,6 +4,8 @@ import { PILLAR_CHART_COLORS } from '@/lib/pillarColors.js';
 // A real screenshot of the app's screen, shown large and sharp. It fades up as it
 // scrolls into view, then drifts slowly, and sits on a soft colour glow so it
 // reads at the same weight as the rest of the page.
+const MONO = "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace";
+const frame = 'rounded-xl border border-white/10 bg-[#0a0a0a] p-5 md:p-6 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.8)]';
 const view = { once: true, amount: 0.3 } as const;
 const EASE = [0.22, 1, 0.36, 1] as const;
 
