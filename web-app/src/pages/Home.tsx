@@ -734,6 +734,7 @@ export default function Home() {
         <SourceNetworkSection />
         <WhoSection onStart={start} />
         <IllustratedExample />
+        <ToolsSection />
         <HowItWorks />
 
         <section className="relative z-10 border-y border-white/[0.06] bg-white/[0.01]">
@@ -788,7 +789,6 @@ export default function Home() {
         </section>
 
         <WhyGoogleSection />
-        <ToolsSection />
         <LanesSection />
         <MethodSection />
         <TrackingSection />
