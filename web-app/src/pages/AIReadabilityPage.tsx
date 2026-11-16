@@ -23,7 +23,7 @@ const PILLARS = [
   },
   {
     name: 'Easy to Quote',
-    body: 'Whether an AI can pull a single answer out of your page and quote it, without the surrounding text.',
+    body: 'Whether an AI can pull a clear, specific fact from your page and mention your business for it.',
   },
 ];
 
@@ -77,14 +77,14 @@ export default function AIReadabilityPage() {
         <section>
           <h2 className="mb-3 text-xl font-semibold text-white">How it fits together</h2>
           <ol className="space-y-3 leading-relaxed text-neutral-400">
-            <li><span className="font-medium text-white">1. Make your content easy to read and quote.</span> The pillars score this on your pages.</li>
+            <li><span className="font-medium text-white">1. Make your content easy to read and state clear facts.</span> The pillars score this on your pages.</li>
             <li><span className="font-medium text-white">2. Visibility grows.</span> AI can find, understand and use what you offer. This is the goal.</li>
             <li><span className="font-medium text-white">3. Mention.</span> AI names your business in an answer.</li>
             <li><span className="font-medium text-white">4. Citation.</span> AI links to one of your pages as a source. Usually it follows a mention.</li>
             <li><span className="font-medium text-white">5. Recommendation.</span> AI names you as the choice when someone asks what to buy or hire.</li>
           </ol>
           <p className="mt-4 leading-relaxed text-neutral-400">
-            Quoting sits alongside this chain rather than in it. An AI can quote your content without naming you, so we score quotability but do not count quotes as a result.
+            Clear facts sit at the start of this chain rather than in it. An AI can use a fact from your page without naming you, so we score how clear your facts are but do not count them as a result.
           </p>
         </section>
 
@@ -98,9 +98,9 @@ export default function AIReadabilityPage() {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-white">Quoted is not the same as mentioned</h2>
+          <h2 className="mb-3 text-xl font-semibold text-white">Using a fact is not the same as mentioning a business</h2>
           <p className="leading-relaxed text-neutral-400">
-            A quote is when an AI repeats a specific sentence or fact from your page, word for word or close to it. It may not name your business or link to your page. That is why we score how easy your content is to quote, under Easy to Quote. We do not count quotes as a result in our checks, because a quote can happen without a mention or a citation.
+            An AI can repeat a fact from your page without naming your business or linking to it. That is why we score how clear your facts are, under Easy to Quote, but we count only mentions and citations as results.
           </p>
         </section>
 

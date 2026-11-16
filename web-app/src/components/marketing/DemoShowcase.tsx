@@ -214,7 +214,7 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
                     <p className="text-neutral-400 leading-relaxed mb-6">Works on blog posts, landing pages, product copy, or anything else. Get a weighted Rain Score with actionable recommendations — and built-in rewrite tools to fix issues without leaving the dashboard.</p>
                     <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10">
                       <Sparkles className="w-5 h-5 text-white shrink-0" />
-                      <span className="text-sm text-white">Highly citable — AI engines will quote this</span>
+                      <span className="text-sm text-white">Highly citable — AI engines will name and link this</span>
                     </div>
                   </>
                 )}

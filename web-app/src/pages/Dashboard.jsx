@@ -895,7 +895,7 @@ export default function Dashboard() {
             <div>
               <h2 className={styles.chartTitle}>Score Trend</h2>
               <p className={styles.chartSub}>Last {chartRange} analyses</p>
-              <span className={styles.chartHelp} title="How your overall scores have changed over time. Higher means AI is more likely to quote your pages.">
+              <span className={styles.chartHelp} title="How your overall scores have changed over time. Higher means AI is more likely to mention your business.">
                 <HelpCircle size={11} />
               </span>
             </div>
