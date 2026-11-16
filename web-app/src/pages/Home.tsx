@@ -284,13 +284,12 @@ function ToolTitle({ text }: { text: string }) {
 // same page with a higher score. Each lane in LANE_RUNS gets its own turn.
 const LANE_RUNS = LANE_EXAMPLES.map(e => ({ index: e.index, business: e.before.business, before: forLane(e.lane, e.before), after: forLane(e.lane, e.after) }));
 
-// The loop runs one step at a time. For each business: the analysis running, its
-// score before the analysis, the analysis running again, then its new score.
+// The loop runs one step at a time. For each lane: its score before the analysis,
+// the analysis running once, then the new score.
 type RunStep =
   | { kind: 'score'; run: (typeof LANE_RUNS)[number]; which: 'before' | 'after' }
   | { kind: 'running'; lane: number };
 const RUN_STEPS: RunStep[] = LANE_RUNS.flatMap(run => [
-  { kind: 'running' as const, lane: run.index },
   { kind: 'score' as const, run, which: 'before' as const },
   { kind: 'running' as const, lane: run.index },
   { kind: 'score' as const, run, which: 'after' as const },
