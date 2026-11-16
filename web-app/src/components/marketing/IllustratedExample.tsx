@@ -187,6 +187,7 @@ export default function IllustratedExample() {
   };
 
   return (
+    <>
     <section ref={sectionRef} className="relative z-10 py-24 border-t border-white/[0.06]">
       <div className="max-w-5xl mx-auto px-6">
         <div className="text-center">
@@ -219,8 +220,12 @@ export default function IllustratedExample() {
           </div>
 
         </motion.div>
+      </div>
+    </section>
 
-        <div className="mt-32 text-center">
+    <section className="relative z-10 py-24 border-t border-white/[0.06]">
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="text-center">
           <div className="text-[11px] uppercase tracking-[0.16em] text-neutral-500" style={MONO}>Your dashboard</div>
           <h2 className="mt-3 text-3xl md:text-4xl font-semibold tracking-[-0.03em] text-white">Every pillar, scored and tracked over time</h2>
         </div>
@@ -239,5 +244,6 @@ export default function IllustratedExample() {
         </div>
       </div>
     </section>
+    </>
   );
 }
