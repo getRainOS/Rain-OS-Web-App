@@ -58,7 +58,7 @@ export default function AIReadabilityPage() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <span className="mb-4 block text-xs font-bold uppercase tracking-wider text-white">AI visibility</span>
           <h1 className="mb-4 text-3xl font-bold leading-tight text-white md:text-4xl">
-            Get mentioned, cited and recommended by AI
+            Make your business easy for AI to find and use
           </h1>
           <p className="mb-6 text-lg leading-relaxed text-neutral-400">
             When someone asks an AI a question, the answer names a few businesses and links to a few sources. AI visibility is how often that happens to you. rain OS shows where you stand and what to change.

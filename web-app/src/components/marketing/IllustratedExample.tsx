@@ -211,9 +211,9 @@ export default function IllustratedExample() {
       <div className="max-w-5xl mx-auto px-6">
         <div className="text-center">
           <div className="text-[11px] uppercase tracking-[0.16em] text-neutral-500" style={MONO}>Example</div>
-          <h2 className="mt-3 text-3xl md:text-4xl font-semibold tracking-[-0.03em] text-white">What a before and after looks like</h2>
+          <h2 className="mt-3 text-3xl md:text-4xl font-semibold tracking-[-0.03em] text-white">Example scores from our own analysis</h2>
           <p className="mt-4 text-neutral-400 max-w-2xl mx-auto">
-            The same question, before and after two fixes, for each kind of business.
+            Our score for one page, at two points in time, for each kind of business. Scores come from our own analysis, not from AI answers.
           </p>
         </div>
 
@@ -239,8 +239,8 @@ export default function IllustratedExample() {
           </div>
 
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-5">
-            <Card tone="before" label="Before" note="The business is not named." answer={ex.before} />
-            <Card tone="after" label="After two fixes" note={ex.afterNote} answer={ex.after} />
+            <Card tone="before" label="Earlier analysis" note="The business is not named." answer={ex.before} />
+            <Card tone="after" label="Later analysis" note={ex.afterNote} answer={ex.after} />
           </div>
         </motion.div>
 

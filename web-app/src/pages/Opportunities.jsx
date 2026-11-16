@@ -85,7 +85,7 @@ export default function Opportunities() {
                   {(item.kind === 'uncited' || item.kind === 'lowrank') && (
                     <>
                       <Link to={improveFor(item).to} state={improveFor(item).state} className={styles.primary}>
-                        <PenLine size={14} /> {item.kind === 'uncited' ? 'Show me how to get cited' : 'Show me how to move up'}
+                        <PenLine size={14} /> {item.kind === 'uncited' ? 'Show me how to be easier to cite' : 'Show me how to move up'}
                       </Link>
                       <Link to={recheckHref(item)} className={styles.secondary}><RefreshCw size={13} /> Re-check</Link>
                     </>
