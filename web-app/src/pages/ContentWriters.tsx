@@ -403,7 +403,7 @@ export default function ContentWriters() {
                 See how AI reads your content
               </h2>
               <p className="text-neutral-400 text-lg mb-8 leading-relaxed">
-                Paste your content to see how it scores for AI readability, or scan a URL for technical signals. Free to start, no credit card required.
+                Paste your content for a full AI readability score.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button
