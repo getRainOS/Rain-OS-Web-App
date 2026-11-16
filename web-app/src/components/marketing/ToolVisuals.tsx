@@ -131,7 +131,6 @@ export function PillarVisual({ result = BEFORE, label, before }: { result?: Pill
           </div>
         ))}
       </div>
-      <IllustrativeTag />
     </div>
   );
 }
@@ -306,7 +305,6 @@ export function CitationPanel({ data }: { data: CitingData }) {
         ))}
       </div>
       <div className="mt-4 text-[12px] text-neutral-500">Each card is one check on the same question, over time. Results vary between checks.</div>
-      <IllustrativeTag />
     </div>
   );
 }
