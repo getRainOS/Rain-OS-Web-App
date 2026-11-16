@@ -34,7 +34,7 @@ const LANE_PILLARS = [
 
 const MEASURES = [
   { name: 'Run an analysis', body: 'Score a piece of content, a web page or a repository. You get one Rain Score, the pillar breakdown and the fixes for each gap.' },
-  { name: 'Is AI Citing Me?', body: 'See which AI tools link to your pages as a source, and which pages they link to.' },
+  { name: 'Is AI Citing Me?', body: 'See which AI tools cite your pages as a source, which pages they link to, and whether they mention your business.' },
   { name: 'Who AI Recommends', body: 'See how often each AI tool names your business, compared with your competitors.' },
   { name: 'How AI Describes Me', body: 'See the description each AI gives of your business, and whether it reads as positive, neutral or negative.' },
 ];
@@ -68,12 +68,26 @@ export default function AIReadabilityPage() {
 
       <div className="mx-auto max-w-3xl space-y-16 px-6 pb-24">
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-white">Three levels of visibility</h2>
+          <h2 className="mb-3 text-xl font-semibold text-white">The goal is AI visibility</h2>
+          <p className="leading-relaxed text-neutral-400">
+            AI visibility is being easy for AI to find, understand and use when people ask about what you offer. You cannot set it directly, so rain OS measures what shows up in AI answers: mentions and citations. Neither one is guaranteed, but both show whether your visibility is growing.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="mb-3 text-xl font-semibold text-white">From mention to citation</h2>
           <ul className="space-y-4 leading-relaxed text-neutral-400">
-            <li><span className="font-medium text-white">Mentioned:</span> the AI names your business in its answer, without linking to your site.</li>
-            <li><span className="font-medium text-white">Cited:</span> the AI names your site and links to a page as a source for what it says. This is the outcome we aim for.</li>
+            <li><span className="font-medium text-white">Mentioned:</span> the AI names your business in its answer, without linking to one of your pages. A mention often comes first.</li>
+            <li><span className="font-medium text-white">Cited:</span> the AI links to one of your pages as a source for what it says. Mentions and citations go together, so rain OS tracks both.</li>
             <li><span className="font-medium text-white">Recommended:</span> the AI names you as a good choice when someone asks what to buy, hire or use.</li>
           </ul>
+        </section>
+
+        <section>
+          <h2 className="mb-3 text-xl font-semibold text-white">Quoted is not the same as mentioned</h2>
+          <p className="leading-relaxed text-neutral-400">
+            A quote is when an AI repeats a specific sentence or fact from your page, word for word or close to it. It may not name your business or link to your page. That is why we score how easy your content is to quote, under Easy to Quote. We do not count quotes as a result in our checks, because a quote can happen without a mention or a citation.
+          </p>
         </section>
 
         <section>
