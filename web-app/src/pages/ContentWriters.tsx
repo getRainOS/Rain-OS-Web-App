@@ -131,7 +131,8 @@ export default function ContentWriters() {
         <section className="pt-40 pb-24 md:pt-52 md:pb-40 relative z-10 px-6 overflow-hidden" style={{ paddingTop: '10rem', paddingBottom: '6rem' }}>
           <div className="max-w-5xl mx-auto flex flex-col gap-12 items-center">
             <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="text-center">
-              <div className="mx-auto max-w-xl space-y-6">
+              {/* The column is as wide as the one-line headline; the paragraph takes that width. */}
+              <div className="mx-auto w-fit max-w-full space-y-6">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-[1.05] text-white"
                 style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
                 Write content that{' '}
@@ -140,7 +141,7 @@ export default function ContentWriters() {
                 </span>
               </h1>
 
-              <p className="text-neutral-400 text-base md:text-lg font-normal leading-relaxed">
+              <p className="w-0 min-w-full text-neutral-400 text-base md:text-lg font-normal leading-relaxed">
                 Most AI answers never send the reader anywhere. rain OS shows you what to change so your writing is easier for AI to find and use, then checks whether AI is citing or mentioning you for the questions that matter.
               </p>
               </div>
