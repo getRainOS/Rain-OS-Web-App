@@ -758,7 +758,7 @@ export default function Home() {
         <section
           className="relative z-10 py-28"
           style={{
-            backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.07) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.07) 1px, transparent 1px)',
+            backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.09) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.09) 1px, transparent 1px)',
             backgroundSize: '64px 64px',
             backgroundPosition: 'center',
           }}
