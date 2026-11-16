@@ -117,8 +117,8 @@ export default function SourceNetwork() {
         const start = (k / ends.length) * 0.8;
         const lit = Math.min(1, Math.max(0, (progress - start) / 0.2));
 
-        ctx!.strokeStyle = `rgba(255,255,255,${0.12 + lit * 0.7})`;
-        ctx!.lineWidth = 1 + lit;
+        ctx!.strokeStyle = `rgba(255,255,255,${0.1 + lit * 0.45})`;
+        ctx!.lineWidth = 1;
         ctx!.beginPath();
         ctx!.moveTo(q.x, q.y);
         ctx!.lineTo(e.x, e.y);
@@ -134,10 +134,9 @@ export default function SourceNetwork() {
         }
 
         // The endpoint dot and its name.
-        const breathe = !still ? Math.sin(t * 0.002 + k) * 0.5 : 0;
-        ctx!.fillStyle = `rgba(255,255,255,${0.45 + lit * 0.55})`;
+        ctx!.fillStyle = `rgba(255,255,255,${0.4 + lit * 0.5})`;
         ctx!.beginPath();
-        ctx!.arc(e.x, e.y, 3 + breathe, 0, Math.PI * 2);
+        ctx!.arc(e.x, e.y, 2.5, 0, Math.PI * 2);
         ctx!.fill();
 
         // The brand mark, in its own colour, then the name.
