@@ -369,7 +369,7 @@ export default function ContentWriters() {
               transition={{ duration: 0.7 }}
             >
               <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
-                See how AI reads your content
+                See how AI reads your writing
               </h2>
               <p className="text-neutral-400 text-lg mb-8 leading-relaxed">
                 Paste your content for a full AI readability score.
@@ -380,7 +380,7 @@ export default function ContentWriters() {
                   className="flex items-center gap-2 text-black rounded-xl px-8 py-4 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
                   style={{ background: 'var(--cyan)' }}
                 >
-                  Score your content free
+                  Score your draft free
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </button>
               </div>
