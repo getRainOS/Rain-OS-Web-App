@@ -41,11 +41,6 @@ export default function VibeWorkflowDiagram() {
   return (
     <section
       className="py-24 px-6 border-t border-white/[0.06] overflow-hidden relative"
-      style={{
-        backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px)',
-        backgroundSize: '120px 100%',
-        backgroundPosition: 'center',
-      }}
     >
       <div className="max-w-6xl mx-auto">
         {/* Header */}
