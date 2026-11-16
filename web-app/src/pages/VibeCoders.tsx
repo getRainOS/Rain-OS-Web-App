@@ -119,7 +119,14 @@ export default function VibeCoders() {
 
 
         {/* The Problem */}
-        <section className="py-16 px-6 border-t border-white/10">
+        <section
+          className="py-16 px-6 border-t border-white/10"
+          style={{
+            backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px)',
+            backgroundSize: '64px 64px',
+            backgroundPosition: 'center',
+          }}
+        >
           <div className="max-w-5xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
