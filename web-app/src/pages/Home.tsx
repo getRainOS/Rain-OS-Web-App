@@ -368,10 +368,6 @@ function ToolsSection() {
             </Reveal>
           ))}
         </div>
-        <Link to="/questions" className="mt-6 flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-[#0a0a0a] p-6 md:px-10 hover:bg-white/[0.02] transition-colors">
-          <span className="text-[15px] text-neutral-300">Find the questions your customers ask AI, then fix the one that matters most.</span>
-          <span className="shrink-0 text-[14px] text-white font-medium inline-flex items-center gap-2">Find customer questions <ArrowUpRight className="w-4 h-4" /></span>
-        </Link>
       </div>
     </section>
   );
