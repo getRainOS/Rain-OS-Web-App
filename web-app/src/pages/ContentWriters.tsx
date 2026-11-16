@@ -42,7 +42,7 @@ const pillars = [
     border: 'rgba(255,255,255,0.25)',
     Icon: Layers,
     name: 'Easy to Quote',
-    desc: 'How easily AI can pull a single answer out of your content and quote it.',
+    desc: 'How easily AI can pull a single clear answer out of your content and use it.',
   },
 ];
 
