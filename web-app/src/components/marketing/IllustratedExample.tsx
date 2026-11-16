@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import PillarGauges from '@/components/marketing/PillarGauges';
+import TrendCard from '@/components/marketing/TrendCard';
 
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
 
@@ -154,20 +156,6 @@ function Drawing({ strokes }: { strokes: Stroke[] }) {
   );
 }
 
-function Card({ tone, label, note, answer }: { tone: 'before' | 'after'; label: string; note: string; answer: string }) {
-  const named = tone === 'after';
-  return (
-    <div className={`rounded-xl border p-5 md:p-6 text-left ${named ? 'border-white/25 bg-white/[0.04]' : 'border-white/10 bg-[#0a0a0a]'}`}>
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-[10px] uppercase tracking-[0.14em] text-neutral-400" style={MONO}>{label}</span>
-        <span className={`text-[11px] ${named ? 'text-white' : 'text-neutral-500'}`} style={MONO}>{named ? 'Named' : 'Not named'}</span>
-      </div>
-      <p className="text-[14px] leading-relaxed text-neutral-300">{answer}</p>
-      <p className="mt-4 text-[12px] text-neutral-500">{note}</p>
-    </div>
-  );
-}
-
 const ROTATE_MS = 4000; // how long each lane stays on screen before the next one
 
 export default function IllustratedExample() {
@@ -230,15 +218,18 @@ export default function IllustratedExample() {
             <span className="inline-block rounded-md border border-white/10 bg-black px-4 py-2 text-[14px] text-neutral-200">{ex.question}</span>
           </div>
 
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-5">
-            <Card tone="before" label="Before" note="The business is not named." answer={ex.before} />
-            <Card tone="after" label="After two fixes" note={ex.afterNote} answer={ex.after} />
-          </div>
         </motion.div>
 
-        <p className="mt-6 text-center text-[12px] text-neutral-500" style={MONO}>
-          Illustrative examples. All business names are invented, and these are not customers or results. Real results vary and take time: checks run weekly, and changes to a page can take weeks to show up in AI answers.
-        </p>
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 rounded-xl border border-white/10 bg-[#0a0a0a] p-6">
+          <figure className="min-w-0">
+            <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>SCORE BY AREA</div>
+            <PillarGauges />
+          </figure>
+          <figure className="min-w-0">
+            <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>TREND BY AREA</div>
+            <TrendCard />
+          </figure>
+        </div>
       </div>
     </section>
   );
