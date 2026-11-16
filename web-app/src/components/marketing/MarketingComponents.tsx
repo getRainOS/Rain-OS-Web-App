@@ -192,7 +192,7 @@ export const FeatureGrid = () => {
         <div className="text-center mb-16">
           <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Under the Hood</span>
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Deeper signals we check</h2>
-          <p className="text-neutral-400 max-w-2xl mx-auto">rain OS also checks signals that sit beneath the four pillars, from how easily each sentence can be quoted to how well your content matches the questions people ask.</p>
+          <p className="text-neutral-400 max-w-2xl mx-auto">rain OS also checks signals that sit beneath the four pillars, from how clearly each sentence states a fact to how well your content matches the questions people ask.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -216,7 +216,7 @@ export const FeatureGrid = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
             <SearchCheck className="w-8 h-8 text-white mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">Information Gain Score</h3>
-            <p className="text-neutral-400 text-sm">AI already knows what's common. This score measures how much genuinely new or specific information your content adds — the higher it is, the more likely AI is to quote you over a generic source.</p>
+            <p className="text-neutral-400 text-sm">AI already knows what's common. This score measures how much genuinely new or specific information your content adds — the higher it is, the more likely AI is to name and link you over a generic source.</p>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
@@ -526,7 +526,7 @@ export const FAQ = ({ items }: { items?: { q: string; a: string }[] } = {}) => {
   const engines = joinNames(useLiveEngines());
   const defaultFaqs = [
     { q: "Who is rain OS for?", a: "Anyone whose customers now ask AI before they search: writers and marketers, online sellers, developers, people shipping apps with AI builders, and local service businesses. You pick the lane that fits, and rain OS weights its scoring for the way that kind of business gets found." },
-    { q: "What does it mean to get cited by AI?", a: "It means making your pages easy for AI assistants to read, trust and quote. Some people call this Answer Engine Optimization (AEO). When ChatGPT, Gemini or Perplexity answer a question, they draw on a handful of sources. AEO is about being one of them." },
+    { q: "What does it mean to get cited by AI?", a: "It means making your pages easy for AI assistants to read, trust and use. Some people call this Answer Engine Optimization (AEO). When ChatGPT, Gemini or Perplexity answer a question, they draw on a handful of sources. AEO is about being one of them." },
     { q: "What is the goal: AI visibility, mentions or citations?", a: "The goal is AI visibility: making your business easy for AI to find, understand and use when people ask about what you offer. Mentions and citations are how that shows up in AI answers, and rain OS tracks both. None of them is guaranteed." },
     { q: "What is a citation?", a: "A citation is when an AI answer names your website or links to one of its pages as a source for what it says. It is the outcome rain OS is built to earn you." },
     { q: "What's the difference between a mention and a citation?", a: "A mention is when an AI names your business in an answer without linking to one of your pages. A citation is when it links to a page on your site as a source for what it says. Being mentioned can come before a citation, so rain OS tracks both, and the checks are snapshots of what each AI said at that time." },
