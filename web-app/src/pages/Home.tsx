@@ -282,39 +282,48 @@ function ToolTitle({ text }: { text: string }) {
 
 // One picture, in turn: the chart, a run of the analysis, the chart again, then the
 // same page with a higher score. Each lane in LANE_RUNS gets its own turn.
-const LANE_RUNS = LANE_EXAMPLES.map(e => ({ index: e.index, before: forLane(e.lane, e.before), after: forLane(e.lane, e.after) }));
-const RUN_PHASES = [
-  { id: 'before', ms: 3500 },
-  { id: 'running', ms: 9000 },
-  { id: 'after', ms: 4000 },
-] as const;
+const LANE_RUNS = LANE_EXAMPLES.map(e => ({ index: e.index, business: e.before.business, before: forLane(e.lane, e.before), after: forLane(e.lane, e.after) }));
+
+// The loop runs one step at a time: a business's score, the analysis running, the
+// same business's new score, then the analysis running for the next business.
+type RunStep =
+  | { kind: 'score'; run: (typeof LANE_RUNS)[number]; which: 'before' | 'after' }
+  | { kind: 'running'; lane: number };
+const RUN_STEPS: RunStep[] = LANE_RUNS.flatMap((run, i) => {
+  const next = LANE_RUNS[(i + 1) % LANE_RUNS.length];
+  return [
+    { kind: 'score' as const, run, which: 'before' as const },
+    { kind: 'running' as const, lane: run.index },
+    { kind: 'score' as const, run, which: 'after' as const },
+    { kind: 'running' as const, lane: next.index },
+  ];
+});
 
 function RotatingAnalysis() {
   const reduce = useReducedMotion();
-  const [phase, setPhase] = useState(0);
-  const [lane, setLane] = useState(0);
+  const [step, setStep] = useState(0);
   useEffect(() => {
     if (reduce) return;
-    const t = setTimeout(() => {
-      const next = phase + 1;
-      if (next < RUN_PHASES.length) setPhase(next);
-      else { setPhase(0); setLane(n => (n + 1) % LANE_RUNS.length); }
-    }, RUN_PHASES[phase].ms);
+    const cur = RUN_STEPS[step];
+    const t = setTimeout(() => setStep(n => (n + 1) % RUN_STEPS.length), cur.kind === 'running' ? 7000 : 3500);
     return () => clearTimeout(t);
-  }, [phase, reduce]);
-  const run = LANE_RUNS[lane];
-  const id = RUN_PHASES[phase].id;
+  }, [step, reduce]);
+  const cur = RUN_STEPS[step];
   return (
     <div className="min-h-[360px]">
       <AnimatePresence mode="wait">
         <motion.div
-          key={`${lane}-${id}`}
+          key={step}
           initial={reduce ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -12 }}
           transition={{ duration: 0.45 }}
         >
-          {id === 'running' ? <AnalyzeConsole compact litLane={run.index} /> : id === 'before' ? <PillarVisual result={run.before} label="Before" /> : <PillarVisual result={run.after} label="After fixes" before={run.before.overall} />}
+          {cur.kind === 'running'
+            ? <AnalyzeConsole compact litLane={cur.lane} />
+            : cur.which === 'before'
+              ? <PillarVisual result={cur.run.before} label="Before" />
+              : <PillarVisual result={cur.run.after} label="After fixes" before={cur.run.before.overall} />}
         </motion.div>
       </AnimatePresence>
     </div>
