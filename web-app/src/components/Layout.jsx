@@ -31,7 +31,7 @@ const TOOLS = {
   repo:       { to: '/repo-analysis',    label: 'GitHub Code Check',       Icon: GitBranch,        tooltip: 'Connect your GitHub project to see how easily AI can read its docs and code.' },
   questions:  { to: '/prompt-research',  label: 'Find Customer Questions', Icon: MessageSquareText, tooltip: 'Find the questions your customers ask AI, then check them or track them each week.' },
   fullcheck:  { to: '/full-check',       label: 'Full Check',          Icon: ScanSearch,       tooltip: 'Enter your website and get one report: how readable your pages are, and whether AI mentions you.' },
-  improve:    { to: '/improve',         label: 'Fix One Question',  Icon: Target,           tooltip: 'Pick one question, compare your page with the sites AI quoted, and get the changes that could get you quoted too.' },
+  improve:    { to: '/improve',         label: 'Fix One Question',  Icon: Target,           tooltip: 'Pick one question, compare your page with the sites AI named, and get the changes that could get you named too.' },
   opportunities: { to: '/opportunities', label: 'To-Do List',    Icon: Lightbulb,        tooltip: 'Your list of what to do next to show up in AI answers, most important first.' },
   citation:   { to: '/citation-monitor', label: 'Is AI Citing Me?',    Icon: Radar,            tooltip: 'See whether AI links to your website when customers ask the questions you care about.' },
   visibility: { to: '/brand-visibility', label: 'How AI Describes Me',       Icon: Eye,              tooltip: 'See what AI says about your business: is it positive, and are the facts right?' },
@@ -88,7 +88,7 @@ const GROUP_TOOLTIPS = {
   'Customer Questions':    'The questions your customers ask AI. Pick one to see how to get your page chosen for it.',
   'Am I Showing Up': 'See whether AI mentions your business for those questions, and what it says.',
   'Fix It':    'Find the biggest gaps first, and what to do about each one.',
-  'Make It Readable':   'Make your pages and writing easy for AI to read and quote.',
+  'Make It Readable':   'Make your pages and writing easy for AI to read and name you in.',
 };
 
 const LOCAL_GROUP_TOOLTIPS = {

@@ -510,7 +510,7 @@ function TrackingSection() {
 const WHO = [
   { Icon: MapPin, title: 'I run a local business', body: 'Plumbers, salons, dentists, restaurants. Help AI recommend you when people ask who\'s best nearby.', to: '/local-business' },
   { Icon: ShoppingBag, title: 'I sell products online', body: 'Shopify, Etsy, Amazon or your own store. Help AI suggest your products when people ask what to buy.', to: '/product-sellers' },
-  { Icon: PenLine, title: 'I write content', body: 'Blogs, newsletters and landing pages. Write things AI quotes and links to.', to: '/content-writers' },
+  { Icon: PenLine, title: 'I write content', body: 'Blogs, newsletters and landing pages. Write things AI names and links to.', to: '/content-writers' },
   { Icon: Sparkles, title: 'I build apps with AI tools', body: 'Bolt, Lovable, Replit, v0 or Cursor. Make sure AI can actually find what you built.', to: '/vibe-coders' },
   { Icon: Code2, title: 'I write code and docs', body: 'READMEs, documentation and API references. Help AI explain your project correctly.', to: '/developers' },
 ];
@@ -526,7 +526,7 @@ function SourceNetworkSection() {
             className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance"
           />
           <p className="mt-5 max-w-3xl text-neutral-400 text-lg leading-relaxed">
-            When someone asks an AI a question, it reads a handful of websites and quotes from the ones it finds most useful. rain OS puts your questions to each AI, shows you which websites it read for each answer, and tells you whether your site is one of them, so you know exactly where you stand.
+            When someone asks an AI a question, it reads a handful of websites and names the ones it finds most useful. rain OS puts your questions to each AI, shows you which websites it read for each answer, and tells you whether your site is one of them, so you know exactly where you stand.
           </p>
         </Reveal>
         <Reveal delay={0.1}>

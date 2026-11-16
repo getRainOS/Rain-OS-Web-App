@@ -21,7 +21,7 @@ export const PILLAR_MEANING = {
   conversion_readiness: 'whether a reader knows what to do next, and why to choose you.',
   product_discoverability: 'whether AI shopping answers can find and describe the product: price, specs, stock, reviews.',
   local_presence: 'whether AI can tell where you are and who you serve: name, address, phone, area, reviews.',
-  rag_readiness: 'how well the page splits into self-contained pieces AI can retrieve and quote.',
+  rag_readiness: 'how easily AI can pull a clear fact from the page and mention your business for it.',
 };
 
 export const PILLARS = [
