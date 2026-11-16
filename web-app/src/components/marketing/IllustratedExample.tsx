@@ -220,7 +220,12 @@ export default function IllustratedExample() {
 
         </motion.div>
 
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 rounded-xl border border-white/10 bg-[#0a0a0a] p-6">
+        <div className="mt-10 rounded-xl border border-white/10 bg-[#0a0a0a] p-6">
+          <div className="text-center">
+            <div className="text-[11px] uppercase tracking-[0.16em] text-neutral-500" style={MONO}>Your dashboard</div>
+            <h3 className="mt-2 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">Every pillar, scored and tracked over time</h3>
+          </div>
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
           <figure className="min-w-0">
             <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>SCORE BY AREA</div>
             <PillarGauges />
@@ -229,6 +234,7 @@ export default function IllustratedExample() {
             <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>TREND BY AREA</div>
             <TrendCard />
           </figure>
+          </div>
         </div>
       </div>
     </section>
