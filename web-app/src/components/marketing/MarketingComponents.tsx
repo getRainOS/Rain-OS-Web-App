@@ -199,8 +199,8 @@ export const FeatureGrid = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="md:col-span-2 bg-gradient-to-br from-white/[0.08] to-white/[0.02] border border-white/10 backdrop-blur-sm rounded-3xl p-8 relative overflow-hidden group hover:border-white/30 transition-all duration-300">
             <BrainCircuit className="absolute -right-10 -bottom-10 w-64 h-64 text-white opacity-5 group-hover:opacity-10 transition-opacity duration-500" />
             <BrainCircuit className="w-8 h-8 text-white mb-6 relative z-10" />
-            <h3 className="text-2xl font-bold text-white mb-4 relative z-10">Semantic Precision Scoring</h3>
-            <p className="text-neutral-400 mb-6 relative z-10 max-w-md">LLMs don't read like humans — they extract facts. We score how machine-extractable your sentences are and flag the vague ones that are hard to cite.</p>
+            <h3 className="text-2xl font-bold text-white mb-4 relative z-10">Clear facts</h3>
+            <p className="text-neutral-400 mb-6 relative z-10 max-w-md">AI pulls out facts, not feelings. We score how clear each sentence is, and flag the vague ones that are hard to cite.</p>
             <div className="bg-midnight/50 rounded-xl p-4 border border-white/5 relative z-10">
               <div className="flex items-center gap-2 text-sm text-white line-through mb-2"><span className="w-2 h-2 rounded-full bg-white" /> "We've seen some really significant growth recently"</div>
               <div className="flex items-center gap-2 text-sm text-white"><span className="w-2 h-2 rounded-full bg-white" /> "Revenue grew 34% quarter-over-quarter in Q2 2025"</div>
@@ -209,38 +209,38 @@ export const FeatureGrid = () => {
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
             <Layers className="w-8 h-8 text-white mb-6" />
-            <h3 className="text-xl font-bold text-white mb-4">RAG Chunking Quality</h3>
-            <p className="text-neutral-400 text-sm">Most AI systems retrieve content in chunks. We score how cleanly your content breaks into standalone, answerable units — the way retrieval systems actually read it.</p>
+            <h3 className="text-xl font-bold text-white mb-4">Clean sections</h3>
+            <p className="text-neutral-400 text-sm">Most AI systems read content in pieces. We score whether each section stands on its own and answers one thing.</p>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
             <SearchCheck className="w-8 h-8 text-white mb-6" />
-            <h3 className="text-xl font-bold text-white mb-4">Information Gain Score</h3>
-            <p className="text-neutral-400 text-sm">AI already knows what's common. This score measures how much genuinely new or specific information your content adds — the higher it is, the more likely AI is to name and link you over a generic source.</p>
+            <h3 className="text-xl font-bold text-white mb-4">New information</h3>
+            <p className="text-neutral-400 text-sm">AI already knows what's common. We score how much new, specific information your content adds. The more it adds, the more likely AI is to name and link you over a generic source.</p>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
             <Network className="w-8 h-8 text-white mb-6" />
-            <h3 className="text-xl font-bold text-white mb-4">Query Alignment Score</h3>
-            <p className="text-neutral-400 text-sm">Maps your content against the real questions people ask AI tools in your topic area. If your content doesn't match the query patterns AI sees, it won't get surfaced.</p>
+            <h3 className="text-xl font-bold text-white mb-4">Matches real questions</h3>
+            <p className="text-neutral-400 text-sm">We compare your content with the questions people ask AI about your topic. If it doesn't match those questions, AI is less likely to find it.</p>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.4 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
             <Target className="w-8 h-8 text-white mb-6" />
-            <h3 className="text-xl font-bold text-white mb-4">Semantic Redundancy Detection</h3>
-            <p className="text-neutral-400 text-sm">Repeated or padded content dilutes AI extraction confidence. We score how much repetition your content contains, so you can cut the padding.</p>
+            <h3 className="text-xl font-bold text-white mb-4">Less repetition</h3>
+            <p className="text-neutral-400 text-sm">Repeated or padded writing makes it harder for AI to tell what you mean. We score how much repetition there is, so you can cut it.</p>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.5 }} className="md:col-span-2 bg-gradient-to-br from-white/20/[0.05] to-surface/50 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
             <Sparkles className="w-8 h-8 text-white mb-6" />
-            <h3 className="text-2xl font-bold text-white mb-4">AI-Powered Rewrite Tools</h3>
+            <h3 className="text-2xl font-bold text-white mb-4">Rewrite help</h3>
             <p className="text-neutral-400 max-w-md">Don't just see the problem — fix it. Built-in tools suggest improved titles, generate meta descriptions, summarize for AI snippets, and rewrite vague sentences into citable facts. All without losing your voice.</p>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.6 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
             <FileJson className="w-8 h-8 text-white mb-6" />
-            <h3 className="text-xl font-bold text-white mb-4">Multimodal Readiness</h3>
-            <p className="text-neutral-400 text-sm">Images and tables are invisible to AI unless they're described in text. We check whether each one has a text description AI can read.</p>
+            <h3 className="text-xl font-bold text-white mb-4">Images explained</h3>
+            <p className="text-neutral-400 text-sm">AI can't see images or tables unless they're described in text. We check that each one has a description AI can read.</p>
           </motion.div>
         </div>
       </div>
