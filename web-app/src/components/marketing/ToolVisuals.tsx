@@ -305,7 +305,7 @@ export function CitationPanel({ data }: { data: CitingData }) {
           </motion.div>
         ))}
       </div>
-      <div className="mt-4 text-[12px] text-neutral-500">Each card is one check on the same question, over time.</div>
+      <div className="mt-4 text-[12px] text-neutral-500">Each card is one check on the same question, over time. Results vary between checks.</div>
       <IllustrativeTag />
     </div>
   );

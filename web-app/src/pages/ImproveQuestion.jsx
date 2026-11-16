@@ -12,7 +12,7 @@ import RecentPicker from '../components/RecentPicker.jsx';
 import styles from './ImproveQuestion.module.css';
 
 const MODES = [
-  { id: 'citation', label: 'Get cited' },
+  { id: 'citation', label: 'Be easier to cite' },
   { id: 'share_of_voice', label: 'Get mentioned' },
   { id: 'sentiment', label: 'Improve tone' },
 ];

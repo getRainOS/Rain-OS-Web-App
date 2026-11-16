@@ -351,7 +351,7 @@ export default function BrandVisibility() {
             const title = !mentioned ? 'AI did not name you. See how to get mentioned.'
               : result.sentiment === 'negative' ? 'AI described you negatively. See what to fix.'
               : result.sentiment !== 'positive' ? 'AI mentions you without much warmth. See how to improve it.'
-              : 'AI names you but does not cite your site. See how to get cited.';
+              : 'AI names you but does not link to your site. See how to be easier to cite.';
             return (
               <ImproveCta
                 title={title}

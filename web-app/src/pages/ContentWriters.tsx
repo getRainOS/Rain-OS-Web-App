@@ -207,7 +207,7 @@ export default function ContentWriters() {
               {[
                 { label: 'The old approach', body: 'Optimize for keyword rankings. Wait for traffic. Hope it converts.', dim: true },
                 { label: 'What\'s changed', body: 'AI answers questions directly. The sources it cites get the traffic — everything else is invisible.', highlight: true },
-                { label: 'The rain OS approach', body: 'Score your content against the signals AI uses. Fix what matters. Get cited more.', dim: false },
+                { label: 'The rain OS approach', body: 'Score your content against the signals AI uses. Fix what matters, so your pages are easier for AI to use.', dim: false },
               ].map((c, i) => (
                 <motion.div
                   key={c.label}

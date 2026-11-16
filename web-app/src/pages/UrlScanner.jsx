@@ -529,7 +529,7 @@ export default function UrlScanner() {
 
           <CitationCrossPromo
             title="Scan done? Now check if AI actually cites this URL."
-            sub="Citation Monitor gives you a real-time snapshot — run it before and after making fixes to track whether AI citations improve."
+            sub="Citation Monitor gives you a real-time snapshot — run it after making changes to see how your pages and AI answers look today."
           />
         </div>
       )}

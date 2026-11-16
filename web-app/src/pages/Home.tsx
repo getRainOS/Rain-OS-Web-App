@@ -319,8 +319,8 @@ function RotatingAnalysis() {
           {cur.kind === 'running'
             ? <AnalyzeConsole compact litLane={cur.lane} />
             : cur.which === 'before'
-              ? <PillarVisual result={cur.run.before} label="Before" />
-              : <PillarVisual result={cur.run.after} label="After fixes" before={cur.run.before.overall} />}
+              ? <PillarVisual result={cur.run.before} label="Earlier analysis" />
+              : <PillarVisual result={cur.run.after} label="Later analysis" before={cur.run.before.overall} />}
         </motion.div>
       </AnimatePresence>
     </div>
@@ -858,7 +858,7 @@ export default function Home() {
             style={{ background: 'radial-gradient(50% 80% at 50% 100%, rgba(255,255,255,0.18), transparent 70%)' }}
           />
           <div className="relative max-w-4xl mx-auto px-6 py-32 text-center">
-            <h2 className="text-4xl md:text-7xl font-semibold tracking-[-0.045em] text-balance">Get cited.</h2>
+            <h2 className="text-4xl md:text-7xl font-semibold tracking-[-0.045em] text-balance">Get ready for AI.</h2>
             <p className="mt-6 text-lg text-neutral-400 max-w-xl mx-auto">Run your first analysis today. Five are free, no card required.</p>
             <button onClick={start} className="mt-10 h-12 px-7 rounded-md bg-white text-black text-[15px] font-medium hover:bg-neutral-200 transition-colors inline-flex items-center gap-2">
               Start free <ArrowRight className="w-4 h-4" />
