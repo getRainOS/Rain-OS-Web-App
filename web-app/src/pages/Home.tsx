@@ -284,20 +284,17 @@ function ToolTitle({ text }: { text: string }) {
 // same page with a higher score. Each lane in LANE_RUNS gets its own turn.
 const LANE_RUNS = LANE_EXAMPLES.map(e => ({ index: e.index, business: e.before.business, before: forLane(e.lane, e.before), after: forLane(e.lane, e.after) }));
 
-// The loop runs one step at a time: a business's score, the analysis running, the
-// same business's new score, then the analysis running for the next business.
+// The loop runs one step at a time. For each business: the analysis running, its
+// score before the analysis, the analysis running again, then its new score.
 type RunStep =
   | { kind: 'score'; run: (typeof LANE_RUNS)[number]; which: 'before' | 'after' }
   | { kind: 'running'; lane: number };
-const RUN_STEPS: RunStep[] = LANE_RUNS.flatMap((run, i) => {
-  const next = LANE_RUNS[(i + 1) % LANE_RUNS.length];
-  return [
-    { kind: 'score' as const, run, which: 'before' as const },
-    { kind: 'running' as const, lane: run.index },
-    { kind: 'score' as const, run, which: 'after' as const },
-    { kind: 'running' as const, lane: next.index },
-  ];
-});
+const RUN_STEPS: RunStep[] = LANE_RUNS.flatMap(run => [
+  { kind: 'running' as const, lane: run.index },
+  { kind: 'score' as const, run, which: 'before' as const },
+  { kind: 'running' as const, lane: run.index },
+  { kind: 'score' as const, run, which: 'after' as const },
+]);
 
 function RotatingAnalysis() {
   const reduce = useReducedMotion();
