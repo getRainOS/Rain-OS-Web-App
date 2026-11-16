@@ -359,37 +359,6 @@ export default function ContentWriters() {
         <ComparisonTable />
         <FAQ items={WRITER_FAQS} />
 
-        {/* Four Pillars Reminder */}
-        <section className="py-16 px-6 border-t border-white/[0.06]">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="flex flex-wrap items-center justify-center gap-3"
-            >
-              {pillars.map((p) => (
-                <span
-                  key={p.name}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold"
-                  style={{
-                    background: p.bg,
-                    border: `1px solid ${p.border}`,
-                    color: p.color,
-                  }}
-                >
-                  <p.Icon className="w-4 h-4" />
-                  {p.name}
-                </span>
-              ))}
-            </motion.div>
-            <p className="text-neutral-500 text-sm mt-4 max-w-lg mx-auto">
-              Every analysis scores across these four pillars. Plus, scan any URL to check technical AI-readiness signals.
-            </p>
-          </div>
-        </section>
-
         {/* CTA */}
         <section className="py-28 px-6 border-t border-white/[0.06] relative overflow-hidden">
           <div className="max-w-2xl mx-auto text-center">
