@@ -19,7 +19,7 @@ function Gauge({ label, value, color, delay }: { label: string; value: number; c
   const transition = { duration: 1.4, delay, ease: EASE };
   return (
     <figure className="min-w-0 text-center">
-      <div className="text-[11px] text-neutral-400 mb-1 truncate">{label}</div>
+      <div className="text-[11px] text-neutral-400 mb-1 leading-tight">{label}</div>
       <svg viewBox="0 0 120 76" className="w-full h-auto block" role="img" aria-label={`${label}: ${value} out of 100`}>
         <path d={arc} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={8} strokeLinecap="round" />
         <motion.path
