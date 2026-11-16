@@ -214,7 +214,7 @@ export default function BlogPost() {
           </p>
           <button
             onClick={() => navigate('/login')}
-            className="inline-flex items-center gap-2 text-white rounded-xl px-8 py-3.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            className="inline-flex items-center gap-2 text-black rounded-xl px-8 py-3.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer"
             style={{ background: 'var(--cyan)' }}
           >
             Scan my content free
