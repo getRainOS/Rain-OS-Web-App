@@ -397,7 +397,7 @@ export const Pricing = () => {
       buttonText: "Get Started",
       features: [
         { label: "Content Optimizer", included: true },
-        { label: "All 6 scored areas", included: true },
+        { label: "Every pillar for your lane", included: true },
         { label: "Actionable recommendations", included: true },
         { label: "URL Scanner", included: false },
         { label: "Repo Analysis (GitHub)", included: false },
