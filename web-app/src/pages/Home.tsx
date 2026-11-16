@@ -16,7 +16,7 @@ import SourceNetwork from '@/components/marketing/SourceNetwork';
 import RainBackground from '@/components/marketing/RainBackground';
 import TrendCard from '@/components/marketing/TrendCard';
 import PillarGauges from '@/components/marketing/PillarGauges';
-import AppShot, { PillarVisual, AFTER, BEFORE, type PillarData } from '@/components/marketing/ToolVisuals';
+import AppShot, { PillarVisual, AFTER, BEFORE, forLane, type PillarData } from '@/components/marketing/ToolVisuals';
 import ScrollWords from '@/components/marketing/ScrollWords';
 import IllustratedExample from '@/components/marketing/IllustratedExample';
 
@@ -283,7 +283,7 @@ function ToolTitle({ text }: { text: string }) {
 // One picture, in turn: the chart, a run of the analysis, the chart again, then the
 // same page with a higher score. Each lane in LANE_RUNS gets its own turn.
 const LANE_RUNS: { lane: string; before: PillarData; after: PillarData }[] = [
-  { lane: 'Local businesses', before: BEFORE, after: AFTER },
+  { lane: 'Local businesses', before: forLane('local', BEFORE), after: forLane('local', AFTER) },
 ];
 const RUN_PHASES = [
   { id: 'before', ms: 3500 },
