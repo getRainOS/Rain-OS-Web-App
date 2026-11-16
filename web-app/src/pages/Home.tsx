@@ -591,7 +591,7 @@ function HowItWorks() {
   const steps = [
     { n: '1', title: 'Add your website', body: 'Paste your web address, or paste the text of a page or post. Nothing to install.' },
     { n: '2', title: 'Get your score', body: 'A number from 0 to 100, with what\'s helping you and what\'s holding you back.' },
-    { n: '3', title: 'Follow the fixes', body: 'Each fix is written in plain English, with a technical version you can hand to whoever builds your site.' },
+    { n: '3', title: 'Follow the fixes', body: 'Each fix is written in plain English, with a technical version you can hand to whoever builds your site, for lanes that need it.' },
   ];
   return (
     <section className="relative z-10 py-24 border-t border-white/[0.06]">
