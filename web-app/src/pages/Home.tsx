@@ -755,23 +755,6 @@ export default function Home() {
           </div>
         </section>
 
-        <SourceNetworkSection />
-        <WhoSection onStart={start} />
-        <IllustratedExample />
-        <ToolsSection />
-        <HowItWorks />
-
-        <section className="relative z-10 border-y border-white/[0.06] bg-white/[0.01]">
-          <div className="max-w-[1440px] mx-auto grid grid-cols-2 md:grid-cols-4">
-            {SPECS.map((s, k) => (
-              <div key={s.v} className={`px-6 py-8 ${k % 2 === 1 ? 'border-l' : ''} ${k >= 2 ? 'border-t md:border-t-0' : ''} ${k === 2 ? 'md:border-l' : ''} border-white/[0.06]`}>
-                <div className="text-2xl md:text-3xl font-semibold tracking-tight text-white">{s.k}</div>
-                <div className="mt-1 text-[13px] text-neutral-500">{s.v}</div>
-              </div>
-            ))}
-          </div>
-        </section>
-
         <section className="relative z-10 py-28">
           <div className="max-w-[1440px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-14 items-end">
             <Reveal>
@@ -794,6 +777,24 @@ export default function Home() {
             </Reveal>
           </div>
         </section>
+
+        <SourceNetworkSection />
+        <WhoSection onStart={start} />
+        <IllustratedExample />
+        <ToolsSection />
+        <HowItWorks />
+
+        <section className="relative z-10 border-y border-white/[0.06] bg-white/[0.01]">
+          <div className="max-w-[1440px] mx-auto grid grid-cols-2 md:grid-cols-4">
+            {SPECS.map((s, k) => (
+              <div key={s.v} className={`px-6 py-8 ${k % 2 === 1 ? 'border-l' : ''} ${k >= 2 ? 'border-t md:border-t-0' : ''} ${k === 2 ? 'md:border-l' : ''} border-white/[0.06]`}>
+                <div className="text-2xl md:text-3xl font-semibold tracking-tight text-white">{s.k}</div>
+                <div className="mt-1 text-[13px] text-neutral-500">{s.v}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
 
 
         <WhyGoogleSection />
