@@ -763,7 +763,7 @@ export default function Home() {
                 Search is becoming an answer.
               </h2>
               <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-xl">
-                When AI answers the question, it cites a handful of sources and most people stop there. If you're not one of them, you're not in the conversation, however well you rank.
+                When AI answers a question, it cites or mentions a handful of sources, and most people stop there. If AI can't see your business, you could be leaving opportunities on the table, however well you rank.
               </p>
             </Reveal>
             <Reveal delay={0.1}>
