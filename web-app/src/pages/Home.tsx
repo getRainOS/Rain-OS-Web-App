@@ -18,6 +18,7 @@ import TrendCard from '@/components/marketing/TrendCard';
 import PillarGauges from '@/components/marketing/PillarGauges';
 import AppShot, { PillarVisual, forLane, LANE_EXAMPLES, CitationRotation, IllustrativeTag, LaneCycle, ShareCard, SHARE_LANES, DescribeCard, DESCRIBE_LANES } from '@/components/marketing/ToolVisuals';
 import ScrollWords from '@/components/marketing/ScrollWords';
+import IllustratedExample from '@/components/marketing/IllustratedExample';
 
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
 
@@ -803,20 +804,7 @@ export default function Home() {
 
         <SourceNetworkSection />
         <WhoSection onStart={start} />
-        <section className="relative z-10 py-24 border-t border-white/[0.06]">
-          <div className="max-w-5xl mx-auto px-6">
-            <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-xl border border-white/10 bg-[#0a0a0a]">
-              <figure className="min-w-0">
-                <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>SCORE BY AREA</div>
-                <PillarGauges />
-              </figure>
-              <figure className="min-w-0">
-                <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>TREND BY AREA</div>
-                <TrendCard />
-              </figure>
-            </div>
-          </div>
-        </section>
+        <IllustratedExample />
         <ToolsSection />
         <HowItWorks />
 
