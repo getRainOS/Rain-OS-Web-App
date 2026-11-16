@@ -400,10 +400,10 @@ export default function ContentWriters() {
               transition={{ duration: 0.7 }}
             >
               <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
-                Ready to get your content cited or mentioned?
+                See how AI reads your content
               </h2>
               <p className="text-neutral-400 text-lg mb-8 leading-relaxed">
-                Paste your content for a full AI readability score, or scan any URL to check technical signals. Free to start, no credit card required.
+                Paste your content to see how it scores for AI readability, or scan a URL for technical signals. Free to start, no credit card required.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button
