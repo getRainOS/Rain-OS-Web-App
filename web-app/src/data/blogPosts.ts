@@ -26,6 +26,59 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: 'ai-visibility-mention-citation-quote',
+    audience: 'everyone',
+    title: 'AI Visibility, Mentions, Citations and Quotes: How They Fit Together',
+    subtitle: 'The goal is visibility. Mentions and citations are how it shows up in AI answers, and quotes are what make it possible.',
+    date: '2026-11-16',
+    readTime: '5 min read',
+    category: 'Education',
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=630&fit=crop&q=80',
+    author: 'rain OS Team',
+    authorRole: 'Product',
+    body: `Four terms come up whenever people talk about getting found by AI: visibility, mentions, citations and quotes. They are easy to mix up. Here is how they fit together.
+
+**AI visibility is the goal**
+
+AI visibility is how easy you are for AI to find, understand and use when people ask about what you offer. It is the outcome that matters, but nobody can set it directly. There is no switch for it.
+
+**Mentions and citations are what you can see**
+
+A **mention** is when an AI names your business in its answer, without linking to one of your pages.
+
+A **citation** is when the AI links to one of your pages as a source for what it says.
+
+A citation usually comes with a mention, so the two go together. A mention with no link still counts as visibility, and it is often the first step.
+
+**Recommendations are the strongest form of mention**
+
+Sometimes an AI goes further and names you as the choice: "for a plumber in Austin, try Brightside." That is a recommendation. We track it separately, because it is the result most businesses care about.
+
+**Quotes are what make it possible**
+
+A **quote** is when an AI repeats a specific sentence or fact from your page, word for word or close to it. It may not name you or link to you.
+
+Quotes matter because they depend on your content. If a clear, specific fact is easy to lift out of a page, AI is more likely to use it, and more likely to name and link the page that holds it. That is why rain OS scores how easy your content is to quote, under the Easy to Quote pillar.
+
+We do not count quotes as a result. An AI can quote a page and never show your name, so a quote on its own does not tell you that you are visible.
+
+**Putting the chain together**
+
+1. Make your content easy to read and quote. The pillars score this.
+2. Visibility grows, as AI finds, understands and uses what you offer.
+3. AI mentions your business.
+4. AI cites one of your pages, usually alongside the mention.
+5. AI recommends you as the choice, when someone asks what to buy or hire.
+
+**What you can do about it**
+
+Work on the first step first. Answer the question near the top of each page. State specific facts such as prices, dates, licences and numbers. Keep each section to one idea. Then check the results: rain OS runs your questions through the AI tools each week and records whether each one mentioned or cited you, and whether it recommended you.
+
+**What we cannot promise**
+
+Better content improves your chances at every step. It does not guarantee a mention, a citation or a recommendation. AI tools decide what to name and link, and their answers change from one check to the next. Treat the checks as snapshots that show direction, not as a fixed score.`
+  },
+  {
     slug: 'mention-vs-citation',
     audience: 'everyone',
     title: 'Mention or Citation? What the Difference Means for Your Business',
