@@ -141,7 +141,7 @@ export default function ContentWriters() {
               </h1>
 
               <p className="text-neutral-400 text-base md:text-lg font-normal leading-relaxed">
-                Most AI answers never send the reader anywhere. rain OS shows you what to change so your writing is easier for AI to find and quote, then checks whether AI is citing or mentioning you for the questions that matter.
+                Most AI answers never send the reader anywhere. rain OS shows you what to change so your writing is easier for AI to find and use, then checks whether AI is citing or mentioning you for the questions that matter.
               </p>
               </div>
             </motion.div>
