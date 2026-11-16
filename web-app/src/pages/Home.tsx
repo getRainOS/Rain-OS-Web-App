@@ -16,7 +16,7 @@ import SourceNetwork from '@/components/marketing/SourceNetwork';
 import RainBackground from '@/components/marketing/RainBackground';
 import TrendCard from '@/components/marketing/TrendCard';
 import PillarGauges from '@/components/marketing/PillarGauges';
-import AppShot, { PillarVisual, AFTER, BEFORE, forLane, type PillarData } from '@/components/marketing/ToolVisuals';
+import AppShot, { PillarVisual, forLane, LANE_EXAMPLES } from '@/components/marketing/ToolVisuals';
 import ScrollWords from '@/components/marketing/ScrollWords';
 import IllustratedExample from '@/components/marketing/IllustratedExample';
 
@@ -101,7 +101,7 @@ const FIX_MODES = [
 ];
 
 // The analysis screen in the app, shown as it runs: each step fills in turn.
-function AnalyzeConsole({ compact = false }: { compact?: boolean }) {
+function AnalyzeConsole({ compact = false, litLane }: { compact?: boolean; litLane?: number }) {
   const reduce = useReducedMotion();
   const [step, setStep] = useState(0);
   const [runIdx, setRunIdx] = useState(0); // the analyzer running now
@@ -141,7 +141,7 @@ function AnalyzeConsole({ compact = false }: { compact?: boolean }) {
         {/* Lanes: the ones the running analyzer is for are lit */}
         <div className="flex flex-wrap gap-2 mb-6">
           {LANES.map((lane, k) => {
-            const on = FIX_MODES[runIdx].lanes.includes(k);
+            const on = litLane !== undefined ? k === litLane : FIX_MODES[runIdx].lanes.includes(k);
             const Icon = lane.icon;
             return (
               <span key={lane.name}
@@ -282,9 +282,7 @@ function ToolTitle({ text }: { text: string }) {
 
 // One picture, in turn: the chart, a run of the analysis, the chart again, then the
 // same page with a higher score. Each lane in LANE_RUNS gets its own turn.
-const LANE_RUNS: { lane: string; before: PillarData; after: PillarData }[] = [
-  { lane: 'Local businesses', before: forLane('local', BEFORE), after: forLane('local', AFTER) },
-];
+const LANE_RUNS = LANE_EXAMPLES.map(e => ({ index: e.index, before: forLane(e.lane, e.before), after: forLane(e.lane, e.after) }));
 const RUN_PHASES = [
   { id: 'before', ms: 3500 },
   { id: 'running', ms: 9000 },
@@ -316,7 +314,7 @@ function RotatingAnalysis() {
           exit={{ opacity: 0, y: -12 }}
           transition={{ duration: 0.45 }}
         >
-          {id === 'running' ? <AnalyzeConsole compact /> : id === 'before' ? <PillarVisual result={run.before} label="Before" /> : <PillarVisual result={run.after} label="After fixes" before={run.before.overall} />}
+          {id === 'running' ? <AnalyzeConsole compact litLane={run.index} /> : id === 'before' ? <PillarVisual result={run.before} label="Before" /> : <PillarVisual result={run.after} label="After fixes" before={run.before.overall} />}
         </motion.div>
       </AnimatePresence>
     </div>
