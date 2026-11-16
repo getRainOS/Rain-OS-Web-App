@@ -16,7 +16,7 @@ import SourceNetwork from '@/components/marketing/SourceNetwork';
 import RainBackground from '@/components/marketing/RainBackground';
 import TrendCard from '@/components/marketing/TrendCard';
 import PillarGauges from '@/components/marketing/PillarGauges';
-import AppShot, { PillarVisual, forLane, LANE_EXAMPLES, CitationRotation } from '@/components/marketing/ToolVisuals';
+import AppShot, { PillarVisual, forLane, LANE_EXAMPLES, CitationRotation, IllustrativeTag } from '@/components/marketing/ToolVisuals';
 import ScrollWords from '@/components/marketing/ScrollWords';
 import IllustratedExample from '@/components/marketing/IllustratedExample';
 
@@ -135,7 +135,7 @@ function AnalyzeConsole({ compact = false, litLane }: { compact?: boolean; litLa
         <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
         <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
         <span className="ml-3 text-[11px] text-neutral-500 truncate" style={MONO}>getrainos.com/analyze</span>
-        <span className="ml-auto text-[10px] text-neutral-600 hidden sm:inline" style={MONO}>EXAMPLE</span>
+        <span className="ml-auto text-[10px] text-neutral-600 hidden sm:inline" style={MONO}>ILLUSTRATIVE</span>
       </div>
       <div className="p-6 md:p-8">
         {/* Lanes: the ones the running analyzer is for are lit */}
@@ -233,6 +233,7 @@ const TOOLS = [
     key: 'citing',
     eyebrow: 'Is AI Citing Me?',
     title: 'See which AI tools cite your pages',
+    lead: 'AI Citation Monitor:',
     body: 'Whether AI links to your pages when customers ask. Which pages, and where you rank among the sources it uses.',
     ways: [],
     href: '/citation-monitor',
@@ -343,7 +344,7 @@ function ToolsSection() {
                 <div>
                   <ToolTitle text={t.eyebrow} />
                   <p className="mt-3 text-2xl md:text-3xl font-semibold tracking-[-0.02em] text-white">{t.title}</p>
-                  <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">{t.body}</p>
+                  <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">{t.lead && <span className="font-medium text-white">{t.lead} </span>}{t.body}</p>
                   {t.ways.length > 0 && (
                     <>
                     <div className="mt-6 text-[12px] text-neutral-500" style={MONO}>FEATURES</div>

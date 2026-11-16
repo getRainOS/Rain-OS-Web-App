@@ -48,6 +48,7 @@ export default function AppShot({ src, alt, accent }: { src: string; alt: string
           />
         )}
       </div>
+      <IllustrativeTag />
     </div>
   );
 }
@@ -86,6 +87,10 @@ export const AFTER: PillarData = {
     { key: 'local_presence', label: 'Local Presence', value: 78 },
   ] as Pillar[],
 };
+
+export function IllustrativeTag() {
+  return <div className="mt-4 text-[11px] uppercase tracking-wider text-neutral-500" style={{ fontFamily: MONO }}>Illustrative example, not a real result</div>;
+}
 
 export function PillarVisual({ result = BEFORE, label, before }: { result?: PillarData; label?: string; before?: number }) {
   const reduce = useReducedMotion();
@@ -126,6 +131,7 @@ export function PillarVisual({ result = BEFORE, label, before }: { result?: Pill
           </div>
         ))}
       </div>
+      <IllustrativeTag />
     </div>
   );
 }
@@ -212,7 +218,7 @@ export const CITING_LANES: CitingData[] = [
   },
   {
     laneName: 'Online sellers', business: 'Harbor Wallet Co.', question: 'best waterproof travel wallet under $80',
-    latest: '#3', firstCited: 'rei.com', example: true,
+    latest: '#3', firstCited: 'wirecutter.com', example: true,
     history: [
       { date: 'Oct 22', result: 'Not cited', cited: false },
       { date: 'Oct 29', result: '#5 of 5', cited: true },
@@ -300,6 +306,7 @@ export function CitationPanel({ data }: { data: CitingData }) {
         ))}
       </div>
       <div className="mt-4 text-[12px] text-neutral-500">Each card is one check on the same question, over time.</div>
+      <IllustrativeTag />
     </div>
   );
 }
