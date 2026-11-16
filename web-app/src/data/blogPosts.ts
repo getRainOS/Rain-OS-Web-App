@@ -181,7 +181,7 @@ Reviews still matter, but AI also looks for response patterns, years in business
 **Signal 4: Availability and action**
 AI favors businesses that make it easy to act. Click-to-call links, online booking, emergency service mentions, and clear service areas all increase the chance you get cited.
 
-At rain OS, we built our local business scoring lane specifically for this new reality. It weights Local Presence at 30% — the largest single pillar in that lane — because trust and findability signals are everything in local. It checks for NAP consistency, schema completeness, and pricing clarity — the exact things AI models look for when recommending a local service.
+At rain OS, we built our local business scoring lane specifically for this new reality. It scores Local Presence as one of five equally weighted pillars, because trust and findability signals matter a great deal in local search. It checks for NAP consistency, schema completeness, and pricing clarity — the exact things AI models look for when recommending a local service.
 
 The businesses that adapt to AI search now will own local discovery for the next decade.`
   },
@@ -196,7 +196,7 @@ The businesses that adapt to AI search now will own local discovery for the next
     image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=1200&h=630&fit=crop&q=80',
     author: 'rain OS Team',
     authorRole: 'Product',
-    body: `In 2024, Google answered 15% of queries directly on the search results page. By 2026, that number is climbing toward 40%.
+    body: `Google now answers many searches directly on the results page, often before a single link is shown.
 
 This is not a gradual evolution. It is a platform shift.
 
@@ -365,7 +365,7 @@ Not because what you built isn't impressive — it often genuinely is. And not b
 
 And for a significant and growing population of amateur vibe coders, that moment is where the project ends — not because they ran out of ideas, but because their nervous system already told them they were done.
 
-**The data bears this out with uncomfortable precision.** An estimated 90% of vibe-coded projects never make it to production. Research tracking non-developer vibe coders found that 63% quietly abandoned their projects by month three. Broader AI project data from RAND puts it even more starkly: 80% of AI-assisted projects never reach their intended outcomes.
+**The pattern is well documented.** Many vibe-coded projects are never finished or never reach production, and non-developers often stop once the first version is working.
 
 Everyone has an oven now. The question is whether anyone is actually running a bakery.
 
@@ -450,7 +450,7 @@ This is coding above your weight class: producing systems whose complexity and r
 
 You've prompted your way into a multi-tenant database schema — and you don't know what would happen if tenant A's query accidentally returned tenant B's data. You've prompted your way into Stripe webhook handling — and you don't know whether your endpoint is verifying signatures, or whether anyone with your URL could fire fake "payment succeeded" events at it. You've prompted your way into user authentication — and you don't know if passwords are hashed properly, if sessions expire, or if there's a path for someone to escalate their own permissions.
 
-None of this is hypothetical. Independent security audits of apps built on one popular vibe coding platform found that more than 10% shipped with vulnerabilities that exposed user data. Broader analysis of AI-generated code in 2026 found it fails to defend against cross-site scripting attacks 86% of the time.
+None of this is hypothetical. Security reviews of apps built with AI coding tools have repeatedly found vulnerabilities that expose user data, and AI-generated code often misses basic defences against attacks such as cross-site scripting.
 
 **The Heavyweight Doesn't Care That You Meant Well**
 
