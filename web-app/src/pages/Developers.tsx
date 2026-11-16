@@ -227,7 +227,7 @@ export default function Developers() {
               {[
                 { label: 'The old assumption', body: 'Developers read docs. Write them clearly and people will find them via search.', dim: true },
                 { label: 'What\'s changed', body: 'Vibe coders ask AI first — Cursor, Bolt, Lovable, Claude. AI reads your docs and cites what it understands. Bad docs = invisible products.', highlight: true },
-                { label: 'The rain OS approach', body: 'Score your README, API docs, and guides for AI readability. Fix structure, clarity, and snippet quality. Become the source AI points developers to.', dim: false },
+                { label: 'The rain OS approach', body: 'Score your README, API docs, and guides for AI visibility. Fix structure, clarity, and snippet quality. Become the source AI points developers to.', dim: false },
               ].map((c, i) => (
                 <motion.div
                   key={c.label}
