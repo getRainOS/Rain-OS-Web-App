@@ -54,7 +54,7 @@ export default function AppShot({ src, alt, accent }: { src: string; alt: string
 // The analysis result, in the same vertical format the app shows: the business,
 // the overall score, and one column per pillar. Example data from a saved demo
 // analysis. Each column rises in turn when it scrolls into view.
-export type PillarData = { overall: number; business: string; page: string; pillars: Pillar[] };
+export type PillarData = { overall: number; business: string; page: string; pillars: Pillar[]; laneName?: string };
 
 type Pillar = { key: keyof typeof PILLAR_CHART_COLORS; label: string; value: number };
 
@@ -93,7 +93,7 @@ export function PillarVisual({ result = BEFORE, label, before }: { result?: Pill
       <div className="flex items-end justify-between gap-4">
         <div className="min-w-0">
           {label && <div className="mb-1 text-[11px] text-neutral-400" style={{ fontFamily: MONO }}>{label.toUpperCase()}</div>}
-          <div className="truncate text-[15px] font-semibold text-white">{result.business}</div>
+          <div className="flex min-w-0 items-center gap-2"><span className="truncate text-[15px] font-semibold text-white">{result.business}</span>{result.laneName && <span className="shrink-0 rounded-full border border-white/20 px-2 py-0.5 text-[11px] text-neutral-300">{result.laneName}</span>}</div>
           <div className="text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>{result.page.toUpperCase()}</div>
         </div>
         <div className="shrink-0 text-right">
@@ -142,9 +142,17 @@ const LANE_KEYS = {
 } as const;
 export type LaneId = keyof typeof LANE_KEYS;
 
+const LANE_NAME: Record<LaneId, string> = {
+  local: 'Local businesses',
+  sellers: 'Online sellers',
+  writers: 'Writers & marketers',
+  developers: 'Developers',
+  vibe_coders: 'Vibe coders',
+};
+
 export function forLane(lane: LaneId, data: PillarData): PillarData {
   const keys: readonly string[] = LANE_KEYS[lane];
-  return { ...data, pillars: data.pillars.filter(p => keys.includes(p.key as string)) };
+  return { ...data, laneName: LANE_NAME[lane], pillars: data.pillars.filter(p => keys.includes(p.key as string)) };
 }
 
 // One example per lane, each for a different kind of business, scored on that
