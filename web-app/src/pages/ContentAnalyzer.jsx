@@ -1,5 +1,5 @@
 import PastAnalyses from '../components/PastAnalyses.jsx';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
@@ -312,14 +312,29 @@ export default function ContentAnalyzer() {
     ? 'Paste your vibe-coded landing page or app copy to audit AI readability and discoverability before launch'
     : 'Paste your content to get a full AEO analysis and rewrite it for AI readability';
 
+  // Text pasted on the homepage arrives with no title. Once signed in, run the
+  // analysis straight away, using the first line as the title.
+  const autoRanRef = useRef(false);
+  useEffect(() => {
+    if (autoRanRef.current || !prefill.pendingContent) return;
+    autoRanRef.current = true;
+    const text = prefill.pendingContent;
+    const firstLine = text.trim().split('\n')[0].trim().slice(0, 80) || 'My content';
+    const nextTitle = prefill.pendingTitle || firstLine;
+    setTitle(nextTitle);
+    setBeforeScore(null);
+    runAnalysis(text, nextTitle);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   async function handleAnalyze(e) {
     e.preventDefault();
     setBeforeScore(null);
     await runAnalysis(content);
   }
 
-  async function runAnalysis(text) {
-    if (!title.trim()) return;
+  async function runAnalysis(text, titleOverride) {
+    const analysisTitle = titleOverride ?? title;
+    if (!analysisTitle.trim()) return;
     if (!text.trim() && !url.trim()) return;
     setLoading(true);
     setError('');
@@ -331,7 +346,7 @@ export default function ContentAnalyzer() {
       // dashboard can show its trend. A fresh analysis starts a new piece.
       const previousAnalysisId = id && result ? Number(id) : undefined;
       setStale(false);
-      const { data } = await api.analyze({ title, content: text, url, brand: brandName.trim() || undefined, module: analysisModule, lane: userLane, contentType: contentTypeLabel, previousAnalysisId });
+      const { data } = await api.analyze({ title: analysisTitle, content: text, url, brand: brandName.trim() || undefined, module: analysisModule, lane: userLane, contentType: contentTypeLabel, previousAnalysisId });
       setResult(data);
       setAnalyzedContent(text);
       setLastAnalyzedText(text);
