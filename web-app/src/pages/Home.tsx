@@ -755,14 +755,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section
-          className="relative z-10 py-28"
-          style={{
-            backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.09) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.09) 1px, transparent 1px)',
-            backgroundSize: '64px 64px',
-            backgroundPosition: 'center',
-          }}
-        >
+        <section className="relative z-10 py-28">
           <div className="max-w-[1440px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-14 items-end">
             <Reveal>
               <Eyebrow>The shift</Eyebrow>
