@@ -476,7 +476,7 @@ function TrackingSection() {
           <div className="rounded-xl border border-white/10 bg-[#0a0a0a] overflow-hidden max-w-md">
             <div className="flex items-center gap-2 px-5 h-11 border-b border-white/[0.07]">
               <Mail className="w-4 h-4 text-neutral-500" />
-              <span className="text-[12px] text-neutral-500" style={MONO}>support@getrainos.com</span>
+              <span className="text-[12px] text-neutral-500" style={MONO}>rain OS alerts</span>
             </div>
             <div className="p-6">
               <div className="text-[11px] text-neutral-500 mb-2">Weekly tracking · Pricing page</div>
