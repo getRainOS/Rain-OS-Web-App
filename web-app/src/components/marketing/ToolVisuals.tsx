@@ -334,3 +334,158 @@ export function CitationRotation() {
     </AnimatePresence>
   );
 }
+
+// Who AI Recommends: how often the business is named across a few prompts, against
+// competitors. Local is the app's saved check; other lanes are illustrative.
+export type ShareData = { laneName: string; business: string; question: string; named: string; share: number; rivals: { name: string; share: number }[]; example: boolean };
+
+export const SHARE_LANES: ShareData[] = [
+  { laneName: 'Local businesses', business: 'Bright Smile Dental', question: 'best dentist in Austin for Invisalign', named: '2 of 3', share: 67,
+    rivals: [{ name: 'Austin Smile Studio', share: 33 }], example: false },
+  { laneName: 'Online sellers', business: 'Harbor Wallet Co.', question: 'best waterproof travel wallet under $80', named: '1 of 3', share: 33,
+    rivals: [{ name: 'Bellroy', share: 45 }, { name: 'Bilum', share: 22 }], example: true },
+  { laneName: 'Writers & marketers', business: 'Quillpost', question: 'best newsletter tool for a solo writer', named: '2 of 3', share: 67,
+    rivals: [{ name: 'Substack', share: 33 }], example: true },
+  { laneName: 'Developers', business: 'Tinyroute', question: 'best framework for a small API on Cloudflare Workers', named: '2 of 3', share: 58,
+    rivals: [{ name: 'Hono', share: 42 }], example: true },
+  { laneName: 'Vibe coders', business: 'Bookly', question: 'easiest way to add a booking page to a Lovable app', named: '0 of 3', share: 0,
+    rivals: [{ name: 'Calendly', share: 67 }, { name: 'Cal.com', share: 33 }], example: true },
+];
+
+export function ShareCard({ data }: { data: ShareData }) {
+  const reduce = useReducedMotion();
+  const rows = [{ name: data.business, share: data.share, you: true }, ...data.rivals.map(r => ({ ...r, you: false }))];
+  return (
+    <div className="rounded-xl border border-white/10 bg-[#0a0a0a] p-6 md:p-8 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)]">
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <div className="truncate text-[15px] font-semibold text-white">{data.business}</div>
+          <div className="text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>{data.example ? 'EXAMPLE' : 'SAVED CHECK'}</div>
+        </div>
+        <span className="shrink-0 rounded-full border border-white/20 px-2 py-0.5 text-[11px] text-neutral-300">{data.laneName}</span>
+      </div>
+
+      <div className="mt-6 text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>QUESTION</div>
+      <div className="mt-1 text-[16px] text-white">{data.question}</div>
+
+      <div className="mt-6">
+        <div className="text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>NAMED IN</div>
+        <motion.div
+          className="mt-1 text-6xl font-semibold tabular-nums text-white"
+          initial={reduce ? false : { opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: EASE }}
+        >
+          {data.named}
+        </motion.div>
+        <div className="mt-1 text-[13px] text-neutral-500">prompts that named this business</div>
+      </div>
+
+      <div className="mt-7 space-y-4">
+        {rows.map((r, i) => (
+          <div key={r.name}>
+            <div className="mb-1.5 flex justify-between text-[13px]">
+              <span className={r.you ? 'text-white' : 'text-neutral-500'}>{r.name}</span>
+              <span className="tabular-nums text-neutral-300">{r.share}%</span>
+            </div>
+            <div className="h-2 w-full overflow-hidden rounded-full bg-white/[0.06]">
+              <motion.div
+                className={`h-full rounded-full ${r.you ? 'bg-white' : 'bg-white/25'}`}
+                style={{ width: `${r.share}%` }}
+                initial={reduce ? false : { scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 0.8, delay: 0.15 + i * 0.12, ease: EASE }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+      <IllustrativeTag />
+    </div>
+  );
+}
+
+// How AI Describes Me: whether the business is named, its tone, and the wording an AI
+// used. Local is the app's saved check; other lanes are illustrative.
+export type DescribeData = { laneName: string; business: string; question: string; mentioned: boolean; tone: 'Positive' | 'Neutral' | 'Negative' | null; engine: string; wording: string; example: boolean };
+
+export const DESCRIBE_LANES: DescribeData[] = [
+  { laneName: 'Local businesses', business: 'Bright Smile Dental', question: 'best dentist in Austin for Invisalign', mentioned: true, tone: 'Positive', engine: 'Gemini',
+    wording: 'Described as modern and transparent on pricing.', example: false },
+  { laneName: 'Online sellers', business: 'Harbor Wallet Co.', question: 'best waterproof travel wallet under $80', mentioned: true, tone: 'Positive', engine: 'ChatGPT',
+    wording: 'Known for durable, waterproof wallets with a five-year warranty.', example: true },
+  { laneName: 'Writers & marketers', business: 'Quillpost', question: 'best newsletter tool for a solo writer', mentioned: true, tone: 'Neutral', engine: 'Perplexity',
+    wording: 'A simple newsletter tool with flat pricing, lighter on automation.', example: true },
+  { laneName: 'Developers', business: 'Tinyroute', question: 'best framework for a small API on Cloudflare Workers', mentioned: true, tone: 'Positive', engine: 'Claude',
+    wording: 'A small, typed router built on Hono for Cloudflare Workers.', example: true },
+  { laneName: 'Vibe coders', business: 'Bookly', question: 'easiest way to add a booking page to a Lovable app', mentioned: false, tone: null, engine: 'Google AI Overviews',
+    wording: 'Not named in the answers for this question yet.', example: true },
+];
+
+const TONE_CLASS: Record<'Positive' | 'Neutral' | 'Negative', string> = {
+  Positive: 'border-white/60 text-white',
+  Neutral: 'border-white/25 text-neutral-300',
+  Negative: 'border-[#F87171]/60 text-[#F87171]',
+};
+
+export function DescribeCard({ data }: { data: DescribeData }) {
+  const reduce = useReducedMotion();
+  return (
+    <div className="rounded-xl border border-white/10 bg-[#0a0a0a] p-6 md:p-8 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)]">
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <div className="truncate text-[15px] font-semibold text-white">{data.business}</div>
+          <div className="text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>{data.example ? 'EXAMPLE' : 'SAVED CHECK'}</div>
+        </div>
+        <span className="shrink-0 rounded-full border border-white/20 px-2 py-0.5 text-[11px] text-neutral-300">{data.laneName}</span>
+      </div>
+
+      <div className="mt-6 text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>QUESTION</div>
+      <div className="mt-1 text-[16px] text-white">{data.question}</div>
+
+      <div className="mt-6 flex items-center gap-3">
+        <span className={`rounded-full border px-3 py-1 text-[12px] font-medium ${data.mentioned ? 'border-white/60 text-white' : 'border-white/15 text-neutral-500'}`}>
+          {data.mentioned ? 'Named by AI' : 'Not named'}
+        </span>
+        {data.tone && (
+          <span className={`rounded-full border px-3 py-1 text-[12px] font-medium ${TONE_CLASS[data.tone]}`}>{data.tone} tone</span>
+        )}
+      </div>
+
+      <motion.div
+        className="mt-6 rounded-lg border border-white/[0.08] bg-white/[0.02] p-5"
+        initial={reduce ? false : { opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
+      >
+        <div className="text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>WHAT {data.engine.toUpperCase()} SAID</div>
+        <p className="mt-2 text-[16px] leading-relaxed text-neutral-100">&ldquo;{data.wording}&rdquo;</p>
+      </motion.div>
+      <IllustrativeTag />
+    </div>
+  );
+}
+
+// Cycles a list of cards, one lane at a time, so each lane's result is shown.
+export function LaneCycle<T>({ items, render }: { items: T[]; render: (item: T) => React.ReactNode }) {
+  const reduce = useReducedMotion();
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (reduce) return;
+    const t = setTimeout(() => setI(n => (n + 1) % items.length), 6500);
+    return () => clearTimeout(t);
+  }, [i, reduce, items.length]);
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={i}
+        initial={reduce ? false : { opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -12 }}
+        transition={{ duration: 0.45 }}
+      >
+        {render(items[i])}
+      </motion.div>
+    </AnimatePresence>
+  );
+}

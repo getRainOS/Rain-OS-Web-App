@@ -16,7 +16,7 @@ import SourceNetwork from '@/components/marketing/SourceNetwork';
 import RainBackground from '@/components/marketing/RainBackground';
 import TrendCard from '@/components/marketing/TrendCard';
 import PillarGauges from '@/components/marketing/PillarGauges';
-import AppShot, { PillarVisual, forLane, LANE_EXAMPLES, CitationRotation, IllustrativeTag } from '@/components/marketing/ToolVisuals';
+import AppShot, { PillarVisual, forLane, LANE_EXAMPLES, CitationRotation, IllustrativeTag, LaneCycle, ShareCard, SHARE_LANES, DescribeCard, DESCRIBE_LANES } from '@/components/marketing/ToolVisuals';
 import ScrollWords from '@/components/marketing/ScrollWords';
 import IllustratedExample from '@/components/marketing/IllustratedExample';
 
@@ -246,7 +246,7 @@ const TOOLS = [
     body: 'Share of AI voice: how often each AI tool names your business compared with the competitors it names.',
     ways: [],
     href: '/share-of-voice',
-    visual: { src: '/screens/app/hi-share.png', accent: 'rgba(31,79,191,0.6)', alt: 'The Who AI Recommends results: how often AI mentions your business for a topic, against competitors' },
+    visual: 'share' as const,
   },
   {
     key: 'describes',
@@ -255,7 +255,7 @@ const TOOLS = [
     body: 'The wording each AI uses for your business, and whether it reads as positive, neutral or negative, so you know what to change.',
     ways: [],
     href: '/brand-visibility',
-    visual: { src: '/screens/app/hi-describe.png', accent: 'rgba(216,67,42,0.45)', alt: 'The How AI Describes Me results: whether AI mentions your business, its sentiment, and how it describes you' },
+    visual: 'describe' as const,
   },
 ];
 
@@ -362,7 +362,7 @@ function ToolsSection() {
                   )}
                 </div>
                 <div className="min-w-0">
-                  {t.visual === 'pillar' ? <RotatingAnalysis /> : t.visual === 'citation' ? <CitationRotation /> : <AppShot src={t.visual.src} alt={t.visual.alt} accent={t.visual.accent} />}
+                  {t.visual === 'pillar' ? <RotatingAnalysis /> : t.visual === 'citation' ? <CitationRotation /> : t.visual === 'share' ? <LaneCycle items={SHARE_LANES} render={d => <ShareCard data={d} />} /> : t.visual === 'describe' ? <LaneCycle items={DESCRIBE_LANES} render={d => <DescribeCard data={d} />} /> : <AppShot src={t.visual.src} alt={t.visual.alt} accent={t.visual.accent} />}
                 </div>
               </div>
             </Reveal>
