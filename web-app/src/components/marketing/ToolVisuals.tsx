@@ -128,3 +128,21 @@ export function PillarVisual({ result = BEFORE, label, before }: { result?: Pill
     </div>
   );
 }
+
+// The pillars each lane is scored on, so a chart only shows what that lane measures.
+// Writers, developers and vibe coders: the four core pillars. Online sellers add
+// Product Discoverability; local businesses add Local Presence.
+const CORE_KEYS = ['ai_readability', 'digital_authority', 'conversion_readiness', 'rag_readiness'] as const;
+const LANE_KEYS = {
+  writers: CORE_KEYS,
+  developers: CORE_KEYS,
+  vibe_coders: CORE_KEYS,
+  sellers: [...CORE_KEYS, 'product_discoverability'],
+  local: [...CORE_KEYS, 'local_presence'],
+} as const;
+export type LaneId = keyof typeof LANE_KEYS;
+
+export function forLane(lane: LaneId, data: PillarData): PillarData {
+  const keys: readonly string[] = LANE_KEYS[lane];
+  return { ...data, pillars: data.pillars.filter(p => keys.includes(p.key as string)) };
+}
