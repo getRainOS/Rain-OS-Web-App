@@ -9,6 +9,13 @@ import { SERIES } from './TrendCard';
 const MONO = "'Geist Mono', ui-monospace, monospace";
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+// Same bands the app uses: Good from 75, Fair from 50, Needs Work below that.
+function scoreBand(s: number) {
+  if (s >= 75) return 'Good';
+  if (s >= 50) return 'Fair';
+  return 'Needs Work';
+}
+
 function Gauge({ label, value, color, delay }: { label: string; value: number; color: string; delay: number }) {
   const reduce = useReducedMotion();
   const cx = 60;
@@ -47,6 +54,7 @@ function Gauge({ label, value, color, delay }: { label: string; value: number; c
         <text x={cx + r} y={cy + 9} textAnchor="middle" fontSize={6} fill="#737373" style={{ fontFamily: MONO }}>100</text>
       </svg>
       <div className="-mt-1 text-[20px] font-semibold text-white tabular-nums">{Math.round(value)}</div>
+      <div className="text-[11px] text-neutral-400">{scoreBand(value)}</div>
     </figure>
   );
 }
