@@ -137,7 +137,7 @@ export default function ContentWriters() {
                 style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
                 Write content that{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-white/40 to-white/20">
-                  AI tools cite and mention
+                  AI tools can see
                 </span>
               </h1>
 
