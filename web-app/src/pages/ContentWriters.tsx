@@ -408,7 +408,7 @@ export default function ContentWriters() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button
                   onClick={() => navigate('/login')}
-                  className="flex items-center gap-2 text-white rounded-xl px-8 py-4 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
+                  className="flex items-center gap-2 text-black rounded-xl px-8 py-4 text-sm font-bold transition-all hover:scale-105 active:scale-95 group"
                   style={{ background: 'var(--cyan)' }}
                 >
                   Score your content free
