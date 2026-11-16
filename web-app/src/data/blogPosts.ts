@@ -26,6 +26,39 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: 'mention-vs-citation',
+    audience: 'everyone',
+    title: 'Mention or Citation? What the Difference Means for Your Business',
+    subtitle: 'An AI can name your business without linking to your site. Here is how the two differ and why both matter.',
+    date: '2026-11-16',
+    readTime: '4 min read',
+    category: 'Education',
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=630&fit=crop&q=80',
+    author: 'rain OS Team',
+    authorRole: 'Product',
+    body: `When an AI answers a question, your business can show up in two different ways. People often use the words interchangeably, but they are not the same.
+
+**A mention** is when the AI names your business in its answer. For example, it says *"Bright Smile Dental is well reviewed for Invisalign in Austin"* but does not link to your website.
+
+**A citation** is when the AI links to one of your pages as a source for what it says. The answer points the reader to your site, so they can read more.
+
+**Why the difference matters**
+
+A mention puts your name in front of someone who is asking. A citation also sends them to your page. Some AI tools show sources as links, and others name a business without one, so the same business can get a mention in one tool and a citation in another.
+
+**Mentions often come first**
+
+If an AI already names your business, it has found your business useful enough to talk about. Turning that into a citation usually depends on whether your pages make the specific fact easy to quote: a clear price, a stated licence, a product page with its warranty, or a docs page that explains a setup step.
+
+**How rain OS tracks both**
+
+rain OS asks each AI the questions you choose and records two things: whether your business is mentioned, and whether one of your pages is cited. These are snapshots. Each check shows what an AI said at that time, and answers can change from one check to the next.
+
+**What we cannot promise**
+
+Better pages improve your chances of being mentioned or cited. They do not guarantee it. The AI decides what to name and link, and that can change without notice. What you can control is making your pages clear, accurate and easy to quote, and then checking what happens.`
+  },
+  {
     slug: 'what-is-google-search-grounding',
     audience: 'everyone',
     title: 'What Is Google Search Grounding? (And Why rain OS Is Built Around It)',
