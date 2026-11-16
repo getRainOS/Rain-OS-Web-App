@@ -770,7 +770,7 @@ export default function Home() {
               <div
                 className="rounded-xl border border-white/10 bg-[#0a0a0a] p-8"
                 style={{
-                  backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px)',
+                  backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.09) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.09) 1px, transparent 1px)',
                   backgroundSize: '64px 64px',
                   backgroundPosition: 'center',
                 }}
