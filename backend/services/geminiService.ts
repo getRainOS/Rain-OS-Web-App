@@ -47,22 +47,22 @@ Use these as scoring anchors. Do not contradict them.
 2. The content itself.
 3. The industry context.
 Score across 6 pillars (0-100 each — not every pillar applies to every module):
-PILLAR 1 — AI READABILITY (weight: varies by module — 36% general, 20% product_sellers, 32% developers, 20% local_business)
+PILLAR 1 — AI READABILITY (weight: 25% general, developers and vibe coders; 20% product_sellers and local_business)
 How well can AI systems parse, chunk, and extract answers from this content?
 Sub-scores: structuralClarity, answerFirstFormatting, semanticPrecision,
 contextSufficiency, sectionConceptIsolation
 Anchors: use avgSentenceLength, longSentenceRatio, passiveVoiceRatio,
 nestedClauseDepth, headingDensity, answerFirstRatio from pre-analysis.
-PILLAR 2 — DIGITAL AUTHORITY (weight: varies by module — 27% general, 15% product_sellers, 32% developers, 20% local_business)
+PILLAR 2 — DIGITAL AUTHORITY (weight: 25% general, developers and vibe coders; 20% product_sellers and local_business)
 Does the content signal expertise, trustworthiness, and citability to AI?
 Sub-scores: citationSignals, entityClarity, topicalAuthority, freshnessSignals,
 socialProofMarkup
 Anchors: use entityDensity, definitionDensity from pre-analysis.
-PILLAR 3 — CONVERSION READINESS (weight: varies by module — 27% general, 15% product_sellers, 26% developers, 20% local_business)
+PILLAR 3 — CONVERSION READINESS (weight: 25% general, developers and vibe coders; 20% product_sellers and local_business)
 Does the content guide the reader toward a clear next action?
 Sub-scores: callToActionClarity, trustSignals, valueProposition, frictionReduction
 Anchors: use qaDensity, answerFirstRatio from pre-analysis.
-PILLAR 4 — PRODUCT DISCOVERABILITY (weight: varies by module — 0% general, 50% product_sellers, 0% developers, 0% local_business)
+PILLAR 4 — PRODUCT DISCOVERABILITY (weight: 20% product_sellers; not scored for other modules)
 For product/service content: how well will AI surface this in shopping or
 discovery contexts?
 Sub-scores: productVariantCoverage, merchantIdentityClarity, pricingTransparency,
@@ -70,7 +70,7 @@ availabilitySignals, comparativeContext
 If content is not product-focused, score conservatively (40-60 range) based on
 general discoverability signals.
 
-PILLAR 5 — RAG READINESS (weight: 10% all modules)
+PILLAR 5 — RAG READINESS (weight: 25% general, developers and vibe coders; 20% product_sellers and local_business)
 How well is this content optimized for Retrieval-Augmented Generation (RAG)
 systems — vector databases, embedding models, and chunk-based retrieval?
 This is distinct from citation scoring. RAG readiness measures whether an AI
@@ -86,7 +86,7 @@ contentChunkingQuality from pre-analysis.
 - explicitQaStructures: FAQ sections, direct definitions, problem-solution frameworks
 - authoritySignals: External links to reputable sources, author bios, verifiable data
 
-PILLAR 6 — LOCAL PRESENCE SIGNALS (weight: varies by module — 0% general, 0% product_sellers, 0% developers, 30% local_business)
+PILLAR 6 — LOCAL PRESENCE SIGNALS (weight: 20% local_business; not scored for other modules)
 For local service businesses: how well will AI trust and surface this
 business's name, address, phone, service area, and reputation when a nearby
 customer asks for a recommendation? This is distinct from Digital Authority —
