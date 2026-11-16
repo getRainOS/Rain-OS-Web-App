@@ -16,7 +16,7 @@ import SourceNetwork from '@/components/marketing/SourceNetwork';
 import RainBackground from '@/components/marketing/RainBackground';
 import TrendCard from '@/components/marketing/TrendCard';
 import PillarGauges from '@/components/marketing/PillarGauges';
-import AppShot, { PillarVisual, forLane, LANE_EXAMPLES } from '@/components/marketing/ToolVisuals';
+import AppShot, { PillarVisual, forLane, LANE_EXAMPLES, CitationPanel } from '@/components/marketing/ToolVisuals';
 import ScrollWords from '@/components/marketing/ScrollWords';
 import IllustratedExample from '@/components/marketing/IllustratedExample';
 
@@ -233,10 +233,10 @@ const TOOLS = [
     key: 'citing',
     eyebrow: 'Is AI Citing Me?',
     title: 'See which AI tools cite your pages',
-    body: 'Ask the questions your customers ask, and see whether each AI tool links to your pages as a source, and which pages it links to.',
+    body: 'Whether AI links to your pages when customers ask. Which pages, and where you rank among the sources it uses.',
     ways: [],
     href: '/citation-monitor',
-    visual: { src: '/screens/app/hi-citation.png', accent: 'rgba(245,154,27,0.5)', alt: 'The Is AI Citing Me? results: your position across checks, and which AI tools cite your business' },
+    visual: 'citation' as const,
   },
   {
     key: 'recommends',
@@ -362,7 +362,7 @@ function ToolsSection() {
                   )}
                 </div>
                 <div className="min-w-0">
-                  {t.visual === 'pillar' ? <RotatingAnalysis /> : <AppShot src={t.visual.src} alt={t.visual.alt} accent={t.visual.accent} />}
+                  {t.visual === 'pillar' ? <RotatingAnalysis /> : t.visual === 'citation' ? <CitationPanel /> : <AppShot src={t.visual.src} alt={t.visual.alt} accent={t.visual.accent} />}
                 </div>
               </div>
             </Reveal>
