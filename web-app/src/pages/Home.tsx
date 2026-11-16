@@ -377,49 +377,6 @@ function ToolsSection() {
   );
 }
 
-/* ── Lanes with real weights ────────────────────────────────────────────── */
-
-const LANE_ROWS = [
-  { name: 'Writers & Marketers', who: 'Articles, blogs, landing pages', href: '/content-writers', w: [25, 25, 25, 0, 0, 25] },
-  { name: 'Online Sellers', who: 'Shopify, Etsy, Amazon, DTC stores', href: '/product-sellers', w: [20, 20, 20, 20, 0, 20] },
-  { name: 'Developers', who: 'Docs, READMEs, API references', href: '/developers', w: [25, 25, 25, 0, 0, 25] },
-  { name: 'Vibe Coders', who: 'Apps built with Bolt, Lovable, Cursor, v0', href: '/vibe-coders', w: [25, 25, 25, 0, 0, 25] },
-  { name: 'Local Businesses', who: 'Service businesses people find nearby', href: '/local-business', w: [20, 20, 20, 0, 20, 20] },
-];
-
-
-function LanesSection() {
-  return (
-    <section className="relative z-10 py-28 border-t border-white/[0.06]">
-      <div className="max-w-[1440px] mx-auto px-6">
-        <Reveal>
-          <Eyebrow>Scored for your kind of business</Eyebrow>
-          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">
-            A bakery and a SaaS company don't get found the same way.
-          </h2>
-          <p className="mt-5 text-neutral-400 text-lg max-w-2xl leading-relaxed">
-            So we don't score them the same way. Pick yours and the Rain Score focuses on what decides whether AI recommends you.
-          </p>
-        </Reveal>
-
-        <Reveal delay={0.1} className="mt-14">
-          <div className="rounded-xl border border-white/10 divide-y divide-white/[0.07] bg-[#0a0a0a]">
-            {LANE_ROWS.map(l => (
-              <Link key={l.name} to={l.href} className="group grid grid-cols-1 md:grid-cols-[260px_1fr_24px] gap-3 md:gap-8 items-center px-5 md:px-6 py-5 hover:bg-white/[0.02] transition-colors">
-                <div className="min-w-0">
-                  <div className="text-[15px] text-white font-medium">{l.name}</div>
-                  <div className="text-[13px] text-neutral-500 truncate">{l.who}</div>
-                </div>
-                <ArrowUpRight className="hidden md:block w-4 h-4 text-neutral-600 group-hover:text-white transition-colors" />
-              </Link>
-            ))}
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
 /* ── Method ─────────────────────────────────────────────────────────────── */
 
 function MethodSection() {
@@ -844,7 +801,6 @@ export default function Home() {
 
 
         <WhyGoogleSection />
-        <LanesSection />
         <MethodSection />
         <TrackingSection />
 
