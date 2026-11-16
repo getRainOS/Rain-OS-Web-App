@@ -23,9 +23,9 @@ const EXAMPLES: LaneExample[] = [
     id: 'local_business',
     tab: 'Local business',
     question: "Who's the best emergency plumber near Austin that's open right now?",
-    before: 'Here are well-reviewed plumbers in Austin with 24/7 service: Lone Star Plumbing, Radiant Plumbing and Riverside Pipe Works.',
-    after: 'Here are well-reviewed plumbers in Austin with 24/7 service: Brightside Plumbing (licensed in Texas, 24/7 dispatch, 4.9★ from 800+ reviews), Lone Star Plumbing and Radiant Plumbing.',
-    afterNote: 'The business states its licence, hours and review count in plain text, so AI can quote them.',
+    before: 'Here are well-reviewed plumbers in Austin with 24/7 service: Acme Plumbing, Sample Drain Co. and Riverside Pipe Works.',
+    after: 'Here are well-reviewed plumbers in Austin with 24/7 service: Acme Plumbing, Example Plumbing Co. (licensed, 24/7 dispatch, same-day repairs) and Sample Drain Co.',
+    afterNote: 'Licensing and 24/7 dispatch added to the first paragraph.',
     drawing: [
       { d: 'M20 176 H300' },
       { d: 'M86 58 Q88 36 110 36 Q132 36 134 58 Z', solid: true },
@@ -46,8 +46,8 @@ const EXAMPLES: LaneExample[] = [
     tab: 'Online sellers',
     question: "What's a good waterproof travel wallet under $80?",
     before: 'Popular options include several well-known brands. Look for RFID blocking, a slim profile and leather or nylon construction.',
-    after: 'Harbor Wallet Co. makes a waterproof travel wallet for $69 with RFID blocking and a 5-year warranty, and it ships free within the US.',
-    afterNote: 'The product page states the price, warranty and shipping in plain text, and carries Product markup.',
+    after: 'Example Co. makes a waterproof travel wallet for $69 with RFID blocking and a 5-year warranty, and it ships free within the US.',
+    afterNote: 'Product details, price and shipping added to the product page as plain text.',
     drawing: [
       { d: 'M20 176 H300' },
       { d: 'M90 80 L160 52 L230 80 L160 108 Z', solid: true },
@@ -64,8 +64,8 @@ const EXAMPLES: LaneExample[] = [
     tab: 'Writers & marketers',
     question: 'Which newsletter tool works best for a solo writer who wants simple pricing?',
     before: 'Many newsletter tools offer free plans and paid tiers. Compare features like templates, automation and analytics before choosing.',
-    after: 'Quillpost is built for solo writers: $12 a month flat, a free tier up to 500 subscribers, and a guide to publishing from your own domain.',
-    afterNote: 'The opening paragraph names the product, the price and the free tier, so the answer can quote it directly.',
+    after: 'Example Letters is built for solo writers: one flat price, a free tier up to 500 subscribers, and a clear guide to publishing from your own domain.',
+    afterNote: 'The answer names the product and its pricing from a comparison page that states both plainly.',
     drawing: [
       { d: 'M20 176 H300' },
       { d: 'M96 40 H230 Q238 40 238 48 V160 Q238 168 230 168 H96 Z', solid: true },
@@ -98,8 +98,8 @@ const EXAMPLES: LaneExample[] = [
     tab: 'Vibe coders',
     question: "What's the easiest way to add a booking page to an app I built with AI?",
     before: 'You can add booking with a scheduling embed, a third-party calendar or a custom form. Each has trade-offs in cost and setup time.',
-    after: 'Bookly adds a booking page to Lovable, Bolt and Replit apps in one step, with a free plan and a copy-paste embed.',
-    afterNote: 'The docs page names the tool, the platforms it works with and the one-step install.',
+    after: 'Example Book adds a booking page to Lovable, Bolt and Replit apps in one step, with a free plan and a copy-paste embed.',
+    afterNote: 'The answer names the tool and the platforms it works with, from its own docs page.',
     drawing: [
       { d: 'M20 176 H300' },
       { d: 'M40 50 H220 Q226 50 226 56 V150 Q226 156 220 156 H40 Q34 156 34 150 V56 Q34 50 40 50 Z' },
@@ -115,49 +115,41 @@ const EXAMPLES: LaneExample[] = [
   },
 ];
 
-// The flat palette from the blog covers and the site's illustrations.
-const LINE = '#F4EFE4';
-const FILLS = ['#D8432A', '#F59A1B', '#1F4FBF'];
-
-// Draws each stroke in turn in off-white on the black page, then fills the solid
-// shapes with flat colour from the blog palette.
+// Draws each stroke in turn, then fills the solid shapes.
 function Drawing({ strokes }: { strokes: Stroke[] }) {
   return (
     <motion.svg
       viewBox="0 0 320 200"
-      className="mx-auto w-full max-w-sm"
+      className="mx-auto w-full max-w-sm text-white"
       role="img"
       aria-label="Illustration for this example"
       fill="none"
-      stroke={LINE}
-      strokeWidth={3}
+      stroke="currentColor"
+      strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.4 }}
     >
-      {strokes.map((s, i) => {
-        const fill = s.solid ? FILLS[i % FILLS.length] : 'none';
-        return (
-          <motion.path
-            key={i}
-            d={s.d}
-            fill={fill}
-            variants={{
-              hidden: { pathLength: 0, fillOpacity: 0, opacity: 1 },
-              show: {
-                pathLength: 1,
-                fillOpacity: 1,
-                transition: {
-                  pathLength: { duration: 0.8, delay: i * 0.12, ease: 'easeInOut' },
-                  fillOpacity: { duration: 0.5, delay: i * 0.12 + 0.6 },
-                },
+      {strokes.map((s, i) => (
+        <motion.path
+          key={i}
+          d={s.d}
+          fill={s.solid ? 'currentColor' : 'none'}
+          variants={{
+            hidden: { pathLength: 0, fillOpacity: 0, opacity: 1 },
+            show: {
+              pathLength: 1,
+              fillOpacity: s.solid ? 0.9 : 0,
+              transition: {
+                pathLength: { duration: 0.8, delay: i * 0.12, ease: 'easeInOut' },
+                fillOpacity: { duration: 0.5, delay: i * 0.12 + 0.6 },
               },
-            }}
-          />
-        );
-      })}
+            },
+          }}
+        />
+      ))}
     </motion.svg>
   );
 }
@@ -211,20 +203,20 @@ export default function IllustratedExample() {
       <div className="max-w-5xl mx-auto px-6">
         <div className="text-center">
           <div className="text-[11px] uppercase tracking-[0.16em] text-neutral-500" style={MONO}>Example</div>
-          <h2 className="mt-3 text-3xl md:text-4xl font-semibold tracking-[-0.03em] text-white">Example scores from our own analysis</h2>
+          <h2 className="mt-3 text-3xl md:text-4xl font-semibold tracking-[-0.03em] text-white">What a before and after looks like</h2>
           <p className="mt-4 text-neutral-400 max-w-2xl mx-auto">
-            Our score for one page, at two points in time, for each kind of business. Scores come from our own analysis, not from AI answers.
+            The same question, before and after two fixes, for each kind of business.
           </p>
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center justify-center rounded-md border border-white/12 bg-white/[0.02] p-1" role="tablist" aria-label="Lane examples">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-2" role="tablist" aria-label="Lane examples">
           {EXAMPLES.map((e, i) => (
             <button
               key={e.id}
               role="tab"
               aria-selected={i === index}
               onClick={() => pick(i)}
-              className={`h-8 px-4 rounded-[4px] text-[13px] transition-colors ${i === index ? 'bg-white text-black' : 'text-neutral-400 hover:text-white'}`}
+              className={`h-9 px-4 rounded-full text-[13px] border transition-colors ${i === index ? 'bg-white text-black border-white' : 'border-white/15 text-neutral-300 hover:border-white/30'}`}
             >
               {e.tab}
             </button>
@@ -239,13 +231,13 @@ export default function IllustratedExample() {
           </div>
 
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-5">
-            <Card tone="before" label="Earlier analysis" note="The business is not named." answer={ex.before} />
-            <Card tone="after" label="Later analysis" note={ex.afterNote} answer={ex.after} />
+            <Card tone="before" label="Before" note="The business is not named." answer={ex.before} />
+            <Card tone="after" label="After two fixes" note={ex.afterNote} answer={ex.after} />
           </div>
         </motion.div>
 
         <p className="mt-6 text-center text-[12px] text-neutral-500" style={MONO}>
-          Illustrative examples. All business names are invented, and these are not customers or results. Real results vary.
+          Illustrative examples. All business names are invented, and these are not customers or results. Real results vary and take time: checks run weekly, and changes to a page can take weeks to show up in AI answers.
         </p>
       </div>
     </section>
