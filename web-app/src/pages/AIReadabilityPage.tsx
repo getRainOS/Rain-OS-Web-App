@@ -75,6 +75,20 @@ export default function AIReadabilityPage() {
         </section>
 
         <section>
+          <h2 className="mb-3 text-xl font-semibold text-white">How it fits together</h2>
+          <ol className="space-y-3 leading-relaxed text-neutral-400">
+            <li><span className="font-medium text-white">1. Make your content easy to read and quote.</span> The pillars score this on your pages.</li>
+            <li><span className="font-medium text-white">2. Visibility grows.</span> AI can find, understand and use what you offer. This is the goal.</li>
+            <li><span className="font-medium text-white">3. Mention.</span> AI names your business in an answer.</li>
+            <li><span className="font-medium text-white">4. Citation.</span> AI links to one of your pages as a source. Usually it follows a mention.</li>
+            <li><span className="font-medium text-white">5. Recommendation.</span> AI names you as the choice when someone asks what to buy or hire.</li>
+          </ol>
+          <p className="mt-4 leading-relaxed text-neutral-400">
+            Quoting sits alongside this chain rather than in it. An AI can quote your content without naming you, so we score quotability but do not count quotes as a result.
+          </p>
+        </section>
+
+        <section>
           <h2 className="mb-3 text-xl font-semibold text-white">From mention to citation</h2>
           <ul className="space-y-4 leading-relaxed text-neutral-400">
             <li><span className="font-medium text-white">Mentioned:</span> the AI names your business in its answer, without linking to one of your pages. A mention often comes first.</li>
