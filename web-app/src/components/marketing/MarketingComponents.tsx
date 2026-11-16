@@ -59,7 +59,7 @@ export const HybridFuture = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }} className="card-gradient rounded-3xl p-8 hover:border-white/30 transition-all">
             <Shield className="w-8 h-8 text-white mb-6" />
             <h3 className="text-2xl font-bold text-white mb-4">The rain OS Standard</h3>
-            <p className="text-neutral-400 leading-relaxed">We bridge the gap. We ensure your content is perfectly structured for AI extraction while maintaining all traditional SEO benefits.</p>
+            <p className="text-neutral-400 leading-relaxed">We bridge the gap. We check that your content is structured for AI extraction, and show what to fix, while keeping the traditional SEO benefits.</p>
           </motion.div>
         </div>
       </div>
@@ -436,8 +436,8 @@ export const Pricing = () => {
         { label: "Everything in Pro", included: true },
         { label: "Is AI Citing Me?", included: true },
         { label: "Weekly tracking of AI links (30 questions)", included: true },
-        { label: "How AI Describes Me on every AI tool", included: true },
-        { label: "Who AI Recommends on every AI tool", included: true },
+        { label: "How AI Describes Me on each AI tool we check", included: true },
+        { label: "Who AI Recommends on each AI tool we check", included: true },
       ]
     }
   ];
@@ -532,7 +532,7 @@ export const FAQ = () => {
     { q: "What does rain OS check across AI?", a: "Is AI Citing Me? shows whether each AI tool cites your pages, and which ones. Who AI Recommends shows how often the AI tools name you compared with your competitors. How AI Describes Me shows whether the description it gives of your business is positive, neutral or negative." },
     { q: "What does each pillar measure?", a: "AI Readability: whether an AI can read and understand your page. Digital Authority: whether an AI can trust the page and trace its claims. Conversion Readiness: whether the next step for a visitor is clear. Easy to Quote: whether an AI can pull a single answer out of your page and quote it. Product Discoverability (online sellers): whether AI can find and compare your products. Local Presence (local businesses): whether AI can confidently recommend your business for a nearby search." },
     { q: "How is the score calculated?", a: "Every check is scored across four core pillars: AI Readability, Digital Authority, Conversion Readiness and Easy to Quote. Online Sellers add Product Discoverability and Local Businesses add Local Presence. Each lane weights these pillars differently, so the score reflects what matters for your kind of business. The result is one score from 0 to 100 with a breakdown for every pillar." },
-    { q: "Which AI tools do you check?", a: `The Rain Score measures structural signals every AI tool relies on, such as clear headings, structured page details, an AI-friendly files list, whether AI can access the page and answer-ready content, so it applies to ChatGPT, Gemini, Perplexity and others. Live checks of AI answers, weekly tracking, Who AI Recommends and How AI Describes Me run on ${engines}, from the US state or country you choose.` },
+    { q: "Which AI tools do you check?", a: `The Rain Score measures structural signals that AI tools commonly rely on, such as clear headings, structured page details, an AI-friendly files list, whether AI can access the page and answer-ready content, so it applies to ChatGPT, Gemini, Perplexity and others. Live checks of AI answers, weekly tracking, Who AI Recommends and How AI Describes Me run on ${engines}, from the US state or country you choose.` },
     { q: "Why not just ask Gemini myself?", a: "You can, and for a quick look it's worth doing. But what you see is shaped by your own account, search history and location, so it may not match what a customer sees. The app also shows only a few links, not the full list of sources it used or where you rank among them. rain OS asks the same question through Gemini with live Google Search results, without your personal history, and shows every source it linked to, in order, with your position. It saves each result so you can see changes over time, can re-check your key questions weekly, and tells you what to fix when you're not cited. Results can still vary between runs, because AI answers do."},
     { q: "How does weekly tracking work?", a: "On Pro and Business, choose Track weekly on any Is AI Citing Me? result. rain OS re-runs that question every week, keeps the history, and emails you when any AI tool starts or stops linking to your site. Pro tracks up to 10 questions and Business up to 30. Scheduled checks don't use your monthly analyses." },
     { q: "Can rain OS fix my content, or just analyze it?", a: "Both. Every result comes with prioritized recommendations in plain language and in technical terms. You can rewrite content for AI in one click, generate titles and meta descriptions, copy a fix prompt tailored to Bolt, Lovable, Cursor and other builders, or have rain OS open a pull request with the fixes on your GitHub repository." },
