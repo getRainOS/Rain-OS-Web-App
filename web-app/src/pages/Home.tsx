@@ -755,7 +755,14 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="relative z-10 py-28">
+        <section
+          className="relative z-10 py-28"
+          style={{
+            backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.09) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.09) 1px, transparent 1px)',
+            backgroundSize: '64px 64px',
+            backgroundPosition: 'center',
+          }}
+        >
           <div className="max-w-[1440px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-14 items-end">
             <Reveal>
               <Eyebrow>The shift</Eyebrow>
@@ -767,14 +774,7 @@ export default function Home() {
               </p>
             </Reveal>
             <Reveal delay={0.1}>
-              <div
-                className="rounded-xl border border-white/10 bg-[#0a0a0a] p-8"
-                style={{
-                  backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.09) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.09) 1px, transparent 1px)',
-                  backgroundSize: '64px 64px',
-                  backgroundPosition: 'center',
-                }}
-              >
+              <div className="rounded-xl border border-white/10 bg-[#0a0a0a] p-8">
                 <div className="text-7xl md:text-8xl font-semibold tracking-[-0.05em] tabular-nums" style={{ color: '#A8203E' }}>47%</div>
                 <p className="mt-3 text-[15px] text-neutral-300 leading-relaxed">Fewer people click through to websites when Google shows an AI answer.</p>
                 <a href="https://www.pewresearch.org/short-reads/2025/07/22/google-users-are-less-likely-to-click-on-links-when-an-ai-summary-appears-in-the-results/" target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-[12px] text-neutral-500 hover:text-neutral-300" style={MONO}>
