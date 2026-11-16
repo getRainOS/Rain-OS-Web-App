@@ -16,7 +16,7 @@ import SourceNetwork from '@/components/marketing/SourceNetwork';
 import RainBackground from '@/components/marketing/RainBackground';
 import TrendCard from '@/components/marketing/TrendCard';
 import PillarGauges from '@/components/marketing/PillarGauges';
-import AppShot, { PillarVisual, forLane, LANE_EXAMPLES, CitationPanel } from '@/components/marketing/ToolVisuals';
+import AppShot, { PillarVisual, forLane, LANE_EXAMPLES, CitationRotation } from '@/components/marketing/ToolVisuals';
 import ScrollWords from '@/components/marketing/ScrollWords';
 import IllustratedExample from '@/components/marketing/IllustratedExample';
 
@@ -361,7 +361,7 @@ function ToolsSection() {
                   )}
                 </div>
                 <div className="min-w-0">
-                  {t.visual === 'pillar' ? <RotatingAnalysis /> : t.visual === 'citation' ? <CitationPanel /> : <AppShot src={t.visual.src} alt={t.visual.alt} accent={t.visual.accent} />}
+                  {t.visual === 'pillar' ? <RotatingAnalysis /> : t.visual === 'citation' ? <CitationRotation /> : <AppShot src={t.visual.src} alt={t.visual.alt} accent={t.visual.accent} />}
                 </div>
               </div>
             </Reveal>
