@@ -191,8 +191,8 @@ export const FeatureGrid = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Under the Hood</span>
-          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">What No Other Tool Measures</h2>
-          <p className="text-neutral-400 max-w-2xl mx-auto">Beyond the pillars, rain OS runs a deeper layer of signals that most tools don't even know exist.</p>
+          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Deeper signals we check</h2>
+          <p className="text-neutral-400 max-w-2xl mx-auto">rain OS also checks signals that sit beneath the four pillars, from how easily each sentence can be quoted to how well your content matches the questions people ask.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -200,7 +200,7 @@ export const FeatureGrid = () => {
             <BrainCircuit className="absolute -right-10 -bottom-10 w-64 h-64 text-white opacity-5 group-hover:opacity-10 transition-opacity duration-500" />
             <BrainCircuit className="w-8 h-8 text-white mb-6 relative z-10" />
             <h3 className="text-2xl font-bold text-white mb-4 relative z-10">Semantic Precision Scoring</h3>
-            <p className="text-neutral-400 mb-6 relative z-10 max-w-md">LLMs don't read like humans — they extract facts. We score every sentence on how machine-extractable it is and flag anything too vague to be cited.</p>
+            <p className="text-neutral-400 mb-6 relative z-10 max-w-md">LLMs don't read like humans — they extract facts. We score how machine-extractable your sentences are and flag the vague ones that are hard to cite.</p>
             <div className="bg-midnight/50 rounded-xl p-4 border border-white/5 relative z-10">
               <div className="flex items-center gap-2 text-sm text-white line-through mb-2"><span className="w-2 h-2 rounded-full bg-white" /> "We've seen some really significant growth recently"</div>
               <div className="flex items-center gap-2 text-sm text-white"><span className="w-2 h-2 rounded-full bg-white" /> "Revenue grew 34% quarter-over-quarter in Q2 2025"</div>
@@ -228,7 +228,7 @@ export const FeatureGrid = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.4 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
             <Target className="w-8 h-8 text-white mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">Semantic Redundancy Detection</h3>
-            <p className="text-neutral-400 text-sm">Repeated or padded content dilutes AI extraction confidence. We flag every redundant passage so you can cut it — tighter content scores higher.</p>
+            <p className="text-neutral-400 text-sm">Repeated or padded content dilutes AI extraction confidence. We score how much repetition your content contains, so you can cut the padding.</p>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.5 }} className="md:col-span-2 bg-gradient-to-br from-white/20/[0.05] to-surface/50 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
@@ -240,7 +240,7 @@ export const FeatureGrid = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.6 }} className="bg-surface/40 border border-white/10 backdrop-blur-sm rounded-3xl p-8 hover:border-white/10 transition-all duration-300">
             <FileJson className="w-8 h-8 text-white mb-6" />
             <h3 className="text-xl font-bold text-white mb-4">Multimodal Readiness</h3>
-            <p className="text-neutral-400 text-sm">Images and tables are invisible to AI unless they're described in text. We flag every non-text element that's missing an AI-readable description.</p>
+            <p className="text-neutral-400 text-sm">Images and tables are invisible to AI unless they're described in text. We check whether each one has a text description AI can read.</p>
           </motion.div>
         </div>
       </div>
@@ -522,9 +522,9 @@ export const AccordionItem = ({ question, answer }: { question: string, answer: 
   );
 };
 
-export const FAQ = () => {
+export const FAQ = ({ items }: { items?: { q: string; a: string }[] } = {}) => {
   const engines = joinNames(useLiveEngines());
-  const faqs = [
+  const defaultFaqs = [
     { q: "Who is rain OS for?", a: "Anyone whose customers now ask AI before they search: writers and marketers, online sellers, developers, people shipping apps with AI builders, and local service businesses. You pick the lane that fits, and rain OS weights its scoring for the way that kind of business gets found." },
     { q: "What does it mean to get cited by AI?", a: "It means making your pages easy for AI assistants to read, trust and quote. Some people call this Answer Engine Optimization (AEO). When ChatGPT, Gemini or Perplexity answer a question, they draw on a handful of sources. AEO is about being one of them." },
     { q: "What is a citation?", a: "A citation is when an AI answer names your website or links to one of its pages as a source for what it says. It is the outcome rain OS is built to earn you." },
@@ -540,6 +540,7 @@ export const FAQ = () => {
     { q: "Do you guarantee that AI will cite me?", a: "No, and anyone who does is guessing. AI answers change with the question, the model and the day. What we guarantee is that every check is real, every score is explained, and you can see exactly what to improve." },
     { q: "Is my data secure?", a: "Your API key is encrypted at rest with AES-256, payments are handled by Stripe, and GitHub access uses OAuth, so we never see your password. Content you analyze is sent to Google's Gemini API to run the analysis and saved to your account so you can see your history." },
   ];
+  const faqs = items ?? defaultFaqs;
 
   return (
     <section className="py-24 relative z-10">
