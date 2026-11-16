@@ -769,6 +769,9 @@ export default function Home() {
               <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
                 Search is becoming an answer.
               </h2>
+              <p className="mt-5 text-lg md:text-xl font-medium text-white leading-relaxed max-w-xl">
+                Start by making your business, website or content more visible to AI
+              </p>
               <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-xl">
                 When AI answers a question, it cites or mentions a handful of sources, and most people stop there. If AI can't see your business, you could be leaving opportunities on the table, however well you rank.
               </p>
