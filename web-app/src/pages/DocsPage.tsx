@@ -90,7 +90,7 @@ export default function DocsPage() {
                   rain OS Documentation
                 </h1>
                 <p className="text-neutral-400 text-lg leading-relaxed max-w-2xl">
-                  Everything you need to get your content, products, and documentation scoring high for AI readability.
+                  Everything you need to get your content, products, and documentation scoring high for AI visibility.
                 </p>
               </div>
 

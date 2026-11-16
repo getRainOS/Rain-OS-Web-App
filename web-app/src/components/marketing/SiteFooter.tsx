@@ -28,7 +28,7 @@ const COLUMNS = [
     links: [
       { label: 'Docs', to: '/docs' },
       { label: 'Blog', to: '/blog' },
-      { label: 'AI Readability', to: '/ai-readability' },
+      { label: 'AI Visibility', to: '/ai-readability' },
       { label: 'Support', to: '/support' },
     ],
   },

@@ -146,7 +146,7 @@ export const FourPillars = () => {
         <div className="text-center mb-16">
           <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Your AI Built Your Product Or Website</span>
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Now Optimize For AI Search</h2>
-          <p className="text-neutral-400 max-w-2xl mx-auto">AI Readability is how easily ChatGPT, Perplexity, and Gemini can extract answers from your raw content. It is the #1 factor in whether AI cites you or skips you. We score it — plus Authority and Conversion — so you own the answers that matter.</p>
+          <p className="text-neutral-400 max-w-2xl mx-auto">The AI Readability pillar measures how easily ChatGPT, Perplexity, and Gemini can extract answers from your raw content. It is the #1 factor in whether AI cites you or skips you. We score it — plus Authority and Conversion — so you own the answers that matter.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -265,7 +265,7 @@ export const ReadabilityIntelligence = () => {
             </p>
             <div className="border-l-2 border-white pl-6 py-2 mb-12">
               <div className="flex items-center gap-2 text-white font-medium mb-2">
-                <Sparkles className="w-4 h-4 text-white" /> Good AI Readability = Good SEO.
+                <Sparkles className="w-4 h-4 text-white" /> Clear pages make good SEO and good AI visibility.
               </div>
               <p className="text-neutral-400 text-sm">When you optimize for machine extraction, human readability naturally improves. It's a win-win.</p>
             </div>
