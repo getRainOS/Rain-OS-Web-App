@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import {
   ArrowRight, CheckCircle, FileText, Search, Zap,
   TrendingUp, Globe, Bot, BarChart3, BrainCircuit,
-  ShieldCheck, MousePointerClick, SearchCheck, Layers, Plus, Radar
+  ShieldCheck, MousePointerClick, SearchCheck, Layers, Radar
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { HybridFuture, FeatureGrid, ReadabilityIntelligence, ComparisonTable, FAQ } from '@/components/marketing/MarketingComponents';
@@ -40,14 +40,6 @@ const pillars = [
     color: '#e5e5e5',
     bg: 'rgba(255,255,255,0.1)',
     border: 'rgba(255,255,255,0.25)',
-    Icon: SearchCheck,
-    name: 'Product Discoverability',
-    desc: 'How easily AI search and recommendation systems can surface your product or service.',
-  },
-  {
-    color: '#e5e5e5',
-    bg: 'rgba(255,255,255,0.1)',
-    border: 'rgba(255,255,255,0.25)',
     Icon: Layers,
     name: 'Easy to Quote',
     desc: 'How easily AI can pull a single answer out of your content and quote it.',
@@ -73,7 +65,7 @@ const features = [
   {
     Icon: Radar,
     title: 'Is AI Citing Me?',
-    desc: 'See whether ChatGPT, Google AI Overviews, Perplexity and Claude cite you for the topics you care about, and track it every week.',
+    desc: 'See whether ChatGPT, Google AI Overviews, Perplexity and Claude cite your pages or mention your business for the topics you care about, and track it every week.',
   },
   {
     Icon: TrendingUp,
@@ -93,16 +85,40 @@ const steps = [
   { num: '03', title: 'Fix and re-score', desc: 'Apply the recommendations, re-run the analysis, and watch your score climb.' },
 ];
 
+
+// Questions a writer or marketer is likely to ask on this page.
+const WRITER_FAQS = [
+  { q: "How do I get my articles cited by AI?", a: "Answer the question near the top, state specific facts such as numbers, names and dates, and keep each section to one idea. rain OS scores these qualities on your draft and shows you what to change. It can raise your chances of being cited, but it cannot guarantee a citation." },
+  { q: "What's the difference between a mention and a citation?", a: "A mention is when an AI names your business in an answer without linking to one of your pages. A citation is when it links to a page on your site as a source. rain OS tracks both, and each check is a snapshot of one answer at that time." },
+  { q: "Does rain OS rewrite my writing?", a: "It suggests improved titles, meta descriptions, summaries for AI snippets and rewrites for vague sentences. You review each change before you use it, so the writing stays yours." },
+  { q: "How is my writing scored?", a: "Every analysis scores four core pillars: AI Readability, Digital Authority, Conversion Readiness and Easy to Quote. The Rain Score combines them with equal weight. Deeper checks, such as how much new information a piece adds and how well it matches the questions people ask, feed into those pillars." },
+  { q: "Can I track whether AI cites or mentions my articles?", a: "Yes. On Pro and Business, Is AI Citing Me? can re-check the questions you choose each week and record whether each AI cited or mentioned you. Each check is a snapshot, so the results can change from one week to the next." },
+  { q: "Do you guarantee that AI will cite my article?", a: "No. AI answers change with the question, the day and the sources available. rain OS shows what to improve and checks what AI says, but it cannot promise a citation." },
+];
+
 export default function ContentWriters() {
   const navigate = useNavigate();
   const [content, setContent] = useState('');
   const [heroFocused, setHeroFocused] = useState(false);
   const heroInputRef = useRef<HTMLTextAreaElement>(null);
 
+  // Sign-in keeps the text and hands it to the analyzer once the account is ready.
+  const startAnalysis = () => {
+    if (!content.trim()) return;
+    navigate('/login', { state: { pendingContent: content.trim() } });
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!content.trim()) return;
-    navigate('/login');
+    startAnalysis();
+  };
+
+  // Enter submits; Shift+Enter still adds a new line.
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      startAnalysis();
+    }
   };
 
   return (
@@ -123,7 +139,7 @@ export default function ContentWriters() {
               </h1>
 
               <p className="text-neutral-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
-                AI tools read your best work, answer the question, and the reader never clicks through. rain OS scores your content against what actually earns a citation — and the Is AI Citing Me? check shows you exactly which topics AI is already citing you for, and which it's giving to a competitor instead.
+                Most AI answers never send the reader anywhere. rain OS shows you what to change so your writing is easier for AI to find, quote and cite, then checks whether AI is citing or mentioning you for the questions that matter.
               </p>
             </motion.div>
 
@@ -152,27 +168,17 @@ export default function ContentWriters() {
                     onChange={(e) => setContent(e.target.value)}
                     onFocus={() => setHeroFocused(true)}
                     onBlur={() => setHeroFocused(false)}
+                    onKeyDown={handleKeyDown}
                     className="w-full h-40 bg-transparent border-0 resize-none p-6 text-neutral-200 focus:ring-0 focus:outline-none text-lg leading-relaxed font-sans relative z-10"
                     required
                   />
                 </div>
 
-                <div className="flex items-center justify-between gap-4 px-6 pb-4 relative z-10">
-                  <div className="flex items-center gap-6">
-                    <button
-                      type="button"
-                      className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-white/10 transition-all active:scale-90"
-                      onClick={() => setContent('')}
-                      title="Clear"
-                    >
-                      <Plus className="w-5 h-5" />
-                    </button>
-                  </div>
-
+                <div className="flex items-center justify-end gap-4 px-6 pb-4 relative z-10">
                   <div className="flex items-center gap-4">
                     <button
                       type="submit"
-                      className="text-white rounded-xl px-6 py-2.5 text-sm font-bold transition-all flex items-center gap-2 group/btn"
+                      className="text-black rounded-xl px-6 py-2.5 text-sm font-bold transition-all flex items-center gap-2 group/btn"
                       style={{ background: 'var(--cyan)', boxShadow: '0 2px 8px rgba(0,0,0,0.4)' }}
                     >
                       Analyze now
@@ -233,7 +239,7 @@ export default function ContentWriters() {
           </div>
         </section>
 
-        {/* Five Pillars */}
+        {/* Four Pillars */}
         <section className="py-20 px-6 border-t border-white/[0.06]">
           <div className="max-w-5xl mx-auto">
             <motion.div
@@ -347,9 +353,9 @@ export default function ContentWriters() {
         <ReadabilityIntelligence />
         <FeatureGrid />
         <ComparisonTable />
-        <FAQ />
+        <FAQ items={WRITER_FAQS} />
 
-        {/* Five Pillars Reminder */}
+        {/* Four Pillars Reminder */}
         <section className="py-16 px-6 border-t border-white/[0.06]">
           <div className="max-w-4xl mx-auto text-center">
             <motion.div
@@ -375,7 +381,7 @@ export default function ContentWriters() {
               ))}
             </motion.div>
             <p className="text-neutral-500 text-sm mt-4 max-w-lg mx-auto">
-              Every analysis scores across these pillars (plus Product Discoverability and Local Presence when they apply). Plus, scan any URL to check technical AI-readiness signals.
+              Every analysis scores across these four pillars. Plus, scan any URL to check technical AI-readiness signals.
             </p>
           </div>
         </section>
