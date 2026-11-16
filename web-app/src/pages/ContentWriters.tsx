@@ -88,12 +88,13 @@ const steps = [
 
 // Questions a writer or marketer is likely to ask on this page.
 const WRITER_FAQS = [
-  { q: "How do I get my articles cited by AI?", a: "Answer the question near the top, state specific facts such as numbers, names and dates, and keep each section to one idea. rain OS scores these qualities on your draft and shows you what to change. It can raise your chances of being cited, but it cannot guarantee a citation." },
-  { q: "What's the difference between a mention and a citation?", a: "A mention is when an AI names your business in an answer without linking to one of your pages. A citation is when it links to a page on your site as a source. rain OS tracks both, and each check is a snapshot of one answer at that time." },
+  { q: "What is the goal: AI visibility, mentions or citations?", a: "The goal is AI visibility: making your business easy for AI to find, understand and use when people ask about what you offer. Mentions and citations are how that shows up in AI answers. A mention is when AI names you, and a citation is when it links to your page. rain OS tracks both, so you can see where you stand. None of them is guaranteed." },
+  { q: "How do I get my articles cited or mentioned by AI?", a: "Answer the question near the top, state specific facts such as numbers, names and dates, and keep each section to one idea. rain OS scores these qualities on your draft and shows you what to change. It can raise your chances of being cited or mentioned, but it cannot guarantee either." },
+  { q: "What's the difference between a mention and a citation?", a: "A mention is when an AI names your business in an answer without linking to one of your pages. A citation is when it links to a page on your site as a source. The two go together: a mention often comes first, and rain OS tracks both. Each check is a snapshot of one answer at that time." },
   { q: "Does rain OS rewrite my writing?", a: "It suggests improved titles, meta descriptions, summaries for AI snippets and rewrites for vague sentences. You review each change before you use it, so the writing stays yours." },
   { q: "How is my writing scored?", a: "Every analysis scores four core pillars: AI Readability, Digital Authority, Conversion Readiness and Easy to Quote. The Rain Score combines them with equal weight. Deeper checks, such as how much new information a piece adds and how well it matches the questions people ask, feed into those pillars." },
   { q: "Can I track whether AI cites or mentions my articles?", a: "Yes. On Pro and Business, Is AI Citing Me? can re-check the questions you choose each week and record whether each AI cited or mentioned you. Each check is a snapshot, so the results can change from one week to the next." },
-  { q: "Do you guarantee that AI will cite my article?", a: "No. AI answers change with the question, the day and the sources available. rain OS shows what to improve and checks what AI says, but it cannot promise a citation." },
+  { q: "Do you guarantee that AI will cite or mention my article?", a: "No. AI answers change with the question, the day and the sources available. rain OS shows what to improve and checks what AI says, but it cannot promise a citation or a mention." },
 ];
 
 export default function ContentWriters() {
@@ -134,12 +135,12 @@ export default function ContentWriters() {
                 style={{ letterSpacing: '-0.04em', fontFeatureSettings: '"cv11" on, "ss01" on, "calt" on' }}>
                 Write content that{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-white/40 to-white/20">
-                  AI tools cite
+                  AI tools cite and mention
                 </span>
               </h1>
 
               <p className="text-neutral-400 text-base md:text-lg font-normal max-w-xl mx-auto leading-relaxed">
-                Most AI answers never send the reader anywhere. rain OS shows you what to change so your writing is easier for AI to find, quote and cite, then checks whether AI is citing or mentioning you for the questions that matter.
+                Most AI answers never send the reader anywhere. rain OS shows you what to change so your writing is easier for AI to find and quote, then checks whether AI is citing or mentioning you for the questions that matter.
               </p>
             </motion.div>
 
@@ -202,7 +203,7 @@ export default function ContentWriters() {
               className="text-center mb-14"
             >
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">
-                SEO alone won't get you cited
+                SEO alone won't get you cited or mentioned
               </h2>
               <p className="text-neutral-400 max-w-2xl mx-auto leading-relaxed">
                 When someone asks ChatGPT or Perplexity a question, AI tools select sources based on structure, authority, and clarity — not keyword density. Most content fails these checks invisibly, even content that ranks well on Google.
@@ -252,7 +253,7 @@ export default function ContentWriters() {
               <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">How we score</span>
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Four core pillars. One Rain Score.</h2>
               <p className="text-neutral-400 max-w-xl leading-relaxed">
-                Every analysis returns a weighted score across the dimensions that determine whether AI tools cite your content.
+                Every analysis returns a weighted score across the dimensions that determine whether AI tools cite or mention your content.
               </p>
             </motion.div>
 
@@ -291,7 +292,7 @@ export default function ContentWriters() {
               className="text-center mb-14"
             >
               <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Simple workflow</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white">From draft to cited in three steps</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white">From draft to cited or mentioned in three steps</h2>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -396,7 +397,7 @@ export default function ContentWriters() {
               transition={{ duration: 0.7 }}
             >
               <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
-                Ready to get your content cited?
+                Ready to get your content cited or mentioned?
               </h2>
               <p className="text-neutral-400 text-lg mb-8 leading-relaxed">
                 Paste your content for a full AI readability score, or scan any URL to check technical signals. Free to start, no credit card required.
