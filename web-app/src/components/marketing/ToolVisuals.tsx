@@ -192,3 +192,58 @@ export const LANE_EXAMPLES: { lane: LaneId; index: number; before: PillarData; a
       pill('ai_readability', 'AI Readability', 70), pill('digital_authority', 'Digital Authority', 68), pill('conversion_readiness', 'Conversion Readiness', 74), pill('rag_readiness', 'Easy to Quote', 71)] },
   },
 ];
+
+// Is AI Citing Me?: the app's own result for one question, drawn large and clean.
+// Figures are from a saved check in the demo (Bright Smile Dental, Invisalign in Austin).
+const CITING_HISTORY = [
+  { date: 'Oct 22', result: 'Not cited', cited: false },
+  { date: 'Oct 29', result: 'Not cited', cited: false },
+  { date: 'Nov 5', result: '#3 of 5', cited: true },
+  { date: 'Nov 12', result: '#2 of 5', cited: true },
+];
+
+export function CitationPanel() {
+  const reduce = useReducedMotion();
+  return (
+    <div className="rounded-xl border border-white/10 bg-[#0a0a0a] p-6 md:p-8 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)]">
+      <div className="text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>QUESTION</div>
+      <div className="mt-1 text-[17px] text-white">best dentist in Austin for Invisalign</div>
+
+      <div className="mt-8 flex items-end justify-between gap-6">
+        <div>
+          <div className="text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>LATEST CHECK</div>
+          <motion.div
+            className="mt-1 text-6xl font-semibold tabular-nums text-white"
+            initial={reduce ? false : { opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={view}
+            transition={{ duration: 0.7, ease: EASE }}
+          >
+            #2
+          </motion.div>
+        </div>
+        <div className="pb-2 text-right">
+          <div className="text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>USUALLY CITED FIRST</div>
+          <div className="mt-1 text-[15px] text-neutral-200">yelp.com</div>
+        </div>
+      </div>
+
+      <div className="mt-8 grid grid-cols-4 gap-2">
+        {CITING_HISTORY.map((h, i) => (
+          <motion.div
+            key={h.date}
+            className={`rounded-lg border px-3 py-3 ${i === CITING_HISTORY.length - 1 ? 'border-white/60 bg-white/[0.05]' : 'border-white/10'}`}
+            initial={reduce ? false : { opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={view}
+            transition={{ duration: 0.5, delay: 0.2 + i * 0.18, ease: EASE }}
+          >
+            <div className="text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>{h.date}</div>
+            <div className={`mt-1 text-[14px] font-medium ${h.cited ? 'text-white' : 'text-[#F87171]'}`}>{h.result}</div>
+          </motion.div>
+        ))}
+      </div>
+      <div className="mt-4 text-[12px] text-neutral-500">Each card is one check on the same question, over time.</div>
+    </div>
+  );
+}
