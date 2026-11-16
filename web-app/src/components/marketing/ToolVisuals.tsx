@@ -400,7 +400,6 @@ export function ShareCard({ data }: { data: ShareData }) {
           </div>
         ))}
       </div>
-      <IllustrativeTag />
     </div>
   );
 }
@@ -461,7 +460,6 @@ export function DescribeCard({ data }: { data: DescribeData }) {
         <div className="text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>WHAT {data.engine.toUpperCase()} SAID</div>
         <p className="mt-2 text-[16px] leading-relaxed text-neutral-100">&ldquo;{data.wording}&rdquo;</p>
       </motion.div>
-      <IllustrativeTag />
     </div>
   );
 }
