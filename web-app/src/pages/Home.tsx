@@ -490,7 +490,7 @@ function WhyGoogleSection() {
           </h2>
           <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-2xl">
             rain OS puts your questions to {joinNames(live)}, searching the live web, and shows exactly which sites each one cited and where you ranked.
-            {' '}One question, every AI tool, side by side.
+            {' '}One question, the AI tools we check, side by side.
           </p>
         </Reveal>
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-3">

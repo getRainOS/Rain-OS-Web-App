@@ -1,10 +1,44 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Sparkles, BrainCircuit, ShieldCheck, FileSearch, CheckCircle } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import MarketingNav from '@/components/marketing/MarketingNav';
-
 import SiteFooter from '@/components/marketing/SiteFooter';
+
+// AI visibility: what it is, what it depends on, and how rain OS measures it.
+// AI Readability is named only where it is one of the pillars.
+
+const PILLARS = [
+  {
+    name: 'AI Readability',
+    body: 'Whether an AI can read and understand your page: clear structure, headings, markup and text that does not depend on scripts.',
+  },
+  {
+    name: 'Digital Authority',
+    body: 'Whether an AI can trust the page and trace its claims: named authors, dates, sources and the details that identify the business.',
+  },
+  {
+    name: 'Conversion Readiness',
+    body: 'Whether the next step for a visitor is clear: what to do, who to contact, and how to book or buy.',
+  },
+  {
+    name: 'Easy to Quote',
+    body: 'Whether an AI can pull a single answer out of your page and quote it, without the surrounding text.',
+  },
+];
+
+const LANE_PILLARS = [
+  { name: 'Product Discoverability', who: 'Online sellers', body: 'Whether AI can find, compare and recommend your products: price, availability, variants and product details.' },
+  { name: 'Local Presence', who: 'Local businesses', body: 'Whether AI can confidently recommend your business for a nearby search: address, hours, reviews and licence details.' },
+];
+
+const MEASURES = [
+  { name: 'Run an analysis', body: 'Score a piece of content, a web page or a repository. You get one Rain Score, the pillar breakdown and the fixes for each gap.' },
+  { name: 'Is AI Citing Me?', body: 'See which AI tools link to your pages as a source, and which pages they link to.' },
+  { name: 'Who AI Recommends', body: 'See how often each AI tool names your business, compared with your competitors.' },
+  { name: 'How AI Describes Me', body: 'See the description each AI gives of your business, and whether it reads as positive, neutral or negative.' },
+];
+
 export default function AIReadabilityPage() {
   const navigate = useNavigate();
 
@@ -12,7 +46,6 @@ export default function AIReadabilityPage() {
     <div style={{ minHeight: '100vh', background: '#000000', color: '#f1f5f9' }}>
       <MarketingNav />
 
-      {/* Hero */}
       <div style={{ padding: '140px 24px 60px', maxWidth: '760px', margin: '0 auto' }}>
         <button
           onClick={() => navigate('/')}
@@ -22,323 +55,83 @@ export default function AIReadabilityPage() {
           Back to home
         </button>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <span className="text-white font-bold tracking-wider text-xs uppercase mb-4 block">
-            What we measure
-          </span>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
-            How rain OS Scores Your Content So AI Will Quote It
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <span className="mb-4 block text-xs font-bold uppercase tracking-wider text-white">AI visibility</span>
+          <h1 className="mb-4 text-3xl font-bold leading-tight text-white md:text-4xl">
+            Get mentioned, cited and recommended by AI
           </h1>
-          <p className="text-lg text-neutral-400 leading-relaxed mb-6">
-            Every piece of content you create — blog posts, product pages, docs, or landing pages — gets scored across four core pillars, plus one lane pillar for online sellers and local businesses. The weights change based on what you are optimizing for, but the goal is the same: make sure AI can read, trust, and cite your content.
+          <p className="mb-6 text-lg leading-relaxed text-neutral-400">
+            When someone asks an AI a question, the answer names a few businesses and links to a few sources. AI visibility is how often that happens to you. rain OS shows where you stand and what to change.
           </p>
         </motion.div>
       </div>
 
-      {/* Content */}
-      <div className="max-w-3xl mx-auto px-6 pb-24">
-        {/* The Core Idea */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-16"
-        >
-          <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center shrink-0">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
-            The core idea
-          </h2>
-          <div className="space-y-4 text-neutral-400 leading-relaxed">
-            <p>
-              When someone asks an AI a question, the AI does not hand them a web page. It reads, understands, and summarizes the answer from sources it trusts. AI Readability is about making sure your content is one of those sources.
-            </p>
-            <p>
-              Think of it like this: an AI needs to do two things to use your content. First, it needs to read and understand it clearly. Second, it needs to explain that understanding to the person asking the question. We call the first step <strong className="text-white">translation</strong> and the second step <strong className="text-white">interpretation</strong>.
-            </p>
-            <p>
-              rain OS makes sure your content is translated well so the AI can interpret it accurately. If your content is poorly structured, ambiguous, or missing key signals, the AI either skips it or misrepresents it.
-            </p>
-          </div>
-        </motion.div>
+      <div className="mx-auto max-w-3xl space-y-16 px-6 pb-24">
+        <section>
+          <h2 className="mb-3 text-xl font-semibold text-white">Three levels of visibility</h2>
+          <ul className="space-y-4 leading-relaxed text-neutral-400">
+            <li><span className="font-medium text-white">Mentioned:</span> the AI names your business in its answer, without linking to your site.</li>
+            <li><span className="font-medium text-white">Cited:</span> the AI names your site and links to a page as a source for what it says. This is the outcome we aim for.</li>
+            <li><span className="font-medium text-white">Recommended:</span> the AI names you as a good choice when someone asks what to buy, hire or use.</li>
+          </ul>
+        </section>
 
-        {/* The Six Pillars */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-16"
-        >
-          <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center shrink-0">
-              <BrainCircuit className="w-5 h-5 text-white" />
-            </div>
-            The six areas of scoring
-          </h2>
-          <p className="text-neutral-400 leading-relaxed mb-6">
-            Every analysis returns a 0–100 Rain Score built from four core pillars. Online sellers and local businesses also get one lane pillar. The pillars in your lane are weighted equally. Here is how they work.
+        <section>
+          <h2 className="mb-3 text-xl font-semibold text-white">What your pages need</h2>
+          <p className="mb-6 leading-relaxed text-neutral-400">
+            Every analysis scores four core pillars. Online sellers and local businesses also get one pillar for their kind of business. The pillars in your lane are weighted equally.
           </p>
-
-          <div className="space-y-6">
-            {/* Pillar 1 */}
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-              <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-white mr-2">Core pillar, all lanes</span>
-                AI Readability
-              </h3>
-              <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                Can the AI read and understand your content clearly? This area checks the structural basics that make content machine-readable. The weighting depends on your lane.
-              </p>
-              <ul className="space-y-2">
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Clear heading structure — H1, H2, H3 that organize ideas logically</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Structured data — labels that tell AI what each part of your page means</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Meta tags — accurate title and description that match your content</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>AI-friendly files — llms.txt or similar that give AI a clean map of your content</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Pillar 2 */}
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-              <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-white mr-2">Core pillar, all lanes</span>
-                Digital Authority
-              </h3>
-              <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                Does the AI trust your content? This area checks the signals that make an AI confident your content is reliable. The weighting depends on your lane.
-              </p>
-              <ul className="space-y-2">
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Credible sources — links that back up your claims</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Consistent expertise — depth on a topic over time, not surface-level coverage</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Access rules (robots.txt and canonicals) — clear signals about which pages to include and which to skip</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Open Graph tags — social metadata that reinforces your content's identity</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Pillar 3 */}
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-              <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-white mr-2">Core pillar, all lanes</span>
-                Conversion Readiness
-              </h3>
-              <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                Is your content organized so that AI can extract the answer and point the user to the next step? The weighting depends on your lane.
-              </p>
-              <ul className="space-y-2">
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Direct answers — clear, concise answers to likely questions near the top</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>FAQ sections — structured questions and answers that AI can quote directly</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Clear CTAs — next steps that are obvious without extra navigation</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Lead paragraph quality — the first paragraph says what the page is about and why it matters</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Pillar 4 — Product Discoverability */}
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-              <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-white mr-2">Online sellers only</span>
-                Product Discoverability
-              </h3>
-              <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                For product-focused content, this area measures how well AI can surface your products in shopping and discovery contexts. Only online sellers score this pillar. Writers, developers, vibe coders and local businesses do not.
-              </p>
-              <ul className="space-y-2">
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Product details completeness — every required field filled in for AI shopping tools</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Pricing transparency — clear, visible pricing that AI can extract</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Variant coverage — sizes, colors, options fully described</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Availability signals — stock status, shipping info, delivery estimates</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Pillar 5 — Easy to Quote */}
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-              <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-white mr-2">Core pillar, all lanes</span>
-                Easy to Quote
-              </h3>
-              <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                How easily can AI pull a single answer out of your content and quote it? It is weighted equally with the other core pillars in your lane. It is separate from the checks on who is cited: this area measures whether an AI can accurately find the right section of your content and use it.
-              </p>
-              <ul className="space-y-2">
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Depth — thorough coverage of each section</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Related wording — rich vocabulary, synonyms, and links between related ideas</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Hierarchical formatting — clean markdown, logical headers, descriptive titles</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Explicit Q&A structures — FAQ sections, direct definitions, problem-solution frameworks</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Authority signals — external links, author bios, verifiable data points</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Pillar 6 — Local Presence */}
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-              <h3 className="text-base font-semibold text-white mb-3">
-                <span className="text-white mr-2">Local businesses only</span>
-                Local Presence
-              </h3>
-              <p className="text-sm text-neutral-400 mb-4 leading-relaxed">
-                For local service businesses, this area measures how confidently AI can recommend you for a "near me" query. Only local businesses score this pillar. Other lanes do not score it.
-              </p>
-              <ul className="space-y-2">
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>NAP consistency — name, address, and phone number that match everywhere you're listed</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Local business details — structured data AI uses to confirm who you are and where you serve</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Service area clarity — the cities, regions, or radius you actually serve, stated plainly</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Review signal strength — visible ratings and review counts AI can cite as trust signals</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm text-neutral-300">
-                  <CheckCircle className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                  <span>Listings and reviews — consistent mentions across directories and Google Business Profile</span>
-                </li>
-              </ul>
-            </div>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            {PILLARS.map(p => (
+              <div key={p.name} className="rounded-xl border border-white/10 bg-[#0a0a0a] p-5">
+                <div className="font-medium text-white">{p.name}</div>
+                <p className="mt-2 text-sm leading-relaxed text-neutral-400">{p.body}</p>
+              </div>
+            ))}
           </div>
-        </motion.div>
-
-        {/* Why It Matters */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-16"
-        >
-          <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-5 h-5 text-white" />
-            </div>
-            Why this matters now
-          </h2>
-          <div className="space-y-4 text-neutral-400 leading-relaxed">
-            <p>
-              Search is changing. People ask ChatGPT, Perplexity, and Gemini questions instead of typing keywords into Google. When they do, the AI answers directly — often without sending anyone to your website.
-            </p>
-            <p>
-              If your content is not AI-readable, you are invisible in the most important search channel of the next decade. Not because your content is bad, but because the AI cannot read it well enough to use it.
-            </p>
-            <p>
-              This is not a technical upgrade for large companies. It is a basic requirement for anyone who wants their content, products, or docs to be discoverable when people ask AI for help — whether you are a writer, a developer shipping with Cursor, or a store owner on Shopify.
-            </p>
+          <div className="mt-6 space-y-3">
+            <div className="text-[12px] text-neutral-500">FOR ONE LANE ONLY</div>
+            {LANE_PILLARS.map(p => (
+              <div key={p.name} className="rounded-xl border border-white/10 bg-[#0a0a0a] p-5">
+                <div className="flex items-baseline justify-between gap-4">
+                  <div className="font-medium text-white">{p.name}</div>
+                  <div className="text-[12px] text-neutral-500">{p.who}</div>
+                </div>
+                <p className="mt-2 text-sm leading-relaxed text-neutral-400">{p.body}</p>
+              </div>
+            ))}
           </div>
-        </motion.div>
+        </section>
 
-        {/* What rain OS Does */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-16"
-        >
-          <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center shrink-0">
-              <FileSearch className="w-5 h-5 text-white" />
-            </div>
-            What rain OS does about it
-          </h2>
-          <div className="space-y-4 text-neutral-400 leading-relaxed">
-            <p>
-              rain OS scans your content, URL, or repository and scores it across every pillar in your lane — using the right weights for your lane. You get a single number — your Rain Score — plus a breakdown of exactly which signals are strong and which are missing.
-            </p>
-            <p>
-              More importantly, you get specific recommendations. Not vague advice like "improve your SEO." Exact, actionable steps like "Add an FAQ section with these questions" or "Your H2 structure is missing — add these three subheadings."
-            </p>
+        <section>
+          <h2 className="mb-3 text-xl font-semibold text-white">How rain OS measures it</h2>
+          <div className="space-y-3">
+            {MEASURES.map(m => (
+              <div key={m.name} className="rounded-xl border border-white/10 bg-[#0a0a0a] p-5">
+                <div className="font-medium text-white">{m.name}</div>
+                <p className="mt-2 text-sm leading-relaxed text-neutral-400">{m.body}</p>
+              </div>
+            ))}
           </div>
+        </section>
 
-          <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-center">
-            <h3 className="text-xl font-semibold text-white mb-3">
-              Ready to see how AI-readable your content is?
-            </h3>
-            <p className="text-neutral-400 mb-6 max-w-lg mx-auto leading-relaxed">
-              Run your first analysis free. No credit card. No setup. Just paste your content or enter a URL and see your score.
-            </p>
-            <button
-              onClick={() => navigate('/login')}
-              className="inline-flex items-center gap-2 text-white rounded-xl px-8 py-3.5 text-sm font-bold transition-all hover:scale-105 active:scale-95"
-              style={{ background: 'var(--cyan)' }}
-            >
-              Scan my content free
-              <ArrowLeft className="w-4 h-4 rotate-180" />
-            </button>
-          </div>
-        </motion.div>
+        <section>
+          <h2 className="mb-3 text-xl font-semibold text-white">What we can and cannot promise</h2>
+          <p className="leading-relaxed text-neutral-400">
+            Each AI tool decides what to cite, and we cannot see how it chooses. We cannot guarantee a mention. What we can do is show you how the pillars score on your pages, tell you what to fix, and check the answers the AI tools give over time, so you see whether anything has changed.
+          </p>
+        </section>
+
+        <div>
+          <button
+            onClick={() => navigate('/login')}
+            className="h-11 rounded-md bg-white px-6 text-[15px] font-medium text-black transition-colors hover:bg-neutral-200"
+          >
+            Check my site free
+          </button>
+        </div>
       </div>
+
       <SiteFooter />
     </div>
   );
