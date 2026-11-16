@@ -193,7 +193,7 @@ export default function IllustratedExample() {
           <div className="text-[11px] uppercase tracking-[0.16em] text-neutral-500" style={MONO}>Example</div>
           <h2 className="mt-3 text-3xl md:text-4xl font-semibold tracking-[-0.03em] text-white">Track the type of questions asked of your business</h2>
           <p className="mt-4 text-neutral-400 max-w-2xl mx-auto">
-            And make changes to increase your chances of answering it.
+            And make changes to increase your chances of answering them.
           </p>
         </div>
 
