@@ -538,7 +538,8 @@ export function TerminalPanel({
           <span className="text-neutral-300">{phaseLabel}</span>
         </span>
       </div>
-      <div className="rounded-lg bg-[#0a0a0a] border border-white/10 p-4 text-xs leading-relaxed min-h-[180px] max-h-[280px] overflow-y-auto">
+      <div className="flex h-[280px] flex-col justify-end overflow-hidden rounded-lg bg-[#0a0a0a] border border-white/10 p-4 text-xs leading-relaxed">
+        <div>
         {lines.map((line, i) => (
           <div key={i} className="mb-1">
             <span className={
@@ -575,6 +576,7 @@ export function TerminalPanel({
             <span className="animate-pulse">Processing...</span>
           </div>
         )}
+        </div>
       </div>
     </motion.div>
   );
