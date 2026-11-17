@@ -89,23 +89,7 @@ export default function VibeWorkflowDiagram() {
               color="#ffffff"
               description="Build fast"
               expanded={step >= 1 && step < 3}
-            >
-              <div className="flex flex-wrap gap-1.5 mt-2 justify-center">
-                {VIBE_TOOLS.map((tool) => (
-                  <span
-                    key={tool.name}
-                    className="text-[10px] px-2 py-0.5 rounded-full font-medium"
-                    style={{
-                      background: `${tool.color}15`,
-                      color: tool.color,
-                      border: `1px solid ${tool.color}30`,
-                    }}
-                  >
-                    {tool.name}
-                  </span>
-                ))}
-              </div>
-            </WorkflowNode>
+            />
 
             {/* Arrow */}
             <FlowArrow visible={step >= 2} />
