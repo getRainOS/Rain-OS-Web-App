@@ -443,7 +443,7 @@ export function ScoreCards({ pillars, animScores, demoFixed, phase }: {
   const initialOverall = Math.round(pillars.map((p) => p.score).reduce((a, b) => a + b, 0) / 5);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 items-start gap-3">
       {pillars.map((p, i) => (
         <ScoreCard
           key={p.name}
@@ -684,7 +684,7 @@ export function RepoDemo({ isVisible }: { isVisible: boolean }) {
     <section className="py-16 px-6 border-t border-white/10">
       <div className="max-w-5xl mx-auto">
         <DemoHeader title="" subtitle="Scan a repo, get a fix prompt, paste it into your vibe builder, and watch the score improve after rescanning." />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 items-start gap-6">
           <ScoreCards pillars={repoPillars} animScores={animScores} demoFixed={demoFixed} phase={phase} />
           <div className="space-y-4">
             <TerminalPanel header="rain-os scan" phase={phase} phaseColor={phaseColor ?? ''} phaseLabel={phaseLabel ?? ''} phaseDotColor={phaseDotColor ?? ''} lines={terminalLines} processing={phase === 'scanning' || phase === 'rescanning' || phase === 'generating_prompt' || phase === 'applying'} />
