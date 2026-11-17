@@ -125,8 +125,10 @@ export default function VibeWorkflowDiagram() {
             {/* Arrow splits */}
             <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-6">
               {/* Branch 1: Repo Scanner */}
-              <div className="flex flex-col items-center gap-3">
-                <FlowArrow visible={step >= 3} direction="down" />
+              <div className="relative flex flex-col items-center gap-3 lg:gap-0">
+                <div className="relative lg:absolute lg:-top-10 lg:left-1/2 lg:-translate-x-1/2">
+                  <FlowArrow visible={step >= 3} direction="down" />
+                </div>
                 <WorkflowNode
                   step={step}
                   targetStep={3}
@@ -143,8 +145,10 @@ export default function VibeWorkflowDiagram() {
               </div>
 
               {/* Branch 2: URL Scanner */}
-              <div className="flex flex-col items-center gap-3">
-                <FlowArrow visible={step >= 3} direction="down" />
+              <div className="relative flex flex-col items-center gap-3 lg:gap-0">
+                <div className="relative lg:absolute lg:-top-10 lg:left-1/2 lg:-translate-x-1/2">
+                  <FlowArrow visible={step >= 3} direction="down" />
+                </div>
                 <WorkflowNode
                   step={step}
                   targetStep={3}
