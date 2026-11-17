@@ -225,7 +225,7 @@ export default function HeroPrompt() {
                 </span>
                 <div className="text-[14px] text-amber-100">
                   <strong className="font-medium">You're not in this answer.</strong>
-                  <span className="text-amber-200/70"> rain OS shows you why, and what to fix.</span>
+                  <span className="text-amber-200/70"> rain OS shows you why, and what to fix to improve your chances.</span>
                 </div>
                 <ArrowRight className="w-4 h-4 text-amber-300 ml-auto hidden sm:block" />
               </motion.div>
