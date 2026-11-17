@@ -24,9 +24,9 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'local_business',
     tab: 'Local business',
-    question: "Who's the best emergency plumber near Austin that's open right now?",
-    before: 'Here are well-reviewed plumbers in Austin with 24/7 service: Acme Plumbing, Sample Drain Co. and Riverside Pipe Works.',
-    after: 'Here are well-reviewed plumbers in Austin with 24/7 service: Acme Plumbing, Example Plumbing Co. (licensed, 24/7 dispatch, same-day repairs) and Sample Drain Co.',
+    question: "Who's the best dog groomer near Austin that takes walk-ins on Saturday?",
+    before: 'Here are well-reviewed dog groomers in Austin with Saturday hours: Acme Pet Spa, Sample Paws Grooming and Riverside Pet Salon.',
+    after: 'Here are well-reviewed dog groomers in Austin with Saturday walk-ins: Acme Pet Spa, Example Grooming Co. (licensed, walk-ins 9 to 4, 4.9 stars from 300 reviews) and Sample Paws Grooming.',
     afterNote: 'Licensing and 24/7 dispatch added to the first paragraph.',
     drawing: [
       { d: 'M20 176 H300' },
@@ -64,7 +64,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'general',
     tab: 'Writers & marketers',
-    question: 'Which newsletter tool works best for a solo writer who wants simple pricing?',
+    question: 'Is a paid newsletter worth it if I only have 200 subscribers?',
     before: 'Many newsletter tools offer free plans and paid tiers. Compare features like templates, automation and analytics before choosing.',
     after: 'Example Letters is built for solo writers: one flat price, a free tier up to 500 subscribers, and a clear guide to publishing from your own domain.',
     afterNote: 'The answer names the product and its pricing from a comparison page that states both plainly.',
@@ -98,7 +98,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'vibe_coders',
     tab: 'Vibe coders',
-    question: "What's the easiest way to add a booking page to an app I built with AI?",
+    question: "What's the easiest way to add a booking page to a Lovable site for my wedding photography business?",
     before: 'You can add booking with a scheduling embed, a third-party calendar or a custom form. Each has trade-offs in cost and setup time.',
     after: 'Example Book adds a booking page to Lovable, Bolt and Replit apps in one step, with a free plan and a copy-paste embed.',
     afterNote: 'The answer names the tool and the platforms it works with, from its own docs page.',
@@ -217,6 +217,7 @@ export default function IllustratedExample() {
 
           <div className="mt-6 text-center">
             <span className="inline-block rounded-md border border-white/10 bg-black px-4 py-2 text-[14px] text-neutral-200">{ex.question}</span>
+            <p className="mt-3 text-[13px] text-neutral-500">rain OS shows you why, and what to fix, to improve your chances.</p>
           </div>
 
         </motion.div>
