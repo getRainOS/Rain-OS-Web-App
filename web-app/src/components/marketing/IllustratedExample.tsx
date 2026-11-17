@@ -64,7 +64,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'general',
     tab: 'Writers & marketers',
-    question: 'Is a paid newsletter worth it if I only have 200 subscribers?',
+    question: 'What is the difference between a newsletter and a blog for a small business?',
     before: 'Many newsletter tools offer free plans and paid tiers. Compare features like templates, automation and analytics before choosing.',
     after: 'Example Letters is built for solo writers: one flat price, a free tier up to 500 subscribers, and a clear guide to publishing from your own domain.',
     afterNote: 'The answer names the product and its pricing from a comparison page that states both plainly.',
@@ -98,7 +98,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'vibe_coders',
     tab: 'Vibe coders',
-    question: "What's the easiest way to add a booking page to a Lovable site for my wedding photography business?",
+    question: 'What are the best AI-powered e-commerce tools?',
     before: 'You can add booking with a scheduling embed, a third-party calendar or a custom form. Each has trade-offs in cost and setup time.',
     after: 'Example Book adds a booking page to Lovable, Bolt and Replit apps in one step, with a free plan and a copy-paste embed.',
     afterNote: 'The answer names the tool and the platforms it works with, from its own docs page.',
