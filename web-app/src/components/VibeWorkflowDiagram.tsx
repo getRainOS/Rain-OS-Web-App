@@ -106,7 +106,11 @@ export default function VibeWorkflowDiagram() {
               pulse={step === 2}
             />
 
-            {/* Arrow splits */}
+          </div>
+
+          {/* Scanners feed the analysis */}
+          <div className="flex justify-center mt-8">
+              {/* Scanners */}
             <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-6">
               {/* Branch 1: Repo Scanner */}
               <div className="relative flex flex-col items-center gap-3 lg:gap-0">
