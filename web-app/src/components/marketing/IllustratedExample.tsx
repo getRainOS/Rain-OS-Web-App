@@ -117,7 +117,11 @@ const EXAMPLES: LaneExample[] = [
   },
 ];
 
-// Draws each stroke in turn, then fills the solid shapes.
+// The flat palette from the blog covers and the site's illustrations.
+const LINE = '#F4EFE4';
+const FILLS = ['#D8432A', '#F59A1B', '#1F4FBF'];
+
+// Draws each stroke in turn, then fills the solid shapes with flat colour.
 function Drawing({ strokes }: { strokes: Stroke[] }) {
   return (
     <motion.svg
@@ -126,7 +130,7 @@ function Drawing({ strokes }: { strokes: Stroke[] }) {
       role="img"
       aria-label="Illustration for this example"
       fill="none"
-      stroke="currentColor"
+      stroke={LINE}
       strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -138,12 +142,12 @@ function Drawing({ strokes }: { strokes: Stroke[] }) {
         <motion.path
           key={i}
           d={s.d}
-          fill={s.solid ? 'currentColor' : 'none'}
+          fill={s.solid ? FILLS[i % FILLS.length] : 'none'}
           variants={{
             hidden: { pathLength: 0, fillOpacity: 0, opacity: 1 },
             show: {
               pathLength: 1,
-              fillOpacity: s.solid ? 0.9 : 0,
+              fillOpacity: s.solid ? 1 : 0,
               transition: {
                 pathLength: { duration: 0.8, delay: i * 0.12, ease: 'easeInOut' },
                 fillOpacity: { duration: 0.5, delay: i * 0.12 + 0.6 },

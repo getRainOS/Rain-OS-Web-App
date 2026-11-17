@@ -16,10 +16,7 @@ function scoreBand(s: number) {
   return 'Needs Work';
 }
 
-// Lane pillars apply to one kind of business only, so they get a dashed track and a tag.
-const LANE_KEYS = ['product_discoverability', 'local_presence'];
-
-function Gauge({ label, value, color, delay, lane }: { label: string; value: number; color: string; delay: number; lane?: boolean }) {
+function Gauge({ label, value, color, delay, lane }: { label: string; value: number; color: string; delay: number }) {
   const reduce = useReducedMotion();
   const cx = 60;
   const cy = 64;
@@ -31,7 +28,7 @@ function Gauge({ label, value, color, delay, lane }: { label: string; value: num
     <figure className="min-w-0 text-center">
       <div className="text-[11px] text-neutral-400 mb-1 leading-tight">{label}</div>
       <svg viewBox="0 0 120 76" className="w-full h-auto block" role="img" aria-label={`${label}: ${value} out of 100`}>
-        <path d={arc} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={8} strokeLinecap="round" strokeDasharray={lane ? '2 6' : undefined} />
+        <path d={arc} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={8} strokeLinecap="round" />
         <motion.path
           d={arc}
           fill="none"
@@ -58,7 +55,6 @@ function Gauge({ label, value, color, delay, lane }: { label: string; value: num
       </svg>
       <div className="-mt-1 text-[20px] font-semibold text-white tabular-nums">{Math.round(value)}</div>
       <div className="text-[11px] text-neutral-400">{scoreBand(value)}</div>
-      {lane && <div className="mt-0.5 text-[9px] uppercase tracking-wider text-neutral-500" style={{ fontFamily: MONO }}>Lane pillar</div>}
     </figure>
   );
 }
@@ -68,10 +64,13 @@ export default function PillarGauges() {
     <div className="mt-4 rounded-md border border-white/[0.07] bg-black p-4">
       <div className="mb-3 text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>LATEST SCORE BY PILLAR</div>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-3 gap-y-4">
-        {SERIES.map((s, i) => (
-          <Gauge key={s.key} label={s.label} value={s.end} color={PILLAR_CHART_COLORS[s.key]} delay={1.4 + i * 0.15} lane={LANE_KEYS.includes(s.key)} />
+        {SERIES.filter(s => s.key !== 'product_discoverability' && s.key !== 'local_presence').map((s, i) => (
+          <Gauge key={s.key} label={s.label} value={s.end} color={PILLAR_CHART_COLORS[s.key]} delay={1.4 + i * 0.15} />
         ))}
       </div>
+      <p className="mt-4 border-t border-white/[0.07] pt-3 text-[12px] leading-relaxed text-neutral-300">
+        Product Discoverability is scored for online sellers. Local Presence is scored for local businesses. Each lane uses the pillars for its own kind of business.
+      </p>
     </div>
   );
 }
