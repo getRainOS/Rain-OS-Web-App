@@ -19,28 +19,6 @@ const PILLARS = [
   { name: 'Easy to Quote', color: '#ffffff', short: 'RAG' },
 ];
 
-// One row of the flow: a node on the left, on the right, or both, with a dot on the spine.
-function Snake({ left, right, middle }: { left?: React.ReactNode; right?: React.ReactNode; middle?: React.ReactNode }) {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center gap-4">
-      <div className="flex justify-center md:justify-end">{left ?? <span className="hidden md:block" />}</div>
-      <div className="hidden md:flex justify-center">
-        {middle ?? <span className="block w-2 h-2 rounded-full bg-white/60" />}
-      </div>
-      <div className="flex justify-center md:justify-start">{right ?? <span className="hidden md:block" />}</div>
-    </div>
-  );
-}
-
-// The line between two rows. It draws down when the next row is reached.
-function Link({ visible }: { visible: boolean }) {
-  return (
-    <div className="relative mx-auto my-3 w-px h-10 bg-white/15 overflow-hidden">
-      <motion.div className="absolute inset-0 bg-white origin-top" initial={false} animate={{ scaleY: visible ? 1 : 0 }} transition={{ duration: 0.6, ease: 'easeOut' }} />
-    </div>
-  );
-}
-
 export default function VibeWorkflowDiagram() {
   const [step, setStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -85,70 +63,207 @@ export default function VibeWorkflowDiagram() {
           </p>
         </motion.div>
 
-        {/* Diagram: one flow, top to bottom, snaking left and right */}
-        <div className="relative max-w-3xl mx-auto">
-          <Snake left={
-            <WorkflowNode step={step} targetStep={0} label="Plan" icon={<Layers className="w-5 h-5" strokeWidth={1.5} />} color="#ffffff" description="Idea ready" />
-          } />
-          <Link visible={step >= 1} />
-          <Snake right={
-            <WorkflowNode step={step} targetStep={1} label="Vibe Code" icon={<Code2 className="w-5 h-5" strokeWidth={1.5} />} color="#ffffff" description="Build fast" expanded={step >= 1 && step < 3}>
+        {/* Diagram */}
+        <div className="relative">
+          {/* Main flow - horizontal on desktop, vertical on mobile */}
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-6">
+            {/* Step 1: Plan */}
+            <WorkflowNode
+              step={step}
+              targetStep={0}
+              label="Plan"
+              icon={<Layers className="w-5 h-5" strokeWidth={1.5} />}
+              color="#ffffff"
+              description="Idea ready"
+            />
+
+            {/* Arrow */}
+            <FlowArrow visible={step >= 1} />
+
+            {/* Step 2: Vibe Code */}
+            <WorkflowNode
+              step={step}
+              targetStep={1}
+              label="Vibe Code"
+              icon={<Code2 className="w-5 h-5" strokeWidth={1.5} />}
+              color="#ffffff"
+              description="Build fast"
+              expanded={step >= 1 && step < 3}
+            >
               <div className="flex flex-wrap gap-1.5 mt-2 justify-center">
                 {VIBE_TOOLS.map((tool) => (
-                  <span key={tool.name} className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: `${tool.color}15`, color: tool.color, border: `1px solid ${tool.color}30` }}>
+                  <span
+                    key={tool.name}
+                    className="text-[10px] px-2 py-0.5 rounded-full font-medium"
+                    style={{
+                      background: `${tool.color}15`,
+                      color: tool.color,
+                      border: `1px solid ${tool.color}30`,
+                    }}
+                  >
                     {tool.name}
                   </span>
                 ))}
               </div>
             </WorkflowNode>
-          } />
-          <Link visible={step >= 2} />
-          <Snake left={
-            <WorkflowNode step={step} targetStep={2} label="rain OS" icon={<Zap className="w-5 h-5" strokeWidth={1.5} />} color="#ffffff" description="Optimize for AI" isHighlighted pulse={step === 2} />
-          } />
-          <Link visible={step >= 3} />
-          <Snake
-            left={<WorkflowNode step={step} targetStep={3} label="Repo Scanner" icon={<GitBranch className="w-5 h-5" strokeWidth={1.5} />} color="#ffffff" description="Scan source code" />}
-            right={<WorkflowNode step={step} targetStep={3} label="URL Scanner" icon={<Search className="w-5 h-5" strokeWidth={1.5} />} color="#ffffff" description="Scan live site" />}
-            middle={<span className="text-[10px] uppercase tracking-[0.2em] text-neutral-500">or</span>}
-          />
-          <Link visible={step >= 4} />
-          <Snake right={
-            <WorkflowNode step={step} targetStep={4} label="6 Pillars" icon={<Globe className="w-5 h-5" strokeWidth={1.5} />} color="#ffffff" description="Analyze signals" expanded={step >= 4 && step < 5}>
-              <div className="flex flex-wrap gap-1.5 mt-2 justify-center">
-                {PILLARS.map((p) => (
-                  <span key={p.name} className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: `${p.color}15`, color: p.color, border: `1px solid ${p.color}30` }}>
-                    {p.short}
-                  </span>
-                ))}
+
+            {/* Arrow */}
+            <FlowArrow visible={step >= 2} />
+
+            {/* Step 3: rain OS - The Critical Layer */}
+            <WorkflowNode
+              step={step}
+              targetStep={2}
+              label="rain OS"
+              icon={<Zap className="w-5 h-5" strokeWidth={1.5} />}
+              color="#ffffff"
+              description="Optimize for AI"
+              isHighlighted
+              pulse={step === 2}
+            />
+
+            {/* Arrow splits */}
+            <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-6">
+              {/* Branch 1: Repo Scanner */}
+              <div className="relative flex flex-col items-center gap-3 lg:gap-0">
+                <div className="relative lg:absolute lg:-top-10 lg:left-1/2 lg:-translate-x-1/2">
+                  <FlowArrow visible={step >= 3} direction="down" />
+                </div>
+                <WorkflowNode
+                  step={step}
+                  targetStep={3}
+                  label="Repo Scanner"
+                  icon={<GitBranch className="w-5 h-5" strokeWidth={1.5} />}
+                  color="#ffffff"
+                  description="Scan source code"
+                />
               </div>
-            </WorkflowNode>
-          } />
-          <Link visible={step >= 5} />
-          <Snake left={
-            <WorkflowNode step={step} targetStep={5} label="AI Prompt" icon={<Zap className="w-5 h-5" strokeWidth={1.5} />} color="#ffffff" description="Get fixes" />
-          } />
-          <Link visible={step >= 6} />
-          <Snake right={
-            <WorkflowNode step={step} targetStep={6} label="Optimize" icon={<CheckCircle2 className="w-5 h-5" strokeWidth={1.5} />} color="#ffffff" description="Apply changes" isHighlighted />
-          } />
-          <Link visible={step >= 7} />
-          <Snake left={
-            <motion.div className="relative" initial={false} animate={step >= 7 ? { scale: 1 } : { scale: 0.9 }}>
-              <WorkflowNode step={step} targetStep={7} label="Score ↑" icon={<TrendingUp className="w-5 h-5" strokeWidth={1.5} />} color="#ffffff" description="AI-ready now" />
-              <AnimatePresence>
-                {step >= 7 && (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-bold text-white">
-                    +42 points
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          } />
-          <Link visible={step >= 8} />
-          <Snake right={
-            <WorkflowNode step={step} targetStep={8} label="Go Live" icon={<Rocket className="w-5 h-5" strokeWidth={1.5} />} color="#ffffff" description="Site is alive" isFinal />
-          } />
+
+              {/* OR */}
+              <div className="text-xs text-neutral-400 font-medium uppercase tracking-wider">
+                or
+              </div>
+
+              {/* Branch 2: URL Scanner */}
+              <div className="relative flex flex-col items-center gap-3 lg:gap-0">
+                <div className="relative lg:absolute lg:-top-10 lg:left-1/2 lg:-translate-x-1/2">
+                  <FlowArrow visible={step >= 3} direction="down" />
+                </div>
+                <WorkflowNode
+                  step={step}
+                  targetStep={3}
+                  label="URL Scanner"
+                  icon={<Search className="w-5 h-5" strokeWidth={1.5} />}
+                  color="#ffffff"
+                  description="Scan live site"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Convergence: 6 Pillars */}
+          <div className="flex justify-center mt-8">
+            <div className="flex flex-col items-center gap-3">
+              <FlowArrow visible={step >= 4} />
+              <WorkflowNode
+                step={step}
+                targetStep={4}
+                label="6 Pillars"
+                icon={<Globe className="w-5 h-5" strokeWidth={1.5} />}
+                color="#ffffff"
+                description="Analyze signals"
+                expanded={step >= 4 && step < 5}
+              >
+                <div className="flex flex-wrap gap-1.5 mt-2 justify-center">
+                  {PILLARS.map((p) => (
+                    <span
+                      key={p.name}
+                      className="text-[10px] px-2 py-0.5 rounded-full font-medium"
+                      style={{
+                        background: `${p.color}15`,
+                        color: p.color,
+                        border: `1px solid ${p.color}30`,
+                      }}
+                    >
+                      {p.short}
+                    </span>
+                  ))}
+                </div>
+              </WorkflowNode>
+            </div>
+          </div>
+
+          {/* Bottom flow: Prompt → Optimize → Score ↑ → Publish */}
+          <div className="flex flex-col items-center gap-4 mt-8">
+            <FlowArrow visible={step >= 5} />
+
+            <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-6">
+              {/* Prompt */}
+              <WorkflowNode
+                step={step}
+                targetStep={5}
+                label="AI Prompt"
+                icon={<Zap className="w-5 h-5" strokeWidth={1.5} />}
+                color="#ffffff"
+                description="Get fixes"
+              />
+
+              <FlowArrow visible={step >= 6} />
+
+              {/* Optimize */}
+              <WorkflowNode
+                step={step}
+                targetStep={6}
+                label="Optimize"
+                icon={<CheckCircle2 className="w-5 h-5" strokeWidth={1.5} />}
+                color="#ffffff"
+                description="Apply changes"
+                isHighlighted
+              />
+
+              <FlowArrow visible={step >= 7} />
+
+              {/* Score Improvement */}
+              <motion.div
+                className="relative"
+                initial={false}
+                animate={step >= 7 ? { scale: 1 } : { scale: 0.9 }}
+              >
+                <WorkflowNode
+                  step={step}
+                  targetStep={7}
+                  label="Score ↑"
+                  icon={<TrendingUp className="w-5 h-5" strokeWidth={1.5} />}
+                  color="#ffffff"
+                  description="AI-ready now"
+                />
+                <AnimatePresence>
+                  {step >= 7 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-bold text-white"
+                    >
+                      +42 points
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+
+              <FlowArrow visible={step >= 8} />
+
+              {/* Publish Live */}
+              <WorkflowNode
+                step={step}
+                targetStep={8}
+                label="Go Live"
+                icon={<Rocket className="w-5 h-5" strokeWidth={1.5} />}
+                color="#ffffff"
+                description="Site is alive"
+                isFinal
+              />
+            </div>
+          </div>
         </div>
 
         {/* Step-by-step breakdown */}
