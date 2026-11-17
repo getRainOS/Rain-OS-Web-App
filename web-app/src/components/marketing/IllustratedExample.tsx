@@ -217,7 +217,6 @@ export default function IllustratedExample() {
 
           <div className="mt-6 text-center">
             <span className="inline-block rounded-md border border-white/10 bg-black px-4 py-2 text-[14px] text-neutral-200">{ex.question}</span>
-            <p className="mt-3 text-[13px] text-neutral-500">rain OS shows you why, and what to fix, to improve your chances.</p>
           </div>
 
         </motion.div>
