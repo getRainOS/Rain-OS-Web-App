@@ -630,17 +630,25 @@ export default function Dashboard() {
               <div className={styles.heroRankHeader}>
                 <span>Pillar scores</span>
               </div>
-              <div className={styles.donutGrid}>
-                {[...piecePillars].sort((a, b) => b.score - a.score).map(p => (
-                  <ScoreDonut
-                    key={p.key}
-                    score={p.score}
-                    label={p.label}
-                    color={p.color}
-                    delta={p.delta == null ? null : Math.abs(p.delta) <= NOISE_PTS ? 0 : p.delta}
-                  />
-                ))}
-              </div>
+              <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
+                {[...piecePillars].sort((a, b) => b.score - a.score).map(p => {
+                  const d = p.delta == null ? null : Math.abs(p.delta) <= NOISE_PTS ? 0 : p.delta;
+                  return (
+                    <li key={p.key} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#d4d4d4' }}>
+                        <span style={{ width: 8, height: 8, borderRadius: '50%', background: p.color }} />
+                        {p.label}
+                      </span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <span style={{ fontSize: 15, fontWeight: 600, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{Math.round(p.score)}</span>
+                        <span style={{ fontSize: 12, minWidth: 64, textAlign: 'right', color: d > 0 ? '#4ade80' : '#737373', fontVariantNumeric: 'tabular-nums' }}>
+                          {d == null || d === 0 ? 'no change' : `${d > 0 ? '+' : ''}${Math.round(d)} pts`}
+                        </span>
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
           </div>
           </>
