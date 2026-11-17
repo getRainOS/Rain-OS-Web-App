@@ -64,7 +64,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'general',
     tab: 'Writers & marketers',
-    question: 'What is the difference between a newsletter and a blog for a small business?',
+    question: 'How do I stop procrastinating?',
     before: 'Many newsletter tools offer free plans and paid tiers. Compare features like templates, automation and analytics before choosing.',
     after: 'Example Letters is built for solo writers: one flat price, a free tier up to 500 subscribers, and a clear guide to publishing from your own domain.',
     afterNote: 'The answer names the product and its pricing from a comparison page that states both plainly.',
