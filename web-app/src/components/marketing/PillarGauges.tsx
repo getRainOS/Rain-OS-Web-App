@@ -16,7 +16,7 @@ function scoreBand(s: number) {
   return 'Needs Work';
 }
 
-function Gauge({ label, value, color, delay, lane }: { label: string; value: number; color: string; delay: number }) {
+function Gauge({ label, value, color, delay, mini }: { label: string; value: number; color: string; delay: number; mini?: boolean }) {
   const reduce = useReducedMotion();
   const cx = 60;
   const cy = 64;
@@ -26,7 +26,7 @@ function Gauge({ label, value, color, delay, lane }: { label: string; value: num
   const transition = { duration: 1.4, delay, ease: EASE };
   return (
     <figure className="min-w-0 text-center">
-      <div className="text-[11px] text-neutral-400 mb-1 leading-tight">{label}</div>
+      {!mini && <div className="text-[11px] text-neutral-400 mb-1 leading-tight">{label}</div>}
       <svg viewBox="0 0 120 76" className="w-full h-auto block" role="img" aria-label={`${label}: ${value} out of 100`}>
         <path d={arc} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={8} strokeLinecap="round" />
         <motion.path
@@ -53,24 +53,40 @@ function Gauge({ label, value, color, delay, lane }: { label: string; value: num
         <text x={cx - r} y={cy + 9} textAnchor="middle" fontSize={6} fill="#737373" style={{ fontFamily: MONO }}>0</text>
         <text x={cx + r} y={cy + 9} textAnchor="middle" fontSize={6} fill="#737373" style={{ fontFamily: MONO }}>100</text>
       </svg>
-      <div className="-mt-1 text-[20px] font-semibold text-white tabular-nums">{Math.round(value)}</div>
-      <div className="text-[11px] text-neutral-400">{scoreBand(value)}</div>
+      <div className={`-mt-1 font-semibold text-white tabular-nums ${mini ? "text-[14px]" : "text-[20px]"}`}>{Math.round(value)}</div>
+      {!mini && <div className="text-[11px] text-neutral-400">{scoreBand(value)}</div>}
     </figure>
   );
 }
+
+const CORE = SERIES.filter(s => s.key !== 'product_discoverability' && s.key !== 'local_presence');
+const LANE_NOTES = [
+  { key: 'product_discoverability' as const, text: 'Product Discoverability is an extra gauge for online sellers.' },
+  { key: 'local_presence' as const, text: 'Local Presence is an extra gauge for local businesses.' },
+];
 
 export default function PillarGauges() {
   return (
     <div className="mt-4 rounded-md border border-white/[0.07] bg-black p-4">
       <div className="mb-3 text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>LATEST SCORE BY PILLAR</div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-3 gap-y-4">
-        {SERIES.filter(s => s.key !== 'product_discoverability' && s.key !== 'local_presence').map((s, i) => (
+      <div className="grid grid-cols-2 gap-x-3 gap-y-4">
+        {CORE.map((s, i) => (
           <Gauge key={s.key} label={s.label} value={s.end} color={PILLAR_CHART_COLORS[s.key]} delay={1.4 + i * 0.15} />
         ))}
       </div>
-      <p className="mt-4 border-t border-white/[0.07] pt-3 text-[12px] leading-relaxed text-neutral-300">
-        Product Discoverability is scored for online sellers. Local Presence is scored for local businesses. Each lane uses the pillars for its own kind of business.
-      </p>
+      <ul className="mt-5 space-y-3 border-t border-white/[0.07] pt-4">
+        {LANE_NOTES.map((n, i) => {
+          const s = SERIES.find(x => x.key === n.key)!;
+          return (
+            <li key={n.key} className="flex items-center gap-3 text-[12px] leading-relaxed text-neutral-300">
+              <div className="w-16 shrink-0">
+                <Gauge label={s.label} value={s.end} color={PILLAR_CHART_COLORS[s.key]} delay={2.6 + i * 0.15} mini />
+              </div>
+              <span>{n.text}</span>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
