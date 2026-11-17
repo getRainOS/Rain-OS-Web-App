@@ -108,38 +108,6 @@ export default function VibeWorkflowDiagram() {
 
           </div>
 
-          {/* Convergence: 6 Pillars */}
-          <div className="flex justify-center mt-8">
-            <div className="flex flex-col items-center gap-3">
-              <FlowArrow visible={step >= 4} />
-              <WorkflowNode
-                step={step}
-                targetStep={4}
-                label="6 Pillars"
-                icon={<Globe className="w-5 h-5" strokeWidth={1.5} />}
-                color="#ffffff"
-                description="Analyze signals"
-                expanded={step >= 4 && step < 5}
-              >
-                <div className="flex flex-wrap gap-1.5 mt-2 justify-center">
-                  {PILLARS.map((p) => (
-                    <span
-                      key={p.name}
-                      className="text-[10px] px-2 py-0.5 rounded-full font-medium"
-                      style={{
-                        background: `${p.color}15`,
-                        color: p.color,
-                        border: `1px solid ${p.color}30`,
-                      }}
-                    >
-                      {p.short}
-                    </span>
-                  ))}
-                </div>
-              </WorkflowNode>
-            </div>
-          </div>
-
           {/* Bottom flow: Prompt → Optimize → Score ↑ → Publish */}
           <div className="flex flex-col items-center gap-4 mt-8">
             <FlowArrow visible={step >= 5} />
