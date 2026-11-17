@@ -16,7 +16,10 @@ function scoreBand(s: number) {
   return 'Needs Work';
 }
 
-function Gauge({ label, value, color, delay }: { label: string; value: number; color: string; delay: number }) {
+// Lane pillars apply to one kind of business only, so they get a dashed track and a tag.
+const LANE_KEYS = ['product_discoverability', 'local_presence'];
+
+function Gauge({ label, value, color, delay, lane }: { label: string; value: number; color: string; delay: number; lane?: boolean }) {
   const reduce = useReducedMotion();
   const cx = 60;
   const cy = 64;
@@ -28,7 +31,7 @@ function Gauge({ label, value, color, delay }: { label: string; value: number; c
     <figure className="min-w-0 text-center">
       <div className="text-[11px] text-neutral-400 mb-1 leading-tight">{label}</div>
       <svg viewBox="0 0 120 76" className="w-full h-auto block" role="img" aria-label={`${label}: ${value} out of 100`}>
-        <path d={arc} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={8} strokeLinecap="round" />
+        <path d={arc} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={8} strokeLinecap="round" strokeDasharray={lane ? '2 6' : undefined} />
         <motion.path
           d={arc}
           fill="none"
@@ -55,6 +58,7 @@ function Gauge({ label, value, color, delay }: { label: string; value: number; c
       </svg>
       <div className="-mt-1 text-[20px] font-semibold text-white tabular-nums">{Math.round(value)}</div>
       <div className="text-[11px] text-neutral-400">{scoreBand(value)}</div>
+      {lane && <div className="mt-0.5 text-[9px] uppercase tracking-wider text-neutral-500" style={{ fontFamily: MONO }}>Lane pillar</div>}
     </figure>
   );
 }
@@ -65,7 +69,7 @@ export default function PillarGauges() {
       <div className="mb-3 text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>LATEST SCORE BY PILLAR</div>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-3 gap-y-4">
         {SERIES.map((s, i) => (
-          <Gauge key={s.key} label={s.label} value={s.end} color={PILLAR_CHART_COLORS[s.key]} delay={1.4 + i * 0.15} />
+          <Gauge key={s.key} label={s.label} value={s.end} color={PILLAR_CHART_COLORS[s.key]} delay={1.4 + i * 0.15} lane={LANE_KEYS.includes(s.key)} />
         ))}
       </div>
     </div>
