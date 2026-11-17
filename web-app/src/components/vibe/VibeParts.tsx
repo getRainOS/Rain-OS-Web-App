@@ -443,7 +443,7 @@ export function ScoreCards({ pillars, animScores, demoFixed, phase }: {
   const initialOverall = Math.round(pillars.map((p) => p.score).reduce((a, b) => a + b, 0) / 5);
 
   return (
-    <div className="space-y-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
       {pillars.map((p, i) => (
         <ScoreCard
           key={p.name}
@@ -457,7 +457,7 @@ export function ScoreCards({ pillars, animScores, demoFixed, phase }: {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-center"
+        className="sm:col-span-2 rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-center"
       >
         <span className="text-xs text-neutral-400 uppercase tracking-wider font-bold">Overall AI Readability</span>
         <div className="mt-3 flex items-center justify-center gap-2">
