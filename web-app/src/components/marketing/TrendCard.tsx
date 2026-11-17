@@ -50,7 +50,6 @@ export default function TrendCard() {
               d={d}
               fill="none"
               stroke={PILLAR_CHART_COLORS[s.key]}
-              strokeDasharray={s.key === 'product_discoverability' || s.key === 'local_presence' ? '4 4' : undefined}
               strokeWidth={2}
               strokeLinejoin="round"
               strokeLinecap="round"
