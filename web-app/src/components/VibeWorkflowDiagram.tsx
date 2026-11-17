@@ -108,47 +108,6 @@ export default function VibeWorkflowDiagram() {
 
           </div>
 
-          {/* Scanners feed the analysis */}
-          <div className="flex justify-center mt-8">
-              {/* Scanners */}
-            <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-6">
-              {/* Branch 1: Repo Scanner */}
-              <div className="relative flex flex-col items-center gap-3 lg:gap-0">
-                <div className="relative lg:absolute lg:-top-10 lg:left-1/2 lg:-translate-x-1/2">
-                  <FlowArrow visible={step >= 3} direction="down" />
-                </div>
-                <WorkflowNode
-                  step={step}
-                  targetStep={3}
-                  label="Repo Scanner"
-                  icon={<GitBranch className="w-5 h-5" strokeWidth={1.5} />}
-                  color="#ffffff"
-                  description="Scan source code"
-                />
-              </div>
-
-              {/* OR */}
-              <div className="text-xs text-neutral-400 font-medium uppercase tracking-wider">
-                or
-              </div>
-
-              {/* Branch 2: URL Scanner */}
-              <div className="relative flex flex-col items-center gap-3 lg:gap-0">
-                <div className="relative lg:absolute lg:-top-10 lg:left-1/2 lg:-translate-x-1/2">
-                  <FlowArrow visible={step >= 3} direction="down" />
-                </div>
-                <WorkflowNode
-                  step={step}
-                  targetStep={3}
-                  label="URL Scanner"
-                  icon={<Search className="w-5 h-5" strokeWidth={1.5} />}
-                  color="#ffffff"
-                  description="Scan live site"
-                />
-              </div>
-            </div>
-          </div>
-
           {/* Convergence: 6 Pillars */}
           <div className="flex justify-center mt-8">
             <div className="flex flex-col items-center gap-3">
