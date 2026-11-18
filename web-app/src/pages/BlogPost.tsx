@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, Clock, Link2, FileText } from 'lucide-react';
@@ -11,6 +11,11 @@ export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const post = getPostBySlug(slug || '');
+
+  // An old slug lands here and moves to the post's current address.
+  useEffect(() => {
+    if (post && slug !== post.slug) navigate(`/blog/${post.slug}`, { replace: true });
+  }, [post, slug, navigate]);
 
   if (!post) {
     return (
