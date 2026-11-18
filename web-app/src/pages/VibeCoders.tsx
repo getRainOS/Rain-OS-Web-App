@@ -147,7 +147,7 @@ export default function VibeCoders() {
               {[
                 {
                   label: 'The vibe coder trap',
-                  body: 'You built something amazing in Bolt or Lovable. It looks perfect. But AI crawlers see a blank page or missing context. Zero citations = zero AI traffic.',
+                  body: 'You built something amazing in Bolt or Lovable. It looks perfect. But AI crawlers see a blank page or missing context. Zero readability = zero AI traffic.',
                   dim: true,
                 },
                 {
