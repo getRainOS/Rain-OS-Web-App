@@ -265,7 +265,7 @@ export const ReadabilityIntelligence = () => {
             </p>
             <div className="border-l-2 border-white pl-6 py-2 mb-12">
               <div className="flex items-center gap-2 text-white font-medium mb-2">
-                <Sparkles className="w-4 h-4 text-white" /> Clear pages make good SEO and good AI visibility.
+                <Sparkles className="w-4 h-4 text-white" /> Clear pages make good SEO and good AI readability.
               </div>
               <p className="text-neutral-400 text-sm">When you optimize for machine extraction, human readability naturally improves. It's a win-win.</p>
             </div>
@@ -527,7 +527,7 @@ export const FAQ = ({ items }: { items?: { q: string; a: string }[] } = {}) => {
   const defaultFaqs = [
     { q: "Who is rain OS for?", a: "Anyone whose customers now ask AI before they search: writers and marketers, online sellers, developers, people shipping apps with AI builders, and local service businesses. You pick the lane that fits, and rain OS weights its scoring for the way that kind of business gets found." },
     { q: "What does it mean to get cited by AI?", a: "It means making your pages easy for AI assistants to read, trust and use. Some people call this Answer Engine Optimization (AEO). When ChatGPT, Gemini or Perplexity answer a question, they draw on a handful of sources. AEO is about being one of them." },
-    { q: "What is the goal: AI visibility, mentions or citations?", a: "The goal is AI visibility: making your business easy for AI to find, understand and use when people ask about what you offer. Mentions and citations are how that shows up in AI answers, and rain OS tracks both. None of them is guaranteed." },
+    { q: "How do mentions and citations relate to AI readability?", a: "Readability is what you improve: rain OS scores it at each analysis and shows what to fix. Mentions and citations are what AI does with your pages, which you can track over time. They are separate, and neither is guaranteed." },
     { q: "What is a citation?", a: "A citation is when an AI answer names your website or links to one of its pages as a source for what it says. It is the outcome rain OS is built to earn you." },
     { q: "What's the difference between a mention and a citation?", a: "A mention is when an AI names your business in an answer without linking to one of your pages. A citation is when it links to a page on your site as a source for what it says. Being mentioned can come before a citation, so rain OS tracks both, and the checks are snapshots of what each AI said at that time." },
     { q: "What does rain OS check across AI?", a: "Is AI Citing Me? shows whether each AI tool cites your pages, and which ones. Who AI Recommends shows how often the AI tools name you compared with your competitors. How AI Describes Me shows whether the description it gives of your business is positive, neutral or negative." },
