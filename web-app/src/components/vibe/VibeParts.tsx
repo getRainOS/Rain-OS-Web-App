@@ -685,7 +685,7 @@ export function RepoDemo({ isVisible }: { isVisible: boolean }) {
   return (
     <section className="py-16 px-6 border-t border-white/10">
       <div className="max-w-5xl mx-auto">
-        <DemoHeader title="" subtitle="Scan a repo, get a fix prompt, paste it into your vibe builder, and watch the score improve after rescanning." />
+        <DemoHeader title="" subtitle="If AI can't read you, it can't see you." />
         <div className="grid grid-cols-1 lg:grid-cols-2 items-start gap-6">
           <ScoreCards pillars={repoPillars} animScores={animScores} demoFixed={demoFixed} phase={phase} />
           <div className="space-y-4">
