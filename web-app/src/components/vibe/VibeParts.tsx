@@ -74,7 +74,7 @@ export const vibeSignals = [
     border: 'rgba(255,255,255,0.12)',
     Icon: FileCode,
     name: 'llms.txt Presence',
-    desc: 'The single most important file for AI discoverability. Tells LLMs what your app does, how to use it, and where key info lives. Most vibe-coded sites skip this entirely.',
+    desc: "Tells AI what your app does and where key information lives. Most vibe-coded sites skip it.",
   },
   {
     color: '#ffffff',
@@ -82,7 +82,7 @@ export const vibeSignals = [
     border: 'rgba(255,255,255,0.12)',
     Icon: Search,
     name: 'Meta Description & OG Tags',
-    desc: 'AI engines use meta descriptions and Open Graph tags to understand your page before they render it. Missing these means AI has no context to cite you.',
+    desc: "Gives AI the context it needs to understand and cite your page.",
   },
   {
     color: '#ffffff',
@@ -90,7 +90,7 @@ export const vibeSignals = [
     border: 'rgba(255,255,255,0.12)',
     Icon: Shield,
     name: 'robots.txt & Crawler Access',
-    desc: 'Is your robots.txt blocking GPTBot, ChatGPT-User, or other AI crawlers? Many vibe-coded sites inherit restrictive defaults that hide them from AI search.',
+    desc: "Some vibe-built sites block AI crawlers by default.",
   },
   {
     color: '#ffffff',
@@ -98,7 +98,7 @@ export const vibeSignals = [
     border: 'rgba(255,255,255,0.12)',
     Icon: Code2,
     name: 'Schema Markup (JSON-LD)',
-    desc: 'Structured data tells AI exactly what your page represents — product, article, organization, FAQ. Without it, AI guesses. Most vibe tools don\'t add schema automatically.',
+    desc: "Tells AI what your page is about. Most vibe tools don't add it.",
   },
   {
     color: '#ffffff',
@@ -106,7 +106,7 @@ export const vibeSignals = [
     border: 'rgba(255,255,255,0.12)',
     Icon: Monitor,
     name: 'SSR vs SPA Detection',
-    desc: 'Vibe-coded SPAs (Vite, CRA) render content in JavaScript. AI crawlers often see a blank page. We detect this and flag it as high-risk for AI discoverability.',
+    desc: "Client-rendered pages can look blank to AI crawlers.",
   },
   {
     color: '#ffffff',
@@ -114,7 +114,7 @@ export const vibeSignals = [
     border: 'rgba(255,255,255,0.12)',
     Icon: Terminal,
     name: 'README & Package.json Quality',
-    desc: 'Your README is often the first thing AI reads about your project. Missing install steps, unclear description, or no keywords in package.json hurts discoverability.',
+    desc: "Often the first thing AI reads about your project.",
   },
   {
     color: '#ffffff',
@@ -122,7 +122,7 @@ export const vibeSignals = [
     border: 'rgba(255,255,255,0.12)',
     Icon: Globe,
     name: 'Canonical URL & index.html',
-    desc: 'Duplicate content and missing canonical tags confuse AI. We check your index.html for title tags, meta viewport, and proper head structure.',
+    desc: "Duplicate or missing canonical tags confuse AI about which page to cite.",
   },
   {
     color: '#ffffff',
@@ -130,7 +130,7 @@ export const vibeSignals = [
     border: 'rgba(255,255,255,0.12)',
     Icon: Cpu,
     name: 'AI-Ready Content Structure',
-    desc: 'Clear H1/H2 hierarchy, FAQ sections, bullet-point answers. AI extracts the first 1-2 sentences of each section. If your lead is vague, AI moves to a competitor.',
+    desc: "Clear headings and direct answers make your content easier for AI to use.",
   },
 ];
 
