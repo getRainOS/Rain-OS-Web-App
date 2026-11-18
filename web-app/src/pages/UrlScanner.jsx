@@ -131,7 +131,7 @@ function buildFixPrompt(platform, recommendations, url, overallScore) {
 
 I ran an AI Readability scan and found the following issues that prevent ChatGPT, Gemini, and Perplexity from discovering and citing my site. Higher-severity items matter most:
 
-${issues.join('\n') || '- No critical issues found — consider adding llms.txt and schema markup for better AI visibility'}
+${issues.join('\n') || '- No critical issues found — consider adding llms.txt and schema markup for better AI readability'}
 ${scoreNote}
 
 Please make only the specific changes listed below — don't refactor, restructure, or modify any other part of the project, and don't change existing functionality, styling, or content beyond what's needed for each fix.

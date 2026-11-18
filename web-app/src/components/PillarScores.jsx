@@ -160,7 +160,7 @@ const PILLARS = [
     camel: 'productDiscoverability',
     label: 'Product Discoverability',
     color: PILLAR_COLORS.product_discoverability,
-    sub: 'Search presence & brand visibility',
+    sub: 'Search presence & brand mentions',
     detailKey: 'product_discoverability_detail',
   },
   {

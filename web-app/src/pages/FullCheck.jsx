@@ -153,7 +153,7 @@ export default function FullCheck() {
     <div className={`${styles.page} fade-in`}>
       <PageHeader
         title="Full check"
-        subtitle="Choose a website you have analyzed and we run the page scan and the AI visibility checks together, then show one report."
+        subtitle="Choose a website you have analyzed and we run the page scan and the AI mention checks together, then show one report."
         about={[
           { heading: 'What runs', body: 'A scan of your page, then Citation Monitor on the questions your customers ask, plus Brand Sentiment, and on Full also Share of Voice. Each result is saved, so it shows up in the dashboard under your site.' },
           { heading: 'What it costs', body: 'Each tool run uses one analysis, the same as running it yourself, except Share of Voice, which asks the AI 3 questions and uses 3. You see the total before anything runs. Suggesting questions is free.' },

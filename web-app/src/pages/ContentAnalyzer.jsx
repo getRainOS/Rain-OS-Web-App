@@ -307,7 +307,7 @@ export default function ContentAnalyzer() {
     : userLane === 'product_sellers'
     ? 'Paste your product content to analyze it for AI shopping and discovery signals'
     : userLane === 'local_business'
-    ? 'Paste your website content or Google Business Profile description to score it for local AI visibility'
+    ? 'Paste your website content or Google Business Profile description to score it for local AI readability'
     : userLane === 'vibe_coders'
     ? 'Paste your vibe-coded landing page or app copy to audit AI readability and discoverability before launch'
     : 'Paste your content to get a full AEO analysis and rewrite it for AI readability';
