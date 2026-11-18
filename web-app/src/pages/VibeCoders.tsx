@@ -72,7 +72,7 @@ export default function VibeCoders() {
               </h1>
 
               <p className="text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto leading-relaxed">
-                Bolt, Lovable, Cursor, and v0 build beautiful sites fast. But AI crawlers can't read them. Missing structured data, no llms.txt, JS-rendered content — if LLMs can't parse your page, you won't be cited.
+                Bolt, Lovable, Cursor, and v0 build beautiful sites fast. But AI crawlers can't read them. Missing structured data, no llms.txt, JS-rendered content — if LLMs can't parse your page, you won't be visible.
               </p>
             </motion.div>
 

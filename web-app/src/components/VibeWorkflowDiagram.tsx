@@ -110,7 +110,6 @@ export default function VibeWorkflowDiagram() {
 
           {/* Bottom flow: Prompt → Optimize → Score ↑ → Publish */}
           <div className="flex flex-col items-center gap-4 mt-8">
-            <FlowArrow visible={step >= 5} />
 
             <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-6">
               {/* Prompt */}
@@ -181,41 +180,6 @@ export default function VibeWorkflowDiagram() {
           </div>
         </div>
 
-        {/* Step-by-step breakdown */}
-        <div className="mt-12 max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {[
-              { num: 1, text: "Start with an idea and build fast with your favorite vibe tool" },
-              { num: 2, text: "Rain scans your site for AI readiness — repo or live URL" },
-              { num: 3, text: "12 signals checked across 5 of 6 pillars for gaps" },
-              { num: 4, text: "Get a platform-specific fix prompt" },
-              { num: 5, text: "Paste back into your builder and apply" },
-              { num: 6, text: "Your score climbs. AI can now read you." },
-            ].map((item) => (
-              <div key={item.num} className="flex items-start gap-3 text-left">
-                <span className="w-6 h-6 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center text-xs font-bold text-neutral-400 shrink-0 mt-0.5">
-                  {item.num}
-                </span>
-                <p className="text-sm text-neutral-400 leading-relaxed">{item.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Replay + CTA */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
-          <button
-            onClick={handleReplay}
-            className="flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors"
-          >
-            <Zap className="w-4 h-4" />
-            {isPlaying ? 'Watch the flow' : 'Replay'}
-          </button>
-          <div className="hidden sm:block w-px h-4 bg-white/10" />
-          <p className="text-xs text-neutral-400">
-            Without Rain, your site is built but invisible. AI cannot find what it cannot read.
-          </p>
-        </div>
       </div>
     </section>
   );
