@@ -26,7 +26,7 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
-    slug: 'ai-visibility-mention-citation-quote',
+    slug: 'readability-mentions-citations',
     audience: 'everyone',
     title: 'Readability, Mentions and Citations: What Each One Means',
     subtitle: 'Readability is what you can measure and improve today. Mentions and citations are what AI does with your pages, and they are tracked separately.',
@@ -924,6 +924,12 @@ Check it: look at your product page with scripts turned off. If the reviews disa
   },
 ];
 
+// Old URLs that have moved. The post page redirects them to the new slug.
+export const LEGACY_SLUGS: Record<string, string> = {
+  'ai-visibility-mention-citation-quote': 'readability-mentions-citations',
+};
+
 export function getPostBySlug(slug: string): BlogPost | undefined {
-  return BLOG_POSTS.find((p) => p.slug === slug);
+  const current = LEGACY_SLUGS[slug] ?? slug;
+  return BLOG_POSTS.find((p) => p.slug === current);
 }
