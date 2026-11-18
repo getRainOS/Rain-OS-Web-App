@@ -725,9 +725,10 @@ export default function Home() {
                 Be the answer <span className="text-neutral-500">AI gives.</span>
               </h1>
               <EngineCycle names={engines} />
-              <p className="mt-7 w-0 min-w-full text-lg md:text-xl text-neutral-400 leading-relaxed text-center">
-                Being readable to AI chatbots like ChatGPT and Claude could be the minimum cost of entry for your business or website to be visible online. rain OS helps you reach that standard by improving your AI readability, in plain English, which raises your chances of being seen by a wider audience.
-              </p>
+              <div className="mt-7 w-0 min-w-full space-y-4 text-lg md:text-xl text-neutral-400 leading-relaxed text-center">
+                <p>Being readable to AI chatbots like ChatGPT and Claude could be the minimum cost of entry for your business or website to be visible online.</p>
+                <p>rain OS helps you reach that standard by improving your AI readability, in plain English, which raises your chances of being seen by a wider audience.</p>
+              </div>
               </div>
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button onClick={start} className="h-11 px-6 rounded-md bg-white text-black text-[15px] font-medium hover:bg-neutral-200 transition-colors inline-flex items-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
