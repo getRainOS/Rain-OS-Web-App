@@ -722,7 +722,7 @@ export default function Home() {
               {/* The subtitle takes the headline's width: w-0 + min-w-full stops it widening the block. */}
               <div className="mx-auto w-fit">
               <h1 className="mt-7 text-[clamp(26px,4.6vw,64px)] leading-[1.02] font-semibold tracking-[-0.045em] whitespace-nowrap">
-                Be the answer <span className="text-neutral-500">AI gives.</span>
+                Create content that <span className="text-neutral-500">AI can read and use.</span>
               </h1>
               <EngineCycle names={engines} />
               <div className="mt-7 w-0 min-w-full space-y-4 text-lg md:text-xl text-neutral-400 leading-relaxed text-center">
