@@ -151,17 +151,6 @@ export default function VibeWorkflowDiagram() {
                   color="#ffffff"
                   description="AI-ready now"
                 />
-                <AnimatePresence>
-                  {step >= 7 && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-bold text-white"
-                    >
-                      +42 points
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </motion.div>
 
               <FlowArrow visible={step >= 8} />
