@@ -132,7 +132,7 @@ export default function Report() {
 
       <article className={`${styles.paper} printArea`}>
         <header className={styles.cover}>
-          <div className={styles.kicker}><Logo size={20} /> <span>AI visibility assessment</span></div>
+          <div className={styles.kicker}><Logo size={20} /> <span>AI readability assessment</span></div>
           <h1 className={styles.coverTitle}>{subject?.name || 'Your business'}</h1>
           <p className={styles.coverMeta}>
             {[lane, subject?.website, `Prepared ${longDay(new Date())}`, user?.email ? `for ${user.email}` : null].filter(Boolean).join('  ·  ')}

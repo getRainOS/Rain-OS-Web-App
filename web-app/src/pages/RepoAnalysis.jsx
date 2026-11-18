@@ -77,7 +77,7 @@ function buildFixPrompt(platform, result, repoUrl) {
 
 I ran an AI Readability scan and found the following issues that prevent ChatGPT, Gemini, and Perplexity from discovering and citing my site. Higher-severity items matter most:
 
-${issues.join('\n') || '- No critical issues found — consider adding llms.txt and schema markup for better AI visibility'}
+${issues.join('\n') || '- No critical issues found — consider adding llms.txt and schema markup for better AI readability'}
 ${frameworkNote}
 ${scoreNote}
 

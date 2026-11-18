@@ -250,7 +250,7 @@ export default function Dashboard() {
     ? { title: 'See what AI tools can actually parse in your repo', sub: "Connect a repo and score your docs and app structure against the signals AI coding assistants and crawlers rely on — then fix what's holding it back.", cta: 'Open Repo Analysis', route: '/repo-analysis' }
     : userLane === 'vibe_coders'
     ? { title: 'Audit your build before AI tools try to read it', sub: "Connect the repo you just shipped and score it against the signals AI assistants rely on — then fix what's holding it back before launch.", cta: 'Open Repo Analysis', route: '/repo-analysis' }
-    : { title: 'Create content that increases your AI visibility', sub: "Paste a draft and score it against the same signals AI engines use to decide what to cite — then fix what's holding it back.", cta: 'Open Content Optimizer', route: '/analyze' };
+    : { title: 'Create content that AI can read and use', sub: "Paste a draft and score it against the same signals AI engines use to decide what to cite — then fix what's holding it back.", cta: 'Open Content Optimizer', route: '/analyze' };
 
   useEffect(() => {
     api.citationHistory({ limit: 50 })
@@ -782,7 +782,7 @@ export default function Dashboard() {
       {/* ── Tool Snapshot Cards ── */}
       <div className={styles.chartHeader}>
         <div>
-          <h2 className={styles.chartTitle}>{userLane === 'local_business' ? 'Found by Local Customers' : 'Your AI Visibility'}</h2>
+          <h2 className={styles.chartTitle}>{userLane === 'local_business' ? 'Found by Local Customers' : 'Your AI Mentions'}</h2>
           <p className={styles.chartSub}>
             {userLane === 'local_business'
               ? "Whether AI cites and mentions your business when nearby customers ask, not just whether you rank."
