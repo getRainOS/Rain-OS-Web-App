@@ -218,7 +218,7 @@ function AnalyzeConsole({ compact = false, litLane }: { compact?: boolean; litLa
 const TOOLS = [
   {
     key: 'analysis',
-    eyebrow: 'Run an analysis and improve your AI visibility',
+    eyebrow: 'Run an analysis and improve your AI readability',
     title: 'Get your Rain Score and pillar breakdown',
     body: 'One score, split into the pillars that matter for your kind of business, with the fixes for each gap. Run it three ways:',
     ways: [
@@ -771,7 +771,7 @@ export default function Home() {
                 Search is becoming an answer.
               </h2>
               <p className="mt-5 text-lg md:text-xl font-medium text-white leading-relaxed max-w-xl">
-                Start by making your business, website or content more visible to AI
+                Start by making your business, website or content easy for AI to read
               </p>
               <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-xl">
                 When AI answers a question, it cites or mentions a handful of sources, and most people stop there. If AI can't see your business, you could be leaving opportunities on the table, however well you rank.

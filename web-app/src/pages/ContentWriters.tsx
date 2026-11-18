@@ -88,7 +88,7 @@ const steps = [
 
 // Questions a writer or marketer is likely to ask on this page.
 const WRITER_FAQS = [
-  { q: "What is the goal: AI visibility, mentions or citations?", a: "The goal is AI visibility: making your business easy for AI to find, understand and use when people ask about what you offer. Mentions and citations are how that shows up in AI answers. A mention is when AI names you, and a citation is when it links to your page. rain OS tracks both, so you can see where you stand. None of them is guaranteed." },
+  { q: "How do mentions and citations relate to AI readability?", a: "Readability is what you improve: rain OS scores it at each analysis and shows what to fix. Mentions and citations are what AI does with your pages, which you can track over time. They are separate, and neither is guaranteed." },
   { q: "How do I get my articles cited or mentioned by AI?", a: "Answer the question near the top, state specific facts such as numbers, names and dates, and keep each section to one idea. rain OS scores these qualities on your draft and shows you what to change. It can raise your chances of being cited or mentioned, but it cannot guarantee either." },
   { q: "What's the difference between a mention and a citation?", a: "A mention is when an AI names your business in an answer without linking to one of your pages. A citation is when it links to a page on your site as a source. The two go together: a mention often comes first, and rain OS tracks both. Each check is a snapshot of one answer at that time." },
   { q: "Does rain OS rewrite my writing?", a: "It suggests better titles, page descriptions, short summaries and clearer wording for vague sentences. You review each change before you use it, so the writing stays yours." },
