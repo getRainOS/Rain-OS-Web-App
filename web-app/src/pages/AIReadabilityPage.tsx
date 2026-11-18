@@ -56,36 +56,31 @@ export default function AIReadabilityPage() {
         </button>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <span className="mb-4 block text-xs font-bold uppercase tracking-wider text-white">AI visibility</span>
+          <span className="mb-4 block text-xs font-bold uppercase tracking-wider text-white">AI readability</span>
           <h1 className="mb-4 text-3xl font-bold leading-tight text-white md:text-4xl">
             Make your business easy for AI to find and use
           </h1>
           <p className="mb-6 text-lg leading-relaxed text-neutral-400">
-            When someone asks an AI a question, the answer names a few businesses and links to a few sources. AI visibility is how often that happens to you. rain OS shows where you stand and what to change.
+            AI chatbots read your pages before they answer. If your pages are clear, structured and easy to quote from, the AI can understand what you offer. rain OS measures how readable your pages are, shows where they fall short, and tells you what to change.
           </p>
         </motion.div>
       </div>
 
       <div className="mx-auto max-w-3xl space-y-16 px-6 pb-24">
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-white">The goal is AI visibility</h2>
+          <h2 className="mb-3 text-xl font-semibold text-white">What we measure</h2>
           <p className="leading-relaxed text-neutral-400">
-            AI visibility is being easy for AI to find, understand and use when people ask about what you offer. You cannot set it directly, so rain OS measures what shows up in AI answers: mentions and citations. Neither one is guaranteed, but both show whether your visibility is growing.
+            AI readability is how easily an AI can find, understand and use your pages. rain OS scores it on four core pillars, and you can act on the result at your next analysis. Readability is what you control; the pillars show where to improve it.
           </p>
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-white">How it fits together</h2>
+          <h2 className="mb-3 text-xl font-semibold text-white">Tracking what AI says about you</h2>
           <ol className="space-y-3 leading-relaxed text-neutral-400">
-            <li><span className="font-medium text-white">1. Make your content easy to read and state clear facts.</span> The pillars score this on your pages.</li>
-            <li><span className="font-medium text-white">2. Visibility grows.</span> AI can find, understand and use what you offer. This is the goal.</li>
-            <li><span className="font-medium text-white">3. Mention.</span> AI names your business in an answer.</li>
-            <li><span className="font-medium text-white">4. Citation.</span> AI links to one of your pages as a source. Usually it follows a mention.</li>
-            <li><span className="font-medium text-white">5. Recommendation.</span> AI names you as the choice when someone asks what to buy or hire.</li>
+            <li><span className="font-medium text-white">Mentions.</span> Whether AI names your business in an answer.</li>
+            <li><span className="font-medium text-white">Citations.</span> Whether AI links to one of your pages as a source.</li>
+            <li><span className="font-medium text-white">Recommendations.</span> Whether AI names you as the choice when someone asks what to buy or hire.</li>
           </ol>
-          <p className="mt-4 leading-relaxed text-neutral-400">
-            Clear facts sit at the start of this chain rather than in it. An AI can use a fact from your page without naming you, so we score how clear your facts are but do not count them as a result.
-          </p>
         </section>
 
         <section>
