@@ -149,7 +149,7 @@ Run your most important page through the Content Optimizer, then use Is AI Citin
 
 Search engines are changing. People no longer type keywords and click links. They ask ChatGPT, Perplexity, and Gemini questions in plain language — and those systems answer directly, often without ever sending a visitor to the source website.
 
-This is a seismic shift. For creators, small businesses, nonprofits, and independent publishers, it means the rules of visibility are being rewritten. And the tools to win in this new world are overwhelmingly complex, expensive, or gatekept behind technical jargon.
+This is a seismic shift. For creators, small businesses, nonprofits, and independent publishers, it means the rules of being found are being rewritten. And the tools to win in this new world are overwhelmingly complex, expensive, or gatekept behind technical jargon.
 
 **We do not believe that is acceptable.**
 
@@ -174,7 +174,7 @@ The internet was supposed to level the playing field. AI search can do the same 
 
 We reject that assumption entirely.
 
-Every day, millions of people create value on the internet. They write. They build. They serve their communities. They do not need to be SEO experts, structured data wizards, or prompt engineers to deserve visibility. They need tools that translate the complexity of AI search into clear, actionable guidance.
+Every day, millions of people create value on the internet. They write. They build. They serve their communities. They do not need to be SEO experts, structured data wizards, or prompt engineers to deserve to be found. They need tools that translate the complexity of AI search into clear, actionable guidance.
 
 That is the principle behind every feature we build at rain OS.
 
@@ -222,7 +222,7 @@ If you want to be the answer, you need to optimize for the engine that delivers 
     slug: 'local-businesses-ai-search',
     audience: 'local_business',
     title: 'How Local Businesses Can Get Found by AI',
-    subtitle: 'AI search is replacing "near me" queries. Here is how your local business stays visible when customers ask ChatGPT for recommendations.',
+    subtitle: 'AI search is replacing "near me" queries. Here is how your local business gets found when customers ask ChatGPT for recommendations.',
     date: '2026-04-20',
     readTime: '6 min read',
     category: 'Local SEO',
@@ -400,7 +400,7 @@ We give you structure, where the meaning was buried.
 
 We give you authority, where the sourcing was thin.
 
-We give you visibility, where the content was technically hidden.
+We make content that was technically hidden readable to AI.
 
 And we give you a running, quantified understanding of where you stand — so that the gap between where your content is and where it needs to be is never a mystery.
 
