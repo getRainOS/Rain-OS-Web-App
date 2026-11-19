@@ -199,17 +199,15 @@ export default function IllustratedExample() {
           <h2 className="mt-3 text-3xl md:text-4xl font-semibold tracking-[-0.03em] text-white">Every pillar, scored and tracked over time</h2>
         </div>
 
-        <div className="mt-10 rounded-xl border border-white/10 bg-[#0a0a0a] p-6 cursor-default select-none">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <figure className="min-w-0">
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 cursor-default select-none">
+          <figure className="min-w-0 rounded-xl border border-white/10 bg-[#0a0a0a] p-6">
             <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>SCORE BY AREA</div>
             <PillarGauges />
           </figure>
-          <figure className="min-w-0">
+          <figure className="min-w-0 rounded-xl border border-white/10 bg-[#0a0a0a] p-6">
             <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>TREND BY AREA</div>
             <TrendCard />
           </figure>
-          </div>
         </div>
       </div>
     </section>
