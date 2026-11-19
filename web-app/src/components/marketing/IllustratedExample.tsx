@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import PillarGauges from '@/components/marketing/PillarGauges';
-import TrendCard, { WEEKS } from '@/components/marketing/TrendCard';
 
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
 
@@ -164,15 +162,6 @@ const ROTATE_MS = 4000; // how long each lane stays on screen before the next on
 
 export default function IllustratedExample() {
   const [index, setIndex] = useState(0);
-  // The dashboard snapshot steps through twelve analyses, one at a time, and loops.
-  const [tick, setTick] = useState(0);
-  const week = tick % WEEKS;
-  const [inView, setInView] = useState(false);
-  const [locked, setLocked] = useState(false); // a tab press keeps that lane on screen
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const dashRef = useRef<HTMLElement | null>(null);
-  const [dashInView, setDashInView] = useState(false);
-  const ex = EXAMPLES[index];
   const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
   // Run only while the section is on screen, so it starts when someone arrives.
@@ -185,21 +174,6 @@ export default function IllustratedExample() {
   }, []);
 
   // Step the snapshot to the next analysis every 3s, only while it is on screen.
-  // The dashboard has its own observer, since it sits above the examples.
-  useEffect(() => {
-    const el = dashRef.current;
-    if (!el || typeof IntersectionObserver === 'undefined') return;
-    const io = new IntersectionObserver(([entry]) => setDashInView(entry.isIntersecting), { threshold: 0.35 });
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (reduceMotion || !dashInView) return;
-    const t = window.setInterval(() => setTick(n => n + 1), 3000);
-    return () => window.clearInterval(t);
-  }, [dashInView, reduceMotion]);
-
   useEffect(() => {
     if (reduceMotion || !inView || locked) return;
     const t = window.setInterval(() => setIndex(i => (i + 1) % EXAMPLES.length), ROTATE_MS);
@@ -213,25 +187,6 @@ export default function IllustratedExample() {
 
   return (
     <>
-    <section ref={dashRef} className="relative z-10 py-24 border-t border-white/[0.06]">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center">
-          <div className="text-[11px] uppercase tracking-[0.16em] text-neutral-500" style={MONO}>Your dashboard</div>
-          <h2 className="mt-3 text-3xl md:text-4xl font-semibold tracking-[-0.03em] text-white">Dashboard Snapshot</h2>
-        </div>
-
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 cursor-default select-none">
-          <figure className="flex min-w-0 flex-col">
-            <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>SCORE BY AREA</div>
-            <PillarGauges week={week} />
-          </figure>
-          <figure className="flex min-w-0 flex-col">
-            <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>TREND BY AREA</div>
-            <TrendCard week={week} />
-          </figure>
-        </div>
-      </div>
-    </section>
     <section ref={sectionRef} className="relative z-10 py-24 border-t border-white/[0.06]">
       <div className="max-w-5xl mx-auto px-6">
         <div className="text-center">
