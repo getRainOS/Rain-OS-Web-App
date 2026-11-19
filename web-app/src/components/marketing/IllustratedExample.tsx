@@ -202,7 +202,7 @@ export default function IllustratedExample() {
   return (
     <>
     <section className="relative z-10 py-24 border-t border-white/[0.06]">
-      <div className="max-w-5xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-6">
         <div className="text-center">
           <div className="text-[11px] uppercase tracking-[0.16em] text-neutral-500" style={MONO}>Your dashboard</div>
           <h2 className="mt-3 text-3xl md:text-4xl font-semibold tracking-[-0.03em] text-white">Dashboard Snapshot</h2>
