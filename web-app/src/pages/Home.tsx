@@ -726,8 +726,7 @@ export default function Home() {
               </h1>
               <EngineCycle names={engines} />
               <div className="mt-7 w-0 min-w-full space-y-4 text-lg md:text-xl text-neutral-400 leading-relaxed text-center">
-                <p>Being readable to AI chatbots could be the minimum cost of entry for your business or website to be found online.</p>
-                <p>rain OS measures and helps improve your AI visibility.</p>
+                <p>Rain OS helps your content or website become more readable to AI to increase your chances of being found and recommended by AI chatbots.</p>
               </div>
               </div>
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
