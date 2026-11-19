@@ -522,11 +522,11 @@ function SourceNetworkSection() {
         <Reveal>
           <Eyebrow>Where AI gets its answers</Eyebrow>
           <ScrollWords
-            text="Each answer draws on sites AI can read. Make yours one of them."
+            text="Each answer draws on sites AI can read."
             className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance"
           />
           <p className="mt-5 max-w-3xl text-neutral-400 text-lg leading-relaxed">
-            When someone asks an AI a question, it reads a handful of websites and names the ones it can read and use most easily. rain OS scores how readable your site is for each AI, shows what is holding it back, and tracks whether it is being read and named, so you know exactly where you stand., so you know exactly where you stand.
+            When someone asks an AI a question, it reads a handful of websites and names the ones it can read and use most easily. rain OS scores how readable your site is for each AI, shows what is holding it back., so you know exactly where you stand.
           </p>
         </Reveal>
         <Reveal delay={0.1}>
