@@ -194,8 +194,8 @@ export default function IllustratedExample() {
     <section ref={sectionRef} className="relative z-10 py-24 border-t border-white/[0.06]">
       <div className="max-w-5xl mx-auto px-6">
         <div className="text-center">
-          <div className="text-[11px] uppercase tracking-[0.16em] text-neutral-500" style={MONO}>Example</div>
-          <h2 className="mt-3 text-3xl md:text-4xl font-semibold tracking-[-0.03em] text-white">Track the type of questions asked of your business</h2>
+          <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Example</div>
+          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Track the type of questions asked of your business</h2>
           <p className="mt-4 text-neutral-400 max-w-2xl mx-auto">
             And make changes to increase your chances of answering them.
           </p>
