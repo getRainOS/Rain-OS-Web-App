@@ -276,8 +276,8 @@ export default function CitationMonitor() {
   return (
     <div className={`${styles.page} fade-in`}>
       <PageHeader
-        title="Is AI Citing Me?"
-        subtitle="Check whether AI links to your website when people ask about the topics you care about."
+        title="Do AI tools link to your site?"
+        subtitle="Is AI Citing Me? checks whether AI links to your website when your customers ask the questions you care about."
         about={[
           { heading: 'What the result means', body: 'Each answer gives two results. Mentioned: AI named your business. Linked: AI included a link to your website as a source. Each one is what AI did at that moment, so check again over time instead of treating one check as a permanent ranking.' },
           { heading: 'How the check works', body: 'We ask each AI engine your exact question live (Gemini with Google Search, ChatGPT and the others through their real answers) and look for your domain among the sources each one cites. One phrasing per check, so run a few variations before drawing conclusions.' },
