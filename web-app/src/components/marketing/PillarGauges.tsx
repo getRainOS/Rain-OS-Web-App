@@ -22,7 +22,7 @@ function Gauge({ label, value, color, mini }: { label: string; value: number; co
   const r = 48;
   const arc = `M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`;
   const angle = -90 + value * 1.8; // -90 = left end (0), +90 = right end (100)
-  const transition = reduce ? { duration: 0 } : { duration: 0.9, ease: EASE };
+  const transition = reduce ? { duration: 0 } : { duration: 1.4, ease: EASE };
   const shown = Math.round(value);
   return (
     <figure className="min-w-0 text-center">
@@ -63,13 +63,13 @@ const LANE_NOTES = [
   { key: 'local_presence' as const, text: 'Local Presence is an extra gauge for local businesses.' },
 ];
 
-export default function PillarGauges({ week = WEEKS - 1 }: { week?: number }) {
+export default function PillarGauges({ week = 0 }: { week?: number }) {
   const reduce = useReducedMotion();
   const current = reduce ? WEEKS - 1 : week;
   return (
     <div className="flex h-full flex-col rounded-md border border-white/[0.07] bg-black p-4">
       <div className="mb-3 text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>LATEST SCORE BY PILLAR</div>
-      <div className="grid grid-cols-2 gap-x-3 gap-y-3">
+      <div className="grid grid-cols-2 gap-x-3 gap-y-2 md:grid-cols-4">
         {CORE.map(({ s, i }) => (
           <Gauge key={s.key} label={s.label} value={valueAt(s.start, s.end, current, i)} color={PILLAR_CHART_COLORS[s.key]} />
         ))}

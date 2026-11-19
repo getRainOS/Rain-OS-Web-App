@@ -164,8 +164,10 @@ const ROTATE_MS = 4000; // how long each lane stays on screen before the next on
 
 export default function IllustratedExample() {
   const [index, setIndex] = useState(0);
-  // The dashboard snapshot steps through the last eight analyses, one at a time.
-  const [week, setWeek] = useState(WEEKS - 1);
+  // The dashboard snapshot steps through twelve analyses, one at a time, and loops.
+  const [tick, setTick] = useState(0);
+  const week = tick % WEEKS;
+  const cycle = Math.floor(tick / WEEKS);
   const [inView, setInView] = useState(false);
   const [locked, setLocked] = useState(false); // a tab press keeps that lane on screen
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -181,10 +183,10 @@ export default function IllustratedExample() {
     return () => io.disconnect();
   }, []);
 
-  // Step the snapshot to the next analysis every 1.8s, only while it is on screen.
+  // Step the snapshot to the next analysis every 3s, only while it is on screen.
   useEffect(() => {
     if (reduceMotion || !inView) return;
-    const t = window.setInterval(() => setWeek(w => (w + 1) % WEEKS), 1800);
+    const t = window.setInterval(() => setTick(n => n + 1), 3000);
     return () => window.clearInterval(t);
   }, [inView, reduceMotion]);
 
@@ -215,7 +217,7 @@ export default function IllustratedExample() {
           </figure>
           <figure className="flex min-w-0 flex-col">
             <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>TREND BY AREA</div>
-            <TrendCard week={week} />
+            <TrendCard week={week} cycle={cycle} />
           </figure>
         </div>
       </div>
