@@ -362,7 +362,7 @@ function ToolsSection() {
                   )}
                 </div>
                 <div className="min-w-0">
-                  {t.visual === 'pillar' ? <RotatingAnalysis /> : t.visual === 'citation' ? <CitationRotation /> : t.visual === 'share' ? <LaneCycle items={SHARE_LANES} render={d => <ShareCard data={d} />} /> : t.visual === 'describe' ? <LaneCycle items={DESCRIBE_LANES} render={d => <DescribeCard data={d} />} /> : <AppShot src={t.visual.src} alt={t.visual.alt} accent={t.visual.accent} />}
+                  {t.visual === 'pillar' ? null : t.visual === 'citation' ? <CitationRotation /> : t.visual === 'share' ? <LaneCycle items={SHARE_LANES} render={d => <ShareCard data={d} />} /> : t.visual === 'describe' ? <LaneCycle items={DESCRIBE_LANES} render={d => <DescribeCard data={d} />} /> : <AppShot src={t.visual.src} alt={t.visual.alt} accent={t.visual.accent} />}
                 </div>
               </div>
             </Reveal>
@@ -791,6 +791,11 @@ export default function Home() {
         <SourceNetworkSection />
         <WhoSection onStart={start} />
         <IllustratedExample />
+        <section className="relative z-10 py-24 border-t border-white/[0.06]">
+          <div className="max-w-3xl mx-auto px-6">
+            <RotatingAnalysis />
+          </div>
+        </section>
         <ToolsSection />
         <HowItWorks />
 
