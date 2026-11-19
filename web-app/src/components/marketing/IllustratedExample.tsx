@@ -166,6 +166,7 @@ export default function IllustratedExample() {
   const [locked, setLocked] = useState(false); // a tab press keeps that lane on screen
   const sectionRef = useRef<HTMLElement | null>(null);
   const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const ex = EXAMPLES[index];
 
   // Run only while the section is on screen, so it starts when someone arrives.
   useEffect(() => {
