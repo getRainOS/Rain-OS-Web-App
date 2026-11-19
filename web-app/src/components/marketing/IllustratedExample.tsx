@@ -171,6 +171,8 @@ export default function IllustratedExample() {
   const [inView, setInView] = useState(false);
   const [locked, setLocked] = useState(false); // a tab press keeps that lane on screen
   const sectionRef = useRef<HTMLElement | null>(null);
+  const dashRef = useRef<HTMLElement | null>(null);
+  const [dashInView, setDashInView] = useState(false);
   const ex = EXAMPLES[index];
   const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
@@ -184,11 +186,20 @@ export default function IllustratedExample() {
   }, []);
 
   // Step the snapshot to the next analysis every 3s, only while it is on screen.
+  // The dashboard has its own observer, since it sits above the examples.
   useEffect(() => {
-    if (reduceMotion || !inView) return;
+    const el = dashRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(([entry]) => setDashInView(entry.isIntersecting), { threshold: 0.35 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (reduceMotion || !dashInView) return;
     const t = window.setInterval(() => setTick(n => n + 1), 3000);
     return () => window.clearInterval(t);
-  }, [inView, reduceMotion]);
+  }, [dashInView, reduceMotion]);
 
   useEffect(() => {
     if (reduceMotion || !inView || locked) return;
@@ -203,7 +214,7 @@ export default function IllustratedExample() {
 
   return (
     <>
-    <section className="relative z-10 py-24 border-t border-white/[0.06]">
+    <section ref={dashRef} className="relative z-10 py-24 border-t border-white/[0.06]">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center">
           <div className="text-[11px] uppercase tracking-[0.16em] text-neutral-500" style={MONO}>Your dashboard</div>
