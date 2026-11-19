@@ -422,45 +422,6 @@ function WhyGoogleSection() {
   );
 }
 
-/* ── Weekly tracking spotlight ──────────────────────────────────────────── */
-
-function TrackingSection() {
-  return (
-    <section className="relative z-10 py-28 border-t border-white/[0.06]">
-      <div className="max-w-[1440px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
-        <Reveal className="order-2 lg:order-1">
-          <div className="rounded-xl border border-white/10 bg-[#0a0a0a] overflow-hidden max-w-md">
-            <div className="flex items-center gap-2 px-5 h-11 border-b border-white/[0.07]">
-              <Mail className="w-4 h-4 text-neutral-500" />
-              <span className="text-[12px] text-neutral-500" style={MONO}>rain OS alerts</span>
-            </div>
-            <div className="p-6">
-              <div className="text-[11px] text-neutral-500 mb-2">Weekly tracking · Pricing page</div>
-              <div className="text-[19px] text-white font-semibold leading-snug">Gemini now cites you for "best scheduling app for clinics"</div>
-              <p className="mt-3 text-[14px] text-neutral-400 leading-relaxed">Your site appeared among the sources in this week's check. Keep the page that earned it up to date.</p>
-              <div className="mt-5 inline-flex items-center gap-2 h-9 px-4 rounded-md bg-white text-black text-[13px] font-medium">Open Citation Monitor</div>
-            </div>
-          </div>
-        </Reveal>
-        <Reveal className="order-1 lg:order-2">
-          <Eyebrow>Weekly tracking</Eyebrow>
-          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
-            Know the week it changes.
-          </h2>
-          <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-xl">
-            Pick the questions that matter to your business. rain OS re-checks them every week, keeps the history, and emails you only when you gain or lose a citation.
-          </p>
-          <ul className="mt-8 space-y-3 text-[15px] text-neutral-300">
-            {['Up to 10 questions on Pro, 30 on Business', 'Email only when your status changes', 'Doesn\'t use your monthly analyses'].map(t => (
-              <li key={t} className="flex items-center gap-3"><Check className="w-4 h-4 text-[#ffffff]" />{t}</li>
-            ))}
-          </ul>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
 /* ── Who it's for (lane picker) ─────────────────────────────────────────── */
 
 const WHO = [
@@ -736,7 +697,6 @@ export default function Home() {
         <ToolsSection />
         <IllustratedExample />
         <WhyGoogleSection />
-        <TrackingSection />
         <HowItWorks />
         <WhoSection onStart={start} />
 
