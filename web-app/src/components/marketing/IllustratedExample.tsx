@@ -162,6 +162,9 @@ const ROTATE_MS = 4000; // how long each lane stays on screen before the next on
 
 export default function IllustratedExample() {
   const [index, setIndex] = useState(0);
+  const [inView, setInView] = useState(false);
+  const [locked, setLocked] = useState(false); // a tab press keeps that lane on screen
+  const sectionRef = useRef<HTMLElement | null>(null);
   const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
   // Run only while the section is on screen, so it starts when someone arrives.
