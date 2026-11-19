@@ -53,7 +53,7 @@ export default function SiteFooter() {
             </Link>
             <p className="mt-1 text-[12px] text-neutral-500 leading-none">Optimization Systems</p>
             <p className="mt-2 text-[13px] text-neutral-500 leading-snug max-w-[240px]">
-              Be <span className="text-white">AI Ready</span>
+              Be <span className="text-white">Seen.</span>
             </p>
           </div>
           {COLUMNS.map(col => (
