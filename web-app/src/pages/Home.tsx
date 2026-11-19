@@ -720,8 +720,8 @@ export default function Home() {
                 <ArrowRight className="w-3 h-3 text-neutral-500" />
               </a>
               {/* The subtitle takes the headline's width: w-0 + min-w-full stops it widening the block. */}
-              <div className="mx-auto w-fit">
-              <h1 className="mt-7 text-[clamp(26px,4.6vw,64px)] leading-[1.02] font-semibold tracking-[-0.045em] whitespace-nowrap">
+              <div className="mx-auto w-fit max-w-full px-2 text-center">
+              <h1 className="mt-7 text-[clamp(26px,4.6vw,64px)] leading-[1.02] font-semibold tracking-[-0.045em] md:whitespace-nowrap">
                 Don't get left behind. <span className="text-neutral-500">Be readable by AI.</span>
               </h1>
               <EngineCycle names={engines} />
