@@ -372,49 +372,6 @@ function ToolsSection() {
   );
 }
 
-/* ── Method ─────────────────────────────────────────────────────────────── */
-
-function MethodSection() {
-  const engines = joinNames(useLiveEngines());
-  const steps = [
-    { n: '01', title: 'We ask the AI tools', body: `Your exact question goes to ${engines}, searching the live web, the same way a customer would ask it.` },
-    { n: '02', title: 'We read the sources', body: 'We collect every source the answer cites and match them against your domain. Cited or not is a fact, not an estimate.' },
-    { n: '03', title: 'We show our work', body: 'You get the answer excerpt, the full source list and the competitors who were cited instead, saved so you can compare over time.' },
-  ];
-  return (
-    <section className="relative z-10 py-28 border-t border-white/[0.06]">
-      <div className="max-w-[1440px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-14 items-start">
-        <Reveal>
-          <Eyebrow>Method</Eyebrow>
-          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
-            Real checks, not predictions.
-          </h2>
-          <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-xl">
-            Some tools guess whether AI will mention you. rain OS asks, then shows you the answer. When a number is a judgment call, we say so and show the evidence.
-          </p>
-          <div className="mt-8 flex items-start gap-3 text-[13px] text-neutral-500 max-w-md">
-            <ShieldCheck className="w-4 h-4 mt-0.5 shrink-0 text-neutral-400" />
-            Citation checks, weekly tracking, Share of Voice and Brand Sentiment run on every engine. The Rain Score looks at what all of them rely on, so each fix helps everywhere.
-          </div>
-        </Reveal>
-        <div className="space-y-3">
-          {steps.map((s, k) => (
-            <Reveal key={s.n} delay={0.08 * k}>
-              <div className="rounded-xl border border-white/10 bg-[#0a0a0a] p-6 flex gap-5">
-                <span className="text-[12px] text-[#ffffff] pt-1" style={MONO}>{s.n}</span>
-                <div>
-                  <div className="text-[17px] text-white font-medium">{s.title}</div>
-                  <p className="mt-1.5 text-[14px] text-neutral-400 leading-relaxed">{s.body}</p>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ── The engines we check ───────────────────────────────────────────────── */
 
 function WhyGoogleSection() {
@@ -779,7 +736,6 @@ export default function Home() {
         <ToolsSection />
         <IllustratedExample />
         <WhyGoogleSection />
-        <MethodSection />
         <TrackingSection />
         <HowItWorks />
         <WhoSection onStart={start} />
