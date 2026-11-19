@@ -14,7 +14,7 @@ import { useLiveEngines, joinNames } from '@/lib/liveEngines';
 import HeroPrompt from '@/components/marketing/HeroPrompt';
 import SourceNetwork from '@/components/marketing/SourceNetwork';
 import RainBackground from '@/components/marketing/RainBackground';
-import TrendCard from '@/components/marketing/TrendCard';
+import TrendCard, { WEEKS } from '@/components/marketing/TrendCard';
 import PillarGauges from '@/components/marketing/PillarGauges';
 import AppShot, { PillarVisual, forLane, LANE_EXAMPLES, CitationRotation, IllustrativeTag, LaneCycle, ShareCard, SHARE_LANES, DescribeCard, DESCRIBE_LANES } from '@/components/marketing/ToolVisuals';
 import ScrollWords from '@/components/marketing/ScrollWords';
@@ -327,6 +327,19 @@ function RotatingAnalysis() {
   );
 }
 
+// The dynamic bar graph shown inside the Run an analysis box. It steps through the
+// twelve analyses every 3 seconds, and holds still for reduced motion.
+function SnapshotBars() {
+  const reduce = useReducedMotion();
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    if (reduce) return;
+    const t = window.setInterval(() => setTick(n => n + 1), 3000);
+    return () => window.clearInterval(t);
+  }, [reduce]);
+  return <TrendCard week={tick % WEEKS} />;
+}
+
 function ToolsSection() {
   return (
     <section id="product" className="relative z-10 py-28 border-t border-white/[0.06]">
@@ -362,7 +375,7 @@ function ToolsSection() {
                   )}
                 </div>
                 <div className="min-w-0">
-                  {t.visual === 'pillar' ? null : t.visual === 'citation' ? <CitationRotation /> : t.visual === 'share' ? <LaneCycle items={SHARE_LANES} render={d => <ShareCard data={d} />} /> : t.visual === 'describe' ? <LaneCycle items={DESCRIBE_LANES} render={d => <DescribeCard data={d} />} /> : <AppShot src={t.visual.src} alt={t.visual.alt} accent={t.visual.accent} />}
+                  {t.visual === 'pillar' ? <SnapshotBars /> : t.visual === 'citation' ? <CitationRotation /> : t.visual === 'share' ? <LaneCycle items={SHARE_LANES} render={d => <ShareCard data={d} />} /> : t.visual === 'describe' ? <LaneCycle items={DESCRIBE_LANES} render={d => <DescribeCard data={d} />} /> : <AppShot src={t.visual.src} alt={t.visual.alt} accent={t.visual.accent} />}
                 </div>
               </div>
             </Reveal>
@@ -790,13 +803,8 @@ export default function Home() {
 
         <SourceNetworkSection />
         <WhoSection onStart={start} />
-        <IllustratedExample />
-        <section className="relative z-10 py-24 border-t border-white/[0.06]">
-          <div className="max-w-3xl mx-auto px-6">
-            <RotatingAnalysis />
-          </div>
-        </section>
         <ToolsSection />
+        <IllustratedExample />
         <HowItWorks />
 
         <section className="relative z-10 border-y border-white/[0.06] bg-white/[0.01]">
