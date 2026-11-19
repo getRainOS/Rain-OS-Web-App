@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { PILLAR_CHART_COLORS } from '@/lib/pillarColors.js';
-import { SERIES, WEEKS, valueAt } from './TrendCard';
+import { SCORES, SERIES, WEEKS } from './TrendCard';
 
 // One half-circle meter per core pillar, in the same colours as the trend lines.
 // The needles move with the same analysis the trend chart is on. Example data.
@@ -22,7 +22,7 @@ function Gauge({ label, value, color, mini }: { label: string; value: number; co
   const r = 48;
   const arc = `M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`;
   const angle = -90 + value * 1.8; // -90 = left end (0), +90 = right end (100)
-  const transition = reduce ? { duration: 0 } : { duration: 1.4, ease: EASE };
+  const transition = reduce ? { duration: 0 } : { duration: 1.2, ease: EASE };
   const shown = Math.round(value);
   return (
     <figure className="min-w-0 text-center">
@@ -71,7 +71,7 @@ export default function PillarGauges({ week = 0 }: { week?: number }) {
       <div className="mb-3 text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>LATEST SCORE BY PILLAR</div>
       <div className="grid grid-cols-2 gap-x-3 gap-y-2 md:grid-cols-4">
         {CORE.map(({ s, i }) => (
-          <Gauge key={s.key} label={s.label} value={valueAt(s.start, s.end, current, i)} color={PILLAR_CHART_COLORS[s.key]} />
+          <Gauge key={s.key} label={s.label} value={SCORES[current][i]} color={PILLAR_CHART_COLORS[s.key]} />
         ))}
       </div>
       <ul className="mt-4 space-y-2 border-t border-white/[0.07] pt-3">
@@ -81,7 +81,7 @@ export default function PillarGauges({ week = 0 }: { week?: number }) {
           return (
             <li key={n.key} className="flex items-center gap-3 text-[12px] leading-relaxed text-neutral-300">
               <div className="w-14 shrink-0">
-                <Gauge label={s.label} value={valueAt(s.start, s.end, current, i)} color={PILLAR_CHART_COLORS[s.key]} mini />
+                <Gauge label={s.label} value={SCORES[current][i]} color={PILLAR_CHART_COLORS[s.key]} mini />
               </div>
               <span>{n.text}</span>
             </li>

@@ -167,7 +167,6 @@ export default function IllustratedExample() {
   // The dashboard snapshot steps through twelve analyses, one at a time, and loops.
   const [tick, setTick] = useState(0);
   const week = tick % WEEKS;
-  const cycle = Math.floor(tick / WEEKS);
   const [inView, setInView] = useState(false);
   const [locked, setLocked] = useState(false); // a tab press keeps that lane on screen
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -228,7 +227,7 @@ export default function IllustratedExample() {
           </figure>
           <figure className="flex min-w-0 flex-col">
             <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>TREND BY AREA</div>
-            <TrendCard week={week} cycle={cycle} />
+            <TrendCard week={week} />
           </figure>
         </div>
       </div>
