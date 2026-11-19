@@ -192,6 +192,27 @@ export default function IllustratedExample() {
 
   return (
     <>
+    <section className="relative z-10 py-24 border-t border-white/[0.06]">
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="text-center">
+          <div className="text-[11px] uppercase tracking-[0.16em] text-neutral-500" style={MONO}>Your dashboard</div>
+          <h2 className="mt-3 text-3xl md:text-4xl font-semibold tracking-[-0.03em] text-white">Every pillar, scored and tracked over time</h2>
+        </div>
+
+        <div className="mt-10 rounded-xl border border-white/10 bg-[#0a0a0a] p-6 cursor-default select-none">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <figure className="min-w-0">
+            <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>SCORE BY AREA</div>
+            <PillarGauges />
+          </figure>
+          <figure className="min-w-0">
+            <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>TREND BY AREA</div>
+            <TrendCard />
+          </figure>
+          </div>
+        </div>
+      </div>
+    </section>
     <section ref={sectionRef} className="relative z-10 py-24 border-t border-white/[0.06]">
       <div className="max-w-5xl mx-auto px-6">
         <div className="text-center">
@@ -224,28 +245,6 @@ export default function IllustratedExample() {
           </div>
 
         </motion.div>
-      </div>
-    </section>
-
-    <section className="relative z-10 py-24 border-t border-white/[0.06]">
-      <div className="max-w-5xl mx-auto px-6">
-        <div className="text-center">
-          <div className="text-[11px] uppercase tracking-[0.16em] text-neutral-500" style={MONO}>Your dashboard</div>
-          <h2 className="mt-3 text-3xl md:text-4xl font-semibold tracking-[-0.03em] text-white">Every pillar, scored and tracked over time</h2>
-        </div>
-
-        <div className="mt-10 rounded-xl border border-white/10 bg-[#0a0a0a] p-6 cursor-default select-none">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <figure className="min-w-0">
-            <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>SCORE BY AREA</div>
-            <PillarGauges />
-          </figure>
-          <figure className="min-w-0">
-            <div className="mb-2 text-[11px] text-neutral-500" style={MONO}>TREND BY AREA</div>
-            <TrendCard />
-          </figure>
-          </div>
-        </div>
       </div>
     </section>
     </>
