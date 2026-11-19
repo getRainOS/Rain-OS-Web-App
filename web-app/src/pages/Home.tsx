@@ -514,27 +514,6 @@ const WHO = [
   { Icon: Code2, title: 'I write code and docs', body: 'READMEs, documentation and API references. Help AI explain your project correctly.', to: '/developers' },
 ];
 
-function SourceNetworkSection() {
-  return (
-    <section className="relative z-10 py-28 border-t border-white/[0.06] overflow-hidden">
-      <div className="max-w-[1440px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
-        <Reveal>
-          <Eyebrow>Where AI gets its answers</Eyebrow>
-          <ScrollWords
-            text="Each answer draws on sites AI can read."
-            className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance"
-          />
-          <p className="mt-5 max-w-3xl text-neutral-400 text-lg leading-relaxed">
-            When someone asks an AI a question, it reads a handful of websites and names the ones it can read and use most easily. rain OS scores how readable your site is for each AI, shows what is holding it back., so you know exactly where you stand.
-          </p>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <SourceNetwork />
-        </Reveal>
-      </div>
-    </section>
-  );
-}
 
 function WhoSection({ onStart }: { onStart: () => void }) {
   return (
@@ -785,9 +764,23 @@ export default function Home() {
               </div>
             </Reveal>
           </div>
+          <div className="max-w-[1440px] mx-auto px-6 mt-24 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
+            <Reveal>
+              <Eyebrow>Where AI gets its answers</Eyebrow>
+              <ScrollWords
+                text="Each answer draws on sites AI can read."
+                className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance"
+              />
+              <p className="mt-5 max-w-3xl text-neutral-400 text-lg leading-relaxed">
+                When someone asks an AI a question, it reads a handful of websites and names the ones it can read and use most easily. rain OS scores how readable your site is for each AI, shows what is holding it back.
+              </p>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <SourceNetwork />
+            </Reveal>
+          </div>
         </section>
 
-        <SourceNetworkSection />
         <WhoSection onStart={start} />
         <ToolsSection />
         <IllustratedExample />

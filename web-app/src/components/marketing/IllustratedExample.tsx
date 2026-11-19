@@ -158,7 +158,6 @@ function Drawing({ strokes }: { strokes: Stroke[] }) {
   );
 }
 
-const ROTATE_MS = 4000; // how long each lane stays on screen before the next one
 
 export default function IllustratedExample() {
   const [index, setIndex] = useState(0);
@@ -178,12 +177,6 @@ export default function IllustratedExample() {
   }, []);
 
   // Step the snapshot to the next analysis every 3s, only while it is on screen.
-  useEffect(() => {
-    if (reduceMotion || !inView || locked) return;
-    const t = window.setInterval(() => setIndex(i => (i + 1) % EXAMPLES.length), ROTATE_MS);
-    return () => window.clearInterval(t);
-  }, [inView, reduceMotion, locked]);
-
   const pick = (i: number) => {
     setIndex(i);
     setLocked(true);
