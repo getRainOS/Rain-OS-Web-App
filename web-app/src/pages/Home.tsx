@@ -372,56 +372,6 @@ function ToolsSection() {
   );
 }
 
-/* ── The engines we check ───────────────────────────────────────────────── */
-
-function WhyGoogleSection() {
-  const live = useLiveEngines();
-  const points = [
-    {
-      Icon: Search,
-      title: 'Where your customers already are',
-      body: 'ChatGPT is the AI assistant people use most. Google answers many searches with an AI Overview before a single link, and AI Mode goes further. Perplexity and Claude round out where people ask. We check the real answers on each.',
-    },
-    {
-      Icon: Globe,
-      title: 'Live search, not memory',
-      body: 'Every check searches the web at that moment and answers from what it finds today, not from training data that may be a year old.',
-    },
-    {
-      Icon: ShieldCheck,
-      title: 'Proof you can click',
-      body: 'Each check returns the exact pages the answer relied on. So "cited" or "not cited" is a fact with links, not a guess, and you can open every source yourself.',
-    },
-  ];
-  return (
-    <section id="why-google" className="relative z-10 py-28 border-t border-white/[0.06]">
-      <div className="max-w-[1440px] mx-auto px-6">
-        <Reveal>
-          <Eyebrow>The AI tools we check</Eyebrow>
-          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance max-w-3xl">
-            We ask the AI your customers actually use.
-          </h2>
-          <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-2xl">
-            rain OS puts your questions to {joinNames(live)}, searching the live web, and shows exactly which sites each one cited and where you ranked.
-            {' '}One question, the AI tools we check, side by side.
-          </p>
-        </Reveal>
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-3">
-          {points.map(({ Icon, title, body }, k) => (
-            <Reveal key={title} delay={0.08 * k}>
-              <div className="h-full rounded-xl border border-white/10 bg-[#0a0a0a] p-6">
-                <Icon className="w-5 h-5 text-[#ffffff]" />
-                <div className="mt-4 text-[17px] text-white font-medium">{title}</div>
-                <p className="mt-2 text-[14px] text-neutral-400 leading-relaxed">{body}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ── Who it's for (lane picker) ─────────────────────────────────────────── */
 
 const WHO = [
@@ -696,7 +646,6 @@ export default function Home() {
 
         <ToolsSection />
         <IllustratedExample />
-        <WhyGoogleSection />
         <HowItWorks />
         <WhoSection onStart={start} />
 
