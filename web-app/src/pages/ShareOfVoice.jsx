@@ -251,7 +251,7 @@ export default function ShareOfVoice() {
 
       <PageHeader
         title="Who AI Recommends"
-        subtitle="See how often AI mentions and cites you for a topic, and which competitors show up instead."
+        subtitle="See how often AI names your business for the questions your customers ask, next to the businesses you compete with."
         about={[
           { heading: 'What the numbers mean', body: 'These are plain counts from three real AI answers, not a score. Check again later to see whether AI mentions you more often.' },
           { heading: 'How the check works', body: 'We ask the AI engine you pick about your topic 3 different ways (best options, a recommendation, and a comparison), each live. The 3 questions tab shows exactly what was asked. It covers one engine at one moment, so treat it as a trend signal rather than true market share.' },

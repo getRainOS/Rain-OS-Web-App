@@ -13,7 +13,7 @@ import styles from './Questions.module.css';
 const CHECKS = [
   { to: '/citation-monitor', label: 'Citations',      Icon: Radar,     hint: 'Does AI cite your site?' },
   { to: '/share-of-voice',   label: 'Share of voice', Icon: BarChart2, hint: 'How often does AI mention you?' },
-  { to: '/brand-visibility', label: 'Sentiment',      Icon: Eye,       hint: 'What does AI say about you?' },
+  { to: '/brand-visibility', label: 'How AI describes you', Icon: Eye,       hint: 'See the description AI gives of your business.' },
 ];
 
 function checkHref(to, question, site) {
