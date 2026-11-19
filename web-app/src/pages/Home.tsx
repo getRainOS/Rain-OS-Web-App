@@ -506,6 +506,11 @@ function EngineMark({ name }: { name: string }) {
 function EngineCycle({ names }: { names: string[] }) {
   const reduce = useReducedMotion();
   const [i, setI] = useState(0);
+  useEffect(() => {
+    if (reduce) return;
+    const t = setInterval(() => setI(n => (n + 1) % names.length), 3000);
+    return () => clearInterval(t);
+  }, [reduce, names.length]);
   return (
     <div className="mt-4 flex justify-center" style={{ fontSize: 'clamp(15px, 2.6vw, 36px)' }}>
       <AnimatePresence mode="wait">
