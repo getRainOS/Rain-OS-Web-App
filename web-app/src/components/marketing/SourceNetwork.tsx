@@ -35,11 +35,9 @@ function drawBlossom(ctx: CanvasRenderingContext2D, cx: number, cy: number, size
 
 const LABEL_FONT = '12px "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace';
 
+// The diagram is static: it is drawn once and does not animate.
 function isStill(): boolean {
-  if (typeof window === 'undefined') return true;
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const phone = window.matchMedia('(max-width: 767px)').matches;
-  return reduced || phone;
+  return true;
 }
 
 export default function SourceNetwork() {
