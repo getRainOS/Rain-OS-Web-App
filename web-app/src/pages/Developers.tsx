@@ -215,7 +215,7 @@ export default function Developers() {
               transition={{ duration: 0.6 }}
               className="text-center mb-14"
             >
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">
+              <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4">
                 Vibe coders ask AI first. Your docs are what it reads.
               </h2>
               <p className="text-neutral-400 max-w-2xl mx-auto leading-relaxed">
@@ -262,10 +262,10 @@ export default function Developers() {
               transition={{ duration: 0.6 }}
               className="mb-12"
             >
-              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">
+              <span className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4 block">
                 Documentation Scoring Framework
               </span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
+              <h2 className="text-3xl md:text-5xl font-semibold text-white mb-3">
                 Four core pillars, weighted equally, for developer docs.
               </h2>
               <p className="text-neutral-400 max-w-xl leading-relaxed">
@@ -322,8 +322,8 @@ export default function Developers() {
               transition={{ duration: 0.6 }}
               className="mb-12"
             >
-              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">8 signals scored</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">What we analyze</h2>
+              <span className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4 block">8 signals scored</span>
+              <h2 className="text-3xl md:text-5xl font-semibold text-white mb-3">What we analyze</h2>
               <p className="text-neutral-400 max-w-xl leading-relaxed">
                 Each of these signals has a measurable impact on whether AI cites your docs or guesses instead.
               </p>
@@ -364,8 +364,8 @@ export default function Developers() {
               transition={{ duration: 0.6 }}
               className="mb-12 text-center"
             >
-              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Works with</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white">Analyze any doc format</h2>
+              <span className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4 block">Works with</span>
+              <h2 className="text-3xl md:text-5xl font-semibold text-white">Analyze any doc format</h2>
             </motion.div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -400,8 +400,8 @@ export default function Developers() {
               transition={{ duration: 0.6 }}
               className="text-center mb-14"
             >
-              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Simple workflow</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white">From written to cited in three steps</h2>
+              <span className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4 block">Simple workflow</span>
+              <h2 className="text-3xl md:text-5xl font-semibold text-white">From written to cited in three steps</h2>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -431,7 +431,7 @@ export default function Developers() {
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
             >
-              <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
+              <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4">
                 Ship docs that get your product cited.
               </h2>
               <p className="text-neutral-400 text-lg mb-8 leading-relaxed">

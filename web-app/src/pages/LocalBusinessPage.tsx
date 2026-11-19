@@ -46,7 +46,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
             <span className="text-[#bdbdbd] font-bold tracking-wider text-xs uppercase mb-3 block">The new reality</span>
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">People ask AI now, not just Google.</h2>
+            <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4">People ask AI now, not just Google.</h2>
             <p className="text-neutral-400 max-w-2xl mx-auto text-lg leading-relaxed">
               Customers used to search Google and pick from a list. Now many ask an AI one question and get one answer. If your business isn't in that answer, they won't see you.
             </p>
@@ -95,7 +95,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
             <span className="text-sky-400 font-bold tracking-wider text-xs uppercase mb-3 block">How rain OS works for local businesses</span>
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">From invisible to recommended in three steps</h2>
+            <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4">From invisible to recommended in three steps</h2>
           </motion.div>
 
           <div className="flex flex-col gap-0">
@@ -159,7 +159,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
             <span className="text-neutral-500 font-bold tracking-wider text-xs uppercase mb-3 block">Who this is for</span>
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Built for local businesses of every size</h2>
+            <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4">Built for local businesses of every size</h2>
             <p className="text-neutral-400 max-w-xl mx-auto">If customers search for your service in your area, this is for you.</p>
           </motion.div>
 
@@ -187,7 +187,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
             <span className="text-[#bdbdbd] font-bold tracking-wider text-xs uppercase mb-3 block">What we score</span>
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Three things AI checks on your website</h2>
+            <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4">Three things AI checks on your website</h2>
             <p className="text-neutral-400 max-w-2xl mx-auto">
               AI looks at five pillars before it recommends a local business. Four are about your website and how you're described. The fifth, Local Presence, covers your Google listing, reviews and service area.
             </p>
@@ -259,7 +259,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
             <span className="text-amber-400 font-bold tracking-wider text-xs uppercase mb-3 block">Your Google listing</span>
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Your listing and your website should agree</h2>
+            <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4">Your listing and your website should agree</h2>
             <p className="text-neutral-400 max-w-2xl mx-auto leading-relaxed">
               Google's AI can check details like your hours, prices and availability for customers. Your website and your Google Business Profile should tell the same story.
             </p>
@@ -325,7 +325,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
       <section className="py-20 px-6 border-t border-white/[0.06]">
         <div className="max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">What you get from rain OS</h2>
+            <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4">What you get from rain OS</h2>
           </motion.div>
 
           <div className="bg-white/[0.03] border border-white/10 rounded-3xl overflow-hidden">
@@ -380,7 +380,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
         <div className="max-w-2xl mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <MapPin className="w-10 h-10 text-[#bdbdbd] mx-auto mb-6" />
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-5">
+            <h2 className="text-3xl md:text-5xl font-semibold text-white mb-5">
               Find out what AI says about your business
             </h2>
             <p className="text-neutral-400 text-lg mb-8 leading-relaxed">

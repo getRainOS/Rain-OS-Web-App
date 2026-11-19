@@ -205,7 +205,7 @@ export default function ContentWriters() {
               transition={{ duration: 0.6 }}
               className="text-center mb-14"
             >
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">
+              <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4">
                 SEO alone won't get you cited or mentioned
               </h2>
               <p className="text-neutral-400 max-w-2xl mx-auto leading-relaxed">
@@ -253,8 +253,8 @@ export default function ContentWriters() {
               transition={{ duration: 0.6 }}
               className="mb-12"
             >
-              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">How we score</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Four core pillars. One Rain Score.</h2>
+              <span className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4 block">How we score</span>
+              <h2 className="text-3xl md:text-5xl font-semibold text-white mb-3">Four core pillars. One Rain Score.</h2>
               <p className="text-neutral-400 max-w-xl leading-relaxed">
                 Every analysis returns a weighted score across the dimensions that determine whether AI tools cite or mention your content.
               </p>
@@ -294,8 +294,8 @@ export default function ContentWriters() {
               transition={{ duration: 0.6 }}
               className="text-center mb-14"
             >
-              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Simple workflow</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white">From draft to cited or mentioned in three steps</h2>
+              <span className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4 block">Simple workflow</span>
+              <h2 className="text-3xl md:text-5xl font-semibold text-white">From draft to cited or mentioned in three steps</h2>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -327,8 +327,8 @@ export default function ContentWriters() {
               transition={{ duration: 0.6 }}
               className="mb-12"
             >
-              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Everything included</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white">Built for content writers</h2>
+              <span className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4 block">Everything included</span>
+              <h2 className="text-3xl md:text-5xl font-semibold text-white">Built for content writers</h2>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -368,7 +368,7 @@ export default function ContentWriters() {
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
             >
-              <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
+              <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4">
                 See how AI reads your writing
               </h2>
               <p className="text-neutral-400 text-lg mb-8 leading-relaxed">

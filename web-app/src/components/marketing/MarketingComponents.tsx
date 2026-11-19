@@ -144,8 +144,8 @@ export const FourPillars = () => {
     <section id="five-pillars" className="py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Your AI Built Your Product Or Website</span>
-          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Now Optimize For AI Search</h2>
+          <span className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4 block">Your AI Built Your Product Or Website</span>
+          <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4">Now Optimize For AI Search</h2>
           <p className="text-neutral-400 max-w-2xl mx-auto">The AI Readability pillar measures how easily ChatGPT, Perplexity, and Gemini can extract answers from your raw content. It is the #1 factor in whether AI cites you or skips you. We score it — plus Authority and Conversion — so you own the answers that matter.</p>
         </div>
 
@@ -190,8 +190,8 @@ export const FeatureGrid = () => {
     <section id="features" className="py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Under the Hood</span>
-          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Deeper signals we check</h2>
+          <span className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4 block">Under the Hood</span>
+          <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4">Deeper signals we check</h2>
           <p className="text-neutral-400 max-w-2xl mx-auto">rain OS also checks signals that sit beneath the four pillars, from how clearly each sentence states a fact to how well your content matches the questions people ask.</p>
         </div>
 
@@ -254,10 +254,10 @@ export const ReadabilityIntelligence = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
-            <span className="text-white font-bold tracking-wider text-xs uppercase mb-2 block flex items-center gap-2">
+            <span className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4 block flex items-center gap-2">
               <Layers className="w-4 h-4" /> Readability Intelligence
             </span>
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-6 leading-[1.1]">
+            <h2 className="text-3xl md:text-5xl font-semibold text-white mb-6 leading-[1.1]">
               Built for the AI Era, <br/><span className="text-neutral-500">Not 2015.</span>
             </h2>
             <p className="text-neutral-400 leading-relaxed mb-8">
@@ -546,7 +546,7 @@ export const FAQ = ({ items }: { items?: { q: string; a: string }[] } = {}) => {
   return (
     <section className="py-24 relative z-10">
       <div className="max-w-3xl mx-auto px-6">
-        <h2 className="text-3xl md:text-4xl font-semibold text-white mb-12 text-center">Frequently Asked Questions</h2>
+        <h2 className="text-3xl md:text-5xl font-semibold text-white mb-12 text-center">Frequently Asked Questions</h2>
         <div className="space-y-2">
           {faqs.map((faq, i) => <AccordionItem key={i} question={faq.q} answer={faq.a} />)}
         </div>
@@ -638,7 +638,7 @@ export const ThreeModesSection = ({ onGetStarted }: { onGetStarted?: () => void 
           className="text-center mb-14"
         >
           <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-500 mb-3 block">Three ways to analyze</span>
-          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4" style={{ letterSpacing: '-0.03em' }}>
+          <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4" style={{ letterSpacing: '-0.03em' }}>
             One platform.{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white/40 to-white/20">
               Three analysis modes.
@@ -716,8 +716,8 @@ export const AIRewriteTools = () => {
     <section className="py-20 relative z-10">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-12">
-          <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Built-in tools</span>
-          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Fix it without leaving the dashboard</h2>
+          <span className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4 block">Built-in tools</span>
+          <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4">Fix it without leaving the dashboard</h2>
           <p className="text-neutral-400 max-w-2xl mx-auto">Don&apos;t just see the problem. rain OS gives you one-click AI tools to rewrite, improve, and optimize the exact issues your score flags.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -757,8 +757,8 @@ export const VibeFAQ = () => {
     <section className="py-24 relative z-10">
       <div className="max-w-3xl mx-auto px-6">
         <div className="text-center mb-12">
-          <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Got questions?</span>
-          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Frequently Asked Questions</h2>
+          <span className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4 block">Got questions?</span>
+          <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4">Frequently Asked Questions</h2>
           <p className="text-neutral-400 max-w-xl mx-auto">Common questions from developers and vibe coders getting their sites AI-ready.</p>
         </div>
         <div className="space-y-2">
@@ -779,7 +779,7 @@ export const VibeCoderBand = ({ onGetStarted }: { onGetStarted?: () => void }) =
           <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-white">For vibe coders</span>
         </div>
 
-        <h2 className="text-2xl md:text-3xl font-semibold text-white leading-tight max-w-2xl" style={{ letterSpacing: '-0.03em' }}>
+        <h2 className="text-3xl md:text-5xl font-semibold text-white leading-tight max-w-2xl" style={{ letterSpacing: '-0.03em' }}>
           Your AI built the site.{' '}
           <span className="text-white">Now scan the repo.</span>
         </h2>

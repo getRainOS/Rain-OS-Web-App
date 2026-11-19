@@ -638,11 +638,6 @@ function EngineMark({ name }: { name: string }) {
 function EngineCycle({ names }: { names: string[] }) {
   const reduce = useReducedMotion();
   const [i, setI] = useState(0);
-  useEffect(() => {
-    if (reduce) return;
-    const t = setInterval(() => setI(n => (n + 1) % names.length), 3000);
-    return () => clearInterval(t);
-  }, [reduce, names.length]);
   return (
     <div className="mt-4 flex justify-center" style={{ fontSize: 'clamp(15px, 2.6vw, 36px)' }}>
       <AnimatePresence mode="wait">
@@ -786,16 +781,6 @@ export default function Home() {
         <IllustratedExample />
         <HowItWorks />
 
-        <section className="relative z-10 border-y border-white/[0.06] bg-white/[0.01]">
-          <div className="max-w-[1440px] mx-auto grid grid-cols-2 md:grid-cols-4">
-            {SPECS.map((s, k) => (
-              <div key={s.v} className={`px-6 py-8 ${k % 2 === 1 ? 'border-l' : ''} ${k >= 2 ? 'border-t md:border-t-0' : ''} ${k === 2 ? 'md:border-l' : ''} border-white/[0.06]`}>
-                <div className="text-2xl md:text-3xl font-semibold tracking-tight text-white">{s.k}</div>
-                <div className="mt-1 text-[13px] text-neutral-500">{s.v}</div>
-              </div>
-            ))}
-          </div>
-        </section>
 
 
 
