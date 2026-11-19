@@ -555,11 +555,6 @@ export default function Home() {
           />
           <div className="relative z-10 max-w-[1440px] mx-auto px-6 pt-32 md:pt-36 pb-16 flex flex-col items-center gap-16">
             <motion.div className="text-center max-w-4xl mx-auto" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <a href="#who" className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] pl-3 pr-2.5 h-7 text-[12px] text-neutral-300 hover:border-white/20 transition-colors">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#ffffff]" />
-                For local businesses, sellers and builders
-                <ArrowRight className="w-3 h-3 text-neutral-500" />
-              </a>
               {/* The subtitle takes the headline's width: w-0 + min-w-full stops it widening the block. */}
               <div className="mx-auto flex w-fit max-w-full flex-col items-center px-2 text-center">
               <h1 className="mt-7 max-w-full text-[clamp(26px,4.6vw,64px)] leading-[1.02] font-semibold tracking-[-0.045em] md:whitespace-nowrap">
@@ -575,11 +570,6 @@ export default function Home() {
                   Check my site free <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
-              <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] text-neutral-400">
-                {['No credit card', 'No technical skills needed'].map(t => (
-                  <li key={t} className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-[#ffffff]" />{t}</li>
-                ))}
-              </ul>
             </motion.div>
 
             <motion.div
