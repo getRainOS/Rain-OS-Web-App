@@ -776,17 +776,13 @@ export default function Home() {
           </div>
         </section>
 
-        <WhoSection onStart={start} />
         <ToolsSection />
         <IllustratedExample />
-        <HowItWorks />
-
-
-
-
         <WhyGoogleSection />
         <MethodSection />
         <TrackingSection />
+        <HowItWorks />
+        <WhoSection onStart={start} />
 
         <section className="relative z-10 border-t border-white/[0.06]">
           <FAQ />
