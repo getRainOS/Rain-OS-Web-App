@@ -82,7 +82,8 @@ const SCENES: Scene[] = [
 type Phase = 'typing' | 'thinking' | 'answer' | 'reveal';
 
 export default function HeroPrompt() {
-  const reduce = useReducedMotion();
+  // Static: the conversation is shown in full, without typing.
+  const reduce = true;
   // The example stays still until it scrolls into view, then runs once.
   const ref = useRef<HTMLDivElement | null>(null);
   // Only starts once the card is well up the screen, so the hero above it stays calm on arrival.

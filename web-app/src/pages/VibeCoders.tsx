@@ -121,11 +121,7 @@ export default function VibeCoders() {
         {/* The Problem */}
         <section
           className="py-16 px-6 border-t border-white/10"
-          style={{
-            backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px)',
-            backgroundSize: '64px 64px',
-            backgroundPosition: 'center',
-          }}
+          
         >
           <div className="max-w-5xl mx-auto">
             <motion.div
@@ -135,7 +131,7 @@ export default function VibeCoders() {
               transition={{ duration: 0.6 }}
               className="text-center mb-14"
             >
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">
+              <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4">
                 Vibe coding is fast. AI discoverability is slow.
               </h2>
               <p className="text-neutral-400 max-w-2xl mx-auto leading-relaxed">
@@ -201,8 +197,8 @@ export default function VibeCoders() {
               transition={{ duration: 0.6 }}
               className="mb-12"
             >
-              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">8 signals scored</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">What we analyze in your repo or URL</h2>
+              <span className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4 block">8 signals scored</span>
+              <h2 className="text-3xl md:text-5xl font-semibold text-white mb-3">What we analyze in your repo or URL</h2>
               <p className="text-neutral-400 max-w-xl leading-relaxed">
                 Each signal has a direct impact on whether AI search engines can discover, understand, and cite your vibe-coded project.
               </p>
@@ -256,8 +252,8 @@ export default function VibeCoders() {
               transition={{ duration: 0.6 }}
               className="text-center mb-14"
             >
-              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Inside rain OS</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Built for people who ship fast</h2>
+              <span className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4 block">Inside rain OS</span>
+              <h2 className="text-3xl md:text-5xl font-semibold text-white mb-3">Built for people who ship fast</h2>
               <p className="text-neutral-400 max-w-xl mx-auto leading-relaxed">
                 You already watch your build's deploy logs. This is the same instinct, pointed at whether AI can actually read what you shipped — real trendlines, not a vibe check.
               </p>
@@ -328,8 +324,8 @@ export default function VibeCoders() {
               transition={{ duration: 0.6 }}
               className="text-center mb-14"
             >
-              <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Before you ship</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">Six things AI-built sites get wrong</h2>
+              <span className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4 block">Before you ship</span>
+              <h2 className="text-3xl md:text-5xl font-semibold text-white mb-3">Six things AI-built sites get wrong</h2>
               <p className="text-neutral-400 max-w-xl mx-auto leading-relaxed">
                 Fast builds skip the parts search and AI tools rely on. These checks are worth running before launch and again after big changes.
               </p>
@@ -392,7 +388,7 @@ export default function VibeCoders() {
               transition={{ duration: 0.6 }}
               className="rounded-[28px] border border-white/10 bg-white/[0.03] p-10"
             >
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">Stop building in the dark.</h2>
+              <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4">Stop building in the dark.</h2>
               <p className="text-neutral-400 mb-8 max-w-lg mx-auto leading-relaxed">
                 Scan your repo or URL for AI discoverability. Check any URL for technical AI-readiness signals. Free to start, no credit card required.
               </p>

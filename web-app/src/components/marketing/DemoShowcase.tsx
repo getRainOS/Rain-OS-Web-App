@@ -126,8 +126,8 @@ export const DemoShowcase = ({ onAnalyzeClick }: DemoShowcaseProps) => {
 
         {/* Section header */}
         <div className="text-center mb-14">
-          <span className="text-white font-bold tracking-wider text-xs uppercase mb-3 block">Live preview</span>
-          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4" style={{ letterSpacing: '-0.03em' }}>
+          <span className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4 block">Live preview</span>
+          <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4" style={{ letterSpacing: '-0.03em' }}>
             Your Rain Score, in real time
           </h2>
           <p className="text-neutral-400 max-w-2xl mx-auto text-lg leading-relaxed">

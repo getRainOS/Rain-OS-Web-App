@@ -170,7 +170,7 @@ export default function ProductSellers() {
               transition={{ duration: 0.6 }}
               className="text-center mb-14"
             >
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">
+              <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4">
                 AI shopping is here. Most product pages aren't ready.
               </h2>
               <p className="text-neutral-400 max-w-2xl mx-auto leading-relaxed">
@@ -219,7 +219,7 @@ export default function ProductSellers() {
               >
                 Product Discoverability Module
               </span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
+              <h2 className="text-3xl md:text-5xl font-semibold text-white mb-3">
                 5 signals AI shopping assistants look for.
               </h2>
               <p className="text-neutral-400 max-w-xl leading-relaxed">
@@ -263,7 +263,7 @@ export default function ProductSellers() {
               className="text-center mb-14"
             >
               <span className="font-bold tracking-wider text-xs uppercase mb-3 block text-white">Simple workflow</span>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white">From invisible to recommended in three steps</h2>
+              <h2 className="text-3xl md:text-5xl font-semibold text-white">From invisible to recommended in three steps</h2>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -294,7 +294,7 @@ export default function ProductSellers() {
               transition={{ duration: 0.5 }}
             >
               <div className="text-center mb-10">
-                <h2 className="text-2xl md:text-3xl font-semibold text-white mb-3">
+                <h2 className="text-3xl md:text-5xl font-semibold text-white mb-3">
                   What rain OS checks that no one else does
                 </h2>
               </div>
@@ -330,7 +330,7 @@ export default function ProductSellers() {
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
             >
-              <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
+              <h2 className="text-3xl md:text-5xl font-semibold text-white mb-4">
                 Ready to get your products recommended?
               </h2>
               <p className="text-neutral-400 text-lg mb-8 leading-relaxed">
