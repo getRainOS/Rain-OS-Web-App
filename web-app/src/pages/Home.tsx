@@ -400,7 +400,12 @@ function ToolsSection() {
                 </div>
               </div>
             </Reveal>
-            {k === 0 && <Reveal delay={0.05}><TrackRow /></Reveal>}
+            {k === 0 && (
+              <Reveal delay={0.05}>
+                <h3 className="mb-6 text-2xl md:text-3xl font-semibold tracking-[-0.03em] text-white">Track it over time.</h3>
+                <TrackRow />
+              </Reveal>
+            )}
             </React.Fragment>
           ))}
         </div>
