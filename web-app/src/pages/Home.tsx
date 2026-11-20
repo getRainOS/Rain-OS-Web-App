@@ -367,7 +367,7 @@ function ToolsSection() {
         <Reveal>
           <Eyebrow>The tools</Eyebrow>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">
-            Measure it.
+            Measure it and Improve it.
           </h2>
         </Reveal>
         <div className="mt-14 space-y-4">
