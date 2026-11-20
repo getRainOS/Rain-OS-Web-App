@@ -365,6 +365,7 @@ function ToolsSection() {
             </Reveal>
           ))}
         </div>
+        <IllustratedExample inline />
       </div>
     </section>
   );
@@ -631,7 +632,6 @@ export default function Home() {
         </section>
 
         <ToolsSection />
-        <IllustratedExample />
         <HowItWorks />
         <WhoSection onStart={start} />
 
