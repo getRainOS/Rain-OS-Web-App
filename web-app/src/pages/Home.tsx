@@ -2,20 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import {
-  ArrowRight, ArrowUpRight, Check, Search, Radar, Wand2, Gauge, CalendarClock,
-  GitPullRequest, FileText, Globe, GitBranch, BarChart2, Eye, Mail, ShieldCheck,
+  ArrowRight, ArrowUpRight, Check, Search,
   MapPin, ShoppingBag, PenLine, Sparkles, Code2, HelpCircle,
 } from 'lucide-react';
 import MarketingNav from '@/components/marketing/MarketingNav';
 import { ENGINE_ICONS } from '@/components/marketing/engineIcons';
 import SiteFooter from '@/components/marketing/SiteFooter';
 import { FAQ } from '@/components/marketing/MarketingComponents';
-import { useLiveEngines, joinNames } from '@/lib/liveEngines';
+import { useLiveEngines } from '@/lib/liveEngines';
 import HeroPrompt from '@/components/marketing/HeroPrompt';
 import SourceNetwork from '@/components/marketing/SourceNetwork';
 import RainBackground from '@/components/marketing/RainBackground';
-import PillarGauges from '@/components/marketing/PillarGauges';
-import AppShot, { PillarVisual, forLane, LANE_EXAMPLES, CitationRotation, IllustrativeTag, LaneCycle, ShareCard, SHARE_LANES, DescribeCard, DESCRIBE_LANES } from '@/components/marketing/ToolVisuals';
+import AppShot, { PillarVisual, forLane, LANE_EXAMPLES, CitationRotation, LaneCycle, ShareCard, SHARE_LANES, DescribeCard, DESCRIBE_LANES } from '@/components/marketing/ToolVisuals';
 import ScrollWords from '@/components/marketing/ScrollWords';
 import IllustratedExample from '@/components/marketing/IllustratedExample';
 
@@ -463,13 +461,6 @@ function HowItWorks() {
 }
 
 /* ── Page ───────────────────────────────────────────────────────────────── */
-
-const SPECS = [
-  { k: '6', v: 'scored areas, weighted for your type of business' },
-  { k: '6', v: 'AI tools checked, from any US state or country' },
-  { k: 'Live', v: 'checks against real AI answers' },
-  { k: 'Weekly', v: 're-checks with email alerts' },
-];
 
 // Each engine's mark. ChatGPT's blossom is drawn here; the rest are brand marks from engineIcons.
 const ENGINE_MARK: Record<string, string> = {
