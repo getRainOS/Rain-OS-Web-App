@@ -159,7 +159,8 @@ function Drawing({ strokes }: { strokes: Stroke[] }) {
 }
 
 
-export default function IllustratedExample() {
+export default function IllustratedExample({ inline = false }: { inline?: boolean }) {
+  const Wrap = inline ? 'div' : 'section';
   const [index, setIndex] = useState(0);
   const [inView, setInView] = useState(false);
   const [locked, setLocked] = useState(false); // a tab press keeps that lane on screen
@@ -184,7 +185,7 @@ export default function IllustratedExample() {
 
   return (
     <>
-    <section ref={sectionRef} className="relative z-10 py-24 border-t border-white/[0.06]">
+    <Wrap ref={sectionRef as any} className={inline ? 'mt-28 pt-28 border-t border-white/[0.06]' : 'relative z-10 py-24 border-t border-white/[0.06]'}>
       <div className="max-w-5xl mx-auto px-6">
         <div className="text-center">
           <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Example</div>
@@ -217,7 +218,7 @@ export default function IllustratedExample() {
 
         </motion.div>
       </div>
-    </section>
+    </Wrap>
     </>
   );
 }
