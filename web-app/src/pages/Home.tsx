@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import {
@@ -15,6 +15,8 @@ import SourceNetwork from '@/components/marketing/SourceNetwork';
 import RainBackground from '@/components/marketing/RainBackground';
 import { PillarVisual, forLane, LANE_EXAMPLES, CitationRotation, LaneCycle, ShareCard, SHARE_LANES, DescribeCard, DESCRIBE_LANES } from '@/components/marketing/ToolVisuals';
 import ScrollWords from '@/components/marketing/ScrollWords';
+import PillarGauges from '@/components/marketing/PillarGauges';
+import TrendCard, { WEEKS } from '@/components/marketing/TrendCard';
 import IllustratedExample from '@/components/marketing/IllustratedExample';
 
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
@@ -324,6 +326,40 @@ function RotatingAnalysis() {
   );
 }
 
+// The score row under the analysis: the pillar gauges and the eight-analysis trend,
+// stepping through the analyses while on screen. Example data, labelled as such.
+function TrackRow() {
+  const reduce = useReducedMotion();
+  const [week, setWeek] = useState(WEEKS - 1);
+  const [inView, setInView] = useState(false);
+  const ref = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.35 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  useEffect(() => {
+    if (reduce || !inView) return;
+    const t = window.setInterval(() => setWeek(w => (w + 1) % WEEKS), 1800);
+    return () => clearInterval(t);
+  }, [reduce, inView]);
+  return (
+    <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.4fr] gap-8 lg:gap-12 items-center rounded-2xl border border-white/10 bg-[#0a0a0a] p-5 md:p-7">
+      <div>
+        <ToolTitle text="Track your scores over time" />
+        <p className="mt-3 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">See each pillar move, one analysis at a time</p>
+        <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">Every analysis adds a point to each pillar, so you can see what changed after a fix. Example data.</p>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+        <PillarGauges week={week} />
+        <TrendCard week={week} />
+      </div>
+    </div>
+  );
+}
+
 function ToolsSection() {
   return (
     <section id="product" className="relative z-10 py-28 border-t border-white/[0.06]">
@@ -331,12 +367,13 @@ function ToolsSection() {
         <Reveal>
           <Eyebrow>The tools</Eyebrow>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">
-            Measure it. Monitor it. Fix it.
+            Measure it.
           </h2>
         </Reveal>
         <div className="mt-14 space-y-4">
           {TOOLS.map((t, k) => (
-            <Reveal key={t.key} delay={0.05 * k}>
+            <React.Fragment key={t.key}>
+            <Reveal delay={0.05 * k}>
               <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.4fr] gap-8 lg:gap-12 items-center rounded-2xl border border-white/10 bg-[#0a0a0a] p-5 md:p-7">
                 <div>
                   <ToolTitle text={t.eyebrow} />
@@ -363,6 +400,8 @@ function ToolsSection() {
                 </div>
               </div>
             </Reveal>
+            {k === 0 && <Reveal delay={0.05}><TrackRow /></Reveal>}
+            </React.Fragment>
           ))}
         </div>
         <IllustratedExample inline />
