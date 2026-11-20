@@ -635,9 +635,9 @@ export default function Home() {
         <HowItWorks />
         <WhoSection onStart={start} />
 
-        <section className="relative z-10 border-t border-white/[0.06]">
+        <div className="relative z-10 border-t border-white/[0.06]">
           <FAQ />
-        </section>
+        </div>
 
         <section className="relative z-10 overflow-hidden border-t border-white/[0.06]">
           <div
