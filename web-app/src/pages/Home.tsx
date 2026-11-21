@@ -348,8 +348,8 @@ function TrackRow() {
   return (
     <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.4fr] gap-8 lg:gap-12 items-center rounded-2xl border border-white/10 bg-[#0a0a0a] p-5 md:p-7">
       <div>
-        <ToolTitle text="Track your scores over time" />
-        <p className="mt-3 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">See each pillar move, one analysis at a time</p>
+        <ToolTitle text="Track it over time" />
+        <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">See each pillar move, one analysis at a time</p>
         <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">Every analysis adds a point to each pillar, so you can see what changed after a fix. Example data.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
@@ -377,7 +377,7 @@ function ToolsSection({ lane }: { lane: number }) {
               <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.4fr] gap-8 lg:gap-12 items-center rounded-2xl border border-white/10 bg-[#0a0a0a] p-5 md:p-7">
                 <div>
                   <ToolTitle text={t.eyebrow} />
-                  <p className="mt-3 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">{t.title}</p>
+                  <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">{t.title}</p>
                   <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">{t.lead && <span className="font-medium text-white">{t.lead} </span>}{t.body}</p>
                   {t.ways.length > 0 && (
                     <>
@@ -402,7 +402,6 @@ function ToolsSection({ lane }: { lane: number }) {
             </Reveal>
             {k === 0 && (
               <Reveal delay={0.05}>
-                <h3 className="mb-6 text-2xl md:text-3xl font-semibold tracking-[-0.03em] text-white">Track it over time.</h3>
                 <TrackRow />
               </Reveal>
             )}
@@ -670,7 +669,9 @@ export default function Home() {
               </p>
             </Reveal>
             <Reveal delay={0.1}>
-              <SourceNetwork />
+              <div className="rounded-2xl border border-white/10 bg-[#0a0a0a] p-4 md:p-6">
+                <SourceNetwork />
+              </div>
             </Reveal>
           </div>
         </section>
