@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
@@ -12,6 +12,7 @@ type LaneExample = {
   id: string;
   tab: string;
   question: string;
+  how: string;
   before: string;
   after: string;
   afterNote: string;
@@ -22,6 +23,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'local_business',
     tab: 'Local business',
+    how: "We check how AI answers questions like yours for your area, then show which pages it can read. We add hours, services, licensing and reviews to them, so it can name you with confidence.",
     question: "Who's the best dog groomer near Austin that takes walk-ins on Saturday?",
     before: 'Here are well-reviewed dog groomers in Austin with Saturday hours: Acme Pet Spa, Sample Paws Grooming and Riverside Pet Salon.',
     after: 'Here are well-reviewed dog groomers in Austin with Saturday walk-ins: Acme Pet Spa, Example Grooming Co. (licensed, walk-ins 9 to 4, 4.9 stars from 300 reviews) and Sample Paws Grooming.',
@@ -44,6 +46,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'product_sellers',
     tab: 'Online sellers',
+    how: "We check whether AI can read your product details: exact price, shipping, returns and reviews. Clear facts let it quote your product instead of guessing.",
     question: "What's a good waterproof travel wallet under $80?",
     before: 'Popular options include several well-known brands. Look for RFID blocking, a slim profile and leather or nylon construction.',
     after: 'Example Co. makes a waterproof travel wallet for $69 with RFID blocking and a 5-year warranty, and it ships free within the US.',
@@ -62,6 +65,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'general',
     tab: 'Writers & marketers',
+    how: "We check whether AI can read your article's facts, headings and sources, so it can quote your writing and link back to it.",
     question: 'How do I stop procrastinating?',
     before: 'Many newsletter tools offer free plans and paid tiers. Compare features like templates, automation and analytics before choosing.',
     after: 'Example Letters is built for solo writers: one flat price, a free tier up to 500 subscribers, and a clear guide to publishing from your own domain.',
@@ -79,6 +83,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'developers',
     tab: 'Developers',
+    how: "We check whether AI can read your README and docs: what the project does, its stack and a quickstart. That lets AI explain your project correctly.",
     question: 'What is the best framework for a small API that runs on Cloudflare Workers?',
     before: 'Several frameworks run on Workers. Consider Hono, itty-router or plain fetch handlers, depending on how much routing and middleware you need.',
     after: 'Tinyroute uses Hono on Cloudflare Workers: about 14 KB, typed routes and middleware, with a quickstart at docs.example.dev.',
@@ -96,6 +101,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'vibe_coders',
     tab: 'Vibe coders',
+    how: "We check whether AI can find what you built, including the platforms it works with, on your site and in your docs. Then it can recommend your app.",
     question: 'What are the best AI-powered e-commerce tools?',
     before: 'You can add booking with a scheduling embed, a third-party calendar or a custom form. Each has trade-offs in cost and setup time.',
     after: 'Example Book adds a booking page to Lovable, Bolt and Replit apps in one step, with a free plan and a copy-paste embed.',
@@ -159,33 +165,43 @@ function Drawing({ strokes }: { strokes: Stroke[] }) {
 }
 
 
-export default function IllustratedExample({ inline = false }: { inline?: boolean }) {
-  const Wrap = inline ? 'div' : 'section';
-  const [index, setIndex] = useState(0);
-  const [inView, setInView] = useState(false);
-  const [locked, setLocked] = useState(false); // a tab press keeps that lane on screen
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+// The lanes we work with: pills, the drawing, and how we work with the chosen lane.
+export function LaneSection({ index, onPick }: { index: number; onPick: (i: number) => void }) {
   const ex = EXAMPLES[index];
-
-  // Run only while the section is on screen, so it starts when someone arrives.
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el || typeof IntersectionObserver === 'undefined') return;
-    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.35 });
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  // Step the snapshot to the next analysis every 3s, only while it is on screen.
-  const pick = (i: number) => {
-    setIndex(i);
-    setLocked(true);
-  };
-
   return (
-    <>
-    <Wrap ref={sectionRef as any} className={inline ? 'mt-28 pt-28 border-t border-white/[0.06]' : 'relative z-10 py-24 border-t border-white/[0.06]'}>
+    <section className="relative z-10 py-24 border-t border-white/[0.06]">
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="text-center">
+          <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Who we work with</div>
+          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Users we work with</h2>
+        </div>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-2" role="tablist" aria-label="Lanes we work with">
+          {EXAMPLES.map((e, i) => (
+            <button
+              key={e.id}
+              role="tab"
+              aria-selected={i === index}
+              onClick={() => onPick(i)}
+              className={`h-9 px-4 rounded-full text-[13px] border transition-colors ${i === index ? 'bg-white text-black border-white' : 'border-white/15 text-neutral-300 hover:border-white/30'}`}
+            >
+              {e.tab}
+            </button>
+          ))}
+        </div>
+        <motion.div className="mt-8" key={ex.id} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.4 }}>
+          <Drawing strokes={ex.drawing} />
+          <p className="mx-auto mt-6 max-w-xl text-center text-[15px] leading-relaxed text-neutral-400">{ex.how}</p>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+// The Track block: its heading, and the sample question for the chosen lane.
+export function TrackExample({ index, inline = false }: { index: number; inline?: boolean }) {
+  const ex = EXAMPLES[index];
+  return (
+    <div className={inline ? 'mt-28 pt-28 border-t border-white/[0.06]' : 'relative z-10 py-24 border-t border-white/[0.06]'}>
       <div className="max-w-5xl mx-auto px-6">
         <div className="text-center">
           <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Example</div>
@@ -194,31 +210,12 @@ export default function IllustratedExample({ inline = false }: { inline?: boolea
             And make changes to increase your chances of answering them.
           </p>
         </div>
-
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-2" role="tablist" aria-label="Lane examples">
-          {EXAMPLES.map((e, i) => (
-            <button
-              key={e.id}
-              role="tab"
-              aria-selected={i === index}
-              onClick={() => pick(i)}
-              className={`h-9 px-4 rounded-full text-[13px] border transition-colors ${i === index ? 'bg-white text-black border-white' : 'border-white/15 text-neutral-300 hover:border-white/30'}`}
-            >
-              {e.tab}
-            </button>
-          ))}
-        </div>
-
         <motion.div className="mt-8" key={ex.id} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.4 }}>
-          <Drawing strokes={ex.drawing} />
-
           <div className="mt-6 text-center">
             <span className="inline-block rounded-md border border-white/10 bg-black px-4 py-2 text-[14px] text-neutral-200">{ex.question}</span>
           </div>
-
         </motion.div>
       </div>
-    </Wrap>
-    </>
+    </div>
   );
 }

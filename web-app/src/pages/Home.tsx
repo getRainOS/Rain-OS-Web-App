@@ -17,7 +17,7 @@ import { PillarVisual, forLane, LANE_EXAMPLES, CitationRotation, LaneCycle, Shar
 import ScrollWords from '@/components/marketing/ScrollWords';
 import PillarGauges from '@/components/marketing/PillarGauges';
 import TrendCard, { WEEKS } from '@/components/marketing/TrendCard';
-import IllustratedExample from '@/components/marketing/IllustratedExample';
+import { LaneSection, TrackExample } from '@/components/marketing/IllustratedExample';
 
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
 
@@ -360,7 +360,7 @@ function TrackRow() {
   );
 }
 
-function ToolsSection() {
+function ToolsSection({ lane }: { lane: number }) {
   return (
     <section id="product" className="relative z-10 py-28 border-t border-white/[0.06]">
       <div className="max-w-[1440px] mx-auto px-6">
@@ -409,7 +409,7 @@ function ToolsSection() {
             </React.Fragment>
           ))}
         </div>
-        <IllustratedExample inline />
+        <TrackExample index={lane} inline />
       </div>
     </section>
   );
@@ -567,6 +567,7 @@ function EngineCycle({ names }: { names: string[] }) {
 }
 
 export default function Home() {
+  const [lane, setLane] = useState(0);
   const engines = useLiveEngines();
   const navigate = useNavigate();
   const start = () => navigate('/login');
@@ -674,7 +675,8 @@ export default function Home() {
           </div>
         </section>
 
-        <ToolsSection />
+        <LaneSection index={lane} onPick={setLane} />
+        <ToolsSection lane={lane} />
         <HowItWorks />
         <WhoSection onStart={start} />
 
