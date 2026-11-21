@@ -263,7 +263,7 @@ function ToolTitle({ text }: { text: string }) {
   const reduce = useReducedMotion();
   const words = text.split(' ');
   return (
-    <h3 className="text-4xl md:text-6xl font-bold tracking-[-0.035em] leading-[1.02] text-white">
+    <h3 className="text-2xl md:text-3xl font-bold tracking-[-0.035em] leading-[1.02] text-white">
       {words.map((w, i) => (
         <motion.span
           key={`${w}-${i}`}
