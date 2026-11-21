@@ -165,54 +165,50 @@ function Drawing({ strokes }: { strokes: Stroke[] }) {
 }
 
 
-// The lanes we work with: pills, the drawing, and how we work with the chosen lane.
+// The lanes we work with: a framed panel with the pills, the drawing, and how we work with the chosen lane.
 export function LaneSection({ index, onPick }: { index: number; onPick: (i: number) => void }) {
   const ex = EXAMPLES[index];
   return (
-    <section className="relative z-10 py-24 border-t border-white/[0.06]">
+    <section className="relative z-10 py-28 border-t border-white/[0.06]">
       <div className="max-w-[1440px] mx-auto px-6">
-        <div className="text-center">
-          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Users we work with</h2>
+        <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Who it's for</div>
+        <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Users we work with</h2>
+        <div className="mt-10 rounded-2xl border border-white/10 bg-[#0a0a0a] p-6 md:p-10">
+          <div className="flex flex-wrap gap-2" role="tablist" aria-label="Lanes we work with">
+            {EXAMPLES.map((e, i) => (
+              <button
+                key={e.id}
+                role="tab"
+                aria-selected={i === index}
+                onClick={() => onPick(i)}
+                className={`h-9 px-4 rounded-full text-[13px] border transition-colors ${i === index ? 'bg-white text-black border-white' : 'border-white/15 text-neutral-300 hover:border-white/30'}`}
+              >
+                {e.tab}
+              </button>
+            ))}
+          </div>
+          <motion.div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center" key={ex.id} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.4 }}>
+            <Drawing strokes={ex.drawing} />
+            <p className="text-[15px] leading-relaxed text-neutral-400">{ex.how}</p>
+          </motion.div>
         </div>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-2" role="tablist" aria-label="Lanes we work with">
-          {EXAMPLES.map((e, i) => (
-            <button
-              key={e.id}
-              role="tab"
-              aria-selected={i === index}
-              onClick={() => onPick(i)}
-              className={`h-9 px-4 rounded-full text-[13px] border transition-colors ${i === index ? 'bg-white text-black border-white' : 'border-white/15 text-neutral-300 hover:border-white/30'}`}
-            >
-              {e.tab}
-            </button>
-          ))}
-        </div>
-        <motion.div className="mt-8" key={ex.id} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.4 }}>
-          <Drawing strokes={ex.drawing} />
-          <p className="mx-auto mt-6 max-w-xl text-center text-[15px] leading-relaxed text-neutral-400">{ex.how}</p>
-        </motion.div>
       </div>
     </section>
   );
 }
 
-// The Track block: its heading, and the sample question for the chosen lane.
+// The Track block: its heading, and the sample question for the chosen lane, in a frame.
 export function TrackExample({ index, inline = false }: { index: number; inline?: boolean }) {
   const ex = EXAMPLES[index];
+  const inner = inline ? '' : 'max-w-[1440px] mx-auto px-6';
   return (
-    <div className={inline ? 'mt-28 pt-28 border-t border-white/[0.06]' : 'relative z-10 py-24 border-t border-white/[0.06]'}>
-      <div className="max-w-5xl mx-auto px-6">
-        <div className="text-center">
-          <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Example</div>
-          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Track the type of questions asked of your business</h2>
-          <p className="mt-4 text-neutral-400 max-w-2xl mx-auto">
-            And make changes to increase your chances of answering them.
-          </p>
-        </div>
-        <motion.div className="mt-8" key={ex.id} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.4 }}>
-          <div className="mt-6 text-center">
-            <span className="inline-block rounded-md border border-white/10 bg-black px-4 py-2 text-[14px] text-neutral-200">{ex.question}</span>
-          </div>
+    <div className={inline ? 'mt-28 pt-28 border-t border-white/[0.06]' : 'relative z-10 py-28 border-t border-white/[0.06]'}>
+      <div className={inner}>
+        <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Example</div>
+        <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Track the type of questions asked of your business</h2>
+        <p className="mt-4 text-neutral-400 max-w-2xl">And make changes to increase your chances of answering them.</p>
+        <motion.div className="mt-8 rounded-2xl border border-white/10 bg-[#0a0a0a] p-6 md:p-10" key={ex.id} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.4 }}>
+          <span className="inline-block rounded-md border border-white/10 bg-black px-4 py-2 text-[14px] text-neutral-200">{ex.question}</span>
         </motion.div>
       </div>
     </div>
