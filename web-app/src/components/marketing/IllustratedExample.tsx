@@ -170,7 +170,7 @@ export function LaneSection({ index, onPick }: { index: number; onPick: (i: numb
   const ex = EXAMPLES[index];
   return (
     <section className="relative z-10 py-28 border-t border-white/[0.06]">
-      <div className="max-w-[1440px] mx-auto px-6">
+      <div className="max-w-[1104px] mx-auto px-6">
         <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Who it's for</div>
         <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Users we work with</h2>
         <div className="mt-10 p-6 md:p-10">
@@ -200,7 +200,7 @@ export function LaneSection({ index, onPick }: { index: number; onPick: (i: numb
 // The Track block: its heading, and the sample question for the chosen lane, in a frame.
 export function TrackExample({ index, inline = false }: { index: number; inline?: boolean }) {
   const ex = EXAMPLES[index];
-  const inner = inline ? '' : 'max-w-[1440px] mx-auto px-6';
+  const inner = inline ? '' : 'max-w-[1104px] mx-auto px-6';
   return (
     <div className={inline ? 'mt-28 pt-28 border-t border-white/[0.06]' : 'relative z-10 py-28 border-t border-white/[0.06]'}>
       <div className={inner}>

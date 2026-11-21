@@ -363,7 +363,7 @@ function TrackRow() {
 function ToolsSection({ lane }: { lane: number }) {
   return (
     <section id="product" className="relative z-10 py-28 border-t border-white/[0.06]">
-      <div className="max-w-[1440px] mx-auto px-6">
+      <div className="max-w-[1104px] mx-auto px-6">
         <Reveal>
           <Eyebrow>The tools</Eyebrow>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">
@@ -428,7 +428,7 @@ const WHO = [
 function WhoSection({ onStart }: { onStart: () => void }) {
   return (
     <section id="who" className="relative z-10 py-24 border-t border-white/[0.06] scroll-mt-16">
-      <div className="max-w-[1440px] mx-auto px-6">
+      <div className="max-w-[1104px] mx-auto px-6">
         <Reveal className="text-center">
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
             What are you working on?
@@ -483,7 +483,7 @@ function HowItWorks() {
   ];
   return (
     <section className="relative z-10 py-24 border-t border-white/[0.06]">
-      <div className="max-w-[1440px] mx-auto px-6">
+      <div className="max-w-[1104px] mx-auto px-6">
         <Reveal>
           <Eyebrow>How it works</Eyebrow>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Three steps. No setup.</h2>
@@ -594,7 +594,7 @@ export default function Home() {
             className={`pointer-events-none absolute inset-x-0 top-0 h-[960px] z-[1] transition-opacity duration-[1500ms] ease-out hero-glow-live ${glowOn ? 'opacity-100' : 'opacity-0'}`}
             style={{ background: 'radial-gradient(75% 60% at 50% 0%, rgba(255,255,255,0.1), rgba(255,255,255,0.03) 45%, transparent 75%)', maskImage: 'linear-gradient(to bottom, #000 20%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, #000 20%, transparent 100%)' }}
           />
-          <div className="relative z-10 max-w-[1440px] mx-auto px-6 pt-28 md:pt-24 pb-16 flex flex-col items-center gap-16">
+          <div className="relative z-10 max-w-[1288px] mx-auto px-6 pt-28 md:pt-24 pb-16 flex flex-col items-center gap-16">
             <motion.div className="text-center max-w-4xl mx-auto" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               {/* The subtitle takes the headline's width: w-0 + min-w-full stops it widening the block. */}
               <div className="mx-auto flex w-fit max-w-full flex-col items-center px-2 text-center">
@@ -614,7 +614,7 @@ export default function Home() {
             </motion.div>
 
             <motion.div
-              className="min-w-0 w-full max-w-[1100px]"
+              className="min-w-0 w-full max-w-[1235px]"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
@@ -633,7 +633,7 @@ export default function Home() {
             backgroundSize: '64px 64px',
             backgroundPosition: 'center',
           }}>
-          <div className="max-w-[1440px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-14 items-end">
+          <div className="max-w-[1104px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-14 items-end">
             <Reveal>
               <Eyebrow>The shift</Eyebrow>
               <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
@@ -657,7 +657,7 @@ export default function Home() {
             </Reveal>
           </div>
           </div>
-          <div className="max-w-[1440px] mx-auto px-6 py-28 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
+          <div className="max-w-[1104px] mx-auto px-6 py-28 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
             <Reveal>
               <Eyebrow>Where AI gets its answers</Eyebrow>
               <ScrollWords
