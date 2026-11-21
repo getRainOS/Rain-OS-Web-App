@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { ArrowRight, HelpCircle } from 'lucide-react';
 
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
 
@@ -12,6 +14,7 @@ type LaneExample = {
   id: string;
   tab: string;
   question: string;
+  to: string;
   before: string;
   after: string;
   afterNote: string;
@@ -22,6 +25,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'local_business',
     tab: 'Local business',
+    to: '/local-business',
     question: "Who's the best dog groomer near Austin that takes walk-ins on Saturday?",
     before: 'Here are well-reviewed dog groomers in Austin with Saturday hours: Acme Pet Spa, Sample Paws Grooming and Riverside Pet Salon.',
     after: 'Here are well-reviewed dog groomers in Austin with Saturday walk-ins: Acme Pet Spa, Example Grooming Co. (licensed, walk-ins 9 to 4, 4.9 stars from 300 reviews) and Sample Paws Grooming.',
@@ -44,6 +48,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'product_sellers',
     tab: 'Online sellers',
+    to: '/product-sellers',
     question: "What's a good waterproof travel wallet under $80?",
     before: 'Popular options include several well-known brands. Look for RFID blocking, a slim profile and leather or nylon construction.',
     after: 'Example Co. makes a waterproof travel wallet for $69 with RFID blocking and a 5-year warranty, and it ships free within the US.',
@@ -62,6 +67,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'general',
     tab: 'Writers & marketers',
+    to: '/content-writers',
     question: 'How do I stop procrastinating?',
     before: 'Many newsletter tools offer free plans and paid tiers. Compare features like templates, automation and analytics before choosing.',
     after: 'Example Letters is built for solo writers: one flat price, a free tier up to 500 subscribers, and a clear guide to publishing from your own domain.',
@@ -79,6 +85,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'developers',
     tab: 'Developers',
+    to: '/developers',
     question: 'What is the best framework for a small API that runs on Cloudflare Workers?',
     before: 'Several frameworks run on Workers. Consider Hono, itty-router or plain fetch handlers, depending on how much routing and middleware you need.',
     after: 'Tinyroute uses Hono on Cloudflare Workers: about 14 KB, typed routes and middleware, with a quickstart at docs.example.dev.',
@@ -96,6 +103,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'vibe_coders',
     tab: 'Vibe coders',
+    to: '/vibe-coders',
     question: 'What are the best AI-powered e-commerce tools?',
     before: 'You can add booking with a scheduling embed, a third-party calendar or a custom form. Each has trade-offs in cost and setup time.',
     after: 'Example Book adds a booking page to Lovable, Bolt and Replit apps in one step, with a free plan and a copy-paste embed.',
@@ -159,8 +167,7 @@ function Drawing({ strokes }: { strokes: Stroke[] }) {
 }
 
 
-export default function IllustratedExample({ inline = false }: { inline?: boolean }) {
-  const Wrap = inline ? 'div' : 'section';
+export default function IllustratedExample({ onStart }: { onStart: () => void }) {
   const [index, setIndex] = useState(0);
   const [inView, setInView] = useState(false);
   const [locked, setLocked] = useState(false); // a tab press keeps that lane on screen
@@ -185,13 +192,13 @@ export default function IllustratedExample({ inline = false }: { inline?: boolea
 
   return (
     <>
-    <Wrap ref={sectionRef as any} className={inline ? 'mt-28 pt-28 border-t border-white/[0.06]' : 'relative z-10 py-24 border-t border-white/[0.06]'}>
+    <section id="who" ref={sectionRef} className="relative z-10 py-24 border-t border-white/[0.06] scroll-mt-16">
       <div className="max-w-5xl mx-auto px-6">
         <div className="text-center">
-          <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Example</div>
-          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Track the type of questions asked of your business</h2>
+          <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Who it's for</div>
+          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">What are you working on?</h2>
           <p className="mt-4 text-neutral-400 max-w-2xl mx-auto">
-            And make changes to increase your chances of answering them.
+            Track the questions customers ask, and make changes to increase your chances of answering them.
           </p>
         </div>
 
@@ -214,11 +221,17 @@ export default function IllustratedExample({ inline = false }: { inline?: boolea
 
           <div className="mt-6 text-center">
             <span className="inline-block rounded-md border border-white/10 bg-black px-4 py-2 text-[14px] text-neutral-200">{ex.question}</span>
+          <div className="mt-4">
+            <Link to={ex.to} className="inline-flex items-center gap-1.5 text-[14px] text-white hover:text-neutral-300">See the page for this lane <ArrowRight className="w-3.5 h-3.5" /></Link>
+          </div>
           </div>
 
         </motion.div>
       </div>
-    </Wrap>
+      <div className="mt-12 text-center">
+        <button onClick={onStart} className="inline-flex items-center gap-2 rounded-md border border-white/15 px-4 h-10 text-[14px] text-neutral-300 hover:border-white/30 hover:text-white transition-colors"><HelpCircle className="w-4 h-4" /> Not sure? Start free and choose inside the app.</button>
+      </div>
+    </section>
     </>
   );
 }

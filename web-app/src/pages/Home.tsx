@@ -3,7 +3,7 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   ArrowRight, ArrowUpRight, Check, Search,
-  MapPin, ShoppingBag, PenLine, Sparkles, Code2, HelpCircle,
+  MapPin, ShoppingBag, PenLine, Sparkles, Code2,
 } from 'lucide-react';
 import MarketingNav from '@/components/marketing/MarketingNav';
 import { ENGINE_ICONS } from '@/components/marketing/engineIcons';
@@ -409,70 +409,12 @@ function ToolsSection() {
             </React.Fragment>
           ))}
         </div>
-        <IllustratedExample inline />
       </div>
     </section>
   );
 }
 
 /* ── Who it's for (lane picker) ─────────────────────────────────────────── */
-
-const WHO = [
-  { Icon: MapPin, title: 'I run a local business', body: 'Plumbers, salons, dentists, restaurants. Help AI recommend you when people ask who\'s best nearby.', to: '/local-business' },
-  { Icon: ShoppingBag, title: 'I sell products online', body: 'Shopify, Etsy, Amazon or your own store. Help AI suggest your products when people ask what to buy.', to: '/product-sellers' },
-  { Icon: PenLine, title: 'I write content', body: 'Blogs, newsletters and landing pages. Write things AI names and links to.', to: '/content-writers' },
-  { Icon: Sparkles, title: 'I build apps with AI tools', body: 'Bolt, Lovable, Replit, v0 or Cursor. Make sure AI can actually find what you built.', to: '/vibe-coders' },
-  { Icon: Code2, title: 'I write code and docs', body: 'READMEs, documentation and API references. Help AI explain your project correctly.', to: '/developers' },
-];
-
-
-function WhoSection({ onStart }: { onStart: () => void }) {
-  return (
-    <section id="who" className="relative z-10 py-24 border-t border-white/[0.06] scroll-mt-16">
-      <div className="max-w-[1440px] mx-auto px-6">
-        <Reveal className="text-center">
-          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
-            What are you working on?
-          </h2>
-          <p className="mt-4 text-neutral-400 text-lg max-w-xl mx-auto leading-relaxed">
-            Pick the one that sounds most like you. We'll show you what matters for your kind of business.
-          </p>
-        </Reveal>
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {WHO.map((w, k) => (
-            <Reveal key={w.title} delay={0.04 * k}>
-              <Link
-                to={w.to}
-                className="group flex h-full flex-col rounded-xl border border-white/10 bg-[#0a0a0a] p-6 hover:border-[#ffffff]/50 hover:bg-[#ffffff]/[0.04] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#ffffff]"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03]">
-                    <w.Icon className="w-4 h-4 text-[#bdbdbd]" />
-                  </span>
-                  <ArrowRight className="w-4 h-4 text-neutral-600 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
-                </div>
-                <div className="mt-5 text-[17px] font-medium text-white">{w.title}</div>
-                <p className="mt-1.5 text-[14px] text-neutral-400 leading-relaxed">{w.body}</p>
-              </Link>
-            </Reveal>
-          ))}
-          <Reveal delay={0.2}>
-            <button
-              onClick={onStart}
-              className="group flex h-full w-full flex-col rounded-xl border border-dashed border-white/15 p-6 text-left hover:border-white/30 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#ffffff]"
-            >
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10">
-                <HelpCircle className="w-4 h-4 text-neutral-400" />
-              </span>
-              <div className="mt-5 text-[17px] font-medium text-white">Not sure?</div>
-              <p className="mt-1.5 text-[14px] text-neutral-400 leading-relaxed">Start free and choose inside the app. You can switch any time.</p>
-            </button>
-          </Reveal>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 /* ── How it works ───────────────────────────────────────────────────────── */
 
@@ -676,7 +618,7 @@ export default function Home() {
 
         <ToolsSection />
         <HowItWorks />
-        <WhoSection onStart={start} />
+        <IllustratedExample onStart={start} />
 
         <div className="relative z-10 border-t border-white/[0.06]">
           <FAQ />
