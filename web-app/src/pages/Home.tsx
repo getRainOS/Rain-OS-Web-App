@@ -346,7 +346,7 @@ function TrackRow() {
     return () => clearInterval(t);
   }, [reduce, inView]);
   return (
-    <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.4fr] gap-8 lg:gap-12 items-center rounded-2xl border border-white/[0.13] bg-white/[0.03] p-5 md:p-7">
+    <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.4fr] gap-8 lg:gap-12 items-center rounded-2xl border border-white/10 bg-[#0a0a0a] bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[length:64px_64px] p-5 md:p-7">
       <div>
         <ToolTitle text="Track it over time" />
         <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">See each pillar move, one analysis at a time</p>
@@ -374,7 +374,7 @@ function ToolsSection({ lane }: { lane: number }) {
           {TOOLS.map((t, k) => (
             <React.Fragment key={t.key}>
             <Reveal delay={0.05 * k}>
-              <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.4fr] gap-8 lg:gap-12 items-center rounded-2xl border border-white/[0.13] bg-white/[0.03] p-5 md:p-7">
+              <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.4fr] gap-8 lg:gap-12 items-center rounded-2xl border border-white/10 bg-[#0a0a0a] bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[length:64px_64px] p-5 md:p-7">
                 <div>
                   <ToolTitle text={t.eyebrow} />
                   <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">{t.title}</p>
@@ -669,7 +669,7 @@ export default function Home() {
               </p>
             </Reveal>
             <Reveal delay={0.1}>
-              <div className="rounded-2xl border border-white/[0.13] bg-white/[0.03] p-4 md:p-6">
+              <div className="rounded-2xl border border-white/10 bg-[#0a0a0a] bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[length:64px_64px] p-4 md:p-6">
                 <SourceNetwork />
               </div>
             </Reveal>

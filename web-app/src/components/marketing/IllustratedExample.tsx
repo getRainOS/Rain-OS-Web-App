@@ -173,7 +173,7 @@ export function LaneSection({ index, onPick }: { index: number; onPick: (i: numb
       <div className="max-w-[1440px] mx-auto px-6">
         <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Who it's for</div>
         <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Users we work with</h2>
-        <div className="mt-10 rounded-2xl border border-white/[0.13] bg-white/[0.03] p-6 md:p-10">
+        <div className="mt-10 rounded-2xl border border-white/10 bg-[#0a0a0a] bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[length:64px_64px] p-6 md:p-10">
           <div className="flex flex-wrap gap-2" role="tablist" aria-label="Lanes we work with">
             {EXAMPLES.map((e, i) => (
               <button
@@ -207,7 +207,7 @@ export function TrackExample({ index, inline = false }: { index: number; inline?
         <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Example</div>
         <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Track the type of questions asked of your business</h2>
         <p className="mt-4 text-neutral-400 max-w-2xl">And make changes to increase your chances of answering them.</p>
-        <motion.div className="mt-8 rounded-2xl border border-white/[0.13] bg-white/[0.03] p-6 md:p-10" key={ex.id} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.4 }}>
+        <motion.div className="mt-8 rounded-2xl border border-white/10 bg-[#0a0a0a] bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[length:64px_64px] p-6 md:p-10" key={ex.id} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.4 }}>
           <span className="inline-block rounded-md border border-white/10 bg-black px-4 py-2 text-[14px] text-neutral-200">{ex.question}</span>
         </motion.div>
       </div>
