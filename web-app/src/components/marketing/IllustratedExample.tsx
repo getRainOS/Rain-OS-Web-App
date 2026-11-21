@@ -23,7 +23,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'local_business',
     tab: 'Local business',
-    how: "We check how AI answers questions like yours for your area, then show which pages it can read. We add hours, services, licensing and reviews to them, so it can name you with confidence.",
+    how: "We check how AI answers questions like yours in your area, then show which of your pages it can read. Adding hours, services, licensing and reviews could help AI name you more often.",
     question: "Who's the best dog groomer near Austin that takes walk-ins on Saturday?",
     before: 'Here are well-reviewed dog groomers in Austin with Saturday hours: Acme Pet Spa, Sample Paws Grooming and Riverside Pet Salon.',
     after: 'Here are well-reviewed dog groomers in Austin with Saturday walk-ins: Acme Pet Spa, Example Grooming Co. (licensed, walk-ins 9 to 4, 4.9 stars from 300 reviews) and Sample Paws Grooming.',
@@ -46,7 +46,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'product_sellers',
     tab: 'Online sellers',
-    how: "We check whether AI can read your product details: exact price, shipping, returns and reviews. Clear facts let it quote your product instead of guessing.",
+    how: "We check whether AI can read your product details: price, shipping, returns and reviews. Clear, plain facts could help AI quote your product instead of guessing.",
     question: "What's a good waterproof travel wallet under $80?",
     before: 'Popular options include several well-known brands. Look for RFID blocking, a slim profile and leather or nylon construction.',
     after: 'Example Co. makes a waterproof travel wallet for $69 with RFID blocking and a 5-year warranty, and it ships free within the US.',
@@ -65,7 +65,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'general',
     tab: 'Writers & marketers',
-    how: "We check whether AI can read your article's facts, headings and sources, so it can quote your writing and link back to it.",
+    how: "We check whether AI can read your article's facts, headings and sources. A clear structure could help AI quote your writing and link back to it.",
     question: 'How do I stop procrastinating?',
     before: 'Many newsletter tools offer free plans and paid tiers. Compare features like templates, automation and analytics before choosing.',
     after: 'Example Letters is built for solo writers: one flat price, a free tier up to 500 subscribers, and a clear guide to publishing from your own domain.',
@@ -83,7 +83,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'developers',
     tab: 'Developers',
-    how: "We check whether AI can read your README and docs: what the project does, its stack and a quickstart. That lets AI explain your project correctly.",
+    how: "We check whether AI can read your README and docs: what the project does, its stack and a quickstart. Clear docs could help AI explain your project correctly.",
     question: 'What is the best framework for a small API that runs on Cloudflare Workers?',
     before: 'Several frameworks run on Workers. Consider Hono, itty-router or plain fetch handlers, depending on how much routing and middleware you need.',
     after: 'Tinyroute uses Hono on Cloudflare Workers: about 14 KB, typed routes and middleware, with a quickstart at docs.example.dev.',
@@ -101,7 +101,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'vibe_coders',
     tab: 'Vibe coders',
-    how: "We check whether AI can find what you built, including the platforms it works with, on your site and in your docs. Then it can recommend your app.",
+    how: "We check whether AI can find what you built, including the platforms it works with, on your site and in your docs. Clear pages could help AI recommend your app.",
     question: 'What are the best AI-powered e-commerce tools?',
     before: 'You can add booking with a scheduling embed, a third-party calendar or a custom form. Each has trade-offs in cost and setup time.',
     after: 'Example Book adds a booking page to Lovable, Bolt and Replit apps in one step, with a free plan and a copy-paste embed.',
@@ -170,9 +170,8 @@ export function LaneSection({ index, onPick }: { index: number; onPick: (i: numb
   const ex = EXAMPLES[index];
   return (
     <section className="relative z-10 py-24 border-t border-white/[0.06]">
-      <div className="max-w-5xl mx-auto px-6">
+      <div className="max-w-[1440px] mx-auto px-6">
         <div className="text-center">
-          <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Who we work with</div>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Users we work with</h2>
         </div>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-2" role="tablist" aria-label="Lanes we work with">
