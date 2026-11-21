@@ -366,7 +366,7 @@ function ToolsSection({ lane }: { lane: number }) {
       <div className="max-w-[1440px] mx-auto px-6">
         <Reveal>
           <Eyebrow>The tools</Eyebrow>
-          <h2 className="text-2xl md:text-3xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">
+          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">
             See what AI can read. Fix what it can’t.
           </h2>
         </Reveal>
