@@ -102,8 +102,8 @@ export default function SourceNetwork() {
     function readProgress() {
       const rect = wrap!.getBoundingClientRect();
       const vh = window.innerHeight;
-      const span = vh + rect.height;
-      progress = Math.min(1, Math.max(0, (vh - rect.top) / span));
+      // Fully lit by the time the section's top reaches the top of the screen, so it finishes before leaving.
+      progress = Math.min(1, Math.max(0, (vh - rect.top) / vh));
     }
 
     function draw(t: number) {
@@ -188,11 +188,10 @@ export default function SourceNetwork() {
     }
 
     redraw();
-    if (still) return;
 
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
-      if (visible && !raf) raf = requestAnimationFrame(loop);
+      if (visible && !raf && !still) raf = requestAnimationFrame(loop);
     });
     observer.observe(wrap);
 
@@ -201,6 +200,7 @@ export default function SourceNetwork() {
     }
     function onScroll() {
       readProgress();
+      if (still) draw(0);
     }
     window.addEventListener('resize', onResize);
     // Capture, so scrolling inside <body> (where this site scrolls) reaches us.
