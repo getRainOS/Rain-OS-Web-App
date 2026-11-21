@@ -85,8 +85,8 @@ export default function HeroPrompt() {
   const reduce = useReducedMotion();
   // The example stays still until it scrolls into view, then runs once.
   const ref = useRef<HTMLDivElement | null>(null);
-  // Only starts once the whole card is on screen.
-  const started = useInView(ref, { once: true, amount: 1 });
+  // Runs only while the whole card is on screen; it pauses when it leaves and resumes when it returns.
+  const started = useInView(ref, { amount: 1 });
   const [i, setI] = useState(0);
   const [phase, setPhase] = useState<Phase>(reduce ? 'reveal' : 'typing');
   const [typed, setTyped] = useState(reduce ? SCENES[0].prompt.length : 0);
