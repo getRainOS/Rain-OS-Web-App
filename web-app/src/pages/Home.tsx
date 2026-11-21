@@ -644,7 +644,7 @@ export default function Home() {
                 Start by making your business, website or content easy for AI to read
               </p>
               <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-xl">
-                You could be leaving opportunities on the table, however well you rank. rain OS helps you optimize your content or website to increase your chances of being found and recommended by AI.
+                You could be leaving opportunities on the table, however well you rank. Rain OS helps you optimize your content or website to increase your chances of being found and recommended by AI.
               </p>
             </Reveal>
             <Reveal delay={0.1}>
