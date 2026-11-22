@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
@@ -168,8 +168,25 @@ function Drawing({ strokes }: { strokes: Stroke[] }) {
 // The lanes we work with: a framed panel with the pills, the drawing, and how we work with the chosen lane.
 export function LaneSection({ index, onPick }: { index: number; onPick: (i: number) => void }) {
   const ex = EXAMPLES[index];
+  const ref = useRef<HTMLElement | null>(null);
+  const [inView, setInView] = useState(false);
+  const reduce = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  // Run only while the section is on screen, so it starts when someone arrives.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.35 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  // Move to the next lane every few seconds while on screen.
+  useEffect(() => {
+    if (reduce || !inView) return;
+    const t = window.setInterval(() => onPick((index + 1) % EXAMPLES.length), 4000);
+    return () => clearInterval(t);
+  }, [reduce, inView, index, onPick]);
   return (
-    <section className="relative z-10 py-28 border-t border-white/[0.06]">
+    <section ref={ref} className="relative z-10 py-28 border-t border-white/[0.06]">
       <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
         <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Who it's for</div>
         <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Users we work with</h2>
