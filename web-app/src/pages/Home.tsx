@@ -594,7 +594,7 @@ export default function Home() {
             <motion.div className="text-center max-w-4xl mx-auto" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               {/* The subtitle takes the headline's width: w-0 + min-w-full stops it widening the block. */}
               <div className="mx-auto flex w-fit max-w-full flex-col items-center px-2 text-center">
-              <h1 className="mt-7 max-w-full text-[clamp(26px,4.6vw,64px)] leading-[1.02] font-semibold tracking-[-0.045em] md:whitespace-nowrap">
+              <h1 className="mt-7 max-w-full text-[clamp(26px,3.5vw,48px)] leading-[1.02] font-semibold tracking-[-0.045em] md:whitespace-nowrap">
                 Can AI Find You? <span className="text-neutral-500">Be readable by</span>
               </h1>
               <EngineCycle names={engines} />
