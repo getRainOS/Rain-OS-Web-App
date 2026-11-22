@@ -324,6 +324,35 @@ function RotatingAnalysis() {
 
 // The score row under the analysis: the pillar gauges and the eight-analysis trend,
 // stepping through the analyses while on screen. Example data, labelled as such.
+// The options under an analysis: each one lights up once, in turn, then the cycle stops.
+function WaysList({ ways }: { ways: { label: string; href: string; note: string }[] }) {
+  const ref = useRef<HTMLUListElement | null>(null);
+  const inView = useInView(ref, { once: true, amount: 0.6 });
+  const reduce = useReducedMotion();
+  const [lit, setLit] = useState(-1);
+  useEffect(() => {
+    if (reduce || !inView) return;
+    const timers = ways.map((_, i) => window.setTimeout(() => setLit(i), i * 1000));
+    timers.push(window.setTimeout(() => setLit(-1), ways.length * 1000));
+    return () => timers.forEach(clearTimeout);
+  }, [inView, reduce, ways]);
+  return (
+    <ul ref={ref} className="mt-3 space-y-2">
+      {ways.map((w, i) => (
+        <li key={w.label}>
+          <Link
+            to={w.href}
+            className={`group flex items-baseline justify-between gap-4 rounded-lg border px-4 py-3 transition-colors duration-500 ${lit === i ? 'border-white/40 bg-white/[0.06]' : 'border-white/[0.07] hover:bg-white/[0.02]'}`}
+          >
+            <span className="text-[14px] text-white font-medium">{w.label}</span>
+            <span className="text-[13px] text-neutral-500 group-hover:text-neutral-300 transition-colors">{w.note}</span>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function TrackRow() {
   const reduce = useReducedMotion();
   const [week, setWeek] = useState(WEEKS - 1);
@@ -378,16 +407,7 @@ function ToolsSection({ lane }: { lane: number }) {
                   {t.ways.length > 0 && (
                     <>
                     <div className="mt-6 text-[12px] text-neutral-500" style={MONO}>FEATURES</div>
-                    <ul className="mt-3 space-y-2">
-                      {t.ways.map(w => (
-                        <li key={w.label}>
-                          <Link to={w.href} className="group flex items-baseline justify-between gap-4 rounded-lg border border-white/[0.07] px-4 py-3 hover:bg-white/[0.02] transition-colors">
-                            <span className="text-[14px] text-white font-medium">{w.label}</span>
-                            <span className="text-[13px] text-neutral-500 group-hover:text-neutral-300 transition-colors">{w.note}</span>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
+                    <WaysList ways={t.ways} />
                     </>
                   )}
                 </div>
