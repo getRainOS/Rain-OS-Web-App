@@ -588,7 +588,7 @@ function DrawnGrid() {
           style={{ left: `${(i / (GRID_LINES - 1)) * 100}%` }}
           initial={{ scaleY: 0 }}
           animate={reduce || inView ? { scaleY: 1 } : { scaleY: 0 }}
-          transition={{ duration: 3.2, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 5, delay: i * 0.2, ease: [0.22, 1, 0.36, 1] }}
         />
       ))}
     </div>
