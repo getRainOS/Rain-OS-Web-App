@@ -125,7 +125,7 @@ export function PillarVisual({ result = BEFORE, label, before }: { result?: Pill
               initial={reduce ? false : { scaleY: 0 }}
               whileInView={{ scaleY: 1 }}
               viewport={view}
-              transition={{ duration: 0.9, delay: i * 0.12, ease: EASE }}
+              transition={{ duration: 2.5, delay: i * 0.12, ease: EASE }}
             />
             <div className="mt-2 text-center text-[11px] leading-tight text-neutral-400">{p.label}</div>
           </div>
