@@ -348,8 +348,7 @@ function TrackRow() {
   return (
     <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.4fr] gap-8 lg:gap-12 items-center p-5 md:p-7">
       <div>
-        <ToolTitle text="Track it over time" />
-        <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">See each pillar move, one analysis at a time</p>
+        <p className="text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">See each pillar move, one analysis at a time</p>
         <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">Every analysis adds a point to each pillar, so you can see what changed after a fix. Example data.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
@@ -357,6 +356,21 @@ function TrackRow() {
         <TrendCard week={week} />
       </div>
     </div>
+  );
+}
+
+// The tracking section: its own heading, then the score row.
+function TrackSection() {
+  return (
+    <section className="relative z-10 py-28 border-t border-white/[0.06]">
+      <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
+        <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Over time</div>
+        <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Track it over time</h2>
+        <div className="mt-12">
+          <TrackRow />
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -400,11 +414,6 @@ function ToolsSection({ lane }: { lane: number }) {
                 </div>
               </div>
             </Reveal>
-            {k === 0 && (
-              <Reveal delay={0.05}>
-                <TrackRow />
-              </Reveal>
-            )}
             </React.Fragment>
           ))}
         </div>
@@ -674,6 +683,7 @@ export default function Home() {
 
         <LaneSection index={lane} onPick={setLane} />
         <ToolsSection lane={lane} />
+        <TrackSection />
         <HowItWorks />
         <WhoSection onStart={start} />
 
