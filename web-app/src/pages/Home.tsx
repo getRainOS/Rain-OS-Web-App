@@ -384,6 +384,46 @@ function TrackRow() {
   );
 }
 
+// The four core pillars, one cell each across the page. The cells light up in turn while on screen.
+const PILLAR_CELLS = [
+  { name: 'Structure', tagline: 'Can AI actually read your source?' },
+  { name: 'Digital Authority', tagline: 'Is your site a source AI will name?' },
+  { name: 'Conversion Readiness', tagline: 'Does your site convert AI-referred visitors?' },
+  { name: 'Easy to Quote', tagline: 'Can AI retrieval systems find and synthesize your content?' },
+];
+function PillarBand() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const inView = useInView(ref, { once: false, amount: 0.5 });
+  const reduce = useReducedMotion();
+  const [active, setActive] = useState(0);
+  useEffect(() => {
+    if (reduce || !inView) return;
+    const t = window.setInterval(() => setActive(n => (n + 1) % PILLAR_CELLS.length), 2200);
+    return () => clearInterval(t);
+  }, [inView, reduce]);
+  return (
+    <section className="relative z-10 py-28 border-t border-white/[0.06]">
+      <div ref={ref} className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
+        <Eyebrow>The pillars</Eyebrow>
+        <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">What we measure</h2>
+        <div className="mt-14 grid grid-cols-1 md:grid-cols-4 border-t border-b border-white/10">
+          {PILLAR_CELLS.map((c, i) => (
+            <div
+              key={c.name}
+              className={`relative p-6 transition-colors duration-700 md:border-r md:border-white/10 md:last:border-r-0 ${active === i ? 'bg-white/[0.05]' : ''} ${i > 0 ? 'border-t border-white/10 md:border-t-0' : ''}`}
+            >
+              <span className={`absolute left-0 top-0 h-full w-px transition-colors duration-700 ${active === i ? 'bg-white' : 'bg-transparent'}`} />
+              <div className="text-[11px] text-neutral-500" style={MONO}>0{i + 1}</div>
+              <div className="mt-6 text-[18px] font-medium text-white">{c.name}</div>
+              <p className="mt-2 text-[14px] leading-relaxed text-neutral-400">{c.tagline}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function ToolsSection({ lane }: { lane: number }) {
   return (
     <section id="product" className="relative z-10 py-28 border-t border-white/[0.06]">
@@ -732,6 +772,7 @@ export default function Home() {
         </section>
 
         <LaneSection index={lane} onPick={setLane} />
+        <PillarBand />
         <ToolsSection lane={lane} />
         <HowItWorks />
         <WhoSection onStart={start} />
