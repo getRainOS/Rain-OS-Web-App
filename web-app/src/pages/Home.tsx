@@ -384,39 +384,56 @@ function TrackRow() {
   );
 }
 
-// The four core pillars, one cell each across the page. The cells light up in turn while on screen.
-const PILLAR_CELLS = [
-  { name: 'Structure', tagline: 'Can AI actually read your source?' },
-  { name: 'Digital Authority', tagline: 'Is your site a source AI will name?' },
-  { name: 'Conversion Readiness', tagline: 'Does your site convert AI-referred visitors?' },
-  { name: 'Easy to Quote', tagline: 'Can AI retrieval systems find and synthesize your content?' },
+// The four core pillars. Each cell shows its name; hovering, tabbing in or tapping
+// opens its meaning underneath. The lane pillars sit in their own row, dashed, so they
+// read as extras for one kind of business.
+const CORE_PILLARS = [
+  { name: 'Structure', meaning: 'Can AI actually read your source? How well your page translates into answers AI can extract.' },
+  { name: 'Digital Authority', meaning: 'Is your site a source AI will name? How much trust and credibility AI sees in your business.' },
+  { name: 'Conversion Readiness', meaning: 'Does your site convert AI-referred visitors? Whether a visitor who arrives from AI can act on it.' },
+  { name: 'Easy to Quote', meaning: 'Can AI retrieval systems find and synthesize your content? How cleanly AI can lift a fact from your page.' },
 ];
+const LANE_PILLARS = [
+  { name: 'Product Discoverability', lane: 'For online sellers', meaning: 'Whether AI can find and recommend your products when shoppers ask.' },
+  { name: 'Local Presence', lane: 'For local businesses', meaning: 'Whether AI knows where you are, what you serve and who to send there.' },
+];
+function PillarCell({ name, meaning, tag, dashed }: { name: string; meaning: string; tag?: string; dashed?: boolean }) {
+  return (
+    <div
+      tabIndex={0}
+      className={`group relative p-6 outline-none focus-visible:bg-white/[0.04] hover:bg-white/[0.03] transition-colors duration-500 ${dashed ? 'border border-dashed border-white/20' : ''}`}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          {tag && <div className="mb-3 text-[11px] text-neutral-500" style={MONO}>{tag}</div>}
+          <div className="text-[18px] font-medium text-white">{name}</div>
+        </div>
+        <span className="text-[20px] leading-none text-neutral-500 transition-transform duration-500 group-hover:rotate-45 group-focus-visible:rotate-45">+</span>
+      </div>
+      <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-700 ease-out group-hover:grid-rows-[1fr] group-focus-visible:grid-rows-[1fr]">
+        <div className="overflow-hidden">
+          <p className="mt-4 text-[14px] leading-relaxed text-neutral-400">{meaning}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
 function PillarBand() {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const inView = useInView(ref, { once: false, amount: 0.5 });
-  const reduce = useReducedMotion();
-  const [active, setActive] = useState(0);
-  useEffect(() => {
-    if (reduce || !inView) return;
-    const t = window.setInterval(() => setActive(n => (n + 1) % PILLAR_CELLS.length), 2200);
-    return () => clearInterval(t);
-  }, [inView, reduce]);
   return (
     <section className="relative z-10 py-28 border-t border-white/[0.06]">
-      <div ref={ref} className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
+      <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
         <Eyebrow>The pillars</Eyebrow>
         <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">What we measure</h2>
         <div className="mt-14 grid grid-cols-1 md:grid-cols-4 border-t border-b border-white/10">
-          {PILLAR_CELLS.map((c, i) => (
-            <div
-              key={c.name}
-              className={`relative p-6 transition-colors duration-700 md:border-r md:border-white/10 md:last:border-r-0 ${active === i ? 'bg-white/[0.05]' : ''} ${i > 0 ? 'border-t border-white/10 md:border-t-0' : ''}`}
-            >
-              <span className={`absolute left-0 top-0 h-full w-px transition-colors duration-700 ${active === i ? 'bg-white' : 'bg-transparent'}`} />
-              <div className="text-[11px] text-neutral-500" style={MONO}>0{i + 1}</div>
-              <div className="mt-6 text-[18px] font-medium text-white">{c.name}</div>
-              <p className="mt-2 text-[14px] leading-relaxed text-neutral-400">{c.tagline}</p>
+          {CORE_PILLARS.map((c, i) => (
+            <div key={c.name} className={`${i > 0 ? 'border-t border-white/10 md:border-t-0 md:border-l md:border-white/10' : ''}`}>
+              <PillarCell name={c.name} meaning={c.meaning} />
             </div>
+          ))}
+        </div>
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {LANE_PILLARS.map(l => (
+            <PillarCell key={l.name} name={l.name} meaning={l.meaning} tag={l.lane} dashed />
           ))}
         </div>
       </div>
