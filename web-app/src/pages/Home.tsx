@@ -427,7 +427,7 @@ const WHO = [
 
 function WhoSection({ onStart }: { onStart: () => void }) {
   return (
-    <section id="who" className="relative z-10 py-24 border-t border-white/[0.06] scroll-mt-16">
+    <section id="who" className="relative z-10 py-28 border-t border-white/[0.06] scroll-mt-16">
       <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
         <Reveal className="text-center">
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
@@ -482,7 +482,7 @@ function HowItWorks() {
     { n: '3', title: 'Follow the fixes', body: 'Each fix is written in plain English, with a technical version you can hand to whoever builds your site, for lanes that need it.' },
   ];
   return (
-    <section className="relative z-10 py-24 border-t border-white/[0.06]">
+    <section className="relative z-10 py-28 border-t border-white/[0.06]">
       <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
         <Reveal>
           <Eyebrow>How it works</Eyebrow>
