@@ -363,7 +363,7 @@ function TrackRow() {
 function ToolsSection({ lane }: { lane: number }) {
   return (
     <section id="product" className="relative z-10 py-28 border-t border-white/[0.06]">
-      <div className="max-w-[1104px] mx-auto px-6">
+      <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
         <Reveal>
           <Eyebrow>The tools</Eyebrow>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">
@@ -427,8 +427,8 @@ const WHO = [
 
 function WhoSection({ onStart }: { onStart: () => void }) {
   return (
-    <section id="who" className="relative z-10 py-24 border-t border-white/[0.06] scroll-mt-16">
-      <div className="max-w-[1104px] mx-auto px-6">
+    <section id="who" className="relative z-10 py-28 border-t border-white/[0.06] scroll-mt-16">
+      <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
         <Reveal className="text-center">
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
             What are you working on?
@@ -482,8 +482,8 @@ function HowItWorks() {
     { n: '3', title: 'Follow the fixes', body: 'Each fix is written in plain English, with a technical version you can hand to whoever builds your site, for lanes that need it.' },
   ];
   return (
-    <section className="relative z-10 py-24 border-t border-white/[0.06]">
-      <div className="max-w-[1104px] mx-auto px-6">
+    <section className="relative z-10 py-28 border-t border-white/[0.06]">
+      <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
         <Reveal>
           <Eyebrow>How it works</Eyebrow>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Three steps. No setup.</h2>
@@ -629,7 +629,7 @@ export default function Home() {
 
         <section className="relative z-10">
           <div className="py-28">
-          <div className="max-w-[1104px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-14 items-end">
+          <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-14 items-end">
             <Reveal>
               <Eyebrow>The shift</Eyebrow>
               <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
@@ -653,7 +653,7 @@ export default function Home() {
             </Reveal>
           </div>
           </div>
-          <div className="max-w-[1104px] mx-auto px-6 py-28 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
+          <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10 py-28 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
             <Reveal>
               <Eyebrow>Where AI gets its answers</Eyebrow>
               <ScrollWords
