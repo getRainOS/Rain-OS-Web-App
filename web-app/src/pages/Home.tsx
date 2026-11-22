@@ -301,9 +301,10 @@ function RotatingAnalysis() {
   const step = Math.max(0, RUN_STEPS.findIndex(x => x.kind === 'score' && x.which === 'before'));
   const cur = RUN_STEPS[step];
   return (
-    <div className="min-h-[360px]">
+    <div className="min-h-[360px] h-full">
       <AnimatePresence mode="wait">
         <motion.div
+          className="h-full"
           key={step}
           initial={reduce ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -369,7 +370,7 @@ function ToolsSection({ lane }: { lane: number }) {
           {TOOLS.map((t, k) => (
             <React.Fragment key={t.key}>
             <Reveal delay={0.05 * k}>
-              <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.4fr] gap-10 lg:gap-16 items-center py-20 md:py-24 border-b border-white/10">
+              <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.4fr] gap-10 lg:gap-16 items-stretch py-20 md:py-24 border-b border-white/10">
                 <div>
                   <ToolTitle text={t.eyebrow} />
                   {t.key !== 'analysis' && <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">{t.title}</p>}
@@ -390,7 +391,7 @@ function ToolsSection({ lane }: { lane: number }) {
                     </>
                   )}
                 </div>
-                <div className="min-w-0">
+                <div className="min-w-0 h-full">
                   {t.visual === 'pillar' ? <RotatingAnalysis /> : t.visual === 'citation' ? <CitationRotation /> : t.visual === 'share' ? <LaneCycle items={SHARE_LANES} render={d => <ShareCard data={d} />} /> : t.visual === 'describe' ? <LaneCycle items={DESCRIBE_LANES} render={d => <DescribeCard data={d} />} /> : null}
                 </div>
               </div>
