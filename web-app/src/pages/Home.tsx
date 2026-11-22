@@ -348,7 +348,7 @@ function TrackRow() {
         <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">See each pillar move, one analysis at a time</p>
         <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">Every analysis adds a point to each pillar, so you can see what changed after a fix. Example data.</p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch lg:border-l lg:border-white/10 lg:pl-12">
         <PillarGauges week={week} />
         <TrendCard week={week} />
       </div>
@@ -391,7 +391,7 @@ function ToolsSection({ lane }: { lane: number }) {
                     </>
                   )}
                 </div>
-                <div className="min-w-0 h-full">
+                <div className="min-w-0 h-full lg:border-l lg:border-white/10 lg:pl-12">
                   {t.visual === 'pillar' ? <RotatingAnalysis /> : t.visual === 'citation' ? <CitationRotation /> : t.visual === 'share' ? <LaneCycle items={SHARE_LANES} render={d => <ShareCard data={d} />} /> : t.visual === 'describe' ? <LaneCycle items={DESCRIBE_LANES} render={d => <DescribeCard data={d} />} /> : null}
                 </div>
               </div>
@@ -625,7 +625,7 @@ export default function Home() {
 
         <section className="relative z-10">
           <div className="py-28">
-          <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-14 items-end">
+          <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
             <Reveal>
               <Eyebrow>The shift</Eyebrow>
               <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
@@ -634,37 +634,49 @@ export default function Home() {
               <p className="mt-5 text-lg md:text-xl font-medium text-white leading-relaxed max-w-xl">
                 Start by making your business, website or content easy for AI to read
               </p>
-              <p className="mt-5 text-neutral-400 text-lg leading-relaxed max-w-xl">
-                You could be leaving opportunities on the table, however well you rank. Rain OS helps you optimize your content or website to increase your chances of being found and recommended by AI.
-              </p>
             </Reveal>
-            <Reveal delay={0.1}>
-              <div className="rounded-xl border border-white/10 bg-[#0a0a0a] p-8">
+            <div className="mt-14 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-14 items-center">
+              <Reveal>
+                <div className="lg:border-r lg:border-white/10 lg:pr-14">
+                  <p className="text-neutral-400 text-lg leading-relaxed max-w-xl">
+                    You could be leaving opportunities on the table, however well you rank. Rain OS helps you optimize your content or website to increase your chances of being found and recommended by AI.
+                  </p>
+                </div>
+              </Reveal>
+              <Reveal delay={0.1}>
+                <div className="rounded-xl border border-white/10 bg-[#0a0a0a] p-8">
                 <div className="text-7xl md:text-8xl font-semibold tracking-[-0.05em] tabular-nums" style={{ color: '#A8203E' }}>47%</div>
                 <p className="mt-3 text-[15px] text-neutral-300 leading-relaxed">Fewer people click through to websites when Google AI Overviews shows an answer.</p>
                 <a href="https://www.pewresearch.org/short-reads/2025/07/22/google-users-are-less-likely-to-click-on-links-when-an-ai-summary-appears-in-the-results/" target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-[12px] text-neutral-500 hover:text-neutral-300" style={MONO}>
                   PEW RESEARCH CENTER, JULY 2025 <ArrowUpRight className="w-3 h-3" />
                 </a>
               </div>
-            </Reveal>
+              </Reveal>
+            </div>
           </div>
           </div>
-          <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10 py-28 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
+          <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10 py-28">
             <Reveal>
               <Eyebrow>Where AI gets its answers</Eyebrow>
               <ScrollWords
                 text="Each answer comes from websites and content it can actually read."
                 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance"
               />
-              <p className="mt-5 max-w-3xl text-neutral-400 text-lg leading-relaxed">
+            </Reveal>
+            <div className="mt-14 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
+              <Reveal>
+                <div className="lg:border-r lg:border-white/10 lg:pr-12">
+                  <p className="mt-5 max-w-3xl text-neutral-400 text-lg leading-relaxed">
                 When someone asks an AI a question, it reads a handful of websites and names the ones it can read and use most easily. Rain OS scores how readable your site is for each AI, shows what is holding it back.
               </p>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <div className="p-4 md:p-6">
+                </div>
+              </Reveal>
+              <Reveal delay={0.1}>
+                <div className="p-4 md:p-6">
                 <SourceNetwork />
               </div>
-            </Reveal>
+              </Reveal>
+            </div>
           </div>
         </section>
 
