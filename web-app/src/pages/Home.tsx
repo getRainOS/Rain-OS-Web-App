@@ -342,7 +342,7 @@ function TrackRow() {
     return () => clearInterval(t);
   }, [reduce, inView]);
   return (
-    <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.4fr] gap-10 lg:gap-16 items-center py-20 md:py-24 border-b border-white/10">
+    <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.4fr] gap-10 lg:gap-16 items-stretch py-20 md:py-24 border-b border-white/10">
       <div>
         <ToolTitle text="Track it over time" />
         <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">See each pillar move, one analysis at a time</p>
@@ -635,22 +635,33 @@ export default function Home() {
                 Start by making your business, website or content easy for AI to read
               </p>
             </Reveal>
-            <div className="mt-14 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-14 items-center">
-              <Reveal>
-                <div className="lg:border-r lg:border-white/10 lg:pr-14">
+            <div className="mt-14 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-14 items-stretch">
+              <Reveal className="h-full">
+                <div className="h-full lg:border-r lg:border-white/10 lg:pr-14">
                   <p className="text-neutral-400 text-lg leading-relaxed max-w-xl">
                     You could be leaving opportunities on the table, however well you rank. Rain OS helps you optimize your content or website to increase your chances of being found and recommended by AI.
                   </p>
                 </div>
               </Reveal>
-              <Reveal delay={0.1}>
-                <div className="rounded-xl border border-white/10 bg-[#0a0a0a] p-8">
+              <Reveal delay={0.1} className="h-full">
+                <div className="relative h-full">
+                  <motion.div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -inset-10 z-0"
+                    style={{ backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px)', backgroundSize: '48px 48px' }}
+                    initial={{ opacity: 0, y: -48 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                  <div className="relative z-10 rounded-xl border border-white/10 bg-[#0a0a0a] p-8">
                 <div className="text-7xl md:text-8xl font-semibold tracking-[-0.05em] tabular-nums" style={{ color: '#A8203E' }}>47%</div>
                 <p className="mt-3 text-[15px] text-neutral-300 leading-relaxed">Fewer people click through to websites when Google AI Overviews shows an answer.</p>
                 <a href="https://www.pewresearch.org/short-reads/2025/07/22/google-users-are-less-likely-to-click-on-links-when-an-ai-summary-appears-in-the-results/" target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-[12px] text-neutral-500 hover:text-neutral-300" style={MONO}>
                   PEW RESEARCH CENTER, JULY 2025 <ArrowUpRight className="w-3 h-3" />
                 </a>
               </div>
+                </div>
               </Reveal>
             </div>
           </div>
@@ -663,9 +674,9 @@ export default function Home() {
                 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance"
               />
             </Reveal>
-            <div className="mt-14 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
-              <Reveal>
-                <div className="lg:border-r lg:border-white/10 lg:pr-12">
+            <div className="mt-14 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-stretch">
+              <Reveal className="h-full">
+                <div className="h-full lg:border-r lg:border-white/10 lg:pr-12">
                   <p className="mt-5 max-w-3xl text-neutral-400 text-lg leading-relaxed">
                 When someone asks an AI a question, it reads a handful of websites and names the ones it can read and use most easily. Rain OS scores how readable your site is for each AI, shows what is holding it back.
               </p>
