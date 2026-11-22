@@ -12,6 +12,7 @@ type LaneExample = {
   id: string;
   tab: string;
   question: string;
+  blurb: string;
   how: string;
   before: string;
   after: string;
@@ -23,6 +24,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'local_business',
     tab: 'Local business',
+    blurb: "Customers searching near you",
     how: "We check the questions people ask AI about your area and which of your pages it can read. Then we show you what's missing: hours, services, licensing and reviews.",
     question: "Who's the best dog groomer near Austin that takes walk-ins on Saturday?",
     before: 'Here are well-reviewed dog groomers in Austin with Saturday hours: Acme Pet Spa, Sample Paws Grooming and Riverside Pet Salon.',
@@ -46,6 +48,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'product_sellers',
     tab: 'Online sellers',
+    blurb: "Products AI can quote accurately",
     how: "We check what AI can read about your products: price, shipping, returns and reviews. Then we show you the gaps so it can quote your details accurately.",
     question: "What's a good waterproof travel wallet under $80?",
     before: 'Popular options include several well-known brands. Look for RFID blocking, a slim profile and leather or nylon construction.',
@@ -65,6 +68,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'general',
     tab: 'Writers & marketers',
+    blurb: "Articles AI can cite and link to",
     how: "We check your articles for the facts, headings and sources AI reads. Then we show you what to tighten so it can quote your writing and link back to you.",
     question: 'How do I stop procrastinating?',
     before: 'Many newsletter tools offer free plans and paid tiers. Compare features like templates, automation and analytics before choosing.',
@@ -83,6 +87,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'developers',
     tab: 'Developers',
+    blurb: "Docs AI can explain correctly",
     how: "We check your README and docs for what the project does, its stack and a quickstart. Then we show you what AI can't find yet.",
     question: 'What is the best framework for a small API that runs on Cloudflare Workers?',
     before: 'Several frameworks run on Workers. Consider Hono, itty-router or plain fetch handlers, depending on how much routing and middleware you need.',
@@ -101,6 +106,7 @@ const EXAMPLES: LaneExample[] = [
   {
     id: 'vibe_coders',
     tab: 'Vibe coders',
+    blurb: "Apps AI can recommend",
     how: "We check whether AI can find what you built, the platforms it works with and your docs. Then we show you the gaps to close.",
     question: 'What are the best AI-powered e-commerce tools?',
     before: 'You can add booking with a scheduling embed, a third-party calendar or a custom form. Each has trade-offs in cost and setup time.',
@@ -190,23 +196,29 @@ export function LaneSection({ index, onPick }: { index: number; onPick: (i: numb
       <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
         <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Who it's for</div>
         <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Users we work with</h2>
-        <div className="mt-10 p-6 md:p-10">
-          <div className="flex flex-wrap gap-2" role="tablist" aria-label="Lanes we work with">
-            {EXAMPLES.map((e, i) => (
-              <button
-                key={e.id}
-                role="tab"
-                aria-selected={i === index}
-                onClick={() => onPick(i)}
-                className={`h-9 px-4 rounded-full text-[13px] border transition-colors ${i === index ? 'bg-white text-black border-white' : 'border-white/15 text-neutral-300 hover:border-white/30'}`}
-              >
-                {e.tab}
-              </button>
-            ))}
-          </div>
-          <motion.div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center" key={ex.id} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.4 }}>
+        <div className="mt-12 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-16 items-start">
+          <ul role="tablist" aria-orientation="vertical" aria-label="Lanes we work with" className="border-t border-white/10">
+            {EXAMPLES.map((e, i) => {
+              const on = i === index;
+              return (
+                <li key={e.id}>
+                  <button
+                    role="tab"
+                    aria-selected={on}
+                    onClick={() => onPick(i)}
+                    className={`relative flex w-full flex-col border-b border-white/10 py-5 pl-5 pr-2 text-left transition-colors ${on ? 'text-white' : 'text-neutral-500 hover:text-neutral-300'}`}
+                  >
+                    <span className={`absolute left-0 top-0 h-full w-px ${on ? 'bg-white' : 'bg-transparent'}`} />
+                    <span className="text-[17px] font-medium">{e.tab}</span>
+                    <span className="mt-1 text-[14px] text-neutral-500">{e.blurb}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+          <motion.div key={ex.id} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.4 }}>
             <Drawing strokes={ex.drawing} />
-            <p className="text-[15px] leading-relaxed text-neutral-400">{ex.how}</p>
+            <p className="mt-6 max-w-md text-[15px] leading-relaxed text-neutral-400">{ex.how}</p>
           </motion.div>
         </div>
       </div>
