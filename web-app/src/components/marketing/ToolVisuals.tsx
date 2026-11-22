@@ -95,7 +95,7 @@ export function IllustrativeTag() {
 export function PillarVisual({ result = BEFORE, label, before }: { result?: PillarData; label?: string; before?: number }) {
   const reduce = useReducedMotion();
   return (
-    <div className={frame}>
+    <div className={`${frame} h-full`}>
       <div className="flex items-end justify-between gap-4">
         <div className="min-w-0">
           {label && <div className="mb-1 text-[11px] text-neutral-400" style={{ fontFamily: MONO }}>{label.toUpperCase()}</div>}
