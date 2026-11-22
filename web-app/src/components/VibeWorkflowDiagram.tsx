@@ -12,7 +12,7 @@ const VIBE_TOOLS = [
 ];
 
 const PILLARS = [
-  { name: 'AI Readability', color: '#ffffff', short: 'Readability' },
+  { name: 'Structure', color: '#ffffff', short: 'Readability' },
   { name: 'Digital Authority', color: '#ffffff', short: 'Authority' },
   { name: 'Conversion Readiness', color: '#ffffff', short: 'Conversion' },
   { name: 'Product Discoverability', color: '#ffffff', short: 'Discoverability' },

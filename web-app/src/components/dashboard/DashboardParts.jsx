@@ -25,7 +25,7 @@ export const PILLAR_MEANING = {
 };
 
 export const PILLARS = [
-  { key: 'ai_readability',          label: 'AI Readability',       color: PILLAR_CHART_COLORS.ai_readability, Icon: BrainCircuit },
+  { key: 'ai_readability',          label: 'Structure',       color: PILLAR_CHART_COLORS.ai_readability, Icon: BrainCircuit },
   { key: 'digital_authority',       label: 'Digital Authority',    color: PILLAR_CHART_COLORS.digital_authority, Icon: ShieldCheck },
   { key: 'conversion_readiness',    label: 'Conversion Readiness', color: PILLAR_CHART_COLORS.conversion_readiness, Icon: MousePointerClick },
   { key: 'product_discoverability', label: 'Product Discoverability',color: PILLAR_CHART_COLORS.product_discoverability, Icon: SearchCheck },

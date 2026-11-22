@@ -10,7 +10,7 @@ import SiteFooter from '@/components/marketing/SiteFooter';
 
 const PILLARS = [
   {
-    name: 'AI Readability',
+    name: 'Structure',
     body: 'Whether an AI can read and understand your page: clear structure, headings, markup and text that does not depend on scripts.',
   },
   {

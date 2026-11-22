@@ -6,7 +6,7 @@ import { PILLAR_CHART_COLORS } from '@/lib/pillarColors.js';
 // Example data, labelled as such.
 export const WEEKS = 8;
 export const SERIES: { key: keyof typeof PILLAR_CHART_COLORS & string; label: string; start: number; end: number }[] = [
-  { key: 'ai_readability', label: 'AI Readability', start: 48, end: 74 },
+  { key: 'ai_readability', label: 'Structure', start: 48, end: 74 },
   { key: 'digital_authority', label: 'Digital Authority', start: 55, end: 70 },
   { key: 'conversion_readiness', label: 'Conversion Readiness', start: 40, end: 61 },
   { key: 'product_discoverability', label: 'Product Discoverability', start: 52, end: 66 },

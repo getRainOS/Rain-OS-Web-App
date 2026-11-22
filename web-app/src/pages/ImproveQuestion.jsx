@@ -18,7 +18,7 @@ const MODES = [
 ];
 
 const PILLAR_KEY = {
-  'AI Readability': 'ai_readability',
+  'Structure': 'ai_readability',
   'Digital Authority': 'digital_authority',
   'Conversion Readiness': 'conversion_readiness',
   'Product Discoverability': 'product_discoverability',

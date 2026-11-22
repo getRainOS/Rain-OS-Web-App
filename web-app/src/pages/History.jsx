@@ -8,7 +8,7 @@ import { PILLAR_COLORS } from '../lib/pillarColors.js';
 import { domainOf } from '../lib/opportunities.js';
 
 const PILLAR_LABELS = {
-  ai_readability: 'AI Readability', digital_authority: 'Digital Authority',
+  ai_readability: 'Structure', digital_authority: 'Digital Authority',
   conversion_readiness: 'Conversion Readiness', product_discoverability: 'Product Discoverability',
 };
 import { CheckCircle2, AlertCircle, ExternalLink, Trash2, Search, X } from 'lucide-react';

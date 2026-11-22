@@ -16,7 +16,7 @@ const STATES = [
     status: 'Critical gaps found',
     statusColor: '#e5e5e5',
     pillars: [
-      { name: 'AI Readability', score: 22, color: '#e5e5e5', Icon: BrainCircuit },
+      { name: 'Structure', score: 22, color: '#e5e5e5', Icon: BrainCircuit },
       { name: 'Digital Authority', score: 29, color: '#e5e5e5', Icon: ShieldCheck },
       { name: 'Conversion', score: 38, color: '#e5e5e5', Icon: MousePointerClick },
       { name: 'Discoverability', score: 35, color: '#e5e5e5', Icon: Target },
@@ -40,7 +40,7 @@ const STATES = [
     status: 'AI-ready',
     statusColor: '#e5e5e5',
     pillars: [
-      { name: 'AI Readability', score: 91, color: '#e5e5e5', Icon: BrainCircuit },
+      { name: 'Structure', score: 91, color: '#e5e5e5', Icon: BrainCircuit },
       { name: 'Digital Authority', score: 87, color: '#e5e5e5', Icon: ShieldCheck },
       { name: 'Conversion', score: 88, color: '#e5e5e5', Icon: MousePointerClick },
       { name: 'Discoverability', score: 90, color: '#e5e5e5', Icon: Target },
@@ -64,7 +64,7 @@ const STATES = [
     status: 'Needs improvement',
     statusColor: '#e5e5e5',
     pillars: [
-      { name: 'AI Readability', score: 61, color: '#e5e5e5', Icon: BrainCircuit },
+      { name: 'Structure', score: 61, color: '#e5e5e5', Icon: BrainCircuit },
       { name: 'Digital Authority', score: 72, color: '#e5e5e5', Icon: ShieldCheck },
       { name: 'Conversion', score: 69, color: '#e5e5e5', Icon: MousePointerClick },
       { name: 'Discoverability', score: 66, color: '#e5e5e5', Icon: Target },
@@ -88,7 +88,7 @@ const STATES = [
     status: 'Highly citable',
     statusColor: '#e5e5e5',
     pillars: [
-      { name: 'AI Readability', score: 96, color: '#e5e5e5', Icon: BrainCircuit },
+      { name: 'Structure', score: 96, color: '#e5e5e5', Icon: BrainCircuit },
       { name: 'Digital Authority', score: 91, color: '#e5e5e5', Icon: ShieldCheck },
       { name: 'Conversion', score: 95, color: '#e5e5e5', Icon: MousePointerClick },
       { name: 'Discoverability', score: 94, color: '#e5e5e5', Icon: Target },

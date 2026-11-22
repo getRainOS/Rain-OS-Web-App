@@ -11,7 +11,7 @@ export const LANE_WEIGHTS = [
 ];
 // One colour per pillar, the same as the trend lines.
 const SEG = ['#ffffff', '#3B82F6', '#F97316', '#14B8A6', '#A78BFA', '#EF4444'];
-const SHORT = ['AI Readability', 'Digital Authority', 'Conversion Readiness', 'Product Discoverability', 'Local Presence', 'Easy to Quote'];
+const SHORT = ['Structure', 'Digital Authority', 'Conversion Readiness', 'Product Discoverability', 'Local Presence', 'Easy to Quote'];
 
 export default function LaneWeights({ current }) {
   return (

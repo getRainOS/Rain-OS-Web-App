@@ -17,7 +17,7 @@ const pillars = [
     bg: 'rgba(255,255,255,0.1)',
     border: 'rgba(255,255,255,0.25)',
     Icon: BrainCircuit,
-    name: 'AI Readability',
+    name: 'Structure',
     desc: 'How easily AI assistants can pull a clear answer out of your content.',
   },
   {
@@ -92,7 +92,7 @@ const WRITER_FAQS = [
   { q: "How do I get my articles cited or mentioned by AI?", a: "Answer the question near the top, state specific facts such as numbers, names and dates, and keep each section to one idea. rain OS scores these qualities on your draft and shows you what to change. It can raise your chances of being cited or mentioned, but it cannot guarantee either." },
   { q: "What's the difference between a mention and a citation?", a: "A mention is when an AI names your business in an answer without linking to one of your pages. A citation is when it links to a page on your site as a source. The two go together: a mention often comes first, and rain OS tracks both. Each check is a snapshot of one answer at that time." },
   { q: "Does rain OS rewrite my writing?", a: "It suggests better titles, page descriptions, short summaries and clearer wording for vague sentences. You review each change before you use it, so the writing stays yours." },
-  { q: "How is my writing scored?", a: "Every analysis scores four core pillars: AI Readability, Digital Authority, Conversion Readiness and Easy to Quote. The Rain Score combines them with equal weight. Deeper checks, such as how much new information a piece adds and how well it matches the questions people ask, feed into those pillars." },
+  { q: "How is my writing scored?", a: "Every analysis scores four core pillars: Structure, Digital Authority, Conversion Readiness and Easy to Quote. The Rain Score combines them with equal weight. Deeper checks, such as how much new information a piece adds and how well it matches the questions people ask, feed into those pillars." },
   { q: "Can I track whether AI cites or mentions my articles?", a: "Yes. On Pro and Business, Is AI Citing Me? can re-check the questions you choose each week and record whether each AI cited or mentioned you. Each check is a snapshot, so the results can change from one week to the next." },
   { q: "Do you guarantee that AI will cite or mention my article?", a: "No. AI answers change with the question, the day and the sources available. rain OS shows what to improve and checks what AI says, but it cannot promise a citation or a mention." },
 ];

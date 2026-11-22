@@ -10,7 +10,7 @@ export const repoPillars = [
     bg: 'rgba(255,255,255,0.04)',
     border: 'rgba(255,255,255,0.12)',
     Icon: BrainCircuit,
-    name: 'AI Readability',
+    name: 'Structure',
     score: 42,
     maxScore: 94,
     subSignals: [
