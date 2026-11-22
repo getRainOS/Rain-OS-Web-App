@@ -561,36 +561,27 @@ function EngineCycle({ names }: { names: string[] }) {
   );
 }
 
-// A faint grid that fades from dark at the top to translucent at the bottom. Its
-// vertical lines draw down, in parallel, once the grid scrolls into view.
-const GRID_LINES = 14;
+// A faint grid that appears at once, opening out from the top-left corner and fading in.
 function DrawnGrid() {
   const ref = useRef<HTMLDivElement | null>(null);
   const inView = useInView(ref, { once: true, amount: 0.2 });
   const reduce = useReducedMotion();
   const fade = 'linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.04) 100%)';
   return (
-    <div
-      ref={ref}
-      aria-hidden="true"
-      className="pointer-events-none absolute -inset-10 z-0 overflow-hidden"
-      style={{
-        backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px)',
-        backgroundSize: '100% 48px',
-        maskImage: fade,
-        WebkitMaskImage: fade,
-      }}
-    >
-      {Array.from({ length: GRID_LINES }, (_, i) => (
-        <motion.div
-          key={i}
-          className="absolute top-0 bottom-0 w-px origin-top bg-white/[0.09]"
-          style={{ left: `${(i / (GRID_LINES - 1)) * 100}%` }}
-          initial={{ scaleY: 0 }}
-          animate={reduce || inView ? { scaleY: 1 } : { scaleY: 0 }}
-          transition={{ duration: 5, delay: i * 0.2, ease: [0.22, 1, 0.36, 1] }}
-        />
-      ))}
+    <div ref={ref} aria-hidden="true" className="pointer-events-none absolute -inset-10 z-0">
+      <motion.div
+        className="absolute inset-0 overflow-hidden"
+        style={{
+          backgroundImage:
+            'linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px)',
+          backgroundSize: '48px 48px',
+          maskImage: fade,
+          WebkitMaskImage: fade,
+        }}
+        initial={{ opacity: 0, clipPath: 'circle(0% at 0% 0%)' }}
+        animate={reduce || inView ? { opacity: 1, clipPath: 'circle(150% at 0% 0%)' } : { opacity: 0, clipPath: 'circle(0% at 0% 0%)' }}
+        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+      />
     </div>
   );
 }
