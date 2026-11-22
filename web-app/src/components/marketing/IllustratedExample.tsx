@@ -176,6 +176,7 @@ export function LaneSection({ index, onPick }: { index: number; onPick: (i: numb
   const ex = EXAMPLES[index];
   const ref = useRef<HTMLElement | null>(null);
   const [inView, setInView] = useState(false);
+  const [chosen, setChosen] = useState(false); // once a visitor picks a lane, it stays put
   const reduce = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   // Run only while the section is on screen, so it starts when someone arrives.
   useEffect(() => {
@@ -187,10 +188,10 @@ export function LaneSection({ index, onPick }: { index: number; onPick: (i: numb
   }, []);
   // Move to the next lane every few seconds while on screen.
   useEffect(() => {
-    if (reduce || !inView) return;
+    if (reduce || !inView || chosen) return;
     const t = window.setInterval(() => onPick((index + 1) % EXAMPLES.length), 4000);
     return () => clearInterval(t);
-  }, [reduce, inView, index, onPick]);
+  }, [reduce, inView, chosen, index, onPick]);
   return (
     <section ref={ref} className="relative z-10 py-28 border-t border-white/[0.06]">
       <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
@@ -206,7 +207,7 @@ export function LaneSection({ index, onPick }: { index: number; onPick: (i: numb
                   <button
                     role="tab"
                     aria-selected={on}
-                    onClick={() => onPick(i)}
+                    onClick={() => { setChosen(true); onPick(i); }}
                     className={`relative flex w-full flex-col border-b border-white/10 py-5 pl-5 pr-2 text-left transition-colors ${on ? 'text-white' : 'text-neutral-500 hover:text-neutral-300'}`}
                   >
                     <span className={`absolute left-0 top-0 h-full w-px ${on ? 'bg-white' : 'bg-transparent'}`} />
