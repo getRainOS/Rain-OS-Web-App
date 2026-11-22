@@ -134,7 +134,7 @@ const PILLARS = [
   {
     key: 'ai_readability',
     camel: 'aiReadability',
-    label: 'AI Readability',
+    label: 'Structure',
     color: PILLAR_COLORS.ai_readability,
     sub: 'Semantic clarity & AEO alignment',
     detailKey: 'ai_readability_detail',

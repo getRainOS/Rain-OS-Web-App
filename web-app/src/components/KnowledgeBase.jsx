@@ -7,7 +7,7 @@ import styles from './KnowledgeBase.module.css';
 const KB_DATA = {
   general: {
     pillars: [
-      { key: 'ai_readability',    label: 'AI Readability',       weight: '25%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
+      { key: 'ai_readability',    label: 'Structure',       weight: '25%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
         desc: 'How easily ChatGPT, Gemini, and Perplexity extract answers from your content. Focus on clear headings, answer-first formatting, and semantic structure.' },
       { key: 'digital_authority', label: 'Digital Authority',      weight: '25%', color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck,
         desc: 'Trust signals that make AI engines choose your content over competitors. Schema markup, citations, entity recognition, and topical depth.' },
@@ -37,7 +37,7 @@ const KB_DATA = {
     pillars: [
       { key: 'discoverability', label: 'Product Discoverability', weight: '20%', color: PILLAR_COLORS.product_discoverability, Icon: SearchCheck,
         desc: 'How easily AI shopping engines find and recommend your products. Structured data, rich descriptions, and attribute completeness matter most.' },
-      { key: 'ai_readability',  label: 'AI Readability',          weight: '20%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
+      { key: 'ai_readability',  label: 'Structure',          weight: '20%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
         desc: 'How well AI can parse your product descriptions and extract key features, benefits, and comparisons.' },
       { key: 'authority',       label: 'Digital Authority',      weight: '20%', color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck,
         desc: 'Brand trust signals — reviews, certifications, and third-party mentions that make AI confident recommending you.' },
@@ -65,7 +65,7 @@ const KB_DATA = {
 
   vibe_coders: {
     pillars: [
-      { key: 'ai_readability',    label: 'AI Readability',       weight: '25%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
+      { key: 'ai_readability',    label: 'Structure',       weight: '25%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
         desc: 'How well your vibe-coded landing pages and app copy translate into machine-extractable answers. Headings, structure, and semantic HTML matter.' },
       { key: 'digital_authority', label: 'Digital Authority',      weight: '25%', color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck,
         desc: 'Trust signals that make AI engines treat your domain as a quotable source. Schema, entity clarity, and credibility markup.' },
@@ -94,7 +94,7 @@ const KB_DATA = {
 
   developers: {
     pillars: [
-      { key: 'doc_structure',    label: 'AI Readability',      weight: '25%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
+      { key: 'doc_structure',    label: 'Structure',      weight: '25%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
         desc: 'README and documentation organization. Clear hierarchy, navigation, and heading structure so AI can index your docs properly.' },
       { key: 'tech_completeness', label: 'Digital Authority',    weight: '25%', color: PILLAR_COLORS.digital_authority, Icon: GitBranch,
         desc: 'Coverage of API endpoints, error handling, code examples, and installation steps. Missing sections make your docs harder for AI to use.' },
@@ -125,7 +125,7 @@ const KB_DATA = {
     pillars: [
       { key: 'local_presence',   label: 'Local Presence',     weight: '30%', color: PILLAR_COLORS.local_presence, Icon: MapPin,
         desc: 'Name, address and phone that match everywhere, LocalBusiness schema, the city and areas you serve, and reviews that mention them.' },
-      { key: 'ai_readability',   label: 'AI Readability',     weight: '20%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
+      { key: 'ai_readability',   label: 'Structure',     weight: '20%', color: PILLAR_COLORS.ai_readability, Icon: BrainCircuit,
         desc: 'How easily AI can read your page and pull out a clear answer: short sentences, answer-first sections, plain structure.' },
       { key: 'digital_authority', label: 'Digital Authority', weight: '20%', color: PILLAR_COLORS.digital_authority, Icon: ShieldCheck,
         desc: 'Credentials, years in business, reviews and sources that make AI confident recommending you.' },

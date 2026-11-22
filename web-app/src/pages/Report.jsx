@@ -19,7 +19,7 @@ const byDate = rows => [...rows].sort((a, b) => new Date(when(b)) - new Date(whe
 const engineName = e => ({ gemini: 'Gemini', chatgpt: 'ChatGPT', perplexity: 'Perplexity', google_ai: 'Google AI', aio: 'Google AI Overviews', ai_overviews: 'Google AI Overviews', claude: 'Claude', copilot: 'Copilot' }[e] || (e ? e[0].toUpperCase() + e.slice(1) : 'Gemini'));
 
 const PILLARS = [
-  ['ai_readability', 'AI Readability'],
+  ['ai_readability', 'Structure'],
   ['digital_authority', 'Digital Authority'],
   ['conversion_readiness', 'Conversion Readiness'],
   ['rag_readiness', 'Easy to Quote'],

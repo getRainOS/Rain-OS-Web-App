@@ -201,7 +201,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 bg: 'bg-sky-500/10',
                 border: 'border-sky-500/20',
                 weight: 'Core pillar',
-                title: 'AI Readability',
+                title: 'Structure',
                 tagline: 'Can AI understand what you offer?',
                 body: 'AI reads the words on your page. If your services are only in images, your pages are vague ("we do it all!"), or the content only appears after a script runs, AI may miss it.',
                 fixes: ['Describe each service in specific words', 'List your services, prices and the areas you serve', 'Replace vague phrases with what you actually do'],

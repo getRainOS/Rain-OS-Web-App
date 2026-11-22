@@ -273,7 +273,7 @@ export default function VibeCoders() {
                 <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
                 <span className="ml-3 text-xs text-neutral-500 font-mono">getrainos.com/dashboard</span>
               </div>
-              <img src="/screenshots/dashboard-chart.png" alt="rain OS pillar breakdown dashboard showing AI Readability, Digital Authority, Conversion Readiness, and Easy to Quote trendlines" className="w-full block" />
+              <img src="/screenshots/dashboard-chart.png" alt="rain OS pillar breakdown dashboard showing Structure, Digital Authority, Conversion Readiness, and Easy to Quote trendlines" className="w-full block" />
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-start">

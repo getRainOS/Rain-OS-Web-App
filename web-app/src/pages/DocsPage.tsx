@@ -156,7 +156,7 @@ export default function DocsPage() {
                         bg: 'rgba(255,255,255,0.08)',
                         border: 'rgba(255,255,255,0.2)',
                         Icon: BrainCircuit,
-                        name: 'AI Readability',
+                        name: 'Structure',
                         weight: 'Core pillar',
                         desc: 'How well AI systems can parse, chunk, and extract answers from your content. Covers structural clarity, answer-first formatting, semantic precision, context sufficiency, and section concept isolation.',
                         subScores: ['Structural Clarity', 'Answer-First Formatting', 'Semantic Precision', 'Context Sufficiency', 'Section Concept Isolation'],
@@ -263,7 +263,7 @@ export default function DocsPage() {
                         Icon: BrainCircuit,
                         name: 'Writers & Marketers',
                         badge: 'General module',
-                        desc: 'The default module. Optimized for blog posts, articles, landing pages, and marketing copy. Uses four core pillars, weighted equally: AI Readability, Digital Authority, Conversion Readiness and Easy to Quote.',
+                        desc: 'The default module. Optimized for blog posts, articles, landing pages, and marketing copy. Uses four core pillars, weighted equally: Structure, Digital Authority, Conversion Readiness and Easy to Quote.',
                         module: 'general',
                       },
                       {
@@ -271,7 +271,7 @@ export default function DocsPage() {
                         Icon: Package,
                         name: 'Online Sellers',
                         badge: 'Product Discoverability module',
-                        desc: 'Dedicated scoring for ecommerce and product pages. Five pillars, weighted equally: AI Readability, Digital Authority, Conversion Readiness, Product Discoverability (covering pricing transparency, variant coverage, availability signals, merchant identity and comparative context) and Easy to Quote.',
+                        desc: 'Dedicated scoring for ecommerce and product pages. Five pillars, weighted equally: Structure, Digital Authority, Conversion Readiness, Product Discoverability (covering pricing transparency, variant coverage, availability signals, merchant identity and comparative context) and Easy to Quote.',
                         module: 'product_sellers',
                       },
                       {
@@ -279,7 +279,7 @@ export default function DocsPage() {
                         Icon: BookOpen,
                         name: 'Developers',
                         badge: 'Documentation module',
-                        desc: 'Specialized scoring for technical documentation. Four core pillars, weighted equally: AI Readability, Digital Authority, Conversion Readiness and Easy to Quote — built for READMEs, API references, guides, and developer docs.',
+                        desc: 'Specialized scoring for technical documentation. Four core pillars, weighted equally: Structure, Digital Authority, Conversion Readiness and Easy to Quote — built for READMEs, API references, guides, and developer docs.',
                         module: 'developers',
                       },
                       {
@@ -295,7 +295,7 @@ export default function DocsPage() {
                         Icon: MapPin,
                         name: 'Local Businesses',
                         badge: 'Local SEO module',
-                        desc: 'Built for service businesses and local shops. Five pillars, weighted equally: AI Readability, Digital Authority, Conversion Readiness, Local Presence (local trust signals) and Easy to Quote. Checks NAP consistency, LocalBusiness schema, review signals, Google Business Profile mentions, and click-to-call CTAs.',
+                        desc: 'Built for service businesses and local shops. Five pillars, weighted equally: Structure, Digital Authority, Conversion Readiness, Local Presence (local trust signals) and Easy to Quote. Checks NAP consistency, LocalBusiness schema, review signals, Google Business Profile mentions, and click-to-call CTAs.',
                         module: 'local_business',
                       },
                     ].map((s) => (

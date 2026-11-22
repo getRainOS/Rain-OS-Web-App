@@ -65,7 +65,7 @@ export const BEFORE: PillarData = {
   page: 'Invisalign in Austin',
   overall: 58,
   pillars: [
-    { key: 'ai_readability', label: 'AI Readability', value: 55 },
+    { key: 'ai_readability', label: 'Structure', value: 55 },
     { key: 'digital_authority', label: 'Digital Authority', value: 61 },
     { key: 'conversion_readiness', label: 'Conversion Readiness', value: 60 },
     { key: 'rag_readiness', label: 'Easy to Quote', value: 52 },
@@ -80,7 +80,7 @@ export const AFTER: PillarData = {
   page: 'Invisalign in Austin',
   overall: 74,
   pillars: [
-    { key: 'ai_readability', label: 'AI Readability', value: 77 },
+    { key: 'ai_readability', label: 'Structure', value: 77 },
     { key: 'digital_authority', label: 'Digital Authority', value: 70 },
     { key: 'conversion_readiness', label: 'Conversion Readiness', value: 72 },
     { key: 'rag_readiness', label: 'Easy to Quote', value: 66 },
@@ -170,32 +170,32 @@ export const LANE_EXAMPLES: { lane: LaneId; index: number; before: PillarData; a
   {
     lane: 'sellers', index: 1,
     before: { business: 'Harbor Wallet Co.', page: 'Example product page', overall: 51, pillars: [
-      pill('ai_readability', 'AI Readability', 50), pill('digital_authority', 'Digital Authority', 48), pill('conversion_readiness', 'Conversion Readiness', 55),
+      pill('ai_readability', 'Structure', 50), pill('digital_authority', 'Digital Authority', 48), pill('conversion_readiness', 'Conversion Readiness', 55),
       pill('product_discoverability', 'Product Discoverability', 44), pill('rag_readiness', 'Easy to Quote', 58)] },
     after: { business: 'Harbor Wallet Co.', page: 'Example product page', overall: 71, pillars: [
-      pill('ai_readability', 'AI Readability', 74), pill('digital_authority', 'Digital Authority', 66), pill('conversion_readiness', 'Conversion Readiness', 70),
+      pill('ai_readability', 'Structure', 74), pill('digital_authority', 'Digital Authority', 66), pill('conversion_readiness', 'Conversion Readiness', 70),
       pill('product_discoverability', 'Product Discoverability', 76), pill('rag_readiness', 'Easy to Quote', 69)] },
   },
   {
     lane: 'writers', index: 2,
     before: { business: 'Quillpost', page: 'Example blog post', overall: 60, pillars: [
-      pill('ai_readability', 'AI Readability', 66), pill('digital_authority', 'Digital Authority', 58), pill('conversion_readiness', 'Conversion Readiness', 55), pill('rag_readiness', 'Easy to Quote', 61)] },
+      pill('ai_readability', 'Structure', 66), pill('digital_authority', 'Digital Authority', 58), pill('conversion_readiness', 'Conversion Readiness', 55), pill('rag_readiness', 'Easy to Quote', 61)] },
     after: { business: 'Quillpost', page: 'Example blog post', overall: 77, pillars: [
-      pill('ai_readability', 'AI Readability', 82), pill('digital_authority', 'Digital Authority', 74), pill('conversion_readiness', 'Conversion Readiness', 72), pill('rag_readiness', 'Easy to Quote', 79)] },
+      pill('ai_readability', 'Structure', 82), pill('digital_authority', 'Digital Authority', 74), pill('conversion_readiness', 'Conversion Readiness', 72), pill('rag_readiness', 'Easy to Quote', 79)] },
   },
   {
     lane: 'developers', index: 3,
     before: { business: 'Tinyroute', page: 'Example README', overall: 56, pillars: [
-      pill('ai_readability', 'AI Readability', 60), pill('digital_authority', 'Digital Authority', 52), pill('conversion_readiness', 'Conversion Readiness', 50), pill('rag_readiness', 'Easy to Quote', 62)] },
+      pill('ai_readability', 'Structure', 60), pill('digital_authority', 'Digital Authority', 52), pill('conversion_readiness', 'Conversion Readiness', 50), pill('rag_readiness', 'Easy to Quote', 62)] },
     after: { business: 'Tinyroute', page: 'Example README', overall: 74, pillars: [
-      pill('ai_readability', 'AI Readability', 80), pill('digital_authority', 'Digital Authority', 71), pill('conversion_readiness', 'Conversion Readiness', 66), pill('rag_readiness', 'Easy to Quote', 78)] },
+      pill('ai_readability', 'Structure', 80), pill('digital_authority', 'Digital Authority', 71), pill('conversion_readiness', 'Conversion Readiness', 66), pill('rag_readiness', 'Easy to Quote', 78)] },
   },
   {
     lane: 'vibe_coders', index: 4,
     before: { business: 'Bookly', page: 'Example landing page', overall: 49, pillars: [
-      pill('ai_readability', 'AI Readability', 45), pill('digital_authority', 'Digital Authority', 50), pill('conversion_readiness', 'Conversion Readiness', 52), pill('rag_readiness', 'Easy to Quote', 48)] },
+      pill('ai_readability', 'Structure', 45), pill('digital_authority', 'Digital Authority', 50), pill('conversion_readiness', 'Conversion Readiness', 52), pill('rag_readiness', 'Easy to Quote', 48)] },
     after: { business: 'Bookly', page: 'Example landing page', overall: 71, pillars: [
-      pill('ai_readability', 'AI Readability', 70), pill('digital_authority', 'Digital Authority', 68), pill('conversion_readiness', 'Conversion Readiness', 74), pill('rag_readiness', 'Easy to Quote', 71)] },
+      pill('ai_readability', 'Structure', 70), pill('digital_authority', 'Digital Authority', 68), pill('conversion_readiness', 'Conversion Readiness', 74), pill('rag_readiness', 'Easy to Quote', 71)] },
   },
 ];
 
