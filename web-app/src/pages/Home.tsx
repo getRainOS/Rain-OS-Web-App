@@ -295,10 +295,10 @@ const RUN_STEPS: RunStep[] = LANE_RUNS.flatMap(run => [
   { kind: 'score' as const, run, which: 'after' as const },
 ]);
 
-// Static: holds on the first earlier analysis and does not cycle.
+// Static: shows the after result from the start, and does not cycle.
 function RotatingAnalysis() {
   const reduce = useReducedMotion();
-  const step = Math.max(0, RUN_STEPS.findIndex(x => x.kind === 'score' && x.which === 'before'));
+  const step = Math.max(0, RUN_STEPS.findIndex(x => x.kind === 'score' && x.which === 'after'));
   const cur = RUN_STEPS[step];
   return (
     <div className="min-h-[360px] h-full">
