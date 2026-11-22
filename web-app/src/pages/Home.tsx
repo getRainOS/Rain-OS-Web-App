@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion, useInView } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   ArrowRight, ArrowUpRight, Check, Search,
@@ -342,7 +342,7 @@ function TrackRow() {
     return () => clearInterval(t);
   }, [reduce, inView]);
   return (
-    <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.4fr] gap-10 lg:gap-16 items-stretch py-20 md:py-24 border-b border-white/10">
+    <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-stretch py-20 md:py-24 border-b border-white/10">
       <div>
         <ToolTitle text="Track it over time" />
         <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">See each pillar move, one analysis at a time</p>
@@ -370,11 +370,11 @@ function ToolsSection({ lane }: { lane: number }) {
           {TOOLS.map((t, k) => (
             <React.Fragment key={t.key}>
             <Reveal delay={0.05 * k}>
-              <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.4fr] gap-10 lg:gap-16 items-stretch py-20 md:py-24 border-b border-white/10">
+              <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-stretch py-20 md:py-24 border-b border-white/10">
                 <div>
                   <ToolTitle text={t.eyebrow} />
                   {t.key !== 'analysis' && <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">{t.title}</p>}
-                  <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">{t.lead && <span className="font-medium text-white">{t.lead} </span>}{t.body}</p>
+                  {t.key !== 'analysis' && <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">{t.lead && <span className="font-medium text-white">{t.lead} </span>}{t.body}</p>}
                   {t.ways.length > 0 && (
                     <>
                     <div className="mt-6 text-[12px] text-neutral-500" style={MONO}>FEATURES</div>
@@ -561,6 +561,40 @@ function EngineCycle({ names }: { names: string[] }) {
   );
 }
 
+// A faint grid that fades from dark at the top to translucent at the bottom. Its
+// vertical lines draw down, in parallel, once the grid scrolls into view.
+const GRID_LINES = 14;
+function DrawnGrid() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const inView = useInView(ref, { once: true, amount: 0.2 });
+  const reduce = useReducedMotion();
+  const fade = 'linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.04) 100%)';
+  return (
+    <div
+      ref={ref}
+      aria-hidden="true"
+      className="pointer-events-none absolute -inset-10 z-0 overflow-hidden"
+      style={{
+        backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px)',
+        backgroundSize: '100% 48px',
+        maskImage: fade,
+        WebkitMaskImage: fade,
+      }}
+    >
+      {Array.from({ length: GRID_LINES }, (_, i) => (
+        <motion.div
+          key={i}
+          className="absolute top-0 bottom-0 w-px origin-top bg-white/[0.09]"
+          style={{ left: `${(i / (GRID_LINES - 1)) * 100}%` }}
+          initial={{ scaleY: 0 }}
+          animate={reduce || inView ? { scaleY: 1 } : { scaleY: 0 }}
+          transition={{ duration: 1.2, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function Home() {
   const [lane, setLane] = useState(0);
   const engines = useLiveEngines();
@@ -645,15 +679,7 @@ export default function Home() {
               </Reveal>
               <Reveal delay={0.1} className="h-full">
                 <div className="relative h-full">
-                  <motion.div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute -inset-10 z-0"
-                    style={{ backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px)', backgroundSize: '48px 48px' }}
-                    initial={{ opacity: 0, y: -48 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.3 }}
-                    transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-                  />
+                  <DrawnGrid />
                   <div className="relative z-10 rounded-xl border border-white/10 bg-[#0a0a0a] p-8">
                 <div className="text-7xl md:text-8xl font-semibold tracking-[-0.05em] tabular-nums" style={{ color: '#A8203E' }}>47%</div>
                 <p className="mt-3 text-[15px] text-neutral-300 leading-relaxed">Fewer people click through to websites when Google AI Overviews shows an answer.</p>
