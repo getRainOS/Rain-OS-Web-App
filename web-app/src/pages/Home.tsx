@@ -217,7 +217,7 @@ function AnalyzeConsole({ compact = false, litLane }: { compact?: boolean; litLa
 const TOOLS = [
   {
     key: 'analysis',
-    eyebrow: 'Run an analysis and improve your AI readability',
+    eyebrow: 'Run an Analysis and Improve Your AI Readability',
     title: 'Get your Rain Score and pillar breakdown',
     body: 'One score, split into the pillars that matter for your kind of business, with the fixes for each gap. Run it three ways:',
     ways: [
