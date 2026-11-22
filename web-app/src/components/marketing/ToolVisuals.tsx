@@ -115,12 +115,12 @@ export function PillarVisual({ result = BEFORE, label, before }: { result?: Pill
           )}
         </div>
       </div>
-      <div className="mt-6 grid h-52 items-end gap-3" style={{ gridTemplateColumns: `repeat(${result.pillars.length}, minmax(0, 1fr))` }}>
+      <div className="mt-6 grid h-64 items-end gap-3" style={{ gridTemplateColumns: `repeat(${result.pillars.length}, minmax(0, 1fr))` }}>
         {result.pillars.map((p, i) => (
           <div key={String(p.key)} className="flex h-full min-w-0 flex-col justify-end">
             <div className="mb-1.5 text-center text-[13px] font-semibold tabular-nums text-white">{p.value}</div>
             <motion.div
-              className="w-full rounded-t-md"
+              className="mx-auto w-[22px] rounded-t-sm"
               style={{ background: PILLAR_CHART_COLORS[p.key], height: `${p.value}%`, originY: 1 }}
               initial={reduce ? false : { scaleY: 0 }}
               whileInView={{ scaleY: 1 }}
