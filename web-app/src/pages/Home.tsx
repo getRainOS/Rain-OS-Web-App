@@ -578,9 +578,9 @@ function DrawnGrid() {
           maskImage: fade,
           WebkitMaskImage: fade,
         }}
-        initial={{ opacity: 0, clipPath: 'circle(0% at 0% 0%)' }}
-        animate={reduce || inView ? { opacity: 1, clipPath: 'circle(150% at 0% 0%)' } : { opacity: 0, clipPath: 'circle(0% at 0% 0%)' }}
-        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ opacity: 0 }}
+        animate={reduce || inView ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
       />
     </div>
   );
