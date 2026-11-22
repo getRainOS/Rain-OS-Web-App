@@ -295,15 +295,10 @@ const RUN_STEPS: RunStep[] = LANE_RUNS.flatMap(run => [
   { kind: 'score' as const, run, which: 'after' as const },
 ]);
 
+// Static: holds on the first earlier analysis and does not cycle.
 function RotatingAnalysis() {
   const reduce = useReducedMotion();
-  const [step, setStep] = useState(0);
-  useEffect(() => {
-    if (reduce) return;
-    const cur = RUN_STEPS[step];
-    const t = setTimeout(() => setStep(n => (n + 1) % RUN_STEPS.length), cur.kind === 'running' ? 7000 : 3500);
-    return () => clearTimeout(t);
-  }, [step, reduce]);
+  const step = Math.max(0, RUN_STEPS.findIndex(x => x.kind === 'score' && x.which === 'before'));
   const cur = RUN_STEPS[step];
   return (
     <div className="min-h-[360px]">
