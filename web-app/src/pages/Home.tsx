@@ -371,7 +371,7 @@ function TrackRow() {
     return () => clearInterval(t);
   }, [reduce, inView]);
   return (
-    <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-stretch py-20 md:py-24 border-b border-white/10">
+    <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-center py-20 md:py-24 border-b border-white/10">
       <div>
         <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">See each pillar move, one analysis at a time</p>
         <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">Every analysis adds a point to each pillar, so you can see what changed after a fix. Example data.</p>
@@ -691,16 +691,16 @@ export default function Home() {
                 Start by making your business, website or content easy for AI to read
               </p>
             </Reveal>
-            <div className="mt-14 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-14 items-stretch">
-              <Reveal className="h-full">
-                <div className="h-full lg:border-r lg:border-white/10 lg:pr-14">
+            <div className="mt-14 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-14 items-center">
+              <Reveal>
+                <div className="lg:border-r lg:border-white/10 lg:pr-14">
                   <p className="text-neutral-400 text-lg leading-relaxed max-w-xl">
                     You could be leaving opportunities on the table, however well you rank. Rain OS helps you optimize your content or website to increase your chances of being found and recommended by AI.
                   </p>
                 </div>
               </Reveal>
-              <Reveal delay={0.1} className="h-full">
-                <div className="relative h-full">
+              <Reveal delay={0.1}>
+                <div className="relative">
                   <DrawnGrid />
                   <div className="relative z-10 rounded-xl border border-white/10 bg-[#0a0a0a] p-8">
                 <div className="text-7xl md:text-8xl font-semibold tracking-[-0.05em] tabular-nums" style={{ color: '#A8203E' }}>47%</div>
@@ -722,9 +722,9 @@ export default function Home() {
                 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance"
               />
             </Reveal>
-            <div className="mt-14 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-stretch">
-              <Reveal className="h-full">
-                <div className="h-full lg:border-r lg:border-white/10 lg:pr-12">
+            <div className="mt-14 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
+              <Reveal>
+                <div className="lg:border-r lg:border-white/10 lg:pr-12">
                   <p className="mt-5 max-w-3xl text-neutral-400 text-lg leading-relaxed">
                 When someone asks an AI a question, it reads a handful of websites and names the ones it can read and use most easily. Rain OS scores how readable your site is for each AI, shows what is holding it back.
               </p>

@@ -198,7 +198,7 @@ export function LaneSection({ index, onPick }: { index: number; onPick: (i: numb
         <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Who it's for</div>
         <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Users we work with</h2>
         <div className="mt-8 text-[13px] text-neutral-500">Choose one</div>
-        <div className="mt-6 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-16 items-stretch">
+        <div className="mt-6 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-16 items-start">
           <ul role="tablist" aria-orientation="vertical" aria-label="Lanes we work with" className="border-t border-white/10">
             {EXAMPLES.map((e, i) => {
               const on = i === index;
