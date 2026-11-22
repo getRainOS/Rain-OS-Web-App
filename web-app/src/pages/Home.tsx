@@ -384,23 +384,6 @@ function TrackRow() {
   );
 }
 
-// Tracking: its own section, with the same heading treatment as the tools section.
-function TrackSection() {
-  return (
-    <section className="relative z-10 py-28 border-t border-white/[0.06]">
-      <div className="max-w-[1104px] mx-auto px-6">
-        <Reveal>
-          <Eyebrow>Over time</Eyebrow>
-          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Track it over time</h2>
-        </Reveal>
-        <div className="mt-14">
-          <TrackRow />
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function ToolsSection({ lane }: { lane: number }) {
   return (
     <section id="product" className="relative z-10 py-28 border-t border-white/[0.06]">
@@ -432,6 +415,15 @@ function ToolsSection({ lane }: { lane: number }) {
                 </div>
               </div>
             </Reveal>
+            {k === 0 && (
+              <Reveal delay={0.05}>
+                <div className="pt-20 md:pt-24">
+                  <Eyebrow>Over time</Eyebrow>
+                  <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Track it over time</h2>
+                </div>
+                <TrackRow />
+              </Reveal>
+            )}
             </React.Fragment>
           ))}
         </div>
@@ -741,7 +733,6 @@ export default function Home() {
 
         <LaneSection index={lane} onPick={setLane} />
         <ToolsSection lane={lane} />
-        <TrackSection />
         <HowItWorks />
         <WhoSection onStart={start} />
 
