@@ -782,11 +782,11 @@ export default function Home() {
               </p>
                 </div>
               </Reveal>
-              <Reveal delay={0.1}>
-                <div className="pointer-events-none p-4 md:p-6 lg:absolute lg:-top-10 lg:-bottom-10 lg:left-[35%] lg:-right-[10%] lg:p-0">
-                <SourceNetwork />
+              <div className="pointer-events-none p-4 md:p-6 lg:absolute lg:-top-24 lg:-bottom-24 lg:left-[37%] lg:-right-[9%] lg:p-0 lg:[&>div>div]:!h-full">
+                <Reveal delay={0.1} className="h-full">
+                  <SourceNetwork />
+                </Reveal>
               </div>
-              </Reveal>
             </div>
           </div>
         </section>
