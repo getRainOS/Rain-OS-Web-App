@@ -427,7 +427,8 @@ function PillarBand() {
             </div>
           ))}
         </div>
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="mt-10 mb-4 text-[11px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>Additionally</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {LANE_PILLARS.map(l => (
             <PillarCell key={l.name} name={l.name} meaning={l.meaning} tag={l.lane} dashed />
           ))}
