@@ -747,7 +747,7 @@ export default function Home() {
               <Reveal>
                 <div className="lg:border-r lg:border-white/10 lg:pr-14">
                   <p className="text-neutral-400 text-lg leading-relaxed max-w-xl">
-                    You could be leaving opportunities on the table, however well you rank on Google. Rain OS helps you optimize your content or website to increase your chances of being found and recommended by AI.
+                    You could be leaving valuable opportunities on the table, however well you rank on Google. Rain OS helps you optimize your business, content or website to increase your chances of being found, quoted, mentioned, cited or recommended by Artificial Intelligence.
                   </p>
                 </div>
               </Reveal>
