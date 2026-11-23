@@ -775,7 +775,7 @@ export default function Home() {
               <Reveal>
                 <div className="lg:border-r lg:border-white/10 lg:pr-12">
                   <p className="mt-5 max-w-3xl text-neutral-400 text-lg leading-relaxed">
-                When someone asks an AI a question, it reads a handful of websites and names the ones it can read and use most easily. Rain OS scores how readable your site is for each AI, shows what is holding it back.
+                When someone asks an AI a question, it reads a handful of websites and names the ones it can read and use most easily. Rain OS scores how readable your business, content or website is for each AI and shows what is holding it back.
               </p>
                 </div>
               </Reveal>
