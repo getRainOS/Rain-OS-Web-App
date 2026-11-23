@@ -103,7 +103,7 @@ export function PillarVisual({ result = BEFORE, label, before }: { result?: Pill
           <div className="text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>{result.page.toUpperCase()}</div>
         </div>
         <div className="shrink-0 text-right">
-          <div className="text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>Readability Score</div>
+          <div className="text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>AI Readability Score</div>
           {before !== undefined ? (
             <div className="flex items-baseline justify-end gap-2 tabular-nums">
               <span className="text-2xl font-semibold text-neutral-500 line-through decoration-neutral-600">{before}</span>
@@ -125,7 +125,7 @@ export function PillarVisual({ result = BEFORE, label, before }: { result?: Pill
               initial={reduce ? false : { scaleY: 0 }}
               whileInView={{ scaleY: 1 }}
               viewport={view}
-              transition={{ duration: 2.5, delay: i * 0.12, ease: EASE }}
+              transition={{ duration: 3.5, delay: i * 0.2, ease: EASE }}
             />
             <div className="mt-2 text-center text-[11px] leading-tight text-neutral-400">{p.label}</div>
           </div>
