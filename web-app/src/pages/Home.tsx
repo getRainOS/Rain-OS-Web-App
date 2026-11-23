@@ -371,8 +371,9 @@ function TrackRow() {
     return () => clearInterval(t);
   }, [reduce, inView]);
   return (
-    <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-4 md:pt-6 pb-20 md:pb-24 border-b border-white/10">
+    <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-20 md:pt-24 pb-20 md:pb-24 border-b border-white/10">
       <div>
+        <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.035em] leading-[1.02] text-white">Track it over time</h2>
         <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">See Each Pillar Move, One Analysis at a Time</p>
         <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">Every analysis adds a point to each pillar, so you can see what changed after a fix. Example data.</p>
       </div>
@@ -474,9 +475,6 @@ function ToolsSection({ lane }: { lane: number }) {
             </Reveal>
             {k === 0 && (
               <Reveal delay={0.05}>
-                <div className="pt-20 md:pt-24">
-                  <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Track it over time</h2>
-                </div>
                 <TrackRow />
               </Reveal>
             )}
