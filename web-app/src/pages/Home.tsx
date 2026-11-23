@@ -357,6 +357,7 @@ function TrackRow() {
     <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-20 md:pt-24 pb-20 md:pb-24 border-b border-white/10">
       <div>
         <div className="flex items-start gap-3">
+        <ToolMark n={5} />
         <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.035em] leading-[1.02] text-white">Track the Improvement of Your AI Readability Score Over Each Analysis</h2>
         </div>
         <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">See Each Pillar Move, One Analysis at a Time</p>
@@ -366,6 +367,23 @@ function TrackRow() {
         <TrackDemo />
       </div>
     </div>
+  );
+}
+
+// A small square in the site's grid pattern, with the tool's number: it marks each
+// tool as a numbered feature, in the same visual language as the grid elsewhere.
+function ToolMark({ n }: { n: number }) {
+  return (
+    <span aria-hidden="true" className="relative mt-1 inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-md border border-white/15 bg-black">
+      <span
+        className="absolute inset-0"
+        style={{
+          backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.14) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.14) 1px, transparent 1px)',
+          backgroundSize: '10px 10px',
+        }}
+      />
+      <span className="relative bg-black px-1 text-[12px] font-medium text-white" style={MONO}>{String(n).padStart(2, '0')}</span>
+    </span>
   );
 }
 
@@ -443,6 +461,7 @@ function ToolsSection({ lane }: { lane: number }) {
               <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-stretch py-20 md:py-24 border-b border-white/10">
                 <div>
                   <div className="flex items-start gap-3">
+                    <ToolMark n={k + 1} />
                     <ToolTitle text={t.eyebrow} />
                   </div>
                   {t.key !== 'analysis' && <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">{t.title}</p>}
