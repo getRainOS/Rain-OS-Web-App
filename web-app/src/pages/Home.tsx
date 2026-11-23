@@ -562,8 +562,7 @@ function ToolsSection({ lane }: { lane: number }) {
             <Reveal delay={0.05 * k}>
               <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-stretch py-20 md:py-24 border-b border-white/10">
                 <div>
-                  <div className="flex items-start gap-3">
-                    <ToolMark />
+                  <div>
                     <ToolTitle text={t.eyebrow} />
                   </div>
                   {t.key !== 'analysis' && <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">{t.title}</p>}
