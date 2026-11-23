@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion, useInView } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import {
-  ArrowRight, ArrowUpRight, Check, Search,
+  ArrowRight, ArrowUpRight, Check, Search, Wrench,
   MapPin, ShoppingBag, PenLine, Sparkles, Code2, HelpCircle,
 } from 'lucide-react';
 import MarketingNav from '@/components/marketing/MarketingNav';
@@ -373,8 +373,10 @@ function TrackRow() {
   return (
     <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-20 md:pt-24 pb-20 md:pb-24 border-b border-white/10">
       <div>
-        <div><span className="mb-4 inline-block rounded-full border border-white/25 px-3 py-1 text-[11px] uppercase tracking-[0.14em] text-white" style={MONO}>Tool</span></div>
+        <div className="flex items-start gap-3">
         <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.035em] leading-[1.02] text-white">Track the Improvement of Your AI Readability Score Over Each Analysis</h2>
+          <span className="inline-flex items-center gap-1.5 shrink-0 whitespace-nowrap mt-1 rounded-full bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-black"><Wrench className="h-3 w-3" />Tool</span>
+        </div>
         <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">See Each Pillar Move, One Analysis at a Time</p>
         <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">Every analysis adds a point to each pillar, so you can see what changed after a fix. Example data.</p>
       </div>
@@ -459,8 +461,10 @@ function ToolsSection({ lane }: { lane: number }) {
             <Reveal delay={0.05 * k}>
               <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-stretch py-20 md:py-24 border-b border-white/10">
                 <div>
-                  <div><span className="mb-4 inline-block rounded-full border border-white/25 px-3 py-1 text-[11px] uppercase tracking-[0.14em] text-white" style={MONO}>Tool</span></div>
-                  <ToolTitle text={t.eyebrow} />
+                  <div className="flex items-start gap-3">
+                    <ToolTitle text={t.eyebrow} />
+                    <span className="inline-flex items-center gap-1.5 shrink-0 whitespace-nowrap mt-1 rounded-full bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-black"><Wrench className="h-3 w-3" />Tool</span>
+                  </div>
                   {t.key !== 'analysis' && <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">{t.title}</p>}
                   {t.key !== 'analysis' && <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">{t.lead && <span className="font-medium text-white">{t.lead} </span>}{t.body}</p>}
                   {t.ways.length > 0 && (
