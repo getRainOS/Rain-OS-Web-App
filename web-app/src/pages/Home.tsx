@@ -475,7 +475,6 @@ function ToolsSection({ lane }: { lane: number }) {
             {k === 0 && (
               <Reveal delay={0.05}>
                 <div className="pt-20 md:pt-24">
-                  <Eyebrow>Over time</Eyebrow>
                   <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Track it over time</h2>
                 </div>
                 <TrackRow />
