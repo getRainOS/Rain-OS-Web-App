@@ -99,7 +99,7 @@ const FIX_MODES = [
 ];
 
 // The analysis screen in the app, shown as it runs: each step fills in turn.
-function AnalyzeConsole({ compact = false, litLane }: { compact?: boolean; litLane?: number }) {
+function AnalyzeConsole({ compact = false, litLane, step: stepProp }: { compact?: boolean; litLane?: number; step?: number }) {
   const reduce = useReducedMotion();
   const [step, setStep] = useState(0);
   const [runIdx, setRunIdx] = useState(0); // the analyzer running now
@@ -108,7 +108,7 @@ function AnalyzeConsole({ compact = false, litLane }: { compact?: boolean; litLa
   // Each lane runs the four steps (1.4s each), shows its result, then clears
   // before the next lane starts.
   useEffect(() => {
-    if (reduce) return;
+    if (reduce || stepProp !== undefined) return; // driven by the parent when a step is given
     if (step < ANALYZE_STEPS.length) {
       const t = setTimeout(() => setStep(n => n + 1), 1400);
       return () => clearTimeout(t);
@@ -122,7 +122,7 @@ function AnalyzeConsole({ compact = false, litLane }: { compact?: boolean; litLa
     }, FIX_HOLD_MS + 700);
     return () => { clearTimeout(clear); clearTimeout(next); };
   }, [step, runIdx, reduce]);
-  const done = reduce ? ANALYZE_STEPS.length : step;
+  const done = stepProp ?? (reduce ? ANALYZE_STEPS.length : step);
   const shown = reduce ? 0 : shownIdx;
   const shownMode = FIX_MODES[Math.max(shown, 0)];
 
@@ -479,33 +479,34 @@ const LANE_CHANGES = [
   ],
 ];
 
-// The analysis flow: the console runs for each lane in turn. While it runs, a thinking
-// indicator plays; then that lane's changes appear, and the next lane begins.
+// The analysis flow: one timer drives the console and the changes together. For each lane
+// the four steps run, the run completes, the lane's changes appear, then the next lane starts.
 function AnalysisFlow() {
   const ref = useRef<HTMLDivElement | null>(null);
   const inView = useInView(ref, { amount: 0.4 });
   const reduce = useReducedMotion();
   const [lane, setLane] = useState(0);
-  const [phase, setPhase] = useState<'thinking' | 'answers'>(reduce ? 'answers' : 'thinking');
+  const [step, setStep] = useState(reduce ? ANALYZE_STEPS.length : 0);
+  const [results, setResults] = useState(!!reduce);
   useEffect(() => {
     if (reduce || !inView) return;
-    const t = window.setTimeout(() => {
-      if (phase === 'thinking') setPhase('answers');
-      else { setLane(l => (l + 1) % LANE_CHANGES.length); setPhase('thinking'); }
-    }, phase === 'thinking' ? ANALYZE_STEPS.length * 1400 + 300 : 4500);
+    let t: number;
+    if (!results && step < ANALYZE_STEPS.length) t = window.setTimeout(() => setStep(n => n + 1), 1400);
+    else if (!results) t = window.setTimeout(() => setResults(true), 0);
+    else t = window.setTimeout(() => { setLane(l => (l + 1) % LANE_CHANGES.length); setStep(0); setResults(false); }, 4500);
     return () => clearTimeout(t);
-  }, [inView, reduce, phase, lane]);
+  }, [inView, reduce, step, results, lane]);
   return (
     <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-20 md:pt-24 pb-20 md:pb-24">
       <div>
         <div className="mb-4 text-[11px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>Running an analysis</div>
-        <AnalyzeConsole compact litLane={lane} />
+        <AnalyzeConsole compact litLane={lane} step={step} />
       </div>
       <div>
         <div className="mb-4 text-[11px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>What to change · {LANE_TABS[lane]}</div>
-        {phase === 'thinking' ? (
+        {!results ? (
           <div className="flex h-[260px] items-center gap-2 border-y border-white/10">
-            <span className="text-[12px] text-neutral-500" style={MONO}>Thinking</span>
+            <span className="text-[12px] text-neutral-500" style={MONO}>Analysing</span>
             {[0, 1, 2].map(d => (
               <motion.span
                 key={d}
