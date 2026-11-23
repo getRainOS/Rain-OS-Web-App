@@ -224,7 +224,7 @@ export function LaneSection({ index, onPick }: { index: number; onPick: (i: numb
               );
             })}
           </ul>
-          <motion.div key={ex.id} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.4 }} className="hidden lg:block lg:border-l lg:border-white/10 lg:pl-12">
+          <motion.div key={ex.id} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.4 }} className="hidden lg:block lg:pl-12">
             <Drawing strokes={ex.drawing} />
             <p className="mt-6 max-w-md text-[15px] leading-relaxed text-neutral-400">{ex.how}</p>
           </motion.div>
