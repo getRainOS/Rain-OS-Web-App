@@ -437,49 +437,100 @@ function PillarBand() {
   );
 }
 
-// The analysis flow: the console runs, then the plain-English recommendations appear one
-// by one, and the page carries on to the score chart below.
-const RECOMMENDATIONS = [
-  'Put your hours and location near the top of the page.',
-  'Answer the main question in the first two sentences.',
-  'Write prices, shipping and returns as plain text, not in an image.',
-  'Add a last-updated date to the page.',
-  'Link to the sources behind any number you quote.',
+// The changes each lane is told to make. This is the app's own fix copy, for the signals
+// that matter most to that kind of business. Each lane takes its turn in the analysis.
+const LANE_TABS = ['Local business', 'Online sellers', 'Writers & marketers', 'Developers', 'Vibe coders'];
+const LANE_CHANGES = [
+  [
+    'Show your business name, street address and phone number exactly as they appear on your Google Business Profile.',
+    'Add LocalBusiness structured data with your name, address, phone, hours and service area.',
+    'Name the city and the neighbourhoods or towns you serve in the main heading and first paragraph.',
+    'Quote or link real local reviews, ideally ones that mention your city or service.',
+    'Link to your listings on Google, Yelp and local directories, and make sure the details match.',
+  ],
+  [
+    'List every size, colour or option with its own price and stock status.',
+    'Name the seller clearly, with shipping, returns and contact details on the page.',
+    'State the exact price with currency, plus any sale price, shipping cost or subscription terms.',
+    'Say whether it is in stock and how fast it ships.',
+    'Compare it with one or two alternatives: what it does better, and who should pick something else.',
+  ],
+  [
+    'Open each section with the direct answer in one sentence, then explain. AI quotes the first sentence under a heading.',
+    'Back your main claims with a named source or a specific number, and say where it comes from ("according to…", a link, a study, your own data).',
+    'Show it is current: add a "last updated" date and refer to current prices, versions or the current year where relevant.',
+    'Swap general words for exact ones: name the product, place, number or person instead of "it", "things" or "solutions".',
+    'Make each section make sense on its own: restate who or what it is about, since AI often quotes one section without the rest.',
+  ],
+  [
+    'Give each section one job: a heading that names it, then short paragraphs that stay on that point.',
+    'Swap general words for exact ones: name the product, place, number or person instead of "it", "things" or "solutions".',
+    'Make each section make sense on its own: restate who or what it is about, since AI often quotes one section without the rest.',
+    'Split sections that cover two topics, so each heading matches exactly one idea.',
+    'Back your main claims with a named source or a specific number, and say where it comes from ("according to…", a link, a study, your own data).',
+  ],
+  [
+    'Name who is speaking and exactly what this is about early on: the author, brand or organization, and the specific topic, product or place.',
+    'Back your main claims with a named source or a specific number, and say where it comes from ("according to…", a link, a study, your own data).',
+    'Add real proof: customer reviews, ratings, testimonials or results with names or numbers.',
+    'End with one clear next step and say exactly what happens when they take it (e.g. "Book a free 15-minute call").',
+    'Say in one sentence near the top what the reader gets and why it beats the alternatives.',
+  ],
 ];
+
+// The analysis flow: the console runs for each lane in turn. While it runs, a thinking
+// indicator plays; then that lane's changes appear, and the next lane begins.
 function AnalysisFlow() {
   const ref = useRef<HTMLDivElement | null>(null);
-  const inView = useInView(ref, { once: true, amount: 0.4 });
+  const inView = useInView(ref, { amount: 0.4 });
   const reduce = useReducedMotion();
-  const [done, setDone] = useState(false);
-  // The changes wait until the console has finished its run.
+  const [lane, setLane] = useState(0);
+  const [phase, setPhase] = useState<'thinking' | 'answers'>(reduce ? 'answers' : 'thinking');
   useEffect(() => {
-    if (!inView) return;
-    const t = window.setTimeout(() => setDone(true), reduce ? 0 : 6500);
+    if (reduce || !inView) return;
+    const t = window.setTimeout(() => {
+      if (phase === 'thinking') setPhase('answers');
+      else { setLane(l => (l + 1) % LANE_CHANGES.length); setPhase('thinking'); }
+    }, phase === 'thinking' ? 2000 : 5200);
     return () => clearTimeout(t);
-  }, [inView, reduce]);
+  }, [inView, reduce, phase, lane]);
   return (
     <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-20 md:pt-24 pb-20 md:pb-24">
       <div>
         <div className="mb-4 text-[11px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>Running an analysis</div>
-        <AnalyzeConsole compact />
+        <AnalyzeConsole compact litLane={lane} />
       </div>
       <div>
-        <div className="mb-4 text-[11px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>What to change</div>
-        <ol className="divide-y divide-white/10 border-y border-white/10">
-          {RECOMMENDATIONS.map((r, i) => (
-            <motion.li
-              key={r}
-              initial={{ opacity: 0, y: 10 }}
-              animate={done ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-              transition={{ duration: 0.5, delay: reduce ? 0 : i * 0.12, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <div className="flex gap-4 py-4">
-                <span className="text-[12px] text-neutral-500" style={MONO}>{String(i + 1).padStart(2, '0')}</span>
-                <span className="text-[16px] leading-relaxed text-neutral-200">{r}</span>
-              </div>
-            </motion.li>
-          ))}
-        </ol>
+        <div className="mb-4 text-[11px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>What to change · {LANE_TABS[lane]}</div>
+        {phase === 'thinking' ? (
+          <div className="flex h-[260px] items-center gap-2 border-y border-white/10">
+            <span className="text-[12px] text-neutral-500" style={MONO}>Thinking</span>
+            {[0, 1, 2].map(d => (
+              <motion.span
+                key={d}
+                className="inline-block h-1.5 w-1.5 rounded-full bg-white"
+                animate={reduce ? {} : { opacity: [0.2, 1, 0.2] }}
+                transition={{ duration: 1.2, repeat: Infinity, delay: d * 0.2 }}
+              />
+            ))}
+          </div>
+        ) : (
+          <ol key={lane} className="divide-y divide-white/10 border-y border-white/10">
+            {LANE_CHANGES[lane].map((r, i) => (
+              <motion.li
+                key={r}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: reduce ? 0 : i * 0.22, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <div className="flex gap-4 py-4">
+                  <span className="text-[12px] text-neutral-500" style={MONO}>{String(i + 1).padStart(2, '0')}</span>
+                  <span className="text-[16px] leading-relaxed text-neutral-200">{r}</span>
+                </div>
+              </motion.li>
+            ))}
+          </ol>
+        )}
       </div>
     </div>
   );
@@ -490,10 +541,9 @@ function ToolsSection({ lane }: { lane: number }) {
     <section id="product" className="relative z-10 py-28 border-t border-white/[0.06]">
       <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
         <Reveal>
-          <Eyebrow>Tool category 1 · Analyse</Eyebrow>
-          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">
+          <div className="flex items-start gap-4"><ToolMark /><h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">
             See what AI can read. Fix what it can’t.
-          </h2>
+          </h2></div>
         </Reveal>
         <AnalysisFlow />
         <div className="border-t border-white/10">
@@ -502,8 +552,7 @@ function ToolsSection({ lane }: { lane: number }) {
             {k === 1 && (
               <Reveal>
                 <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-6 md:gap-16 items-end pt-20 md:pt-24 pb-4">
-                  <div className="md:col-span-2 text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-2" style={MONO}>Tool category 2 · Monitor</div>
-                  <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Long Term Monitoring</h2>
+                  <div className="flex items-start gap-4"><ToolMark /><h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Long Term Monitoring</h2></div>
                   <p className="text-neutral-400 text-lg leading-relaxed max-w-md">Keep checking what AI says and where it links, over time, so you see changes as they happen.</p>
                 </div>
               </Reveal>
