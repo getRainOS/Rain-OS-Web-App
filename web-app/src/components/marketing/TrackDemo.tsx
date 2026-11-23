@@ -6,7 +6,7 @@ import { SERIES, WEEKS, valueAt } from './TrendCard';
 // Each pillar loads in turn: its line draws and its gauge moves to the score. After all
 // of them have loaded, the set holds, then loads again. Each later run scores higher.
 // Example data, labelled as such on the page.
-const SLOT_MS = 1400;
+const SLOT_MS = 1000;
 const PER_CYCLE = SERIES.length + 1; // one slot per pillar, then a short hold
 const GAIN = [7, 6, 8, 5, 7, 6]; // how far each pillar rises per run
 const CORE = [0, 1, 2, 4]; // the four core pillars get gauges
@@ -93,7 +93,7 @@ export default function TrackDemo() {
               strokeLinecap="round"
               initial={{ pathLength: reduce ? 1 : 0 }}
               animate={{ pathLength: i < loaded ? 1 : 0 }}
-              transition={{ duration: 1.2, ease: 'easeInOut' }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
             />
           ))}
         </svg>
