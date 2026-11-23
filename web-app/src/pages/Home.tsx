@@ -375,13 +375,6 @@ function TrackRow() {
 function ToolMark() {
   return (
     <span aria-hidden="true" className="relative mt-1 inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-md border border-white/15 bg-black">
-      <span
-        className="absolute inset-0"
-        style={{
-          backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.14) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.14) 1px, transparent 1px)',
-          backgroundSize: '10px 10px',
-        }}
-      />
       <ChevronsRight className="relative h-5 w-5 text-white" />
     </span>
   );
@@ -773,16 +766,16 @@ export default function Home() {
                 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance"
               />
             </Reveal>
-            <div className="mt-14 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
+            <div className="relative mt-14 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
               <Reveal>
-                <div className="lg:border-r lg:border-white/10 lg:pr-12">
+                <div className="relative z-10 lg:pr-12">
                   <p className="mt-5 max-w-3xl text-neutral-400 text-lg leading-relaxed">
                 When someone asks an AI a question, it reads a handful of websites and names the ones it can read and use most easily. Rain OS scores how readable your business, content or website is for each AI and shows what is holding it back.
               </p>
                 </div>
               </Reveal>
               <Reveal delay={0.1}>
-                <div className="p-4 md:p-6">
+                <div className="pointer-events-none p-4 md:p-6 lg:absolute lg:-top-10 lg:-bottom-10 lg:left-[38%] lg:-right-[6%] lg:p-0">
                 <SourceNetwork />
               </div>
               </Reveal>
