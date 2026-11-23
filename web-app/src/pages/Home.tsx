@@ -783,7 +783,7 @@ export default function Home() {
                 </div>
               </Reveal>
               <Reveal delay={0.1}>
-                <div className="pointer-events-none p-4 md:p-6 lg:absolute lg:-top-10 lg:-bottom-10 lg:left-[38%] lg:-right-[6%] lg:p-0">
+                <div className="pointer-events-none p-4 md:p-6 lg:absolute lg:-top-10 lg:-bottom-10 lg:left-[24%] lg:-right-[6%] lg:p-0">
                 <SourceNetwork />
               </div>
               </Reveal>
