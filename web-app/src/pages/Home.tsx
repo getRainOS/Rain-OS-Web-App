@@ -492,7 +492,7 @@ function AnalysisFlow() {
     const t = window.setTimeout(() => {
       if (phase === 'thinking') setPhase('answers');
       else { setLane(l => (l + 1) % LANE_CHANGES.length); setPhase('thinking'); }
-    }, phase === 'thinking' ? 2000 : 5200);
+    }, phase === 'thinking' ? ANALYZE_STEPS.length * 1400 + 300 : 4500);
     return () => clearTimeout(t);
   }, [inView, reduce, phase, lane]);
   return (
