@@ -15,8 +15,7 @@ import SourceNetwork from '@/components/marketing/SourceNetwork';
 import RainBackground from '@/components/marketing/RainBackground';
 import { PillarVisual, forLane, LANE_EXAMPLES, CitationRotation, LaneCycle, ShareCard, SHARE_LANES, DescribeCard, DESCRIBE_LANES } from '@/components/marketing/ToolVisuals';
 import ScrollWords from '@/components/marketing/ScrollWords';
-import PillarGauges from '@/components/marketing/PillarGauges';
-import TrendCard, { WEEKS } from '@/components/marketing/TrendCard';
+import TrackDemo from '@/components/marketing/TrackDemo';
 import { LaneSection, TrackExample } from '@/components/marketing/IllustratedExample';
 
 const MONO: React.CSSProperties = { fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace" };
@@ -354,24 +353,8 @@ function WaysList({ ways }: { ways: { label: string; href: string; note: string 
 }
 
 function TrackRow() {
-  const reduce = useReducedMotion();
-  const [week, setWeek] = useState(WEEKS - 1);
-  const [inView, setInView] = useState(false);
-  const ref = useRef<HTMLDivElement | null>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || typeof IntersectionObserver === 'undefined') return;
-    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.35 });
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-  useEffect(() => {
-    if (reduce || !inView) return;
-    const t = window.setInterval(() => setWeek(w => (w + 1) % WEEKS), 1800);
-    return () => clearInterval(t);
-  }, [reduce, inView]);
   return (
-    <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-20 md:pt-24 pb-20 md:pb-24 border-b border-white/10">
+    <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-20 md:pt-24 pb-20 md:pb-24 border-b border-white/10">
       <div>
         <div className="flex items-start gap-3">
         <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.035em] leading-[1.02] text-white">Track the Improvement of Your AI Readability Score Over Each Analysis</h2>
@@ -380,9 +363,8 @@ function TrackRow() {
         <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">See Each Pillar Move, One Analysis at a Time</p>
         <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">Every analysis adds a point to each pillar, so you can see what changed after a fix. Example data.</p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch lg:border-l lg:border-white/10 lg:pl-12">
-        <PillarGauges week={week} />
-        <TrendCard week={week} />
+      <div className="lg:border-l lg:border-white/10 lg:pl-12">
+        <TrackDemo />
       </div>
     </div>
   );
