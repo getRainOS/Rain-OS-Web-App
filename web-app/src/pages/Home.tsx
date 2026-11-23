@@ -737,7 +737,7 @@ export default function Home() {
             <Reveal>
               <Eyebrow>The shift</Eyebrow>
               <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">
-                Search is becoming an answer.
+                Search is becoming an answer. Be readable to artificial intelligence is the new standard for your online presence.
               </h2>
               <p className="mt-5 text-lg md:text-xl font-medium text-white leading-relaxed max-w-xl">
                 Start by making your business, website or content easy for AI to read
