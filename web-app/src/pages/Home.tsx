@@ -767,7 +767,7 @@ export default function Home() {
             <Reveal>
               <Eyebrow>Where AI gets its answers</Eyebrow>
               <ScrollWords
-                text="Each answer comes from websites and content it can actually read."
+                text="Each answer comes from websites and content AI can actually read."
                 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance"
               />
             </Reveal>
