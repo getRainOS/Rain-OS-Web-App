@@ -801,7 +801,7 @@ export default function Home() {
             </div>
           </div>
           </div>
-          <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10 py-28">
+          <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10 py-36">
             <Reveal>
               <Eyebrow>Where AI gets its answers</Eyebrow>
               <ScrollWords
@@ -809,7 +809,7 @@ export default function Home() {
                 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance"
               />
             </Reveal>
-            <div className="relative mt-14 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
+            <div className="relative mt-24 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
               <Reveal>
                 <div className="relative z-10 lg:pr-12">
                   <p className="mt-5 max-w-3xl text-neutral-400 text-lg leading-relaxed">
