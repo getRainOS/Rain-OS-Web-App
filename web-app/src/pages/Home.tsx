@@ -371,7 +371,7 @@ function TrackRow() {
     return () => clearInterval(t);
   }, [reduce, inView]);
   return (
-    <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-center py-20 md:py-24 border-b border-white/10">
+    <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-4 md:pt-6 pb-20 md:pb-24 border-b border-white/10">
       <div>
         <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">See each pillar move, one analysis at a time</p>
         <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">Every analysis adds a point to each pillar, so you can see what changed after a fix. Example data.</p>
