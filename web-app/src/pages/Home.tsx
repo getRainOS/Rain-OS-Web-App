@@ -447,8 +447,18 @@ const RECOMMENDATIONS = [
   'Link to the sources behind any number you quote.',
 ];
 function AnalysisFlow() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const inView = useInView(ref, { once: true, amount: 0.4 });
+  const reduce = useReducedMotion();
+  const [done, setDone] = useState(false);
+  // The changes wait until the console has finished its run.
+  useEffect(() => {
+    if (!inView) return;
+    const t = window.setTimeout(() => setDone(true), reduce ? 0 : 6500);
+    return () => clearTimeout(t);
+  }, [inView, reduce]);
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-20 md:pt-24 pb-20 md:pb-24">
+    <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-20 md:pt-24 pb-20 md:pb-24">
       <div>
         <div className="mb-4 text-[11px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>Running an analysis</div>
         <AnalyzeConsole compact />
@@ -457,12 +467,17 @@ function AnalysisFlow() {
         <div className="mb-4 text-[11px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>What to change</div>
         <ol className="divide-y divide-white/10 border-y border-white/10">
           {RECOMMENDATIONS.map((r, i) => (
-            <Reveal key={r} delay={0.08 * i}>
-              <li className="flex gap-4 py-4">
+            <motion.li
+              key={r}
+              initial={{ opacity: 0, y: 10 }}
+              animate={done ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+              transition={{ duration: 0.5, delay: reduce ? 0 : i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="flex gap-4 py-4">
                 <span className="text-[12px] text-neutral-500" style={MONO}>{String(i + 1).padStart(2, '0')}</span>
                 <span className="text-[16px] leading-relaxed text-neutral-200">{r}</span>
-              </li>
-            </Reveal>
+              </div>
+            </motion.li>
           ))}
         </ol>
       </div>
