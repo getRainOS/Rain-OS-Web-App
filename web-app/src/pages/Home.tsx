@@ -652,14 +652,14 @@ function DrawnGrid() {
         className="absolute inset-0 overflow-hidden"
         style={{
           backgroundImage:
-            'linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px)',
+            'linear-gradient(to right, rgba(255,255,255,0.14) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.14) 1px, transparent 1px)',
           backgroundSize: '48px 48px',
           maskImage: fade,
           WebkitMaskImage: fade,
         }}
         initial={{ opacity: 0 }}
         animate={reduce || inView ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 2.4, ease: 'easeOut' }}
+        transition={{ duration: 4, ease: 'easeOut' }}
       />
     </div>
   );
