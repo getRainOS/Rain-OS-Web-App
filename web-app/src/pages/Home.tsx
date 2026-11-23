@@ -437,22 +437,57 @@ function PillarBand() {
   );
 }
 
+// The analysis flow: the console runs, then the plain-English recommendations appear one
+// by one, and the page carries on to the score chart below.
+const RECOMMENDATIONS = [
+  'Put your hours and location near the top of the page.',
+  'Answer the main question in the first two sentences.',
+  'Write prices, shipping and returns as plain text, not in an image.',
+  'Add a last-updated date to the page.',
+  'Link to the sources behind any number you quote.',
+];
+function AnalysisFlow() {
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-20 md:pt-24 pb-20 md:pb-24">
+      <div>
+        <div className="mb-4 text-[11px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>Running an analysis</div>
+        <AnalyzeConsole compact />
+      </div>
+      <div>
+        <div className="mb-4 text-[11px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>What to change</div>
+        <ol className="divide-y divide-white/10 border-y border-white/10">
+          {RECOMMENDATIONS.map((r, i) => (
+            <Reveal key={r} delay={0.08 * i}>
+              <li className="flex gap-4 py-4">
+                <span className="text-[12px] text-neutral-500" style={MONO}>{String(i + 1).padStart(2, '0')}</span>
+                <span className="text-[16px] leading-relaxed text-neutral-200">{r}</span>
+              </li>
+            </Reveal>
+          ))}
+        </ol>
+      </div>
+    </div>
+  );
+}
+
 function ToolsSection({ lane }: { lane: number }) {
   return (
     <section id="product" className="relative z-10 py-28 border-t border-white/[0.06]">
       <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
         <Reveal>
-          <Eyebrow>The tools</Eyebrow>
+          <Eyebrow>Tool category 1 · Analyse</Eyebrow>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">
             See what AI can read. Fix what it can’t.
           </h2>
         </Reveal>
-        <div className="mt-14 border-t border-white/10">
+        <AnalysisFlow />
+        <div className="border-t border-white/10">
           {TOOLS.map((t, k) => (
             <React.Fragment key={t.key}>
             {k === 1 && (
               <Reveal>
                 <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-6 md:gap-16 items-end pt-20 md:pt-24 pb-4">
+                  <div className="md:col-span-2 text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-2" style={MONO}>Tool category 2 · Monitor</div>
                   <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Long Term Monitoring</h2>
                   <p className="text-neutral-400 text-lg leading-relaxed max-w-md">Keep checking what AI says and where it links, over time, so you see changes as they happen.</p>
                 </div>
