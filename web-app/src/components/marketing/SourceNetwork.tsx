@@ -115,7 +115,7 @@ export default function SourceNetwork() {
         const start = (k / ends.length) * 0.8;
         const lit = Math.min(1, Math.max(0, (progress - start) / 0.2));
 
-        ctx!.strokeStyle = `rgba(255,255,255,${0.1 + lit * 0.45})`;
+        ctx!.strokeStyle = `rgba(255,255,255,${lit * 0.55})`;
         ctx!.lineWidth = 1;
         ctx!.beginPath();
         ctx!.moveTo(q.x, q.y);
