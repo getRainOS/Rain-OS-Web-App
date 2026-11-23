@@ -6,9 +6,11 @@ import { SERIES, WEEKS, valueAt } from './TrendCard';
 // Each pillar loads in turn: its line draws and its gauge moves to the score. After all
 // of them have loaded, the set holds, then loads again. Each later run scores higher.
 // Example data, labelled as such on the page.
-const SLOT_MS = 1000;
+const SLOT_MS = 700;
 const PER_CYCLE = SERIES.length + 1; // one slot per pillar, then a short hold
-const GAIN = [7, 6, 8, 5, 7, 6]; // how far each pillar rises per run
+// How far each pillar can rise over repeated runs. Gains taper off, so the scores level out
+// below 100 rather than piling up at the top.
+const MAX_GAIN = [22, 18, 24, 14, 20, 16];
 const CORE = [0, 1, 2, 4]; // the four core pillars get gauges
 const W = 560;
 const H = 200;
@@ -17,7 +19,7 @@ const MONO = "'Geist Mono', ui-monospace, monospace";
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 const valueFor = (i: number, w: number, run: number) =>
-  Math.min(100, valueAt(SERIES[i].start, SERIES[i].end, w, i) + run * GAIN[i]);
+  Math.min(95, valueAt(SERIES[i].start, SERIES[i].end, w, i) + MAX_GAIN[i] * (1 - Math.exp(-run * 0.7)));
 const x = (w: number) => PAD + (w / (WEEKS - 1)) * (W - PAD * 2);
 const y = (v: number) => PAD + (1 - v / 100) * (H - PAD * 2);
 const linePath = (i: number, run: number) =>
@@ -30,7 +32,7 @@ function Gauge({ label, value, color }: { label: string; value: number; color: s
   const r = 48;
   const arc = `M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`;
   const angle = -90 + value * 1.8;
-  const transition = reduce ? { duration: 0 } : { duration: 1.1, ease: EASE };
+  const transition = reduce ? { duration: 0 } : { duration: 0.9, ease: 'easeInOut' as const };
   return (
     <figure className="min-w-0 text-center">
       <div className="mb-1 text-[11px] leading-tight text-neutral-400">{label}</div>
@@ -82,8 +84,22 @@ export default function TrackDemo() {
           {[0, 50, 100].map(v => (
             <line key={v} x1={PAD} x2={W - PAD} y1={y(v)} y2={y(v)} stroke="rgba(255,255,255,0.06)" />
           ))}
+          <defs>
+            {SERIES.map((s, i) => (
+              <clipPath key={`clip-${run}-${s.key}`} id={`track-clip-${run}-${i}`}>
+                <motion.rect
+                  x={0}
+                  y={0}
+                  height={H}
+                  initial={{ width: reduce ? W : 0 }}
+                  animate={{ width: i < loaded ? W : 0 }}
+                  transition={{ duration: 0.9, ease: 'easeInOut' }}
+                />
+              </clipPath>
+            ))}
+          </defs>
           {SERIES.map((s, i) => (
-            <motion.path
+            <path
               key={`${run}-${s.key}`}
               d={linePath(i, run)}
               fill="none"
@@ -91,9 +107,7 @@ export default function TrackDemo() {
               strokeWidth={2}
               strokeLinejoin="round"
               strokeLinecap="round"
-              initial={{ pathLength: reduce ? 1 : 0 }}
-              animate={{ pathLength: i < loaded ? 1 : 0 }}
-              transition={{ duration: 0.5, ease: 'easeOut' }}
+              clipPath={`url(#track-clip-${run}-${i})`}
             />
           ))}
         </svg>
