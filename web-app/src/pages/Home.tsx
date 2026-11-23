@@ -450,6 +450,14 @@ function ToolsSection({ lane }: { lane: number }) {
         <div className="mt-14 border-t border-white/10">
           {TOOLS.map((t, k) => (
             <React.Fragment key={t.key}>
+            {k === 1 && (
+              <Reveal>
+                <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-6 md:gap-16 items-end pt-20 md:pt-24 pb-4">
+                  <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Long Term Monitoring</h2>
+                  <p className="text-neutral-400 text-lg leading-relaxed max-w-md">Keep checking what AI says and where it links, over time, so you see changes as they happen.</p>
+                </div>
+              </Reveal>
+            )}
             <Reveal delay={0.05 * k}>
               <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-stretch py-20 md:py-24 border-b border-white/10">
                 <div>
