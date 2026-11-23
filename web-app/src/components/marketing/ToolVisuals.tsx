@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence, animate, useInView, useReducedMotion } from 'framer-motion';
 import { PILLAR_CHART_COLORS } from '@/lib/pillarColors.js';
 
 // A real screenshot of the app's screen, shown large and sharp. It fades up as it
@@ -92,6 +92,27 @@ export function IllustrativeTag() {
   return <div className="mt-4 text-[11px] uppercase tracking-wider text-neutral-500" style={{ fontFamily: MONO }}>Illustrative example, not a real result</div>;
 }
 
+// The score counts up from the earlier value to the later one, over the same time the
+// bars take to rise, and the gain beside it follows the count.
+function ScoreTally({ from, to }: { from: number; to: number }) {
+  const ref = useRef<HTMLSpanElement | null>(null);
+  const inView = useInView(ref, { once: true, amount: 0.6 });
+  const reduce = useReducedMotion();
+  const [val, setVal] = useState(from);
+  useEffect(() => {
+    if (reduce) { setVal(to); return; }
+    if (!inView) return;
+    const controls = animate(from, to, { duration: 3.5, ease: EASE, onUpdate: v => setVal(Math.round(v)) });
+    return () => controls.stop();
+  }, [inView, from, to, reduce]);
+  return (
+    <span ref={ref} className="inline-flex items-baseline gap-2 tabular-nums">
+      <span className="text-4xl font-semibold text-white">{val}</span>
+      <span className="text-[13px] font-semibold text-[#3B82F6]">+{val - from}</span>
+    </span>
+  );
+}
+
 export function PillarVisual({ result = BEFORE, label, before }: { result?: PillarData; label?: string; before?: number }) {
   const reduce = useReducedMotion();
   return (
@@ -107,8 +128,7 @@ export function PillarVisual({ result = BEFORE, label, before }: { result?: Pill
           {before !== undefined ? (
             <div className="flex items-baseline justify-end gap-2 tabular-nums">
               <span className="text-2xl font-semibold text-neutral-500 line-through decoration-neutral-600">{before}</span>
-              <span className="text-4xl font-semibold text-white">{result.overall}</span>
-              <span className="text-[13px] font-semibold text-[#3B82F6]">+{result.overall - before}</span>
+              <ScoreTally from={before} to={result.overall} />
             </div>
           ) : (
             <div className="text-4xl font-semibold tabular-nums text-white">{result.overall}<span className="text-lg text-neutral-500">/100</span></div>
