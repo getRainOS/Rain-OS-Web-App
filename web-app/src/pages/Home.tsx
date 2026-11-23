@@ -394,26 +394,31 @@ const LANE_PILLARS = [
   { name: 'Local Presence', lane: 'For local businesses', meaning: 'Whether AI knows where you are, what you serve and who to send there.' },
 ];
 function PillarCell({ name, meaning, tag, dashed }: { name: string; meaning: string; tag?: string; dashed?: boolean }) {
+  // Tapping opens the meaning on touch screens; hovering or keyboard focus opens it on desktop.
+  const [open, setOpen] = useState(false);
   return (
-    <div
-      tabIndex={0}
-      className={`group relative p-6 outline-none focus-visible:bg-white/[0.04] hover:bg-white/[0.03] transition-colors duration-500 ${dashed ? 'border border-dashed border-white/20' : ''}`}
+    <button
+      type="button"
+      aria-expanded={open}
+      onClick={() => setOpen(o => !o)}
+      className={`group relative block w-full p-6 text-left outline-none focus-visible:bg-white/[0.04] hover:bg-white/[0.03] transition-colors duration-500 ${dashed ? 'border border-dashed border-white/20' : ''}`}
     >
       <div className="flex items-start justify-between gap-4">
         <div>
           {tag && <div className="mb-3 text-[11px] text-neutral-500" style={MONO}>{tag}</div>}
           <div className="text-[18px] font-medium text-white">{name}</div>
         </div>
-        <span className="text-[20px] leading-none text-neutral-500 transition-transform duration-500 group-hover:rotate-45 group-focus-visible:rotate-45">+</span>
+        <span className={`text-[20px] leading-none text-neutral-500 transition-transform duration-500 group-hover:rotate-45 group-focus-visible:rotate-45 ${open ? 'rotate-45' : ''}`}>+</span>
       </div>
-      <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-700 ease-out group-hover:grid-rows-[1fr] group-focus-visible:grid-rows-[1fr]">
+      <div className={`grid transition-[grid-template-rows] duration-700 ease-out group-hover:grid-rows-[1fr] group-focus-visible:grid-rows-[1fr] ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
         <div className="overflow-hidden">
           <p className="mt-4 text-[14px] leading-relaxed text-neutral-400">{meaning}</p>
         </div>
       </div>
-    </div>
+    </button>
   );
 }
+
 function PillarBand() {
   return (
     <section className="relative z-10 py-28 border-t border-white/[0.06]">
