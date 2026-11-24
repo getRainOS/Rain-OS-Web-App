@@ -505,7 +505,7 @@ function AnalysisFlow() {
   return (
     <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-20 md:pt-24 pb-20 md:pb-24">
       <div>
-        <div className="mb-4 text-[11px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>Running an analysis</div>
+        <div className="mb-6"><ToolTitle text="Run an Analysis" /></div>
         <AnalyzeConsole compact litLane={lane} step={step} />
       </div>
       <div>
