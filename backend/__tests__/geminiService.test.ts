@@ -250,6 +250,8 @@ describe('formatMetricsAsGroundingBlock', () => {
     nestedClauseDepth: 1.8,
     headingDensity: 1.25,
     answerFirstRatio: 0.42,
+    figureDensity: 2.5,
+    sourceLinkCount: 3,
     qaDensity: 0.06,
     definitionDensity: 0.50,
     entityDensity: 2.10,

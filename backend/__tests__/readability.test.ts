@@ -13,6 +13,16 @@ describe('computeReadabilityMetrics', () => {
   it('does not count a # inside a sentence as a heading', () => {
     expect(computeReadabilityMetrics('We ranked #1 in the survey. Prices start at $5.').headingDensity).toBe(0);
   });
+  it('counts figures per 100 words', () => {
+    const none = computeReadabilityMetrics('Our team works with local clients on every project.');
+    const some = computeReadabilityMetrics('Sales rose 34% in 2024 to $2.5 million across 12 stores.');
+    expect(none.figureDensity).toBe(0);
+    expect(some.figureDensity).toBeGreaterThan(20);
+  });
+  it('counts absolute source links, not relative ones', () => {
+    const m = computeReadabilityMetrics('<p>See <a href="https://www.example.org/study">the study</a> and <a href="/about">about us</a>. Also https://data.gov/x.</p>');
+    expect(m.sourceLinkCount).toBe(2);
+  });
   it('is deterministic', () => {
     const t = 'Some text. It is often various. This was written by them.';
     expect(computeReadabilityMetrics(t)).toEqual(computeReadabilityMetrics(t));

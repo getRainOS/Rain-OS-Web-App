@@ -64,6 +64,18 @@ const MEASURES: Record<string, Omit<Measure, 'min' | 'max'>> = {
     value: m => m.abstractionRatio, display: pct,
     fix: (v, t) => `${pct(v)} of your words are vague ("things", "various", "aspects"); get it under ${pct(t.max!)}. Replace each with the specific thing, number or name.`,
   },
+  figureDensity: {
+    key: 'figureDensity', label: 'Specific figures', pillar: 'digital_authority',
+    value: m => m.figureDensity, display: per100,
+    fix: (v, t) => `Only ${v.toFixed(2)} figures per 100 words. Add specific numbers, dates or prices where you make a claim (aim for ${t.min} or more), so AI has something concrete to quote.`,
+  },
+  sourceLinkCount: {
+    key: 'sourceLinkCount', label: 'Linked sources', pillar: 'digital_authority',
+    value: m => m.sourceLinkCount, display: v => `${v} ${v === 1 ? 'link' : 'links'}`,
+    fix: (v, t) => v === 0
+      ? 'This page links to no outside sources. Link the study, data or organization behind your main claims.'
+      : `Only ${v} outside source link${v === 1 ? '' : 's'}. Link the study, data or organization behind each main claim.`,
+  },
   nestedClauseDepth: {
     key: 'nestedClauseDepth', label: 'Commas per sentence', pillar: 'ai_readability',
     value: m => m.nestedClauseDepth, display: v => v.toFixed(1),
@@ -110,7 +122,17 @@ const LONG_FORM: Record<string, Target> = {
   coreferenceLeaks: { max: 1.5 }, abstractionRatio: { max: 0.05 }, nestedClauseDepth: { max: 3 },
   headingDensity: { min: 0.5, max: 2.5, minWords: 150 }, answerFirstRatio: { min: 0.4, minWords: 150 },
   qaDensity: { min: 0.02, minWords: 300 },
+  figureDensity: { min: 0.5, minWords: 150 }, sourceLinkCount: { min: 1, minWords: 150 },
 };
+
+// Citation Signals cap: when a measured figure or source-link check fails,
+// the scorer's citationSignals sub-score cannot exceed this value.
+export const CITATION_CAP = 60;
+const CITATION_KEYS = ['figureDensity', 'sourceLinkCount'];
+export function citationCap(m: ReadabilityMetrics, text: string, type: ContentTypeId | null): number {
+  const failed = measuredChecks(m, text, type).some(c => CITATION_KEYS.includes(c.key) && !c.pass);
+  return failed ? CITATION_CAP : 100;
+}
 const TARGETS: Record<ContentTypeId | 'default', Record<string, Target>> = {
   default: LONG_FORM,
   article: LONG_FORM,

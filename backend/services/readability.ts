@@ -16,6 +16,10 @@ export interface ReadabilityMetrics {
     entityDensity: number;
     listItemRatio: number;
     wordCount: number;
+    // Figures (numbers, %, currency, years) per 100 words. Heuristic.
+    figureDensity: number;
+    // Absolute http(s) links in the raw content (any host). Heuristic.
+    sourceLinkCount: number;
     }
     const stripHtml = (t: string): string =>
     t.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -106,7 +110,15 @@ export interface ReadabilityMetrics {
     const listItems = (raw.match(/<li[^>]*>/gi) || []).length
     + (raw.match(/^\s*(?:[-*+]|\d+[.)])\s+\S/gm) || []).length;
     const listRatio = wordCount ? (listItems / wordCount) * 100 : 0;
+    // ─── Figure density (numbers, %, currency, years per 100 words) ──────────
+    // Heuristic: counts digit runs, so a step number like "3" also counts.
+    const figureMatches = (text.match(/[$€£]?\d[\d,]*(?:\.\d+)?(?:\s?(?:%|percent|x|times|million|billion|k)\b)?/gi) || []).length;
+    const figureDensity = wordCount ? (figureMatches / wordCount) * 100 : 0;
+    // ─── Source links (absolute http/https URLs in the raw content) ─────────
+    const sourceLinkCount = (raw.match(/https?:\/\/[^\s"'<>)\]]+/gi) || []).length;
     return {
+    figureDensity: Math.round(figureDensity * 100) / 100,
+    sourceLinkCount,
     avgSentenceLength: Math.round(avg * 10) / 10,
     sentenceLengthVariance: Math.round(variance * 10) / 10,
     longSentenceRatio: Math.round(longRatio * 100) / 100,
@@ -146,6 +158,8 @@ export interface ReadabilityMetrics {
     `Answer-first ratio: ${(m.answerFirstRatio * 100).toFixed(1)}% (reward
     answerFirstFormatting generously if >40%)`,
     `QA density: ${(m.qaDensity * 100).toFixed(1)}% question sentences`,
+    `Figure density: ${m.figureDensity.toFixed(2)} figures per 100 words (numbers, %, currency, years; reward citationSignals when specific figures are present)`,
+    `Source links: ${m.sourceLinkCount} external http(s) links (reward citationSignals when sources are linked)`,
     `Definition density: ${m.definitionDensity.toFixed(2)} per 100 words`,
     `Entity density: ${m.entityDensity.toFixed(2)} proper nouns per 100 words`,
     `List item ratio: ${m.listItemRatio.toFixed(2)} list items per 100 words`,

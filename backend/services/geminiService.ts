@@ -4,7 +4,7 @@ import { generateContentWithRetry } from './geminiRetry';
 // Algorithmic readability pre-analysis grounding.
 // SDK: @google/generative-ai
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
-import { contentTypeId, typeScorecardPrompt, applyTypeScorecard, measuredChecks, measuredFixes, coverageFixes, MEASURED_TOPICS } from './contentTypes';
+import { contentTypeId, typeScorecardPrompt, applyTypeScorecard, measuredChecks, measuredFixes, coverageFixes, MEASURED_TOPICS, citationCap } from './contentTypes';
 import { computeReadabilityMetrics, formatMetricsAsGroundingBlock } from './readability'
 import type {
 AnalysisResponse,
@@ -57,7 +57,9 @@ PILLAR 2 — DIGITAL AUTHORITY (weight: 25% general, developers and vibe coders;
 Does the content signal expertise, trustworthiness, and citability to AI?
 Sub-scores: citationSignals, entityClarity, topicalAuthority, freshnessSignals,
 socialProofMarkup
-Anchors: use entityDensity, definitionDensity from pre-analysis.
+Anchors: use entityDensity, definitionDensity from pre-analysis. For
+citationSignals also use figureDensity and sourceLinkCount. The server caps
+citationSignals when either measured check fails.
 PILLAR 3 — CONVERSION READINESS (weight: 25% general, developers and vibe coders; 20% product_sellers and local_business)
 Does the content guide the reader toward a clear next action?
 Sub-scores: callToActionClarity, trustSignals, valueProposition, frictionReduction
@@ -406,7 +408,7 @@ const subScores: SubScore[] = [
     { category: 'contextSufficiency', score:
     clamp(parsed.ai_readability_detail?.contextSufficiency || 0), label: 'Context Sufficiency' },
     { category: 'citationSignals', score:
-    clamp(parsed.digital_authority_detail?.citationSignals || 0), label: 'Citation Signals' },
+    Math.min(citationCap(metrics, content, typeId), clamp(parsed.digital_authority_detail?.citationSignals || 0)), label: 'Citation Signals' },
     { category: 'entityClarity', score:
     clamp(parsed.digital_authority_detail?.entityClarity || 0), label: 'Entity Clarity' },
     { category: 'topicalAuthority', score:
