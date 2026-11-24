@@ -559,9 +559,9 @@ function ToolsSection({ lane }: { lane: number }) {
             <React.Fragment key={t.key}>
             {k === 1 && (
               <Reveal>
-                <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-6 md:gap-16 items-end pt-20 md:pt-24 pb-4">
-                  <div className="flex items-start gap-4"><ToolMark /><h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Long Term Monitoring</h2></div>
-                  <p className="text-neutral-400 text-lg leading-relaxed max-w-md">Keep checking what AI says and where it links, over time, so you see changes as they happen.</p>
+                <div className="pt-20 md:pt-24">
+                  <div className="flex items-start gap-4"><ToolMark /><h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">Long Term Monitoring</h2></div>
+                  <p className="mt-6 text-neutral-400 text-lg leading-relaxed max-w-2xl">Keep checking what AI says and where it links, over time, so you see changes as they happen.</p>
                 </div>
               </Reveal>
             )}
