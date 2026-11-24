@@ -813,7 +813,7 @@ export default function Home() {
               </h1>
               <EngineCycle names={engines} />
               <div className="mt-7 w-0 min-w-full space-y-4 text-lg md:text-xl text-neutral-400 leading-relaxed text-center">
-                <p>People now ask AI for answers. Rain OS helps expand the virtual presence of businesses, content and websites by improving how well chatbots like ChatGPT and Claude can read them, which increases their chances of being visible online.</p>
+                <p>People now ask AI for answers. Rain OS helps businesses, content and websites become more readable by chatbots like ChatGPT and Claude.</p>
               </div>
               </div>
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
