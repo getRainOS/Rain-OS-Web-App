@@ -193,8 +193,8 @@ export function LaneSection({ index, onPick }: { index: number; onPick: (i: numb
     return () => clearInterval(t);
   }, [reduce, inView, chosen, index, onPick]);
   return (
-    <section ref={ref} className="relative z-10 py-28">
-      <div className="mx-auto max-w-[1104px] px-6">
+    <section ref={ref} className="relative z-10 pb-28">
+      <div className="mx-auto max-w-[1104px] px-6 pt-28 pb-16">
         <div className="border-t border-white/[0.06]" />
       </div>
       <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
