@@ -408,7 +408,7 @@ function PillarCell({ name, meaning, tag, dashed }: { name: string; meaning: str
           {tag && <div className="mb-3 text-[11px] text-neutral-500" style={MONO}>{tag}</div>}
           <div className="text-[18px] font-medium text-white">{name}</div>
         </div>
-        <span className={`text-[20px] leading-none text-neutral-500 transition-transform duration-500 group-hover:rotate-45 group-focus-visible:rotate-45 ${open ? 'rotate-45' : ''}`}>+</span>
+        <span style={{ color: "#A8203E" }} className={`text-[20px] leading-none transition-transform duration-500 group-hover:rotate-45 group-focus-visible:rotate-45 ${open ? 'rotate-45' : ''}`}>+</span>
       </div>
       <div className={`grid transition-[grid-template-rows] duration-700 ease-out group-hover:grid-rows-[1fr] group-focus-visible:grid-rows-[1fr] ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
         <div className="overflow-hidden">
