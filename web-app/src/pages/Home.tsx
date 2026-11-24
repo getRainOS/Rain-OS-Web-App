@@ -769,7 +769,7 @@ function DrawnGrid() {
         }}
         initial={{ opacity: 0 }}
         animate={reduce || inView ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 4, ease: 'easeOut' }}
+        transition={{ duration: 7, ease: 'easeOut' }}
       />
     </div>
   );
