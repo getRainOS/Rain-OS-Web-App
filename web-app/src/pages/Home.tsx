@@ -511,7 +511,7 @@ function AnalysisFlow() {
       <div>
         <div className="mb-4 text-[11px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>What to change · {LANE_TABS[lane]}</div>
         {!results ? (
-          <div className="flex h-[260px] items-center gap-2 border-y border-white/10">
+          <div className="flex h-[260px] items-center gap-2">
             <span className="text-[12px] text-neutral-500" style={MONO}>Analysing</span>
             {[0, 1, 2].map(d => (
               <motion.span
