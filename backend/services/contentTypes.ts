@@ -125,14 +125,6 @@ const LONG_FORM: Record<string, Target> = {
   figureDensity: { min: 0.5, minWords: 150 }, sourceLinkCount: { min: 1, minWords: 150 },
 };
 
-// Citation Signals cap: when a measured figure or source-link check fails,
-// the scorer's citationSignals sub-score cannot exceed this value.
-export const CITATION_CAP = 60;
-const CITATION_KEYS = ['figureDensity', 'sourceLinkCount'];
-export function citationCap(m: ReadabilityMetrics, text: string, type: ContentTypeId | null): number {
-  const failed = measuredChecks(m, text, type).some(c => CITATION_KEYS.includes(c.key) && !c.pass);
-  return failed ? CITATION_CAP : 100;
-}
 const TARGETS: Record<ContentTypeId | 'default', Record<string, Target>> = {
   default: LONG_FORM,
   article: LONG_FORM,
