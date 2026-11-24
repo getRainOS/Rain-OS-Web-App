@@ -57,7 +57,8 @@ PILLAR 2 — DIGITAL AUTHORITY (weight: 25% general, developers and vibe coders;
 Does the content signal expertise, trustworthiness, and citability to AI?
 Sub-scores: citationSignals, entityClarity, topicalAuthority, freshnessSignals,
 socialProofMarkup
-Anchors: use entityDensity, definitionDensity from pre-analysis.
+Anchors: use entityDensity, definitionDensity from pre-analysis. For
+citationSignals also use figureDensity and sourceLinkCount (see caps there).
 PILLAR 3 — CONVERSION READINESS (weight: 25% general, developers and vibe coders; 20% product_sellers and local_business)
 Does the content guide the reader toward a clear next action?
 Sub-scores: callToActionClarity, trustSignals, valueProposition, frictionReduction

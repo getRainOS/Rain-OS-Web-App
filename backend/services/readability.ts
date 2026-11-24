@@ -158,6 +158,8 @@ export interface ReadabilityMetrics {
     `Answer-first ratio: ${(m.answerFirstRatio * 100).toFixed(1)}% (reward
     answerFirstFormatting generously if >40%)`,
     `QA density: ${(m.qaDensity * 100).toFixed(1)}% question sentences`,
+    `Figure density: ${m.figureDensity.toFixed(2)} figures per 100 words (numbers, %, currency, years; reward citationSignals when specific figures are present; a page with 0 figures cannot score citationSignals above 60)`,
+    `Source links: ${m.sourceLinkCount} external http(s) links (reward citationSignals when sources are linked; 0 links cannot score citationSignals above 60)`,
     `Definition density: ${m.definitionDensity.toFixed(2)} per 100 words`,
     `Entity density: ${m.entityDensity.toFixed(2)} proper nouns per 100 words`,
     `List item ratio: ${m.listItemRatio.toFixed(2)} list items per 100 words`,
