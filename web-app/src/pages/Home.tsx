@@ -837,7 +837,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="relative z-10">
+        <section className="relative z-10 pb-28">
           <div className="py-28">
           <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
             <Reveal>
