@@ -194,7 +194,7 @@ export function LaneSection({ index, onPick }: { index: number; onPick: (i: numb
   }, [reduce, inView, chosen, index, onPick]);
   return (
     <section ref={ref} className="relative z-10 pb-28 border-t border-white/[0.06]">
-      <div className="h-16" aria-hidden />
+      <div className="h-28" aria-hidden />
       <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
         <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Who it's for</div>
         <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Users we work with</h2>
