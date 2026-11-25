@@ -240,7 +240,7 @@ export function TrackExample({ index, inline = false }: { index: number; inline?
   const ex = EXAMPLES[index];
   const inner = inline ? '' : 'max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10';
   return (
-    <div className={inline ? 'mt-28 pt-28 border-t border-white/[0.06]' : 'relative z-10 py-28 border-t border-white/[0.06]'}>
+    <div className={inline ? 'mt-28' : 'relative z-10 py-28 border-t border-white/[0.06]'}>
       <div className={inner}>
         <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Example</div>
         <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Track the type of questions asked of your business</h2>
