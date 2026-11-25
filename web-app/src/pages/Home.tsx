@@ -361,7 +361,7 @@ function WaysList({ ways }: { ways: { label: string; href: string; note: string 
 
 function TrackRow() {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-20 md:pt-24 pb-20 md:pb-24 border-b border-white/10">
+    <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-20 md:pt-24 pb-20 md:pb-24">
       <div>
         <div className="flex items-start gap-3">
         <StepBadge n={3} />
@@ -553,6 +553,7 @@ function AnalysisFlow() {
 
 function ToolsSection({ lane }: { lane: number }) {
   return (
+    <>
     <section id="product" className="relative z-10 py-28 border-t border-white/[0.06]">
       <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
         <Reveal>
@@ -562,16 +563,8 @@ function ToolsSection({ lane }: { lane: number }) {
         </Reveal>
         <AnalysisFlow />
         <div className="border-t border-white/10">
-          {TOOLS.map((t, k) => (
+          {TOOLS.slice(0, 1).map((t, k) => (
             <React.Fragment key={t.key}>
-            {k === 1 && (
-              <Reveal>
-                <div className="pt-20 md:pt-24">
-                  <div className="flex items-start gap-4"><ToolMark /><h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">Long Term Monitoring</h2></div>
-                  <p className="mt-6 text-neutral-400 text-lg leading-relaxed max-w-2xl">Keep checking what AI says and where it links, over time, so you see changes as they happen.</p>
-                </div>
-              </Reveal>
-            )}
             <Reveal delay={0.05 * k}>
               <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-stretch py-20 md:py-24 border-b border-white/10">
                 <div>
@@ -601,9 +594,48 @@ function ToolsSection({ lane }: { lane: number }) {
             </React.Fragment>
           ))}
         </div>
+      </div>
+    </section>
+    <section className="relative z-10 py-28 border-t border-white/[0.06]">
+      <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
+        <Reveal>
+          <div className="flex items-start gap-4"><ToolMark /><h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">Long Term Monitoring</h2></div>
+          <p className="mt-6 text-neutral-400 text-lg leading-relaxed max-w-2xl">Keep checking what AI says and where it links, over time, so you see changes as they happen.</p>
+        </Reveal>
+        <div className="mt-16 md:mt-20">
+          {TOOLS.slice(1).map((t, i) => {
+            const k = i + 1;
+            return (
+            <React.Fragment key={t.key}>
+            <Reveal delay={0.05 * k}>
+              <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-stretch py-20 md:py-24 border-b border-white/10">
+                <div>
+                  <div className={k === 0 ? 'flex items-center gap-3' : undefined}>
+                    {k === 0 && <StepBadge n={2} />}
+                    <ToolTitle text={t.eyebrow} />
+                  </div>
+                  {t.key !== 'analysis' && <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">{t.title}</p>}
+                  {t.key !== 'analysis' && <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">{t.lead && <span className="font-medium text-white">{t.lead} </span>}{t.body}</p>}
+                  {t.ways.length > 0 && (
+                    <>
+                    <div className="mt-6 text-[12px] text-neutral-500" style={MONO}>FEATURES</div>
+                    <WaysList ways={t.ways} />
+                    </>
+                  )}
+                </div>
+                <div className="min-w-0 h-full lg:border-l lg:border-white/10 lg:pl-12">
+                  {t.visual === 'pillar' ? <RotatingAnalysis /> : t.visual === 'citation' ? <CitationRotation /> : t.visual === 'share' ? <LaneCycle items={SHARE_LANES} render={d => <ShareCard data={d} />} /> : t.visual === 'describe' ? <LaneCycle items={DESCRIBE_LANES} render={d => <DescribeCard data={d} />} /> : null}
+                </div>
+              </div>
+            </Reveal>
+            </React.Fragment>
+            );
+          })}
+        </div>
         <TrackExample index={lane} inline />
       </div>
     </section>
+    </>
   );
 }
 
