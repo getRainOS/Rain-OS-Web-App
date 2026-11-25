@@ -368,7 +368,7 @@ function TrackRow() {
       <div>
         <div className="flex items-start gap-3">
         <StepBadge n={3} />
-        <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.035em] leading-[1.02] text-white">See your progress over each most recent analysis</h2>
+        <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.035em] leading-[1.02] text-white">See your progress over your most recent analysis</h2>
         </div>
         <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">See Each Pillar Move, One Analysis at a Time</p>
         <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">Every analysis adds a point to each pillar, so you can see what changed after a fix. Example data.</p>
