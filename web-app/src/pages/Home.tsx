@@ -866,7 +866,7 @@ export default function Home() {
               {/* The subtitle takes the headline's width: w-0 + min-w-full stops it widening the block. */}
               <div className="mx-auto flex w-fit max-w-full flex-col items-center px-2 text-center">
               <h1 className="mt-7 max-w-full text-[clamp(26px,3.5vw,48px)] leading-[1.02] font-semibold tracking-[-0.045em] md:whitespace-nowrap">
-                Are You Invisible? <span className="text-neutral-500">Be readable by</span>
+                Are You Invisible to AI? <span className="text-neutral-500">Be readable by</span>
               </h1>
               <EngineCycle names={engines} />
               <div className="mt-7 w-0 min-w-full space-y-4 text-lg md:text-xl text-neutral-400 leading-relaxed text-center">
