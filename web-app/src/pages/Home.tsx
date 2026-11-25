@@ -213,17 +213,20 @@ function AnalyzeConsole({ compact = false, litLane, step: stepProp }: { compact?
 
 /* ── The tools: stacked, each with a dynamic picture ───────────────────── */
 
+// The three ways to run an analysis, shown under Run an Analysis.
+const ANALYSIS_WAYS = [
+  { label: 'Check your writing', href: '/analyze', note: 'Articles, blogs and landing pages' },
+  { label: 'Scan a URL', href: '/url-scanner', note: 'Your website, with plain-English fixes' },
+  { label: 'Scan a repo', href: '/repo-analysis', note: 'Docs, READMEs and apps on GitHub' },
+];
+
 const TOOLS = [
   {
     key: 'analysis',
     eyebrow: 'Improve Your AI Readability',
     title: 'Get your Rain Score and pillar breakdown',
-    body: 'One score, split into the pillars that matter for your kind of business, with the fixes for each gap. Run it three ways:',
-    ways: [
-      { label: 'Check your writing', href: '/analyze', note: 'Articles, blogs and landing pages' },
-      { label: 'Scan a URL', href: '/url-scanner', note: 'Your website, with plain-English fixes' },
-      { label: 'Scan a repo', href: '/repo-analysis', note: 'Docs, READMEs and apps on GitHub' },
-    ],
+    body: 'One score, split into the pillars that matter for your kind of business, with the fixes for each gap.',
+    ways: [],
     href: '/analyze',
     visual: 'pillar' as const,
   },
@@ -514,6 +517,8 @@ function AnalysisFlow() {
       <div>
         <div className="mb-6 flex items-center gap-3"><StepBadge n={1} /><ToolTitle text="Run an Analysis" /></div>
         <AnalyzeConsole compact litLane={lane} step={step} />
+        <div className="mt-10 text-[12px] text-neutral-500" style={MONO}>FEATURES</div>
+        <WaysList ways={ANALYSIS_WAYS} />
       </div>
       <div>
         <div className="mb-4 text-[11px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>What to change · {LANE_TABS[lane]}</div>
