@@ -21,7 +21,7 @@ function BusinessCycle() {
   return (
     <span
       className="block whitespace-nowrap text-[#bdbdbd]"
-      style={{ fontSize: 'clamp(20px, 5.2vw, 60px)' }}
+      style={{ fontSize: 'clamp(20px, 4.2vw, 48px)' }}
     >
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
@@ -53,14 +53,14 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.05] mb-6" style={{ letterSpacing: '-0.04em' }}>
               Someone asks AI<br />
-              <BusinessCycle /><br />
+              <BusinessCycle />
               Does it name you?
             </h1>
             <p className="text-neutral-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
               More people ask ChatGPT, Google's AI answers, Perplexity and Claude who to call. rain OS checks what each one says about your business, and tells you what to change, in plain English.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/login" className="inline-flex items-center gap-2 bg-[#ffffff] hover:bg-neutral-200 text-black rounded-md px-7 py-3.5 text-sm font-medium transition-colors">
+              <a href="/login" style={{ color: '#000' }} className="inline-flex items-center gap-2 bg-[#ffffff] hover:bg-neutral-200 rounded-md px-7 py-3.5 text-sm font-medium transition-colors">
                 Check my business site free
                 <ArrowRight className="w-4 h-4" />
               </a>
