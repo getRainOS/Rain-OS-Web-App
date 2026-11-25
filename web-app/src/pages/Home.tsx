@@ -258,6 +258,13 @@ const TOOLS = [
 ];
 
 // A tool's name, large and bold, with each word rising in turn as it scrolls into view.
+// Filled numbered circle that marks the order of the steps on the page.
+function StepBadge({ n }: { n: number }) {
+  return (
+    <span aria-hidden className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-sm font-semibold text-black">{n}</span>
+  );
+}
+
 function ToolTitle({ text }: { text: string }) {
   const reduce = useReducedMotion();
   const words = text.split(' ');
@@ -357,8 +364,8 @@ function TrackRow() {
     <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-20 md:pt-24 pb-20 md:pb-24 border-b border-white/10">
       <div>
         <div className="flex items-start gap-3">
-        <ToolMark />
-        <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.035em] leading-[1.02] text-white">Check Your Improvement in Your AI Readability Score Over Each Analysis</h2>
+        <StepBadge n={3} />
+        <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.035em] leading-[1.02] text-white">See your progress over each most recent analysis</h2>
         </div>
         <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">See Each Pillar Move, One Analysis at a Time</p>
         <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">Every analysis adds a point to each pillar, so you can see what changed after a fix. Example data.</p>
@@ -505,7 +512,7 @@ function AnalysisFlow() {
   return (
     <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-20 md:pt-24 pb-20 md:pb-24">
       <div>
-        <div className="mb-6"><ToolTitle text="Run an Analysis" /></div>
+        <div className="mb-6 flex items-center gap-3"><StepBadge n={1} /><ToolTitle text="Run an Analysis" /></div>
         <AnalyzeConsole compact litLane={lane} step={step} />
       </div>
       <div>
@@ -568,7 +575,8 @@ function ToolsSection({ lane }: { lane: number }) {
             <Reveal delay={0.05 * k}>
               <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-stretch py-20 md:py-24 border-b border-white/10">
                 <div>
-                  <div>
+                  <div className={k === 0 ? 'flex items-center gap-3' : undefined}>
+                    {k === 0 && <StepBadge n={2} />}
                     <ToolTitle text={t.eyebrow} />
                   </div>
                   {t.key !== 'analysis' && <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">{t.title}</p>}
