@@ -508,7 +508,7 @@ function AnalysisFlow() {
   const [intro, setIntro] = useState(!reduce);
   useEffect(() => {
     if (reduce || !inView || !intro) return;
-    const t = window.setTimeout(() => setIntro(false), 2600);
+    const t = window.setTimeout(() => setIntro(false), 6000);
     return () => clearTimeout(t);
   }, [intro, reduce, inView, lane]);
   useEffect(() => {
