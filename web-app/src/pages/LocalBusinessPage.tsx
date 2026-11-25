@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import {
   MapPin, Search, PhoneCall, Star, BrainCircuit, ShieldCheck, MousePointerClick,
   ArrowRight, CheckCircle2, AlertTriangle, Sparkles, Globe, MessageSquare,
@@ -8,6 +8,37 @@ import {
 import MarketingNav from '@/components/marketing/MarketingNav';
 
 import SiteFooter from '@/components/marketing/SiteFooter';
+// Cycles the kind of business in the hero question, one line at a time.
+const HERO_BUSINESSES = ['plumber', 'dentist', 'electrician', 'hair salon', 'bakery', 'florist', 'mechanic', 'vet', 'locksmith'];
+function BusinessCycle() {
+  const reduce = useReducedMotion();
+  const [i, setI] = React.useState(0);
+  React.useEffect(() => {
+    if (reduce) return;
+    const t = window.setInterval(() => setI(n => (n + 1) % HERO_BUSINESSES.length), 2400);
+    return () => clearInterval(t);
+  }, [reduce]);
+  return (
+    <span
+      className="block whitespace-nowrap text-[#bdbdbd]"
+      style={{ fontSize: 'clamp(20px, 5.2vw, 60px)' }}
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={i}
+          className="inline-block"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -12 }}
+          transition={{ duration: 0.35 }}
+        >
+          {`"who's the best ${HERO_BUSINESSES[i]} near me?"`}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+}
+
 export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
   return (
     <div className="min-h-screen bg-black text-white">
@@ -15,14 +46,14 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
 
       {/* Hero */}
       <section className="pt-36 pb-20 px-6 relative overflow-hidden">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-5xl mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
             <div className="inline-flex items-center gap-2 rounded-md border border-[#ffffff]/30 bg-[#ffffff]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[#bdbdbd] mb-6">
               <MapPin className="w-3.5 h-3.5" /> For Local Businesses
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.05] mb-6" style={{ letterSpacing: '-0.04em' }}>
               Someone asks AI<br />
-              <span className="text-[#bdbdbd]">"who's the best plumber near me?"</span><br />
+              <BusinessCycle /><br />
               Does it name you?
             </h1>
             <p className="text-neutral-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
