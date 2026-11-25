@@ -583,7 +583,7 @@ function ToolsSection({ lane }: { lane: number }) {
           {TOOLS.slice(0, 1).map((t, k) => (
             <React.Fragment key={t.key}>
             <Reveal delay={0.05 * k}>
-              <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-stretch py-20 md:py-24 border-b border-white/10">
+              <div className={k === 0 ? 'grid grid-cols-1 gap-10 items-stretch py-20 md:py-24 border-b border-white/10' : 'grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-stretch py-20 md:py-24 border-b border-white/10'}>
                 <div>
                   <div className={k === 0 ? 'flex items-center gap-3' : undefined}>
                     {k === 0 && <StepBadge n={2} />}
@@ -598,7 +598,7 @@ function ToolsSection({ lane }: { lane: number }) {
                     </>
                   )}
                 </div>
-                <div className="min-w-0 h-full lg:border-l lg:border-white/10 lg:pl-12">
+                <div className={k === 0 ? 'min-w-0 h-full' : 'min-w-0 h-full lg:border-l lg:border-white/10 lg:pl-12'}>
                   {t.visual === 'pillar' ? <RotatingAnalysis /> : t.visual === 'citation' ? <CitationRotation /> : t.visual === 'share' ? <LaneCycle items={SHARE_LANES} render={d => <ShareCard data={d} />} /> : t.visual === 'describe' ? <LaneCycle items={DESCRIBE_LANES} render={d => <DescribeCard data={d} />} /> : null}
                 </div>
               </div>
@@ -625,7 +625,7 @@ function ToolsSection({ lane }: { lane: number }) {
             return (
             <React.Fragment key={t.key}>
             <Reveal delay={0.05 * k}>
-              <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-stretch py-20 md:py-24 border-b border-white/10">
+              <div className={k === 0 ? 'grid grid-cols-1 gap-10 items-stretch py-20 md:py-24 border-b border-white/10' : 'grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-stretch py-20 md:py-24 border-b border-white/10'}>
                 <div>
                   <div className={k === 0 ? 'flex items-center gap-3' : undefined}>
                     {k === 0 && <StepBadge n={2} />}
@@ -640,7 +640,7 @@ function ToolsSection({ lane }: { lane: number }) {
                     </>
                   )}
                 </div>
-                <div className="min-w-0 h-full lg:border-l lg:border-white/10 lg:pl-12">
+                <div className={k === 0 ? 'min-w-0 h-full' : 'min-w-0 h-full lg:border-l lg:border-white/10 lg:pl-12'}>
                   {t.visual === 'pillar' ? <RotatingAnalysis /> : t.visual === 'citation' ? <CitationRotation /> : t.visual === 'share' ? <LaneCycle items={SHARE_LANES} render={d => <ShareCard data={d} />} /> : t.visual === 'describe' ? <LaneCycle items={DESCRIBE_LANES} render={d => <DescribeCard data={d} />} /> : null}
                 </div>
               </div>
