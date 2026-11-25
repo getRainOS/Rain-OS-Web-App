@@ -41,6 +41,18 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
         </div>
       </section>
 
+      {/* Team photo */}
+      <section className="px-6 pb-20">
+        <div className="max-w-5xl mx-auto overflow-hidden rounded-2xl border border-white/10">
+          <img
+            src="/images/local-business-team.webp"
+            alt="A small team reviewing printed plans together around an office table"
+            className="w-full block object-cover aspect-[16/9]"
+            loading="lazy"
+          />
+        </div>
+      </section>
+
       {/* The problem */}
       <section className="py-20 px-6 border-t border-white/[0.06]">
         <div className="max-w-5xl mx-auto">
