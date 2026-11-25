@@ -504,21 +504,33 @@ function AnalysisFlow() {
   const [lane, setLane] = useState(0);
   const [step, setStep] = useState(reduce ? ANALYZE_STEPS.length : 0);
   const [results, setResults] = useState(!!reduce);
+  // Each cycle opens with the three ways to run an analysis, then the analysis runs.
+  const [intro, setIntro] = useState(!reduce);
   useEffect(() => {
-    if (reduce || !inView) return;
+    if (reduce || !inView || !intro) return;
+    const t = window.setTimeout(() => setIntro(false), 2600);
+    return () => clearTimeout(t);
+  }, [intro, reduce, inView, lane]);
+  useEffect(() => {
+    if (reduce || !inView || intro) return;
     let t: number;
     if (!results && step < ANALYZE_STEPS.length) t = window.setTimeout(() => setStep(n => n + 1), 1400);
     else if (!results) t = window.setTimeout(() => setResults(true), 0);
-    else t = window.setTimeout(() => { setLane(l => (l + 1) % LANE_CHANGES.length); setStep(0); setResults(false); }, 4500);
+    else t = window.setTimeout(() => { setLane(l => (l + 1) % LANE_CHANGES.length); setStep(0); setResults(false); setIntro(true); }, 4500);
     return () => clearTimeout(t);
-  }, [inView, reduce, step, results, lane]);
+  }, [inView, reduce, step, results, lane, intro]);
   return (
     <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-20 md:pt-24 pb-20 md:pb-24">
       <div>
         <div className="mb-6 flex items-center gap-3"><StepBadge n={1} /><ToolTitle text="Run an Analysis" /></div>
-        <AnalyzeConsole compact litLane={lane} step={step} />
-        <div className="mt-10 text-[12px] text-neutral-500" style={MONO}>FEATURES</div>
-        <WaysList ways={ANALYSIS_WAYS} />
+        {intro ? (
+          <div>
+            <div className="text-[12px] text-neutral-500" style={MONO}>FEATURES</div>
+            <WaysList ways={ANALYSIS_WAYS} />
+          </div>
+        ) : (
+          <AnalyzeConsole compact litLane={lane} step={step} />
+        )}
       </div>
       <div>
         <div className="mb-4 text-[11px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>What to change · {LANE_TABS[lane]}</div>
