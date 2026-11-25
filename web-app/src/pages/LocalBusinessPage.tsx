@@ -20,8 +20,8 @@ function BusinessCycle() {
   }, [reduce]);
   return (
     <span
-      className="block whitespace-nowrap text-[#bdbdbd]"
-      style={{ fontSize: 'clamp(20px, 4.2vw, 48px)' }}
+      className="block whitespace-nowrap text-neutral-500 font-semibold leading-[1.02] tracking-[-0.045em]"
+      style={{ fontSize: 'clamp(26px, 3.5vw, 48px)' }}
     >
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
@@ -54,7 +54,7 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.05] mb-6" style={{ letterSpacing: '-0.04em' }}>
               Someone asks AI<br />
               <BusinessCycle />
-              Does it name you?
+              <span className="block leading-[1.02]">Does it name you?</span>
             </h1>
             <p className="text-neutral-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
               More people ask ChatGPT, Google's AI answers, Perplexity and Claude who to call. rain OS checks what each one says about your business, and tells you what to change, in plain English.
@@ -64,9 +64,6 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
                 Check my business site free
                 <ArrowRight className="w-4 h-4" />
               </a>
-              <a href="/pricing" className="inline-flex items-center gap-2 border border-white/10 hover:border-white/20 text-neutral-300 hover:text-white rounded-xl px-7 py-3.5 text-sm font-semibold transition-all">
-                See plans
-              </a>
             </div>
           </motion.div>
         </div>
@@ -74,11 +71,11 @@ export default function LocalBusinessPage({ onBack }: { onBack: () => void }) {
 
       {/* Team photo */}
       <section className="px-6 pb-20">
-        <div className="max-w-5xl mx-auto overflow-hidden rounded-2xl border border-white/10">
+        <div className="max-w-5xl mx-auto rounded-2xl border border-white/10 bg-white/[0.02] p-3 md:p-4">
           <img
             src="/images/local-business-team.webp"
             alt="A small team reviewing printed plans together around an office table"
-            className="w-full block object-cover aspect-[16/9]"
+            className="w-full block object-cover aspect-[16/9] rounded-xl"
             loading="lazy"
           />
         </div>
