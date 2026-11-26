@@ -4,6 +4,7 @@ import { api } from '../api/client.js';
 import { useApp } from '../context/AppContext.jsx';
 import { PILLAR_COLORS } from '../lib/pillarColors.js';
 import ScoreDonut from '../components/ScoreDonut.jsx';
+import { Gauge } from '../components/marketing/TrackDemo';
 import { LANES as LANE_META } from '../lib/lanes.js';
 import { groupPieces, pieceName, buildPieceKeyer } from '../lib/analysisSeries.js';
 import { domainOf } from '../lib/opportunities.js';
@@ -630,25 +631,19 @@ export default function Dashboard() {
               <div className={styles.heroRankHeader}>
                 <span>Pillar scores</span>
               </div>
-              <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 16 }}>
                 {[...piecePillars].sort((a, b) => b.score - a.score).map(p => {
                   const d = p.delta == null ? null : Math.abs(p.delta) <= NOISE_PTS ? 0 : p.delta;
                   return (
-                    <li key={p.key} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#d4d4d4' }}>
-                        <span style={{ width: 8, height: 8, borderRadius: '50%', background: p.color }} />
-                        {p.label}
-                      </span>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <span style={{ fontSize: 15, fontWeight: 600, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{Math.round(p.score)}</span>
-                        <span style={{ fontSize: 12, minWidth: 64, textAlign: 'right', color: d > 0 ? '#4ade80' : '#737373', fontVariantNumeric: 'tabular-nums' }}>
-                          {d == null || d === 0 ? 'no change' : `${d > 0 ? '+' : ''}${Math.round(d)} pts`}
-                        </span>
-                      </span>
-                    </li>
+                    <div key={p.key} style={{ textAlign: 'center' }}>
+                      <Gauge label={p.label} value={p.score} color={p.color} />
+                      <div style={{ fontSize: 12, marginTop: -4, color: d > 0 ? '#4ade80' : '#737373', fontVariantNumeric: 'tabular-nums' }}>
+                        {d == null || d === 0 ? 'no change' : `${d > 0 ? '+' : ''}${Math.round(d)} pts`}
+                      </div>
+                    </div>
                   );
                 })}
-              </ul>
+              </div>
             </div>
           </div>
           </>
