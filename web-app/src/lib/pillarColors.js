@@ -16,7 +16,7 @@ export const PILLAR_COLORS = {
 };
 
 export const PILLAR_CHART_COLORS = {
-  ai_readability: '#FFFFFF',
+  ai_readability: '#EAB308',
   digital_authority: '#3B82F6',
   conversion_readiness: '#F97316',
   product_discoverability: '#14B8A6',

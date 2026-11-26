@@ -13,6 +13,7 @@ const MAX_GAIN = [22, 18, 24, 14, 20, 16];
 const CORE = [0, 1, 2, 4]; // the four core pillars get gauges and lines
 const LANE_ONLY = [3, 5]; // online sellers and local business: shown faint, not drawn
 const PER_CYCLE = CORE.length + 1; // one slot per core pillar, then a short hold
+const RUN_CYCLE = 5; // runs repeat so each one shows a clear rise, not a plateau
 const MOVE_S = 1.8; // lines and gauges move over the same time
 const W = 560;
 const H = 200;
@@ -43,7 +44,7 @@ export function Gauge({ label, value, color = '#ffffff', dim = false }: { label:
         <path d={arc} fill="none" stroke="#262626" strokeWidth={2} strokeLinecap="round" />
         {!dim && (
           <>
-            <motion.path d={arc} fill="none" stroke="#ffffff" strokeWidth={2} strokeLinecap="round" animate={{ pathLength: value / 100 }} transition={transition} />
+            <motion.path d={arc} fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" animate={{ pathLength: value / 100 }} transition={transition} />
             <motion.circle
               cx={cx - r}
               cy={cy}
@@ -77,10 +78,11 @@ export default function TrackDemo() {
   }, [inView, reduce]);
 
   const run = Math.floor(tick / PER_CYCLE);
+  const level = run % RUN_CYCLE;
   const step = tick % PER_CYCLE;
   const loaded = reduce ? CORE.length : step + 1; // how many pillars are on screen this run
 
-  const gaugeValue = (i: number) => (CORE.indexOf(i) < loaded ? valueFor(i, WEEKS - 1, run) : run > 0 ? valueFor(i, WEEKS - 1, run - 1) : valueFor(i, 0, 0));
+  const gaugeValue = (i: number) => (CORE.indexOf(i) < loaded ? valueFor(i, WEEKS - 1, level) : level > 0 ? valueFor(i, WEEKS - 1, level - 1) : valueFor(i, 0, 0));
   return (
     <div
       ref={ref}
@@ -95,7 +97,6 @@ export default function TrackDemo() {
         <div className="min-w-0 lg:pr-8">
           <div className="mb-4 flex items-center justify-between text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>
             <span>PILLAR SCORES · LAST {WEEKS} ANALYSES</span>
-            <span>RUN {run + 1}</span>
           </div>
           <div className="relative pl-7">
             {[0, 25, 50, 75, 100].map(v => (
@@ -128,7 +129,7 @@ export default function TrackDemo() {
               {SERIES.map((s, i) => CORE.includes(i) && (
                 <path
                   key={`${run}-${s.key}`}
-                  d={linePath(i, run)}
+                  d={linePath(i, level)}
                   fill="none"
                   stroke={PILLAR_CHART_COLORS[s.key]}
                   strokeWidth={1.5}
