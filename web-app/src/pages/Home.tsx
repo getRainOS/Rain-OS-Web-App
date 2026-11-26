@@ -434,7 +434,7 @@ function PillarBand() {
     <section className="relative z-10 py-28 border-t border-white/[0.06]">
       <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
         <Eyebrow>The pillars</Eyebrow>
-        <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">What we measure</h2>
+        <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">What we measure: four core pillars, plus two</h2>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-neutral-400">Four core scores, built on a detailed scoring model that reads your pages the way AI does, plus two extra scores for specific kinds of business.</p>
         <div className="mt-14 grid grid-cols-1 md:grid-cols-4 border-t border-b border-white/10">
           {CORE_PILLARS.map((c, i) => (
