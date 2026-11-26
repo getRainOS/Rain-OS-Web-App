@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion, useInView } from 'framer-motion';
-import { Sparkles, X, ArrowRight, ArrowUp } from 'lucide-react';
+import { Sparkles, X, ArrowRight, ArrowUp, Search } from 'lucide-react';
 
 // The hero: someone asks an AI a question, the answer lists a few businesses,
 // then the card tilts and either your result pops out ("cited") or a note
@@ -92,6 +92,8 @@ export default function HeroPrompt() {
   const [typed, setTyped] = useState(reduce ? SCENES[0].prompt.length : 0);
   const [shown, setShown] = useState(reduce ? 3 : 0);
   const s = SCENES[i];
+  // Google's AI Overview is laid out like a search page, not a chat, so it gets its own layout.
+  const isGoogle = s.engine === 'Google AI Overview';
 
   useEffect(() => {
     if (reduce || !started) return;
@@ -145,11 +147,18 @@ export default function HeroPrompt() {
                 initial={reduce ? false : { opacity: 0, y: 150 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                className="flex justify-end"
+                className={isGoogle ? 'flex justify-start' : 'flex justify-end'}
               >
-                <div className="max-w-[85%] rounded-2xl rounded-br-md bg-white/[0.07] px-4 py-2.5 text-[15px] text-white">
-                  {s.prompt}
-                </div>
+                {isGoogle ? (
+                  <div className="flex max-w-[85%] items-center gap-3 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2.5 text-[15px] text-white">
+                    <Search className="w-4 h-4 shrink-0 text-neutral-500" />
+                    {s.prompt}
+                  </div>
+                ) : (
+                  <div className="max-w-[85%] rounded-2xl rounded-br-md bg-white/[0.07] px-4 py-2.5 text-[15px] text-white">
+                    {s.prompt}
+                  </div>
+                )}
               </motion.div>
             )}
           </div>
@@ -178,6 +187,38 @@ export default function HeroPrompt() {
               )}
               {(phase === 'answer' || revealed) && (
                 <>
+                  {isGoogle ? (
+                    <>
+                      <div className="mb-2 flex items-center gap-1.5 text-[12px] text-neutral-400" style={MONO}>
+                        <Sparkles className="w-3 h-3" /> AI Overview
+                      </div>
+                      <p className="text-[14px] text-neutral-300">{s.intro}</p>
+                      <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3" style={{ transformStyle: 'preserve-3d' }}>
+                        {s.items.slice(0, shown).map((it, k) => {
+                          const pop = revealed && it.you;
+                          return (
+                            <motion.div
+                              key={`${i}-${it.name}`}
+                              initial={{ opacity: 0, y: 8 }}
+                              animate={{
+                                opacity: revealed && !it.you ? (s.found ? 0.45 : 0.7) : 1,
+                                y: 0,
+                                z: pop && !reduce ? 70 : 0,
+                                scale: pop ? 1.04 : 1,
+                              }}
+                              transition={{ type: 'spring', stiffness: 120, damping: 15 }}
+                              className={`rounded-xl border px-3.5 py-3 ${pop ? 'border-[#ffffff] bg-[#0f1a26]' : 'border-white/[0.07] bg-white/[0.02]'}`}
+                              style={pop ? { boxShadow: '0 24px 60px -12px rgba(255,255,255,0.55)' } : undefined}
+                            >
+                              <div className="text-[11px] text-neutral-500" style={MONO}>{k + 1} · {it.source}</div>
+                              <div className="mt-1 text-[14px] text-white font-medium leading-snug">{it.name}</div>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
+                    </>
+                  ) : (
+                  <>
                   <p className="text-[14px] text-neutral-300">{s.intro}</p>
                   <ol className="mt-3 space-y-2" style={{ transformStyle: 'preserve-3d' }}>
                     {s.items.slice(0, shown).map((it, k) => {
@@ -206,6 +247,8 @@ export default function HeroPrompt() {
                       );
                     })}
                   </ol>
+                </>
+                  )}
                 </>
               )}
             </div>
@@ -261,7 +304,7 @@ export default function HeroPrompt() {
                     <span className="inline-block w-[2px] h-[1em] bg-[#ffffff] align-[-2px] ml-0.5 animate-pulse" />
                   </>
                 ) : (
-                  <span className="text-neutral-600">Ask anything</span>
+                  <span className="text-neutral-600">{isGoogle ? 'Ask a follow-up' : 'Ask anything'}</span>
                 )}
               </div>
               <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${phase === 'typing' && typed === s.prompt.length ? 'bg-white text-black' : 'bg-white/10 text-neutral-500'}`}>
