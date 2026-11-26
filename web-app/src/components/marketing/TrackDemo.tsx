@@ -3,30 +3,26 @@ import { motion, useInView, useReducedMotion } from 'framer-motion';
 import { PILLAR_CHART_COLORS } from '@/lib/pillarColors.js';
 import { SERIES, WEEKS, valueAt } from './TrendCard';
 
-// Each pillar loads in turn: its line draws and its gauge moves to the score. After all
-// of them have loaded, the set holds, then loads again. Each later run scores higher.
-// Example data, labelled as such on the page.
+// The card plays once: each core pillar's line climbs and its gauge moves from its start
+// score to its end score, one pillar at a time, then the card holds. Example data,
+// labelled as such on the page.
 const SLOT_MS = 1400;
-// How far each pillar can rise over repeated runs. Gains taper off, so the scores level out
-// below 100 rather than piling up at the top.
-const MAX_GAIN = [22, 18, 24, 14, 20, 16];
+const MOVE_S = 1.8; // lines and gauges move over the same time
 const CORE = [0, 1, 2, 4]; // the four core pillars get gauges and lines
 const LANE_ONLY = [3, 5]; // online sellers and local business: shown faint, not drawn
-const PER_CYCLE = CORE.length + 1; // one slot per core pillar, then a short hold
-const RUN_CYCLE = 5; // runs repeat so each one shows a clear rise, not a plateau
-const MOVE_S = 1.8; // lines and gauges move over the same time
+const PER_CYCLE = CORE.length + 1; // one slot per core pillar, then a hold
+// Start and end score for each core pillar's climb.
+const RANGE: Record<number, [number, number]> = { 0: [36, 91], 1: [44, 84], 2: [34, 79], 4: [30, 73] };
 const W = 560;
 const H = 200;
 const PAD = 12;
 const MONO = "'Geist Mono', ui-monospace, monospace";
-const EASE = [0.22, 1, 0.36, 1] as const;
 
-const valueFor = (i: number, w: number, run: number) =>
-  Math.min(95, valueAt(SERIES[i].start, SERIES[i].end, w, i) + MAX_GAIN[i] * (1 - Math.exp(-run * 0.7)));
+const valueFor = (i: number, w: number) => valueAt(RANGE[i][0], RANGE[i][1], w, i);
 const x = (w: number) => PAD + (w / (WEEKS - 1)) * (W - PAD * 2);
 const y = (v: number) => PAD + (1 - v / 100) * (H - PAD * 2);
-const linePath = (i: number, run: number) =>
-  Array.from({ length: WEEKS }, (_, w) => `${w === 0 ? 'M' : 'L'} ${x(w)} ${y(valueFor(i, w, run))}`).join(' ');
+const linePath = (i: number) =>
+  Array.from({ length: WEEKS }, (_, w) => `${w === 0 ? 'M' : 'L'} ${x(w)} ${y(valueFor(i, w))}`).join(' ');
 
 const bandLabel = (v: number) => (v >= 75 ? 'Good' : v >= 50 ? 'Fair' : 'Needs Work');
 
@@ -37,7 +33,7 @@ export function Gauge({ label, value, color = '#ffffff', dim = false }: { label:
   const r = 48;
   const arc = `M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`;
   const transition = reduce ? { duration: 0 } : { duration: MOVE_S, ease: 'easeInOut' as const };
-  const t = (Math.PI * (1 - value / 100));
+  const t = Math.PI * (1 - value / 100);
   return (
     <figure className={`min-w-0 text-center ${dim ? 'opacity-30' : ''}`}>
       <svg viewBox="0 0 120 76" className="block h-auto w-full" role="img" aria-label={dim ? `${label}: not used in this example` : `${label}: ${Math.round(value)} out of 100`}>
@@ -73,16 +69,13 @@ export default function TrackDemo() {
   const [tick, setTick] = useState(0);
   useEffect(() => {
     if (reduce || !inView) return;
-    const id = window.setInterval(() => setTick(n => n + 1), SLOT_MS);
+    const id = window.setInterval(() => setTick(n => Math.min(n + 1, PER_CYCLE)), SLOT_MS);
     return () => clearInterval(id);
   }, [inView, reduce]);
 
-  const run = Math.floor(tick / PER_CYCLE);
-  const level = run % RUN_CYCLE;
-  const step = tick % PER_CYCLE;
-  const loaded = reduce ? CORE.length : step + 1; // how many pillars are on screen this run
+  const loaded = reduce ? CORE.length : Math.min(tick + 1, CORE.length); // pillars on screen so far
+  const gaugeValue = (i: number) => (CORE.indexOf(i) < loaded ? valueFor(i, WEEKS - 1) : valueFor(i, 0));
 
-  const gaugeValue = (i: number) => (CORE.indexOf(i) < loaded ? valueFor(i, WEEKS - 1, level) : level > 0 ? valueFor(i, WEEKS - 1, level - 1) : valueFor(i, 0, 0));
   return (
     <div
       ref={ref}
@@ -95,9 +88,7 @@ export default function TrackDemo() {
     >
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_200px] lg:gap-0 items-stretch">
         <div className="min-w-0 lg:pr-8">
-          <div className="mb-4 flex items-center justify-between text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>
-            <span>PILLAR SCORES · LAST {WEEKS} ANALYSES</span>
-          </div>
+          <div className="mb-4 text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>PILLAR SCORES</div>
           <div className="relative pl-7">
             {[0, 25, 50, 75, 100].map(v => (
               <span
@@ -108,13 +99,13 @@ export default function TrackDemo() {
                 {v}
               </span>
             ))}
-            <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full" role="img" aria-label="Score lines for each pillar over eight analyses">
+            <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full" role="img" aria-label="Score lines for each core pillar over eight analyses">
               {[0, 25, 50, 75, 100].map(v => (
                 <line key={v} x1={PAD} x2={W - PAD} y1={y(v)} y2={y(v)} stroke="rgba(255,255,255,0.06)" />
               ))}
               <defs>
-                {SERIES.map((s, i) => (
-                  <clipPath key={`clip-${run}-${s.key}`} id={`track-clip-${run}-${i}`}>
+                {CORE.map(i => (
+                  <clipPath key={`clip-${i}`} id={`track-clip-${i}`}>
                     <motion.rect
                       x={0}
                       y={0}
@@ -126,16 +117,16 @@ export default function TrackDemo() {
                   </clipPath>
                 ))}
               </defs>
-              {SERIES.map((s, i) => CORE.includes(i) && (
+              {CORE.map(i => (
                 <path
-                  key={`${run}-${s.key}`}
-                  d={linePath(i, level)}
+                  key={SERIES[i].key}
+                  d={linePath(i)}
                   fill="none"
-                  stroke={PILLAR_CHART_COLORS[s.key]}
+                  stroke={PILLAR_CHART_COLORS[SERIES[i].key]}
                   strokeWidth={1.5}
                   strokeLinejoin="round"
                   strokeLinecap="round"
-                  clipPath={`url(#track-clip-${run}-${i})`}
+                  clipPath={`url(#track-clip-${i})`}
                 />
               ))}
             </svg>
