@@ -364,16 +364,16 @@ function WaysList({ ways }: { ways: { label: string; href: string; note: string 
 
 function TrackRow() {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-20 md:pt-24 pb-20 md:pb-24">
-      <div>
+    <div className="pt-20 md:pt-24 pb-20 md:pb-24">
+      <div className="max-w-3xl">
         <div className="flex items-start gap-3">
-        <StepBadge n={3} />
-        <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.035em] leading-[1.02] text-white">See your progress over your most recent analysis</h2>
+          <StepBadge n={3} />
+          <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.035em] leading-[1.02] text-white">See your progress over your most recent analysis</h2>
         </div>
         <p className="mt-6 text-xl md:text-2xl font-semibold tracking-[-0.02em] text-white">See Each Pillar Move, One Analysis at a Time</p>
         <p className="mt-4 text-[15px] leading-relaxed text-neutral-400">Every analysis adds a point to each pillar, so you can see what changed after a fix.</p>
       </div>
-      <div className="lg:border-l lg:border-white/10 lg:pl-12">
+      <div className="mt-12">
         <TrackDemo />
       </div>
     </div>
