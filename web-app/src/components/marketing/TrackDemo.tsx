@@ -73,7 +73,15 @@ export default function TrackDemo() {
 
   const gaugeValue = (i: number) => (i < loaded ? valueFor(i, WEEKS - 1, run) : run > 0 ? valueFor(i, WEEKS - 1, run - 1) : valueFor(i, 0, 0));
   return (
-    <div ref={ref} className="rounded-md border border-white/[0.07] bg-black p-5">
+    <div
+      ref={ref}
+      className="rounded-md border border-white/[0.07] bg-black p-5"
+      style={{
+        backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px)',
+        backgroundSize: '16px 16px',
+        backgroundPosition: '-4px -4px',
+      }}
+    >
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_200px] lg:gap-0 items-stretch">
         <div className="min-w-0 lg:pr-8">
           <div className="mb-4 flex items-center justify-between text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>
