@@ -71,70 +71,61 @@ export default function TrackDemo() {
   const step = tick % PER_CYCLE;
   const loaded = reduce ? SERIES.length : step + 1; // how many pillars are on screen this run
 
-  const gaugeValue = (i: number) => (i < loaded ? valueFor(i, WEEKS - 1, run) : run > 0 ? valueFor(i, WEEKS - 1, run - 1) : valueFor(i, 0, 0));
   return (
-    <div ref={ref} className="rounded-md border border-white/[0.07] bg-black p-5">
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_200px] lg:gap-0 items-stretch">
-        <div className="min-w-0 lg:pr-8">
-          <div className="mb-4 flex items-center justify-between text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>
-            <span>PILLAR SCORES · LAST {WEEKS} ANALYSES</span>
-            <span>RUN {run + 1}</span>
-          </div>
-          <div className="relative pl-7">
-            {[0, 25, 50, 75, 100].map(v => (
-              <span
-                key={v}
-                className="absolute left-0 -translate-y-1/2 text-[10px] text-neutral-600 tabular-nums"
-                style={{ fontFamily: MONO, top: `${(y(v) / H) * 100}%` }}
-              >
-                {v}
-              </span>
-            ))}
-            <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full" role="img" aria-label="Score lines for each pillar over eight analyses">
-              {[0, 25, 50, 75, 100].map(v => (
-                <line key={v} x1={PAD} x2={W - PAD} y1={y(v)} y2={y(v)} stroke="rgba(255,255,255,0.06)" />
-              ))}
-              <defs>
-                {SERIES.map((s, i) => (
-                  <clipPath key={`clip-${run}-${s.key}`} id={`track-clip-${run}-${i}`}>
-                    <motion.rect
-                      x={0}
-                      y={0}
-                      height={H}
-                      initial={{ width: reduce ? W : 0 }}
-                      animate={{ width: i < loaded ? W : 0 }}
-                      transition={{ duration: 0.9, ease: 'easeInOut' }}
-                    />
-                  </clipPath>
-                ))}
-              </defs>
-              {SERIES.map((s, i) => (
-                <path
-                  key={`${run}-${s.key}`}
-                  d={linePath(i, run)}
-                  fill="none"
-                  stroke={PILLAR_CHART_COLORS[s.key]}
-                  strokeWidth={1.5}
-                  strokeLinejoin="round"
-                  strokeLinecap="round"
-                  clipPath={`url(#track-clip-${run}-${i})`}
+    <div ref={ref} className="grid grid-cols-1 gap-4 md:grid-cols-2 items-stretch">
+      <div className="flex h-full flex-col rounded-md border border-white/[0.07] bg-black p-4">
+        <div className="mb-3 text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>LATEST SCORE BY PILLAR</div>
+        <div className="grid grid-cols-2 gap-x-3 gap-y-3">
+          {CORE.map(i => {
+            const shown = i < loaded ? valueFor(i, WEEKS - 1, run) : run > 0 ? valueFor(i, WEEKS - 1, run - 1) : valueFor(i, 0, 0);
+            return <Gauge key={SERIES[i].key} label={SERIES[i].label} value={shown} color={PILLAR_CHART_COLORS[SERIES[i].key]} />;
+          })}
+        </div>
+      </div>
+      <div className="flex h-full flex-col rounded-md border border-white/[0.07] bg-black p-4">
+        <div className="mb-3 flex items-center justify-between text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>
+          <span>LAST {WEEKS} ANALYSES</span>
+          <span>RUN {run + 1}</span>
+        </div>
+        <svg viewBox={`0 0 ${W} ${H}`} className="min-h-[180px] w-full flex-1" role="img" aria-label="Score lines for each pillar over eight analyses">
+          {[0, 50, 100].map(v => (
+            <line key={v} x1={PAD} x2={W - PAD} y1={y(v)} y2={y(v)} stroke="rgba(255,255,255,0.06)" />
+          ))}
+          <defs>
+            {SERIES.map((s, i) => (
+              <clipPath key={`clip-${run}-${s.key}`} id={`track-clip-${run}-${i}`}>
+                <motion.rect
+                  x={0}
+                  y={0}
+                  height={H}
+                  initial={{ width: reduce ? W : 0 }}
+                  animate={{ width: i < loaded ? W : 0 }}
+                  transition={{ duration: 0.9, ease: 'easeInOut' }}
                 />
-              ))}
-            </svg>
-            <div className="mt-2 flex justify-between text-[10px] text-neutral-600" style={{ fontFamily: MONO }}>
-              <span>Analysis 1</span>
-              <span>Analysis {WEEKS}</span>
-            </div>
-          </div>
-        </div>
-        <div className="min-w-0 border-t border-white/10 pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
-          <div className="mb-4 text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>LATEST SCORE BY PILLAR</div>
-          <div className="grid grid-cols-2 gap-x-3 gap-y-4">
-            {CORE.map(i => (
-              <Gauge key={SERIES[i].key} label={SERIES[i].label} value={gaugeValue(i)} color={PILLAR_CHART_COLORS[SERIES[i].key]} />
+              </clipPath>
             ))}
-          </div>
-        </div>
+          </defs>
+          {SERIES.map((s, i) => (
+            <path
+              key={`${run}-${s.key}`}
+              d={linePath(i, run)}
+              fill="none"
+              stroke={PILLAR_CHART_COLORS[s.key]}
+              strokeWidth={1.5}
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              clipPath={`url(#track-clip-${run}-${i})`}
+            />
+          ))}
+        </svg>
+        <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-[12px] text-neutral-400 sm:grid-cols-3">
+          {SERIES.map(s => (
+            <li key={s.key} className="flex items-center gap-2">
+              <span className="inline-block h-2 w-2 rounded-full" style={{ background: PILLAR_CHART_COLORS[s.key] }} />
+              {s.label}
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
