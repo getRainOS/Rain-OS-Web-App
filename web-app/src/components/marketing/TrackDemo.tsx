@@ -25,24 +25,22 @@ const y = (v: number) => PAD + (1 - v / 100) * (H - PAD * 2);
 const linePath = (i: number, run: number) =>
   Array.from({ length: WEEKS }, (_, w) => `${w === 0 ? 'M' : 'L'} ${x(w)} ${y(valueFor(i, w, run))}`).join(' ');
 
-function Gauge({ label, value, color }: { label: string; value: number; color: string }) {
+function Gauge({ label, value }: { label: string; value: number; color?: string }) {
   const reduce = useReducedMotion();
   const cx = 60;
   const cy = 64;
   const r = 48;
   const arc = `M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`;
-  const angle = -90 + value * 1.8;
   const transition = reduce ? { duration: 0 } : { duration: 0.9, ease: 'easeInOut' as const };
   return (
     <figure className="min-w-0 text-center">
       <div className="mb-1 text-[11px] leading-tight text-neutral-400">{label}</div>
       <svg viewBox="0 0 120 76" className="block h-auto w-full" role="img" aria-label={`${label}: ${Math.round(value)} out of 100`}>
-        <path d={arc} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={8} strokeLinecap="round" />
-        <motion.path d={arc} fill="none" stroke={color} strokeWidth={8} strokeLinecap="round" animate={{ pathLength: value / 100 }} transition={transition} />
-        <motion.g style={{ transformOrigin: `${cx}px ${cy}px` }} animate={{ rotate: angle }} transition={transition}>
-          <path d={`M ${cx - 2.5} ${cy} L ${cx} ${cy - (r - 6)} L ${cx + 2.5} ${cy} Z`} fill={color} />
+        <path d={arc} fill="none" stroke="#262626" strokeWidth={2} strokeLinecap="round" />
+        <motion.path d={arc} fill="none" stroke="#ffffff" strokeWidth={2} strokeLinecap="round" animate={{ pathLength: value / 100 }} transition={transition} />
+        <motion.g style={{ transformOrigin: `${cx}px ${cy}px` }} animate={{ rotate: value * 1.8 }} transition={transition}>
+          <circle cx={cx - r} cy={cy} r={3.5} fill="#ffffff" />
         </motion.g>
-        <circle cx={cx} cy={cy} r={3.5} fill={color} />
       </svg>
       <div className="-mt-1 text-[20px] font-semibold tabular-nums text-white">{Math.round(value)}</div>
     </figure>
