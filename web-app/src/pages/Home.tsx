@@ -223,7 +223,7 @@ const ANALYSIS_WAYS = [
 const TOOLS = [
   {
     key: 'analysis',
-    eyebrow: 'Improve Your AI Readability',
+    eyebrow: 'Improve your AI readability',
     title: 'Get your Rain Score and pillar breakdown',
     body: 'One score, split into the pillars that matter for your kind of business, with the fixes for each gap.',
     ways: [],
@@ -232,7 +232,7 @@ const TOOLS = [
   },
   {
     key: 'citing',
-    eyebrow: 'Is AI Citing Me?',
+    eyebrow: 'Is AI citing me?',
     title: 'See which AI tools cite your pages',
     lead: 'AI Citation Monitor:',
     body: 'Whether AI links to your pages when customers ask. Which pages, and where you rank among the sources it uses.',
@@ -242,7 +242,7 @@ const TOOLS = [
   },
   {
     key: 'recommends',
-    eyebrow: 'Who AI Recommends',
+    eyebrow: 'Who AI recommends',
     title: 'See how often you are named, against competitors',
     body: 'Share of AI voice: how often each AI tool names your business compared with the competitors it names.',
     ways: [],
@@ -251,7 +251,7 @@ const TOOLS = [
   },
   {
     key: 'describes',
-    eyebrow: 'How AI Describes Me',
+    eyebrow: 'How AI describes me',
     title: 'See how AI describes your business',
     body: 'The wording each AI uses for your business, and whether it reads as positive, neutral or negative, so you know what to change.',
     ways: [],
@@ -522,7 +522,7 @@ function AnalysisFlow() {
   return (
     <div ref={ref} className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start pt-20 md:pt-24 pb-20 md:pb-24">
       <div>
-        <div className="mb-6 flex items-center gap-3"><StepBadge n={1} /><ToolTitle text="Run an Analysis" /></div>
+        <div className="mb-6 flex items-center gap-3"><StepBadge n={1} /><ToolTitle text="Run an analysis" /></div>
         {intro ? (
           <div>
             <div className="text-[12px] text-neutral-500" style={MONO}>FEATURES</div>
@@ -616,7 +616,7 @@ function ToolsSection({ lane }: { lane: number }) {
     <section className="relative z-10 py-28 border-t border-white/[0.06]">
       <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
         <Reveal>
-          <div className="flex items-start gap-4"><ToolMark /><h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">Long Term Monitoring</h2></div>
+          <div className="flex items-start gap-4"><ToolMark /><h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">Watch how AI answers change over time</h2></div>
           <p className="mt-6 text-neutral-400 text-lg leading-relaxed max-w-2xl">Keep checking what AI says and where it links, over time, so you see changes as they happen.</p>
         </Reveal>
         <div className="mt-16 md:mt-20">
