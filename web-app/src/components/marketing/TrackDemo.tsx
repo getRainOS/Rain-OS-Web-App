@@ -25,7 +25,7 @@ const y = (v: number) => PAD + (1 - v / 100) * (H - PAD * 2);
 const linePath = (i: number, run: number) =>
   Array.from({ length: WEEKS }, (_, w) => `${w === 0 ? 'M' : 'L'} ${x(w)} ${y(valueFor(i, w, run))}`).join(' ');
 
-function Gauge({ label, value }: { label: string; value: number; color?: string }) {
+function Gauge({ label, value, color = '#ffffff' }: { label: string; value: number; color?: string }) {
   const reduce = useReducedMotion();
   const cx = 60;
   const cy = 64;
@@ -42,7 +42,7 @@ function Gauge({ label, value }: { label: string; value: number; color?: string 
           cx={cx - r}
           cy={cy}
           r={3.5}
-          fill="#ffffff"
+          fill={color}
           initial={false}
           animate={{
             x: r * Math.cos(Math.PI * (1 - value / 100)) + r,
