@@ -38,9 +38,18 @@ function Gauge({ label, value }: { label: string; value: number; color?: string 
       <svg viewBox="0 0 120 76" className="block h-auto w-full" role="img" aria-label={`${label}: ${Math.round(value)} out of 100`}>
         <path d={arc} fill="none" stroke="#262626" strokeWidth={2} strokeLinecap="round" />
         <motion.path d={arc} fill="none" stroke="#ffffff" strokeWidth={2} strokeLinecap="round" animate={{ pathLength: value / 100 }} transition={transition} />
-        <motion.g style={{ transformOrigin: `${cx}px ${cy}px` }} animate={{ rotate: value * 1.8 }} transition={transition}>
-          <circle cx={cx - r} cy={cy} r={3.5} fill="#ffffff" />
-        </motion.g>
+        <motion.circle
+          cx={cx - r}
+          cy={cy}
+          r={3.5}
+          fill="#ffffff"
+          initial={false}
+          animate={{
+            x: r * Math.cos(Math.PI * (1 - value / 100)) + r,
+            y: -r * Math.sin(Math.PI * (1 - value / 100)),
+          }}
+          transition={transition}
+        />
       </svg>
       <div className="-mt-1 text-[20px] font-semibold tabular-nums text-white">{Math.round(value)}</div>
     </figure>
