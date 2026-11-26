@@ -611,7 +611,7 @@ export default function Dashboard() {
                       tick={{ fill: 'rgba(255,255,255,0.28)', fontSize: 11 }} tickLine={false} axisLine={false} />
                     <Tooltip content={<PillarLineTooltip pillars={activePillars} />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
                     {activePillars.map(p => (
-                      <Line key={p.key} type="monotone" dataKey={p.key} stroke={p.color} strokeWidth={2.25}
+                      <Line key={p.key} type="monotone" dataKey={p.key} stroke={p.color} strokeWidth={1.5}
                         strokeLinecap="round" strokeLinejoin="round"
                         isAnimationActive={false}
                         dot={{ r: piecePoints.length === 1 ? 5 : 3.5, strokeWidth: 0, fill: p.color }}

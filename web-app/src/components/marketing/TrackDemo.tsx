@@ -111,7 +111,7 @@ export default function TrackDemo() {
               d={linePath(i, run)}
               fill="none"
               stroke={PILLAR_CHART_COLORS[s.key]}
-              strokeWidth={2}
+              strokeWidth={1.5}
               strokeLinejoin="round"
               strokeLinecap="round"
               clipPath={`url(#track-clip-${run}-${i})`}
