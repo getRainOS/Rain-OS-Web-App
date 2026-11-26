@@ -69,7 +69,6 @@ export const BEFORE: PillarData = {
     { key: 'digital_authority', label: 'Digital Authority', value: 61 },
     { key: 'conversion_readiness', label: 'Conversion Readiness', value: 60 },
     { key: 'rag_readiness', label: 'Easy to Quote', value: 52 },
-    { key: 'local_presence', label: 'Local Presence', value: 57 },
   ] as Pillar[],
 };
 
@@ -84,7 +83,6 @@ export const AFTER: PillarData = {
     { key: 'digital_authority', label: 'Digital Authority', value: 70 },
     { key: 'conversion_readiness', label: 'Conversion Readiness', value: 72 },
     { key: 'rag_readiness', label: 'Easy to Quote', value: 66 },
-    { key: 'local_presence', label: 'Local Presence', value: 78 },
   ] as Pillar[],
 };
 
