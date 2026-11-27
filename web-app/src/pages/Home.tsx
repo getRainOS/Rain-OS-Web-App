@@ -624,6 +624,7 @@ function ToolsSection({ lane }: { lane: number }) {
           <div className="flex items-start gap-4"><ToolMark /><h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">Watch how AI answers change over time</h2></div>
           <p className="mt-6 text-neutral-400 text-lg leading-relaxed max-w-2xl">Keep checking what AI says and where it links, over time, so you see changes as they happen.</p>
         </Reveal>
+        <TrackExample index={lane} inline />
         <div className="mt-16 md:mt-20">
           {TOOLS.slice(1).map((t, i) => {
             const k = i + 1;
@@ -654,7 +655,6 @@ function ToolsSection({ lane }: { lane: number }) {
             );
           })}
         </div>
-        <TrackExample index={lane} inline />
       </div>
     </section>
     </>
