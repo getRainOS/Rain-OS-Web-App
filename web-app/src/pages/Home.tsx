@@ -892,8 +892,8 @@ export default function Home() {
               transition={{ duration: 0.9, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
             >
               <HeroPrompt />
-              <p className="mt-4 text-center text-[12px] text-neutral-500">
-                Illustrative example, not a real AI answer.
+              <p className="mt-4 text-right text-[12px] text-neutral-500">
+                Illustrative example
               </p>
             </motion.div>
           </div>
