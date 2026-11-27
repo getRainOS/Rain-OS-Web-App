@@ -236,43 +236,65 @@ export function LaneSection({ index, onPick }: { index: number; onPick: (i: numb
 }
 
 // The Track block: its heading, and the sample question for the chosen lane, in a frame.
-// The app's tracked-questions row: status, past weekly results and the next check.
-// One state per lane, so each lane's example shows a different kind of result.
-const TRACK_STATE: { status: string; tone: 'good' | 'bad' | 'warn'; history: boolean[]; next: string }[] = [
-  { status: 'Cited', tone: 'good', history: [false, true, true, true], next: 'Dec 3' },
-  { status: 'Cited? confirming', tone: 'warn', history: [false, false, true, true], next: 'Dec 3' },
-  { status: 'Not cited', tone: 'bad', history: [true, true, false, false], next: 'Dec 3' },
-  { status: 'Cited', tone: 'good', history: [false, true, true, true], next: 'Dec 3' },
-  { status: 'Not cited', tone: 'bad', history: [true, false, false, false], next: 'Dec 3' },
+// Tracked weekly questions, three per lane, in the app's row format: status, past weekly
+// results and the next check. Example data, labelled as illustrative above the cards.
+type TrackRow = { q: string; status: string; tone: 'good' | 'bad' | 'warn'; history: boolean[] };
+const TRACK_ROWS: TrackRow[][] = [
+  [ // Local businesses
+    { q: 'best dentist in Austin for Invisalign', status: 'Cited', tone: 'good', history: [false, true, true, true] },
+    { q: 'emergency dentist near me open Sunday', status: 'Cited? confirming', tone: 'warn', history: [false, false, true, true] },
+    { q: 'dentist in Austin that takes new patients', status: 'Not cited', tone: 'bad', history: [true, true, false, false] },
+  ],
+  [ // Online sellers
+    { q: 'best waterproof travel wallet under $80', status: 'Cited', tone: 'good', history: [false, true, true, true] },
+    { q: 'durable travel wallet with RFID blocking', status: 'Not cited', tone: 'bad', history: [true, false, false, false] },
+    { q: 'travel wallet for a carry-on under $50', status: 'Cited? confirming', tone: 'warn', history: [false, false, true, true] },
+  ],
+  [ // Writers and marketers
+    { q: 'best newsletter tool for a solo writer', status: 'Cited', tone: 'good', history: [false, true, true, true] },
+    { q: 'how to price a paid newsletter', status: 'Not cited', tone: 'bad', history: [true, false, false, false] },
+    { q: 'newsletter platform with a free tier', status: 'Cited? confirming', tone: 'warn', history: [false, false, true, true] },
+  ],
+  [ // Developers
+    { q: 'best framework for a small API on Cloudflare Workers', status: 'Cited', tone: 'good', history: [false, true, true, true] },
+    { q: 'lightweight router for Cloudflare Workers', status: 'Cited? confirming', tone: 'warn', history: [false, false, true, true] },
+    { q: 'typed API framework for Node', status: 'Not cited', tone: 'bad', history: [true, true, false, false] },
+  ],
+  [ // Vibe coders
+    { q: 'easiest way to add a booking page to a Lovable app', status: 'Not cited', tone: 'bad', history: [true, false, false, false] },
+    { q: 'booking widget for a no-code app', status: 'Cited? confirming', tone: 'warn', history: [false, false, true, true] },
+    { q: 'scheduling app to embed in a Lovable site', status: 'Cited', tone: 'good', history: [false, true, true, true] },
+  ],
 ];
 const TONE_TEXT = { good: 'text-white', bad: 'text-[#F87171]', warn: 'text-[#FBBF24]' } as const;
 
 export function TrackExample({ index, inline = false }: { index: number; inline?: boolean }) {
-  const ex = EXAMPLES[index];
-  const st = TRACK_STATE[index];
+  const rows = TRACK_ROWS[index];
   const inner = inline ? '' : 'max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10';
   return (
     <div className={inline ? 'mt-16 md:mt-20 mb-16 md:mb-20' : 'relative z-10 py-28 border-t border-white/[0.06]'}>
       <div className={inner}>
         <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Tracked weekly</div>
-        <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Track the type of questions asked of your business</h2>
-        <p className="mt-4 text-neutral-400 max-w-2xl">And make changes to increase your chances of answering them.</p>
-        <motion.div className="mt-8 rounded-xl border border-white/10 bg-[#0a0a0a] p-5 md:p-6" key={ex.id} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.4 }}>
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="min-w-0">
-              <div className="text-[15px] text-white">{ex.question}</div>
-              <div className="mt-2 flex items-center gap-1.5" aria-label="Past weekly results">
-                {st.history.map((cited, d) => (
-                  <span key={d} className={`h-2 w-2 rounded-full ${cited ? 'bg-white' : 'bg-white/20'}`} />
-                ))}
+        <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Track the questions that matter, every week</h2>
+        <p className="mt-4 text-neutral-400 max-w-2xl">Re-check the questions your customers ask AI, and get an email when AI starts or stops citing you. Included with Pro and Business.</p>
+        <div className="mt-8 divide-y divide-white/10 rounded-xl border border-white/10 bg-[#0a0a0a]">
+          {rows.map((r, n) => (
+            <div key={`${index}-${n}`} className="flex flex-col gap-3 p-5 md:flex-row md:items-center md:justify-between md:p-6">
+              <div className="min-w-0">
+                <div className="text-[15px] text-white">{r.q}</div>
+                <div className="mt-2 flex items-center gap-1.5" aria-label="Past weekly results">
+                  {r.history.map((cited, d) => (
+                    <span key={d} className={`h-2 w-2 rounded-full ${cited ? 'bg-white' : 'bg-white/20'}`} />
+                  ))}
+                </div>
+              </div>
+              <div className="shrink-0 text-left md:text-right">
+                <div className={`text-[13px] font-medium ${TONE_TEXT[r.tone]}`}>{r.status}</div>
+                <div className="mt-1 text-[12px] text-neutral-500" style={MONO}>Next check Dec 3</div>
               </div>
             </div>
-            <div className="shrink-0 text-left md:text-right">
-              <div className={`text-[13px] font-medium ${TONE_TEXT[st.tone]}`}>{st.status}</div>
-              <div className="mt-1 text-[12px] text-neutral-500" style={MONO}>Next check {st.next}</div>
-            </div>
-          </div>
-        </motion.div>
+          ))}
+        </div>
       </div>
     </div>
   );
