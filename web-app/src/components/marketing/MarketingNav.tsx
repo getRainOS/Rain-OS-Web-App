@@ -39,7 +39,6 @@ const SOLUTIONS = [
 
 const MAIN_LINKS = [
   { label: 'AI Readability', href: '/ai-readability' },
-  { label: 'How we score', href: '/how-we-score' },
   { label: 'Blog', href: '/blog' },
   { label: 'Docs', href: '/docs' },
   { label: 'Pricing', href: '/pricing' },
