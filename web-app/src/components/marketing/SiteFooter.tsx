@@ -4,13 +4,20 @@ import { Link } from 'react-router-dom';
 
 const COLUMNS = [
   {
-    title: 'Product',
+    title: 'Analysis tools',
     links: [
       { label: 'Content Optimizer', to: '/analyze' },
       { label: 'URL Scanner', to: '/url-scanner' },
-      { label: 'Citation Monitor', to: '/citation-monitor' },
       { label: 'Repo Analysis', to: '/repo-analysis' },
       { label: 'Pricing', to: '/pricing' },
+    ],
+  },
+  {
+    title: 'Monitoring tools',
+    links: [
+      { label: 'Citation Monitor', to: '/citation-monitor' },
+      { label: 'Share of Voice', to: '/share-of-voice' },
+      { label: 'How AI describes you', to: '/brand-visibility' },
     ],
   },
   {
@@ -47,7 +54,7 @@ export default function SiteFooter() {
   return (
     <footer className="relative z-10 border-t border-white/[0.07] bg-black">
       <div className="max-w-[1440px] mx-auto px-6 pt-16 pb-10">
-        <div className="grid grid-cols-2 md:grid-cols-[1.4fr_repeat(4,1fr)] gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-[1.4fr_repeat(5,1fr)] gap-10">
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="block w-fit leading-none text-white" aria-label="rain OS home">
               <Logo size={22} />
