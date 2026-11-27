@@ -9,10 +9,10 @@ import SiteFooter from '@/components/marketing/SiteFooter';
 const PILLARS = [
   { name: 'AI Readability', what: 'How easily AI can parse, break up and extract answers from your content.', measured: 'Sentence length, passive voice, vague words, heading count, question and answer structure.', judged: 'Whether each section makes sense on its own and whether sentences are quotable.' },
   { name: 'Digital Authority', what: 'Whether the content shows expertise, trust and sources AI can check.', measured: 'Figures (numbers, percentages, dates) per 100 words, and links to outside sources.', judged: 'Entity clarity, topical depth, freshness and social proof.' },
-  { name: 'Conversion Readiness', what: 'Whether the content makes its next step clear to the reader.', measured: 'None. This pillar is judged.', judged: 'How clear the next step and the value are.' },
+  { name: 'Conversion Readiness', what: 'Whether the content makes its next step clear to the reader.', measured: 'No rule-based checks. Judged by AI.', judged: 'How clear the next step and the value are.' },
   { name: 'Easy to Quote', what: 'Whether individual passages can be lifted into an answer without losing their meaning.', measured: 'Answers that open a section, and question structure.', judged: 'Whether a passage stands on its own.' },
-  { name: 'Product Discoverability', what: 'For online sellers: whether product details are clear to AI.', measured: 'None. This pillar is judged.', judged: 'Price, variants and availability clarity.' },
-  { name: 'Local Presence', what: 'For local businesses: whether location and listing details are clear.', measured: 'None. This pillar is judged.', judged: 'Location, hours, service area and review signals.' },
+  { name: 'Product Discoverability', what: 'For online sellers: whether product details are clear to AI.', measured: 'No rule-based checks. Judged by AI.', judged: 'Price, variants and availability clarity.' },
+  { name: 'Local Presence', what: 'For local businesses: whether location and listing details are clear.', measured: 'No rule-based checks. Judged by AI.', judged: 'Location, hours, service area and review signals.' },
 ];
 
 const WEIGHTS = [
@@ -55,7 +55,7 @@ export default function HowWeScorePage() {
 
         <h2 className="mt-14 text-2xl font-semibold">What each pillar covers</h2>
         <p className="mt-3 text-neutral-400 leading-relaxed">
-          Some parts of each pillar are measured directly from your text. Others are judged by an AI model, which can vary a little between runs. We label both so you can tell which is which.
+          Some checks are rule-based: the same text always gives the same result, such as heading count or figures per 100 words. Others are judged by an AI model, so the score can shift a little between runs. Each pillar score combines both.
         </p>
         <div className="mt-8 space-y-6">
           {PILLARS.map(p => (
@@ -63,8 +63,8 @@ export default function HowWeScorePage() {
               <div className="text-[16px] font-semibold text-white">{p.name}</div>
               <p className="mt-2 text-[14px] text-neutral-400">{p.what}</p>
               <div className="mt-4 grid gap-4 md:grid-cols-2 text-[13px]">
-                <div><div className="text-[11px] uppercase tracking-[0.12em] text-neutral-500">Measured</div><p className="mt-1 text-neutral-300">{p.measured}</p></div>
-                <div><div className="text-[11px] uppercase tracking-[0.12em] text-neutral-500">Judged</div><p className="mt-1 text-neutral-300">{p.judged}</p></div>
+                <div><div className="text-[11px] uppercase tracking-[0.12em] text-neutral-500">Checked by rule</div><p className="mt-1 text-neutral-300">{p.measured}</p></div>
+                <div><div className="text-[11px] uppercase tracking-[0.12em] text-neutral-500">Judged by AI</div><p className="mt-1 text-neutral-300">{p.judged}</p></div>
               </div>
             </div>
           ))}
