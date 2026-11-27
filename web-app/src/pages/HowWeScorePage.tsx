@@ -72,8 +72,7 @@ export default function HowWeScorePage() {
 
         <h2 className="mt-14 text-2xl font-semibold">What the score does not show</h2>
         <ul className="mt-4 list-disc space-y-3 pl-5 text-neutral-400 leading-relaxed">
-          <li>The weights are our choice. We have not yet tested whether a higher score goes with more citations.</li>
-          <li>Citations and mentions depend on the question, the engine and what else is online. No score can guarantee them.</li>
+          <li>The weights are our choice, not a standard.</li>
           <li>Judged parts can change slightly between runs. Re-checking the same text will not always give the same number.</li>
         </ul>
       </main>
