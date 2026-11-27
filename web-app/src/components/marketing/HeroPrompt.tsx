@@ -122,7 +122,7 @@ export default function HeroPrompt() {
       <motion.div
         className="relative rounded-2xl border border-white/10 bg-[#0b0b0c]/95 shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] text-left"
         style={{ transformStyle: 'preserve-3d' }}
-        animate={revealed && !reduce ? { rotateX: 9, rotateY: -7, y: -6 } : { rotateX: 0, rotateY: 0, y: 0 }}
+        animate={{ rotateX: 0, rotateY: 0, y: 0 }}
         transition={{ type: 'spring', stiffness: 70, damping: 16 }}
       >
         {/* Top bar: which AI is answering */}
@@ -211,26 +211,6 @@ export default function HeroPrompt() {
             </div>
           </div>
 
-          {/* Not in the answer */}
-          <AnimatePresence>
-            {revealed && !s.found && (
-              <motion.div
-                initial={{ opacity: 0, y: 14, z: 0 }} animate={{ opacity: 1, y: 0, z: reduce ? 0 : 50 }} exit={{ opacity: 0 }}
-                transition={{ type: 'spring', stiffness: 140, damping: 16, delay: 0.15 }}
-                className="mt-5 flex items-center gap-3 rounded-xl border border-amber-400/40 bg-amber-400/[0.08] px-4 py-3"
-                style={{ boxShadow: '0 20px 50px -14px rgba(245,166,35,0.35)' }}
-              >
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-400/20">
-                  <X className="w-3.5 h-3.5 text-amber-300" />
-                </span>
-                <div className="text-[14px] text-amber-100">
-                  <strong className="font-medium">Not named in this answer.</strong>
-                  <span className="text-amber-200/70"> Check your site to see what to change.</span>
-                </div>
-                <ArrowRight className="w-4 h-4 text-amber-300 ml-auto hidden sm:block" />
-              </motion.div>
-            )}
-          </AnimatePresence>
 
 
           {/* The box the question is typed into */}
