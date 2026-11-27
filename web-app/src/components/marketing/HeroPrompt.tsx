@@ -181,13 +181,13 @@ export default function HeroPrompt() {
                   <p className="text-[14px] text-neutral-300">{s.intro}</p>
                   <ol className="mt-3 space-y-2" style={{ transformStyle: 'preserve-3d' }}>
                     {s.items.slice(0, shown).map((it, k) => {
-                      const pop = revealed && it.you;
+                      const pop = false; // no business is singled out as the winner
                       return (
                         <motion.li
                           key={`${i}-${it.name}`}
                           initial={{ opacity: 0, y: 8 }}
                           animate={{
-                            opacity: revealed && !it.you ? (s.found ? 0.45 : 0.7) : 1,
+                            opacity: 1,
                             y: 0,
                             z: pop && !reduce ? 70 : 0,
                             scale: pop ? 1.04 : 1,
@@ -224,10 +224,24 @@ export default function HeroPrompt() {
                   <X className="w-3.5 h-3.5 text-amber-300" />
                 </span>
                 <div className="text-[14px] text-amber-100">
-                  <strong className="font-medium">You're not in this answer.</strong>
-                  <span className="text-amber-200/70"> rain OS shows you why, and what to fix to improve your chances.</span>
+                  <strong className="font-medium">This answer doesn't name you yet.</strong>
+                  <span className="text-amber-200/70"> Rain OS shows what to change to make your content easier for AI to read.</span>
                 </div>
                 <ArrowRight className="w-4 h-4 text-amber-300 ml-auto hidden sm:block" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* What the product does: an example readability change, not an AI answer */}
+          <AnimatePresence>
+            {revealed && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="mt-5 rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3"
+              >
+                <div className="text-[11px] text-neutral-500" style={MONO}>EXAMPLE READABILITY SCORE</div>
+                <div className="mt-1 text-[14px] text-neutral-200">58 → 74 after changes to structure, answers and figures</div>
               </motion.div>
             )}
           </AnimatePresence>
