@@ -6,10 +6,10 @@ const COLUMNS = [
   {
     title: 'Product',
     links: [
-      { label: 'Content Optimizer', to: '/content-writers' },
-      { label: 'URL Scanner', to: '/ai-readability' },
-      { label: 'Citation Monitor', to: '/#product' },
-      { label: 'Repo Analysis', to: '/vibe-coders' },
+      { label: 'Content Optimizer', to: '/analyze' },
+      { label: 'URL Scanner', to: '/url-scanner' },
+      { label: 'Citation Monitor', to: '/citation-monitor' },
+      { label: 'Repo Analysis', to: '/repo-analysis' },
       { label: 'Pricing', to: '/pricing' },
     ],
   },
