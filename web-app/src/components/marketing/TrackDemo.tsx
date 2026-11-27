@@ -75,6 +75,8 @@ export default function TrackDemo() {
 
   const loaded = reduce ? CORE.length : Math.min(tick + 1, CORE.length); // pillars on screen so far
   const gaugeValue = (i: number) => (CORE.indexOf(i) < loaded ? valueFor(i, WEEKS - 1) : valueFor(i, 0));
+  // The general scoring weights the four core pillars equally, so overall is their average.
+  const overall = Math.round(CORE.reduce((n, i) => n + gaugeValue(i), 0) / CORE.length);
 
   return (
     <div
@@ -89,6 +91,10 @@ export default function TrackDemo() {
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_200px] lg:gap-0 items-stretch">
         <div className="min-w-0 lg:pr-8">
           <div className="mb-4 text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>PILLAR SCORES</div>
+          <div className="mb-5 flex items-baseline gap-2">
+            <span className="text-4xl font-semibold tabular-nums text-white">{overall}</span>
+            <span className="text-[13px] text-neutral-500">/100 overall</span>
+          </div>
           <div className="relative pl-7">
             {[0, 25, 50, 75, 100].map(v => (
               <span
