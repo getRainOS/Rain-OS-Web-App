@@ -578,6 +578,9 @@ function ToolsSection({ lane }: { lane: number }) {
             See what AI can read. Fix what it can’t.
           </h2></div>
         </Reveal>
+        <Reveal>
+          <p className="mt-4 max-w-2xl text-[13px] text-neutral-500">The examples below are illustrative, not real results.</p>
+        </Reveal>
         <AnalysisFlow />
         <div className="border-t border-white/10">
           {TOOLS.slice(0, 1).map((t, k) => (

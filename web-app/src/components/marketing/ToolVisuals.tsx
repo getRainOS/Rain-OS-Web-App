@@ -48,7 +48,6 @@ export default function AppShot({ src, alt, accent }: { src: string; alt: string
           />
         )}
       </div>
-      <IllustrativeTag />
     </div>
   );
 }
@@ -282,7 +281,6 @@ export function CitationPanel({ data }: { data: CitingData }) {
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <div className="truncate text-[15px] font-semibold text-white">{data.business}</div>
-          <div className="text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>ILLUSTRATIVE EXAMPLE</div>
         </div>
         <span className="shrink-0 rounded-full border border-white/20 px-2 py-0.5 text-[11px] text-neutral-300">{data.laneName}</span>
       </div>
@@ -384,7 +382,6 @@ export function ShareCard({ data }: { data: ShareData }) {
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <div className="truncate text-[15px] font-semibold text-white">{data.business}</div>
-          <div className="text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>ILLUSTRATIVE EXAMPLE</div>
         </div>
         <span className="shrink-0 rounded-full border border-white/20 px-2 py-0.5 text-[11px] text-neutral-300">{data.laneName}</span>
       </div>
@@ -464,7 +461,6 @@ export function DescribeCard({ data }: { data: DescribeData }) {
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <div className="truncate text-[15px] font-semibold text-white">{data.business}</div>
-          <div className="text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>ILLUSTRATIVE EXAMPLE</div>
         </div>
         <span className="shrink-0 rounded-full border border-white/20 px-2 py-0.5 text-[11px] text-neutral-300">{data.laneName}</span>
       </div>
