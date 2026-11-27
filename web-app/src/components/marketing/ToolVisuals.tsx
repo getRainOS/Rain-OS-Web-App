@@ -353,24 +353,32 @@ export function CitationRotation() {
 
 // Who AI Recommends: how often the business is named across a few prompts, against
 // competitors. Local is the app's saved check; other lanes are illustrative.
-export type ShareData = { laneName: string; business: string; question: string; named: string; share: number; rivals: { name: string; share: number }[]; example: boolean };
+// Share of voice, as the app shows it: each brand's share of all brand mentions across the
+// three answers (a brand is counted once per answer it appears in), the number of answers
+// that named your business, and each brand's average position (1 means named first).
+// Example data, labelled as illustrative on every card.
+export type ShareBrand = { name: string; mentions: number; avgPosition: number; you?: boolean };
+export type ShareData = { laneName: string; business: string; question: string; brands: ShareBrand[]; answers: number; example: boolean };
 
 export const SHARE_LANES: ShareData[] = [
-  { laneName: 'Local businesses', business: 'Bright Smile Dental', question: 'best dentist in Austin for Invisalign', named: '2 of 3', share: 67,
-    rivals: [{ name: 'Austin Smile Studio', share: 33 }], example: false },
-  { laneName: 'Online sellers', business: 'Harbor Wallet Co.', question: 'best waterproof travel wallet under $80', named: '1 of 3', share: 33,
-    rivals: [{ name: 'Bellroy', share: 45 }, { name: 'Bilum', share: 22 }], example: true },
-  { laneName: 'Writers & marketers', business: 'Quillpost', question: 'best newsletter tool for a solo writer', named: '2 of 3', share: 67,
-    rivals: [{ name: 'Substack', share: 33 }], example: true },
-  { laneName: 'Developers', business: 'Tinyroute', question: 'best framework for a small API on Cloudflare Workers', named: '2 of 3', share: 58,
-    rivals: [{ name: 'Hono', share: 42 }], example: true },
-  { laneName: 'Vibe coders', business: 'Bookly', question: 'easiest way to add a booking page to a Lovable app', named: '0 of 3', share: 0,
-    rivals: [{ name: 'Calendly', share: 67 }, { name: 'Cal.com', share: 33 }], example: true },
+  { laneName: 'Local businesses', business: 'Bright Smile Dental', question: 'best dentist in Austin for Invisalign', answers: 3, example: true,
+    brands: [{ name: 'Bright Smile Dental', mentions: 2, avgPosition: 2.0, you: true }, { name: 'Austin Smile Studio', mentions: 3, avgPosition: 1.3 }] },
+  { laneName: 'Online sellers', business: 'Harbor Wallet Co.', question: 'best waterproof travel wallet under $80', answers: 3, example: true,
+    brands: [{ name: 'Harbor Wallet Co.', mentions: 2, avgPosition: 2.5, you: true }, { name: 'Bellroy', mentions: 3, avgPosition: 1.3 }, { name: 'Bilum', mentions: 1, avgPosition: 3.0 }] },
+  { laneName: 'Writers & marketers', business: 'Quillpost', question: 'best newsletter tool for a solo writer', answers: 3, example: true,
+    brands: [{ name: 'Quillpost', mentions: 3, avgPosition: 1.7, you: true }, { name: 'Substack', mentions: 2, avgPosition: 2.5 }] },
+  { laneName: 'Developers', business: 'Tinyroute', question: 'best framework for a small API on Cloudflare Workers', answers: 3, example: true,
+    brands: [{ name: 'Tinyroute', mentions: 2, avgPosition: 2.5, you: true }, { name: 'Hono', mentions: 3, avgPosition: 1.3 }] },
+  { laneName: 'Vibe coders', business: 'Bookly', question: 'easiest way to add a booking page to a Lovable app', answers: 3, example: true,
+    brands: [{ name: 'Bookly', mentions: 0, avgPosition: 0, you: true }, { name: 'Calendly', mentions: 3, avgPosition: 1.0 }, { name: 'Cal.com', mentions: 2, avgPosition: 2.0 }] },
 ];
 
 export function ShareCard({ data }: { data: ShareData }) {
   const reduce = useReducedMotion();
-  const rows = [{ name: data.business, share: data.share, you: true }, ...data.rivals.map(r => ({ ...r, you: false }))];
+  const total = data.brands.reduce((n, b) => n + b.mentions, 0);
+  const rows = data.brands.map(b => ({ ...b, share: total ? Math.round((b.mentions / total) * 100) : 0 }));
+  const top = Math.max(...rows.map(r => r.share), 1);
+  const you = rows.find(r => r.you)!;
   return (
     <div className="rounded-xl border border-white/10 bg-[#0a0a0a] p-6 md:p-8 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)]">
       <div className="flex items-center justify-between gap-3">
@@ -384,35 +392,42 @@ export function ShareCard({ data }: { data: ShareData }) {
       <div className="mt-6 text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>QUESTION</div>
       <div className="mt-1 text-[16px] text-white">{data.question}</div>
 
-      <div className="mt-6">
-        <div className="text-[12px] text-neutral-500" style={{ fontFamily: MONO }}>NAMED IN</div>
-        <motion.div
-          className="mt-1 text-6xl font-semibold tabular-nums text-white"
+      <div className="mt-6 flex items-end gap-4">
+        <motion.span
+          className="text-6xl font-semibold tabular-nums text-white"
           initial={reduce ? false : { opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: EASE }}
         >
-          {data.named}
-        </motion.div>
-        <div className="mt-1 text-[13px] text-neutral-500">prompts that named this business</div>
+          {you.share}%
+        </motion.span>
+        <span className="pb-2 text-[13px] text-neutral-500">Share of voice: your share of all brand mentions</span>
       </div>
+      <div className="mt-1 text-[13px] text-neutral-400">Mentioned in {you.mentions} of {data.answers} answers</div>
 
-      <div className="mt-7 space-y-4">
-        {rows.map((r, i) => (
-          <div key={r.name}>
-            <div className="mb-1.5 flex justify-between text-[13px]">
-              <span className={r.you ? 'text-white' : 'text-neutral-500'}>{r.name}</span>
-              <span className="tabular-nums text-neutral-300">{r.share}%</span>
-            </div>
-            <div className="h-2 w-full overflow-hidden rounded-full bg-white/[0.06]">
-              <motion.div
-                className={`h-full rounded-full ${r.you ? 'bg-white' : 'bg-white/25'}`}
-                style={{ width: `${r.share}%` }}
-                initial={reduce ? false : { scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ duration: 0.8, delay: 0.15 + i * 0.12, ease: EASE }}
-              />
-            </div>
+      <div className="mt-7">
+        <div className="grid grid-cols-[1fr_1.4fr_auto] gap-4 border-b border-white/10 pb-2 text-[11px] text-neutral-500" style={{ fontFamily: MONO }}>
+          <span>BRAND</span><span>SHARE OF VOICE</span><span>AVG. POSITION</span>
+        </div>
+        {rows.map(r => (
+          <div key={r.name} className="grid grid-cols-[1fr_1.4fr_auto] items-center gap-4 border-b border-white/[0.06] py-3">
+            <span className={`flex items-center gap-2 text-[13px] ${r.you ? 'text-white' : 'text-neutral-400'}`}>
+              {r.name}
+              {r.you && <span className="rounded-full border border-white/30 px-1.5 py-px text-[10px] text-white">You</span>}
+            </span>
+            <span className="flex items-center gap-3">
+              <span className="h-2 flex-1 overflow-hidden rounded-full bg-white/[0.06]">
+                <motion.span
+                  className={`block h-full rounded-full ${r.you ? 'bg-white' : 'bg-white/25'}`}
+                  style={{ width: `${(r.share / top) * 100}%`, originX: 0 }}
+                  initial={reduce ? false : { scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ duration: 0.9, ease: EASE }}
+                />
+              </span>
+              <span className="w-9 text-right text-[12px] tabular-nums text-neutral-300">{r.share}%</span>
+            </span>
+            <span className="w-12 text-right text-[12px] tabular-nums text-neutral-400">{r.mentions ? r.avgPosition.toFixed(1) : '—'}</span>
           </div>
         ))}
       </div>
@@ -420,8 +435,6 @@ export function ShareCard({ data }: { data: ShareData }) {
   );
 }
 
-// How AI Describes Me: whether the business is named, its tone, and the wording an AI
-// used. Local is the app's saved check; other lanes are illustrative.
 export type DescribeData = { laneName: string; business: string; question: string; mentioned: boolean; tone: 'Positive' | 'Neutral' | 'Negative' | null; engine: string; wording: string; example: boolean };
 
 export const DESCRIBE_LANES: DescribeData[] = [
