@@ -435,25 +435,26 @@ export function ShareCard({ data }: { data: ShareData }) {
   );
 }
 
-export type DescribeData = { laneName: string; business: string; question: string; mentioned: boolean; tone: 'Positive' | 'Neutral' | 'Negative' | null; engine: string; wording: string; example: boolean };
+export type DescribeData = { laneName: string; business: string; question: string; mentioned: boolean; tone: 'Positive' | 'Neutral' | 'Negative' | 'Mixed' | null; engine: string; wording: string; example: boolean };
 
 export const DESCRIBE_LANES: DescribeData[] = [
   { laneName: 'Local businesses', business: 'Bright Smile Dental', question: 'best dentist in Austin for Invisalign', mentioned: true, tone: 'Positive', engine: 'Gemini',
     wording: 'Described as modern and transparent on pricing.', example: false },
-  { laneName: 'Online sellers', business: 'Harbor Wallet Co.', question: 'best waterproof travel wallet under $80', mentioned: true, tone: 'Positive', engine: 'ChatGPT',
-    wording: 'Known for durable, waterproof wallets with a five-year warranty.', example: true },
+  { laneName: 'Online sellers', business: 'Harbor Wallet Co.', question: 'best waterproof travel wallet under $80', mentioned: true, tone: 'Negative', engine: 'ChatGPT',
+    wording: 'Well made and waterproof, but reviewers say the zip sticks in cold weather.', example: true },
   { laneName: 'Writers & marketers', business: 'Quillpost', question: 'best newsletter tool for a solo writer', mentioned: true, tone: 'Neutral', engine: 'Perplexity',
     wording: 'A simple newsletter tool with flat pricing, lighter on automation.', example: true },
-  { laneName: 'Developers', business: 'Tinyroute', question: 'best framework for a small API on Cloudflare Workers', mentioned: true, tone: 'Positive', engine: 'Claude',
-    wording: 'A small, typed router built on Hono for Cloudflare Workers.', example: true },
+  { laneName: 'Developers', business: 'Tinyroute', question: 'best framework for a small API on Cloudflare Workers', mentioned: true, tone: 'Mixed', engine: 'Claude',
+    wording: 'Fast and typed, but a young project with few production examples.', example: true },
   { laneName: 'Vibe coders', business: 'Bookly', question: 'easiest way to add a booking page to a Lovable app', mentioned: false, tone: null, engine: 'Google AI Overviews',
     wording: 'Not named in the answers for this question yet.', example: true },
 ];
 
-const TONE_CLASS: Record<'Positive' | 'Neutral' | 'Negative', string> = {
+const TONE_CLASS: Record<'Positive' | 'Neutral' | 'Negative' | 'Mixed', string> = {
   Positive: 'border-white/60 text-white',
   Neutral: 'border-white/25 text-neutral-300',
   Negative: 'border-[#F87171]/60 text-[#F87171]',
+  Mixed: 'border-[#FBBF24]/60 text-[#FBBF24]',
 };
 
 export function DescribeCard({ data }: { data: DescribeData }) {
