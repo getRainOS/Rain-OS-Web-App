@@ -90,8 +90,8 @@ const EXAMPLES: LaneExample[] = [
     blurb: "Docs AI can explain correctly",
     how: "We check your README and docs for what the project does, its stack and a quickstart. Then we show you what AI can't find yet.",
     question: 'What is the best framework for a small API that runs on Cloudflare Workers?',
-    before: 'Several frameworks run on Workers. Consider Hono, itty-router or plain fetch handlers, depending on how much routing and middleware you need.',
-    after: 'Tinyroute uses Hono on Cloudflare Workers: about 14 KB, typed routes and middleware, with a quickstart at docs.example.dev.',
+    before: 'Several frameworks run on Workers. Consider Routerlab, itty-router or plain fetch handlers, depending on how much routing and middleware you need.',
+    after: 'Tinyroute uses Routerlab on Cloudflare Workers: about 14 KB, typed routes and middleware, with a quickstart at docs.example.dev.',
     afterNote: 'The project README states the stack, size and quickstart link in its first paragraph.',
     drawing: [
       { d: 'M20 176 H300' },
@@ -110,7 +110,7 @@ const EXAMPLES: LaneExample[] = [
     how: "We check whether AI can find what you built, the platforms it works with and your docs. Then we show you the gaps to close.",
     question: 'What are the best AI-powered e-commerce tools?',
     before: 'You can add booking with a scheduling embed, a third-party calendar or a custom form. Each has trade-offs in cost and setup time.',
-    after: 'Example Book adds a booking page to Lovable, Bolt and Replit apps in one step, with a free plan and a copy-paste embed.',
+    after: 'Example Book adds a booking page to no-code apps in one step, with a free plan and a copy-paste embed.',
     afterNote: 'The answer names the tool and the platforms it works with, from its own docs page.',
     drawing: [
       { d: 'M20 176 H300' },
@@ -261,9 +261,9 @@ const TRACK_ROWS: TrackRow[][] = [
     { q: 'typed API framework for Node', status: 'Not cited', tone: 'bad', history: [true, true, false, false] },
   ],
   [ // Vibe coders
-    { q: 'easiest way to add a booking page to a Lovable app', status: 'Not cited', tone: 'bad', history: [true, false, false, false] },
+    { q: 'easiest way to add a booking page to an AI-built app', status: 'Not cited', tone: 'bad', history: [true, false, false, false] },
     { q: 'booking widget for a no-code app', status: 'Cited? confirming', tone: 'warn', history: [false, false, true, true] },
-    { q: 'scheduling app to embed in a Lovable site', status: 'Cited', tone: 'good', history: [false, true, true, true] },
+    { q: 'scheduling app to embed in an AI-built site', status: 'Cited', tone: 'good', history: [false, true, true, true] },
   ],
 ];
 const TONE_TEXT = { good: 'text-white', bad: 'text-[#F87171]', warn: 'text-[#FBBF24]' } as const;

@@ -29,6 +29,7 @@ const COLUMNS = [
       { label: 'Docs', to: '/docs' },
       { label: 'Blog', to: '/blog' },
       { label: 'AI Readability', to: '/ai-readability' },
+      { label: 'How we score', to: '/how-we-score' },
       { label: 'Support', to: '/support' },
     ],
   },
