@@ -224,7 +224,7 @@ export type CitingData = { laneName: string; business: string; question: string;
 export const CITING_LANES: CitingData[] = [
   {
     laneName: 'Local businesses', business: 'Bright Smile Dental', question: 'best dentist in Austin for Invisalign',
-    latest: '#2', firstCited: 'yelp.com', example: false,
+    latest: '#2', firstCited: 'austinlocalguide.com', example: false,
     history: [
       { date: 'Oct 22', result: 'Not cited', cited: false },
       { date: 'Oct 29', result: 'Not cited', cited: false },
@@ -234,7 +234,7 @@ export const CITING_LANES: CitingData[] = [
   },
   {
     laneName: 'Online sellers', business: 'Harbor Wallet Co.', question: 'best waterproof travel wallet under $80',
-    latest: '#3', firstCited: 'wirecutter.com', example: true,
+    latest: '#3', firstCited: 'gearjudge.com', example: true,
     history: [
       { date: 'Oct 22', result: 'Not cited', cited: false },
       { date: 'Oct 29', result: '#5 of 5', cited: true },
@@ -244,7 +244,7 @@ export const CITING_LANES: CitingData[] = [
   },
   {
     laneName: 'Writers & marketers', business: 'Quillpost', question: 'best newsletter tool for a solo writer',
-    latest: '#1', firstCited: 'substack.com', example: true,
+    latest: '#1', firstCited: 'newsletterhub.co', example: true,
     history: [
       { date: 'Oct 22', result: 'Not cited', cited: false },
       { date: 'Oct 29', result: '#4 of 5', cited: true },
@@ -254,7 +254,7 @@ export const CITING_LANES: CitingData[] = [
   },
   {
     laneName: 'Developers', business: 'Tinyroute', question: 'best framework for a small API on Cloudflare Workers',
-    latest: '#2', firstCited: 'hono.dev', example: true,
+    latest: '#2', firstCited: 'routerlab.dev', example: true,
     history: [
       { date: 'Oct 22', result: 'Not cited', cited: false },
       { date: 'Oct 29', result: 'Not cited', cited: false },
@@ -263,8 +263,8 @@ export const CITING_LANES: CitingData[] = [
     ],
   },
   {
-    laneName: 'Vibe coders', business: 'Bookly', question: 'easiest way to add a booking page to a Lovable app',
-    latest: 'Not cited', firstCited: 'lovable.dev', example: true,
+    laneName: 'Vibe coders', business: 'Bookly', question: 'easiest way to add a booking page to an AI-built app',
+    latest: 'Not cited', firstCited: 'appbuilderguide.com', example: true,
     history: [
       { date: 'Oct 22', result: 'Not cited', cited: false },
       { date: 'Oct 29', result: '#5 of 5', cited: true },
@@ -362,13 +362,13 @@ export const SHARE_LANES: ShareData[] = [
   { laneName: 'Local businesses', business: 'Bright Smile Dental', question: 'best dentist in Austin for Invisalign', answers: 3, example: true,
     brands: [{ name: 'Bright Smile Dental', mentions: 2, avgPosition: 2.0, you: true }, { name: 'Austin Smile Studio', mentions: 3, avgPosition: 1.3 }] },
   { laneName: 'Online sellers', business: 'Harbor Wallet Co.', question: 'best waterproof travel wallet under $80', answers: 3, example: true,
-    brands: [{ name: 'Harbor Wallet Co.', mentions: 2, avgPosition: 2.5, you: true }, { name: 'Bellroy', mentions: 3, avgPosition: 1.3 }, { name: 'Bilum', mentions: 1, avgPosition: 3.0 }] },
+    brands: [{ name: 'Harbor Wallet Co.', mentions: 2, avgPosition: 2.5, you: true }, { name: 'Carrysmith', mentions: 3, avgPosition: 1.3 }, { name: 'Pathfold', mentions: 1, avgPosition: 3.0 }] },
   { laneName: 'Writers & marketers', business: 'Quillpost', question: 'best newsletter tool for a solo writer', answers: 3, example: true,
-    brands: [{ name: 'Quillpost', mentions: 3, avgPosition: 1.7, you: true }, { name: 'Substack', mentions: 2, avgPosition: 2.5 }] },
+    brands: [{ name: 'Quillpost', mentions: 3, avgPosition: 1.7, you: true }, { name: 'Newsletterhub', mentions: 2, avgPosition: 2.5 }] },
   { laneName: 'Developers', business: 'Tinyroute', question: 'best framework for a small API on Cloudflare Workers', answers: 3, example: true,
-    brands: [{ name: 'Tinyroute', mentions: 2, avgPosition: 2.5, you: true }, { name: 'Hono', mentions: 3, avgPosition: 1.3 }] },
-  { laneName: 'Vibe coders', business: 'Bookly', question: 'easiest way to add a booking page to a Lovable app', answers: 3, example: true,
-    brands: [{ name: 'Bookly', mentions: 0, avgPosition: 0, you: true }, { name: 'Calendly', mentions: 3, avgPosition: 1.0 }, { name: 'Cal.com', mentions: 2, avgPosition: 2.0 }] },
+    brands: [{ name: 'Tinyroute', mentions: 2, avgPosition: 2.5, you: true }, { name: 'Routerlab', mentions: 3, avgPosition: 1.3 }] },
+  { laneName: 'Vibe coders', business: 'Bookly', question: 'easiest way to add a booking page to an AI-built app', answers: 3, example: true,
+    brands: [{ name: 'Bookly', mentions: 0, avgPosition: 0, you: true }, { name: 'Bookwise', mentions: 3, avgPosition: 1.0 }, { name: 'Schedulr', mentions: 2, avgPosition: 2.0 }] },
 ];
 
 export function ShareCard({ data }: { data: ShareData }) {
@@ -443,7 +443,7 @@ export const DESCRIBE_LANES: DescribeData[] = [
     wording: 'A simple newsletter tool with flat pricing, lighter on automation.', example: true },
   { laneName: 'Developers', business: 'Tinyroute', question: 'best framework for a small API on Cloudflare Workers', mentioned: true, tone: 'Mixed', engine: 'Claude',
     wording: 'Fast and typed, but a young project with few production examples.', example: true },
-  { laneName: 'Vibe coders', business: 'Bookly', question: 'easiest way to add a booking page to a Lovable app', mentioned: false, tone: null, engine: 'Google AI Overviews',
+  { laneName: 'Vibe coders', business: 'Bookly', question: 'easiest way to add a booking page to an AI-built app', mentioned: false, tone: null, engine: 'Google AI Overviews',
     wording: 'Not named in the answers for this question yet.', example: true },
 ];
 
