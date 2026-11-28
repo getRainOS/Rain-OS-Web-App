@@ -587,7 +587,7 @@ function EngineRun() {
       step += 1;
       setIdx(step % ENGINE_OPTIONS.length);
       if (step >= ENGINE_OPTIONS.length) { window.clearInterval(t); setOpen(false); }
-    }, 650);
+    }, 350);
     return () => window.clearInterval(t);
   }, [inView, reduce]);
   return (
@@ -672,14 +672,6 @@ function ToolsSection({ lane }: { lane: number }) {
     <section className="relative z-10 py-28 border-t border-white/[0.06]">
       <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
         <Reveal>
-          <div className="mb-5 flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center rounded-full border border-dashed border-white/30 px-3 py-1 text-[12px] font-semibold text-neutral-300">AI engines</span>
-            <span className="text-[14px] text-neutral-400">Every monitoring check runs on one engine or all of them.</span>
-          </div>
-          <div className="flex items-start gap-4"><h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">Choose the AI engine you check</h2></div>
-          <div className="mt-8"><EngineRun /></div>
-        </Reveal>
-        <Reveal>
           <div className="mt-28 mb-5 flex flex-wrap items-center gap-3">
             <span className="inline-flex items-center rounded-full border border-white/40 px-3 py-1 text-[12px] font-semibold text-white">Monitoring tools</span>
             <span className="text-[14px] text-neutral-400">Follows what AI says about you, over weeks.</span>
@@ -687,6 +679,16 @@ function ToolsSection({ lane }: { lane: number }) {
           <div className="flex items-start gap-4"><ToolMark /><h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">Watch how AI answers change over time</h2></div>
           <p className="mt-6 text-neutral-400 text-lg leading-relaxed max-w-2xl">Keep checking what AI says and where it links, over time, so you can see how things change.</p>
           <p className="mt-4 text-[15px] leading-relaxed text-neutral-500 max-w-2xl">Monitoring is most useful over time. New content often shows &ldquo;not cited&rdquo; at first, and changes take weeks to show.</p>
+        </Reveal>
+        <Reveal>
+          <div className="mt-20 md:mt-24 rounded-xl border border-dashed border-white/15 p-6 md:p-8">
+          <div className="mb-5 flex flex-wrap items-center gap-3">
+            <span className="inline-flex items-center rounded-full border border-dashed border-white/30 px-3 py-1 text-[12px] font-semibold text-neutral-300">AI engines</span>
+            <span className="text-[14px] text-neutral-400">Every monitoring check runs on one engine or all of them.</span>
+          </div>
+          <div className="flex items-start gap-4"><span aria-hidden="true" className="h-10 w-10 shrink-0" /><h2 className="text-2xl md:text-3xl font-semibold tracking-[-0.02em] text-neutral-200 max-w-3xl text-balance">Choose the AI engine you check</h2></div>
+          <div className="mt-8"><EngineRun /></div>
+          </div>
         </Reveal>
         <TrackExample index={lane} inline />
         <div className="mt-16 md:mt-20">
