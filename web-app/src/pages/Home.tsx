@@ -570,9 +570,54 @@ function AnalysisFlow() {
   );
 }
 
+const ENGINE_OPTIONS = ['All AI engines', ...ENGINES];
+
+// One run through the AI engines: the highlight moves down the list and ends back on All AI engines.
+function EngineRun() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const inView = useInView(ref, { amount: 0.6, once: true });
+  const reduce = useReducedMotion();
+  const [idx, setIdx] = useState(0);
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (reduce || !inView) return;
+    setOpen(true);
+    let step = 0;
+    const t = window.setInterval(() => {
+      step += 1;
+      setIdx(step % ENGINE_OPTIONS.length);
+      if (step >= ENGINE_OPTIONS.length) { window.clearInterval(t); setOpen(false); }
+    }, 650);
+    return () => window.clearInterval(t);
+  }, [inView, reduce]);
+  return (
+    <div ref={ref} className="max-w-md">
+      <div className="mb-2 text-[11px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>AI engine</div>
+      <div className="rounded-lg border border-white/20 bg-black">
+        <div className="flex items-center justify-between px-4 py-3 text-[14px] text-white">
+          <span>{ENGINE_OPTIONS[idx]}</span>
+          <span className="text-neutral-500">{open ? '▴' : '▾'}</span>
+        </div>
+        {open && (
+          <ul className="border-t border-white/10 py-1" role="listbox" aria-label="AI engine">
+            {ENGINE_OPTIONS.map((e, i) => (
+              <li
+                key={e}
+                role="option"
+                aria-selected={i === idx}
+                className={`px-4 py-2 text-[14px] transition-colors duration-200 ${i === idx ? 'bg-white/[0.08] text-white' : 'text-neutral-500'}`}
+              >
+                {e}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function ToolsSection({ lane }: { lane: number }) {
-  // AI engine the monitoring checks run against: all of them by default, or one.
-  const [engine, setEngine] = useState<string>('All AI engines');
   return (
     <>
     <section id="product" className="relative z-10 py-28 border-t border-white/[0.06]">
@@ -628,27 +673,22 @@ function ToolsSection({ lane }: { lane: number }) {
       <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
         <Reveal>
           <div className="mb-5 flex flex-wrap items-center gap-3">
+            <span className="inline-flex items-center rounded-full border border-dashed border-white/30 px-3 py-1 text-[12px] font-semibold text-neutral-300">AI engines</span>
+            <span className="text-[14px] text-neutral-400">Every monitoring check runs on one engine or all of them.</span>
+          </div>
+          <div className="flex items-start gap-4"><h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">Choose the AI engine you check</h2></div>
+          <div className="mt-8"><EngineRun /></div>
+        </Reveal>
+        <Reveal>
+          <div className="mt-28 mb-5 flex flex-wrap items-center gap-3">
             <span className="inline-flex items-center rounded-full border border-white/40 px-3 py-1 text-[12px] font-semibold text-white">Monitoring tools</span>
             <span className="text-[14px] text-neutral-400">Follows what AI says about you, over weeks.</span>
           </div>
           <div className="flex items-start gap-4"><ToolMark /><h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">Watch how AI answers change over time</h2></div>
           <p className="mt-6 text-neutral-400 text-lg leading-relaxed max-w-2xl">Keep checking what AI says and where it links, over time, so you can see how things change.</p>
           <p className="mt-4 text-[15px] leading-relaxed text-neutral-500 max-w-2xl">Monitoring is most useful over time. New content often shows &ldquo;not cited&rdquo; at first, and changes take weeks to show.</p>
-          <p className="mt-3 text-[15px] leading-relaxed text-neutral-500 max-w-2xl">Choose which AI engine to check, and where from.</p>
         </Reveal>
-        <div className="mt-8 flex flex-wrap items-center gap-3 text-[14px] text-neutral-400">
-          <label htmlFor="monitor-engine">AI engine</label>
-          <select
-            id="monitor-engine"
-            value={engine}
-            onChange={e => setEngine(e.target.value)}
-            className="rounded-md border border-white/20 bg-black px-3 py-2 text-[14px] text-white focus:outline-none focus:border-white/50"
-          >
-            <option value="All AI engines">All AI engines</option>
-            {ENGINES.map(e => <option key={e} value={e}>{e}</option>)}
-          </select>
-        </div>
-        <TrackExample index={lane} inline engine={engine} />
+        <TrackExample index={lane} inline />
         <div className="mt-16 md:mt-20">
           {TOOLS.slice(1).map((t, i) => {
             const k = i + 1;
