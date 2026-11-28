@@ -6,8 +6,8 @@ import { SERIES, WEEKS, valueAt } from './TrendCard';
 // The card plays once: each core pillar's line climbs and its gauge moves from its start
 // score to its end score, one pillar at a time, then the card holds. Example data,
 // labelled as such on the page.
-const SLOT_MS = 1400;
-const MOVE_S = 1.8; // lines and gauges move over the same time
+const SLOT_MS = 1000;
+const MOVE_S = 1.2; // lines and gauges move over the same time
 const CORE = [0, 1, 2, 4]; // the four core pillars get gauges and lines
 const LANE_ONLY = [3, 5]; // online sellers and local business: shown faint, not drawn
 const PER_CYCLE = CORE.length + 1; // one slot per core pillar, then a hold
