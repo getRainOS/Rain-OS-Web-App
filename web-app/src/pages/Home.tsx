@@ -576,7 +576,10 @@ function ToolsSection({ lane }: { lane: number }) {
     <section id="product" className="relative z-10 py-28 border-t border-white/[0.06]">
       <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
         <Reveal>
-          <div className="mb-5 text-[11px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>Analysis tools</div>
+          <div className="mb-5 flex flex-wrap items-center gap-3">
+            <span className="inline-flex items-center rounded-full bg-white px-3 py-1 text-[12px] font-semibold text-black">Analysis tools</span>
+            <span className="text-[14px] text-neutral-400">Scores your content before AI reads it.</span>
+          </div>
           <div className="flex items-start gap-4"><ToolMark /><h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">
             See what AI can read. Fix what it can’t.
           </h2></div>
@@ -622,7 +625,10 @@ function ToolsSection({ lane }: { lane: number }) {
     <section className="relative z-10 py-28 border-t border-white/[0.06]">
       <div className="max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10">
         <Reveal>
-          <div className="mb-5 text-[11px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>Monitoring tools</div>
+          <div className="mb-5 flex flex-wrap items-center gap-3">
+            <span className="inline-flex items-center rounded-full border border-white/40 px-3 py-1 text-[12px] font-semibold text-white">Monitoring tools</span>
+            <span className="text-[14px] text-neutral-400">Follows what AI says about you, over weeks.</span>
+          </div>
           <div className="flex items-start gap-4"><ToolMark /><h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">Watch how AI answers change over time</h2></div>
           <p className="mt-6 text-neutral-400 text-lg leading-relaxed max-w-2xl">Keep checking what AI says and where it links, over time, so you see changes as they happen.</p>
         </Reveal>
