@@ -686,7 +686,6 @@ function ToolsSection({ lane }: { lane: number }) {
             <span className="inline-flex items-center rounded-full border border-dashed border-white/30 px-3 py-1 text-[12px] font-semibold text-neutral-300">AI engines</span>
             <span className="text-[14px] text-neutral-400">Every monitoring check runs on one engine or all of them.</span>
           </div>
-          <div className="flex items-start gap-4"><span aria-hidden="true" className="h-10 w-10 shrink-0" /><h2 className="text-2xl md:text-3xl font-semibold tracking-[-0.02em] text-neutral-200 max-w-3xl text-balance">Choose the AI engine you check</h2></div>
           <div className="mt-8"><EngineRun /></div>
           </div>
         </Reveal>
