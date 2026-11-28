@@ -268,7 +268,7 @@ const TRACK_ROWS: TrackRow[][] = [
 ];
 const TONE_TEXT = { good: 'text-white', bad: 'text-[#F87171]', warn: 'text-[#FBBF24]' } as const;
 
-export function TrackExample({ index, inline = false }: { index: number; inline?: boolean }) {
+export function TrackExample({ index, inline = false, engine = 'All AI engines' }: { index: number; inline?: boolean; engine?: string }) {
   const rows = TRACK_ROWS[index];
   const inner = inline ? '' : 'max-w-[1104px] mx-auto px-6 border-x border-dashed border-white/10';
   return (
@@ -277,7 +277,11 @@ export function TrackExample({ index, inline = false }: { index: number; inline?
         <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Tracked weekly</div>
         <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white text-balance">Track the questions that matter, every week</h2>
         <p className="mt-4 text-neutral-400 max-w-2xl">Re-check the questions your customers ask AI, and get an email when AI starts or stops citing you. Included with Pro and Business.</p>
-        <div className="mt-8 divide-y divide-white/10 rounded-xl border border-white/10 bg-[#0a0a0a]">
+        <div className="mt-8 rounded-xl border border-white/10 bg-[#0a0a0a]">
+        <div className="flex items-center justify-between border-b border-white/10 px-5 py-3 text-[12px] text-neutral-500" style={MONO}>
+          <span>ENGINE</span><span className="text-neutral-300">{engine}</span>
+        </div>
+        <div className="divide-y divide-white/10">
           {rows.map((r, n) => (
             <div key={`${index}-${n}`} className="flex flex-col gap-3 p-5 md:flex-row md:items-center md:justify-between md:p-6">
               <div className="min-w-0">
@@ -294,6 +298,7 @@ export function TrackExample({ index, inline = false }: { index: number; inline?
               </div>
             </div>
           ))}
+        </div>
         </div>
       </div>
     </div>
