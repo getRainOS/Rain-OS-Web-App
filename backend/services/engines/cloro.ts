@@ -23,6 +23,24 @@ export { EngineError };
 
 export interface CloroAnswer { text: string; sources: CitationSource[]; entities: string[]; credits: number | null }
 
+// cloro rejects requests beyond the account's concurrent-job slots with a 429,
+// and free trial accounts get one slot. Every ChatGPT request in this process
+// waits in this queue so checks never overlap. Set CLORO_MAX_CONCURRENT to the
+// plan's slot count to allow more at once (defaults to 1).
+const maxConcurrent = Math.max(1, Number(process.env.CLORO_MAX_CONCURRENT) || 1);
+let running = 0;
+const waiting: Array<() => void> = [];
+async function withCloroSlot<T>(task: () => Promise<T>): Promise<T> {
+  if (running >= maxConcurrent) await new Promise<void>(resolve => waiting.push(resolve));
+  running++;
+  try {
+    return await task();
+  } finally {
+    running--;
+    waiting.shift()?.();
+  }
+}
+
 // Turns cloro's result into our source list: one entry per URL, in order.
 export function parseCloroResult(result: any): Omit<CloroAnswer, 'credits'> {
   const seen = new Set<string>();
@@ -40,9 +58,13 @@ export function parseCloroResult(result: any): Omit<CloroAnswer, 'credits'> {
   return { text: typeof result?.text === 'string' ? result.text : '', sources, entities };
 }
 
-export async function cloroAnswer(engine: string, prompt: string, opts: { country?: string; state?: string | null; timeoutMs?: number } = {}): Promise<CloroAnswer> {
+export function cloroAnswer(engine: string, prompt: string, opts: { country?: string; state?: string | null; timeoutMs?: number } = {}): Promise<CloroAnswer> {
   const key = process.env.CLORO_API_KEY;
-  if (!key) throw new EngineError('ChatGPT checks are not set up yet.', 503, 'engine_unavailable');
+  if (!key) return Promise.reject(new EngineError('ChatGPT checks are not set up yet.', 503, 'engine_unavailable'));
+  return withCloroSlot(() => cloroRequest(engine, prompt, key, opts));
+}
+
+async function cloroRequest(engine: string, prompt: string, key: string, opts: { country?: string; state?: string | null; timeoutMs?: number }): Promise<CloroAnswer> {
   const country = opts.country || 'US';
   const state = country === 'US' && opts.state && US_STATES.has(opts.state) ? opts.state : undefined;
   const ctrl = new AbortController();
