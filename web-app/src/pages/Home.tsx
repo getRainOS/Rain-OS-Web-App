@@ -630,7 +630,8 @@ function ToolsSection({ lane }: { lane: number }) {
             <span className="text-[14px] text-neutral-400">Follows what AI says about you, over weeks.</span>
           </div>
           <div className="flex items-start gap-4"><ToolMark /><h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">Watch how AI answers change over time</h2></div>
-          <p className="mt-6 text-neutral-400 text-lg leading-relaxed max-w-2xl">Keep checking what AI says and where it links, over time, so you see changes as they happen.</p>
+          <p className="mt-6 text-neutral-400 text-lg leading-relaxed max-w-2xl">Keep checking what AI says and where it links, over time, so you can see how things change.</p>
+          <p className="mt-4 text-[15px] leading-relaxed text-neutral-500 max-w-2xl">Monitoring is most useful over time. New content often shows &ldquo;not cited&rdquo; at first, and changes take weeks to show.</p>
         </Reveal>
         <TrackExample index={lane} inline />
         <div className="mt-16 md:mt-20">
