@@ -48,12 +48,19 @@ export async function cloroAnswer(engine: string, prompt: string, opts: { countr
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), opts.timeoutMs ?? 120000);
   try {
-    const res = await fetch(`${BASE}/${engine}`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt, country, ...(state ? { state } : {}) }),
-      signal: ctrl.signal,
-    });
+    // Rate-limited (429) requests wait and try again: 2s, then 4s, then give up.
+    const body = JSON.stringify({ prompt, country, ...(state ? { state } : {}) });
+    let res!: Response;
+    for (let attempt = 0; ; attempt++) {
+      res = await fetch(`${BASE}/${engine}`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+        body,
+        signal: ctrl.signal,
+      });
+      if (res.status !== 429 || attempt >= 2) break;
+      await new Promise(r => setTimeout(r, 2000 * 2 ** attempt));
+    }
     const json: any = await res.json().catch(() => ({}));
     if (!res.ok || json?.success === false) {
       const code = json?.error?.code;
