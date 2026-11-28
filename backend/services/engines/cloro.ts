@@ -48,7 +48,7 @@ export async function cloroAnswer(engine: string, prompt: string, opts: { countr
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), opts.timeoutMs ?? 120000);
   try {
-    // Rate-limited (429) requests wait and try again: 2s, then 4s, then give up.
+    // Rate-limited (429) requests wait and try again: 5s, 10s, 20s, 40s, then give up.
     const body = JSON.stringify({ prompt, country, ...(state ? { state } : {}) });
     let res!: Response;
     for (let attempt = 0; ; attempt++) {
@@ -58,8 +58,8 @@ export async function cloroAnswer(engine: string, prompt: string, opts: { countr
         body,
         signal: ctrl.signal,
       });
-      if (res.status !== 429 || attempt >= 2) break;
-      await new Promise(r => setTimeout(r, 2000 * 2 ** attempt));
+      if (res.status !== 429 || attempt >= 4) break;
+      await new Promise(r => setTimeout(r, 5000 * 2 ** attempt));
     }
     const json: any = await res.json().catch(() => ({}));
     if (!res.ok || json?.success === false) {
