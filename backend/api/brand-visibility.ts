@@ -2,7 +2,7 @@
 // Check how visible a brand is in AI-generated answers for a given topic.
 import express from 'express';
 import { findUserByApiKey, incrementUserUsage, saveBrandVisibilityCheck, getBrandVisibilityChecksByUser, deleteBrandVisibilityChecksByUser } from '../services/dbService';
-import { runBrandVisibilityCheck, GenerationIncompleteError } from '../services/brandVisibilityService';
+import { runBrandVisibilityAcrossEngines, GenerationIncompleteError } from '../services/brandVisibilityService';
 import { laneOf } from '../services/lanes';
 import { requestedEngine } from '../services/engines/requestEngine';
 import { EngineError } from '../services/engines/engineError';
@@ -76,7 +76,20 @@ export default async function handler(req: express.Request, res: express.Respons
   if ('error' in picked) return res.status(400).json({ error: 'engine_unavailable', message: picked.error } as ApiError);
 
   try {
-    const result = await runBrandVisibilityCheck(brand.trim(), topic.trim(), normalisedUrl, picked.engine, picked.location);
+    const across = await runBrandVisibilityAcrossEngines(brand.trim(), topic.trim(), normalisedUrl, picked.location);
+    const result = across.primary.result;
+    const primaryEngine = across.primary.engine;
+    const engineResults = across.perEngine.map(({ engine, result: r }) => ({
+      engine,
+      mention_status: r.mentionStatus,
+      sentiment: r.sentiment,
+      sentiment_explanation: r.sentimentExplanation,
+      answer_excerpt: r.answerExcerpt,
+      sources: r.sources,
+      competitors: r.competitors,
+      recommendations: r.recommendations,
+      summary: r.summary,
+    }));
 
     // Persist to DB. visibility_score and mention_position are no longer
     // computed (they were LLM guesses) — omitted so they fall back to their
@@ -96,7 +109,8 @@ export default async function handler(req: express.Request, res: express.Respons
       competitors: result.competitors,
       recommendations: result.recommendations,
       summary: result.summary,
-      engine: picked.engine,
+      engine: primaryEngine,
+      engine_results: engineResults,
       lane: laneOf(req),
       subject: typeof req.body?.subject === 'string' ? req.body.subject.trim().slice(0, 300) || null : null,
     });
@@ -104,7 +118,7 @@ export default async function handler(req: express.Request, res: express.Respons
     const updated = await incrementUserUsage(user.id);
     if (updated) res.setHeader('X-Usage-Info', JSON.stringify(updated.usage));
 
-    return res.status(200).json({ success: true, data: { ...result, engine: picked.engine, name: name.trim() }, ...result, engine: picked.engine, name: name.trim() });
+    return res.status(200).json({ success: true, data: { ...result, engine: primaryEngine, engineResults, name: name.trim() }, ...result, engine: primaryEngine, engineResults, name: name.trim() });
   } catch (error) {
     if (error instanceof EngineError) return res.status(error.status).json({ error: error.code || 'engine_error', message: error.message } as ApiError);
     if (error instanceof GenerationIncompleteError) {

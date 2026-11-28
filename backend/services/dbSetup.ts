@@ -255,7 +255,9 @@ ALTER TABLE tracked_queries ADD COLUMN IF NOT EXISTS location_state TEXT;
 ALTER TABLE tracked_queries ADD COLUMN IF NOT EXISTS engine_state JSONB NOT NULL DEFAULT '{}'::jsonb;
 ALTER TABLE citation_checks ADD COLUMN IF NOT EXISTS lane TEXT;
 ALTER TABLE brand_visibility_checks ADD COLUMN IF NOT EXISTS lane TEXT;
+ALTER TABLE brand_visibility_checks ADD COLUMN IF NOT EXISTS engine_results JSONB NOT NULL DEFAULT '[]'::jsonb;
 ALTER TABLE sov_checks ADD COLUMN IF NOT EXISTS lane TEXT;
+ALTER TABLE sov_checks ADD COLUMN IF NOT EXISTS engine_results JSONB NOT NULL DEFAULT '[]'::jsonb;
 CREATE TABLE IF NOT EXISTS product_facts (
   id BIGSERIAL PRIMARY KEY,
   user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,

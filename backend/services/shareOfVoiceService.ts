@@ -1,5 +1,5 @@
 import { askEngine } from './engines/run';
-import { engineLabel } from './engines';
+import { engineLabel, availableEngines } from './engines';
 import { EngineError } from './engines/engineError';
 import { generateContentWithRetry } from './geminiRetry';
 // services/shareOfVoiceService.ts — rain OS AI Share of Voice
@@ -446,4 +446,29 @@ export async function runShareOfVoice(
     summary: buildSummary(b, t, mentionedCount, domainSharePercent, domainCitedCount, domainSourceCount, engineName, modelResults.length),
     engine,
   };
+}
+
+// Runs Share of Voice on every AI engine that is switched on. Engines that fail
+// are left out, and the check only fails when none of them answers. `primary` is
+// the Gemini answer when there is one, otherwise the first engine that answered.
+export async function runShareOfVoiceAcrossEngines(
+  brand: string,
+  topic: string,
+  url: string | null,
+  rivals: string[],
+  location: { country?: string; state?: string | null } = {}
+): Promise<{ primary: { engine: string; result: SovResult }; perEngine: { engine: string; result: SovResult }[] }> {
+  const engines = availableEngines().map(e => e.id);
+  const settled = await Promise.allSettled(
+    engines.map(engine => runShareOfVoice(brand, topic, url, rivals, engine, location).then(result => ({ engine, result })))
+  );
+  const perEngine: { engine: string; result: SovResult }[] = [];
+  const failures: unknown[] = [];
+  for (const r of settled) {
+    if (r.status === 'fulfilled') perEngine.push(r.value);
+    else failures.push(r.reason);
+  }
+  if (!perEngine.length) throw failures[0] ?? new Error('No AI engine is available for this check.');
+  const primary = perEngine.find(p => p.engine === 'gemini') ?? perEngine[0];
+  return { primary, perEngine };
 }

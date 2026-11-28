@@ -748,13 +748,14 @@ export const saveBrandVisibilityCheck = async (
     engine?: string;
     lane?: string | null;
     subject?: string | null;
+    engine_results?: unknown[];
   }
 ): Promise<BrandVisibilityRecord | null> => {
   const res = await pool.query(
     `INSERT INTO brand_visibility_checks
        (user_id, name, brand, topic, url, visibility_score, mention_status, mention_position,
-        sentiment, sentiment_explanation, answer_excerpt, sources, competitors, recommendations, summary, engine, lane, subject)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+        sentiment, sentiment_explanation, answer_excerpt, sources, competitors, recommendations, summary, engine, lane, subject, engine_results)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
      RETURNING *`,
     [
       userId,
@@ -775,6 +776,7 @@ export const saveBrandVisibilityCheck = async (
       data.engine || 'gemini',
       data.lane ?? null,
       data.subject ?? null,
+      JSON.stringify(data.engine_results || []),
     ]
   );
   return res.rows[0] ? mapBrandVisRow(res.rows[0]) : null;

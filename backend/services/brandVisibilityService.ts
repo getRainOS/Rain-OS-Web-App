@@ -1,5 +1,5 @@
 import { EngineError } from './engines/engineError';
-import { engineLabel } from './engines';
+import { engineLabel, availableEngines } from './engines';
 import { askEngine } from './engines/run';
 import { generateContentWithRetry } from './geminiRetry';
 // services/brandVisibilityService.ts — rain OS AI Brand Visibility Checker
@@ -380,4 +380,28 @@ export async function runBrandVisibilityCheck(
     summary: buildSummary(trimmedBrand, mentioned, cited, competitors, engineName),
     notMentionedHint,
   };
+}
+
+// Runs the check on every AI engine that is switched on. Engines that fail are
+// left out, and the check only fails when none of them answers. `primary` is the
+// Gemini answer when there is one, otherwise the first engine that answered.
+export async function runBrandVisibilityAcrossEngines(
+  brand: string,
+  topic: string,
+  url: string | null,
+  location: { country?: string; state?: string | null } = {}
+): Promise<{ primary: { engine: string; result: BrandVisibilityResult }; perEngine: { engine: string; result: BrandVisibilityResult }[] }> {
+  const engines = availableEngines().map(e => e.id);
+  const settled = await Promise.allSettled(
+    engines.map(engine => runBrandVisibilityCheck(brand, topic, url, engine, location).then(result => ({ engine, result })))
+  );
+  const perEngine: { engine: string; result: BrandVisibilityResult }[] = [];
+  const failures: unknown[] = [];
+  for (const r of settled) {
+    if (r.status === 'fulfilled') perEngine.push(r.value);
+    else failures.push(r.reason);
+  }
+  if (!perEngine.length) throw failures[0] ?? new Error('No AI engine is available for this check.');
+  const primary = perEngine.find(p => p.engine === 'gemini') ?? perEngine[0];
+  return { primary, perEngine };
 }
