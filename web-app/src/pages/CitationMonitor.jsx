@@ -21,6 +21,7 @@ import LocalListings from '../components/LocalListings.jsx';
 import { needsPlace } from '../lib/localListings.js';
 import EngineCheckPanel from '../components/EngineCheckPanel.jsx';
 import Select from '../components/Select.jsx';
+import { engineName } from '../lib/engines.js';
 import { COUNTRIES, US_STATES } from '../lib/usStates.js';
 import styles from './CitationMonitor.module.css';
 import { CitationWorldMap, EXAMPLE_TOPICS, LOCAL_EXAMPLE_TOPICS, RECENT_PAGE_SIZE, topicKey, getFavicon, normalizeDomain, ownPositionOf, byCheckedAtAsc, shortDate, timeAgo, RANK_LINE_COLORS, RankingsChart, ResultConsole, RecentAnalysesSection, MapEmptyViz, MapSummaryPanel, MapDetailSection, pct, SourceTypesSection } from '../components/citation/CitationParts';
@@ -78,6 +79,8 @@ export default function CitationMonitor() {
   // ?view=past&topic=… opens that question's past checks (the dashboard map links here).
   const [view, setView] = useState(() => (searchParams.get('view') === 'past' ? 'past' : 'new'));
   const [resultTab, setResultTab] = useState('result');
+  // Which engine's answer to view: all of them by default. Filters the view only; every engine still runs.
+  const [engineView, setEngineView] = useState('all');
   const [pastTab, setPastTab] = useState('overview');
   const [mapFilter, setMapFilter] = useState(() => (searchParams.get('topic') ? topicKey(searchParams.get('topic')) : null));
 
@@ -439,9 +442,23 @@ export default function CitationMonitor() {
               />
               {resultTab === 'result' && (
                 <>
-                  <ResultConsole result={result} name={name} topicHistory={topicHistory} tracking={tracking}
-                    location={engineRun ? { country: engineRun.country, state: engineRun.state } : null} />
-                  {engineRun && otherEngines.map(e => (
+                  {engineRun && otherEngines.length > 0 && (
+                    <div style={{ marginBottom: 12 }}>
+                      <span className="muted" style={{ marginRight: 8 }}>View</span>
+                      <Select
+                        value={engineView}
+                        onChange={setEngineView}
+                        ariaLabel="AI engine to view"
+                        options={[{ value: 'all', label: 'All AI engines' }, { value: 'gemini', label: engineName('gemini') },
+                          ...otherEngines.map(e => ({ value: e.id, label: e.label || engineName(e.id) }))]}
+                      />
+                    </div>
+                  )}
+                  {(engineView === 'all' || engineView === 'gemini') && (
+                    <ResultConsole result={result} name={name} topicHistory={topicHistory} tracking={tracking}
+                      location={engineRun ? { country: engineRun.country, state: engineRun.state } : null} />
+                  )}
+                  {engineRun && otherEngines.filter(e => engineView === 'all' || engineView === e.id).map(e => (
                     <EngineCheckPanel key={e.id} engine={e.id} label={e.label} usesLocation={e.location !== 'none'} run={engineRun} />
                   ))}
                   {enginesLocked && (
