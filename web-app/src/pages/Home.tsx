@@ -343,8 +343,8 @@ function WaysList({ ways }: { ways: { label: string; href: string; note: string 
   const [lit, setLit] = useState(-1);
   useEffect(() => {
     if (reduce || !inView) return;
-    const timers = ways.map((_, i) => window.setTimeout(() => setLit(i), i * 2000));
-    timers.push(window.setTimeout(() => setLit(-1), ways.length * 2000));
+    const timers = ways.map((_, i) => window.setTimeout(() => setLit(i), i * 1000));
+    timers.push(window.setTimeout(() => setLit(-1), ways.length * 1000));
     return () => timers.forEach(clearTimeout);
   }, [inView, reduce, ways]);
   return (
