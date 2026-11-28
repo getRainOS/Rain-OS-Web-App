@@ -275,10 +275,7 @@ export function TrackExample({ index, inline = false, engine = 'All AI engines' 
     <div className={inline ? 'mt-16 md:mt-20 mb-16 md:mb-20' : 'relative z-10 py-28 border-t border-white/[0.06]'}>
       <div className={inner}>
         <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mb-4" style={MONO}>Tracked weekly</div>
-        <div className="flex items-start gap-4">
-          <span aria-hidden="true" className="h-10 w-10 shrink-0" />
-          <h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">Track the questions that matter, every week</h2>
-        </div>
+        <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.035em] leading-[1.02] text-white">Track the questions that matter, every week</h2>
         <p className="mt-4 text-neutral-400 max-w-2xl">Re-check the questions your customers ask AI, and get an email when AI starts or stops citing you. Included with Pro and Business.</p>
         <div className="mt-8 rounded-xl border border-white/10 bg-[#0a0a0a]">
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-3 text-[12px] text-neutral-500" style={MONO}>
