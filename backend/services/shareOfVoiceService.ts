@@ -459,14 +459,16 @@ export async function runShareOfVoiceAcrossEngines(
   location: { country?: string; state?: string | null } = {}
 ): Promise<{ primary: { engine: string; result: SovResult }; perEngine: { engine: string; result: SovResult }[] }> {
   const engines = availableEngines().map(e => e.id);
-  const settled = await Promise.allSettled(
-    engines.map(engine => runShareOfVoice(brand, topic, url, rivals, engine, location).then(result => ({ engine, result })))
-  );
+  // One engine at a time: running them together overloads the engines' concurrency limits.
   const perEngine: { engine: string; result: SovResult }[] = [];
   const failures: unknown[] = [];
-  for (const r of settled) {
-    if (r.status === 'fulfilled') perEngine.push(r.value);
-    else failures.push(r.reason);
+  for (const engine of engines) {
+    try {
+      const result = await runShareOfVoice(brand, topic, url, rivals, engine, location);
+      perEngine.push({ engine, result });
+    } catch (err) {
+      failures.push(err);
+    }
   }
   if (!perEngine.length) throw failures[0] ?? new Error('No AI engine is available for this check.');
   const primary = perEngine.find(p => p.engine === 'gemini') ?? perEngine[0];
