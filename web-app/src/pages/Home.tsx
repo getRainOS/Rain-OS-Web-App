@@ -572,46 +572,51 @@ function AnalysisFlow() {
 
 const ENGINE_OPTIONS = ['All AI engines', ...ENGINES];
 
-// One run through the AI engines: the highlight moves down the list and ends back on All AI engines.
-function EngineRun() {
+// One run through the AI engines: starts only when the whole block is in view, and the
+// dotted box is drawn in once the highlight has ended back on All AI engines.
+function EngineBox() {
   const ref = useRef<HTMLDivElement | null>(null);
-  const inView = useInView(ref, { amount: 0.6, once: true });
+  const inView = useInView(ref, { amount: 1, once: true });
   const reduce = useReducedMotion();
   const [idx, setIdx] = useState(0);
   const [open, setOpen] = useState(false);
+  const [done, setDone] = useState(false);
   useEffect(() => {
-    if (reduce || !inView) return;
+    if (reduce) { setDone(true); return; }
+    if (!inView) return;
     setOpen(true);
     let step = 0;
     const t = window.setInterval(() => {
       step += 1;
       setIdx(step % ENGINE_OPTIONS.length);
-      if (step >= ENGINE_OPTIONS.length) { window.clearInterval(t); setOpen(false); }
+      if (step >= ENGINE_OPTIONS.length) { window.clearInterval(t); setOpen(false); setDone(true); }
     }, 350);
     return () => window.clearInterval(t);
   }, [inView, reduce]);
   return (
-    <div ref={ref} className="max-w-md">
-      <div className="mb-2 text-[11px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>AI engine</div>
-      <div className="rounded-lg border border-white/20 bg-black">
-        <div className="flex items-center justify-between px-4 py-3 text-[14px] text-white">
-          <span>{ENGINE_OPTIONS[idx]}</span>
-          <span className="text-neutral-500">{open ? '▴' : '▾'}</span>
+    <div ref={ref} className={`mt-20 md:mt-24 rounded-xl border p-6 md:p-8 transition-colors duration-300 ${done ? 'border-dashed border-white/15' : 'border-transparent'}`}>
+      <div className="mb-5 flex flex-wrap items-center gap-3">
+        <span className="inline-flex items-center rounded-full border border-dashed border-white/30 px-3 py-1 text-[12px] font-semibold text-neutral-300">AI engines</span>
+        <span className="text-[14px] text-neutral-400">Every monitoring check runs on one engine or all of them.</span>
+      </div>
+      <div className="mt-8 max-w-md">
+        <div className="mb-2 text-[11px] uppercase tracking-[0.14em] text-neutral-500" style={MONO}>AI engine</div>
+        <div className="rounded-lg border border-white/20 bg-black">
+          <div className="flex items-center justify-between px-4 py-3 text-[14px] text-white">
+            <span>{ENGINE_OPTIONS[idx]}</span>
+            <span className="text-neutral-500">{open ? '▴' : '▾'}</span>
+          </div>
+          {open && (
+            <ul className="border-t border-white/10 py-1" role="listbox" aria-label="AI engine">
+              {ENGINE_OPTIONS.map((e, i) => (
+                <li key={e} role="option" aria-selected={i === idx}
+                  className={`px-4 py-2 text-[14px] transition-colors duration-200 ${i === idx ? 'bg-white/[0.08] text-white' : 'text-neutral-500'}`}>
+                  {e}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-        {open && (
-          <ul className="border-t border-white/10 py-1" role="listbox" aria-label="AI engine">
-            {ENGINE_OPTIONS.map((e, i) => (
-              <li
-                key={e}
-                role="option"
-                aria-selected={i === idx}
-                className={`px-4 py-2 text-[14px] transition-colors duration-200 ${i === idx ? 'bg-white/[0.08] text-white' : 'text-neutral-500'}`}
-              >
-                {e}
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
     </div>
   );
@@ -681,13 +686,7 @@ function ToolsSection({ lane }: { lane: number }) {
           <p className="mt-4 text-[15px] leading-relaxed text-neutral-500 max-w-2xl">Monitoring is most useful over time. New content often shows &ldquo;not cited&rdquo; at first, and changes take weeks to show.</p>
         </Reveal>
         <Reveal>
-          <div className="mt-20 md:mt-24 rounded-xl border border-dashed border-white/15 p-6 md:p-8">
-          <div className="mb-5 flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center rounded-full border border-dashed border-white/30 px-3 py-1 text-[12px] font-semibold text-neutral-300">AI engines</span>
-            <span className="text-[14px] text-neutral-400">Every monitoring check runs on one engine or all of them.</span>
-          </div>
-          <div className="mt-8"><EngineRun /></div>
-          </div>
+          <EngineBox />
         </Reveal>
         <TrackExample index={lane} inline />
         <div className="mt-16 md:mt-20">
