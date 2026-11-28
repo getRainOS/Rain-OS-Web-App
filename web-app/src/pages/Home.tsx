@@ -571,9 +571,6 @@ function AnalysisFlow() {
 }
 
 function ToolsSection({ lane }: { lane: number }) {
-  // Monitoring tools: one chooser, set to all of them until a single tool is picked.
-  const [monitor, setMonitor] = useState<'all' | 'citing' | 'recommends' | 'describes'>('all');
-  const monitorTools = TOOLS.slice(1).filter(t => monitor === 'all' || t.key === monitor);
   return (
     <>
     <section id="product" className="relative z-10 py-28 border-t border-white/[0.06]">
@@ -637,23 +634,9 @@ function ToolsSection({ lane }: { lane: number }) {
           <p className="mt-4 text-[15px] leading-relaxed text-neutral-500 max-w-2xl">Monitoring is most useful over time. New content often shows &ldquo;not cited&rdquo; at first, and changes take weeks to show.</p>
           <p className="mt-3 text-[15px] leading-relaxed text-neutral-500 max-w-2xl">Choose which AI tool to check, and where from.</p>
         </Reveal>
-        <div className="mt-8 flex flex-wrap items-center gap-3 text-[14px] text-neutral-400">
-          <label htmlFor="monitor-tool">Show</label>
-          <select
-            id="monitor-tool"
-            value={monitor}
-            onChange={e => setMonitor(e.target.value as typeof monitor)}
-            className="rounded-md border border-white/20 bg-black px-3 py-2 text-[14px] text-white focus:outline-none focus:border-white/50"
-          >
-            <option value="all">All monitoring tools</option>
-            {TOOLS.slice(1).map(t => (
-              <option key={t.key} value={t.key}>{t.eyebrow}</option>
-            ))}
-          </select>
-        </div>
-        {(monitor === 'all' || monitor === 'citing') && <TrackExample index={lane} inline />}
+        <TrackExample index={lane} inline />
         <div className="mt-16 md:mt-20">
-          {monitorTools.map((t, i) => {
+          {TOOLS.slice(1).map((t, i) => {
             const k = i + 1;
             return (
             <React.Fragment key={t.key}>
