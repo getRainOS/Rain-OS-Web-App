@@ -913,7 +913,7 @@ export default function Home() {
                 <span style={{ color: '#A8203E' }}>Search is becoming an answer.</span> And being readable to artificial intelligence is now the new standard for your online presence.
               </h2>
               <p className="mt-5 text-lg md:text-xl font-medium text-white leading-relaxed max-w-xl">
-                Start by making your business, website or content easy for AI to read
+                Start by making your business, website or content easy for AI to read.
               </p>
             </Reveal>
             <div className="mt-14 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-14 items-center">
