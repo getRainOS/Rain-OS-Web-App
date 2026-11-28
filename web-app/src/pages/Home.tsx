@@ -9,7 +9,7 @@ import MarketingNav from '@/components/marketing/MarketingNav';
 import { ENGINE_ICONS } from '@/components/marketing/engineIcons';
 import SiteFooter from '@/components/marketing/SiteFooter';
 import { FAQ } from '@/components/marketing/MarketingComponents';
-import { useLiveEngines } from '@/lib/liveEngines';
+import { useLiveEngines, ENGINES } from '@/lib/liveEngines';
 import HeroPrompt from '@/components/marketing/HeroPrompt';
 import SourceNetwork from '@/components/marketing/SourceNetwork';
 import RainBackground from '@/components/marketing/RainBackground';
@@ -571,6 +571,8 @@ function AnalysisFlow() {
 }
 
 function ToolsSection({ lane }: { lane: number }) {
+  // AI engine the monitoring checks run against: all of them by default, or one.
+  const [engine, setEngine] = useState<string>('All AI engines');
   return (
     <>
     <section id="product" className="relative z-10 py-28 border-t border-white/[0.06]">
@@ -632,9 +634,21 @@ function ToolsSection({ lane }: { lane: number }) {
           <div className="flex items-start gap-4"><ToolMark /><h2 className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-white max-w-3xl text-balance">Watch how AI answers change over time</h2></div>
           <p className="mt-6 text-neutral-400 text-lg leading-relaxed max-w-2xl">Keep checking what AI says and where it links, over time, so you can see how things change.</p>
           <p className="mt-4 text-[15px] leading-relaxed text-neutral-500 max-w-2xl">Monitoring is most useful over time. New content often shows &ldquo;not cited&rdquo; at first, and changes take weeks to show.</p>
-          <p className="mt-3 text-[15px] leading-relaxed text-neutral-500 max-w-2xl">Choose which AI tool to check, and where from.</p>
+          <p className="mt-3 text-[15px] leading-relaxed text-neutral-500 max-w-2xl">Choose which AI engine to check, and where from.</p>
         </Reveal>
-        <TrackExample index={lane} inline />
+        <div className="mt-8 flex flex-wrap items-center gap-3 text-[14px] text-neutral-400">
+          <label htmlFor="monitor-engine">AI engine</label>
+          <select
+            id="monitor-engine"
+            value={engine}
+            onChange={e => setEngine(e.target.value)}
+            className="rounded-md border border-white/20 bg-black px-3 py-2 text-[14px] text-white focus:outline-none focus:border-white/50"
+          >
+            <option value="All AI engines">All AI engines</option>
+            {ENGINES.map(e => <option key={e} value={e}>{e}</option>)}
+          </select>
+        </div>
+        <TrackExample index={lane} inline engine={engine} />
         <div className="mt-16 md:mt-20">
           {TOOLS.slice(1).map((t, i) => {
             const k = i + 1;
